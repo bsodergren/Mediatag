@@ -1,0 +1,19 @@
+<?php
+/**
+ * Command like Metatag writer for video files.
+ *
+ */
+
+namespace Mediatag\Modules\Patterns\%%LIBRARY%%;
+use Mediatag\Modules\TagBuilder\Patterns;
+
+%%EXTEND_USE%%
+
+const %%CLASSNAME_UC%%_REGEX_COMMON = '//i';
+
+class %%CLASSNAME%% extends %%CLASS_EXTEND%%
+{
+
+    %%STUDIO%%
+
+}

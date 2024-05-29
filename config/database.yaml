@@ -1,0 +1,25 @@
+mediatag:
+    prefix: "mediatag_"
+    tables:
+        - video_file
+        - video_info
+        - video_custom
+        - video_metadata
+        - studios
+        - genre
+        - artists
+        - tags
+        - keyword
+        - title
+plexweb:
+    prefix: "plexweb_"
+    tables:
+        - 'video_chapter'
+        - 'settings'
+        - 'search_data'
+        - 'video_sequence'
+        - 'playlist_videos'
+        - 'playlist_data'
+        - 'favorite_videos'
+        - 'smartlist_data'
+        - 'wordMap'

@@ -1,0 +1,36 @@
+<?php
+%%CMD_NAMESPACE%%;
+
+use Mediatag\Core\MediaOptions;
+use Mediatag\Traits\Translate;
+
+%%LANG_USE%%;
+
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+
+
+class Options extends MediaOptions
+{
+    use Lang;
+
+    public $options = ['Default'=>null];
+
+    /*
+    public function Definitions()
+    {
+        Translate::$Class = __CLASS__;
+        return   [                
+            //    ['optionName', 'N', InputOption::VALUE_NONE, Translate::text('%%COMMAND_CONST_DESC%%')],
+        ];
+        
+    }
+#    */
+
+    /*
+    public function Arguments($varName=null,$description = null)
+    {
+        return [$varName, InputArgument::OPTIONAL, $description];
+    }
+#    */
+} 

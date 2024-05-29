@@ -1,0 +1,33 @@
+<?php
+%%CMD_NAMESPACE%%;
+
+const DESCRIPTION = 'Example Description';
+const NAME        = '%%COMMAND_NAME%%';
+
+use Mediatag\Core\Mediatag;
+use Mediatag\Core\MediaCommand;
+%%LANG_USE%%;
+use Symfony\Component\Console\Command\Command as SymCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Attribute\AsCommand;
+
+
+
+#[AsCommand(name: NAME, description: DESCRIPTION)]
+class Command extends MediaCommand
+{
+    use Lang;
+
+    public const USE_LIBRARY     = false;
+
+    public function execute(InputInterface $input, OutputInterface $output)
+    {
+        $class     = parent::getProcessClass();
+        $ClassObj = new $class($input, $output);
+
+        $ClassObj->process();
+        return SymCommand::SUCCESS;
+    }
+
+}
