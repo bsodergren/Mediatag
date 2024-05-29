@@ -210,6 +210,7 @@ class Storage
 
     public function insert($data, $table = __MYSQL_VIDEO_FILE__)
     {
+        $id = null;
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
             $this->output->writeln(__METHOD__.' -> '.$array_string);

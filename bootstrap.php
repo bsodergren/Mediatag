@@ -3,7 +3,6 @@
  * Command like Metatag writer for video files.
  */
 
-use Dotenv\Dotenv;
 use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
@@ -33,7 +32,6 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 require_once __CONFIG_LIB__.'/path_constants.php';
 
 require_once __CONFIG_LIB__.'/variables.php';
-
 $log = new UTMLog(__SCRIPT_NAME__);
 UTMLog::$Logger = $log;
 
