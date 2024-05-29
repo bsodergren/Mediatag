@@ -1,0 +1,32 @@
+
+
+###> symfony/framework-bundle ###
+/.env.local
+/.env.local.php
+/.env.*.local
+/config/secrets/prod/prod.decrypt.private.php
+/public/bundles/
+/var/
+###< symfony/framework-bundle ###
+*/app/*
+/.env
+.idea/**
+.idea/modules.xml
+.idea/php.xml
+.idea/plextags.iml
+.idea/vcs.xml
+.idea/.gitignore
+bin/list.php
+.env
+app/Component/Filesystem/.php-cs-fixer.cache
+composer.lock
+composer.lock
+.vscode/settings.json
+config.ini
+composer.lock
+.vscode/
+app/Commands/mfiles.sh
+vendor
+.env-server
+db/*
+package-lock.json

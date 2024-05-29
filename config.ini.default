@@ -1,0 +1,8 @@
+[path]
+mediatag=D:\\development\\Mediatag
+ATOMICPARSLEY=C:\xampp\php\AtomicParsley.exe
+FFMPEG_CMD=C:\xampp\composer\ffmpeg.exe
+YOUTUBEDL_CMD=/home/bjorn/.local/bin/youtube-dl
+WEB_HOME=D:\development\plex_web\html
+HOME=D:\\development\\Mediatag
+APP_HOME=D:\\development\\Mediatag
