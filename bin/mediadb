@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
+define('__ROOT_DIRECTORY__', dirname(realpath($_SERVER['SCRIPT_FILENAME']), 2));
+define('__CONFIG_LIB__', __ROOT_DIRECTORY__.'/config');
+
+require __ROOT_DIRECTORY__.'/bootstrap.php';
+require __CONFIG_LIB__.'/applicationLoader.php';
