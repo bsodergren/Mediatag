@@ -1,0 +1,138 @@
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
+namespace Mediatag\Commands\Test;
+
+
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\Duration;
+
+trait Helper
+{
+    public function t1($val, $min, $max)
+    {
+        return $val >= $min && $val < $max;
+    }
+
+    public function sortFiles()
+    {
+        foreach ($this->VideoList['file'] as $key => $vidArray) {
+            $min = 0;
+            $hours = 0;
+            $minutes = 0;
+            $seconds = 0;
+
+            $this->duration = new Duration(Mediatag::$input, Mediatag::$output);
+            $duration = $this->duration->getDbDuration($vidArray['video_key'], $vidArray['video_file']);
+            $duration = (int) $duration;
+
+            $seconds = round($duration / 1000);
+            $hours = floor($seconds / 3600);
+
+            $min = round((float) $seconds / 60 % 60);
+
+            $sec = round($seconds % 60);
+            $minutes = $min + ($hours * 60);
+
+            $dur = $minutes;
+            if ($this->t1($minutes, 0, 10)) {
+                $video_array['0_9'][] = $vidArray['video_file'];
+            }
+            if ($this->t1($minutes, 10, 20)) {
+                $video_array['10_20'][] = $vidArray['video_file'];
+            }
+            if ($this->t1($minutes, 20, 30)) {
+                $video_array['20_30'][] = $vidArray['video_file'];
+            }
+            if ($this->t1($minutes, 30, 40)) {
+                $video_array['30_40'][] = $vidArray['video_file'];
+            }
+            if ($this->t1($minutes, 40, 50)) {
+                $video_array['40_50'][] = $vidArray['video_file'];
+            }
+            if ($this->t1($minutes, 50, 60)) {
+                $video_array['50_60'][] = $vidArray['video_file'];
+            }
+            if (60 <= $minutes) {
+                $video_array['60'][] = $vidArray['video_file'];
+            }
+
+            // printf('%02d:%02d:%02d', $hours, $minutes, $sec);
+        }
+
+        $this->symlinkFiles($video_array);
+    }
+
+    public function symlinkFiles($video_array)
+    {
+        $filesystem = new Filesystem();
+
+        foreach ($video_array as $dir => $fileArray) {
+            $new_path = __PLEX_HOME__.'/Duration/'.$dir;
+            if (! is_dir($new_path)) {
+                $filesystem->mkdir($new_path);
+            }
+            foreach ($fileArray as $file) {
+                $new_filePath = str_replace(__PLEX_HOME__.'/'.__LIBRARY__, $new_path, $file);
+                if (! file_exists($new_filePath)) {
+                    $filesystem->symlink($file, $new_filePath);
+                    echo 'creating symlink for '.basename($file)."\n";
+                    // utmdd([__METHOD__,$new_filePath, $file]);
+                }
+            }
+        }
+    }
+
+    public function mvFiles($video_array)
+    {
+        $filesystem = new Filesystem();
+        // foreach ($video_array as $dir => $fileArray)
+        // {
+        $new_path = __PLEX_HOME__.'/backup_ph';
+        foreach ($video_array as $file) {
+            $file = trim($file);
+            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Pornhub', $new_path, $file);
+            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Studios', $new_path, $new_fileName);
+
+            //                $new_fileName = str_replace($new_path.'/Studios', $new_path, $new_fileName);
+            $new_filePath = str_replace(basename($new_fileName), '', $new_fileName);
+            if (! is_dir($new_filePath)) {
+                $filesystem->mkdir($new_filePath);
+            }
+
+            if (file_exists($file)) {
+                if (! file_exists($new_fileName)) {
+                    $filesystem->rename($file, $new_fileName);
+                    echo 'mving for '.basename($file)."\n";
+                    //   utmdd([__METHOD__,$new_fileName, $file]);
+                }
+            }
+        }
+        //  utmdd([__METHOD__,$dirs]);
+        // }
+    }
+
+    public function getPhKeys()
+    {
+        $ph_video = [];
+        $video_array = [];
+        foreach ($this->VideoList['file'] as $key => $vidArray) {
+            $filename = basename($vidArray['video_file']);
+            //            if(str_contains($filename,$dir)){
+            if (! str_starts_with($key, 'x')) {
+                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+                echo 'adding '.basename($vidArray['video_file'])."\n";
+                $video_array[] = $vidArray['video_file'].\PHP_EOL;
+            }
+        }
+        file_put_contents(__LIBRARY__.'_playlist.txt', $ph_video);
+        file_put_contents(__LIBRARY__.'files.txt', $video_array);
+
+        $this->mvFiles($video_array);
+    }
+
+   
+}
