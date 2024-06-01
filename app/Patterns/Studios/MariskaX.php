@@ -1,27 +1,31 @@
 <?php
 /**
  * Command like Metatag writer for video files.
+ *
  */
 
-namespace Mediatag\Patterns\Studios;
+ namespace Mediatag\Patterns\Studios;
+ 
+ use Mediatag\Modules\TagBuilder\Patterns;
 
-use Mediatag\Modules\TagBuilder\Patterns;
 
-const MYLIFEINMIAMI_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i';
+const MARISKAX_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i';
 
-class MyLifeInMiami extends Patterns
+class MariskaX extends Patterns
 {
-    public $regex = [
-        'mylifeinmiami' => [
+
+    public $studio = 'Mariska X';
+    public $regex  = [
+        'mariskax' => [
             'artist' => [
-                'pattern'             => MYLIFEINMIAMI_REGEX_COMMON,
+                'pattern'             => MARISKAX_REGEX_COMMON,
                 'delim'               => '_',
                 'match'               => 3,
                 'artistFirstNameOnly' => false,
             ],
 
             'title'  => [
-                'pattern' => MYLIFEINMIAMI_REGEX_COMMON,
+                'pattern' => MARISKAX_REGEX_COMMON,
                 'match'   => 2,
                 'delim'   => '_',
             ],

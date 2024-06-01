@@ -437,7 +437,7 @@ class MediaFinder extends SFinder
     {
         if (\count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);
-            $obj->addCmd('update', ['-U', '-f']);
+            $obj->addCmd('update', ['-U', '-f'],true,true);
         
             foreach ($file_array as $i => $missing_file) {
                 

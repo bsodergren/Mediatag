@@ -47,7 +47,7 @@ class Reader extends TagReader
 
     public function getvideoData(array $file_array)
     {
-        $read = new ReadExec($file_array, Mediatag::$input, Mediatag::$output);
+        $read = new ReadExec($file_array, Mediatag::$input, Mediatag::$output);       
         $video_info = $read->read();
         return $video_info[$this->video_key]['metatags'];
     }

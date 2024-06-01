@@ -20,7 +20,7 @@ class PurgatoryX extends Patterns
                 'artistFirstNameOnly' => true,
             ],
             'title'  => [
-                'pattern' => '/(([a-zA-Z0-9]+))\-[a-zA-Z0-9]+\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}p|k.mp4/i',
+                'pattern' => '/(([a-zA-Z0-9]+))\-[a-zA-Z0-9]+\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i',
                 'match'   => 2,
                 'delim'   => '_',
             ],

@@ -27,7 +27,6 @@ class ReadExec extends MediatagExec
     {
         $video_key = File::file($this->video_file, 'videokey');
         $array = MediaCache::get($video_key);
-
         if (false === $array) {
             $command = [
                 Mediatag::App(),

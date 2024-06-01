@@ -32,6 +32,7 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 require_once __CONFIG_LIB__.'/path_constants.php';
 
 require_once __CONFIG_LIB__.'/variables.php';
+UTMLog::$display = false;
 $log = new UTMLog(__SCRIPT_NAME__);
 UTMLog::$Logger = $log;
 

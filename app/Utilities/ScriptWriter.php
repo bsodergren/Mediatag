@@ -20,7 +20,11 @@ class ScriptWriter
     /**
      * script_text.
      */
+    public $script_header;
+    public $script_command;
+    public $script_filelist;
     public $script_text;
+
 
     /**
      * update.
@@ -90,7 +94,7 @@ class ScriptWriter
     public function addHeader()
     {
         $directory = '"'.__CURRENT_DIRECTORY__.'"';
-        $this->script_text = <<<EOD
+        $this->script_header = <<<EOD
 #!/bin/bash
 DIR={$directory}
 
@@ -108,21 +112,23 @@ EOD;
      */
     public function addCmd(string $command, array $cmdOptions = [], bool $comment = true, bool $singleLine = false)
     {
-        $eol = " \\".PHP_EOL;
+        $eol = " ";
 
-        if($singleLine === true) {
-            $eol = " ";
-        }
 
         $cmd = $this->{$command};
+
         $run_cmd = $cmd.' '.implode($eol, $cmdOptions);
+
         if (true == $comment) {
-            $this->script_text .= '## CMD='.$run_cmd.\PHP_EOL;
+            $this->script_header .= '## CMD='.$run_cmd.\PHP_EOL;
         }
 
+        if($singleLine === true) {
+            $eol = " \\";
 
+        }
 
-        $this->script_text .= $run_cmd.\PHP_EOL;
+        $this->script_command .= $run_cmd.$eol.\PHP_EOL;
     }
 
     /**
@@ -135,7 +141,7 @@ EOD;
     {
         $file = '"'.$file.'"';
         if (true === $string) {
-            $this->script_text .= $file;
+            $this->script_filelist .= $file;
         } else {
             $this->fileListAray[] = $file;
         }
@@ -154,7 +160,7 @@ EOD;
         });
 
         $file_list = implode("\n", $fileArray);
-        $this->script_text .= $file_list;
+        $this->script_filelist .= $file_list;
     }
 
     /**
@@ -169,13 +175,19 @@ EOD;
         }
         if (\count($this->fileListAray) > 0) {
             $file_list = implode("\n", $this->fileListAray);
-            $this->script_text .= $file_list;
+            $this->script_filelist .= $file_list;
         }
 
         if (true == $singleLine) {
-            $this->script_text = str_replace("\"\n", '",\\'.\PHP_EOL, $this->script_text);
+            $this->script_filelist = str_replace("\"\n", '",\\'.\PHP_EOL, $this->script_filelist);
         }
-        $this->script_text = str_replace(__CURRENT_DIRECTORY__.'/', '', $this->script_text);
+
+
+        $this->script_filelist = str_replace(__CURRENT_DIRECTORY__.'/', '', $this->script_filelist);
+
+
+        $this->script_text = $this->script_header . PHP_EOL . $this->script_command . $this->script_filelist;
+
         FileSystem::write($this->script, $this->script_text, 0755);
     }
 

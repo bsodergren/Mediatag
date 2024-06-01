@@ -5,14 +5,14 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
-use UTM\Utilities\Debug\Debug;
-use UTM\Utilities\Option;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/StudioMap.php';
 
@@ -260,10 +260,10 @@ class Reader extends TagReader
             // utmdd([__METHOD__,$res]);
             $filename = $this->video_file;
             $success = preg_match(__GENRE_REGEX__, $filename, $matches);
-         
+
             if (true == $success) {
                 $this->genre = $matches[1];
-              //  $genre = $matches[1];
+                //  $genre = $matches[1];
             }
         }
 
@@ -297,7 +297,7 @@ class Reader extends TagReader
 
     public function getFileTag($tag)
     {
-           
+
         $method = 'get'.$tag;
 
         //  UTMLog::Logger('Class', $className);

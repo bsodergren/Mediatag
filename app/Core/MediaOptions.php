@@ -18,7 +18,7 @@ class MediaOptions
     use Lang;
     use Translate;
 
-    public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display'=> false];
+    public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display' => false];
 
     public static $callingClass;
 
@@ -80,7 +80,7 @@ class MediaOptions
                     $cmd = "get".$value."Options";
                     $commandOptions[] = self::$cmd();
                 }
-            }    
+            }
 
             $definitions = self::$classObj->Definitions();
 
@@ -89,11 +89,10 @@ class MediaOptions
             }
         }
 
-        foreach($commandOptions as $Options)
-        {
+        foreach($commandOptions as $Options) {
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
-        
+
 
         return new InputDefinition($cmdOptions);
     }
@@ -167,6 +166,7 @@ class MediaOptions
             ['time', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TIME')],
             ['dump', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_DUMP')],
             ['flush', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
+            ['nocache', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
             // ['trunc',null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TRUNC')],
         ];
 

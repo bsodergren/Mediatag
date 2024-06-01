@@ -10,19 +10,20 @@ use Mediatag\Modules\TagBuilder\Patterns;
 class DevilsFilm extends Patterns
 {
     public $studio = 'Devils Film';
-    public $regex  = [
+    public $regex = [
         'devilsfilm' => [
             'artist' => [
-                'pattern'             => '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_([a-zA-Z_]{1,})\_([\_0-9]{0,10})(p|k)\.mp4/i',
-                'delim'               => '_',
-                'match'               => 3,
+                'pattern' => '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_([a-zA-Z_]{1,})\_([\_0-9]{0,10})(p|k)\.mp4/i',
+                'delim' => '_',
+                'match' => 3,
                 'artistFirstNameOnly' => false,
             ],
 
-            'title'  => [
-                'pattern' => '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i',
-                'delim'   => '_',
-                'match'   => 1,
+            'title' => [
+                'pattern' => '/(([a-zA-Z0-9]+))\-?[a-zA-Z]+?\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i',
+                //'pattern' => '/(([a-zA-Z0-9]+))\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i',
+                'delim' => '_',
+                'match' => 1,
             ],
         ],
     ];

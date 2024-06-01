@@ -4,7 +4,7 @@
  *
  */
 
-namespace Mediatag\Modules\Patterns\%%LIBRARY%%;
+namespace Mediatag\Patterns\%%LIBRARY%%;
 use Mediatag\Modules\TagBuilder\Patterns;
 
 %%EXTEND_USE%%

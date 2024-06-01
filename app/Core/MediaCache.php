@@ -5,11 +5,10 @@
 
 namespace Mediatag\Core;
 
-use UTM\Bundle\Stash;
-use UTM\Utilities\Option;
-use UTM\Bundle\Stash\Cache;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Bundle\Stash\Cache;
+use UTM\Utilities\Option;
 
 class MediaCache
 {
@@ -22,10 +21,10 @@ class MediaCache
     public static function init(InputInterface $input = null, OutputInterface $output = null)
     {
         Option::init($input);
-        if (!\defined('__LIBRARY__')) {
+        if (! \defined('__LIBRARY__')) {
             \define('__LIBRARY__', 'tmp');
         }
-        if (!is_dir(__APP_CACHE_DIR__.'/'.__LIBRARY__)) {
+        if (! is_dir(__APP_CACHE_DIR__.'/'.__LIBRARY__)) {
             mkdir(__APP_CACHE_DIR__.'/'.__LIBRARY__, 0777, true);
         }
 
@@ -41,11 +40,17 @@ class MediaCache
 
     public static function get($key)
     {
+        if (true == Option::isTrue('nocache')) {
+            return false;
+        }
+
         return self::$stash->get($key);
     }
 
     public static function put($key, $value)
     {
+        // self::forget($key);
+
         return self::$stash->put($key, $value);
     }
 
