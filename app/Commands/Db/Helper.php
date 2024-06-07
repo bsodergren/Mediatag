@@ -18,6 +18,9 @@ use Mediatag\Modules\VideoData\Data\Thumbnail;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Symfony\Component\Console\Question\Question;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
+use Mediatag\Modules\Executable\YoutubeExec;
+
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -321,5 +324,41 @@ trait Helper
 
             $this->updateNow();
         }
+    }
+
+
+    public function getJson()
+    {
+
+        $file_array = Mediatag::$SearchArray;
+        foreach ($file_array as $k => $file) {
+            $json_key          = File::getVideoKey($file);
+            if(!str_starts_with($json_key,"x"))
+            {
+                $json_file      = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
+                // utmdump([$json_key,$json_file]);
+
+                if (!Mediatag::$filesystem->exists($json_file)) {
+                    $exec = new YoutubeExec('');
+                    $return = $exec->youtubeGetJson(  $json_key );
+                    
+
+                    if(Mediatag::$filesystem->exists($json_file) ){
+                        parent::$output->writeln('<info>adding json '.basename($return).' </info>');
+                    } else {
+                        parent::$output->writeln('<error>adding fake json for '.basename($file).' </error>');
+                        MediaFilesystem::writeFile( $json_file,'{"id": "'.$json_key.'"}',false);
+                    }
+                    //utmdd($file,$json_key);
+                } else {
+                    parent::$output->writeln('<id>json file for '.basename($file).' exists</id>');
+                }
+
+
+            } else {
+                parent::$output->writeln('<comment>skipping '.basename($file).' </comment>');
+            }
+        }
+       
     }
 }

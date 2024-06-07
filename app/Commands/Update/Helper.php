@@ -97,7 +97,6 @@ trait Helper
         }
 
         $videoArray = $this->VideoList['file'];
-
         $count = \count($videoArray);
         $current_dir = null;
         $prev_dir = null;
@@ -129,7 +128,9 @@ trait Helper
             $tagObj->loadVideo($videoInfo);
             $tagBuilder = new tagBuilder($key, $tagObj);
 
+
             $videoInfo = $tagBuilder->getTags($videoInfo);
+
 
             $message = 'No Update';
 

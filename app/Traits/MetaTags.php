@@ -109,6 +109,11 @@ trait MetaTags
 
     public static function mergeTag($tag, $first, $second)
     {
+
+
+        $firstCmp = strtoupper($first);
+        $secondCmp = strtoupper($second);
+
         $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
@@ -116,25 +121,38 @@ trait MetaTags
         if ('title' == $tag) {
             $delim = '';
         }
-        if ('' != $second) {
-            if ('' == $first) {
+        if ('' != $secondCmp) {
+            if ('' == $firstCmp) {
                 $return = $second;
             } else {
-                $return = $first.$delim.$second;
+                if($firstCmp == $secondCmp)
+                {
+                    $return = $first;
+                } else {
+
+                    $return = $first.$delim.$second;
+                }
+              
             }
         } else {
+
             $return = $first;
         }
 
 
-        if (null !== $first && $first != $second) {
+        if (null !== $firstCmp && $first != $second) {
 
             $data['video_key'] = Metatags::$Videokey;
 
-            if($tag == 'studio') {
-
-                $data['studio'] = MetaTags::clean($first, $tag);
-                $data['substudio'] = MetaTags::clean($second, $tag);
+            if($tag == 'studio')
+            {
+                if($firstCmp == $secondCmp){
+                   
+                    $data['studio'] = MetaTags::clean($first, $tag);
+                } else {
+                    $data['studio'] = MetaTags::clean($first, $tag);
+                    $data['substudio'] = MetaTags::clean($second, $tag);
+                } 
             } else {
                 $data[$tag] = MetaTags::clean($return, $tag);
             }
@@ -145,6 +163,7 @@ trait MetaTags
                 __MYSQL_VIDEO_CUSTOM__
             );
         }
+
 
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }

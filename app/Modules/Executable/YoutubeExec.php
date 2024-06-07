@@ -37,7 +37,20 @@ class YoutubeExec extends MediatagExec
 
     public $commonOptions;
 
+    private  $options = [
+        '-f',
+        'bestvideo[width<=?1080]+bestaudio/best',
+        '-o',
+        __PLEX_DOWNLOAD__.'/%(uploader)s/%(title)s-%(id)s.%(ext)s',
+        '--restrict-filenames',
+        '-w',
+        '-c',
+        '--no-part',
+        '--write-info-json',
+    ];
+
     public $Console;
+    public $yt_json_string;
     public $pltype;
 
     public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
@@ -59,23 +72,39 @@ class YoutubeExec extends MediatagExec
         ];
     }
 
+    public function youtubeGetJson($video_key)
+    {
+        // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
+        $options = array_merge($this->commonOptions, $this->options);
+        $options = array_merge($options, ['--skip-download']);
+        $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
+        $command = array_merge($options, [$video_url]);
+
+        $callback = Callback::check([$this, 'downloadJsonCallback']);
+        
+        $this->exec($command, $callback);
+       
+        preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
+        $json_file = '';
+
+        if(array_key_exists(1,$output_array))
+        {
+            $json_file = $output_array[1];
+            $this->moveJson($json_file);
+        }
+
+        return $json_file;
+
+    }
+
     public function youtubeCmdOptions()
     {
         $options = [
-            '-f',
-            'bestvideo[width<=?1080]+bestaudio/best',
-            '-o',
-            __PLEX_DOWNLOAD__.'/%(uploader)s/%(title)s-%(id)s.%(ext)s',
-            '--restrict-filenames',
-            '-w',
-            '-c',
             '--write-thumbnail',
             '--embed-thumbnail',
-            '--no-part',
-            '--write-info-json',
         ];
 
-        $options = array_merge($this->commonOptions, $options);
+        $options = array_merge($this->commonOptions, $this->options, $options);
         if (! Option::istrue('ignore') && ! Option::istrue('skip')) {
             $options = array_merge($options, ['--download-archive', __PLEX_PL_DIR__.'/ids/archive.txt']);
         }
@@ -174,4 +203,42 @@ class YoutubeExec extends MediatagExec
             return 1;
         }
     }
+
+    public function moveJson($json_file)
+    {
+        // $old_name = $videoInfo['video_name'];
+        // $old_path = $videoInfo['video_path'];
+        $json_key = '';
+        // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
+        if (Mediatag::$filesystem->exists($json_file)) {
+
+            
+            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
+            if (1 === $success) {
+                $json_key = $matches[1];
+            } else {
+                // utmdd($matches);
+            }
+        }
+
+        $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
+
+        if (Mediatag::$filesystem->exists($json_file)) {
+            if (!Mediatag::$filesystem->exists($newJson_file)) {
+                if (Option::istrue('test')) {
+                    $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
+                    Mediatag::$output->writeln($out);
+                } else {
+                    Mediatag::$filesystem->rename($json_file, $newJson_file, false);
+                }
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+
+
+
 }

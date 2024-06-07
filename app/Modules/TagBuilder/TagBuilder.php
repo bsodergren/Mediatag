@@ -47,7 +47,6 @@ class TagBuilder
             }
         }
 
-
         $DbUpdates = $this->ReaderObj->getDbValues();
         // utmdump([__METHOD__.':'.__LINE__,"dbupdate",$DbUpdates]);
         if (null !== $DbUpdates) {

@@ -218,6 +218,34 @@ trait Callables
         // $this->Console->writeln($this->key );
     }
 
+
+    public function downloadJsonCallback($type, $buffer)
+    {
+        $outputText = '';
+        $line_id = \PHP_EOL.'<id>'.$this->num_of_lines.'</id>';
+
+        if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
+            if (\array_key_exists(2, $matches)) {
+                if ('' != $matches[2]) {
+                    $this->key = $matches[2];
+                }
+            }
+        }
+
+        $buffer = str_replace("\n", '', $buffer);
+        switch ($buffer) {
+            case str_contains($buffer, '[info]'):
+                // 
+
+                if (str_contains($buffer, 'as JSON')) {
+                    utmdump($buffer);
+                    $this->yt_json_string = $buffer;
+                }
+            break;
+        }
+    }
+
+
     public function downloadCallback($type, $buffer)
     {
         $outputText = '';

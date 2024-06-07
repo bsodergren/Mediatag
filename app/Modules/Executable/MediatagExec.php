@@ -131,7 +131,17 @@ class MediatagExec
         //     $this->addOptionArg('--'.$meta_tag.'='.$meta_value);
         // }
     }
+    // protected function testexec($command, $callback = null): mixed
+    // {
+    //     $process = new Process($command);
+    //     $process->setTimeout(60000);
 
+    //     $this->runCommand = $process->getCommandLine();
+    //     utmdd($this->runCommand);
+  
+
+    //     return true;
+    // }
     protected function exec($command, $callback = null): mixed
     {
         $process = new Process($command);
@@ -144,7 +154,6 @@ class MediatagExec
 
         $process->start();
         $process->wait($callback);
-
         return $this->errors;
     }
 }

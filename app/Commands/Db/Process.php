@@ -52,6 +52,7 @@ class Process extends Mediatag
         'info' => ['execInfo' => null, 'checkClean' => null],
         'update' => ['execUpdate' => 'default'],
         'empty' => ['execEmpty' => 'default'],
+        'json' => ['getJson'  => null],
     ];
 
     private $count;

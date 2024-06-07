@@ -8,6 +8,7 @@ namespace Mediatag\Modules\TagBuilder\Json;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Database\TagDB;
+use Mediatag\Modules\Executable\YoutubeExec;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\FileSystem;
@@ -119,6 +120,7 @@ class Reader extends TagReader
 
                 if ('studio' == $tag) {
                     $value = ucwords($value);
+                    utmdump([$tag,$value]);
 
                 }
 
@@ -130,11 +132,26 @@ class Reader extends TagReader
 
     private function getJsonFile()
     {
+
+
         $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+
         if (file_exists($this->json_file)) {
             $this->json_string = FileSystem::read($this->json_file);
 
             return true;
+        } else {
+            $exec = new YoutubeExec('');
+            $exec->youtubeGetJson($this->video_key);
+
+            $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+
+            if (file_exists($this->json_file)) {
+                $this->json_string = FileSystem::read($this->json_file);
+
+                return true;
+            }
+
         }
 
         return false;

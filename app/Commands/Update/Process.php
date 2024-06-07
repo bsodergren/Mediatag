@@ -69,7 +69,6 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-
         $this->formatter   = new FormatterHelper();
         Mediatag::$output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
         Mediatag::$output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
@@ -93,7 +92,10 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        
+
         $this->VideoList = parent::getVideoArray();
+
         if(count($this->VideoList['file']) == 0)
         {
             return SymCommand::SUCCESS;
