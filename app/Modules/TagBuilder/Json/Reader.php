@@ -120,7 +120,6 @@ class Reader extends TagReader
 
                 if ('studio' == $tag) {
                     $value = ucwords($value);
-                    utmdump([$tag,$value]);
 
                 }
 
