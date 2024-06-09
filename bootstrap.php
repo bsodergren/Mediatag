@@ -7,6 +7,7 @@ use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
 use UTM\Bundle\Monolog\UTMLog;
+// die(get_include_path());
 
 define('__PROJECT_ROOT__', __ROOT_DIRECTORY__);
 define('__COMPOSER_LIB__', __ROOT_DIRECTORY__.'/vendor');

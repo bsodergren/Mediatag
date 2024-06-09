@@ -245,6 +245,7 @@ class Storage
 
 
             $this->dbConn->onDuplicate($fieldArray, 'id');
+            
             $id = $this->dbConn->insert($table, $data);
         } catch (\Exception $e) {
             utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);

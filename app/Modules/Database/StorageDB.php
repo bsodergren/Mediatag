@@ -12,9 +12,9 @@ use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Mediatag\Modules\VideoData\Data\VideoTags;
-use UTM\Utilities\Option;
 use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use UTM\Utilities\Option;
 
 class StorageDB extends Storage
 {
@@ -152,7 +152,7 @@ class StorageDB extends Storage
             $vdata = ['video_file' => $row['fullpath'].'/'.$row['filename']];
 
             $this->updateDBEntry($row['video_key'], $vdata, Option::istrue('all'));
-            if($this->progressbar !== null){
+            if($this->progressbar !== null) {
                 $this->progressbar->advance();
             }
             $this->progressbar1->advance();
@@ -242,20 +242,20 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo['Video'] = $action.basename($video_file).' ';
         if($video_id !== null) {
 
-            $this->vtags = new VideoTags();
-            Mediatag::$Display->BlockInfo['MetaTags'] = $this->vtags->getVideoInfo($key, $video_file);
-            $this->vinfo = new VideoInfo();
-            Mediatag::$Display->BlockInfo['VideoInfo'] = $this->vinfo->getVideoInfo($key, $video_file);
+            // $this->vtags = new VideoTags();
+            Mediatag::$Display->BlockInfo['MetaTags'] = (new VideoTags())->getVideoInfo($key, $video_file);
+            // $this->vinfo = new VideoInfo();
+            Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo())->getVideoInfo($key, $video_file);
 
             if (true === $all) {
-                $this->thumb = new Thumbnail();
-                Mediatag::$Display->BlockInfo['thumbnail'] = $this->thumb->getVideoInfo($key, $video_file);
+                // $this->thumb = new Thumbnail();
+                Mediatag::$Display->BlockInfo['thumbnail'] = (new Thumbnail())->getVideoInfo($key, $video_file);
 
-                $this->duration = new Duration();
-                Mediatag::$Display->BlockInfo['Duration'] = $this->duration->getVideoInfo($key, $video_file);
+                // $this->duration = new Duration();
+                Mediatag::$Display->BlockInfo['Duration'] = (new Duration())->getVideoInfo($key, $video_file);
 
-                $this->preview = new GifPreviewFiles();
-                Mediatag::$Display->BlockInfo['Preview'] = $this->preview->getVideoInfo($key, $video_file);
+                // $this->preview = new GifPreviewFiles();
+                Mediatag::$Display->BlockInfo['Preview'] = (new GifPreviewFiles())->getVideoInfo($key, $video_file);
 
             }
         }
