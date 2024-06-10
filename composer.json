@@ -7,8 +7,30 @@
       "app"
     ]
   },
- 
+  "require-dev": {
+    "symfony/var-dumper": "^6.2"
+  },
   "require": {
-    "formr/formr": "^1.5"
+    "symfony/console": "^6.3",
+    "bhittani/download": "^0.3.0",
+    "doctrine/doctrine-bundle": "^2.10",
+    "symfony/monolog-bundle": "^3.8",
+    "symfony/config": "^6.3",
+    "nette/utils": "^4.0",
+    "mhor/php-mediainfo": "^5.5",
+    "php-ffmpeg/php-ffmpeg": "^1.2",
+    "doctrine/orm": "^2.15",
+    "symfony/process": "^6.3",
+    "php-di/php-di": "^7.0",
+    "slim/slim": "^4.11",
+    "slim/psr7": "^1.6",
+    "doctrine/migrations": "^3.6",
+    "camoo/config": "^1.0",
+    "vlucas/phpdotenv": "^5.5",
+    "nesbot/carbon": "^2.71",
+    "siteorigin/string-splitter": "^1.0",
+    "sybio/gif-creator": "^1.0",
+    "intervention/image": "^3.3",
+    "bsodergren/utm": "dev-main"
   }
 }
