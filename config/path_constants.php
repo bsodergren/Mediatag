@@ -7,7 +7,7 @@ define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_NAME'], '.php'));
 
 function DEFINE_DIR($definition, $value)
 {
-    if (!is_dir($value)) {
+    if (! is_dir($value)) {
         mkdir($value, 0777, true);
     }
     define($definition, $value);
@@ -39,6 +39,10 @@ const __INC_WEB_THUMB_ROOT__ = __WEB_HOME__;
 
 const __INC_WEB_THUMB_URL__ = '/images/plex/thumbnails';
 const __INC_WEB_THUMB_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_THUMB_URL__;
+
+const __INC_WEB_CHAPTER_URL__ = '/images/plex/chapterImages';
+const __INC_WEB_CHAPTER_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_CHAPTER_URL__;
+
 
 const __INC_WEB_PREVIEW_URL__ = '/images/plex/preview';
 const __INC_WEB_PREVIEW_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_PREVIEW_URL__;

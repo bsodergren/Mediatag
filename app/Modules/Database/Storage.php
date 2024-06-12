@@ -173,21 +173,20 @@ class Storage
             return false;
         }
 
-        // foreach ($where as $field => $value) {
-        //     $this->dbConn->where($field, $value);
-        // }
+        foreach ($where as $field => $value) {
+            $this->dbConn->where($field, $value);
+        }
 
-        $data = array_merge($data, $where);
+        // $data = array_merge($data, $where);
 
         // if(array_key_exists('video_key',$fieldArray)){
         //  //   unset($fieldArray['video_key']);
         // }
 
 
-        $this->dbConn->onDuplicate($data, 'id');
-        $id = $this->dbConn->insert($table, $data);
-        // $r = $this->dbConn->update($table, $data);
-
+        // $this->dbConn->onDuplicate($data, 'id');
+        // $id = $this->dbConn->insert($table, $data);
+        $id = $this->dbConn->update($table, $data);
         if (! $id) {
             $this->video_string = ['insert failed: '.$this->dbConn->getLastQuery()];
 
@@ -218,7 +217,7 @@ class Storage
             return false;
         }
 
-        try {
+        // try {
             $fieldArray = $data;
             if (\array_key_exists('fullpath', $fieldArray)) {
 
@@ -242,14 +241,15 @@ class Storage
             // }
 
 
-
+utmdump($fieldArray,$table, $data);
 
             $this->dbConn->onDuplicate($fieldArray, 'id');
             
             $id = $this->dbConn->insert($table, $data);
-        } catch (\Exception $e) {
-            utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
-        }
+            utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
+        // } catch (\Exception $e) {
+        //     utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
+        // }
 
         return $id;
 

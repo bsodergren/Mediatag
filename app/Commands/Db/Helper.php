@@ -6,47 +6,47 @@
 namespace Mediatag\Commands\Db;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
-use UTM\Utilities\Option;
-use Mediatag\Utilities\Strings;
-use Mediatag\Utilities\MediaArray;
-use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Database\StorageDB;
+use Mediatag\Modules\Display\MediaBar;
+use Mediatag\Modules\Executable\YoutubeExec;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoData\Data\Duration;
+use Mediatag\Modules\VideoData\Data\Markers;
+use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Symfony\Component\Console\Question\Question;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
-use Mediatag\Modules\Executable\YoutubeExec;
+use Mediatag\Traits\Translate;
 
-use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Symfony\Component\Console\Input\InputInterface;
+use Mediatag\Utilities\MediaArray;
+use Mediatag\Utilities\Strings;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
+use Symfony\Component\Console\Question\Question;
+use UTM\Utilities\Option;
 
 trait Helper
 {
     public function updateNow()
     {
-        $data          = ['name' => __LIBRARY__.'_last_updated',
-            'value'              => parent::$dbconn->dbConn->now(),
-            'type'               => 'update'];
+        $data = ['name' => __LIBRARY__.'_last_updated',
+            'value' => parent::$dbconn->dbConn->now(),
+            'type' => 'update'];
         $updateColumns = ['value'];
-        $lastInsertId  = 'id';
+        $lastInsertId = 'id';
         parent::$dbconn->dbConn->onDuplicate($updateColumns, $lastInsertId);
-        $id            = parent::$dbconn->dbConn->insert(__MYSQL_SETTINGS__, $data);
+        $id = parent::$dbconn->dbConn->insert(__MYSQL_SETTINGS__, $data);
     }
 
     public function lastUpdated()
     {
-        $db  = Mediatag::$dbconn->dbConn;
+        $db = Mediatag::$dbconn->dbConn;
         $db->where('name', __LIBRARY__.'_last_updated');
 
         $res = $db->getValue(__MYSQL_SETTINGS__, 'value');
-        $q   = $db->getLastQuery();
+        $q = $db->getLastQuery();
 
         return $res;
         //        utmdd([__METHOD__,$res]);
@@ -57,7 +57,7 @@ trait Helper
         $obj = (new self($input, $output))->init()->getFileArray();
 
         return [
-            'New'     => $obj['new'],
+            'New' => $obj['new'],
             'Changed' => $obj['changed'],
         ];
     }
@@ -66,7 +66,7 @@ trait Helper
     {
         // utmdd([__METHOD__,$this->db_array, $this->file_array]);
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
-        $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
+        $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
         foreach ($this->file_array as $key => $file) {
             if (\array_key_exists($key, $this->New_Array)) {
                 continue;
@@ -89,7 +89,7 @@ trait Helper
             parent::$output->writeln('New files '.print_r($this->New_Array, 1));
         }
 
-        $changed_string      = 0;
+        $changed_string = 0;
         if (\count($this->Changed_Array) > 0) {
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
@@ -98,11 +98,12 @@ trait Helper
         }
 
         // utmdd($this->Changed_Array);
-        Mediatag::$Console->info('Database Updates',
-            ['Files found'   => \count($this->file_array)],
+        Mediatag::$Console->info(
+            'Database Updates',
+            ['Files found' => \count($this->file_array)],
             ['Deleted files' => \count($this->Deleted_Array)],
             ['Changed files' => $changed_string],
-            ['New files'     => \count($this->New_Array)],
+            ['New files' => \count($this->New_Array)],
         );
 
         // utmdd([__METHOD__,
@@ -113,7 +114,7 @@ trait Helper
         //  ]);
 
         return [
-            'new'     => $this->New_Array,
+            'new' => $this->New_Array,
             'changed' => $this->Changed_Array,
             'deleted' => $this->Deleted_Array,
         ];
@@ -121,18 +122,18 @@ trait Helper
 
     public function execEmpty()
     {
-        Translate::$Class             = __CLASS__;
+        Translate::$Class = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
-        $videos                       = Mediatag::$dbconn->getVideoCount();
+        $videos = Mediatag::$dbconn->getVideoCount();
         if (Option::istrue('yes')) {
-            $go     = true;
+            $go = true;
             $answer = 'y';
         } else {
             Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper();
+            $ask = new QuestionHelper();
             $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
 
-            $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         }
         // $answer            = 'y';
         switch ($answer) {
@@ -161,6 +162,13 @@ trait Helper
     public function execThumb()
     {
         $this->obj = new Thumbnail();
+        // $this->obj = new Thumbnail(parent::$input, parent::$output);
+        $this->obj->updateVideoData();
+    }
+
+    public function execMarkers()
+    {
+        $this->obj = new Markers();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
     }
@@ -199,7 +207,7 @@ trait Helper
      */
     public function updateEntry($key, $video_file, $exists = null)
     {
-        $this->OutputText   = [];
+        $this->OutputText = [];
         $this->OutputText[] = '<info>'.$this->count.'</info>:<comment>'.basename($video_file).'</comment> ';
 
         if (null !== parent::$dbconn->videoExists($key, 'thumbnail')) {
@@ -224,20 +232,20 @@ trait Helper
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
             parent::$output->writeln('deleting '.basename($video_file).' from db ');
-            if (!Option::istrue('preview')) {
+            if (! Option::istrue('preview')) {
                 parent::$dbconn->removeDBEntry();
                 //  parent::$dbconn->clearDBValues($video_key);
-            } 
+            }
         }
     }
 
     public function addDBEntry()
     {
         $chunkSize = 50;
-        $total     = \count($this->New_Array);
+        $total = \count($this->New_Array);
         if ($total > 0) {
-            $idx                         = 1;
-            $progressbar                 = new MediaBar($total, 'three', 50);
+            $idx = 1;
+            $progressbar = new MediaBar($total, 'three', 50);
             parent::$dbconn->progressbar1 = $progressbar;
             $progressbar->newbar();
             $progressbar->start();
@@ -248,23 +256,23 @@ trait Helper
                 $data_array[] = (new StorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
                 ++$idx;
             }
-            $idx                         = 1;
+            $idx = 1;
 
-            $data_array                  = array_chunk($data_array, $chunkSize);
-            $chunks                      = \count($data_array);
+            $data_array = array_chunk($data_array, $chunkSize);
+            $chunks = \count($data_array);
 
-            if($total > $chunkSize){
-                $progressbar2                = new MediaBar($chunks, 'two', 50);
+            if($total > $chunkSize) {
+                $progressbar2 = new MediaBar($chunks, 'two', 50);
                 parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', 50);
                 $progressbar2->newbar()->start();
             }
 
             foreach ($data_array as $data) {
 
-                if($total > $chunkSize){
+                if($total > $chunkSize) {
 
-                parent::$dbconn->progressbar->newbar()->start();
-                $progressbar2->advance();
+                    parent::$dbconn->progressbar->newbar()->start();
+                    $progressbar2->advance();
                 }
 
                 // if (Option::istrue('preview')) {
@@ -288,8 +296,8 @@ trait Helper
         foreach ($this->Changed_Array as $video_key => $video_file) {
             parent::$dbconn->video_file = $video_file;
             // parent::$dbconn->video_key  = $video_key;
-            $video_name                 = basename($video_file);
-            if (!Option::istrue('preview')) {
+            $video_name = basename($video_file);
+            if (! Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db '.$video_name);
 
                 parent::$dbconn->UpdateFilePath();
@@ -299,26 +307,28 @@ trait Helper
         }
     }
 
-    public function findRemoved() {}
+    public function findRemoved()
+    {
+    }
 
     public function execUpdate()
     {
-        $date       = null;
-        if (!Option::istrue('yes')) {
-            $date       = $this->lastUpdated();
+        $date = null;
+        if (! Option::istrue('yes')) {
+            $date = $this->lastUpdated();
         }
 
         $file_array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date);
-        if (!\is_array($file_array)) {
+        if (! \is_array($file_array)) {
             return 0;
         }
-        $total      = \count($file_array);
+        $total = \count($file_array);
         if ($total > 0) {
-            $storagedb           = new StorageDB();
+            $storagedb = new StorageDB();
             $storagedb->MultiIDX = \count($file_array);
             foreach ($file_array as $k => $file) {
-                $key          = File::getVideoKey($file);
-                $data_array[] = $storagedb->updateDBEntry($key, ['video_file' => $file],Option::istrue('all'));
+                $key = File::getVideoKey($file);
+                $data_array[] = $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
                 --$storagedb->MultiIDX;
             }
 
@@ -326,28 +336,26 @@ trait Helper
         }
     }
 
-
     public function getJson()
     {
 
         $file_array = Mediatag::$SearchArray;
         foreach ($file_array as $k => $file) {
-            $json_key          = File::getVideoKey($file);
-            if(!str_starts_with($json_key,"x"))
-            {
-                $json_file      = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
+            $json_key = File::getVideoKey($file);
+            if(! str_starts_with($json_key, "x")) {
+                $json_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
                 // utmdump([$json_key,$json_file]);
 
-                if (!Mediatag::$filesystem->exists($json_file)) {
+                if (! Mediatag::$filesystem->exists($json_file)) {
                     $exec = new YoutubeExec('');
-                    $return = $exec->youtubeGetJson(  $json_key );
-                    
+                    $return = $exec->youtubeGetJson($json_key);
 
-                    if(Mediatag::$filesystem->exists($json_file) ){
+
+                    if(Mediatag::$filesystem->exists($json_file)) {
                         parent::$output->writeln('<info>adding json '.basename($return).' </info>');
                     } else {
                         parent::$output->writeln('<error>adding fake json for '.basename($file).' </error>');
-                        MediaFilesystem::writeFile( $json_file,'{"id": "'.$json_key.'"}',false);
+                        MediaFilesystem::writeFile($json_file, '{"id": "'.$json_key.'"}', false);
                     }
                     //utmdd($file,$json_key);
                 } else {
@@ -359,6 +367,6 @@ trait Helper
                 parent::$output->writeln('<comment>skipping '.basename($file).' </comment>');
             }
         }
-       
+
     }
 }
