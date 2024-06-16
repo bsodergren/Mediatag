@@ -246,9 +246,9 @@ utmdump($fieldArray,$table, $data);
             $this->dbConn->onDuplicate($fieldArray, 'id');
             
             $id = $this->dbConn->insert($table, $data);
-            utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
+           // utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
         // } catch (\Exception $e) {
-        //     utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
+            // utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
         // }
 
         return $id;
