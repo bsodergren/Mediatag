@@ -27,10 +27,10 @@
     "doctrine/migrations": "^3.6",
     "camoo/config": "^1.0",
     "vlucas/phpdotenv": "^5.5",
-    "nesbot/carbon": "^2.71",
     "siteorigin/string-splitter": "^1.0",
     "sybio/gif-creator": "^1.0",
     "intervention/image": "^3.3",
-    "bsodergren/utm": "dev-main"
+    "nesbot/carbon": "^3.6",
+    "bsodergren/utm": "^1.0"
   }
 }
