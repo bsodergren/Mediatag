@@ -6,7 +6,7 @@
 namespace Mediatag\Commands\Playlist;
 
 const DESCRIPTION = 'download PH Playlist';
-const NAME = 'playlist';
+const NAME        = 'playlist';
 
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -19,6 +19,8 @@ class Command extends MediaCommand
 {
     use Lang;
 
+    public const CMD_NAME        = NAME;
+    public const CMD_DESCRIPTION = DESCRIPTION;
     // public const USE_LIBRARY     = false;
     public $process;
 
@@ -44,7 +46,7 @@ class Command extends MediaCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $playlist[] = $input->getArgument(self::CMD_NAME);
+        $playlist[]        = $input->getArgument(self::CMD_NAME);
         parent::$optionArg = $playlist;
         parent::execute($input, $output);
 

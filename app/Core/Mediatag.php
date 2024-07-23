@@ -23,7 +23,7 @@ abstract class Mediatag extends Command
 {
     use CmdProcess;
 
-    public const PH_META_CACHE = __CACHE_DIR__.'/pornhub.hash';
+    public const PH_META_CACHE = __CACHE_DIR__ . '/pornhub.hash';
 
     public static $SearchArray = [];
 
@@ -61,9 +61,9 @@ abstract class Mediatag extends Command
 
     // public static $ignoreList = __DATA_LISTS__.'/NamesList.txt';
 
-    public static $amateurFile = __DATA_MAPS__.'/Amateur.txt';
+    public static $amateurFile = __DATA_MAPS__ . '/Amateur.txt';
 
-    public static $channelFile = __DATA_MAPS__.'/Channels.txt';
+    public static $channelFile = __DATA_MAPS__ . '/Channels.txt';
 
     // public static $keywordReplacement = __DATA_MAPS__.'/keyword.txt';
 
@@ -74,9 +74,9 @@ abstract class Mediatag extends Command
     public static $title_map;
     public static $IoStyle;
 
-    public static $tmpText = null;
+    public static $tmpText     = null;
 
-    private $meta_tag_arrary = [
+    private $meta_tag_arrary   = [
         'studio',
         'genre',
         'artist',
@@ -96,7 +96,7 @@ abstract class Mediatag extends Command
                 return CONFIG['ATOMICPARSLEY'];
             }
 
-            exit(CONFIG['ATOMICPARSLEY'].' does not exist');
+            exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
         }
     }
 
@@ -113,13 +113,13 @@ abstract class Mediatag extends Command
 
 
 
-        $this->command = self::getDefaultName();
-        self::$input = $input;
-        self::$output = $output;
+        $this->command     = self::getDefaultName();
+        self::$input       = $input;
+        self::$output      = $output;
         MediaCache::init($input, $output);
 
         Option::init($input);
-        self::$Console = new ConsoleOutput($output, $input);
+        self::$Console     = new ConsoleOutput($output, $input);
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {
                 case 'title':
@@ -150,21 +150,23 @@ abstract class Mediatag extends Command
 
         UTMLog::Logger('Meta Tags', __META_TAGS__);
 
+        self::$Display     = new Display($output);
+
+        self::$dbconn      = new StorageDB($input, $output);
+        $this->StorageConn = new Storage();
+
         if(!Option::isTrue('SKIP_SEARCH')) {
-            self::$finder = new Finder();
-            self::$filesystem = new Filesystem();
+            self::$finder             = new Finder();
+            self::$filesystem         = new Filesystem();
             self::$finder->defaultCmd = $this->command ;
-            self::$SearchArray = self::$finder->ExecuteSearch();
+            self::$SearchArray        = self::$finder->ExecuteSearch();
 
             if (true == Option::isTrue('numberofFiles')) {
                 $this->getNumberofFiles();
                 exit;
             }
-    }
-        self::$Display = new Display($output);
+        }
 
-        self::$dbconn = new StorageDB($input, $output);
-        $this->StorageConn = new Storage();
         if (! \defined('TITLE_REPLACE_MAP')) {
             $this->getTitleMap('TITLE_REPLACE_MAP', $this->StorageConn->getTitleMap());
         }
@@ -178,7 +180,7 @@ abstract class Mediatag extends Command
             if (method_exists($this, $cmd)) {
                 $this->{$cmd}($option);
             } else {
-                self::$output->writeln('<info>'.$cmd.' doesnt exist</info>');
+                self::$output->writeln('<info>' . $cmd . ' doesnt exist</info>');
 
                 return 0;
             }
@@ -191,21 +193,21 @@ abstract class Mediatag extends Command
             return CONFIG['ATOMICPARSLEY'];
         }
 
-        exit(CONFIG['ATOMICPARSLEY'].' does not exist');
+        exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
     }
 
     public function getVideoArray()
     {
-        $file_array = self::$SearchArray;
+        $file_array               = self::$SearchArray;
         $this->videoArray['file'] = [];
         $this->videoArray['dupe'] = [];
-        $count = \count($file_array);
+        $count                    = \count($file_array);
 
 
         self::$output->writeln('<info>Getting Video array</info>');
         foreach ($file_array as $__ => $file) {
-            $fs = new File($file);
-            $videoData = $fs->get();
+            $fs                                                   = new File($file);
+            $videoData                                            = $fs->get();
 
             if (! \array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
@@ -224,14 +226,14 @@ abstract class Mediatag extends Command
             if (is_file($file)) {
                 $artistList = file_get_contents($file);
 
-                $artistMap = explode("\n", $artistList);
+                $artistMap  = explode("\n", $artistList);
             }
         } else {
             $artistMap = $file;
         }
 
         foreach ($artistMap as $name) {
-            $name = trim($name);
+            $name        = trim($name);
             $nameArray[] = strtolower($name);
         }
 
@@ -240,18 +242,14 @@ abstract class Mediatag extends Command
         \define($constant, $nameArray);
     }
 
-    public function exec($option = null)
-    {
-    }
+    public function exec($option = null) {}
 
-    public function print()
-    {
-    }
+    public function print() {}
 
     public function getNumberofFiles()
     {
         $this->getVideoArray();
         $total = \count($this->videoArray['file']);
-        self::$output->writeLn('<info>There are '.$total.' files found</info>');
+        self::$output->writeLn('<info>There are ' . $total . ' files found</info>');
     }
 }

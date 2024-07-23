@@ -46,7 +46,7 @@ class MediaFinder extends SFinder
      *
      * @var array
      */
-    public $video = [];
+    public $video          = [];
 
     /**
      * Summary of output.
@@ -97,26 +97,26 @@ class MediaFinder extends SFinder
      */
     public function renameCommaFiles($filelist, $spaces = false): array
     {
-        $first_part = '';
+        $first_part  = '';
         $rename_file = false;
-        $oldName = '';
+        $oldName     = '';
 
         foreach ($filelist as $i => $fileRow) {
             if (str_contains($fileRow, ',')) {
-                $oldName = $fileRow;
-                $newName = str_replace(',', '', $fileRow);
+                $oldName     = $fileRow;
+                $newName     = str_replace(',', '', $fileRow);
                 $rename_file = true;
             } else {
                 if (str_contains($fileRow, '.mp4')) {
-                    $oldName = $fileRow;
-                    $newName = $first_part.$fileRow;
+                    $oldName    = $fileRow;
+                    $newName    = $first_part . $fileRow;
 
                     if (true === $rename_file) {
-                        $oldName = $first_part.','.$fileRow;
+                        $oldName = $first_part . ',' . $fileRow;
                     }
                     $first_part = '';
                 } else {
-                    $first_part = $fileRow;
+                    $first_part  = $fileRow;
                     $rename_file = true;
 
                     continue;
@@ -125,14 +125,14 @@ class MediaFinder extends SFinder
 
             if (true === $spaces) {
                 $pathInfo = pathinfo($newName);
-                $newName = $pathInfo['basename'];
+                $newName  = $pathInfo['basename'];
 
-                $newName = UtilitiesStrings::cleanFileName($newName);
-                $newName = str_replace('__', '_', $newName);
-                $newName = str_replace('_.', '.', $newName);
+                $newName  = UtilitiesStrings::cleanFileName($newName);
+                $newName  = str_replace('__', '_', $newName);
+                $newName  = str_replace('_.', '.', $newName);
 
                 if ('.' != $pathInfo['dirname']) {
-                    $newName = $pathInfo['dirname'].'/'.$newName;
+                    $newName = $pathInfo['dirname'] . '/' . $newName;
                 }
 
                 if ($oldName != $newName) {
@@ -147,19 +147,19 @@ class MediaFinder extends SFinder
                     }
                 }
 
-                $message = 'Renaming file from <comment>'.basename($oldName).'</comment> to';
-                $message2 = '                -> <comment>'.basename($newName).'</comment> ';
+                $message  = 'Renaming file from <comment>' . basename($oldName) . '</comment> to';
+                $message2 = '                -> <comment>' . basename($newName) . '</comment> ';
                 UTMLog::Logger('Renaming file from ', $oldName);
                 UTMLog::Logger('Renaming file to ', $newName);
-                $this->output->writeln('<info>'.$message.'</info>');
-                $this->output->writeln('<info>'.$message2.'</info>');
+                $this->output->writeln('<info>' . $message . '</info>');
+                $this->output->writeln('<info>' . $message2 . '</info>');
                 //  Filesystem::renameFile($oldName, $newName);
             }
 
             $newFileArray[] = $newName;
 
-            $first_part = '';
-            $rename_file = false;
+            $first_part     = '';
+            $rename_file    = false;
         }
 
         return $newFileArray;
@@ -221,15 +221,15 @@ class MediaFinder extends SFinder
 
     public function getRangeArray($file_array): array
     {
-        $start = 0;
-        $total = \count($file_array);
+        $start          = 0;
+        $total          = \count($file_array);
 
         [$total,$start] = $this->getRangeIds($total);
         for ($q = $start; $q < $total; ++$q) {
-            $file_name = $file_array[$q];
+            $file_name             = $file_array[$q];
 
-            $video_key = File::file($file_name, 'videokey');
-            $video_file = File::file($file_name, 'fullname');
+            $video_key             = File::file($file_name, 'videokey');
+            $video_file            = File::file($file_name, 'fullname');
             $FileArray[$video_key] = $video_file;
         }
 
@@ -238,9 +238,9 @@ class MediaFinder extends SFinder
 
     public function getFileNumberArray($file_array): array
     {
-        $start = 0;
-        $total = \count($file_array);
-        $FileArray = [];
+        $start      = 0;
+        $total      = \count($file_array);
+        $FileArray  = [];
         $filenumber = Option::getValue('filenumber');
         if (str_contains($filenumber, ',')) {
             $range = explode(',', $filenumber);
@@ -248,26 +248,26 @@ class MediaFinder extends SFinder
                 if ($q > $total) {
                     continue;
                 }
-                $file_name = $file_array[$q - 1];
-                $video_key = MediaFile::file($file_name, 'videokey');
+                $file_name             = $file_array[$q - 1];
+                $video_key             = MediaFile::file($file_name, 'videokey');
                 $FileArray[$video_key] = $file_name;
             }
         } else {
             if (str_contains($filenumber, '-')) {
                 $range = explode('-', $filenumber);
                 $start = $range[0] - 1;
-                $stop = $range[1];
+                $stop  = $range[1];
             } else {
                 $start = (Option::getValue('filenumber') - 1);
-                $stop = $start + 1;
+                $stop  = $start + 1;
             }
 
             for ($q = $start; $q < $stop; ++$q) {
                 if ($q >= $total) {
                     continue;
                 }
-                $file_name = $file_array[$q];
-                $video_key = MediaFile::file($file_name, 'videokey');
+                $file_name             = $file_array[$q];
+                $video_key             = MediaFile::file($file_name, 'videokey');
                 $FileArray[$video_key] = $file_name;
             }
         }
@@ -312,12 +312,12 @@ class MediaFinder extends SFinder
 
         UTMLog::logger('Search Directory', $path);
 
-        $finder = new SFinder();
+        $finder     = new SFinder();
         $filesystem = new SFilesystem();
 
         $finder->files()->in($path);
         if($date !== null) {
-            $finder->date('>= '. $date);
+            $finder->date('>= ' . $date);
         }
         if (null !== $this->excludeDir) {
 
@@ -330,7 +330,7 @@ class MediaFinder extends SFinder
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($finder->hasResults()) {
             foreach ($finder as $file) {
-                $video_file = $file->getRealPath();
+                $video_file   = $file->getRealPath();
                 if (str_contains($video_file, '-temp-')) {
                     $filesystem->remove($video_file);
 
@@ -341,9 +341,9 @@ class MediaFinder extends SFinder
 
 
             $file_array = $this->onlyNew($path, $file_array);
-            
+
             if(is_array($file_array)) {
-                if(count($file_array) > 0) {                
+                if(count($file_array) > 0) {
                     if (Option::isTrue('dump')) {
                         $this->scriptNewFiles($file_array);
                         return null;
@@ -352,13 +352,13 @@ class MediaFinder extends SFinder
                 }
             }
         }
-//dump($file_array);
+        //dump($file_array);
 
         //if (isset($this->output)) {
-            Mediatag::$output->writeln('<info>No files found</info>');
+        Mediatag::$output->writeln('<info>No files found</info>');
         //}
 
-  //      return null;
+        //      return null;
     }
 
     /**
@@ -375,40 +375,21 @@ class MediaFinder extends SFinder
         return null;
     }
 
+
     public function onlyNew($path, $fileArray)
     {
-        $cache_id = md5($path) . "_".__SCRIPT_NAME__;
-        $cache_array = null;
-        $Changed_Array = [];
-        $New_Array = [];
+        $db_array             = null;
+        $New_Array            = [];
 
         if(__SCRIPT_NAME__ == 'mediadb') {
             return $fileArray;
         }
 
-        if (Option::isTrue('cache')) {
-            MediaCache::put($cache_id, $fileArray);
-            $cache_array = MediaCache::get($cache_id);
-            Mediatag::$output->writeln('Wrote new cache with '. count($cache_array). ' files');
-             
-            return null;
-        }
+        $db_array             = Mediatag::$dbconn->getDbFileList();
 
-        
-        if (Option::isTrue('new')) {
-            $cache_array = MediaCache::get($cache_id);
-        } else {
-            MediaCache::put($cache_id, $fileArray);
-            return $fileArray;
-        }
-
-        $DEBUG['cache_id'] = $cache_id;
-        $DEBUG['cache_array'] = $cache_array;
-
-
-        if(is_array($cache_array)) {
-            $Deleted_Array = MediaArray::diff($cache_array, $fileArray, false);
-            $New_Array = MediaArray::diff($fileArray, $cache_array, false);
+        if(is_array($db_array)) {
+            $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
+            $New_Array     = MediaArray::diff($fileArray, $db_array, false);
             foreach ($fileArray as $key => $file) {
 
                 if (MediaArray::Search($Deleted_Array, basename($file))) {
@@ -418,10 +399,8 @@ class MediaFinder extends SFinder
 
                 }
 
-            }           
+            }
         }
-
-        MediaCache::put($cache_id, $fileArray);
 
         if(count($New_Array) > 0) {
             return $New_Array;
@@ -432,18 +411,14 @@ class MediaFinder extends SFinder
     }
 
 
-
     public function scriptNewFiles($file_array)
     {
         if (\count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);
-            $obj->addCmd('update', ['-U', '-f'],true,true);
-        
-            foreach ($file_array as $i => $missing_file) {
-                
-                    $obj->addFile($missing_file, false);
-                
+            $obj->addCmd('update', ['-U', '-f'], true, true);
 
+            foreach ($file_array as $i => $missing_file) {
+                $obj->addFile($missing_file, false);
             }
             $obj->write();
             Mediatag::$output->writeln('Wrote new script');
