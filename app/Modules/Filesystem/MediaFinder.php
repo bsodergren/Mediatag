@@ -339,9 +339,10 @@ class MediaFinder extends SFinder
                 $file_array[] = $video_file;
             }
 
+            if (Option::isTrue('new')) {
 
-            $file_array = $this->onlyNew($path, $file_array);
-
+                $file_array = $this->onlyNew($path, $file_array);
+            }
             if(is_array($file_array)) {
                 if(count($file_array) > 0) {
                     if (Option::isTrue('dump')) {
@@ -352,13 +353,9 @@ class MediaFinder extends SFinder
                 }
             }
         }
-        //dump($file_array);
 
-        //if (isset($this->output)) {
         Mediatag::$output->writeln('<info>No files found</info>');
-        //}
 
-        //      return null;
     }
 
     /**
