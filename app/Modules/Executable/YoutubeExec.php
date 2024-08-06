@@ -100,7 +100,7 @@ class YoutubeExec extends MediatagExec
     public function youtubeCmdOptions()
     {
         $options = [
-            '--write-thumbnail',
+            // '--write-thumbnail',
             '--embed-thumbnail',
         ];
 

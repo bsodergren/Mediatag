@@ -77,15 +77,17 @@ trait Helper
         }
 
         foreach ($file_array as $__ => $file) {
-            $oldName                             = $file;
-            $newName                             = $this->cleanFilename($file);
-            [$file,$message]                     = $this->renameFile($oldName, $newName, false);
+            $message = '';
+            // $oldName                             = $file;
+            // $newName                             = $this->cleanFilename($file);
+            // [$file,$message]                     = $this->renameFile($oldName, $newName, false);
 
             $fs                                  = new File($file);
             $videoData                           = $fs->get();
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
         }
+        $SortDir   = false;
         foreach ($videoArray as $k => $videoData) {
             $text       = [];
             $video_file = $videoData['video_file'];
@@ -196,7 +198,6 @@ trait Helper
                 }
 
                 $text[] = ['Moving' => $video_name];
-
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
                     $text[]  = ['New Path' => $video_path];
@@ -296,7 +297,6 @@ trait Helper
     public static function istrue($var)
     {
         $var = strtolower($var);
-        // utmdump([__METHOD__,$var]);
         foreach (self::$selfClass as $genre => $value) {
             if ($var == $genre) {
                 if ('1' == $value) {

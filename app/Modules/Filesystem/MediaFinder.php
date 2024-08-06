@@ -5,13 +5,14 @@
 
 namespace Mediatag\Modules\Filesystem;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
 use Mediatag\Traits\Callables;
-use UTM\Utilities\Option;
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
-use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\UtmStopWatch;
 use Symfony\Component\Finder\Finder as SFinder;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
@@ -174,6 +175,7 @@ class MediaFinder extends SFinder
         UTMLog::logger('Search');
 
         if (Option::isTrue('filelist')) {
+
             $file_array = $this->getFilelistOption();
         } else {
             $file_array = $this->searchFiles();
@@ -315,8 +317,10 @@ class MediaFinder extends SFinder
         $finder     = new SFinder();
         $filesystem = new SFilesystem();
 
-        $finder->files()->in($path);
-        if($date !== null) {
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+                $finder->files()->in($path);
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,''); 
+               if($date !== null) {
             $finder->date('>= ' . $date);
         }
         if (null !== $this->excludeDir) {
@@ -328,7 +332,10 @@ class MediaFinder extends SFinder
         // }
 
         $finder->name($search)->sortByCaseInsensitiveName();
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
         if ($finder->hasResults()) {
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+
             foreach ($finder as $file) {
                 $video_file   = $file->getRealPath();
                 if (str_contains($video_file, '-temp-')) {
@@ -338,11 +345,14 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
 
             if (Option::isTrue('new')) {
 
                 $file_array = $this->onlyNew($path, $file_array);
             }
+
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
             if(is_array($file_array)) {
                 if(count($file_array) > 0) {
                     if (Option::isTrue('dump')) {

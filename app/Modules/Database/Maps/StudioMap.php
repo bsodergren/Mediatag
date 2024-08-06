@@ -7,7 +7,6 @@ trait StudioMap
     public function getStudioPath($text)
     {
         $query = 'SELECT library, studio,path FROM '.__MYSQL_STUDIOS__." WHERE name LIKE '".$text."'";
-
         $result = $this->dbConn->rawQueryOne($query);
 
         if (null !== $result) {
