@@ -111,8 +111,8 @@ trait MetaTags
     {
 
 
-        $firstCmp = strtoupper($first);
-        $secondCmp = strtoupper($second);
+        $firstCmp = str_replace(" ","",strtoupper($first));
+        $secondCmp = str_replace(" ","",strtoupper($second));
 
         $delim = ',';
         if ('studio' == $tag) {
