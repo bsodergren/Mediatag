@@ -31,32 +31,31 @@ class Thumbnail extends VideoData
 
     public $returnText;
 
-    private $updatedText = "<comment>Updated ";
-    private $newText = "<fg=red>Wrote ";
-    private $actionText = 'Thumbnail</> ';
+    private $updatedText   = "<comment>Updated ";
+    private $newText       = "<fg=red>Wrote ";
+    private $actionText    = 'Thumbnail</> ';
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
     public function clean()
     {
-        $missing = [];
+        $missing                                = [];
         [$dbList,$missing_file, $missing_thumb] = $this->getExistingList();
-        $res = Mediatag::$finder->Search(__INC_WEB_THUMB_DIR__.'/'.__LIBRARY__, '*.jpg');
+        $res                                    = Mediatag::$finder->Search(__INC_WEB_THUMB_DIR__ . '/' . __LIBRARY__, '*.jpg');
         if($res === null) {
             $res = [];
         }
 
-        $missing = array_diff($res, $dbList);
-
+        $missing                                = array_diff($res, $dbList);
 
         foreach ($res as $k => $file) {
             if (! array_search($file, $dbList)) {
                 $videoFile = self::thumbToVideo($file);
                 if (file_exists($videoFile)) {
-                    $fs = new File($videoFile);
+                    $fs        = new File($videoFile);
                     $videoData = $fs->get();
                     $this->get($videoData['video_key'], $videoFile);
-                    Mediatag::$output->writeln($this->returnText.'</info>');
+                    Mediatag::$output->writeln($this->returnText . '</info>');
                 }
             }
         }
@@ -65,23 +64,23 @@ class Thumbnail extends VideoData
             foreach ($missing as $k => $file) {
                 $videoFile = self::thumbToVideo($file);
                 if (! file_exists($videoFile)) {
-                    $this->renameThumb($file, true);
-                    Mediatag::$output->writeln('<comment>Deleting '.$file.' </comment>');
+                    $this->renameThumb($file, false);
+                    Mediatag::$output->writeln('<comment>Deleting ' . $file . ' </comment>');
                 }
             }
         }
 
         if (\count($missing_thumb) > 0) {
             foreach ($missing_thumb as $k => $file) {
-                $query = 'update '.$this->VideoDataTable.' set thumbnail = null WHERE id = '.$k.'';
+                $query  = 'update ' . $this->VideoDataTable . ' set thumbnail = null WHERE id = ' . $k . '';
 
                 $result = Mediatag::$dbconn->query($query);
-                $file = $this->thumbToVideo($file);
+                $file   = $this->thumbToVideo($file);
 
-                Mediatag::$output->write('<comment>Changing '.$k.' to null, '.$file.' </comment>');
+                Mediatag::$output->write('<comment>Changing ' . $k . ' to null, ' . $file . ' </comment>');
 
                 if (file_exists($file)) {
-                    $fs = new File($file);
+                    $fs        = new File($file);
                     $videoData = $fs->get();
                     $this->get($videoData['video_key'], $file);
                     Mediatag::$output->writeln($this->returnText); // .'</info>');
@@ -90,24 +89,24 @@ class Thumbnail extends VideoData
                 }
             }
         }
-        Filesystem::prunedirs(__INC_WEB_THUMB_DIR__.'/'.__LIBRARY__);
+        Filesystem::prunedirs(__INC_WEB_THUMB_DIR__ . '/' . __LIBRARY__);
 
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
 
     public function getText()
     {
-        return $this->returnText .basename($this->video_name, '.mp4').'.jpg';// .' for '.basename($this->video_file);
+        return $this->returnText . basename($this->video_name, '.mp4') . '.jpg';// .' for '.basename($this->video_file);
 
     }
 
     public function get($key, $file)
     {
         $this->video_file = $file;
-        $this->video_key = (string) $key;
+        $this->video_key  = (string) $key;
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;
-        $thumbnail = $this->getThumbImg();
+        $thumbnail        = $this->getThumbImg();
 
         return ['thumbnail' => $thumbnail, 'video_key' => $this->video_key];
     }
@@ -117,18 +116,18 @@ class Thumbnail extends VideoData
         $this->video_name = basename($this->video_file);
         $this->video_path = \dirname($this->video_file);
 
-        $img_name = basename($this->video_name, '.mp4').'.jpg';
-        $img_name = Strings::cleanFileName($img_name);
-        $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
-        $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
-        $img_file = $img_location.$img_name;
-        $img_url_path = __INC_WEB_THUMB_URL__.'/'.$img_web_path.$img_name;
-        $action = $this->updatedText;
-        $type = $this->actionText;
+        $img_name         = basename($this->video_name, '.mp4') . '.jpg';
+        $img_name         = Strings::cleanFileName($img_name);
+        $img_web_path     = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
+        $img_location     = __INC_WEB_THUMB_DIR__ . '/' . $img_web_path;
+        $img_file         = $img_location . $img_name;
+        $img_url_path     = __INC_WEB_THUMB_URL__ . '/' . $img_web_path . $img_name;
+        $action           = $this->updatedText;
+        $type             = $this->actionText;
         if (! file_exists($img_file)) {
-            $mediaInfo = new MediaInfo();
+            $mediaInfo          = new MediaInfo();
             $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
-            $videos = $mediaInfoContainer->getVideos();
+            $videos             = $mediaInfoContainer->getVideos();
 
             foreach ($videos as $video) {
                 if (
@@ -141,22 +140,22 @@ class Thumbnail extends VideoData
                 }
             }
 
-            $time = '00:01:00.00';
+            $time               = '00:01:00.00';
 
             if ((int) $duration < 70000) {
                 $time = '00:00:15.00';
             }
-            if ((int)  $duration < 16000) {
+            if ((int) $duration < 16000) {
                 $time = '00:00:05.00';
             }
 
-            if ((int)  $duration < 5000) {
+            if ((int) $duration < 5000) {
                 $time = '00:00:02.00';
             }
 
             (new FileSystem())->mkdir($img_location);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
-            $action = $this->newText;
+            $action             = $this->newText;
 
         }
 
@@ -173,10 +172,10 @@ class Thumbnail extends VideoData
             $where = ' thumbnail is not null ';
         }
 
-        $where = $where . ' AND fullpath like \''.__CURRENT_DIRECTORY__ .'%\' ';
+        $where = $where . ' AND fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
 
         return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM
-         ".$this->VideoDataTable." WHERE  Library = '".__LIBRARY__."' AND  ".$where;
+         " . $this->VideoDataTable . " WHERE  Library = '" . __LIBRARY__ . "' AND  " . $where;
     }
 
     public function clearQuery($key = null)
@@ -185,11 +184,11 @@ class Thumbnail extends VideoData
         if (null !== $key) {
             $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
             if (null !== $exists) {
-                $where = "AND video_key = '".$key."'";
+                $where = "AND video_key = '" . $key . "'";
             }
         }
 
-        return 'update '.$this->VideoDataTable.' set thumbnail = null WHERE Library = "'.__LIBRARY__.'"';
+        return 'update ' . $this->VideoDataTable . ' set thumbnail = null WHERE Library = "' . __LIBRARY__ . '"';
     }
 
     /**
@@ -198,14 +197,13 @@ class Thumbnail extends VideoData
     private function getExistingList(): array
     {
         $missing_thumb = [];
-        $missing_mp4 = [];
-        $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  thumbnail is not null";
+        $missing_mp4   = [];
+        $query         = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  thumbnail is not null";
 
-        utmdd($query);
-        $result = Mediatag::$dbconn->query($query);
-        $dblist = [];
+        $result        = Mediatag::$dbconn->query($query);
+        $dblist        = [];
         foreach ($result as $_ => $row) {
-            $thumb = self::videoToThumb($row['file_name']);
+            $thumb              = self::videoToThumb($row['file_name']);
             if (! file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;
 
@@ -225,12 +223,12 @@ class Thumbnail extends VideoData
 
     public static function videoToThumb($file)
     {
-        return str_replace('.mp4', '.jpg', __INC_WEB_THUMB_DIR__.str_replace(__PLEX_HOME__, '', $file));
+        return str_replace('.mp4', '.jpg', __INC_WEB_THUMB_DIR__ . str_replace(__PLEX_HOME__, '', $file));
     }
 
     public static function thumbToVideo($file)
     {
-        return str_replace('.jpg', '.mp4', __PLEX_HOME__.str_replace(__INC_WEB_THUMB_DIR__, '', $file));
+        return str_replace('.jpg', '.mp4', __PLEX_HOME__ . str_replace(__INC_WEB_THUMB_DIR__, '', $file));
     }
 
     public function renameThumb($file, $delete = false)
@@ -241,7 +239,7 @@ class Thumbnail extends VideoData
             return 0;
         }
         $newFile = str_replace('thumbnails', 'backup', $file);
-        $path = \dirname($newFile);
+        $path    = \dirname($newFile);
 
         if (! is_dir($path)) {
             (new SFileSystem())->mkdir($path);

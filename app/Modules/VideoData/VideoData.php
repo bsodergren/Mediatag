@@ -82,6 +82,14 @@ class VideoData
         $file_array = [];
 
         $query = $this->videoQuery();
+       
+        if (!Option::istrue('clean')) {
+            if (Option::isTrue('max')) {
+                $total = (int) Option::getValue('max');
+                $query = $query . " LIMIT " . $total;
+            }
+        }
+
         $result = Mediatag::$dbconn->query($query);
 
         //
@@ -89,7 +97,6 @@ class VideoData
             $file_array[$row['video_key']] = $row['file_name'];
         }
         $this->resultCount = \count($file_array);
-
         return $file_array;
     }
 

@@ -149,6 +149,7 @@ class VideoPreview extends VideoData
         $missing_mp4 = [];
         $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable.
         " WHERE Library = '".__LIBRARY__."' AND  preview is not null AND  fullpath like '".__CURRENT_DIRECTORY__."%'";
+        utmdd($query);
         $result = Mediatag::$dbconn->query($query);
         $dblist = [];
         foreach ($result as $_ => $row) {
@@ -178,7 +179,9 @@ class VideoPreview extends VideoData
             $where = ' preview is not null ';
         }
 
-        return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable.
+        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable.
         " WHERE  Library = '".__LIBRARY__."' AND  ". $where . " AND  fullpath like '".__CURRENT_DIRECTORY__."%'";
+        // utmdd($query);
+        return $query;
     }
 }

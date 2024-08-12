@@ -81,7 +81,6 @@ class Process extends Mediatag
 
 
         $file_array = parent::$SearchArray;
-
         $this->DbMap = new DbMap();
 
         foreach ($file_array as $k => $file) {

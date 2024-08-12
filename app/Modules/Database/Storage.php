@@ -240,9 +240,6 @@ class Storage
             //     unset();
             // }
 
-
-utmdump($fieldArray,$table, $data);
-
             $this->dbConn->onDuplicate($fieldArray, 'id');
             
             $id = $this->dbConn->insert($table, $data);

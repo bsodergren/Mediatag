@@ -9,7 +9,7 @@ use FFMpeg\Coordinate\TimeCode;
 
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use GifCreator\GifCreator;
+use Mediatag\Utilities\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Mediatag\Core\Mediatag;
