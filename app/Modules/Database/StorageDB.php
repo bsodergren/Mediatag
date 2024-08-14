@@ -77,11 +77,11 @@ class StorageDB extends Storage
     public function getDbFileList()
     {
         $fileListArray     = [];
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name, video_key");
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $results           = $this->query($query);
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         foreach ($results as $key => $arr) {
             $fileListArray[$arr['video_key']] = $arr['file_name'];
         }
@@ -249,11 +249,13 @@ class StorageDB extends Storage
             // $this->vtags = new VideoTags();
             Mediatag::$Display->BlockInfo['MetaTags']  = (new VideoTags())->getVideoInfo($key, $video_file);
             // $this->vinfo = new VideoInfo();
-            Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo())->getVideoInfo($key, $video_file);
-
+            //
             if (true === $all) {
+
                 // $this->thumb = new Thumbnail();
                 Mediatag::$Display->BlockInfo['thumbnail'] = (new Thumbnail())->getVideoInfo($key, $video_file);
+
+                Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo())->getVideoInfo($key, $video_file);
 
                 // $this->duration = new Duration();
                 Mediatag::$Display->BlockInfo['Duration']  = (new Duration())->getVideoInfo($key, $video_file);

@@ -47,7 +47,6 @@ class Thumbnail extends VideoData
         }
 
         $missing                                = array_diff($res, $dbList);
-
         foreach ($res as $k => $file) {
             if (! array_search($file, $dbList)) {
                 $videoFile = self::thumbToVideo($file);
@@ -174,8 +173,11 @@ class Thumbnail extends VideoData
 
         $where = $where . ' AND fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
 
-        return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM
+        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM
          " . $this->VideoDataTable . " WHERE  Library = '" . __LIBRARY__ . "' AND  " . $where;
+
+         utmdump($query);
+         return $query;
     }
 
     public function clearQuery($key = null)

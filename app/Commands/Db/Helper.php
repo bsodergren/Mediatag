@@ -221,7 +221,7 @@ trait Helper
         }
         if ($exists == parent::$dbconn->videoExists($key, null, __MYSQL_VIDEO_INFO__)) {
             $this->vinfo->get($key, $video_file);
-            $this->OutputText[] = "\t<fg=bright-cyan>" . $this->vinfo->getVideoText() . '</> ';
+            $this->OutputText[] = "\t<fg=cyan>" . $this->vinfo->getVideoText() . '</> ';
         }
 
         Mediatag::$output->writeln($this->OutputText);
@@ -242,10 +242,11 @@ trait Helper
     public function addDBEntry()
     {
         $chunkSize = 50;
+        $barWidth  = 50;
         $total     = \count($this->New_Array);
         if ($total > 0) {
             $idx                          = 1;
-            $progressbar                  = new MediaBar($total, 'three', 50);
+            $progressbar                  = new MediaBar($total, 'three', $barWidth);
             parent::$dbconn->progressbar1 = $progressbar;
             $progressbar->newbar();
             $progressbar->start();
@@ -262,8 +263,8 @@ trait Helper
             $chunks                       = \count($data_array);
 
             if($total > $chunkSize) {
-                $progressbar2                = new MediaBar($chunks, 'two', 50);
-                parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', 50);
+                $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
+                parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
                 $progressbar2->newbar()->start();
             }
 

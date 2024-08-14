@@ -105,21 +105,21 @@ abstract class Mediatag extends Command
         \define('__CURRENT_DIRECTORY__', getcwd());
 
 
-        // if(count($options) > 0) {
-        //     foreach ($options as $key => $value) {
-        //         Option::set($key, $value);
-        //     }
-        // }
+        if(count($options) > 0) {
+            foreach ($options as $key => $value) {
+                // Option::set($key, $value);
+            }
+        }
 
 
 
-        $this->command     = self::getDefaultName();
-        self::$input       = $input;
-        self::$output      = $output;
+        $this->command            = self::getDefaultName();
+        self::$input              = $input;
+        self::$output             = $output;
         MediaCache::init($input, $output);
 
         Option::init($input);
-        self::$Console     = new ConsoleOutput($output, $input);
+        self::$Console            = new ConsoleOutput($output, $input);
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {
                 case 'title':
@@ -150,15 +150,16 @@ abstract class Mediatag extends Command
 
         UTMLog::Logger('Meta Tags', __META_TAGS__);
 
-        self::$Display     = new Display($output);
+        self::$Display            = new Display($output);
 
-        self::$dbconn      = new StorageDB($input, $output);
-        $this->StorageConn = new Storage();
+        self::$dbconn             = new StorageDB($input, $output);
+        $this->StorageConn        = new Storage();
 
+        self::$finder             = new Finder();
+        self::$filesystem         = new Filesystem();
+        self::$finder->defaultCmd = $this->command ;
         if(!Option::isTrue('SKIP_SEARCH')) {
-            self::$finder             = new Finder();
-            self::$filesystem         = new Filesystem();
-            self::$finder->defaultCmd = $this->command ;
+
             self::$SearchArray        = self::$finder->ExecuteSearch();
 
             if (true == Option::isTrue('numberofFiles')) {

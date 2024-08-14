@@ -70,6 +70,7 @@ class Process extends Mediatag
         Option::istrue('info') ||
         Option::istrue('videopreview')
         ) {
+            utmdump("skip");
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
