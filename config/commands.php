@@ -20,12 +20,15 @@ use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
 return new FactoryCommandLoader([
     //    'app:heavy' => function () { return new HeavyCommand(); },
-    'create' => function () {return new CreateCommand(); },
-    'map' => function () {return new MapCommand(); },
-    'test' => function () {return new TestCommand(); },
-    'update' => function () {return new UpdateCommand(); },
-    'show' => function () {return new ShowCommand(); },
-    'db' => function () {return new DBCommand(); },
-    'rename' => function () {return new RenameCommand(); },
+    'create'    => function () {return new CreateCommand(); },
+    'playlist'  => function () {return new PlaylistCommand(); },
+    'download'  => function () {return new DlCommand(); },
+
+    'map'       => function () {return new MapCommand(); },
+    'test'      => function () {return new TestCommand(); },
+    'update'    => function () {return new UpdateCommand(); },
+    'show'      => function () {return new ShowCommand(); },
+    'db'        => function () {return new DBCommand(); },
+    'rename'    => function () {return new RenameCommand(); },
     // %%NEW_CMD%%
 ]);

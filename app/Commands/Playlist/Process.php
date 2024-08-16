@@ -105,8 +105,14 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
+        define('SKIP_SEARCH',true);
         parent::boot($input, $output);
+        if($file === null)
+        {
+            $file = Option::getValue('playlist');
+        }
         $this->playlist = $file;
+
 
         if (!is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);

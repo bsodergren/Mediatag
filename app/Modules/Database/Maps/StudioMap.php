@@ -6,10 +6,16 @@ trait StudioMap
     
     public function getStudioPath($text)
     {
-        $query = 'SELECT library, studio,path FROM '.__MYSQL_STUDIOS__." WHERE name LIKE '".$text."'";
+        $query = 'SELECT library, path,studio FROM '.__MYSQL_STUDIOS__." WHERE name LIKE '".$text."'";
         $result = $this->dbConn->rawQueryOne($query);
 
         if (null !== $result) {
+            utmdump($result);
+            if($result['path'] === null ||
+                $result['path'] == "")
+            {
+                 unset($result['path']);
+            }
             $path = implode('/', $result);
 
             return rtrim($path, '/');

@@ -260,10 +260,10 @@ trait Callables
         }
 
         $buffer = str_replace("\n", '', $buffer);
-        if (!str_contains($buffer, '[download]') && !str_contains($buffer, 'ETA')) {
-            UTMLog::Logger('Ph Download', $buffer);
-        }
-
+        // if (!str_contains($buffer, '[download]') && !str_contains($buffer, 'ETA')) {
+        //     UTMLog::Logger('Ph Download', $buffer);
+        // }
+        //UTMLog::Logger('Ph Download', $buffer);
         switch ($buffer) {
             case str_contains($buffer, '[PornHub]'):
                 PlaylistProcess::$current_key = false;
@@ -283,7 +283,7 @@ trait Callables
 
                 return 0;
 
-            case str_contains($buffer, 'private'):
+            case str_contains($buffer, 'private.'):
                 PlaylistProcess::$current_key = false;
                 $outputText = $line_id.'  <error>  '.$this->key.' is private </error>';
                 $this->updateIdList(PlaylistProcess::DISABLED);
@@ -348,16 +348,18 @@ trait Callables
 
                 break;
 
-            case str_contains($buffer, '[ffmpeg]'):
+            case str_contains($buffer, '[FixupM3u8]'):
+              
+
                 // if (!Option::istrue('ignore')) {
                 //     $this->updateIdList(PlaylistProcess::IGNORED);
                 // }
-                $outputText = str_replace('[ffmpeg]', $line_id.' <text>[ffmpeg]', $buffer);
+
+                $outputText = str_replace('[FixupM3u8]', $line_id.' <text>[FixupM3u8]', $buffer);
 
                 $outputText = str_replace(__PLEX_DOWNLOAD__, '', $outputText);
-                $outputText = str_replace('bitstream in', 'bitstream in</text> <file>', $outputText);
+                $outputText = str_replace('container of', 'container of</text> <file>', $outputText);
                 $outputText = $outputText.'</file>'.\PHP_EOL;
-
                 break;
 
             case str_contains($buffer, 'ERROR'):

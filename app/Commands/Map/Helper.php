@@ -244,8 +244,8 @@ trait Helper
         $path = Option::getValue('dir');
         if (null !== $path) {
             $t = $path;
-            $path = $studio;
-            $studio = $t;
+            // $path = $studio;
+            // $studio = $t;
         }
 
         $this->StorageConn->addStudioMap($library, $name, $studio, $path);

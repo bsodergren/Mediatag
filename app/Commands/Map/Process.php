@@ -45,6 +45,8 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
+        define('SKIP_SEARCH',true);
+
         parent::__construct($input, $output);
 
         // $this->output = $output;

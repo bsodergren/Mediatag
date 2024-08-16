@@ -102,8 +102,9 @@ abstract class Mediatag extends Command
 
     public function boot(InputInterface $input = null, OutputInterface $output = null, $options = [])
     {
+        if (! \defined('__CURRENT_DIRECTORY__')) {
         \define('__CURRENT_DIRECTORY__', getcwd());
-
+        }
 
         if(count($options) > 0) {
             foreach ($options as $key => $value) {
@@ -240,7 +241,10 @@ abstract class Mediatag extends Command
 
         sort($nameArray);
         array_unique($nameArray);
+        if (! \defined($constant)) {
+
         \define($constant, $nameArray);
+        }
     }
 
     public function exec($option = null) {}

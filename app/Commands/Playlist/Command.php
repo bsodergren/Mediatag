@@ -13,6 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 class Command extends MediaCommand
@@ -46,8 +47,12 @@ class Command extends MediaCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $playlist[]        = $input->getArgument(self::CMD_NAME);
-        parent::$optionArg = $playlist;
+        $playlist         = $input->getArgument(self::CMD_NAME);
+        if($playlist === null) {
+            $playlist = Option::getValue('playlist');
+        }
+
+        parent::$optionArg = [$playlist];
         parent::execute($input, $output);
 
         return SymCommand::SUCCESS;

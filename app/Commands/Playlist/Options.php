@@ -22,6 +22,8 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
+
+            ['playlist', '', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_FILE')],
             ['find', 'f', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_FIND')],
             ['watchlater', 'w', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_WATCHLATER')],
             ['url', 'u', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_URL')],

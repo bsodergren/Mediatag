@@ -1,0 +1,26 @@
+#!/bin/bash
+
+PL_CMD="playlist"
+DL_CMD="mediadownload -n"
+UP_CMD="mediaupdate"
+RN_CMD="mediarename -gm"
+
+PLEX_HOME="/home/bjorn/plex/XXX"
+PL_DIR="$PLEX_HOME/Playlists"
+PL_FILE="plexplaylist.txt"
+
+DL_DIR="$PLEX_HOME/Downloads"
+PH_DIR="$PLEX_HOME/Pornhub"
+PR_DIR="$PH_DIR/Premium"
+
+cd $PL_DIR
+$PL_CMD $PL_FILE
+
+cd $DL_DIR
+eval $DL_CMD
+
+cd $PR_DIR
+eval $UP_CMD
+eval $RN_CMD
+
+
