@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\VideoData;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use UTM\Utilities\Option;
 
 class VideoData
@@ -80,7 +82,20 @@ class VideoData
     public function getDbList()
     {
         $file_array = [];
+        if (Option::istrue('filelist')) {
 
+            $fileList = Mediatag::$SearchArray;
+            foreach($fileList as $filename){
+                
+                $key = MediaFile::getVideoKey($filename);
+                $file_array[$key] = $filename;
+            }
+            $this->resultCount = \count($file_array);
+
+            return $file_array;
+//            utmdd( $file_array);
+
+        }
         $query = $this->videoQuery();
        
         if (!Option::istrue('clean')) {
@@ -97,6 +112,8 @@ class VideoData
             $file_array[$row['video_key']] = $row['file_name'];
         }
         $this->resultCount = \count($file_array);
+
+
         return $file_array;
     }
 

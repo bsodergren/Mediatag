@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+
+$file =  $argv[1];
+$newFile = "new_" . str_replace("csv","txt",$file);
+
+foreach(file($file) as $input_line) {
+
+    $s =preg_match('/.*src="([:a-z0-9\/.]+)".*\/([0-9]+)\/[a-z].*/', $input_line, $output_array);
+if($s == true) {
+    $newline = $output_array[1] . ";".$output_array[2] . PHP_EOL;
+    // echo $newline;
+    file_put_contents($newFile, $newline, FILE_APPEND);
+} else {
+    file_put_contents("fail.txt", $input_line, FILE_APPEND);
+}
+    //exit;
+    // do stuff here
+  }
+
+?>

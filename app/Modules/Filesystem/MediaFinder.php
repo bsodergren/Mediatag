@@ -310,17 +310,19 @@ class MediaFinder extends SFinder
             $path = getcwd();
         }
 
-
+        if (Option::isTrue('new')) {
+            $date = 'now - 12 hours';
+        }
 
         UTMLog::logger('Search Directory', $path);
 
         $finder     = new SFinder();
         $filesystem = new SFilesystem();
 
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
-                $finder->files()->in($path);
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,''); 
-               if($date !== null) {
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+        $finder->files()->in($path);
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+        if($date !== null) {
             $finder->date('>= ' . $date);
         }
         if (null !== $this->excludeDir) {
@@ -332,9 +334,9 @@ class MediaFinder extends SFinder
         // }
 
         $finder->name($search)->sortByCaseInsensitiveName();
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         if ($finder->hasResults()) {
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
             foreach ($finder as $file) {
                 $video_file   = $file->getRealPath();
@@ -345,14 +347,14 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
-            if (Option::isTrue('new')) {
+            // if (Option::isTrue('new')) {
 
-                $file_array = $this->onlyNew($path, $file_array);
-            }
+            //     $file_array = $this->onlyNew($path, $file_array);
+            // }
 
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,'');
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             if(is_array($file_array)) {
                 if(count($file_array) > 0) {
                     if (Option::isTrue('dump')) {
