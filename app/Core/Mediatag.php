@@ -23,6 +23,7 @@ abstract class Mediatag extends Command
 {
     use CmdProcess;
 
+    public static $index = 0;
     public const PH_META_CACHE = __CACHE_DIR__ . '/pornhub.hash';
 
     public static $SearchArray = [];
@@ -86,11 +87,15 @@ abstract class Mediatag extends Command
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::boot($input, $output,$args);
     }
 
     public static function __callStatic($method, $args): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('GetApp' == $method) {
             if (file_exists(CONFIG['ATOMICPARSLEY'])) {
                 return CONFIG['ATOMICPARSLEY'];
@@ -102,6 +107,8 @@ abstract class Mediatag extends Command
 
     public function boot(InputInterface $input = null, OutputInterface $output = null, $options = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (! \defined('__CURRENT_DIRECTORY__')) {
         \define('__CURRENT_DIRECTORY__', getcwd());
         }
@@ -175,6 +182,8 @@ abstract class Mediatag extends Command
 
     public function process()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $ClassCmds = $this->runCommand();
 
         foreach ($ClassCmds as $cmd => $option) {
@@ -190,6 +199,8 @@ abstract class Mediatag extends Command
 
     public static function App(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (file_exists(CONFIG['ATOMICPARSLEY'])) {
             return CONFIG['ATOMICPARSLEY'];
         }
@@ -199,6 +210,8 @@ abstract class Mediatag extends Command
 
     public function getVideoArray()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file_array               = self::$SearchArray;
         $this->videoArray['file'] = [];
         $this->videoArray['dupe'] = [];
@@ -223,6 +236,8 @@ abstract class Mediatag extends Command
 
     public function getTitleMap($constant, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\is_string($file)) {
             if (is_file($file)) {
                 $artistList = file_get_contents($file);
@@ -252,6 +267,8 @@ abstract class Mediatag extends Command
 
     public function getNumberofFiles()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->getVideoArray();
         $total = \count($this->videoArray['file']);
         self::$output->writeLn('<info>There are ' . $total . ' files found</info>');

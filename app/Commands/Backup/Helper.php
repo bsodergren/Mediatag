@@ -17,7 +17,8 @@ trait Helper
 
 
     private function mysqlDump($options,$backupFile)
-    {
+    { utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         $baseCommand = [
             'mysqldump',
@@ -48,7 +49,8 @@ trait Helper
 
 
     public function backupDb()
-    {
+    { utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         if (! is_dir($this->backupDirectory)) {
             NetteFile::createdir($this->backupDirectory);

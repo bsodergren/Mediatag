@@ -15,7 +15,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 
-
 class Process extends Mediatag
 {
     use Callables;
@@ -35,17 +34,17 @@ class Process extends Mediatag
     public $VideoList;
 
     public $commandList     = [
-        'empty' => [
+        'empty'     => [
             'exec'      => null,
             'clearMeta' => null,
         ],
-        // 'only'  => [
-        //     'exec'         => null,
-        //     'getChanges'   => true,
-        //     'writeChanges' => true,
-        // ],
+        'download'  => [
+            'exec'         => null,
+            'download'     => null,
+            //     'writeChanges' => true,
+        ],
 
-        'list'  => [
+        'list'      => [
             'exec'        => null,
             'getChanges'  => null,
             'saveChanges' => 'isset',
@@ -79,12 +78,12 @@ class Process extends Mediatag
         $this->StorageConn = new Storage();
 
         if (!\defined('ARTIST_MAP')) {
-           $this->getArtistMap('ARTIST_MAP', $this->StorageConn->getArtistMap());
+            $this->getArtistMap('ARTIST_MAP', $this->StorageConn->getArtistMap());
         }
 
         if (!\defined('IGNORE_NAME_MAP')) {
             $this->getArtistMap('IGNORE_NAME_MAP', $this->StorageConn->getIgnoredArists());
-        // utmdd(IGNORE_NAME_MAP);
+            // utmdd(IGNORE_NAME_MAP);
 
         }
         //        utmdd([__METHOD__,IGNORE_NAME_MAP]);
@@ -92,12 +91,11 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        
+
 
         $this->VideoList = parent::getVideoArray();
 
-        if(count($this->VideoList['file']) == 0)
-        {
+        if(count($this->VideoList['file']) == 0) {
             return SymCommand::SUCCESS;
         }
 

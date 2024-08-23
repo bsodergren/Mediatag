@@ -5,17 +5,24 @@
 
 namespace Mediatag\Commands\Update;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\WriteExec;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Modules\TagBuilder\TagReader;
+use Nette\Utils\Callback;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\ScriptWriter;
+use Symfony\Component\Process\Process;
+use Mediatag\Commands\Update\CaseHelper;
+use Mediatag\Modules\Executable\WriteExec;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\TagBuilder\TagBuilder;
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
+    use CaseHelper;
+
+    public $lineOut = false;
     /**
      * process.
      */
@@ -235,4 +242,76 @@ trait Helper
     {
         //  Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData);
     }
+
+    public function download()
+    {
+        Mediatag::$output->writeln("Checking files...");
+
+        foreach($this->VideoList['file'] as $videoInfo) {
+
+            $video_filename = $videoInfo['video_name'];
+
+            $match          = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
+            if($match == 1) {
+                $number = $output_array[1];
+                $file   = $this->getphdbUrl($number);
+                $found  = $this->findUrl($number, $file);
+                if($found !== false) {
+                    Mediatag::$output->write("<info>".$video_filename."</info>");
+
+                    Mediatag::$output->write (" was found in <comment>" . basename($file)."</comment>");
+                    [$url,$id] = explode(";", $found);
+                    $this->checkurl($url);
+                    // Mediatag::$output->writeln("");
+
+                }
+
+            }
+            //            utmdump($match);
+        }
+    }
+
+    public function checkurl($url)
+    {
+        $client     = HttpClient::create();
+        $response   = $client->request(
+            'GET',
+            $url
+        );
+
+        $statusCode = $response->getStatusCode();
+        if($statusCode != '404') {
+            Mediatag::$output->writeln(" and is ". $url);
+        } else {
+            Mediatag::$output->writeln(" but is 404");
+        }
+    }
+
+
+    public function urlCallback($type, $buffer)
+    {
+        if (Process::ERR === $type) {
+            // echo 'ERR > '.$buffer;
+        } else {
+            $this->lineOut = trim($buffer);
+        }
+    }
+    private function findUrl($number, $file)
+    {
+    
+        $this->lineOut = false;
+        $callback      = Callback::check([$this, 'urlCallback']);
+
+        $command       = [
+            '/usr/bin/grep',
+            $number,
+            $file,
+        ];
+        $proccess      = new Process($command);
+        // utmdd($proccess->getCommandLine());
+        $proccess->run($callback);
+        return $this->lineOut;
+    }
+
+
 }

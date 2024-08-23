@@ -176,7 +176,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
         //     $returnCode = $obj->getApplication()->doRun($greetInput, $output);
         // }
-
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
         $className = static::class;
         $classPath = rtrim($className, 'Command');
         $classPath .= 'Process';
@@ -187,6 +187,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
         $args              = [$input, $output];
 
         Mediatag::$IoStyle = new SymfonyStyle($input, $output);
@@ -244,6 +245,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
         $className = static::class;
         Option::init($input);
         UtmStopWatch::init($input,$output);

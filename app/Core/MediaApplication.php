@@ -23,6 +23,8 @@ class MediaApplication extends Application
 
     protected function getDefaultInputDefinition(): InputDefinition
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Translate::$Class = __CLASS__;
 
         return new InputDefinition([
@@ -39,6 +41,8 @@ class MediaApplication extends Application
 
     public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         register_shutdown_function([\get_class(UTMLog::$Logger), 'LogEnd']);
         parent::run($input, $output);
     }
