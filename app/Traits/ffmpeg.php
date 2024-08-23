@@ -39,7 +39,7 @@ trait ffmpeg
 
     public function ffmpegExec($cmdOptions, $callback = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->ffmpeg = [CONFIG['FFMPEG_CMD']];
 
@@ -57,7 +57,7 @@ trait ffmpeg
 
     public function convertVideo($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $new_file       = str_replace('.mkv', '.mp4', $file);
         $this->progress = new ProgressBar($this->barSection);
@@ -77,13 +77,13 @@ trait ffmpeg
 
     public function repairVideo()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::logNotice('processing with FFMPEG');
+        // UTMlog::logNotice('processing with FFMPEG');
         $orig_file    = $this->video_file;
         $new_file     = $orig_file;
         $new_tmp_file = str_replace('.mp4', '_new.mp4', $this->video_file);
-        // UTMLog::logNotice('new file', [$orig_file, $new_file, $new_tmp_file]);
+        // // UTMlog::logNotice('new file', [$orig_file, $new_file, $new_tmp_file]);
 
         $cmdOptions   = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
         $this->ffmpegExec($cmdOptions);
@@ -98,7 +98,7 @@ trait ffmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $cmdOptions    = [
             '-ss', $time, '-i', $video_file, '-vf',

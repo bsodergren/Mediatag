@@ -53,7 +53,7 @@ class Display
 
     public function __construct(OutputInterface $output)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->formatter        = new FormatterHelper();
 
@@ -77,9 +77,9 @@ class Display
 
     public function DisplayTable(array $filelist_array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::logger('start Display Table');
+        // UTMlog::logger('start Display Table');
         $count = \count($filelist_array);
         if (0 == $count) {
             Mediatag::$output->writeln('<error>No files found </error>');
@@ -88,10 +88,10 @@ class Display
         }
         $this->displayHeader(Mediatag::$output, ['count' => $count]);
         $idx   = 1;
-        UTMLog::logger('start File display');
-        UTMLog::startLap();
+        // UTMlog::logger('start File display');
+        // UTMlog::startLap();
         foreach ($filelist_array as $key => $value) {
-            UTMLog::watchlap('key', $key);
+            // UTMlog::watchlap('key', $key);
             $display = $this->displayFileInfo($value, $count, $idx);
             if (true === $display) {
                 if (true == $this->LineBreaks) {
@@ -108,14 +108,14 @@ class Display
             }
             ++$idx;
         }
-        UTMLog::logger('end File display');
+        // UTMlog::logger('end File display');
     }
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::logger('start Display Header');
+        // UTMlog::logger('start Display Header');
 
         $count = $options['count'];
         if ($count > 0) {
@@ -129,7 +129,7 @@ class Display
 
     public function displayFileInfo($fileinfo, $count, $idx)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $method             = 'overwrite';
 
@@ -167,7 +167,7 @@ class Display
      */
     public function sortBlocks($block)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $returnArray = [];
         $array       = [];
@@ -199,7 +199,7 @@ class Display
 
     public function formatTagLine($tag, $value, $style = 'comment')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $value) {
             $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
@@ -212,7 +212,7 @@ class Display
 
     public function indent($string, $spaces)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\is_string($string)) {
             return str_pad($string, \strlen($string) + $spaces, $this->padbufferChar, \STR_PAD_LEFT);
@@ -223,7 +223,7 @@ class Display
 
     private function DisplayMetaBlock($fileinfo): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (__META_TAGS__ as $tag) {
             $MetatagBlock[] = $this->TagBlockDisplay($tag, $fileinfo);
@@ -241,7 +241,7 @@ class Display
 
     private function TagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag              = strtolower($tag);
         $style            = 'update';
@@ -277,7 +277,7 @@ class Display
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag     = strtolower($tag);
         $string  = '';

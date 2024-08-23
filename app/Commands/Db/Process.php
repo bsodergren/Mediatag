@@ -66,7 +66,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         if (Option::istrue('thumbnail') ||
@@ -74,7 +74,7 @@ class Process extends Mediatag
         Option::istrue('info')          ||
         Option::istrue('videopreview')
         ) {
-            utmdump("skip");
+
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
@@ -83,7 +83,7 @@ class Process extends Mediatag
 
     public function init()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
 
@@ -92,7 +92,7 @@ class Process extends Mediatag
 
         foreach ($file_array as $k => $file) {
             $key                    = File::getVideoKey($file);
-            // utmdump([__METHOD__.':'.__LINE__,$file,$key]);
+
             if (\array_key_exists($key, $this->file_array)) {
 
                 continue;
@@ -108,7 +108,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->getFileArray();
 

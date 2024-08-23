@@ -7,7 +7,8 @@ use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
 use UTM\Bundle\Monolog\UTMLog;
-// die(get_include_path());
+use UTM\Utilities\Debug\Debug;
+use Symfony\Component\Stopwatch\Stopwatch;// die(get_include_path());
 
 define('__PROJECT_ROOT__', __ROOT_DIRECTORY__);
 define('__COMPOSER_LIB__', __ROOT_DIRECTORY__.'/vendor');
@@ -33,11 +34,15 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 require_once __CONFIG_LIB__.'/path_constants.php';
 
 require_once __CONFIG_LIB__.'/variables.php';
-UTMLog::$display = false;
-$log = new UTMLog(__SCRIPT_NAME__);
-UTMLog::$Logger = $log;
+Debug::$AppRootDir = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
+Debug::$AppTraceDir = __LOGFILE_DIR__;
+TimerStart();
+register_shutdown_function('utmshutdown',__SCRIPT_NAME__.'_tracefile.log');
+// // UTMlog::$display = false;
+// $log = new UTMLog(__SCRIPT_NAME__);
+// // UTMlog::$Logger = $log;
 
-UTMLog::LogStart(__SCRIPT_NAME__);
+// // UTMlog::LogStart(__SCRIPT_NAME__);
 
 AppFactory::setContainer($container);
 

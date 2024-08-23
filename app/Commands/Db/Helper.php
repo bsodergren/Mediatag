@@ -33,7 +33,7 @@ trait Helper
 {
     public function updateNow()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $data          = ['name' => __LIBRARY__ . '_last_updated',
             'value'              => parent::$dbconn->dbConn->now(),
@@ -46,7 +46,7 @@ trait Helper
 
     public function lastUpdated()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $db  = Mediatag::$dbconn->dbConn;
         $db->where('name', __LIBRARY__ . '_last_updated');
@@ -60,7 +60,7 @@ trait Helper
 
     public static function getNewFiles(array $array, InputInterface $input, OutputInterface $output): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $obj = (new self($input, $output))->init()->getFileArray();
 
@@ -72,7 +72,7 @@ trait Helper
 
     public function getFileArray()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // utmdd([__METHOD__,$this->db_array, $this->file_array]);
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
@@ -132,7 +132,7 @@ trait Helper
 
     public function execEmpty()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class             = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
@@ -173,7 +173,7 @@ trait Helper
 
     public function execThumb()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->obj = new Thumbnail();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
@@ -182,7 +182,7 @@ trait Helper
 
     public function execMarkers()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->obj = new Markers();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
@@ -191,7 +191,7 @@ trait Helper
 
     public function execDuration()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->obj = new Duration();
         $this->obj->updateVideoData();
@@ -199,7 +199,7 @@ trait Helper
 
     public function execInfo()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->obj = new VideoInfo();
         $this->obj->updateVideoData();
@@ -207,7 +207,7 @@ trait Helper
 
     public function execPreview()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->obj = new GifPreviewFiles();
         $this->obj->updateVideoData();
@@ -215,7 +215,7 @@ trait Helper
 
     public function checkClean()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::istrue('clean')) {
             $this->obj->clean();
@@ -231,7 +231,7 @@ trait Helper
      */
     public function updateEntry($key, $video_file, $exists = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->OutputText   = [];
         $this->OutputText[] = '<info>' . $this->count . '</info>:<comment>' . basename($video_file) . '</comment> ';
@@ -255,7 +255,7 @@ trait Helper
 
     public function removeDBEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
@@ -269,7 +269,7 @@ trait Helper
 
     public function addDBEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $chunkSize = 50;
         $barWidth  = 50;
@@ -324,7 +324,7 @@ trait Helper
 
     public function changeDBEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($this->Changed_Array as $video_key => $video_file) {
             parent::$dbconn->video_file = $video_file;
@@ -344,7 +344,7 @@ trait Helper
 
     public function execUpdate()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $date       = null;
         if (! Option::istrue('yes')) {
@@ -371,7 +371,7 @@ trait Helper
 
     public function getJson()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $file_array = Mediatag::$SearchArray;
@@ -379,7 +379,7 @@ trait Helper
             $json_key = File::getVideoKey($file);
             if (! str_starts_with($json_key, "x")) {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
-                // utmdump([$json_key,$json_file]);
+
 
                 if (! Mediatag::$filesystem->exists($json_file)) {
                     $exec   = new YoutubeExec('');

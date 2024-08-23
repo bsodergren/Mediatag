@@ -17,14 +17,14 @@ class TagDB extends Storage
 
     public function __construct()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
     }
 
     public function getGenre($arguments)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag = 'genre';
 
@@ -33,7 +33,7 @@ class TagDB extends Storage
 
     public function getKeyword($arguments)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag = 'keyword';
 

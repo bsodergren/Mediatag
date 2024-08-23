@@ -36,7 +36,7 @@ class Bang extends Patterns
 
     public function __construct($object)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         parent::__construct($object);
         parent::$StudioKey = $this->studio;

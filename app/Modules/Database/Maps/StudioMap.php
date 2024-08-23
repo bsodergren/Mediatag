@@ -11,13 +11,13 @@ trait StudioMap
 {
     public function getStudioPath($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query  = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $text . "'";
         $result = $this->dbConn->rawQueryOne($query);
 
         if (null !== $result) {
-            utmdump($result);
+
             if ($result['path'] === null ||
                 $result['path'] == "") {
                 unset($result['path']);
@@ -32,7 +32,7 @@ trait StudioMap
 
     public function addStudioMap($library, $name, $studio, $path) // $library,$name, $path, $studio)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $library = "'" . $library . "'";
         $name    = "'" . $name . "'";
@@ -52,7 +52,7 @@ trait StudioMap
 
     public function dropStudio($library, $name) // $library,$name, $path, $studio)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $library = "'" . $library . "'";
         $name    = "'" . $name . "'";

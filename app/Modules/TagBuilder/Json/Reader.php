@@ -32,7 +32,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->db = new TagDB();
 
@@ -44,16 +44,16 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::logger('Call in json', $method);
+        // UTMlog::logger('Call in json', $method);
 
         $this->get($method);
     }
 
     public function artist()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->title();
 
@@ -61,7 +61,7 @@ class Reader extends TagReader
             $string                    = $this->tag_array['title'];
             //
             $string                    = $this->matchArtist($string);
-            UTMLog::logger('title in artist()', $string);
+            // UTMlog::logger('title in artist()', $string);
             $this->tag_array['artist'] = $string;
         }
 
@@ -70,7 +70,7 @@ class Reader extends TagReader
 
     private function getPageDetails($webpage_url)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key          = 'ph_webpage_' . ltrim(strrchr($webpage_url, '='), '=');
         $artist_array = MediaCache::get($key);
@@ -104,7 +104,7 @@ class Reader extends TagReader
 
     private function get($tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag = strtolower($tag);
 
@@ -136,7 +136,7 @@ class Reader extends TagReader
 
                 }
 
-                UTMLog::Logger('json data ' . $tag, $value);
+                // UTMlog::Logger('json data ' . $tag, $value);
                 $this->tag_array[$tag] = $value;
             }
         }
@@ -144,7 +144,7 @@ class Reader extends TagReader
 
     private function getJsonFile()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
 
@@ -173,7 +173,7 @@ class Reader extends TagReader
 
     private function matchArtist($string)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $artists_array = $this->getPageDetails($this->json_array['webpage_url']);
 

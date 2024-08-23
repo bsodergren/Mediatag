@@ -5,14 +5,14 @@
 
 namespace Mediatag\Commands\Update;
 
-use Mediatag\Core\Mediatag;
-
-
 use Nette\Utils\Callback;
+
+
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Traits\CaseHelper;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Process\Process;
-use Mediatag\Commands\Update\CaseHelper;
 use Mediatag\Modules\Executable\WriteExec;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -30,42 +30,42 @@ trait Helper
      */
     public function setgenre($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $value;
     }
 
     public function settitle($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $value;
     }
 
     public function setstudio($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $value;
     }
 
     public function setartist($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $value;
     }
 
     public function setkeyword($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $value;
     }
 
     public function getArtistMap($constant, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $replacement = null;
         if (\is_string($file)) {
@@ -100,7 +100,7 @@ trait Helper
 
     public function clearMeta($options = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($this->VideoList['file'] as $key => $videoArray) {
             $Command          = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
@@ -111,7 +111,7 @@ trait Helper
 
     public function getChanges($options)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null === $this->VideoList) {
             $this->exec();
@@ -177,7 +177,7 @@ trait Helper
 
     public function saveChanges($json_file = '')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->json_file = $json_file;
         if (null !== $json_file) {
@@ -196,7 +196,7 @@ trait Helper
 
     public function videoArraytoJson($array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $this->json_file) {
             $json_file = $this->json_file;
@@ -214,7 +214,7 @@ trait Helper
 
     public function writeChanges($options = '')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $videoList                       = $this->ChangesArray;
         $count                           = \count($videoList);
@@ -264,14 +264,14 @@ trait Helper
 
     public function updateDbEntry($videoData)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //  Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData);
     }
 
     public function download()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Mediatag::$output->writeln("Checking files...");
 
@@ -295,13 +295,13 @@ trait Helper
                 }
 
             }
-            //            utmdump($match);
+
         }
     }
 
     public function checkurl($url)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $client     = HttpClient::create();
         $response   = $client->request(
@@ -320,7 +320,7 @@ trait Helper
 
     public function urlCallback($type, $buffer)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Process::ERR === $type) {
             // echo 'ERR > '.$buffer;
@@ -330,7 +330,7 @@ trait Helper
     }
     private function findUrl($number, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $this->lineOut = false;

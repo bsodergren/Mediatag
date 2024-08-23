@@ -17,7 +17,7 @@ class Options extends MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return [$varName, InputArgument::OPTIONAL, $description];
     }

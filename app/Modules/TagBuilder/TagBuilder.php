@@ -25,7 +25,7 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
@@ -33,56 +33,56 @@ class TagBuilder
 
     public function getTags($videoInfo)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::Logger('ReaderObj', $this->ReaderObj);
+        // UTMlog::Logger('ReaderObj', $this->ReaderObj);
 
         if (! \defined('__UPDATE_SET_ONLY__')) {
             if (str_starts_with($this->video_key, 'x')) {
                 $updates = $this->ReaderObj->getFileValues();
-                // utmdump([__METHOD__.':'.__LINE__,"updates",$updates]);
+
 
             } else {
                 $fileUpdates = $this->ReaderObj->getFileValues();
-                UTMLog::Logger('fileUpdates', $fileUpdates);
+                // UTMlog::Logger('fileUpdates', $fileUpdates);
 
                 //  $fileUpdates['title'] = '';
                 $jsonupdates = $this->ReaderObj->getJsonValues();
-                UTMLog::Logger('jsonupdates', $jsonupdates);
+                // UTMlog::Logger('jsonupdates', $jsonupdates);
 
                 $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
             }
         }
 
         $DbUpdates = $this->ReaderObj->getDbValues();
-        // utmdump([__METHOD__.':'.__LINE__,"dbupdate",$DbUpdates]);
+
         if (null !== $DbUpdates) {
             foreach ($DbUpdates as $tag => $value) {
                 $updates[$tag] = $value;
             }
-            // utmdump([__METHOD__.':'.__LINE__,$DbUpdates,$updates]);
+
         }
 
         if (isset($updates)) {
-            UTMLog::Logger('Reader', $updates);
+            // UTMlog::Logger('Reader', $updates);
         }
 
         foreach (Option::getOptions() as $option => $value) {
             $method = 'set' . $option;
             if (method_exists($this->ReaderObj, $method)) {
-                UTMLog::Logger('Option ' . $option, $method, $value);
+                // UTMlog::Logger('Option ' . $option, $method, $value);
                 $updates[$option] = $this->ReaderObj->{$method}($value, $videoInfo['video_key']);
 
             }
         }
-        UTMLog::Logger('updates', $updates);
+        // UTMlog::Logger('updates', $updates);
 
         if (Option::isTrue('update')) {
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
-            UTMLog::Logger('getMetaValues', $current);
+            // UTMlog::Logger('getMetaValues', $current);
 
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
@@ -108,7 +108,7 @@ class TagBuilder
      */
     public function getTagValues()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (__META_TAGS__ as $tag) {
             if (\array_key_exists($tag, $tagList)) {
@@ -158,7 +158,7 @@ class TagBuilder
 
     private function compareTags(array $Current, array $New)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
@@ -178,12 +178,12 @@ class TagBuilder
                 $lev           = levenshtein(${$current_tag}, ${$new_tag});
                 $sim           = similar_text(${$current_tag}, ${$new_tag});
                 $updates[$tag] = ${$new_tag};
-                // UTMLog::logNotice('Lev------------------------');
-                // UTMLog::logNotice('Lev Current', $$current_tag);
-                // UTMLog::logNotice('Lev New', $$new_tag);
-                // UTMLog::logNotice('Lev', $lev);
-                // UTMLog::logNotice('sim', $sim);
-                // UTMLog::logNotice('Lev------------------------');
+                // // UTMlog::logNotice('Lev------------------------');
+                // // UTMlog::logNotice('Lev Current', $$current_tag);
+                // // UTMlog::logNotice('Lev New', $$new_tag);
+                // // UTMlog::logNotice('Lev', $lev);
+                // // UTMlog::logNotice('sim', $sim);
+                // // UTMlog::logNotice('Lev------------------------');
                 if (0 == $lev) {
                     unset($updates[$tag]);
                 }

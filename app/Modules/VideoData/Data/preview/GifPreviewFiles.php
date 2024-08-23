@@ -28,7 +28,7 @@ class GifPreviewFiles extends VideoPreview
 {
     public function getText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->returnText . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
 
@@ -36,21 +36,21 @@ class GifPreviewFiles extends VideoPreview
 
     public function previewToVideo($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return str_replace('.gif', '.mp4', __PLEX_HOME__ . str_replace(__INC_WEB_PREVIEW_DIR__, '', $file));
     }
 
     public function videoToPreview($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return str_replace('.mp4', '.gif', __INC_WEB_PREVIEW_DIR__ . str_replace(__PLEX_HOME__, '', $file));
     }
 
     public function build_video_thumbnail()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         // Create a temp directory for building.
@@ -134,7 +134,7 @@ class GifPreviewFiles extends VideoPreview
 
     public function getPreviewFiles()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return Mediatag::$finder->Search(__INC_WEB_PREVIEW_DIR__ . '/' . __LIBRARY__, '*.gif');
     }

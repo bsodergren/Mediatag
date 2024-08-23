@@ -28,7 +28,7 @@ class Chooser
      */
     public static function changes(InputInterface $input, OutputInterface $output, string $questionText = 'Continue with this action'): bool
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $ask      = new QuestionHelper();
         $question = new Question('<question>' . $questionText . '? </question> yY|nN|A|N ');

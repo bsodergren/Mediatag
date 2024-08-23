@@ -13,7 +13,7 @@ trait Translate
 
     public static function text($constant, $vars = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $class     = self::$Class;
         $thisClass = new \ReflectionClass($class);

@@ -46,7 +46,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         parent::boot($input, $output);
         // parent::$Display              = new ShowDisplay($output);
@@ -54,26 +54,26 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::logger('call', $m);
+        // UTMlog::logger('call', $m);
 
         return null;
     }
 
     public function exec($option = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $meta = new metaReader($this->videoData);
         // return $meta->getTagArray();
         $this->VideoList = parent::getVideoArray();
-        UTMLog::logger('Video List', \count($this->VideoList));
+        // UTMlog::logger('Video List', \count($this->VideoList));
     }
 
     public function print()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $filelist_array                = $this->VideoList['file'];
         Mediatag::$Display->LineBreaks = true;
@@ -82,7 +82,7 @@ class Process extends Mediatag
 
     public function return()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->meta['print'] = true;
 

@@ -21,7 +21,7 @@ class MediaConfig
 
     public function __construct(array $env)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->config = [
             'environment' => ($env['APP_ENVIRONMENT'] ?? 'development'),
@@ -37,7 +37,7 @@ class MediaConfig
 
     public function __get(string $name)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->config[$name] ?? null;
     }

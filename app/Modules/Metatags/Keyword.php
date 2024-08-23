@@ -21,16 +21,16 @@ class Keyword extends TagBuilder
 
     public function __construct($videoData)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        // UTMLog::Logger(__CLASS__, $this->videoData);
+        // // UTMlog::Logger(__CLASS__, $this->videoData);
     }
 
     public function getTagValue() {}
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null === parent::$dbConn) {
             parent::$dbConn = new TagDB();
@@ -49,7 +49,7 @@ class Keyword extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return parent::clean($text, 'keyword');
     }

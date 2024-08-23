@@ -22,14 +22,14 @@ class DbMap extends Storage
 
     public function __construct()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
     }
 
     public function getVideoCount()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query   = $this->queryBuilder('select', 'COUNT(*) as count');
         $results = $this->query($query);
@@ -39,7 +39,7 @@ class DbMap extends Storage
 
     public function emptydatabase()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query   = $this->queryBuilder('cleandb');
         $results = $this->query($query);
@@ -49,7 +49,7 @@ class DbMap extends Storage
 
     public function listTag($tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $table  = $this->getTagTable($tag);
         $result = $this->dbConn->get($table, null, $tag);
@@ -68,7 +68,7 @@ class DbMap extends Storage
 
     public function addTag($tag, $text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
@@ -78,7 +78,7 @@ class DbMap extends Storage
 
     public function getTag($tag, $string, $bypass = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $text   = $string;
         $table  = $this->getTagTable($tag);
@@ -111,7 +111,7 @@ class DbMap extends Storage
 
     public function addNewTagReplacement($tag, $text, $addition, $show = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $existing = $this->getTag($tag, $text, true);
 
@@ -126,7 +126,7 @@ class DbMap extends Storage
 
     public function getReplacementString($tag, $text, $addition, $show = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $existing = $this->getTag($tag, $text, true);
 
@@ -137,7 +137,7 @@ class DbMap extends Storage
 
     public function updateTag($tag, $text, $replacement, $show = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $table    = $this->getTagTable($tag);
         $where    = $this->getTagWhere($tag, $text);
@@ -165,7 +165,7 @@ class DbMap extends Storage
 
     private function getTagWhere($tag, $text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key   = $this->makeKey($text);
         $where = $tag . " = '" . $key . "';";

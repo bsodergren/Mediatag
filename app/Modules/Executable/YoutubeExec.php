@@ -59,7 +59,7 @@ class YoutubeExec extends MediatagExec
 
     public function __construct($playlist, $input = null, $output = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->playlist      = $playlist;
 
@@ -78,7 +78,7 @@ class YoutubeExec extends MediatagExec
 
     public function youtubeGetJson($video_key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->options);
@@ -104,7 +104,7 @@ class YoutubeExec extends MediatagExec
 
     public function youtubeCmdOptions()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $options      = [
             // '--write-thumbnail',
@@ -127,7 +127,7 @@ class YoutubeExec extends MediatagExec
 
     public function createWatchList($url)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->Console->writeln('<info> Downloading video URLs from playlist </info>');
         $this->pltype = 'watchlater';
@@ -141,7 +141,7 @@ class YoutubeExec extends MediatagExec
 
     public function downloadPlaylist($downloadFiles = true)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->Console->writeln('<info> Downloaded new Playlist </info>');
 
@@ -168,14 +168,14 @@ class YoutubeExec extends MediatagExec
 
     private function updateIdList($keyfile)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         file_put_contents($keyfile, $this->key . \PHP_EOL, \FILE_APPEND);
     }
 
     private function updatePlaylist($type)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('watchlaterPr' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
@@ -221,7 +221,7 @@ class YoutubeExec extends MediatagExec
 
     public function moveJson($json_file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $old_name = $videoInfo['video_name'];
         // $old_path = $videoInfo['video_path'];

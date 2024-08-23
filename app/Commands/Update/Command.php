@@ -31,7 +31,7 @@ class Command extends MediaCommand
 
     public function handleSignal(int $signal): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
@@ -48,7 +48,7 @@ class Command extends MediaCommand
     /*
     public function execute(InputInterface $input, OutputInterface $output): int
     {
- utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+ utminfo();
 
 
         if (true == Option::isTrue('rename')) {

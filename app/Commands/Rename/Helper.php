@@ -27,7 +27,7 @@ trait Helper
 
     public static function __callStatic($method, $args): string
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //  $genre = str_replace('get', '', $method);
         return self::get($method, $args[0]['genre']);
@@ -35,14 +35,14 @@ trait Helper
 
     public function prunedirs()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Filesystem::prunedirs();
     }
 
     public function moveStudios()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = [];
         $tagConn    = new DbMap();
@@ -226,7 +226,7 @@ trait Helper
 
     public function getGenres($metadata)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $genreArray      = explode(',', $metadata['genre']);
         $this->genrePath = [];
@@ -244,7 +244,7 @@ trait Helper
 
     public static function get($genre, $arg)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $genre = strtolower($genre);
         $genre = str_replace('_', ' ', $genre);
@@ -259,7 +259,7 @@ trait Helper
 
     public static function compare($object)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         self::$selfClass = $object->genrePath;
 
@@ -310,7 +310,7 @@ trait Helper
 
     public static function istrue($var)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $var = strtolower($var);
         foreach (self::$selfClass as $genre => $value) {
@@ -326,7 +326,7 @@ trait Helper
 
     public function translate($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $filename = Strings::translate($text);
         // $filename = $this->cleanFilename($filename);
@@ -336,7 +336,7 @@ trait Helper
 
     public function rename($option = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (Mediatag::$SearchArray as $key => $file) {
             $oldName   = $file;
@@ -356,7 +356,7 @@ trait Helper
 
     public function cleanFilename($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_name = basename($file);
         $file_dir  = \dirname($file);
@@ -367,7 +367,7 @@ trait Helper
 
     public function renameFile($oldName, $newName, $write = true)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $color       = 'comment';
         $rtn_message = '';

@@ -59,7 +59,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function getSubscribedSignals(): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // return here any of the constants defined by PCNTL extension
         return [];
@@ -67,7 +67,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function handleSignal(int $signal): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
@@ -82,7 +82,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function configure(): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
@@ -111,7 +111,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
      */
     public function run(InputInterface $input, OutputInterface $output): int
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         self::$Console = new ConsoleOutput($output, $input);
 
@@ -188,11 +188,11 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
         //     $returnCode = $obj->getApplication()->doRun($greetInput, $output);
         // }
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
         $className = static::class;
         $classPath = rtrim($className, 'Command');
         $classPath .= 'Process';
-        UTMLog::logger('Process Class', $classPath);
+        // UTMlog::logger('Process Class', $classPath);
 
         return $classPath;
     }
@@ -200,7 +200,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
         $args              = [$input, $output];
 
         Mediatag::$IoStyle = new SymfonyStyle($input, $output);
@@ -259,7 +259,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
         $className = static::class;
         Option::init($input);
         UtmStopWatch::init($input, $output);

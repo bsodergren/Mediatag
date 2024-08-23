@@ -22,7 +22,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
 
@@ -48,7 +48,7 @@ class Options extends MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return [$varName, InputArgument::OPTIONAL, Translate::text('L__PLAYLIST_NAME')];
     }

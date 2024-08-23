@@ -29,28 +29,28 @@ class VideoData
 
     public function getVideoDetails()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->get($this->video_key, $this->video_file);
     }
 
     public function saveVideoDetails()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->save();
     }
 
     public function getVideoText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getText();
     }
 
     public function getVideoInfo($key, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_file = $file;
         $this->video_key  = $key;
@@ -67,7 +67,7 @@ class VideoData
 
     public function updateVideoData()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = $this->getDbList();
 
@@ -87,7 +87,7 @@ class VideoData
 
     public function clearDBValues($key = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query  = $this->clearQuery($key);
         $result = Mediatag::$dbconn->query($query);
@@ -95,7 +95,7 @@ class VideoData
 
     public function getDbList()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array        = [];
         if (Option::istrue('filelist')) {
@@ -135,7 +135,7 @@ class VideoData
 
     public function save()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
@@ -149,31 +149,31 @@ class VideoData
 
     public function get($key, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public function clean()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public function videoQuery()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public function clearQuery($key = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public function getText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return '';
     }

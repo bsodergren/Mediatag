@@ -67,7 +67,7 @@ class ScriptWriter
      */
     public function __construct(string $script_name, string $directory)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->directory = $directory;
         $this->script    = $directory . '/' . $script_name;
@@ -81,7 +81,7 @@ class ScriptWriter
      */
     public function updatePreview(array $VideoArray)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         foreach ($VideoArray as $n => $video) {
@@ -99,7 +99,7 @@ class ScriptWriter
      */
     public function addHeader()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $directory           = '"' . __CURRENT_DIRECTORY__ . '"';
         $this->script_header = <<<EOD
@@ -120,7 +120,7 @@ EOD;
      */
     public function addCmd(string $command, array $cmdOptions = [], bool $comment = true, bool $singleLine = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $eol     = " ";
 
@@ -149,7 +149,7 @@ EOD;
      */
     public function addFile(string $file, bool $string = true)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file = '"' . $file . '"';
         if (true === $string) {
@@ -166,7 +166,7 @@ EOD;
      */
     public function addFileList(array $file_array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $fileArray = MediaArray::VideoFiles($file_array, 'video_file');
         array_walk($fileArray, function (&$value, $key) {
@@ -184,7 +184,7 @@ EOD;
      */
     public function write(bool $singleLine = true)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (file_exists($this->script)) {
             Filesystem::delete($this->script);
@@ -216,7 +216,7 @@ EOD;
      */
     public static function addPattern(string $class, string $TitleStudio, array $options = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $extended_class = 'Patterns';

@@ -26,7 +26,7 @@ trait CmdCreater
 
     public function template($template, $params = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $template_text = $this->loadTemplate($template);
 
@@ -35,14 +35,14 @@ trait CmdCreater
 
     public function callback_replace($matches)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return '';
     }
 
     private function whichTemplate($template_class)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         switch ($template_class) {
             case 'app':
@@ -69,7 +69,7 @@ trait CmdCreater
 
     private function loadTemplate($template)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $template) {
             $template_file = $this->whichTemplate($template);
@@ -82,7 +82,7 @@ trait CmdCreater
 
     private function parse($text, $params = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\is_array($params)) {
             foreach ($params as $key => $value) {
@@ -98,7 +98,7 @@ trait CmdCreater
 
     public function AddCommand($params = [])
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $cmd_template  = file_get_contents($this->APP_COMMAND);
 

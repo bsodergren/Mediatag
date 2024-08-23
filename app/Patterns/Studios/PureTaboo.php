@@ -52,7 +52,7 @@ class PureTaboo extends Patterns
 
     public function getArtistTransform($artist_string, $delim = ', ')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $delim       = ', ';
         $checkTitle  = false;
@@ -77,7 +77,7 @@ class PureTaboo extends Patterns
             $aName        = implode(' ', $parts);
 
             foreach ($this->names_map as $find => $replace) {
-                //  UTMLog::LogDebug("title replace",[$find,$replace,$title],"title");
+                //  // UTMlog::LogDebug("title replace",[$find,$replace,$title],"title");
                 $aName = str_replace($find, $replace, $aName);
             }
 

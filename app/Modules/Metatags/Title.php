@@ -16,14 +16,14 @@ class Title extends TagBuilder
 {
     public function __construct($videoData)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        // UTMLog::Logger('data', $this->videoData);
+        // // UTMlog::Logger('data', $this->videoData);
     }
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file = Mediatag::$titleList;
 
@@ -34,7 +34,7 @@ class Title extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //        $genObj = new Genre();
         /*
@@ -46,7 +46,7 @@ class Title extends TagBuilder
                 }
         */
         // $text      = strtolower($text);
-        UTMLog::Logger('before', $text);
+        // UTMlog::Logger('before', $text);
         $text      = Strings::clean($text);
         $text      = str_replace("\\'", "'", $text);
         $text      = str_replace('/', ' ', $text);
@@ -89,7 +89,7 @@ class Title extends TagBuilder
         if (false === $r) {
             //  self::writeTagList($titleText);
         }
-        UTMLog::Logger('after', $titleText);
+        // UTMlog::Logger('after', $titleText);
 
         return $titleText;
     }

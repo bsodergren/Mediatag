@@ -69,7 +69,7 @@ class Process extends Mediatag
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         parent::boot($input, $output);
         $this->formatter   = new FormatterHelper();
@@ -95,7 +95,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
 
@@ -105,6 +105,6 @@ class Process extends Mediatag
             return SymCommand::SUCCESS;
         }
 
-        UTMLog::logger('Videos found', \count($this->VideoList['file']));
+        // UTMlog::logger('Videos found', \count($this->VideoList['file']));
     }
 }

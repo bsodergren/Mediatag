@@ -14,7 +14,7 @@ trait preview
 {
     public function preview($text, $exit = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::isTrue('preview')) {
             $this->output->write($text);

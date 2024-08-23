@@ -30,7 +30,7 @@ class DoghouseDigital extends MileHighMedia
 
     public function getTitle()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $regex = $this->getTitleRegex();
         if ($regex) {
@@ -58,7 +58,7 @@ class DoghouseDigital extends MileHighMedia
 
     private function artistTransform($artist)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $artist = str_replace(',', '_and_', $artist);
 

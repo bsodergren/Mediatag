@@ -17,7 +17,7 @@ trait Studio
      */
     public function mapStudio($studio)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
@@ -32,7 +32,7 @@ trait Studio
      */
     public function getStudioRegex()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getKeyValue('studio', 'pattern');
     }
@@ -42,9 +42,9 @@ trait Studio
      */
     public function getStudio()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::Logger('Studio Key', $this->video_name);
+        // UTMlog::Logger('Studio Key', $this->video_name);
         //  utmdd([__METHOD__,$this->getStudioRegex()]);
         if (true == $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
@@ -57,7 +57,7 @@ trait Studio
             if ($return == $this->video_name) {
                 return false;
             }
-            UTMLog::Logger('file studio', $return);
+            // UTMlog::Logger('file studio', $return);
 
             return ucwords($return);
         }
@@ -67,7 +67,7 @@ trait Studio
 
     public static function customStudio($key_studio, $arr)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (false == self::$StudioKey) {
             self::$StudioKey = $key_studio;

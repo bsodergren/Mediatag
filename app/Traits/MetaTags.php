@@ -25,7 +25,7 @@ trait MetaTags
 
     public function CleanMetaValue(string $tag, string $text): string
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
@@ -35,35 +35,35 @@ trait MetaTags
 
     public function cleanGenre($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return Genre::clean($text);
     }
 
     public function cleanArtist($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $text;
     }
 
     public function cleanKeyword($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return Keyword::clean($text);
     }
 
     public function cleanTitle($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return Title::clean($text);
     }
 
     public function cleanStudio($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         if (\is_array($text)) {
@@ -97,7 +97,7 @@ trait MetaTags
 
     public function sortTagList($genre, $new = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\is_array($genre)) {
             $array = $genre;
@@ -125,7 +125,7 @@ trait MetaTags
 
     public static function mergeTag($tag, $first, $second)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
 
@@ -186,7 +186,7 @@ trait MetaTags
 
     public function mergetags($tag_array, $tag_array2, $obj)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
@@ -203,9 +203,9 @@ trait MetaTags
 
     public static function clean($text, $tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        UTMLog::Logger('Clean', [$tag, $text]);
+        // UTMlog::Logger('Clean', [$tag, $text]);
         if ('artist' == $tag && null === $text) {
             return null;
         }
@@ -225,7 +225,7 @@ trait MetaTags
                 $value = trim(ucwords(strtolower($value)));
             });
             $newTitle = implode(' ', $arr);
-            UTMLog::Logger('Clean tile', $tag, $newTitle);
+            // UTMlog::Logger('Clean tile', $tag, $newTitle);
 
             return $newTitle;
         }
@@ -322,7 +322,7 @@ trait MetaTags
 
     public function expandArray($array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($array as $key => $value) {
             $this->{$key} = $value;

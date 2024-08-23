@@ -22,7 +22,7 @@ class VideoTags extends VideoData
 
     public function getText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
 
@@ -31,7 +31,7 @@ class VideoTags extends VideoData
     }
     public function get($key, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $parts                 = pathinfo($this->video_file);
 
@@ -59,7 +59,7 @@ class VideoTags extends VideoData
         }
 
         $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
-        utmdump($tagList);
+
         $this->tagList         = $tagList;
         return $tagList;
     }

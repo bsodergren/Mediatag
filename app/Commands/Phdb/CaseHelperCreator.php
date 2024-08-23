@@ -22,15 +22,14 @@ use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Symfony\Component\Process\Process as ExecProcess;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
-define("__MEDIAUPDATE_CMD_DIR__", __APP_HOME__ . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Commands" . DIRECTORY_SEPARATOR . "Update");
 trait CaseHelperCreator
 {
-    public $phDbCaseHelper   =  __MEDIAUPDATE_CMD_DIR__ . DIRECTORY_SEPARATOR . "CaseHelper.php";
+    public $phDbCaseHelper   =  __PORNHUB_DB_MAP_FILE__;
 
     public $CaseHelperHeader = <<<'EOT'
 <?php
 
-namespace Mediatag\Commands\Update;
+namespace Mediatag\Traits;
 use Mediatag\Core\Mediatag;
 
 
@@ -62,7 +61,7 @@ EOF;
     }
     private function firstLine($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $callback = Callback::check([$this, 'csvmapCallback']);
 
@@ -78,7 +77,7 @@ EOF;
     }
     private function lastLine($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $callback = Callback::check([$this, 'csvmapCallback']);
 
@@ -95,7 +94,7 @@ EOF;
 
     public function map()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $filesystem = new SFilesystem();
 

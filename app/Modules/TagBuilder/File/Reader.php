@@ -44,7 +44,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->expandArray($videoData);
 
@@ -61,7 +61,7 @@ class Reader extends TagReader
         }
 
         if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
-            UTMLog::Logger('File Studio className', $className);
+            // UTMlog::Logger('File Studio className', $className);
 
             if (Option::isTrue('addClass')) {
                 $options     = Option::getValue('addClass', 1);
@@ -93,7 +93,7 @@ class Reader extends TagReader
 
     public function getStudioClass($studio)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);
@@ -108,7 +108,7 @@ class Reader extends TagReader
 
     public function __call($method, $arg)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $getMethod = 'get' . ucfirst($method);
         // utmdd([__METHOD__,$method,$arg]);
@@ -127,7 +127,7 @@ class Reader extends TagReader
 
     public function mapStudio($studio)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
@@ -139,7 +139,7 @@ class Reader extends TagReader
 
     public function getSubStudio()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null == $this->title_studio) {
             $this->getStudio();
@@ -150,7 +150,7 @@ class Reader extends TagReader
 
     public function getStudio()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $studio_array = [];
 
@@ -179,7 +179,7 @@ class Reader extends TagReader
                 }
 
                 $success    = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
-                UTMLog::Logger('File Studio Dir', $matches);
+                // UTMlog::Logger('File Studio Dir', $matches);
 
                 if (true == $success) {
                     if (\array_key_exists(2, $matches)) {
@@ -211,7 +211,7 @@ class Reader extends TagReader
                     }
 
                     $result       = $this->getFileTag('Studio');
-                    UTMLog::Logger('this->getFileTag', $result);
+                    // UTMlog::Logger('this->getFileTag', $result);
 
                     if (true == $result) {
                         if (str_contains($result, '/')) {
@@ -268,7 +268,7 @@ class Reader extends TagReader
 
     public function getGenre()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $genre = '';
         if ('' == $this->genre) {
@@ -290,7 +290,7 @@ class Reader extends TagReader
 
     public function getTitle()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $res = $this->getFileTag('Title');
         if (false === $res) {
@@ -302,7 +302,7 @@ class Reader extends TagReader
 
     public function getArtist()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $res = $this->getFileTag('Artist');
         if (false === $res) {
@@ -314,19 +314,19 @@ class Reader extends TagReader
 
     public function getKeyword()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public function getFileTag($tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $method = 'get' . $tag;
 
-        //  UTMLog::Logger('Class', $className);
-        UTMLog::Logger('method', $method);
+        //  // UTMlog::Logger('Class', $className);
+        // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
             return $this->PatternObject->{$method}();
             //  } else {

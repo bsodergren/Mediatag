@@ -65,7 +65,7 @@ class StorageDB extends Storage
 
     public function init($video_file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $fs               = new File($video_file);
         $this->videoData  = $fs->get();
@@ -80,7 +80,7 @@ class StorageDB extends Storage
     // end init()
     public function getDbFileList()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $fileListArray     = [];
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
@@ -104,7 +104,7 @@ class StorageDB extends Storage
 
     public function removeDBEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $thumb  = $this->getThumbnailPath();
 
@@ -141,7 +141,7 @@ class StorageDB extends Storage
             }
         }
         // }
-        // UTMLog::logNotice($results);
+        // // UTMlog::logNotice($results);
     }
 
     // public function addDBEntry($data)
@@ -154,7 +154,7 @@ class StorageDB extends Storage
 
     public function addDBArray($data)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_string           = [];
         $vdata                        = [];
@@ -180,7 +180,7 @@ class StorageDB extends Storage
 
     public static function getSubLibrary($video_path)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $sublibrary   = null;
         $filesystem   = new SFilesystem();
@@ -195,7 +195,7 @@ class StorageDB extends Storage
 
     public function createDbEntry($video_file, $video_key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->init($video_file);
 
@@ -215,7 +215,7 @@ class StorageDB extends Storage
 
     public function getThumbnailPath()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $where = ["video_key = '" . $this->video_key . "'"];
 
@@ -224,7 +224,7 @@ class StorageDB extends Storage
 
     public function UpdateFilePath()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_string = [];
         $this->init($this->video_file);
@@ -240,7 +240,7 @@ class StorageDB extends Storage
 
     public function updateDBEntry($key, $videoData, $all = true)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $video_file                            = $videoData['video_file'];
         $video_id                              = true;

@@ -19,7 +19,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
 

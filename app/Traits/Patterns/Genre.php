@@ -14,7 +14,7 @@ trait Genre
      */
     public function getGenre()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' == $this->genre) {
             $filename = $this->video_file;

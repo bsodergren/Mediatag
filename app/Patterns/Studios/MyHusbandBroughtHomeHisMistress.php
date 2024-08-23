@@ -50,7 +50,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getArtistTransform($artist_string, $delim = ', ')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $checkTitle  = false;
         $names       = false;
@@ -80,7 +80,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
             $aName        = implode(' ', $parts);
 
             foreach ($this->names_map as $find => $replace) {
-                //  UTMLog::LogDebug("title replace",[$find,$replace,$title],"title");
+                //  // UTMlog::LogDebug("title replace",[$find,$replace,$title],"title");
                 $aName = str_replace($find, $replace, $aName);
             }
 
@@ -108,7 +108,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getTitle($names = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $regex = $this->getTitleRegex();
         if ($regex) {
@@ -124,7 +124,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
                 }
 
                 // foreach (WORD_MAP as $find => $replace) {
-                //     //  UTMLog::LogDebug("title replace",[$find,$replace,$title],"title");
+                //     //  // UTMlog::LogDebug("title replace",[$find,$replace,$title],"title");
                 //     //     $title = str_replace($find, $replace, $title);
                 // }
 
@@ -166,7 +166,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getFilename($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $filename = basename($file);
         if (!str_starts_with($filename, 'MHBHM')) {

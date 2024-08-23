@@ -21,7 +21,7 @@ class Pornhub extends Patterns
 
     public function __construct($object)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $video_details   = false;
         //        $dbConn          = new PornhubDB();
@@ -38,9 +38,9 @@ class Pornhub extends Patterns
                     $peices = explode('_', basename($object->video_name, '.mp4'));
                     $a      = array_reverse($peices);
                     //   $a[0] = '100000752';
-                    Timer::watch('before if');
+                   
                     $file   = getVideoCSV($a[0]);
-                    Timer::watch('after if');
+                   
                     if (null !== $file) {
                         // Mediatag::$output->writeln($object->video_name.' in '.$file);
                         $csv_line = $this->findLine($file, $a[0]);
@@ -81,7 +81,7 @@ class Pornhub extends Patterns
 
     public function findLine($file, $key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //  $csv_file = __NEW_CSV_DIR__.'/'.$file.'.csv';
 
@@ -90,7 +90,7 @@ class Pornhub extends Patterns
 
     private function getDataTag($tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $value = '';
         if (null === $this->videoInfo) {
@@ -114,7 +114,7 @@ class Pornhub extends Patterns
 
     public function getArtist()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getDataTag('video_artist');
     }
@@ -123,14 +123,14 @@ class Pornhub extends Patterns
 
     public function getGenre()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getDataTag('genres_a') . ',' . $this->getDataTag('genres_b');
     }
 
     public function getTitle($names = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getDataTag('video_title');
     }

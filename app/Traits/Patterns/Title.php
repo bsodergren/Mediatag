@@ -19,7 +19,7 @@ trait Title
      */
     public function getTitleRegex()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getKeyValue('title', 'pattern');
     }
@@ -29,7 +29,7 @@ trait Title
      */
     public function gettitleMatch()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getKeyValue('title', 'match');
     }
@@ -39,7 +39,7 @@ trait Title
      */
     public function getTitleDelim()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->getKeyValue('title', 'delim');
     }
@@ -49,7 +49,7 @@ trait Title
      */
     public function getTitle()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $regex = $this->getTitleRegex();
         if ($regex) {
@@ -65,9 +65,9 @@ trait Title
                 $title     = str_replace($this->getTitleDelim(), ' ', $title);
                 $pretitle  = $title;
                 $title     = (new JsExec($video_key))->read($title);
-                UTMLog::Logger('Title Tag', [$pretitle,$title]);
+                // UTMlog::Logger('Title Tag', [$pretitle,$title]);
 
-                //   utmdump($title);
+
 
                 /*
                                 foreach (BASIC_WORD_MAP as $find => $replace) {
@@ -75,7 +75,7 @@ trait Title
                                     // $title = preg_replace('/(.*)\b('.$find .')(.*)/i', '$1'.$replace.'$3', $title);
                                     $title      = str_replace($find, $replace, $title);
                                     if ($prev_title != $title) {
-                                        //utmdump([__METHOD__.':'.__LINE__,$find, $replace,$title,$prev_title]);
+
                                     }
                                 }
                 */
@@ -85,7 +85,7 @@ trait Title
                                     $title      = preg_replace('/(.*)\b('.$find.')(.*)/i', '$1'.$replace.'$3', $title);
                                     //                    $title = str_replace($find, $replace, $title);
                                     if ($prev_title != $title) {
-                                        //utmdump([__METHOD__.':'.__LINE__,$find, $replace,$title,$prev_title]);
+
                                     }
                                 }
                                 $parts = preg_split('/(?=[A-Z])/', $title, -1, \PREG_SPLIT_NO_EMPTY);

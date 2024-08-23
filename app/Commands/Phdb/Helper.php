@@ -25,13 +25,12 @@ use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 trait Helper
 {
     use Callables;
-    use CaseHelper;
     use CaseHelperCreator;
 
 
     public function convert()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         if (!is_array($this->ph_csv)) {
@@ -44,10 +43,11 @@ trait Helper
         foreach ($this->ph_csv as $thisFile) {
 
             $currentDir      = dirname($thisFile);
-            $newFileDir      = $currentDir . DIRECTORY_SEPARATOR . "new";
+
+            $newFileDir      = __PORNHUB_TXT_DIR__;
             FileSystem::createDir($newFileDir);
 
-            $finishedFileDir = $currentDir . DIRECTORY_SEPARATOR . "finished";
+            $finishedFileDir = __PORNHUB_FINISHED_DIR__;
             FileSystem::createDir($finishedFileDir);
 
             $filename        = basename($thisFile);

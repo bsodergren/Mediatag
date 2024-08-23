@@ -16,14 +16,14 @@ trait Helper
 {
     public function t1($val, $min, $max)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $val >= $min && $val < $max;
     }
 
     public function sortFiles()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $min            = 0;
@@ -74,7 +74,7 @@ trait Helper
 
     public function symlinkFiles($video_array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $filesystem = new Filesystem();
 
@@ -96,7 +96,7 @@ trait Helper
 
     public function mvFiles($video_array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $filesystem = new Filesystem();
         // foreach ($video_array as $dir => $fileArray)
@@ -127,7 +127,7 @@ trait Helper
 
     public function getPhKeys()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $ph_video    = [];
         $video_array = [];

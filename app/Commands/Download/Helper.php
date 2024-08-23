@@ -19,7 +19,7 @@ trait Helper
 {
     public function convertVideos()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = [];
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mkv');
@@ -41,7 +41,7 @@ trait Helper
 
     public function jSonCache()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.json');
 
@@ -62,7 +62,7 @@ trait Helper
 
     public function moveDownloads()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (Mediatag::$SearchArray as $key => $file) {
             $videoInfo = File::file($file);
@@ -121,7 +121,7 @@ trait Helper
 
     private function moveJson($videoInfo)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $old_name     = $videoInfo['video_name'];
         $old_path     = $videoInfo['video_path'];
@@ -160,7 +160,7 @@ trait Helper
 
     private function moveVideo($videoInfo)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $old_name   = $videoInfo['video_name'];
         $old_path   = $videoInfo['video_path'];
@@ -193,7 +193,7 @@ trait Helper
 
     private function cleanDupeFiles()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $go = Chooser::changes(Mediatag::$input, Mediatag::$output, 'Remove Duplicate files');
 
@@ -207,7 +207,7 @@ trait Helper
 
     private function cleanEmptyDir()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $command  = [
             '/usr/bin/find',

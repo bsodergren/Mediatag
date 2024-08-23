@@ -14,21 +14,21 @@ trait ExecArgs
 {
     public function getOptionArgs()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->optionArgs;
     }
 
     public function addOptionArg($option)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->optionArgs[] = $option;
     }
 
     public function getCmdArgs($meta_tag, $meta_value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('artist' == $meta_tag) {
             $this->addOptionArg('--rDNSatom');

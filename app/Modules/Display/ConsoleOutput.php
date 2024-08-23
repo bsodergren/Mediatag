@@ -20,7 +20,7 @@ class ConsoleOutput
 
     public function __construct($output, $input)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         /*
         black, red, green, yellow, blue,
@@ -45,28 +45,28 @@ class ConsoleOutput
 
     public function debug($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $formattedLine = $this->io->getErrorStyle()->info($text);
     }
 
     public function info(...$args)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->io->definitionList(...$args);
     }
 
     public function error($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->writeln($text, 'error');
     }
 
     public function write($text, $style = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $style) {
             $text = '<' . $style . '>' . $text . '</' . $style . '>';
@@ -77,7 +77,7 @@ class ConsoleOutput
 
     public function writeln($text, $style = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $style) {
             $text = '<' . $style . '>' . $text . '</' . $style . '>';

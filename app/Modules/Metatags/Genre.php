@@ -21,13 +21,13 @@ class Genre extends TagBuilder
 
     public function __construct()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
     }
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null === parent::$dbConn) {
             parent::$dbConn = new TagDB();
@@ -44,7 +44,7 @@ class Genre extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return parent::clean($text, 'Genre');
     }

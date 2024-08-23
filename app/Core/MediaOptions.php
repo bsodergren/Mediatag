@@ -29,22 +29,21 @@ class MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return null;
     }
 
     public function Definitions()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return null;
     }
 
     public static function getClassObject($command)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
-
+        utminfo();
         $command   = ucfirst(strtolower($command));
         $command   = str_replace('Db', 'DB', $command);
         //        $command = str_replace("Ph","PH",$command);
@@ -70,8 +69,7 @@ class MediaOptions
     public static function getDefinition($command = null)
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
-
+        utminfo();
         $testOptions    = [];
         $metaOptions    = [];
         $commandOptions = [];
@@ -112,7 +110,7 @@ class MediaOptions
     public static function getArguments($varName = null, $description = null)
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //    self::getClassObject();
         if (\is_object(self::$classObj)) {
@@ -125,7 +123,7 @@ class MediaOptions
     public static function getOptions($optionArray)
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (! \is_array($optionArray)) {
             return [];
@@ -160,7 +158,7 @@ class MediaOptions
     public static function getDefaultOptions()
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
 
@@ -180,7 +178,7 @@ class MediaOptions
     public static function getTestOptions()
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
 
@@ -200,7 +198,7 @@ class MediaOptions
     public static function getMetaOptions()
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
         $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
@@ -219,7 +217,7 @@ class MediaOptions
     public static function getDisplayOptions()
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
         $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));

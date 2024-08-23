@@ -51,7 +51,7 @@ class Process extends Mediatag
     ];
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         $this->ph_csv = $args;
@@ -61,17 +61,34 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         if (str_contains($this->ph_csv, ",")) {
             $this->ph_csv = explode(",", $this->ph_csv);
-        }
-
-        if (Option::isTrue('file')) {
-            $fileSearch         = Option::getValue('file');
+        } else {
+        
             MediaFinder::$depth = 1;
-            $this->ph_csv       = MediaFinder::find($fileSearch, __CURRENT_DIRECTORY__);
+         
+
+            if (Option::isTrue('map')){
+                $fileSearch         = "ph_db*.txt";
+                $path = __PORNHUB_TXT_DIR__;
+
+            }
+            if (Option::isTrue('convert')){
+                $fileSearch         = "ph_db*.csv";
+                $path = __PORNHUB_CSV_DIR__;
+
+            }
+
+            if (Option::isTrue('file')) {
+                $fileSearch         = Option::getValue('file');               
+            } 
+         
+            $this->ph_csv       = MediaFinder::find($fileSearch,  $path );
+
+
         }
         // utmdd( $this->ph_csv );
 

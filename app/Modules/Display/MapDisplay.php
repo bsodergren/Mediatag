@@ -37,7 +37,7 @@ class MapDisplay
 
     public function __construct(OutputInterface $output)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->formatter = new FormatterHelper();
         $outputStyle     = new OutputFormatterStyle('red');
@@ -47,7 +47,7 @@ class MapDisplay
 
     public function drawTable($data)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $output      = $this->output;
         $section     = $output->section();
@@ -60,7 +60,7 @@ class MapDisplay
 
     public function addRow($data)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $idx = 1;
         foreach ($data as $k => $row) {

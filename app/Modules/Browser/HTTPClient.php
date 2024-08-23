@@ -15,7 +15,7 @@ class HTTPClient extends AbstractBrowser
 {
     protected function doRequest($request): Response
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // ... convert request into a response
 

@@ -102,7 +102,7 @@ class MediaFinder extends SFinder
      */
     public function renameCommaFiles($filelist, $spaces = false): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $first_part  = '';
         $rename_file = false;
@@ -156,8 +156,8 @@ class MediaFinder extends SFinder
 
                 $message  = 'Renaming file from <comment>' . basename($oldName) . '</comment> to';
                 $message2 = '                -> <comment>' . basename($newName) . '</comment> ';
-                UTMLog::Logger('Renaming file from ', $oldName);
-                UTMLog::Logger('Renaming file to ', $newName);
+                // UTMlog::Logger('Renaming file from ', $oldName);
+                // UTMlog::Logger('Renaming file to ', $newName);
                 $this->output->writeln('<info>' . $message . '</info>');
                 $this->output->writeln('<info>' . $message2 . '</info>');
                 //  Filesystem::renameFile($oldName, $newName);
@@ -177,10 +177,10 @@ class MediaFinder extends SFinder
      */
     public function ExecuteSearch(): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $FileArray = [];
-        UTMLog::logger('Search');
+        // UTMlog::logger('Search');
 
         if (Option::isTrue('filelist')) {
 
@@ -206,7 +206,7 @@ class MediaFinder extends SFinder
 
     public function getRangeIds($total, $offset = 1)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $start = 0;
 
@@ -233,7 +233,7 @@ class MediaFinder extends SFinder
 
     public function getRangeArray($file_array): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $start          = 0;
         $total          = \count($file_array);
@@ -252,7 +252,7 @@ class MediaFinder extends SFinder
 
     public function getFileNumberArray($file_array): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $start      = 0;
         $total      = \count($file_array);
@@ -298,7 +298,7 @@ class MediaFinder extends SFinder
      */
     public function Search($path, $search, $date = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->searchFiles($search, $path, $date);
     }
@@ -310,7 +310,7 @@ class MediaFinder extends SFinder
      */
     public static function find($file, $location)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return (new self())->searchFiles($file, $location);
     }
@@ -324,7 +324,7 @@ class MediaFinder extends SFinder
      */
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null === $path) {
             $path = getcwd();
@@ -334,7 +334,7 @@ class MediaFinder extends SFinder
             $date = 'now - 12 hours';
         }
 
-        UTMLog::logger('Search Directory', $path);
+        // UTMlog::logger('Search Directory', $path);
 
         $finder     = new SFinder();
         $filesystem = new SFilesystem();
@@ -403,7 +403,7 @@ class MediaFinder extends SFinder
      */
     private function getFilelistOption()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::isTrue('filelist')) {
             return Option::getValue('filelist');
@@ -415,7 +415,7 @@ class MediaFinder extends SFinder
 
     public function onlyNew($path, $fileArray)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $db_array             = null;
         $New_Array            = [];
@@ -452,7 +452,7 @@ class MediaFinder extends SFinder
 
     public function scriptNewFiles($file_array)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (\count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);

@@ -55,7 +55,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         //        $this->backupDirectory = $file;
@@ -65,9 +65,9 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
-        utmdump($m, $a);
+
 
         return null;
     }

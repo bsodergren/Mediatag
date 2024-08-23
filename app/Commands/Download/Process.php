@@ -45,7 +45,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (__PLEX_DOWNLOAD__ != getcwd()) {
             chdir(__PLEX_DOWNLOAD__);

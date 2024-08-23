@@ -17,10 +17,10 @@ trait MediaLibrary
 {
     public function getLibrary($exit = true): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $curent_dir   = getcwd();
-        UTMLog::logger('Current Directory', $curent_dir);
+        // UTMlog::logger('Current Directory', $curent_dir);
         if (false === $exit) {
             return;
         }
@@ -28,11 +28,11 @@ trait MediaLibrary
 
         $success      = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
-        Timer::watch('GetLibrary');
+       
         if (0 == \count($match)) {
             self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
 
-            UTMLog::logger('Wrong spot?', $curent_dir);
+            // UTMlog::logger('Wrong spot?', $curent_dir);
             if (true === $exit) {
                 exit;
             }
@@ -42,7 +42,7 @@ trait MediaLibrary
             }
         } else {
             if (!Arrays::contains(__LIBRARIES__, $match[1])) {
-                UTMLog::logger('Not in a Library directory?', $curent_dir);
+                // UTMlog::logger('Not in a Library directory?', $curent_dir);
 
                 self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
                 if (true === $exit) {
@@ -53,7 +53,7 @@ trait MediaLibrary
                     \define('__LIBRARY__', $match[1]);
                 }
 
-                UTMLog::logger('In Directory', __LIBRARY__);
+                // UTMlog::logger('In Directory', __LIBRARY__);
             }
         }
     }

@@ -87,7 +87,7 @@ class TeamSkeet extends Patterns
 
     public function getArtistTextTransform($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('Teamskeet Selects' == $this->getStudio()) {
             return false;

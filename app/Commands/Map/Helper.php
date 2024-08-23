@@ -23,7 +23,7 @@ trait Helper
 
     public function artistMap()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $artistMap                  = Option::getValue('artistMap', 1);
 
@@ -51,7 +51,7 @@ trait Helper
 
     public function addText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $word  = Option::getValue('word', 1);
@@ -76,7 +76,7 @@ trait Helper
 
     public function limit()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $offset = null;
 
@@ -91,7 +91,7 @@ trait Helper
 
     public function SearchDB($keyword)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $where = '';
 
@@ -134,7 +134,7 @@ trait Helper
 
     public function searchDBEntry($value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $search  = $this->SearchDB($value);
 
@@ -151,7 +151,7 @@ trait Helper
 
     public function keywordMap($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->tagMap('keyword', $text);
     }
@@ -161,7 +161,7 @@ trait Helper
      */
     public function genreMap($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $text = Option::getValue('genre', 1);
         $this->tagMap('genre', $text);
@@ -169,7 +169,7 @@ trait Helper
 
     public function tagMap($tag, $text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         switch ($tag) {
             case 'genre':
@@ -236,7 +236,7 @@ trait Helper
 
     public function Replace()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::isTrue('show')) {
             return 1;
@@ -250,7 +250,7 @@ trait Helper
 
     public function addStudioEntry($library, $text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $library         = Option::getValue('channel', 1);
         // $text         = Option::getValue('studio', 1);
@@ -277,7 +277,7 @@ trait Helper
 
     public function addStudioChannelEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $library = Option::getValue('channel');
         $studio  = Option::getValue('studio');
@@ -309,7 +309,7 @@ trait Helper
 
     public function addartistentry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $name        = Option::getValue('artist');
         $replacement = null;
@@ -358,7 +358,7 @@ trait Helper
 
     public function addTitleEntry()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $ignore = 0;
         $drop   = false;
@@ -379,21 +379,21 @@ trait Helper
 
     public function getArtistMap()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->StorageConn->getArtistMap();
     }
 
     public function getIgnoredArtists()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->StorageConn->getIgnoredArists();
     }
 
     public function videoTag()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $videos = parent::$SearchArray;
         $name   = Option::getValue('video');
@@ -402,7 +402,7 @@ trait Helper
 
     public function listMap()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $namesArr     = [];
         $namesIgnore  = [];
@@ -460,7 +460,7 @@ trait Helper
 
     public function AddLangugage()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $lang        = Option::getValue('lang');
         $replacement = Option::getValue('replacement');
@@ -483,7 +483,7 @@ trait Helper
 
     private function addConst($const, $value, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $contents = file_get_contents($file);
         // $contents = str_replace("\n\n","\n",$contents);

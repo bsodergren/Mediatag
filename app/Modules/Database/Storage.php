@@ -57,7 +57,7 @@ class Storage
 
     public function __construct()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->mapClass    = new DbMap();
@@ -70,7 +70,7 @@ class Storage
 
     public function truncate()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (__MYSQL_TRUNC_TABLES__ as $table) {
             $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
@@ -81,7 +81,7 @@ class Storage
 
     public function __call($name, $arguments)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $method = $name;
         // Note: value of $name is case sensitive.
@@ -99,7 +99,7 @@ class Storage
         }
         if (isset($this->mapClass)) {
             if (method_exists(\get_class($this->mapClass), $method)) {
-                // utmdump([__METHOD__.':'.__LINE__,get_class($this->mapClass),$method,$arguments]);
+
                 return $this->mapClass->{$method}();
             }
         }
@@ -109,7 +109,7 @@ class Storage
 
     public function query($sql)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $res = $this->dbConn->rawQuery($sql);
 
@@ -119,14 +119,14 @@ class Storage
 
     public function queryOne($sql)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->dbConn->rawQueryOne($sql);
     }
 
     public function videoExists($video_key, $where = null, $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->dbConn->where('video_key', $video_key);
         $this->dbConn->where('library', __LIBRARY__);
@@ -139,7 +139,7 @@ class Storage
 
     public function insertVideoDb($data)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($data as $videokey => $rowData) {
             $this->dbConn->startTransaction();
@@ -163,7 +163,7 @@ class Storage
 
     public function insertMulti($data, $table = __MYSQL_VIDEO_FILE__, $quiet = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
@@ -182,7 +182,7 @@ class Storage
 
     public function update($data, $where = [], $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
@@ -219,19 +219,19 @@ class Storage
 
     public function getValue($where_clause, $column = 'count(*)', $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach ($where_clause as $where) {
             $this->dbConn->where($where);
         }
 
         return $this->dbConn->getValue($table, $column);
-        // UTMLog::Logger('INSERT SQL', $this->dbConn->getLastQuery());
+        // // UTMlog::Logger('INSERT SQL', $this->dbConn->getLastQuery());
     }
 
     public function insert($data, $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $id         = null;
         if (Option::Istrue('test')) {
@@ -246,7 +246,7 @@ class Storage
         if (\array_key_exists('fullpath', $fieldArray)) {
 
             $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
-            //utmdump($fieldArray);
+
             if ($has !== null) {
                 $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
                 if (! Mediatag::$filesystem->exists($backup_path)) {
@@ -255,7 +255,7 @@ class Storage
                 $old_file    = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
                 $new_file    = $backup_path . '/' . $fieldArray['filename'];
 
-                //utmdump(["Video Key exists?",$old_file,$new_file]);
+
                 Mediatag::$filesystem->rename($old_file, $new_file);
 
                 return null ;
@@ -269,17 +269,17 @@ class Storage
         $id         = $this->dbConn->insert($table, $data);
         // utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
         // } catch (\Exception $e) {
-        // utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
+
         // }
 
         return $id;
 
-        // UTMLog::Logger('INSERT SQL', $this->conn->getLastQuery());
+        // // UTMlog::Logger('INSERT SQL', $this->conn->getLastQuery());
     }
 
     public function makeKey($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key = strtolower($text);
 
@@ -296,7 +296,7 @@ class Storage
 
     public function getTagTable($tag)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         switch ($tag) {
             case 'genre':
@@ -309,7 +309,7 @@ class Storage
 
     protected function queryBuilder($query_cmd, $search = null, $limit = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $sel_cols = null;
         $die      = false;

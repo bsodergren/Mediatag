@@ -30,3 +30,4 @@ vendor
 .env-server
 db/*
 package-lock.json
+mediaphdb_tracefile.txt

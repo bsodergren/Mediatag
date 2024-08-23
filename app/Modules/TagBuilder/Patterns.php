@@ -108,7 +108,7 @@ class Patterns extends TagBuilder
      */
     public function __construct($object)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->className  = $object->className;
         $this->video_name = $object->video_name;
@@ -138,7 +138,7 @@ class Patterns extends TagBuilder
      */
     private function getKeyValue($tag, $key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $regex         = $this->regex;
         $parent_studio = str_replace(' ', '', $this->studio);
@@ -186,14 +186,14 @@ class Patterns extends TagBuilder
      */
     public function getFilename($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $file;
     }
 
     public function getStudio()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (null !== $this->subStudio) {
             return $this->studio . '/' . $this->subStudio;
@@ -205,7 +205,7 @@ class Patterns extends TagBuilder
      */
     /*    public static function customStudio($key_studio, $arr)
         {
- utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+ utminfo();
 
             if(is_array($arr)){
                 $studioArray[] = $key_studio;

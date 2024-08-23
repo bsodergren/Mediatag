@@ -20,7 +20,7 @@ trait CmdProcess
 
     public function runCommand()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $array   = $this->commandList;
 
@@ -66,7 +66,7 @@ trait CmdProcess
         }
 
 
-        UTMLog::Logger('Process Commands', $Commands);
+        // UTMlog::Logger('Process Commands', $Commands);
 
         return $Commands;
     }

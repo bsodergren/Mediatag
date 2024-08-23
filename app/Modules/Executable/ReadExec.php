@@ -21,7 +21,7 @@ class ReadExec extends MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->execMode = 'read';
         parent::__construct($videoData, $input, $output);
@@ -29,7 +29,7 @@ class ReadExec extends MediatagExec
 
     public function read()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $video_key = File::file($this->video_file, 'videokey');
         $array     = MediaCache::get($video_key);
@@ -64,7 +64,7 @@ class ReadExec extends MediatagExec
 
     private function getMetaValue($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return preg_replace_callback_array([
             '/.*(alb).*contains\:\ (.*)/' => function ($matches) {

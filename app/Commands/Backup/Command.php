@@ -26,7 +26,7 @@ class Command extends MediaCommand
     public function execute(InputInterface $input, OutputInterface $output): int
     {
 
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $backupDirectory[] = $input->getArgument(self::CMD_NAME);
         parent::$optionArg = $backupDirectory;

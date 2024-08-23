@@ -42,7 +42,7 @@ class Markers extends VideoData
 
     private function videoDuration($duration)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $seconds = (int) round($duration);
         $secs    = $seconds % 60;
@@ -56,7 +56,7 @@ class Markers extends VideoData
 
     public function clean()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $missing                                = [];
         [$dbList,$missing_file, $missing_thumb] = $this->getExistingList();
@@ -116,7 +116,7 @@ class Markers extends VideoData
 
     public function getText()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // return $this->returnText .basename($this->video_name, '.mp4').'.jpg';// .' for '.basename($this->video_file);
 
@@ -124,7 +124,7 @@ class Markers extends VideoData
 
     public function get($key, $file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_file = $file;
         $this->video_key  = (string) $key;
@@ -138,7 +138,7 @@ class Markers extends VideoData
 
     public function save()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $this->VideoInfo['video_key'] = $this->video_key;
         // $this->VideoInfo['library'] = __LIBRARY__;
@@ -155,7 +155,7 @@ class Markers extends VideoData
 
     public function getMarkerImg()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_name = basename($this->video_file);
         $this->video_path = \dirname($this->video_file);
@@ -184,7 +184,7 @@ class Markers extends VideoData
 
     public function videoQuery()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode,vm.id ";
         $where  = ' vm.markerThumbnail is null ';
@@ -204,7 +204,7 @@ class Markers extends VideoData
 
     public function clearQuery($key = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $where = '';
         if (null !== $key) {
@@ -222,7 +222,7 @@ class Markers extends VideoData
      */
     private function getExistingList(): array
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $missing_thumb = [];
         $missing_mp4   = [];
@@ -252,21 +252,21 @@ class Markers extends VideoData
 
     public static function videoToThumb($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return str_replace('.mp4', '.jpg', __INC_WEB_CHAPTER_DIR__ . str_replace(__PLEX_HOME__, '', $file));
     }
 
     public static function thumbToVideo($file)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return str_replace('.jpg', '.mp4', __PLEX_HOME__ . str_replace(__INC_WEB_CHAPTER_DIR__, '', $file));
     }
 
     public function renameThumb($file, $delete = false)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (true === $delete) {
             unlink($file);
@@ -287,7 +287,7 @@ class Markers extends VideoData
 
     public function getVideoInfo($key, $row)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->video_file    = $row['filename'];
         $this->video_markers = $row['timeCode'];
@@ -300,7 +300,7 @@ class Markers extends VideoData
 
     public function updateVideoData()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = $this->getDbList();
         if (\count($file_array) > 0) {
@@ -319,7 +319,7 @@ class Markers extends VideoData
     }
     public function getDbList()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $file_array = [];
 

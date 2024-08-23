@@ -48,16 +48,16 @@ trait Callables
     {
         if (Process::ERR === $type) {
             $this->errors .= $buffer;
-            UTMLog::logError('Writing Metadata', $buffer);
-            UTMLog::logError('Writing Metadata', $this->video_file);
+            // UTMlog::logError('Writing Metadata', $buffer);
+            // UTMlog::logError('Writing Metadata', $this->video_file);
         } else {
             if (str_contains($buffer, 'error')) {
                 $this->errors .= $buffer;
-                UTMLog::logError('Writing Metadata', $buffer);
-                UTMLog::logError('Writing Metadata', $this->video_file);
+                // UTMlog::logError('Writing Metadata', $buffer);
+                // UTMlog::logError('Writing Metadata', $this->video_file);
             } elseif (str_contains($buffer, 'warning')) {
-                UTMLog::logWarning('Writing Metadata', $buffer);
-                UTMLog::logWarning('Writing Metadata', $this->video_file);
+                // UTMlog::logWarning('Writing Metadata', $buffer);
+                // UTMlog::logWarning('Writing Metadata', $this->video_file);
             } else {
                 $out = $buffer;
                 if (str_contains($buffer, "\r")) {
@@ -71,7 +71,7 @@ trait Callables
 
     public function parseArchive($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $key = Strings::after($line, ' ');
         if (!\array_key_exists($key, $this->json_Array)) {
@@ -83,7 +83,7 @@ trait Callables
 
     public function filemap($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' != $line) {
             $ph_id            = Strings::after($line, '=');
@@ -103,7 +103,7 @@ trait Callables
 
     public function getpremiumListIds($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
@@ -115,7 +115,7 @@ trait Callables
 
     public function compactPlaylist($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
@@ -132,7 +132,7 @@ trait Callables
 
     public function studioList($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' != $line) {
             $studioReplacement = '';
@@ -150,7 +150,7 @@ trait Callables
 
     public function studioPaths($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' != $line) {
             if (!str_contains($line, ':')) {
@@ -170,7 +170,7 @@ trait Callables
 
     public function toList($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' != $line) {
             $Replacement = $line;
@@ -196,7 +196,7 @@ trait Callables
 
     public function toArray($line)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('' != $line) {
             $Replacement = null;
@@ -257,7 +257,7 @@ trait Callables
                 //
 
                 if (str_contains($buffer, 'as JSON')) {
-                    utmdump($buffer);
+
                     $this->yt_json_string = $buffer;
                 }
                 break;
@@ -280,9 +280,9 @@ trait Callables
 
         $buffer     = str_replace("\n", '', $buffer);
         // if (!str_contains($buffer, '[download]') && !str_contains($buffer, 'ETA')) {
-        //     UTMLog::Logger('Ph Download', $buffer);
+        //     // UTMlog::Logger('Ph Download', $buffer);
         // }
-        //UTMLog::Logger('Ph Download', $buffer);
+        //// UTMlog::Logger('Ph Download', $buffer);
         switch ($buffer) {
             case str_contains($buffer, '[PornHub]'):
                 PlaylistProcess::$current_key = false;

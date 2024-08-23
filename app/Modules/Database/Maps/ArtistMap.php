@@ -11,7 +11,7 @@ trait ArtistMap
 {
     public function addArtist($artist, $ignore = 0, $replacement = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         if (null !== $replacement) {
@@ -27,7 +27,7 @@ trait ArtistMap
 
     public function dropArtist($artist)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query = 'DELETE FROM ' . __MYSQL_ARTISTS__ . ' WHERE name = "' . $artist . '"';
         $this->dbConn->rawQuery($query);
@@ -35,7 +35,7 @@ trait ArtistMap
 
     public function getArtistMap()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query = 'SELECT name,replacement FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 0';
         //   $query = 'SELECT name FROM '.__MYSQL_ARTISTS__.' WHERE hide = 0';
@@ -50,7 +50,7 @@ trait ArtistMap
 
     public function getIgnoredArists()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $query = 'SELECT name FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 1';
         $res   = $this->dbConn->rawQuery($query);

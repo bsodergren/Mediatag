@@ -14,7 +14,7 @@ class MediaDoctrineCommand extends DoctrineCommand
 {
     public function configure(): void
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);

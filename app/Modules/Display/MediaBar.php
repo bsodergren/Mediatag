@@ -29,7 +29,7 @@ class MediaBar
 
     public function __construct($count, $section = null, $width = 50)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->width = $width;
 
@@ -45,7 +45,7 @@ class MediaBar
 
     public function setMsgFormat($format = '<comment>%message%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         ProgressBar::setFormatDefinition('custom', $format);
@@ -56,7 +56,7 @@ class MediaBar
 
     public function setMessage($message)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ($this->format != 'custom') {
             $this->setMsgFormat();
@@ -67,7 +67,7 @@ class MediaBar
 
     public function newBar($bar = '<comment>-</comment>', $lead = '<error>></error>')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // $this->bar->setBarCharacter($bar);
         // $this->bar->setProgressCharacter($lead);
@@ -84,21 +84,21 @@ class MediaBar
 
     public function start()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->bar->start();
     }
 
     public function advance()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->bar->advance();
     }
 
     public function clear()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->bar->clear();
     }

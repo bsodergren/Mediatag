@@ -66,7 +66,7 @@ class GifCreator
      */
     public function __construct()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->reset();
 
@@ -91,7 +91,7 @@ class GifCreator
      */
     public function create($frames = array(), $durations = array(), $loop = 0)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (!is_array($frames) && !is_array($GIF_tim)) {
 
@@ -194,7 +194,7 @@ class GifCreator
      */
     public function gifAddHeader()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $cmap = 0;
 
@@ -216,7 +216,7 @@ class GifCreator
      */
     public function addGifFrames($i, $d)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $Locals_str     = 13 + 3 * (2 << (ord($this->frameSources[ $i ][10]) & 0x07));
 
@@ -303,7 +303,7 @@ class GifCreator
      */
     public function gifAddFooter()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->gif .= ';';
     }
@@ -319,7 +319,7 @@ class GifCreator
      */
     public function gifBlockCompare($globalBlock, $localBlock, $length)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         for ($i = 0; $i < $length; $i++) {
 
@@ -343,7 +343,7 @@ class GifCreator
      */
     public function encodeAsciiToChar($char)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return (chr($char & 0xFF) . chr(($char >> 8) & 0xFF));
     }
@@ -353,7 +353,7 @@ class GifCreator
      */
     public function reset()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->frameSources;
         $this->gif      = 'GIF89a'; // the GIF header
@@ -373,7 +373,7 @@ class GifCreator
      */
     public function getGif()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return $this->gif;
     }

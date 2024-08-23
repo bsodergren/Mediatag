@@ -14,6 +14,19 @@ use Mediatag\Commands\Phdb\Lang;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
+
+
+define("__PORNHUB_DB_DIR__",__CACHE_DIR__."/phdb");
+define("__PORNHUB_CSV_DIR__",__PORNHUB_DB_DIR__."/csv");
+define("__PORNHUB_TXT_DIR__",__PORNHUB_DB_DIR__."/txt");
+define("__PORNHUB_FINISHED_DIR__",__PORNHUB_DB_DIR__."/finished");
+
+define("__PORNHUB_DB_MAP_FILE__",__APP_HOME__ . "/app/Traits/CaseHelper.php");
+
+
+
+
+
 class Options extends MediaOptions
 {
     use Lang;
@@ -23,7 +36,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Translate::$Class = __CLASS__;
         return [
@@ -39,7 +52,7 @@ class Options extends MediaOptions
 
     public function Arguments($varName=null, $description = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return [$varName, InputArgument::OPTIONAL, $description];
     }

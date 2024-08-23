@@ -22,7 +22,7 @@ class MediaTable
 
     public function __construct(OutputInterface $output)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $output->{$this}->output = $output;
         $this->section1          = $output->section();
@@ -30,7 +30,7 @@ class MediaTable
 
     public function displayTable($videoInfo)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $this->table = new Table($this->section1);
         $this->table->setStyle('box');
@@ -48,7 +48,7 @@ class MediaTable
 
     public function row($key, $value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return [
             new TableCell($key, ['style' => new TableCellStyle(['cellFormat' => '<info>%s</info>'])]),

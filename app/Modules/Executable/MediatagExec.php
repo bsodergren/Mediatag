@@ -62,7 +62,7 @@ class MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         //        $this->getTags();
 
@@ -92,7 +92,7 @@ class MediatagExec
 
     public function preview()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('write' == $this->execMode) {
             //   $this->previewTrait("\t Running ".$this->runCommand, true);
@@ -101,7 +101,7 @@ class MediatagExec
 
     public function test()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if ('write' == $this->execMode) {
             $this->testTrait("\t Running " . $this->runCommand, true);
@@ -110,7 +110,7 @@ class MediatagExec
 
     public function getTags()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         foreach (__META_TAGS__ as $value) {
             $this->metatags[$value] = '';
@@ -119,7 +119,7 @@ class MediatagExec
 
     protected function createOptionArg($meta_tag, $meta_value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
         $this->getCmdArgs($meta_tag, $meta_value);
@@ -157,13 +157,13 @@ class MediatagExec
     // }
     protected function exec($command, $callback = null): mixed
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $process          = new Process($command);
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        UTMLog::Logger('Executing', $this->runCommand);
+        // UTMlog::Logger('Executing', $this->runCommand);
         $this->preview();
         $this->test();
 

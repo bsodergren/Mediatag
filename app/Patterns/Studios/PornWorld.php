@@ -33,24 +33,24 @@ class PornWorld extends Patterns
 
     public function __construct($object)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
 
-        //utmdump($this->artist_match);
+
         parent::__construct($object);
         parent::$StudioKey = $this->studio;
     }
 
     public function getArtistTextTransform($text)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         return str_replace(['La_','De_'], ['La','De'], $text);
     }
 
     public function getArtistTransform($names, $delim = ', ')
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         $namesArray  = [];
         $names       = str_replace($this->getArtistDelim(), $delim, $names);
@@ -68,7 +68,7 @@ class PornWorld extends Patterns
             if (true === $this->ignoreArtist($aName)) {
                 continue;
             }
-            //utmdump([$skip, $aName]);
+
             if ($skip === true) {
                 $skip = false;
 
@@ -83,7 +83,7 @@ class PornWorld extends Patterns
                     if ('' != $aName) {
                         $namesArray[] = $aName;
                         $skip         = true;
-                        //utmdump([$skip, $namesArray]);
+
                     }
                 }
 

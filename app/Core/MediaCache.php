@@ -23,7 +23,7 @@ class MediaCache
 
     public static function init(InputInterface $input = null, OutputInterface $output = null)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         Option::init($input);
         if (! \defined('__LIBRARY__')) {
@@ -45,7 +45,7 @@ class MediaCache
 
     public static function get($key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         if (true == Option::isTrue('nocache')) {
             return false;
@@ -56,7 +56,7 @@ class MediaCache
 
     public static function put($key, $value)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         // self::forget($key);
 
@@ -65,7 +65,7 @@ class MediaCache
 
     public static function flush()
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         self::$stash->flush();
 
@@ -74,7 +74,7 @@ class MediaCache
 
     public static function forget($key)
     {
-        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+        utminfo();
 
         self::$stash->forget($key);
     }
