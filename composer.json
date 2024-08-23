@@ -30,6 +30,6 @@
     "siteorigin/string-splitter": "^1.0",
     "intervention/image": "^3.3",
     "nesbot/carbon": "^3.6",
-    "bsodergren/utm": "^1.0"
+    "bsodergren/utm": "^1.3"
   }
 }

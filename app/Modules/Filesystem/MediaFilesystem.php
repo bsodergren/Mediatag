@@ -261,6 +261,10 @@ class MediaFilesystem extends SFilesystem
      */
     public static function renameFile($old, $new, $overwrite = true)
     {
+        $filesystem = new SFilesystem();
+        if (!is_dir(dirname($new))) {
+            $filesystem->mkdir(dirname($new));
+        }
         NetteFile::rename($old, $new, $overwrite);
     }
 

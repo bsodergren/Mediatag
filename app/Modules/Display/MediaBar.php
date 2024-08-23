@@ -23,6 +23,8 @@ class MediaBar
     public $bar;
     public $sectionName;
 
+    public $format = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
+
     public function __construct($count, $section = null, $width = 50)
     {
         $this->width = $width;
@@ -37,11 +39,30 @@ class MediaBar
         $this->bar = new ProgressBar($section, $count);
     }
 
+    public function setMsgFormat($format = '<comment>%message%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%')
+    {
+        
+        ProgressBar::setFormatDefinition('custom', $format );
+        $this->format='custom';
+        return $this;
+
+    }
+
+    public function setMessage($message)
+    {
+        if($this->format != 'custom')
+        {
+            $this->setMsgFormat();
+        }
+        $this->bar->setMessage($message);
+        return $this;
+    }
+
     public function newBar($bar = '<comment>-</comment>', $lead = '<error>></error>')
     {
         // $this->bar->setBarCharacter($bar);
         // $this->bar->setProgressCharacter($lead);
-        $this->bar->setFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
+        $this->bar->setFormat($this->format);
 
         $this->bar->setRedrawFrequency(100);
         $this->bar->maxSecondsBetweenRedraws(0.2);

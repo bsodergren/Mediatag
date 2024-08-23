@@ -93,6 +93,8 @@ class MediaFinder extends SFinder
 
     public $defaultCmd;
 
+    public static $depth = null;
+
     /**
      * renameCommaFiles.
      */
@@ -321,6 +323,9 @@ class MediaFinder extends SFinder
 
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $finder->files()->in($path);
+        if(self::$depth != null){
+            $finder->depth('== 0');
+        }
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         if($date !== null) {
             $finder->date('>= ' . $date);
@@ -357,6 +362,9 @@ class MediaFinder extends SFinder
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             if(is_array($file_array)) {
                 if(count($file_array) > 0) {
+                    $noFiles = count($file_array);
+                    Mediatag::$output->writeln('<info>'.$noFiles.' files found</info>');
+
                     if (Option::isTrue('dump')) {
                         $this->scriptNewFiles($file_array);
                         return null;

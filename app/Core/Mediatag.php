@@ -86,7 +86,7 @@ abstract class Mediatag extends Command
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        self::boot($input, $output);
+        self::boot($input, $output,$args);
     }
 
     public static function __callStatic($method, $args): string
@@ -100,18 +100,15 @@ abstract class Mediatag extends Command
         }
     }
 
-    public function boot(InputInterface $input = null, OutputInterface $output = null, $options = [])
+    public function boot(InputInterface $input = null, OutputInterface $output = null, $options = null)
     {
         if (! \defined('__CURRENT_DIRECTORY__')) {
         \define('__CURRENT_DIRECTORY__', getcwd());
         }
 
-        if(count($options) > 0) {
-            foreach ($options as $key => $value) {
-                // Option::set($key, $value);
-            }
-        }
-
+        // if(!count($options) > 0) {
+        //    $options = null;
+        // }
 
 
         $this->command            = self::getDefaultName();
@@ -119,7 +116,9 @@ abstract class Mediatag extends Command
         self::$output             = $output;
         MediaCache::init($input, $output);
 
-        Option::init($input);
+        Option::init($input,$options);
+
+
         self::$Console            = new ConsoleOutput($output, $input);
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {
