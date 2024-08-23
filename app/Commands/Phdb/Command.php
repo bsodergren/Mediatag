@@ -1,18 +1,21 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Commands\Phdb;
+
+use Mediatag\Core\Mediatag;
 
 const DESCRIPTION = 'Example Description';
 const NAME        = 'phdb';
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCommand;
 use Mediatag\Commands\Phdb\Lang;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
-
-
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 class Command extends MediaCommand
@@ -29,9 +32,10 @@ class Command extends MediaCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
         $phcsv_file         = $input->getArgument(self::CMD_NAME);
-        parent::$optionArg = [$phcsv_file];
+        parent::$optionArg  = [$phcsv_file];
 
         parent::execute($input, $output);
         return SymCommand::SUCCESS;

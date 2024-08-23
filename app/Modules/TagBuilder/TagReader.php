@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
@@ -29,18 +32,24 @@ class TagReader
 
     public function __construct()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->dbConn = new Storage();
     }        // UTMLog::Logger('data', $this->videoData);
 
     public function updateVideoTable($key, $tag, $value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         [$_,$tag] = explode('::', $tag);
-        $tag = str_replace('set', '', strtolower($tag));
-        $r = $this->dbConn->insert(['video_key' => $key, $tag => $value], __MYSQL_VIDEO_CUSTOM__);
+        $tag      = str_replace('set', '', strtolower($tag));
+        $r        = $this->dbConn->insert(['video_key' => $key, $tag => $value], __MYSQL_VIDEO_CUSTOM__);
     }
 
     public function setGenre($value, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $meta = $this->getMetaValues();
         if (Option::isTrue('add') || Option::isTrue('drop')) {
 
@@ -49,10 +58,10 @@ class TagReader
             }
 
             if (Option::isTrue('add')) {
-                foreach($value as $i => $v) {
-                    if(str_contains($v, ",")) {
+                foreach ($value as $i => $v) {
+                    if (str_contains($v, ",")) {
                         $parts = explode(',', $v);
-                        foreach($parts as $ii => $vv) {
+                        foreach ($parts as $ii => $vv) {
                             $meta_array[] = $vv;
                         }
 
@@ -73,7 +82,7 @@ class TagReader
             }
 
             $updatedArray = array_unique($updatedArray);
-            $value = implode(',', $updatedArray);
+            $value        = implode(',', $updatedArray);
         }
 
         $this->updateVideoTable($key, __METHOD__, $value);
@@ -83,6 +92,8 @@ class TagReader
 
     public function setTitle($value, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->updateVideoTable($key, __METHOD__, $value);
 
         return $value;
@@ -90,6 +101,8 @@ class TagReader
 
     public function setArtist($value, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->updateVideoTable($key, __METHOD__, $value);
 
         return $value;
@@ -97,6 +110,8 @@ class TagReader
 
     public function setStudio($value, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->updateVideoTable($key, __METHOD__, $value);
 
         return $value;
@@ -104,6 +119,8 @@ class TagReader
 
     public function setKeyword($value, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->updateVideoTable($key, __METHOD__, $value);
 
         return $value;
@@ -111,6 +128,8 @@ class TagReader
 
     public function loadVideo($video)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->videoData = $video;
 
         return $this;
@@ -118,6 +137,8 @@ class TagReader
 
     public function getJsonValues()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $json = new jsonReader($this->videoData);
 
         return $json->getTagArray();
@@ -125,6 +146,8 @@ class TagReader
 
     public function getFileValues()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file = new fileReader($this->videoData);
 
         return $file->getTagArray();
@@ -132,6 +155,8 @@ class TagReader
 
     public function getMetaValues()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $meta = new metaReader($this->videoData);
 
         return $meta->getTagArray(false);
@@ -139,6 +164,8 @@ class TagReader
 
     public function getDbValues()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // utmdump([__METHOD__.':'.__LINE__,$this->videoData]);
         $db = new DbReader($this->videoData);
         if (null === $db->tag_array) {
@@ -150,6 +177,8 @@ class TagReader
 
     public function getTagArray($clean = true)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
 

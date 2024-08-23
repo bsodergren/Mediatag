@@ -5,11 +5,13 @@
 
 namespace Mediatag\Commands\Phdb;
 
+use Mediatag\Core\Mediatag;
+
+
 use Nette\Utils\Strings;
 use Nette\Utils\Callback;
 
 use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 use Mediatag\Traits\Callables;
 use Mediatag\Modules\Display\MediaBar;
@@ -29,15 +31,17 @@ trait Helper
 
     public function convert()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        if(!is_array($this->ph_csv)) {
+
+        if (!is_array($this->ph_csv)) {
             $this->ph_csv = [$this->ph_csv];
         }
 
         // utmdd($this->ph_csv);
         $progressbar                  = new MediaBar(100000, 'three', 80);
 
-        foreach($this->ph_csv as $thisFile) {
+        foreach ($this->ph_csv as $thisFile) {
 
             $currentDir      = dirname($thisFile);
             $newFileDir      = $currentDir . DIRECTORY_SEPARATOR . "new";
@@ -53,9 +57,9 @@ trait Helper
 
             $progressbar->setMessage($filename)->newbar()->start();
 
-            foreach(file($thisFile) as $input_line) {
+            foreach (file($thisFile) as $input_line) {
                 $s =preg_match('/.*src="([:a-z0-9\/.]+)".*\/([0-9]+)\/[a-z].*/', $input_line, $output_array);
-                if($s == true) {
+                if ($s == true) {
                     $newline = $output_array[1] . ";" . $output_array[2] ;
                     $progressbar->advance();
                     //Mediatag::$output->writeln('<comment>' . $idx . '</comment><info>' . $newline . '</info>');

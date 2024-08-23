@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\VideoData;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use UTM\Utilities\Option;
@@ -27,36 +29,46 @@ class VideoData
 
     public function getVideoDetails()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->get($this->video_key, $this->video_file);
     }
 
     public function saveVideoDetails()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->save();
     }
 
     public function getVideoText()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getText();
     }
 
     public function getVideoInfo($key, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video_file = $file;
-        $this->video_key = $key;
-        $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
+        $this->video_key  = $key;
+        $exists           = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
         if (null === $exists) {
             $data_array = Mediatag::$dbconn->createDbEntry($file, $key);
             Mediatag::$dbconn->insert($data_array);
         }
 
-        $this->VideoInfo = $this->getVideoDetails();
+        $this->VideoInfo  = $this->getVideoDetails();
 
         return $this->saveVideoDetails();
     }
 
     public function updateVideoData()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file_array = $this->getDbList();
 
         if (\count($file_array) > 0) {
@@ -66,7 +78,7 @@ class VideoData
                     if (! Option::istrue('all')) {
                         $int = $this->resultCount--;
                         $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
-                        Mediatag::$output->writeln('<info>'.$int.'</info> : '.$this->getVideoText());
+                        Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
                     }
                 }
             }
@@ -75,29 +87,33 @@ class VideoData
 
     public function clearDBValues($key = null)
     {
-        $query = $this->clearQuery($key);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $query  = $this->clearQuery($key);
         $result = Mediatag::$dbconn->query($query);
     }
 
     public function getDbList()
     {
-        $file_array = [];
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $file_array        = [];
         if (Option::istrue('filelist')) {
 
-            $fileList = Mediatag::$SearchArray;
-            foreach($fileList as $filename){
-                
-                $key = MediaFile::getVideoKey($filename);
+            $fileList          = Mediatag::$SearchArray;
+            foreach ($fileList as $filename) {
+
+                $key              = MediaFile::getVideoKey($filename);
                 $file_array[$key] = $filename;
             }
             $this->resultCount = \count($file_array);
 
             return $file_array;
-//            utmdd( $file_array);
+            //            utmdd( $file_array);
 
         }
-        $query = $this->videoQuery();
-       
+        $query             = $this->videoQuery();
+
         if (!Option::istrue('clean')) {
             if (Option::isTrue('max')) {
                 $total = (int) Option::getValue('max');
@@ -105,7 +121,7 @@ class VideoData
             }
         }
 
-        $result = Mediatag::$dbconn->query($query);
+        $result            = Mediatag::$dbconn->query($query);
 
         //
         foreach ($result as $_ => $row) {
@@ -119,8 +135,10 @@ class VideoData
 
     public function save()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->VideoInfo['video_key'] = $this->video_key;
-        $this->VideoInfo['library'] = __LIBRARY__;
+        $this->VideoInfo['library']   = __LIBRARY__;
 
         if (Mediatag::$dbconn->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> '.$this->videoData;
@@ -131,22 +149,32 @@ class VideoData
 
     public function get($key, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function clean()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function videoQuery()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function clearQuery($key = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function getText()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return '';
     }
 }

@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Patterns\Studios\Blowpass;
 
 class MommyBlowsBest extends Blowpass

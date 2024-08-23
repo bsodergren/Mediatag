@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
+
+
 //use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -32,41 +34,51 @@ class VideoPreview extends VideoData
 
     public function getPreviewFiles()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
     }
 
     public function previewToVideo($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
     }
 
     public function videoToPreview($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
     }
 
     public function build_video_thumbnail()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
     }
 
     public function clean()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $missing = [];
+
+        $missing                                  = [];
         [$dbList,$missing_file, $missing_preview] = $this->getExistingList();
-        $res = $this->getPreviewFiles();
-        if($res === null) {
+        $res                                      = $this->getPreviewFiles();
+        if ($res === null) {
             $res = [];
         }
-        $missing = array_diff($res, $dbList);
+        $missing                                  = array_diff($res, $dbList);
 
         if (\count($missing) > 0) {
             foreach ($missing as $k => $file) {
                 $videoFile = $this->previewToVideo($file);
                 if (! file_exists($videoFile)) {
                     unlink($file);
-                    Mediatag::$output->writeln('<fg=red>UNLINK '.$file.'</>');
+                    Mediatag::$output->writeln('<fg=red>UNLINK ' . $file . '</>');
 
                     continue;
                 }
@@ -75,22 +87,22 @@ class VideoPreview extends VideoData
 
         if (\count($missing_file) > 0) {
             foreach ($missing_file as $k => $file) {
-                $query = 'update '.$this->VideoDataTable.' set preview = null WHERE id = '.$k.'';
+                $query  = 'update ' . $this->VideoDataTable . ' set preview = null WHERE id = ' . $k . '';
                 $result = Mediatag::$dbconn->query($query);
             }
         }
 
         if (\count($missing_preview) > 0) {
             foreach ($missing_preview as $k => $file) {
-                $query = 'update '.$this->VideoDataTable.' set preview = null WHERE id = '.$k.'';
+                $query  = 'update ' . $this->VideoDataTable . ' set preview = null WHERE id = ' . $k . '';
 
                 $result = Mediatag::$dbconn->query($query);
-                $file = $this->previewToVideo($file);
+                $file   = $this->previewToVideo($file);
 
-                Mediatag::$output->write('<comment>Changing '.$k.' to null, </comment>');
+                Mediatag::$output->write('<comment>Changing ' . $k . ' to null, </comment>');
 
                 if (file_exists($file)) {
-                    $fs = new File($file);
+                    $fs        = new File($file);
                     $videoData = $fs->get();
                     $this->get($videoData['video_key'], $file);
                     Mediatag::$output->writeln($this->returnText); // .'</info>');
@@ -99,31 +111,35 @@ class VideoPreview extends VideoData
                 }
             }
         }
-        Filesystem::prunedirs(__INC_WEB_PREVIEW_DIR__.'/'.__LIBRARY__);
+        Filesystem::prunedirs(__INC_WEB_PREVIEW_DIR__ . '/' . __LIBRARY__);
 
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
 
     public function get($key, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video_file = $file;
-        $this->video_key = (string) $key;
+        $this->video_key  = (string) $key;
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;
-        $preview = $this->BuildPreview();
+        $preview          = $this->BuildPreview();
 
         return ['preview' => $preview, 'video_key' => $this->video_key];
     }
 
     public function BuildPreview()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
 
 
         //$this->video_file = $this->video_file;
-        $this->previewName = $this->videoToPreview($this->video_file);
-        $this->video_name = basename($this->video_file);
-        if(file_exists($this->previewName)) {
+        $this->previewName  = $this->videoToPreview($this->video_file);
+        $this->video_name   = basename($this->video_file);
+        if (file_exists($this->previewName)) {
             $this->video_name = $this->video_name . " Exists";
 
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
@@ -145,15 +161,17 @@ class VideoPreview extends VideoData
      */
     private function getExistingList(): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $missing_thumb = [];
-        $missing_mp4 = [];
-        $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable.
-        " WHERE Library = '".__LIBRARY__."' AND  preview is not null AND  fullpath like '".__CURRENT_DIRECTORY__."%'";
+        $missing_mp4   = [];
+        $query         = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable .
+        " WHERE Library = '" . __LIBRARY__ . "' AND  preview is not null AND  fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
         utmdd($query);
-        $result = Mediatag::$dbconn->query($query);
-        $dblist = [];
+        $result        = Mediatag::$dbconn->query($query);
+        $dblist        = [];
         foreach ($result as $_ => $row) {
-            $thumb = $this->videoToPreview($row['file_name']);
+            $thumb              = $this->videoToPreview($row['file_name']);
             if (! file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;
 
@@ -173,14 +191,16 @@ class VideoPreview extends VideoData
 
     public function videoQuery()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $where = ' preview is null ';
 
         if (Option::istrue('update')) {
             $where = ' preview is not null ';
         }
 
-        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable.
-        " WHERE  Library = '".__LIBRARY__."' AND  ". $where . " AND  fullpath like '".__CURRENT_DIRECTORY__."%'";
+        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM " . $this->VideoDataTable .
+        " WHERE  Library = '" . __LIBRARY__ . "' AND  " . $where . " AND  fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
         // utmdd($query);
         return $query;
     }

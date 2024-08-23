@@ -5,11 +5,13 @@
 
 namespace Mediatag\Commands\Phdb;
 
+use Mediatag\Core\Mediatag;
+
+
 use Nette\Utils\Strings;
 use Nette\Utils\Callback;
 
 use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 use Mediatag\Traits\Callables;
 use Mediatag\Modules\Display\MediaBar;
@@ -20,7 +22,7 @@ use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Symfony\Component\Process\Process as ExecProcess;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
-define("__MEDIAUPDATE_CMD_DIR__", __APP_HOME__ . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Commands" . DIRECTORY_SEPARATOR . "Update" );
+define("__MEDIAUPDATE_CMD_DIR__", __APP_HOME__ . DIRECTORY_SEPARATOR . "app" . DIRECTORY_SEPARATOR . "Commands" . DIRECTORY_SEPARATOR . "Update");
 trait CaseHelperCreator
 {
     public $phDbCaseHelper   =  __MEDIAUPDATE_CMD_DIR__ . DIRECTORY_SEPARATOR . "CaseHelper.php";
@@ -29,6 +31,8 @@ trait CaseHelperCreator
 <?php
 
 namespace Mediatag\Commands\Update;
+use Mediatag\Core\Mediatag;
+
 
 trait CaseHelper {
 
@@ -37,6 +41,7 @@ trait CaseHelper {
     }
     public function getphdbUrl($number)
     {
+
 
 EOT;
 
@@ -48,6 +53,7 @@ EOF;
 
     public function csvmapCallback($type, $buffer)
     {
+
         if (ExecProcess::ERR === $type) {
             // echo 'ERR > '.$buffer;
         } else {
@@ -56,6 +62,8 @@ EOF;
     }
     private function firstLine($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $callback = Callback::check([$this, 'csvmapCallback']);
 
         $command  = [
@@ -70,6 +78,8 @@ EOF;
     }
     private function lastLine($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $callback = Callback::check([$this, 'csvmapCallback']);
 
         $command  = [
@@ -85,9 +95,11 @@ EOF;
 
     public function map()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $filesystem = new SFilesystem();
 
-        if(!is_array($this->ph_csv)) {
+        if (!is_array($this->ph_csv)) {
             $this->ph_csv = [$this->ph_csv];
         }
         // utmdd($this->phDbCaseHelper);
@@ -96,7 +108,7 @@ EOF;
 
         $filesystem->appendToFile($this->phDbCaseHelper, $this->CaseHelperHeader);
 
-        foreach($this->ph_csv as $thisFile) {
+        foreach ($this->ph_csv as $thisFile) {
             [$_a,$firstLine] = explode(";", $this->firstLine($thisFile));
             [$_b,$lastLine]  = explode(";", $this->lastLine($thisFile));
 

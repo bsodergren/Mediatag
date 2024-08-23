@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Map;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\TagDB;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,28 +26,30 @@ class Process extends Mediatag
     // ];
 
     public $commandList   = [
-        'search'  => ['searchDBEntry' => true],
-        'channel' => ['addStudioChannelEntry' => true],
-        'artist'  => ['addartistentry' => true],
-        'title'   => ['addTitleEntry' => true],
-        'genre'   => ['genreMap' => true],
-        'video'   => ['videoTag' => true],
-        'keyword' => ['addartistentry' => true],
-        'lang'    => ['AddLangugage' => null],
-        'list'    => ['listMap' => null],
-        'word'    => ['addText' => null],
+        'search'    => ['searchDBEntry' => true],
+        'channel'   => ['addStudioChannelEntry' => true],
+        'artist'    => ['addartistentry' => true],
+        'title'     => ['addTitleEntry' => true],
+        'genre'     => ['genreMap' => true],
+        'video'     => ['videoTag' => true],
+        'keyword'   => ['addartistentry' => true],
+        'lang'      => ['AddLangugage' => null],
+        'list'      => ['listMap' => null],
+        'word'      => ['addText' => null],
         'artistMap' => ['artistMap' => null],
     ];
 
-    private $global_lang  = __APP_HOME__.'/app/Locales/Lang.php';
+    private $global_lang  = __APP_HOME__ . '/app/Locales/Lang.php';
 
-    private $command_lang = __APP_HOME__.'/app/Commands/%KEY%/Lang.php';
+    private $command_lang = __APP_HOME__ . '/app/Commands/%KEY%/Lang.php';
     public $tagConn;
     public $StorageConn;
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-        define('SKIP_SEARCH',true);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        define('SKIP_SEARCH', true);
 
         parent::__construct($input, $output);
 

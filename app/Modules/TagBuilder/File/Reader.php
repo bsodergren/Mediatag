@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
@@ -14,13 +17,13 @@ use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Option;
 
-include_once __DATA_MAPS__.'/StudioMap.php';
+include_once __DATA_MAPS__ . '/StudioMap.php';
 
 class Reader extends TagReader
 {
     public $genre;
 
-    public $studio = '';
+    public $studio    = '';
 
     public $video_file;
 
@@ -41,6 +44,8 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->expandArray($videoData);
 
         $className = 'Pornhub';
@@ -55,39 +60,41 @@ class Reader extends TagReader
             }
         }
 
-        if (! class_exists($classPath.$this->video_library.'\\'.$className)) {
+        if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
             UTMLog::Logger('File Studio className', $className);
 
             if (Option::isTrue('addClass')) {
-                $options = Option::getValue('addClass', 1);
+                $options     = Option::getValue('addClass', 1);
                 $classOption = null;
                 if (null !== $options) {
-                    $opt = explode('=', $options);
+                    $opt         = explode('=', $options);
                     $classOption = ['Studio' => $opt[1],
-                        'ExtendClass' => $this->getStudioClass($opt[1]),
+                        'ExtendClass'        => $this->getStudioClass($opt[1]),
                     ];
                 }
                 ScriptWriter::addPattern($className, ucwords($studioName), $classOption);
-                $className = $classPath.$this->video_library.'\\'.$className;
+                $className   = $classPath . $this->video_library . '\\' . $className;
             } else {
-                $this->PatternObject = Patterns::getClassObject($className, $this);
+                $this->PatternObject             = Patterns::getClassObject($className, $this);
                 $this->PatternObject->video_file = $this->video_file;
             }
             //    $className = 'Mediatag\\Modules\\TagBuilder\\Patterns';
         } else {
-            $className = $classPath.$this->video_library.'\\'.$className;
+            $className = $classPath . $this->video_library . '\\' . $className;
         }
 
         if (class_exists($className)) {
 
-            self::$PatternClass = $className;
-            $this->PatternObject = new $className($this);
+            self::$PatternClass              = $className;
+            $this->PatternObject             = new $className($this);
             $this->PatternObject->video_file = $this->video_file;
         }
     }
 
     public function getStudioClass($studio)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);
         $className = str_replace('&', '_', $className);
@@ -101,7 +108,9 @@ class Reader extends TagReader
 
     public function __call($method, $arg)
     {
-        $getMethod = 'get'.ucfirst($method);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $getMethod = 'get' . ucfirst($method);
         // utmdd([__METHOD__,$method,$arg]);
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
@@ -118,6 +127,8 @@ class Reader extends TagReader
 
     public function mapStudio($studio)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
@@ -128,6 +139,8 @@ class Reader extends TagReader
 
     public function getSubStudio()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null == $this->title_studio) {
             $this->getStudio();
         }
@@ -137,15 +150,17 @@ class Reader extends TagReader
 
     public function getStudio()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $studio_array = [];
 
         if (null !== $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
                 $sub_studio = '';
-                $studio_dir = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__.'/'.__LIBRARY__);
+                $studio_dir = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
 
-                $studio_dir = str_replace('/'.$this->getGenre().'/', '', $studio_dir);
-                $arr = explode('/', $studio_dir);
+                $studio_dir = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
+                $arr        = explode('/', $studio_dir);
                 foreach ($arr as $idx => $studio_string) {
                     foreach (__SKIP_STUDIOS__ as $k) {
                         if ($studio_string == ucwords($k)) {
@@ -159,17 +174,17 @@ class Reader extends TagReader
 
                 $studio_dir = implode('/', $studio_array);
                 if ('' != $studio_dir) {
-                    $studio_dir = '/'.$studio_dir;
+                    $studio_dir = '/' . $studio_dir;
                     $studio_dir = str_replace('//', '/', $studio_dir);
                 }
 
-                $success = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
+                $success    = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
                 UTMLog::Logger('File Studio Dir', $matches);
 
                 if (true == $success) {
                     if (\array_key_exists(2, $matches)) {
-                        $sub_studio = $matches[2];
-                        $studio = $matches[1];
+                        $sub_studio         = $matches[2];
+                        $studio             = $matches[1];
                         $this->title_studio = $matches[1];
                         foreach (__SKIP_STUDIOS__ as $k) {
                             if ($studio == $k) {
@@ -191,11 +206,11 @@ class Reader extends TagReader
                                     $this->title_studio = '';
                                 }
                             }
-                            $this->studio = $studio;
+                            $this->studio       = $studio;
                         }
                     }
 
-                    $result = $this->getFileTag('Studio');
+                    $result       = $this->getFileTag('Studio');
                     UTMLog::Logger('this->getFileTag', $result);
 
                     if (true == $result) {
@@ -203,7 +218,7 @@ class Reader extends TagReader
                             $studio = $result;
                         } else {
                             $sub_studio = $studio;
-                            $studio = $result;
+                            $studio     = $result;
                         }
                     }
 
@@ -212,19 +227,19 @@ class Reader extends TagReader
                         //     $sub_studio = $studio."/".$sub_studio;
                         //     $studio = '';
                         //  } else {
-                        $sub_studio = '/'.$sub_studio;
+                        $sub_studio = '/' . $sub_studio;
                     }
 
                     // }
-                    $this->studio = $studio.$sub_studio;
+                    $this->studio = $studio . $sub_studio;
                 } else {
                     $this->title_studio = 'Misc';
                 }
             }
             if (true == File::isPornhubfile($this->video_file)) {
-                $studio_dir = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__.'/'.__LIBRARY__);
-                $studio_dir = str_replace('/'.$this->getGenre().'/', '', $studio_dir);
-                $arr = explode('/', $studio_dir);
+                $studio_dir   = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
+                $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
+                $arr          = explode('/', $studio_dir);
                 foreach ($arr as $idx => $studio_string) {
                     foreach (__SKIP_STUDIOS__ as $k) {
                         if ($studio_string == $k) {
@@ -236,7 +251,7 @@ class Reader extends TagReader
                     }
                 }
 
-                $string = implode('/', $studio_array);
+                $string       = implode('/', $studio_array);
                 $studio_array = explode('/', $string);
 
                 $this->studio = $studio_array[0];
@@ -253,13 +268,15 @@ class Reader extends TagReader
 
     public function getGenre()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $genre = '';
         if ('' == $this->genre) {
 
             // $res = $this->getFileTag('Genre');
             // utmdd([__METHOD__,$res]);
             $filename = $this->video_file;
-            $success = preg_match(__GENRE_REGEX__, $filename, $matches);
+            $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
 
             if (true == $success) {
                 $this->genre = $matches[1];
@@ -273,6 +290,8 @@ class Reader extends TagReader
 
     public function getTitle()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $res = $this->getFileTag('Title');
         if (false === $res) {
             return null;
@@ -283,6 +302,8 @@ class Reader extends TagReader
 
     public function getArtist()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $res = $this->getFileTag('Artist');
         if (false === $res) {
             return null;
@@ -293,12 +314,16 @@ class Reader extends TagReader
 
     public function getKeyword()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function getFileTag($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $method = 'get'.$tag;
+
+        $method = 'get' . $tag;
 
         //  UTMLog::Logger('Class', $className);
         UTMLog::Logger('method', $method);

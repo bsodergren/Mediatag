@@ -5,6 +5,9 @@
 
 namespace Mediatag\Commands\Test;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 
@@ -17,6 +20,8 @@ class Options extends MediaOptions
     public $options = ['Default',  'Test'];
     public function Definitions()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Translate::$Class = __CLASS__;
 
         return [

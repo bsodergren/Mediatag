@@ -5,8 +5,10 @@
 
 namespace Mediatag\Modules\Display;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -18,7 +20,7 @@ class ShowDisplay
 {
     public $BarSection1;
 
-    public $LineBreaks = false;
+    public $LineBreaks    = false;
 
     public $BarSection2;
 
@@ -38,35 +40,39 @@ class ShowDisplay
 
     public $processOutput;
 
-    public $padbuffer = 2;
+    public $padbuffer     = 2;
 
     public $padbufferChar = ' ';
 
     /**
      * @var int
      */
-    public $displayTimer = 500000;
+    public $displayTimer  = 500000;
 
     protected $formatter;
 
     public function __construct(OutputInterface $output)
     {
-        $this->formatter = new FormatterHelper();
-        $outputStyle = new OutputFormatterStyle('red');
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $this->formatter        = new FormatterHelper();
+        $outputStyle            = new OutputFormatterStyle('red');
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
-        $currentTagStyle = new OutputFormatterStyle('gray');
+        $currentTagStyle        = new OutputFormatterStyle('gray');
         Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
-        $this->BarSection1 = Mediatag::$output->section();
-        $this->BarSection2 = Mediatag::$output->section();
+        $this->BarSection1      = Mediatag::$output->section();
+        $this->BarSection2      = Mediatag::$output->section();
         $this->fileCountSection = Mediatag::$output->section();
-        $this->fileInfoSection = Mediatag::$output->section();
-        $this->tableSection = Mediatag::$output->section();
-        $this->table = new Table($this->tableSection);
+        $this->fileInfoSection  = Mediatag::$output->section();
+        $this->tableSection     = Mediatag::$output->section();
+        $this->table            = new Table($this->tableSection);
     }
 
     public function DisplayTable(array $filelist_array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('start Display Table');
         $count = \count($filelist_array);
         if (0 == $count) {
@@ -75,7 +81,7 @@ class ShowDisplay
             return;
         }
         $this->displayHeader(Mediatag::$output, ['count' => $count]);
-        $idx = 1;
+        $idx   = 1;
         UTMLog::logger('start File display');
         UTMLog::startLap();
         foreach ($filelist_array as $key => $value) {
@@ -89,7 +95,7 @@ class ShowDisplay
                         for ($n = 0; $n < 7; ++$n) {
                             $line_array[] = '';
                         }
-                        $line = implode(\PHP_EOL, $line_array);
+                        $line       = implode(\PHP_EOL, $line_array);
                         Mediatag::$output->write($line);
                     }
                 }
@@ -101,11 +107,13 @@ class ShowDisplay
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('start Display Header');
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeLn('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
+            $this->fileCountSection->writeLn('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
             $this->fileInfoSection->writeLn('<info>   </info>');
             $this->table->setHeaders(['ID', 'Meta Value']);
             $this->table->render();
@@ -116,11 +124,13 @@ class ShowDisplay
 
     public function displayFileInfo($fileinfo, $count, $idx)
     {
-        $method = 'overwrite';
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $method       = 'overwrite';
 
         if (!\array_key_exists('currentTags', $fileinfo)) {
             $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
-            $tagCount = \count($fileinfo['metatags']);
+            $tagCount             = \count($fileinfo['metatags']);
         } else {
             $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
         }
@@ -136,10 +146,10 @@ class ShowDisplay
             $this->table->appendRow([$tag, $row]);
         }
         $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
-        $filename = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
+        $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files');
-        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files');
+        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
 
         return true;
         // usleep($this->displayTimer);
@@ -147,17 +157,19 @@ class ShowDisplay
 
     private function TagBlockDisplay($tag, $fileinfo): string|null
     {
-        $tag = strtolower($tag);
-        $style = 'comment';
-        $string = '';
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $tag           = strtolower($tag);
+        $style         = 'comment';
+        $string        = '';
         $current[$tag] = '';
         if (\array_key_exists('currentTags', $fileinfo)) {
             $current = $fileinfo['currentTags'];
-            $style = 'current';
+            $style   = 'current';
         }
         if (\array_key_exists('metatags', $fileinfo)) {
             $current = $fileinfo['metatags'];
-            $style = 'info';
+            $style   = 'info';
         }
         if (\array_key_exists('updateTags', $fileinfo)) {
             if (!\array_key_exists($tag, $fileinfo['updateTags'])) {
@@ -176,8 +188,10 @@ class ShowDisplay
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
     {
-        $tag = strtolower($tag);
-        $string = '';
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $tag     = strtolower($tag);
+        $string  = '';
         $changes = [];
         $changes = $fileinfo['updateTags'];
         if (\array_key_exists($tag, $changes)) {

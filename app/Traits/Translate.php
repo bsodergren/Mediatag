@@ -5,15 +5,19 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
+
 trait Translate
 {
     public static $Class;
 
     public static function text($constant, $vars = [])
     {
-        $class = self::$Class;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $class     = self::$Class;
         $thisClass = new \ReflectionClass($class);
-        $text = $thisClass->getConstant($constant);
+        $text      = $thisClass->getConstant($constant);
 
         if (false == $text) {
             if (!str_contains($class, 'Commands')) {
@@ -23,12 +27,12 @@ trait Translate
                 $class = str_replace('Options', 'Lang.php', $class);
             }
 
-            return '<error>'.$constant.' not yet set in '.$class.'</error> ';
+            return '<error>' . $constant . ' not yet set in ' . $class . '</error> ';
         }
 
         if (\is_array($vars)) {
             foreach ($vars as $key => $value) {
-                $key = '%%'.strtoupper($key).'%%';
+                $key  = '%%' . strtoupper($key) . '%%';
                 $text = str_replace($key, $value, $text);
             }
 

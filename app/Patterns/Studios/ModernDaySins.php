@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Patterns\Studios\AdultTime;
 
 const MODERNDAYSINS_REGEX_COMMON = '//i';

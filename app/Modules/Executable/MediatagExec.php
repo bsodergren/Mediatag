@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Executable;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Traits\Callables;
@@ -29,7 +32,7 @@ class MediatagExec
         Test::test as testTrait;
     }
 
-    public $metatags = [];
+    public $metatags      = [];
 
     public $stdout;
 
@@ -51,14 +54,16 @@ class MediatagExec
 
     public $runCommand;
 
-    public $updateTags = [];
+    public $updateTags    = [];
 
-    public $execMode = '';
+    public $execMode      = '';
 
     protected $optionArgs = [];
 
     public function __construct($videoData, $input = null, $output = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //        $this->getTags();
 
         if (\is_string($videoData)) {
@@ -87,6 +92,8 @@ class MediatagExec
 
     public function preview()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('write' == $this->execMode) {
             //   $this->previewTrait("\t Running ".$this->runCommand, true);
         }
@@ -94,13 +101,17 @@ class MediatagExec
 
     public function test()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('write' == $this->execMode) {
-            $this->testTrait("\t Running ".$this->runCommand, true);
+            $this->testTrait("\t Running " . $this->runCommand, true);
         }
     }
 
     public function getTags()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (__META_TAGS__ as $value) {
             $this->metatags[$value] = '';
         }
@@ -108,6 +119,8 @@ class MediatagExec
 
     protected function createOptionArg($meta_tag, $meta_value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         $this->getCmdArgs($meta_tag, $meta_value);
 
@@ -138,13 +151,15 @@ class MediatagExec
 
     //     $this->runCommand = $process->getCommandLine();
     //     utmdd($this->runCommand);
-  
+
 
     //     return true;
     // }
     protected function exec($command, $callback = null): mixed
     {
-        $process = new Process($command);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $process          = new Process($command);
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();

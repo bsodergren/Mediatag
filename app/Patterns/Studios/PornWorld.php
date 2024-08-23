@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Patterns;
 
@@ -15,21 +18,23 @@ class PornWorld extends Patterns
     public $regex = [
         'pornworld' => [
             'artist' => [
-                'pattern' => PORNWORLD_REGEX_COMMON,
-                'delim' => '_',
-                'match' => 2,
+                'pattern'             => PORNWORLD_REGEX_COMMON,
+                'delim'               => '_',
+                'match'               => 2,
                 'artistFirstNameOnly' => true,
             ],
-            'title' => [
+            'title'  => [
                 'pattern' => PORNWORLD_REGEX_COMMON,
-                'delim' => '_',
-                'match' => 2,
+                'delim'   => '_',
+                'match'   => 2,
             ],
         ],
     ];
 
     public function __construct($object)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         //utmdump($this->artist_match);
         parent::__construct($object);
@@ -38,17 +43,21 @@ class PornWorld extends Patterns
 
     public function getArtistTextTransform($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return str_replace(['La_','De_'], ['La','De'], $text);
     }
 
     public function getArtistTransform($names, $delim = ', ')
     {
-        $namesArray = [];
-        $names = str_replace($this->getArtistDelim(), $delim, $names);
-        $names = str_replace(['La_','De_'], ['La','De'], $names);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $namesArray  = [];
+        $names       = str_replace($this->getArtistDelim(), $delim, $names);
+        $names       = str_replace(['La_','De_'], ['La','De'], $names);
         $names_array = explode($delim, $names);
-        $prev_name = '';
-        $skip = false;
+        $prev_name   = '';
+        $skip        = false;
 
         foreach ($names_array as $aName) {
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, \PREG_SPLIT_NO_EMPTY);
@@ -60,7 +69,7 @@ class PornWorld extends Patterns
                 continue;
             }
             //utmdump([$skip, $aName]);
-            if($skip === true) {
+            if ($skip === true) {
                 $skip = false;
 
                 continue;
@@ -73,7 +82,7 @@ class PornWorld extends Patterns
 
                     if ('' != $aName) {
                         $namesArray[] = $aName;
-                        $skip = true;
+                        $skip         = true;
                         //utmdump([$skip, $namesArray]);
                     }
                 }

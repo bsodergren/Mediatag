@@ -5,6 +5,9 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Timer;
 use Nette\Utils\Arrays;
@@ -14,18 +17,20 @@ trait MediaLibrary
 {
     public function getLibrary($exit = true): void
     {
-        $curent_dir = getcwd();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $curent_dir   = getcwd();
         UTMLog::logger('Current Directory', $curent_dir);
         if (false === $exit) {
             return;
         }
         $in_directory = (new Filesystem())->makePathRelative($curent_dir, __PLEX_HOME__);
 
-        $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+        $success      = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
         Timer::watch('GetLibrary');
         if (0 == \count($match)) {
-            self::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
+            self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
 
             UTMLog::logger('Wrong spot?', $curent_dir);
             if (true === $exit) {
@@ -39,7 +44,7 @@ trait MediaLibrary
             if (!Arrays::contains(__LIBRARIES__, $match[1])) {
                 UTMLog::logger('Not in a Library directory?', $curent_dir);
 
-                self::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
+                self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
                 if (true === $exit) {
                     exit;
                 }

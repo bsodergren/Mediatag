@@ -5,6 +5,9 @@
 
 namespace Mediatag\Core;
 
+use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Bundle\Stash\Cache;
@@ -20,16 +23,18 @@ class MediaCache
 
     public static function init(InputInterface $input = null, OutputInterface $output = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Option::init($input);
         if (! \defined('__LIBRARY__')) {
             \define('__LIBRARY__', 'tmp');
         }
-        if (! is_dir(__APP_CACHE_DIR__.'/'.__LIBRARY__)) {
-            mkdir(__APP_CACHE_DIR__.'/'.__LIBRARY__, 0777, true);
+        if (! is_dir(__APP_CACHE_DIR__ . '/' . __LIBRARY__)) {
+            mkdir(__APP_CACHE_DIR__ . '/' . __LIBRARY__, 0777, true);
         }
 
         self::$stash = Cache::file(function (): void {
-            $this->setCacheDir(__APP_CACHE_DIR__.'/'.__LIBRARY__);
+            $this->setCacheDir(__APP_CACHE_DIR__ . '/' . __LIBRARY__);
         });
 
         if (true == Option::isTrue('flush')) {
@@ -40,6 +45,8 @@ class MediaCache
 
     public static function get($key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (true == Option::isTrue('nocache')) {
             return false;
         }
@@ -49,6 +56,8 @@ class MediaCache
 
     public static function put($key, $value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // self::forget($key);
 
         return self::$stash->put($key, $value);
@@ -56,6 +65,8 @@ class MediaCache
 
     public static function flush()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$stash->flush();
 
         // exit('cache flushed');
@@ -63,6 +74,8 @@ class MediaCache
 
     public static function forget($key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$stash->forget($key);
     }
 }

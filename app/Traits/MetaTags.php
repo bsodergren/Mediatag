@@ -6,6 +6,8 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
@@ -23,41 +25,53 @@ trait MetaTags
 
     public function CleanMetaValue(string $tag, string $text): string
     {
-        $tag = strtolower($tag);
-        $method = 'clean'.ucfirst($tag);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $tag    = strtolower($tag);
+        $method = 'clean' . ucfirst($tag);
 
         return trim($this->{$method}($text));
     }
 
     public function cleanGenre($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return Genre::clean($text);
     }
 
     public function cleanArtist($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $text;
     }
 
     public function cleanKeyword($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return Keyword::clean($text);
     }
 
     public function cleanTitle($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return Title::clean($text);
     }
 
     public function cleanStudio($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         if (\is_array($text)) {
             $array = $text;
         } else {
             $array = explode('/', $text);
         }
-        $array = array_unique($array);
+        $array        = array_unique($array);
         //   sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
@@ -68,10 +82,10 @@ trait MetaTags
             $this->videoData['video_path'] = $this->video_path;
         }
 
-        $studio_dir = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__.'/'.__LIBRARY__);
+        $studio_dir   = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
-        $key_studio = $studio_array[0];
+        $key_studio   = $studio_array[0];
 
         if (isset(fileReader::$PatternClass)) {
 
@@ -83,6 +97,8 @@ trait MetaTags
 
     public function sortTagList($genre, $new = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\is_array($genre)) {
             $array = $genre;
         } else {
@@ -92,7 +108,7 @@ trait MetaTags
         if (null !== $new) {
             if (str_contains($new, ',')) {
                 $add_array = explode(',', $new);
-                $array = array_merge($array, $add_array);
+                $array     = array_merge($array, $add_array);
             } else {
                 $array[] = $new;
             }
@@ -109,12 +125,14 @@ trait MetaTags
 
     public static function mergeTag($tag, $first, $second)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
-        $firstCmp = str_replace(" ","",strtoupper($first));
-        $secondCmp = str_replace(" ","",strtoupper($second));
 
-        $delim = ',';
+        $firstCmp  = str_replace(" ", "", strtoupper($first));
+        $secondCmp = str_replace(" ", "", strtoupper($second));
+
+        $delim     = ',';
         if ('studio' == $tag) {
             $delim = '/';
         }
@@ -125,11 +143,11 @@ trait MetaTags
             if ('' == $firstCmp) {
                 $return = $second;
             } else {
-                if($firstCmp == $secondCmp) {
+                if ($firstCmp == $secondCmp) {
                     $return = $first;
                 } else {
 
-                    $return = $first.$delim.$second;
+                    $return = $first . $delim . $second;
                 }
 
             }
@@ -143,12 +161,12 @@ trait MetaTags
 
             $data['video_key'] = Metatags::$Videokey;
 
-            if($tag == 'studio') {
-                if($firstCmp == $secondCmp) {
+            if ($tag == 'studio') {
+                if ($firstCmp == $secondCmp) {
 
                     $data['studio'] = MetaTags::clean($first, $tag);
                 } else {
-                    $data['studio'] = MetaTags::clean($first, $tag);
+                    $data['studio']    = MetaTags::clean($first, $tag);
                     $data['substudio'] = MetaTags::clean($second, $tag);
                 }
             } else {
@@ -168,6 +186,8 @@ trait MetaTags
 
     public function mergetags($tag_array, $tag_array2, $obj)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
             if (\array_key_exists($tag, $tag_array2)) {
@@ -183,11 +203,13 @@ trait MetaTags
 
     public static function clean($text, $tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::Logger('Clean', [$tag, $text]);
         if ('artist' == $tag && null === $text) {
             return null;
         }
-        $delim = ',';
+        $delim     = ',';
         if ('studio' == $tag) {
             $delim = '/';
         }
@@ -197,7 +219,7 @@ trait MetaTags
         }
 
         if ('title' == $tag) {
-            $arr = explode(' ', $text);
+            $arr      = explode(' ', $text);
 
             array_walk($arr, function (&$value) {
                 $value = trim(ucwords(strtolower($value)));
@@ -208,11 +230,11 @@ trait MetaTags
             return $newTitle;
         }
 
-        $method = 'get'.ucfirst($tag);
+        $method    = 'get' . ucfirst($tag);
 
-        $newList = [];
-        $i = 0;
-        $total = 0;
+        $newList   = [];
+        $i         = 0;
+        $total     = 0;
         $tag_array = explode($delim, $text);
 
         foreach ($tag_array as $tagValue) {
@@ -229,7 +251,7 @@ trait MetaTags
             $value = MetaTags::$tagDB->{$method}($tagValue);
 
             if ('Genre' == $tag) {
-                if(__LIBRARY__ == "Home") {
+                if (__LIBRARY__ == "Home") {
                     $newList[] = $tagValue;
                 }
 
@@ -241,14 +263,14 @@ trait MetaTags
             }
         }
 
-        $string = implode($delim, $newList);
-        $arr = explode($delim, $string);
+        $string    = implode($delim, $newList);
+        $arr       = explode($delim, $string);
 
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
-        $arr = array_unique($arr, \SORT_STRING);
+        $arr       = array_unique($arr, \SORT_STRING);
 
-        $arr = array_values($arr);
+        $arr       = array_values($arr);
         if ('genre' == $tag) {
             // utmdd([__METHOD__,$arr]);
             if (true == MediaArray::search($arr, 'MMF')) {
@@ -275,7 +297,7 @@ trait MetaTags
             }
         }
 
-        $max = \count($arr);
+        $max       = \count($arr);
 
         while ($total < 255) {
             $total = \strlen($arr[$i]) + $total + 1;
@@ -288,9 +310,9 @@ trait MetaTags
         if ($total > 255) {
             --$i;
         }
-        $new_arr = \array_slice($arr, 0, $i);
+        $new_arr   = \array_slice($arr, 0, $i);
 
-        $string = implode($delim, $new_arr);
+        $string    = implode($delim, $new_arr);
         if ('' == $string) {
             $string = null;
         }
@@ -300,6 +322,8 @@ trait MetaTags
 
     public function expandArray($array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($array as $key => $value) {
             $this->{$key} = $value;
         }

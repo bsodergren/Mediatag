@@ -5,6 +5,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 class PervMom extends TeamSkeet
 {
     // public $studio = 'Perv Mom';

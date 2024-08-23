@@ -5,11 +5,14 @@
 
 namespace Mediatag\Commands\Download;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 const DESCRIPTION = 'Download and move new videos to Media Folder';
-const NAME = 'download';
+const NAME        = 'download';
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 class Command extends MediaCommand

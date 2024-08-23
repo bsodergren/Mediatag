@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Filesystem;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Traits\Callables;
 use UTM\Utilities\Debug\Debug;
 use Mediatag\Utilities\Strings;
@@ -22,7 +25,7 @@ class MediaFile
 
     public $video_name;
 
-    public $video = [];
+    public $video           = [];
 
     public $output;
 
@@ -46,6 +49,8 @@ class MediaFile
 
     public function __construct($filename = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null !== $filename) {
             $this->video_file = $filename;
             $this->video_name = $this->filename();
@@ -61,11 +66,13 @@ class MediaFile
      */
     public function get(): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video = [
-            'video_file' => $this->fullname(),
-            'video_path' => $this->filepath(),
-            'video_name' => $this->filename(),
-            'video_key' => $this->videokey(),
+            'video_file'    => $this->fullname(),
+            'video_path'    => $this->filepath(),
+            'video_name'    => $this->filename(),
+            'video_key'     => $this->videokey(),
             'video_library' => $this->library(),
         ];
 
@@ -74,27 +81,31 @@ class MediaFile
 
     private static function get64BitNumber($text)
     {
-        $alpha = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $alpha   = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
         $numeric = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5];
-       // $text = basename($text);
-        $text = strtolower($text);
-        $key =  md5($text);
+        // $text = basename($text);
+        $text    = strtolower($text);
+        $key     =  md5($text);
         // $key = str_replace($alpha, $numeric, $text);
         // $key = str_replace(['_', '-', '.', '/', ' '], '', $key);
         // $len = \strlen($key);
-         $xkey = 'x'.substr($key, 0, 31);
+        $xkey    = 'x' . substr($key, 0, 31);
         return $xkey;
 
     }
 
     public static function getVideoKey($filename)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         // $filename = realpath($filename);
 
         $filename = basename($filename);
 
-        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success  = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             $video_key = $matches[1];
         } else {
@@ -110,6 +121,8 @@ class MediaFile
      */
     public function videokey()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $this->video_file) {
             if (false == $this->video_key) {
                 $this->video_key = self::getVideoKey($this->video_file);
@@ -125,6 +138,8 @@ class MediaFile
      */
     public function fullname(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->path('fullname');
     }
 
@@ -133,6 +148,8 @@ class MediaFile
      */
     public function filepath(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->path('fullpath');
     }
 
@@ -141,6 +158,8 @@ class MediaFile
      */
     public function filename(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->path('filename');
     }
 
@@ -149,11 +168,13 @@ class MediaFile
      */
     public function library(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ($this->video_file) {
             $directory = $this->filepath();
         }
 
-        $filesystem = new SFilesystem();
+        $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative($directory, __PLEX_HOME__);
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
@@ -169,6 +190,8 @@ class MediaFile
      */
     public function studioName(): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->path('studioName');
     }
 
@@ -180,6 +203,8 @@ class MediaFile
      */
     public static function file(string $filename, string $method = 'get'): mixed
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $obj = new static($filename);
 
         return $obj->{$method}();
@@ -187,8 +212,10 @@ class MediaFile
 
     public static function splitFile($source, $targetpath = './logs/', $lines = 10, $filename = 'videos_', $ext = '')
     {
-        $i = 0;
-        $j = 1;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $i      = 0;
+        $j      = 1;
         $buffer = '';
 
         if (!str_ends_with($targetpath, '/')) {
@@ -204,7 +231,7 @@ class MediaFile
             ++$i;
 
             $file_name = sprintf('%s%02d%s', $filename, $j, $ext);
-            $fname = $targetpath.$file_name;
+            $fname     = $targetpath . $file_name;
 
             Strings::showstatus($i, $lines, 80, $file_name);
             if ($i >= $lines) {
@@ -223,6 +250,8 @@ class MediaFile
 
     public static function saveToFile(&$buffer, $fname)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (!$fhandle = @fopen($fname, 'w')) {
             echo "Cannot open file ({$fname})";
 
@@ -239,6 +268,8 @@ class MediaFile
 
     public static function file_append_file($file = '', $string = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $fp = fopen($file, 'a+');
         fwrite($fp, $string);
         fclose($fp);
@@ -249,8 +280,10 @@ class MediaFile
      */
     private function path($method = 'filename'): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->full_filename = realpath($this->video_file);
-        $path_parts = pathinfo($this->full_filename);
+        $path_parts          = pathinfo($this->full_filename);
 
         return match ($method) {
             'fullname' => $this->full_filename,
@@ -261,7 +294,9 @@ class MediaFile
 
     public static function isPornhubfile($filename)
     {
-        $filesystem = new SFilesystem();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
@@ -270,7 +305,7 @@ class MediaFile
             $library = $match[1];
         }
 
-        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success      = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             return true;
         }

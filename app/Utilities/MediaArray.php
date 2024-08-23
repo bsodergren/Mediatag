@@ -5,6 +5,8 @@
 
 namespace Mediatag\Utilities;
 
+use Mediatag\Core\Mediatag;
+
 /**
  * Summary of MediaArray.
  */
@@ -17,6 +19,8 @@ class MediaArray
      */
     public static function diff($array, $compare, $diff = 'key')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $return_array = [];
         if ('key' == $diff) {
             foreach ($array as $key => $value) {
@@ -25,7 +29,7 @@ class MediaArray
                 }
             }
         } else {
-            $return_array = array_diff($array,$compare);
+            $return_array = array_diff($array, $compare);
         }
 
         return $return_array;
@@ -36,6 +40,8 @@ class MediaArray
      */
     public static function search($arr, $string, $exact = false, $nodelim = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
             if (\is_array($value)) {
                 if (str_contains($string, $value['name'])) {
@@ -55,7 +61,7 @@ class MediaArray
                     $value = str_replace(' ', '_', $value);
 
                     if (true === $nodelim) {
-                        $value = str_replace('_', '', $value);
+                        $value  = str_replace('_', '', $value);
                         $string = str_replace('_', '', $string);
 
                     }
@@ -82,6 +88,8 @@ class MediaArray
 
     public static function matchArtist($array, $string)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $namesArray = [];
         foreach ($array as $key => $parts) {
             if (str_contains($string, $parts['name'])) {
@@ -92,8 +100,8 @@ class MediaArray
                 }
                 continue;
             }
-            $shortName = str_replace("_","",$parts['name']);
-            if (str_contains($string,$shortName )) {
+            $shortName = str_replace("_", "", $parts['name']);
+            if (str_contains($string, $shortName)) {
                 if ('' != $parts['replacement']) {
                     $namesArray[] = $parts['replacement'];
                 } else {
@@ -114,12 +122,14 @@ class MediaArray
      */
     public static function VideoFiles(array $array, string $field, $exists = true): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $videoArray = [];
 
         foreach ($array as $k => $file) {
             if (\is_array($file)) {
                 if (\array_key_exists($field, $file)) {
-                    $row = $file[$field];
+                    $row        = $file[$field];
                     $row_exists = $file;
                     if ('video_file' != $field && $exists) {
                         if (\array_key_exists('video_file', $file)) {
@@ -128,7 +138,7 @@ class MediaArray
                     }
                 }
             } else {
-                $row = $file;
+                $row        = $file;
                 $row_exists = $file;
             }
 

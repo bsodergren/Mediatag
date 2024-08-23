@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
@@ -14,18 +17,22 @@ class VideoTags extends VideoData
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
 
-    private $actionText = "<comment>Updated Meta Tags</comment>";
+    private $actionText    = "<comment>Updated Meta Tags</comment>";
 
 
     public function getText()
     {
-   
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        return  $this->actionText;
+
+
+        return $this->actionText;
 
     }
     public function get($key, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $parts                 = pathinfo($this->video_file);
 
         $vdata                 = [
@@ -53,7 +60,7 @@ class VideoTags extends VideoData
 
         $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
         utmdump($tagList);
-        $this->tagList = $tagList;
+        $this->tagList         = $tagList;
         return $tagList;
     }
 }

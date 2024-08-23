@@ -5,8 +5,10 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
+
+
+use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Callables;
 use Nette\Utils\Callback;
@@ -19,16 +21,20 @@ class ReadExec extends MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->execMode = 'read';
         parent::__construct($videoData, $input, $output);
     }
 
     public function read()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $video_key = File::file($this->video_file, 'videokey');
-        $array = MediaCache::get($video_key);
+        $array     = MediaCache::get($video_key);
         if (false === $array) {
-            $command = [
+            $command  = [
                 Mediatag::App(),
                 $this->video_file,
                 '-t',
@@ -38,13 +44,13 @@ class ReadExec extends MediatagExec
 
             $this->exec($command, $callback);
 
-            $array = [
+            $array    = [
                 $this->video_key => [
-                    'video_file' => $this->video_file,
-                    'video_path' => $this->video_path,
-                    'video_name' => $this->video_name,
+                    'video_file'    => $this->video_file,
+                    'video_path'    => $this->video_path,
+                    'video_name'    => $this->video_name,
                     'video_library' => $this->video_library,
-                    'metatags' => $this->metatags,
+                    'metatags'      => $this->metatags,
                 ],
             ];
 
@@ -58,20 +64,22 @@ class ReadExec extends MediatagExec
 
     private function getMetaValue($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return preg_replace_callback_array([
             '/.*(alb).*contains\:\ (.*)/' => function ($matches) {
                 return $this->metatags['studio'] = $matches[2];
             },
-            '/(gen).*contains\:\ (.*)/' => function ($matches) {
+            '/(gen).*contains\:\ (.*)/'   => function ($matches) {
                 return $this->metatags['genre'] = $matches[2];
             },
-            '/(nam).*contains\:\ (.*)/' => function ($matches) {
+            '/(nam).*contains\:\ (.*)/'   => function ($matches) {
                 return $this->metatags['title'] = $matches[2];
             },
-            '/(aART).*contains\:\ (.*)/' => function ($matches) {
+            '/(aART).*contains\:\ (.*)/'  => function ($matches) {
                 return $this->metatags['artist'] = $matches[2];
             },
-            '/(keyw).*contains\:\ (.*)/' => function ($matches) {
+            '/(keyw).*contains\:\ (.*)/'  => function ($matches) {
                 return $this->metatags['keyword'] = $matches[2];
             },
         ], $text);

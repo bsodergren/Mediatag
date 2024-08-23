@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Rename;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -25,17 +27,23 @@ trait Helper
 
     public static function __callStatic($method, $args): string
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //  $genre = str_replace('get', '', $method);
         return self::get($method, $args[0]['genre']);
     }
 
     public function prunedirs()
     {
-      Filesystem::prunedirs();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        Filesystem::prunedirs();
     }
 
     public function moveStudios()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file_array = [];
         $tagConn    = new DbMap();
 
@@ -55,7 +63,7 @@ trait Helper
             $finder->files()->in(__CURRENT_DIRECTORY__)->sortByName();
 
             if (Option::isTrue('depth')) {
-                $depth = '< '.Option::getValue('depth', 1)[0];
+                $depth = '< ' . Option::getValue('depth', 1)[0];
 
                 $finder->depth($depth);
             }
@@ -77,7 +85,7 @@ trait Helper
         }
 
         foreach ($file_array as $__ => $file) {
-            $message = '';
+            $message                             = '';
             // $oldName                             = $file;
             // $newName                             = $this->cleanFilename($file);
             // [$file,$message]                     = $this->renameFile($oldName, $newName, false);
@@ -87,7 +95,7 @@ trait Helper
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
         }
-        $SortDir   = false;
+        $SortDir    = false;
         foreach ($videoArray as $k => $videoData) {
             $text       = [];
             $video_file = $videoData['video_file'];
@@ -116,7 +124,7 @@ trait Helper
                 $genDir    = $this->getGenres($metatags);
                 if (false !== $genDir) {
                     $SortDir   = false;
-                    $genrePath = '/'.$genDir;
+                    $genrePath = '/' . $genDir;
                 }
             }
             foreach (__SKIP_STUDIOS__ as $k) {
@@ -129,7 +137,7 @@ trait Helper
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
 
             if (Option::isTrue('studio')) {
-                $prefix = '/'.Option::getValue('studio', 1)[0];
+                $prefix = '/' . Option::getValue('studio', 1)[0];
             }
             if (self::istrue('pov')) {
                 //   $prefix = '/POV';
@@ -143,17 +151,17 @@ trait Helper
                 $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
                 if (false == $studio_dir) {
                     // continue;
-                    $studio_dir = 'New/'.$studios[$Arraykey];
+                    $studio_dir = 'New/' . $studios[$Arraykey];
                 }
             }
 
-            $video_path = $studio_dir.$genrePath;
+            $video_path = $studio_dir . $genrePath;
             if (true == $SortDir) {
-                $video_path = 'Sort/'.$studio_dir;
+                $video_path = 'Sort/' . $studio_dir;
             }
 
-            $newPath    = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;
-            $dupePath   = __PLEX_HOME__.'/Dupes/'.__LIBRARY__;
+            $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
+            $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__;
             $newPath    = nFileSystem::normalizePath($newPath);
             $dupePath   = nFileSystem::normalizePath($dupePath);
             if (!is_dir($newPath)) {
@@ -163,7 +171,7 @@ trait Helper
             }
             if (true == $SortDir) {
                 foreach (['Group', 'MMF', 'MFF', 'Single', 'Compilation'] as $geneDir) {
-                    $gebrePath = $newPath.'/'.$geneDir;
+                    $gebrePath = $newPath . '/' . $geneDir;
                     if (!is_dir($gebrePath)) {
                         if (!Option::isTrue('test')) {
                             nFileSystem::createDir($gebrePath, 0755);
@@ -180,8 +188,8 @@ trait Helper
             }
 
             $video_name = basename($video_file);
-            $newFile    = $newPath.'/'.$video_name;
-            $dupeFile   = $dupePath.'/'.$video_name;
+            $newFile    = $newPath . '/' . $video_name;
+            $dupeFile   = $dupePath . '/' . $video_name;
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -218,6 +226,8 @@ trait Helper
 
     public function getGenres($metadata)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $genreArray      = explode(',', $metadata['genre']);
         $this->genrePath = [];
         foreach ($genreArray as $genre) {
@@ -234,6 +244,8 @@ trait Helper
 
     public static function get($genre, $arg)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $genre = strtolower($genre);
         $genre = str_replace('_', ' ', $genre);
         $arg   = strtolower($arg);
@@ -247,11 +259,13 @@ trait Helper
 
     public static function compare($object)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$selfClass = $object->genrePath;
 
         // $genreArray = [
-        //     'mmf' => 1, 'mff' => 2, 'group' => 4, 
-//        'orgy' => 8, 'Compilation' => 16, 'threesome' => 32, 'double_penetration' => 64, 'Single' => 128,
+        //     'mmf' => 1, 'mff' => 2, 'group' => 4,
+        //        'orgy' => 8, 'Compilation' => 16, 'threesome' => 32, 'double_penetration' => 64, 'Single' => 128,
         // ];
         // $code = 0;
         // foreach($genreArray as $gen => $bit){
@@ -296,6 +310,8 @@ trait Helper
 
     public static function istrue($var)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $var = strtolower($var);
         foreach (self::$selfClass as $genre => $value) {
             if ($var == $genre) {
@@ -310,6 +326,8 @@ trait Helper
 
     public function translate($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // $filename = Strings::translate($text);
         // $filename = $this->cleanFilename($filename);
 
@@ -318,6 +336,8 @@ trait Helper
 
     public function rename($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (Mediatag::$SearchArray as $key => $file) {
             $oldName   = $file;
 
@@ -336,15 +356,19 @@ trait Helper
 
     public function cleanFilename($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file_name = basename($file);
         $file_dir  = \dirname($file);
         $file_name = Strings::cleanFileName($file_name);
 
-        return $file_dir.'/'.$file_name;
+        return $file_dir . '/' . $file_name;
     }
 
     public function renameFile($oldName, $newName, $write = true)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $color       = 'comment';
         $rtn_message = '';
 
@@ -363,8 +387,8 @@ trait Helper
                     Filesystem::renameFile($oldName, $newName);
                 }
                 if (true == $write) {
-                    $message = 'Renaming file from <'.$color.'>'.basename($oldName).'</'.$color.'> to <'.$color.'>'.basename($newName).'</'.$color.'> ';
-                    Mediatag::$output->writeln('<info>'.$message.'</info>');
+                    $message = 'Renaming file from <' . $color . '>' . basename($oldName) . '</' . $color . '> to <' . $color . '>' . basename($newName) . '</' . $color . '> ';
+                    Mediatag::$output->writeln('<info>' . $message . '</info>');
                 } else {
                     $rtn_message = ['Renaming files', ['Old' => basename($oldName)], ['New' => basename($newName)]];
                 }

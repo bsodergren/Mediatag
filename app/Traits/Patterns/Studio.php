@@ -5,6 +5,9 @@
 
 namespace Mediatag\Traits\Patterns;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\Monolog\UTMLog;
 
 trait Studio
@@ -14,6 +17,8 @@ trait Studio
      */
     public function mapStudio($studio)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
@@ -27,6 +32,8 @@ trait Studio
      */
     public function getStudioRegex()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('studio', 'pattern');
     }
 
@@ -35,6 +42,8 @@ trait Studio
      */
     public function getStudio()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::Logger('Studio Key', $this->video_name);
         //  utmdd([__METHOD__,$this->getStudioRegex()]);
         if (true == $this->getStudioRegex()) {
@@ -58,6 +67,8 @@ trait Studio
 
     public static function customStudio($key_studio, $arr)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (false == self::$StudioKey) {
             self::$StudioKey = $key_studio;
         }

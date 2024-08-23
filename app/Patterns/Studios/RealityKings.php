@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class RealityKings extends Patterns

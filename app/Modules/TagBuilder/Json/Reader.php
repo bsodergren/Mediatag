@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\TagBuilder\Json;
 
+use Mediatag\Core\Mediatag;
+
+
 use Facebook\WebDriver\Exception\WebDriverException;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Database\TagDB;
@@ -17,7 +20,7 @@ use UTM\Bundle\Monolog\UTMLog;
 
 class Reader extends TagReader
 {
-    public $tag_array = [];
+    public $tag_array   = [];
 
     public $db;
 
@@ -29,6 +32,8 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->db = new TagDB();
 
         $this->expandArray($videoData);
@@ -39,6 +44,8 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('Call in json', $method);
 
         $this->get($method);
@@ -46,12 +53,14 @@ class Reader extends TagReader
 
     public function artist()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->title();
 
         if (\array_key_exists('title', $this->tag_array)) {
-            $string = $this->tag_array['title'];
+            $string                    = $this->tag_array['title'];
             //
-            $string = $this->matchArtist($string);
+            $string                    = $this->matchArtist($string);
             UTMLog::logger('title in artist()', $string);
             $this->tag_array['artist'] = $string;
         }
@@ -61,13 +70,15 @@ class Reader extends TagReader
 
     private function getPageDetails($webpage_url)
     {
-        $key = 'ph_webpage_'.ltrim(strrchr($webpage_url, '='), '=');
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $key          = 'ph_webpage_' . ltrim(strrchr($webpage_url, '='), '=');
         $artist_array = MediaCache::get($key);
 
         if (false === $artist_array) {
-            $client = Client::createChromeClient();
+            $client       = Client::createChromeClient();
 
-            $webpage_url = str_replace('pornhubpremium.com', 'pornhub.com', $webpage_url);
+            $webpage_url  = str_replace('pornhubpremium.com', 'pornhub.com', $webpage_url);
 
             $client->request('GET', $webpage_url);
 
@@ -85,7 +96,7 @@ class Reader extends TagReader
                 return $node->text();
             });
 
-            $r = MediaCache::put($key, $artist_array);
+            $r            = MediaCache::put($key, $artist_array);
         }
 
         return $artist_array;
@@ -93,6 +104,8 @@ class Reader extends TagReader
 
     private function get($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $tag = strtolower($tag);
 
         if (! \array_key_exists($tag, $this->tag_array)) {
@@ -108,10 +121,10 @@ class Reader extends TagReader
             }
 
             if (\array_key_exists($json_key, $this->json_array)) {
-                $value = $this->json_array[$json_key];
+                $value                 = $this->json_array[$json_key];
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];
-                    $value = array_merge($value, $keyword_value);
+                    $value         = array_merge($value, $keyword_value);
                 }
 
                 if (\is_array($value)) {
@@ -123,7 +136,7 @@ class Reader extends TagReader
 
                 }
 
-                UTMLog::Logger('json data '.$tag, $value);
+                UTMLog::Logger('json data ' . $tag, $value);
                 $this->tag_array[$tag] = $value;
             }
         }
@@ -131,19 +144,21 @@ class Reader extends TagReader
 
     private function getJsonFile()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
-        $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+
+        $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
         if (file_exists($this->json_file)) {
             $this->json_string = FileSystem::read($this->json_file);
 
             return true;
         } else {
-            $exec = new YoutubeExec('');
+            $exec            = new YoutubeExec('');
             $exec->youtubeGetJson($this->video_key);
 
-            $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+            $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
@@ -158,6 +173,8 @@ class Reader extends TagReader
 
     private function matchArtist($string)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // $artists_array = $this->getPageDetails($this->json_array['webpage_url']);
 
         $string = strtolower($string);
@@ -165,13 +182,13 @@ class Reader extends TagReader
         $string = str_replace(' ', '_', $string);
         // //   $name_key = str_replace('.', '', $name_key);
 
-        $res = MediaArray::matchArtist(ARTIST_MAP, $string);
+        $res    = MediaArray::matchArtist(ARTIST_MAP, $string);
 
         if (null !== $res) {
             // if (is_array($artists_array))
             // {
             foreach ($res as $names) {
-                $names = str_replace('_', ' ', $names);
+                $names       = str_replace('_', ' ', $names);
                 $nameArray[] = ucwords($names);
             }
 

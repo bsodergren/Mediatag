@@ -5,6 +5,9 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use UTM\Utilities\Option;
@@ -35,9 +38,9 @@ trait Callables
     public function ProcessOutput($type, $buffer)
     {
         if (Process::ERR === $type) {
-            echo 'ERR > '.$buffer;
+            echo 'ERR > ' . $buffer;
         } else {
-            echo 'OUT > '.$buffer;
+            echo 'OUT > ' . $buffer;
         }
     }
 
@@ -68,6 +71,8 @@ trait Callables
 
     public function parseArchive($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $key = Strings::after($line, ' ');
         if (!\array_key_exists($key, $this->json_Array)) {
             return $line;
@@ -78,8 +83,10 @@ trait Callables
 
     public function filemap($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $line) {
-            $ph_id = Strings::after($line, '=');
+            $ph_id            = Strings::after($line, '=');
             if (str_contains($ph_id, '&')) {
                 $ph_id = Strings::before($ph_id, '&');
             }
@@ -96,6 +103,8 @@ trait Callables
 
     public function getpremiumListIds($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
             $ph_id = Strings::before($ph_id, '&');
@@ -106,6 +115,8 @@ trait Callables
 
     public function compactPlaylist($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
             $ph_id = Strings::before($ph_id, '&');
@@ -121,15 +132,17 @@ trait Callables
 
     public function studioList($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $line) {
             $studioReplacement = '';
-            $studio = $line;
+            $studio            = $line;
             if (str_contains($line, ':')) {
-                $studio = Strings::before($line, ':');
-                $studioReplacement = ':'.Strings::after($line, ':');
+                $studio            = Strings::before($line, ':');
+                $studioReplacement = ':' . Strings::after($line, ':');
             }
 
-            return $studio.$studioReplacement;
+            return $studio . $studioReplacement;
         }
 
         return false;
@@ -137,9 +150,11 @@ trait Callables
 
     public function studioPaths($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $line) {
             if (!str_contains($line, ':')) {
-                $line = $line.':'.$line;
+                $line = $line . ':' . $line;
             }
 
             $studio_match = Strings::before($line, ':');
@@ -155,21 +170,23 @@ trait Callables
 
     public function toList($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $line) {
             $Replacement = $line;
-            $match = $line;
+            $match       = $line;
             if (str_contains($line, ':')) {
-                $match = Strings::before($line, ':');
+                $match       = Strings::before($line, ':');
                 $Replacement = Strings::after($line, ':');
                 if ('' == $Replacement) {
                     $Replacement = null;
                 }
             }
-            $key = strtolower($match);
-            $key = str_replace(' ', '_', $key);
-            $key = str_replace('+', '', $key);
-            $key = str_replace('(', '', $key);
-            $key = str_replace(')', '', $key);
+            $key         = strtolower($match);
+            $key         = str_replace(' ', '_', $key);
+            $key         = str_replace('+', '', $key);
+            $key         = str_replace('(', '', $key);
+            $key         = str_replace(')', '', $key);
 
             return [$key => $Replacement];
         }
@@ -179,18 +196,20 @@ trait Callables
 
     public function toArray($line)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' != $line) {
             $Replacement = null;
-            $match = $line;
+            $match       = $line;
             if (str_contains($line, ':')) {
-                $match = Strings::before($line, ':');
+                $match       = Strings::before($line, ':');
                 $Replacement = Strings::after($line, ':');
             }
-            $key = strtolower($match);
-            $key = str_replace(' ', '_', $key);
-            $key = str_replace('+', '', $key);
-            $key = str_replace('(', '', $key);
-            $key = str_replace(')', '', $key);
+            $key         = strtolower($match);
+            $key         = str_replace(' ', '_', $key);
+            $key         = str_replace('+', '', $key);
+            $key         = str_replace('(', '', $key);
+            $key         = str_replace(')', '', $key);
 
             return [$key => $Replacement];
         }
@@ -222,7 +241,7 @@ trait Callables
     public function downloadJsonCallback($type, $buffer)
     {
         $outputText = '';
-        $line_id = \PHP_EOL.'<id>'.$this->num_of_lines.'</id>';
+        $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
 
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
@@ -232,16 +251,16 @@ trait Callables
             }
         }
 
-        $buffer = str_replace("\n", '', $buffer);
+        $buffer     = str_replace("\n", '', $buffer);
         switch ($buffer) {
             case str_contains($buffer, '[info]'):
-                // 
+                //
 
                 if (str_contains($buffer, 'as JSON')) {
                     utmdump($buffer);
                     $this->yt_json_string = $buffer;
                 }
-            break;
+                break;
         }
     }
 
@@ -249,7 +268,7 @@ trait Callables
     public function downloadCallback($type, $buffer)
     {
         $outputText = '';
-        $line_id = \PHP_EOL.'<id>'.$this->num_of_lines.'</id>';
+        $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
 
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
@@ -259,7 +278,7 @@ trait Callables
             }
         }
 
-        $buffer = str_replace("\n", '', $buffer);
+        $buffer     = str_replace("\n", '', $buffer);
         // if (!str_contains($buffer, '[download]') && !str_contains($buffer, 'ETA')) {
         //     UTMLog::Logger('Ph Download', $buffer);
         // }
@@ -269,60 +288,60 @@ trait Callables
                 PlaylistProcess::$current_key = false;
                 if (str_contains($buffer, 'pc webpage')) {
                     --$this->num_of_lines;
-                    $line_id = \PHP_EOL.'<id>'.$this->num_of_lines.'</id>';
+                    $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
 
-                    $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>';
+                    $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
                 }
 
                 break;
 
             case str_contains($buffer, 'Interrupted by user'):
                 PlaylistProcess::$current_key = false;
-                $outputText = $line_id.'  <error> '.$this->key.' cancelled </error>';
+                $outputText                   = $line_id . '  <error> ' . $this->key . ' cancelled </error>';
                 $this->Console->writeln($outputText);
 
                 return 0;
 
             case str_contains($buffer, 'private.'):
                 PlaylistProcess::$current_key = false;
-                $outputText = $line_id.'  <error>  '.$this->key.' is private </error>';
+                $outputText                   = $line_id . '  <error>  ' . $this->key . ' is private </error>';
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'restriction'):
                 PlaylistProcess::$current_key = false;
-                $outputText = $line_id.'  <error>  '.$this->key.' is restricted </error>';
+                $outputText                   = $line_id . '  <error>  ' . $this->key . ' is restricted </error>';
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'disabled'):
                 PlaylistProcess::$current_key = false;
-                $outputText = $line_id.'  <error>  '.$this->key.' has been disabled </error>';
+                $outputText                   = $line_id . '  <error>  ' . $this->key . ' has been disabled </error>';
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'HTTPError'):
                 PlaylistProcess::$current_key = false;
-                $outputText = $line_id.' <error> '.$this->key.' NOT FOUND </error>';
+                $outputText                   = $line_id . ' <error> ' . $this->key . ' NOT FOUND </error>';
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'Upgrade now'):
                 PlaylistProcess::$current_key = false;
-                $outputText = "\n\t <playlist> Premium Video </playlist>";
+                $outputText                   = "\n\t <playlist> Premium Video </playlist>";
                 $this->updatePlaylist('premium');
-                $this->premiumIds[] = $this->key;
+                $this->premiumIds[]           = $this->key;
 
                 break;
 
             case str_contains($buffer, 'encoded url'):
                 PlaylistProcess::$current_key = false;
 
-                $outputText = "\n\t <playlist> ModelHub Video </playlist>";
+                $outputText                   = "\n\t <playlist> ModelHub Video </playlist>";
                 $this->updatePlaylist('modelhub');
                 $this->updateIdList(PlaylistProcess::MODELHUB);
 
@@ -330,18 +349,18 @@ trait Callables
 
             case str_contains($buffer, '[download]'):
                 PlaylistProcess::$current_key = $this->key;
-                $outputText = '<download>'.$buffer.'                           </>';
+                $outputText                   = '<download>' . $buffer . '                           </>';
 
                 if (str_contains($buffer, 'Destination')) {
-                    $outputText = str_replace('[download]', '</text>'.$line_id.' <text>[download]', $buffer);
-                    $outputText = $line_id.' <text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
+                    $outputText = str_replace('[download]', '</text>' . $line_id . ' <text>[download]', $buffer);
+                    $outputText = $line_id . ' <text>' . str_replace(__PLEX_DOWNLOAD__, '', $outputText) . '</file>' . \PHP_EOL;
                     $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
                     break;
                 }
 
                 if (str_contains($buffer, 'already been')) {
-                    $outputText = $line_id.'<error> Already been downloaded </error>';
+                    $outputText = $line_id . '<error> Already been downloaded </error>';
 
                     break;
                 }
@@ -349,21 +368,21 @@ trait Callables
                 break;
 
             case str_contains($buffer, '[FixupM3u8]'):
-              
+
 
                 // if (!Option::istrue('ignore')) {
                 //     $this->updateIdList(PlaylistProcess::IGNORED);
                 // }
 
-                $outputText = str_replace('[FixupM3u8]', $line_id.' <text>[FixupM3u8]', $buffer);
+                $outputText                   = str_replace('[FixupM3u8]', $line_id . ' <text>[FixupM3u8]', $buffer);
 
-                $outputText = str_replace(__PLEX_DOWNLOAD__, '', $outputText);
-                $outputText = str_replace('container of', 'container of</text> <file>', $outputText);
-                $outputText = $outputText.'</file>'.\PHP_EOL;
+                $outputText                   = str_replace(__PLEX_DOWNLOAD__, '', $outputText);
+                $outputText                   = str_replace('container of', 'container of</text> <file>', $outputText);
+                $outputText                   = $outputText . '</file>' . \PHP_EOL;
                 break;
 
             case str_contains($buffer, 'ERROR'):
-                $outputText = "\n <error>Uncaught Error </>  <comment>".$buffer.'</comment>'.\PHP_EOL;
+                $outputText                   = "\n <error>Uncaught Error </>  <comment>" . $buffer . '</comment>' . \PHP_EOL;
                 // $this->updatePlaylist('error');
                 // $this->updateIdList(PlaylistProcess::ERRORIDS);
 
@@ -371,13 +390,13 @@ trait Callables
         }
 
         if (Option::istrue('debug')) {
-            $style = 'info';
-            $style_end = 'info';
+            $style      = 'info';
+            $style_end  = 'info';
             if (preg_match('/(ERROR):(.*)/', $buffer, $matches)) {
-                $style = 'fg=bright-magenta';
+                $style     = 'fg=bright-magenta';
                 $style_end = '';
             }
-            $outputText = __LINE__.'<comment>'.$this->num_of_lines.'</comment> <'.$style.'>'.$buffer.'</'.$style_end.'>'.\PHP_EOL;
+            $outputText = __LINE__ . '<comment>' . $this->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' . \PHP_EOL;
         }
 
         $this->Console->write($outputText);

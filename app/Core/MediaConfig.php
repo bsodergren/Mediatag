@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Mediatag\Core;
 
+use Mediatag\Core\Mediatag;
+
 /**
  * @property ?array  $db
  * @property ?string $environment
@@ -19,20 +21,24 @@ class MediaConfig
 
     public function __construct(array $env)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->config = [
             'environment' => ($env['APP_ENVIRONMENT'] ?? 'development'),
-            'db' => [
-                'host' => $env['DB_HOST'],
-                'user' => $env['DB_USER'],
+            'db'          => [
+                'host'     => $env['DB_HOST'],
+                'user'     => $env['DB_USER'],
                 'password' => $env['DB_PASS'],
-                'dbname' => $env['DB_DATABASE'],
-                'driver' => ($env['DB_DRIVER'] ?? 'pdo_mysql'),
+                'dbname'   => $env['DB_DATABASE'],
+                'driver'   => ($env['DB_DRIVER'] ?? 'pdo_mysql'),
             ],
         ];
     }
 
     public function __get(string $name)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->config[$name] ?? null;
     }
 }

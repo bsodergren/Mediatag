@@ -5,6 +5,8 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Core\Mediatag;
+
 trait Lang
 {
     public const CMD_DESCRIPTION           = DESCRIPTION;

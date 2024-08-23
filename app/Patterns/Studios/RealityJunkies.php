@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Modules\TagBuilder\TagReader;
@@ -15,24 +18,26 @@ class RealityJunkies extends MileHighMedia
 {
     public $subStudio = 'Reality Junkies';
 
-    public $regex = [
+    public $regex     = [
         'realityjunkies' => [
             'artist' => [
-                'pattern' => REALITYJUNKIES_REGEX_COMMON,
-                'delim' => '_AND_',
-                'match' => 5,
+                'pattern'             => REALITYJUNKIES_REGEX_COMMON,
+                'delim'               => '_AND_',
+                'match'               => 5,
                 'artistFirstNameOnly' => false,
             ],
-            'title' => [
+            'title'  => [
                 'pattern' => REALITYJUNKIES_REGEX_COMMON,
-                'delim' => '-',
-                'match' => 1,
+                'delim'   => '-',
+                'match'   => 1,
             ],
         ],
     ];
 
     public function getTitle()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
@@ -46,10 +51,10 @@ class RealityJunkies extends MileHighMedia
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid = 'E'.$output_array[2];
-                $epi = 'Scene '.$output_array[3];
+                $vid   = 'E' . $output_array[2];
+                $epi   = 'Scene ' . $output_array[3];
 
-                return ucwords($title).' '.$vid.' '.$epi;
+                return ucwords($title) . ' ' . $vid . ' ' . $epi;
             }
         }
 
@@ -58,6 +63,8 @@ class RealityJunkies extends MileHighMedia
 
     private function artistTransform($artist)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $artist = str_replace(',', '_and_', $artist);
 
         return str_replace(' ', '_', $artist);
@@ -65,20 +72,22 @@ class RealityJunkies extends MileHighMedia
 
     public function getFilename($file)
     {
-        $filename = basename($file);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $fs = new File($file);
-        $videoData = $fs->get();
-        $tagObj = new TagReader();
+        $filename     = basename($file);
+
+        $fs           = new File($file);
+        $videoData    = $fs->get();
+        $tagObj       = new TagReader();
         $tagObj->loadVideo($videoData);
-        $tagBuilder = new TagBuilder($videoData['video_key'], $tagObj);
+        $tagBuilder   = new TagBuilder($videoData['video_key'], $tagObj);
 
-        $videoInfo = $tagBuilder->getTags($videoData);
-        $artistName = $videoInfo['currentTags']['artist'];
+        $videoInfo    = $tagBuilder->getTags($videoData);
+        $artistName   = $videoInfo['currentTags']['artist'];
         $artistString = $this->artistTransform($artistName);
 
         if (! str_contains($filename, $artistString)) {
-            $file = str_replace('_', '_'.$artistString.'_', $file);
+            $file = str_replace('_', '_' . $artistString . '_', $file);
         }
 
         return $file;

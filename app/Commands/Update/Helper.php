@@ -5,9 +5,11 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Core\Mediatag;
+
+
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Process\Process;
 use Mediatag\Commands\Update\CaseHelper;
@@ -28,31 +30,43 @@ trait Helper
      */
     public function setgenre($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $value;
     }
 
     public function settitle($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $value;
     }
 
     public function setstudio($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $value;
     }
 
     public function setartist($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $value;
     }
 
     public function setkeyword($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $value;
     }
 
     public function getArtistMap($constant, $file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $replacement = null;
         if (\is_string($file)) {
             if (is_file($file)) {
@@ -86,6 +100,8 @@ trait Helper
 
     public function clearMeta($options = [])
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($this->VideoList['file'] as $key => $videoArray) {
             $Command          = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display = Mediatag::$Display;
@@ -95,6 +111,8 @@ trait Helper
 
     public function getChanges($options)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null === $this->VideoList) {
             $this->exec();
         }
@@ -159,6 +177,8 @@ trait Helper
 
     public function saveChanges($json_file = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->json_file = $json_file;
         if (null !== $json_file) {
             if (file_exists($json_file)) {
@@ -176,6 +196,8 @@ trait Helper
 
     public function videoArraytoJson($array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null !== $this->json_file) {
             $json_file = $this->json_file;
         } else {
@@ -192,6 +214,8 @@ trait Helper
 
     public function writeChanges($options = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $videoList                       = $this->ChangesArray;
         $count                           = \count($videoList);
         $idx                             = 1;
@@ -240,26 +264,30 @@ trait Helper
 
     public function updateDbEntry($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //  Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData);
     }
 
     public function download()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Mediatag::$output->writeln("Checking files...");
 
-        foreach($this->VideoList['file'] as $videoInfo) {
+        foreach ($this->VideoList['file'] as $videoInfo) {
 
             $video_filename = $videoInfo['video_name'];
 
             $match          = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
-            if($match == 1) {
+            if ($match == 1) {
                 $number = $output_array[1];
                 $file   = $this->getphdbUrl($number);
                 $found  = $this->findUrl($number, $file);
-                if($found !== false) {
-                    Mediatag::$output->write("<info>".$video_filename."</info>");
+                if ($found !== false) {
+                    Mediatag::$output->write("<info>" . $video_filename . "</info>");
 
-                    Mediatag::$output->write (" was found in <comment>" . basename($file)."</comment>");
+                    Mediatag::$output->write(" was found in <comment>" . basename($file) . "</comment>");
                     [$url,$id] = explode(";", $found);
                     $this->checkurl($url);
                     // Mediatag::$output->writeln("");
@@ -273,15 +301,17 @@ trait Helper
 
     public function checkurl($url)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $client     = HttpClient::create();
         $response   = $client->request(
             'GET',
-            $url
+            $url,
         );
 
         $statusCode = $response->getStatusCode();
-        if($statusCode != '404') {
-            Mediatag::$output->writeln(" and is ". $url);
+        if ($statusCode != '404') {
+            Mediatag::$output->writeln(" and is " . $url);
         } else {
             Mediatag::$output->writeln(" but is 404");
         }
@@ -290,6 +320,8 @@ trait Helper
 
     public function urlCallback($type, $buffer)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (Process::ERR === $type) {
             // echo 'ERR > '.$buffer;
         } else {
@@ -298,7 +330,9 @@ trait Helper
     }
     private function findUrl($number, $file)
     {
-    
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+
         $this->lineOut = false;
         $callback      = Callback::check([$this, 'urlCallback']);
 

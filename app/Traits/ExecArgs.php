@@ -5,22 +5,31 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Metatags\Artist;
 
 trait ExecArgs
 {
     public function getOptionArgs()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->optionArgs;
     }
 
     public function addOptionArg($option)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->optionArgs[] = $option;
     }
 
     public function getCmdArgs($meta_tag, $meta_value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('artist' == $meta_tag) {
             $this->addOptionArg('--rDNSatom');
             if ('' != $meta_value) {
@@ -34,11 +43,11 @@ trait ExecArgs
                 $this->addOptionArg('domain=');
             }
 
-            $this->addOptionArg('--albumArtist='.$meta_value);
+            $this->addOptionArg('--albumArtist=' . $meta_value);
         } elseif ('studio' == $meta_tag) {
-            $this->addOptionArg('--album='.$meta_value);
+            $this->addOptionArg('--album=' . $meta_value);
         } else {
-            $this->addOptionArg('--'.$meta_tag.'='.$meta_value);
+            $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
         }
     }
 }

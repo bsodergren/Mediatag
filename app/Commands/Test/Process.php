@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Test;
 
 use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Panther\Client;
 use Mediatag\Modules\Executable\JsExec;
 use Mediatag\Modules\Display\ShowDisplay;
@@ -17,25 +19,27 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
 
-include_once __DATA_MAPS__.'/WordMap.php';
+include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
     use Helper;
-    
-    public $VideoList = [];
+
+    public $VideoList       = [];
 
     public $defaultCommands = [
         'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
     ];
 
-    public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
+    public $csvfilename     = __DOWNLOAD_DIR__ . '/pornhub.com-db.csv';
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         parent::boot($input, $output);
 
         // parent::$Display              = new ShowDisplay($output);
@@ -43,24 +47,27 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return null;
     }
 
     public function exec($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->VideoList = parent::getVideoArray();
-     //   
-     foreach ($this->VideoList['file'] as $key => $videoInfo)
-     {
-        $preview = new VideoPreview;
-       $previewLoc = $preview->BuildPreview($videoInfo);
+        //
+        foreach ($this->VideoList['file'] as $key => $videoInfo) {
+            $preview    = new VideoPreview();
+            $previewLoc = $preview->BuildPreview($videoInfo);
 
-       utmdd($previewLoc);
+            utmdd($previewLoc);
 
-     }
+        }
 
         //echo $exec->stdout;
-return 1;
+        return 1;
         // $this->StorageConn = new Storage();
 
         //     // $client        = Client::createChromeClient();
@@ -129,5 +136,7 @@ return 1;
 
     public function print()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 }

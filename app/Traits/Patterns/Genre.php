@@ -5,6 +5,8 @@
 
 namespace Mediatag\Traits\Patterns;
 
+use Mediatag\Core\Mediatag;
+
 trait Genre
 {
     /**
@@ -12,6 +14,8 @@ trait Genre
      */
     public function getGenre()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' == $this->genre) {
             $filename = $this->video_file;
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);

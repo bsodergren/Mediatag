@@ -5,6 +5,9 @@
 
 namespace Mediatag\Utilities;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 
 class Strings extends \Nette\Utils\Strings
@@ -13,18 +16,22 @@ class Strings extends \Nette\Utils\Strings
 
     public static function videoDuration($duration)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $seconds = round($duration / 1000);
-        $hours = floor($seconds / 3600);
+        $hours   = floor($seconds / 3600);
 
         $minutes = round((float) $seconds / 60 % 60);
 
-        $sec = round($seconds % 60);
+        $sec     = round($seconds % 60);
 
         return sprintf('%02d:%02d:%02d', $hours, $minutes, $sec);
     }
 
     public static function clean($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' == $text) {
             return $text;
         }
@@ -34,6 +41,8 @@ class Strings extends \Nette\Utils\Strings
 
     public static function cleanFileName($filename)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('' == $filename) {
             return $filename;
         }
@@ -44,34 +53,36 @@ class Strings extends \Nette\Utils\Strings
             return $filename;
         }
 
-        $fileInfo = pathinfo($filename);
-        $filename = $fileInfo['filename'];
+        $fileInfo  = pathinfo($filename);
+        $filename  = $fileInfo['filename'];
 
         if (str_contains($filename, $video_key)) {
-            $filename = str_replace('-'.$video_key, '', $fileInfo['filename']);
-            $video_key = '-'.$video_key;
+            $filename  = str_replace('-' . $video_key, '', $fileInfo['filename']);
+            $video_key = '-' . $video_key;
         } else {
             $video_key = '';
         }
 
-        $fileExt = $fileInfo['extension'];
+        $fileExt   = $fileInfo['extension'];
 
-        $filename = self::cleanSpecialChars($filename, true);
+        $filename  = self::cleanSpecialChars($filename, true);
 
-        return $filename.$video_key.'.'.$fileExt;
+        return $filename . $video_key . '.' . $fileExt;
     }
 
     public static function truncateString($string, $maxlength, $ellipsis = false, $reverse = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (mb_strlen($string) <= $maxlength) {
             return $string;
         }
-        $color_length = 0;
-        $color_close = '';
+        $color_length    = 0;
+        $color_close     = '';
         if (str_contains($string, "\033[0m")) {
-            $string = str_replace("\033[0m", '', $string);
+            $string       = str_replace("\033[0m", '', $string);
             $color_length = mb_strlen("\033[0m");
-            $color_close = "\033[0m";
+            $color_close  = "\033[0m";
         }
 
         if (empty($ellipsis)) {
@@ -84,21 +95,25 @@ class Strings extends \Nette\Utils\Strings
 
         $ellipsis_length = mb_strlen($ellipsis);
 
-        $maxlength = $maxlength - $ellipsis_length - $color_length;
+        $maxlength       = $maxlength - $ellipsis_length - $color_length;
 
-        return trim(mb_substr($string, 0, $maxlength)).$ellipsis.$color_close;
+        return trim(mb_substr($string, 0, $maxlength)) . $ellipsis . $color_close;
     }
 
     public static function showStatus($done, $total, $size = 30, $label = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return self::showStatusBar($done, $total, $size, $label);
     }
 
     public static function showStatusBar($done, $total, $size = 30, $label = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //  static $start_time;
 
-        $label = self::truncateString($label, 45, true);
+        $label      = self::truncateString($label, 45, true);
 
         // if we go over our bound, just ignore it
         if ($done > $total) {
@@ -110,16 +125,16 @@ class Strings extends \Nette\Utils\Strings
         //   if(empty($start_time)) $start_time=time();
         //   $now = time();
 
-        $perc = (float) ($done / $total);
+        $perc       = (float) ($done / $total);
 
-        $bar = floor($perc * $size);
+        $bar        = floor($perc * $size);
 
-        $status_bar = "\r[".$label;
-        $status_bar .= ' '.number_format($done).'/'.number_format($total).' ';
+        $status_bar = "\r[" . $label;
+        $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
 
-        $str_len = \strlen($status_bar);
+        $str_len    = \strlen($status_bar);
         $size -= $str_len;
-        $bar = floor($perc * $size);
+        $bar        = floor($perc * $size);
         if ($bar < 1) {
             $bar = 0;
         }
@@ -131,7 +146,7 @@ class Strings extends \Nette\Utils\Strings
             $status_bar .= '=';
         }
 
-        $disp = number_format($perc * 100, 0);
+        $disp       = number_format($perc * 100, 0);
 
         $status_bar .= "] {$disp}%";
         echo $status_bar;
@@ -148,6 +163,8 @@ class Strings extends \Nette\Utils\Strings
 
     public static function geturl($string)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $array = explode('"', $string);
 
         return $array[1];
@@ -155,6 +172,8 @@ class Strings extends \Nette\Utils\Strings
 
     public static function getkey($string)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $array = explode('/', $string);
 
         return $array[6];
@@ -162,32 +181,38 @@ class Strings extends \Nette\Utils\Strings
 
     public static function wrapimplode($array, $before = '', $after = '', $separator = '')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (! $array) {
             return '';
         }
 
-        return $before.implode("{$after}{$separator}{$before}", $array).$after;
+        return $before . implode("{$after}{$separator}{$before}", $array) . $after;
     }
 
     public static function translate($text, $sep = '_')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $text;
     }
 
     private static function cleanSpecialChars($text, $file = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file_special_chars = [];
-        $special_chars = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
+        $special_chars      = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
             "'", '"', '&', '$', '#', '*', '|', '`', '!', '{', '}',
             '%', '’', '«', '»', '”', '“', \chr(0)];
 
         if (true === $file) {
             $file_special_chars = ['.', ';', ','];
-            $special_chars = array_merge($special_chars, $file_special_chars);
+            $special_chars      = array_merge($special_chars, $file_special_chars);
         }
 
 
-        $text = str_replace('é', 'e', $text);
+        $text               = str_replace('é', 'e', $text);
         foreach (str_split($text) as $char) {
             if (\ord($char) > 125) {
                 $str[] = ' ';
@@ -196,18 +221,18 @@ class Strings extends \Nette\Utils\Strings
             }
         }
 
-        $text = implode('', $str);
+        $text               = implode('', $str);
 
         if (true === $file) {
             $text = strtolower($text);
         }
 
-        $text = str_replace($special_chars, '', $text);
-        $special_chars = ['(', ')', '~'];
-        $text = str_replace($special_chars, ' ', $text);
-        $text = str_replace(['%20', '+'], '-', $text);
-        $text = preg_replace('/[\r\n\t ]+/', '_', $text);
-        $text = str_replace('_', ' ', $text);
+        $text               = str_replace($special_chars, '', $text);
+        $special_chars      = ['(', ')', '~'];
+        $text               = str_replace($special_chars, ' ', $text);
+        $text               = str_replace(['%20', '+'], '-', $text);
+        $text               = preg_replace('/[\r\n\t ]+/', '_', $text);
+        $text               = str_replace('_', ' ', $text);
         if (true === $file) {
             $text = ucwords($text);
             $text = str_replace(' ', '_', $text);
@@ -216,13 +241,15 @@ class Strings extends \Nette\Utils\Strings
             $text = str_replace(' ', '-', $text);
         }
 
-        $text = str_replace('___', '_', $text);
+        $text               = str_replace('___', '_', $text);
 
         return trim($text, '.-_');
     }
 
     public static function getFilePath($filename)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
     }
 }

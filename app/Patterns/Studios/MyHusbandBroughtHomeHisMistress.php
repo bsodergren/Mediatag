@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Utilities\MediaArray;
 
 const MHBHM_REGEX_COMMON = '/MHBHM[_se0-9]+?([a-zA-Z0-9]{4,})?-([_a-zA-Z]{1,})\_[0-9pkm\.]{1,}/i';
@@ -47,6 +50,8 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getArtistTransform($artist_string, $delim = ', ')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $checkTitle  = false;
         $names       = false;
         if (str_contains($artist_string, '-')) {
@@ -103,6 +108,8 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getTitle($names = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
@@ -159,28 +166,30 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getFilename($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $filename = basename($file);
         if (!str_starts_with($filename, 'MHBHM')) {
-            $path     = str_replace('/'.$filename, '', $file);
+            $path     = str_replace('/' . $filename, '', $file);
 
             // $new = preg_replace('/([a-zA-Z]+([0-9]+))?-?(.*)?_([s0-9]+)_(.*)/i', 'MHBHM_e$2_$4_$3-$5', $filename);
             preg_match('/([a-zA-Z]+([0-9]+))?-?(.*)?_([s0-9]+)_(.*)/', $filename, $output_array);
 
             $nArray[] = 'MHBHM';
             if ('' != $output_array[2]) {
-                $nArray[] = 'e'.$output_array[2];
+                $nArray[] = 'e' . $output_array[2];
             }
             $nArray[] = $output_array[4];
             $nArray[] = $output_array[3];
 
-            $nArray[] = '-'.$output_array[5];
+            $nArray[] = '-' . $output_array[5];
 
             $name     = implode('_', $nArray);
             $name     = str_replace('__', '_', $name);
 
             $name     = str_replace('_-', '-', $name);
             if ($name != $filename) {
-                return $path.\DIRECTORY_SEPARATOR.$name;
+                return $path . \DIRECTORY_SEPARATOR . $name;
             }
         }
 

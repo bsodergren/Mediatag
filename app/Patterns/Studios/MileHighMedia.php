@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -34,6 +37,8 @@ class MileHighMedia extends Patterns
 
     public function getTitle()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
@@ -47,10 +52,10 @@ class MileHighMedia extends Patterns
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid   = 'E'.$output_array[2];
-                $epi   = 'Scene '.$output_array[3];
+                $vid   = 'E' . $output_array[2];
+                $epi   = 'Scene ' . $output_array[3];
 
-                return ucwords($title).' '.$vid.' '.$epi;
+                return ucwords($title) . ' ' . $vid . ' ' . $epi;
             }
         }
 

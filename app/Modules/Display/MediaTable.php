@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Display;
 
+use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -19,17 +22,21 @@ class MediaTable
 
     public function __construct(OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $output->{$this}->output = $output;
-        $this->section1 = $output->section();
+        $this->section1          = $output->section();
     }
 
     public function displayTable($videoInfo)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->table = new Table($this->section1);
         $this->table->setStyle('box');
         $this->table->setRow(1, ['Video', $videoInfo['video_name']]);
         $this->table->addrow(new TableSeparator());
-        $idx = 2;
+        $idx         = 2;
         foreach ($videoInfo['metatags'] as $tag => $value) {
             $this->table->setRow($idx, [$tag, $value]);
             ++$idx;
@@ -41,6 +48,8 @@ class MediaTable
 
     public function row($key, $value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return [
             new TableCell($key, ['style' => new TableCellStyle(['cellFormat' => '<info>%s</info>'])]),
             new TableCell($value, ['style' => new TableCellStyle(['cellFormat' => '<info>%s</info>'])]),

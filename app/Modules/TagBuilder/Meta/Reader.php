@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\TagBuilder\Meta;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Executable\ReadExec;
 use Mediatag\Modules\TagBuilder\TagReader;
 
@@ -33,6 +35,8 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         $this->expandArray($videoData);
         $this->tag_array = $this->getvideoData($videoData);
@@ -42,11 +46,15 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->get($method);
     }
 
     public function getvideoData(array $file_array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $read       = new ReadExec($file_array, Mediatag::$input, Mediatag::$output);
         $video_info = $read->read();
         return $video_info[$this->video_key]['metatags'];
@@ -54,6 +62,8 @@ class Reader extends TagReader
 
     private function get($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (!\array_key_exists($tag, $this->tag_array)) {
             $this->tag_array[$tag] = null;
         }

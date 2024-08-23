@@ -5,6 +5,9 @@
 
 namespace Mediatag\Core;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -42,8 +45,8 @@ class MediaOptions
     {
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $command = ucfirst(strtolower($command));
-        $command = str_replace('Db', 'DB', $command);
+        $command   = ucfirst(strtolower($command));
+        $command   = str_replace('Db', 'DB', $command);
         //        $command = str_replace("Ph","PH",$command);
 
         // $className = $command.'\\Options';
@@ -51,7 +54,7 @@ class MediaOptions
 
         $className = self::$callingClass;
         $className = str_replace('\\', '/', $className);
-        $className = \dirname($className).'/Options';
+        $className = \dirname($className) . '/Options';
         $className = str_replace('/', '\\', $className);
 
         if (class_exists($className)) {
@@ -66,13 +69,14 @@ class MediaOptions
      */
     public static function getDefinition($command = null)
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $testOptions = [];
-        $metaOptions = [];
+        $testOptions    = [];
+        $metaOptions    = [];
         $commandOptions = [];
         $displayOptions = [];
-        $cmdOptions = [];
+        $cmdOptions     = [];
 
         self::getClassObject($command);
         if (\is_object(self::$classObj)) {
@@ -85,7 +89,7 @@ class MediaOptions
 
                         $value = $option;
                     }
-                    $cmd = "get".$value."Options";
+                    $cmd              = "get" . $value . "Options";
                     $commandOptions[] = self::$cmd();
                 }
             }
@@ -97,7 +101,7 @@ class MediaOptions
             }
         }
 
-        foreach($commandOptions as $Options) {
+        foreach ($commandOptions as $Options) {
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
 
@@ -107,6 +111,7 @@ class MediaOptions
 
     public static function getArguments($varName = null, $description = null)
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         //    self::getClassObject();
@@ -119,23 +124,24 @@ class MediaOptions
 
     public static function getOptions($optionArray)
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         if (! \is_array($optionArray)) {
             return [];
         }
 
-        $cnt = \count($optionArray);
+        $cnt            = \count($optionArray);
         $commandOptions = [];
-        $i = 0;
-        $prev = '';
+        $i              = 0;
+        $prev           = '';
 
         foreach ($optionArray as $idx => $optionName) {
             ++$i;
-            $breakText = '';
+            $breakText        = '';
             if ('break' == $optionName[0]) {
-                $key = $idx - 1;
-                $prev[3] .= \PHP_EOL.\PHP_EOL;// .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
+                $key                  = $idx - 1;
+                $prev[3] .= \PHP_EOL . \PHP_EOL;// .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
                 $commandOptions[$key] = new InputOption(...$prev);
 
                 continue;
@@ -144,7 +150,7 @@ class MediaOptions
             if ($i == $cnt) {
                 $optionName[3] .= \PHP_EOL;
             }
-            $prev = $optionName;
+            $prev             = $optionName;
             $commandOptions[] = new InputOption(...$optionName);
         }
 
@@ -153,11 +159,12 @@ class MediaOptions
 
     public static function getDefaultOptions()
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         Translate::$Class = __CLASS__;
 
-        $options = [
+        $options          = [
             ['filelist', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_FILELIST')],
             ['numberofFiles', 'N', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_NUMBEROFFILES')],
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_MAX')],
@@ -172,11 +179,12 @@ class MediaOptions
 
     public static function getTestOptions()
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         Translate::$Class = __CLASS__;
 
-        $options = [
+        $options          = [
             ['test', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_CMD')],
             ['preview', 'p', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_PREVIEW')],
             ['time', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TIME')],
@@ -191,11 +199,12 @@ class MediaOptions
 
     public static function getMetaOptions()
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         Translate::$Class = __CLASS__;
-        $cmdName = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
-        $options = [
+        $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
+        $options          = [
             ['only', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_ONLY', ['TXT' => $cmdName]), [], ['Studio', 'Genre', 'Title', 'Artist', 'Keyword']],
             ['title', 't', InputOption::VALUE_REQUIRED, Translate::text('L__META_TITLE', ['TXT' => $cmdName])],
             ['genre', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_GENRE', ['TXT' => $cmdName])],
@@ -209,11 +218,12 @@ class MediaOptions
 
     public static function getDisplayOptions()
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         Translate::$Class = __CLASS__;
-        $cmdName = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
-        $options = [
+        $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
+        $options          = [
             ['show', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_SHOW', ['TXT' => $cmdName])],
             ['hide', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_HIDE', ['TXT' => $cmdName])],
             ['add', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_ADD', ['TXT' => $cmdName])],

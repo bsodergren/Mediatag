@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Db;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Executable\YoutubeExec;
@@ -31,6 +33,8 @@ trait Helper
 {
     public function updateNow()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $data          = ['name' => __LIBRARY__ . '_last_updated',
             'value'              => parent::$dbconn->dbConn->now(),
             'type'               => 'update'];
@@ -42,6 +46,8 @@ trait Helper
 
     public function lastUpdated()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $db  = Mediatag::$dbconn->dbConn;
         $db->where('name', __LIBRARY__ . '_last_updated');
 
@@ -54,6 +60,8 @@ trait Helper
 
     public static function getNewFiles(array $array, InputInterface $input, OutputInterface $output): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $obj = (new self($input, $output))->init()->getFileArray();
 
         return [
@@ -64,6 +72,8 @@ trait Helper
 
     public function getFileArray()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // utmdd([__METHOD__,$this->db_array, $this->file_array]);
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
         $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
@@ -122,6 +132,8 @@ trait Helper
 
     public function execEmpty()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Translate::$Class             = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
         $videos                       = Mediatag::$dbconn->getVideoCount();
@@ -161,6 +173,8 @@ trait Helper
 
     public function execThumb()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->obj = new Thumbnail();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
@@ -168,6 +182,8 @@ trait Helper
 
     public function execMarkers()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->obj = new Markers();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
@@ -175,24 +191,32 @@ trait Helper
 
     public function execDuration()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->obj = new Duration();
         $this->obj->updateVideoData();
     }
 
     public function execInfo()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->obj = new VideoInfo();
         $this->obj->updateVideoData();
     }
 
     public function execPreview()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->obj = new GifPreviewFiles();
         $this->obj->updateVideoData();
     }
 
     public function checkClean()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (Option::istrue('clean')) {
             $this->obj->clean();
         } elseif (Option::istrue('empty')) {
@@ -207,6 +231,8 @@ trait Helper
      */
     public function updateEntry($key, $video_file, $exists = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->OutputText   = [];
         $this->OutputText[] = '<info>' . $this->count . '</info>:<comment>' . basename($video_file) . '</comment> ';
 
@@ -229,6 +255,8 @@ trait Helper
 
     public function removeDBEntry()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
             parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
@@ -241,6 +269,8 @@ trait Helper
 
     public function addDBEntry()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $chunkSize = 50;
         $barWidth  = 50;
         $total     = \count($this->New_Array);
@@ -262,7 +292,7 @@ trait Helper
             $data_array                   = array_chunk($data_array, $chunkSize);
             $chunks                       = \count($data_array);
 
-            if($total > $chunkSize) {
+            if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
                 parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
                 $progressbar2->newbar()->start();
@@ -270,7 +300,7 @@ trait Helper
 
             foreach ($data_array as $data) {
 
-                if($total > $chunkSize) {
+                if ($total > $chunkSize) {
 
                     parent::$dbconn->progressbar->newbar()->start();
                     $progressbar2->advance();
@@ -294,6 +324,8 @@ trait Helper
 
     public function changeDBEntry()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($this->Changed_Array as $video_key => $video_file) {
             parent::$dbconn->video_file = $video_file;
             // parent::$dbconn->video_key  = $video_key;
@@ -312,6 +344,8 @@ trait Helper
 
     public function execUpdate()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $date       = null;
         if (! Option::istrue('yes')) {
             $date = $this->lastUpdated();
@@ -337,11 +371,13 @@ trait Helper
 
     public function getJson()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         $file_array = Mediatag::$SearchArray;
         foreach ($file_array as $k => $file) {
             $json_key = File::getVideoKey($file);
-            if(! str_starts_with($json_key, "x")) {
+            if (! str_starts_with($json_key, "x")) {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
                 // utmdump([$json_key,$json_file]);
 
@@ -350,7 +386,7 @@ trait Helper
                     $return = $exec->youtubeGetJson($json_key);
 
 
-                    if(Mediatag::$filesystem->exists($json_file)) {
+                    if (Mediatag::$filesystem->exists($json_file)) {
                         parent::$output->writeln('<info>adding json ' . basename($return) . ' </info>');
                     } else {
                         parent::$output->writeln('<error>adding fake json for ' . basename($file) . ' </error>');

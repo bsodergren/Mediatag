@@ -5,6 +5,8 @@
 
 namespace Mediatag\Commands\Create;
 
+use Mediatag\Core\Mediatag;
+
 const DESCRIPTION = 'Create a new Command';
 const NAME        = 'create';
 
@@ -24,12 +26,14 @@ class Command extends MediaCommand
     use Lang;
     use MediaLibrary;
 
-    public $COMMAND_PATH = __APP_HOME__.'/app/Commands';
+    public $COMMAND_PATH = __APP_HOME__ . '/app/Commands';
 
-    public $bin_path     = __APP_HOME__.'/bin';
+    public $bin_path     = __APP_HOME__ . '/bin';
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $CommandName                  = $input->getArgument(self::CMD_NAME);
 
         if (null === $CommandName) {
@@ -37,7 +41,7 @@ class Command extends MediaCommand
         }
         $CommandClass                 = ucfirst(strtolower($CommandName));
 
-        $CommandDir                   = $this->COMMAND_PATH.'/'.$CommandClass;
+        $CommandDir                   = $this->COMMAND_PATH . '/' . $CommandClass;
 
         if (is_dir($CommandDir)) {
             FileSystem::delete($CommandDir);
@@ -45,19 +49,19 @@ class Command extends MediaCommand
 
         Filesystem::createDir($CommandDir, 0755);
 
-        $binName                      = 'media'.strtolower($CommandClass);
-        $binFile                      = $this->bin_path.'/'.$binName;
+        $binName                      = 'media' . strtolower($CommandClass);
+        $binFile                      = $this->bin_path . '/' . $binName;
 
-        $OptionsClass_file            = $CommandDir.'/Options.php';
-        $CommandClass_file            = $CommandDir.'/Command.php';
-        $LangClass_file               = $CommandDir.'/Lang.php';
-        $ProcessClass_file            = $CommandDir.'/Process.php';
+        $OptionsClass_file            = $CommandDir . '/Options.php';
+        $CommandClass_file            = $CommandDir . '/Command.php';
+        $LangClass_file               = $CommandDir . '/Lang.php';
+        $ProcessClass_file            = $CommandDir . '/Process.php';
 
-        $CommandNameSpace             = 'namespace Mediatag\\Commands\\'.$CommandClass;
-        $CommandUse                   = 'use Mediatag\\Commands\\'.$CommandClass.'\\Command';
-        $OptionsUse                   = 'use Mediatag\\Commands\\'.$CommandClass.'\\Options';
-        $LangUse                      = 'use Mediatag\\Commands\\'.$CommandClass.'\\Lang';
-        $ProcessUse                   = 'use Mediatag\\Commands\\'.$CommandClass.'\\Proccess';
+        $CommandNameSpace             = 'namespace Mediatag\\Commands\\' . $CommandClass;
+        $CommandUse                   = 'use Mediatag\\Commands\\' . $CommandClass . '\\Command';
+        $OptionsUse                   = 'use Mediatag\\Commands\\' . $CommandClass . '\\Options';
+        $LangUse                      = 'use Mediatag\\Commands\\' . $CommandClass . '\\Lang';
+        $ProcessUse                   = 'use Mediatag\\Commands\\' . $CommandClass . '\\Proccess';
 
         $params['CMD_NAMESPACE']      = $CommandNameSpace;
         $params['COMMAND_USE']        = $CommandUse;
@@ -68,7 +72,7 @@ class Command extends MediaCommand
         $params['COMMAND_NAME']       = $CommandName;
 
         $params['COMMAND_TEXT_NAME']  = strtoupper($CommandName);
-        $params['COMMAND_CONST_DESC'] = strtoupper('L__'.$CommandName.'_DESC');
+        $params['COMMAND_CONST_DESC'] = strtoupper('L__' . $CommandName . '_DESC');
 
         $app                          = $this->template('app', $params);
         if (file_exists($binFile)) {

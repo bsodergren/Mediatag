@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Db;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\ffmpeg;
@@ -22,21 +24,21 @@ class Process extends Mediatag
     use Lang;
     use Translate;
 
-    public $db_array = [];
+    public $db_array        = [];
 
-    public $file_array = [];
+    public $file_array      = [];
 
     public $read;
 
     public $meta;
 
-    public $OutputText = [];
+    public $OutputText      = [];
 
-    public $New_Array = [];
+    public $New_Array       = [];
 
-    public $Deleted_Array = [];
+    public $Deleted_Array   = [];
 
-    public $Changed_Array = [];
+    public $Changed_Array   = [];
 
     public $duration;
 
@@ -45,15 +47,15 @@ class Process extends Mediatag
         'exec' => null,
     ];
 
-    public $commandList = [
-        'thumbnail' => ['execThumb' => null, 'checkClean' => null],
-        'markers' => ['execMarkers' => null],
+    public $commandList     = [
+        'thumbnail'    => ['execThumb' => null, 'checkClean' => null],
+        'markers'      => ['execMarkers' => null],
         'videopreview' => ['execPreview' => null, 'checkClean' => null],
-        'duration' => ['execDuration' => null, 'checkClean' => null],
-        'info' => ['execInfo' => null, 'checkClean' => null],
-        'update' => ['execUpdate' => 'default'],
-        'empty' => ['execEmpty' => 'default'],
-        'json' => ['getJson' => null],
+        'duration'     => ['execDuration' => null, 'checkClean' => null],
+        'info'         => ['execInfo' => null, 'checkClean' => null],
+        'update'       => ['execUpdate' => 'default'],
+        'empty'        => ['execEmpty' => 'default'],
+        'json'         => ['getJson' => null],
     ];
 
     private $count;
@@ -64,10 +66,12 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         if (Option::istrue('thumbnail') ||
-        Option::istrue('duration') ||
-        Option::istrue('info') ||
+        Option::istrue('duration')      ||
+        Option::istrue('info')          ||
         Option::istrue('videopreview')
         ) {
             utmdump("skip");
@@ -79,13 +83,15 @@ class Process extends Mediatag
 
     public function init()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
-        $file_array = parent::$SearchArray;
-        $this->DbMap = new DbMap();
+
+        $file_array                 = parent::$SearchArray;
+        $this->DbMap                = new DbMap();
 
         foreach ($file_array as $k => $file) {
-            $key = File::getVideoKey($file);
+            $key                    = File::getVideoKey($file);
             // utmdump([__METHOD__.':'.__LINE__,$file,$key]);
             if (\array_key_exists($key, $this->file_array)) {
 
@@ -95,13 +101,15 @@ class Process extends Mediatag
         }
         // utmdd([__METHOD__,count($file_array), count($this->file_array)]);
         parent::$dbconn->file_array = $this->file_array;
-        $this->db_array = parent::$dbconn->getDbFileList();
+        $this->db_array             = parent::$dbconn->getDbFileList();
 
         return $this;
     }
 
     public function exec($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->getFileArray();
 
         $this->removeDBEntry();

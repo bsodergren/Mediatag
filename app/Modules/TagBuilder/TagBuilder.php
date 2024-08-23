@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
@@ -22,12 +25,16 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
     }
 
     public function getTags($videoInfo)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::Logger('ReaderObj', $this->ReaderObj);
 
         if (! \defined('__UPDATE_SET_ONLY__')) {
@@ -43,7 +50,7 @@ class TagBuilder
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 UTMLog::Logger('jsonupdates', $jsonupdates);
 
-                $updates = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
+                $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
             }
         }
 
@@ -61,9 +68,9 @@ class TagBuilder
         }
 
         foreach (Option::getOptions() as $option => $value) {
-            $method = 'set'.$option;
+            $method = 'set' . $option;
             if (method_exists($this->ReaderObj, $method)) {
-                UTMLog::Logger('Option '.$option, $method, $value);
+                UTMLog::Logger('Option ' . $option, $method, $value);
                 $updates[$option] = $this->ReaderObj->{$method}($value, $videoInfo['video_key']);
 
             }
@@ -71,10 +78,10 @@ class TagBuilder
         UTMLog::Logger('updates', $updates);
 
         if (Option::isTrue('update')) {
-            $videoInfo['updateTags'] = $updates;
+            $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
         } else {
-            $current = $this->ReaderObj->getMetaValues();
+            $current                  = $this->ReaderObj->getMetaValues();
             UTMLog::Logger('getMetaValues', $current);
 
             $videoInfo['currentTags'] = $current;
@@ -90,7 +97,7 @@ class TagBuilder
                 }
             }
 
-            $videoInfo['updateTags'] = $this->compareTags($current, $updates);
+            $videoInfo['updateTags']  = $this->compareTags($current, $updates);
         }
 
         return $videoInfo;
@@ -101,28 +108,30 @@ class TagBuilder
      */
     public function getTagValues()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (__META_TAGS__ as $tag) {
             if (\array_key_exists($tag, $tagList)) {
                 if ('' == $tagList[$tag]) {
                     $getTags[] = $tag;
                 } else {
-                    $value = $this->CleanMetaValue($tag, $tagList[$tag]);
+                    $value         = $this->CleanMetaValue($tag, $tagList[$tag]);
                     $tagList[$tag] = $value;
 
                     if ('genre' == $tag && '' != $value) {
                         if (\array_key_exists('genre', $tagList)) {
                             if ('' != $tagList['genre']) {
-                                $tagList['genre'] .= ','.$value;
+                                $tagList['genre'] .= ',' . $value;
                             } else {
                                 $tagList['genre'] = $value;
                             }
-                            $tagList['genre'] .= ','.$this->fileReader->getGenre();
+                            $tagList['genre'] .= ',' . $this->fileReader->getGenre();
                             $tagList['genre'] = $this->CleanMetaValue('genre', $tagList['genre']);
                         }
                     }
 
                     if ('studio' == $tag) {
-                        $tagList['studio'] = $this->fileReader->getStudio().'/'.$tagList['studio'];
+                        $tagList['studio'] = $this->fileReader->getStudio() . '/' . $tagList['studio'];
                         $tagList['studio'] = $this->CleanMetaValue('studio', $tagList['studio']);
                         $tagList['studio'] = trim($tagList['studio'], '/');
                     }
@@ -137,7 +146,7 @@ class TagBuilder
                 $value = $this->getNewTagValue($tag);
 
                 if ('' != $value) {
-                    $value = $this->CleanMetaValue($tag, $value);
+                    $value         = $this->CleanMetaValue($tag, $value);
 
                     $tagList[$tag] = $value;
                 }
@@ -149,12 +158,14 @@ class TagBuilder
 
     private function compareTags(array $Current, array $New)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
-            $current_tag = $tag.'_current';
+            $current_tag    = $tag . '_current';
             ${$current_tag} = '';
-            $new_tag = $tag.'_new';
-            ${$new_tag} = '';
+            $new_tag        = $tag . '_new';
+            ${$new_tag}     = '';
             if (\array_key_exists($tag, $Current)) {
                 ${$current_tag} = $Current[$tag];
             }
@@ -164,8 +175,8 @@ class TagBuilder
             }
 
             if ('' != ${$new_tag}) {
-                $lev = levenshtein(${$current_tag}, ${$new_tag});
-                $sim = similar_text(${$current_tag}, ${$new_tag});
+                $lev           = levenshtein(${$current_tag}, ${$new_tag});
+                $sim           = similar_text(${$current_tag}, ${$new_tag});
                 $updates[$tag] = ${$new_tag};
                 // UTMLog::logNotice('Lev------------------------');
                 // UTMLog::logNotice('Lev Current', $$current_tag);

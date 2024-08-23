@@ -6,13 +6,15 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Utilities\Strings;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
 
 class Storage
 {
-    public $DbFileArray = [];
+    public $DbFileArray  = [];
 
     public $input;
 
@@ -51,23 +53,27 @@ class Storage
 
     public object $mapClass;
 
-    private $MultiIDX = 1;
+    private $MultiIDX    = 1;
 
     public function __construct()
     {
-        $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-        $this->mapClass = new DbMap();
-        $this->output = Mediatag::$output;
-        $this->input = Mediatag::$input;
-        $this->FileNumber = $this->output->section();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+        $this->mapClass    = new DbMap();
+        $this->output      = Mediatag::$output;
+        $this->input       = Mediatag::$input;
+        $this->FileNumber  = $this->output->section();
         $this->headerBlock = $this->output->section();
-        $this->RowBlock = $this->output->section();
+        $this->RowBlock    = $this->output->section();
     }
 
     public function truncate()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (__MYSQL_TRUNC_TABLES__ as $table) {
-            $res[] = $this->dbConn->rawQuery('TRUNCATE '.$table);
+            $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
         }
 
         utmdd([__METHOD__,$res]);
@@ -75,14 +81,16 @@ class Storage
 
     public function __call($name, $arguments)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $method = $name;
         // Note: value of $name is case sensitive.
         if (str_contains($name, 'Genre')) {
-            $tag = 'genre';
+            $tag    = 'genre';
             $method = str_replace('Genre', 'Tag', $name);
         }
         if (str_contains($name, 'Keyword')) {
-            $tag = 'keyword';
+            $tag    = 'keyword';
             $method = str_replace('Keyword', 'Tag', $name);
         }
 
@@ -101,6 +109,8 @@ class Storage
 
     public function query($sql)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $res = $this->dbConn->rawQuery($sql);
 
         return $res;
@@ -109,11 +119,15 @@ class Storage
 
     public function queryOne($sql)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->dbConn->rawQueryOne($sql);
     }
 
     public function videoExists($video_key, $where = null, $table = __MYSQL_VIDEO_FILE__)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->dbConn->where('video_key', $video_key);
         $this->dbConn->where('library', __LIBRARY__);
         if (null !== $where) {
@@ -125,20 +139,22 @@ class Storage
 
     public function insertVideoDb($data)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($data as $videokey => $rowData) {
             $this->dbConn->startTransaction();
             $commit = true;
-            foreach($rowData as $tableName => $data) {
-                if($commit === true) {
+            foreach ($rowData as $tableName => $data) {
+                if ($commit === true) {
                     if (! $this->dbConn->insert($tableName, $data)) {
-                        $this->video_string[] = ['insert failed: '.$this->dbConn->getLastError()];
+                        $this->video_string[] = ['insert failed: ' . $this->dbConn->getLastError()];
                         // Error while saving, cancel new record
                         $this->dbConn->rollback();
-                        $commit = false;
+                        $commit               = false;
                     }
                 }
             }
-            if($commit === true) {
+            if ($commit === true) {
                 $this->dbConn->commit();
             }
         }
@@ -147,15 +163,17 @@ class Storage
 
     public function insertMulti($data, $table = __MYSQL_VIDEO_FILE__, $quiet = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
         $ids = $this->dbConn->insertMulti($table, $data);
         if (! $ids) {
-            $this->video_string = ['insert failed: '.$this->dbConn->getLastError()];
+            $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];
         }
         if (false === $quiet) {
             $this->RowBlock->overwrite($this->video_string);
@@ -164,11 +182,13 @@ class Storage
 
     public function update($data, $where = [], $table = __MYSQL_VIDEO_FILE__)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
             $array_string = var_export($where, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
@@ -188,7 +208,7 @@ class Storage
         // $id = $this->dbConn->insert($table, $data);
         $id = $this->dbConn->update($table, $data);
         if (! $id) {
-            $this->video_string = ['insert failed: '.$this->dbConn->getLastQuery()];
+            $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
 
             // return $r;
         }
@@ -199,6 +219,8 @@ class Storage
 
     public function getValue($where_clause, $column = 'count(*)', $table = __MYSQL_VIDEO_FILE__)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($where_clause as $where) {
             $this->dbConn->where($where);
         }
@@ -209,43 +231,45 @@ class Storage
 
     public function insert($data, $table = __MYSQL_VIDEO_FILE__)
     {
-        $id = null;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $id         = null;
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
 
         // try {
-            $fieldArray = $data;
-            if (\array_key_exists('fullpath', $fieldArray)) {
+        $fieldArray = $data;
+        if (\array_key_exists('fullpath', $fieldArray)) {
 
-                $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
-                //utmdump($fieldArray);
-                if($has !== null) {
-                    $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
-                    if (! Mediatag::$filesystem->exists($backup_path)) {
-                        Mediatag::$filesystem->mkdir($backup_path);
-                    }
-                    $old_file = $fieldArray['fullpath'].'/'.$fieldArray['filename'];
-                    $new_file = $backup_path.'/'.$fieldArray['filename'];
-
-                    //utmdump(["Video Key exists?",$old_file,$new_file]);
-                    Mediatag::$filesystem->rename($old_file, $new_file);
-
-                    return null ;
+            $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
+            //utmdump($fieldArray);
+            if ($has !== null) {
+                $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
+                if (! Mediatag::$filesystem->exists($backup_path)) {
+                    Mediatag::$filesystem->mkdir($backup_path);
                 }
-            }
-            //     unset();
-            // }
+                $old_file    = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
+                $new_file    = $backup_path . '/' . $fieldArray['filename'];
 
-            $this->dbConn->onDuplicate($fieldArray, 'id');
-            
-            $id = $this->dbConn->insert($table, $data);
-           // utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
+                //utmdump(["Video Key exists?",$old_file,$new_file]);
+                Mediatag::$filesystem->rename($old_file, $new_file);
+
+                return null ;
+            }
+        }
+        //     unset();
+        // }
+
+        $this->dbConn->onDuplicate($fieldArray, 'id');
+
+        $id         = $this->dbConn->insert($table, $data);
+        // utmdd([__METHOD__,$this->dbConn->getLastQuery()]);
         // } catch (\Exception $e) {
-            // utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
+        // utmdump([__METHOD__,$this->dbConn->getLastQuery(),$e]);
         // }
 
         return $id;
@@ -255,6 +279,8 @@ class Storage
 
     public function makeKey($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $key = strtolower($text);
 
         /*
@@ -270,6 +296,8 @@ class Storage
 
     public function getTagTable($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         switch ($tag) {
             case 'genre':
                 return __MYSQL_GENRE__;
@@ -281,34 +309,36 @@ class Storage
 
     protected function queryBuilder($query_cmd, $search = null, $limit = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $sel_cols = null;
-        $die = false;
-        $where = null;
+        $die      = false;
+        $where    = null;
 
         switch ($query_cmd) {
             case 'select':
                 if (null === $search) {
                     $search = '*';
                 }
-                $query = 'SELECT '.$search.' FROM ';
+                $query      = 'SELECT ' . $search . ' FROM ';
 
                 break;
 
             case 'delete':
-                $query = 'delete from ';
+                $query      = 'delete from ';
                 if (\is_array($search)) {
-                    $search = ' '.$search[0]." = '".$search[1]."'";
+                    $search = ' ' . $search[0] . " = '" . $search[1] . "'";
                 }
-                $sel_cols = $search;
-                $die = true;
+                $sel_cols   = $search;
+                $die        = true;
 
                 break;
 
             case 'cleandb':
 
-                $cleanQuery = 'DELETE  FROM '.__MYSQL_VIDEO_FILE__.'  ';
-                $cleanQuery .= " WHERE Library = '".__LIBRARY__."' AND ";
-                $cleanQuery .= " fullpath like '".__CURRENT_DIRECTORY__."%'";
+                $cleanQuery = 'DELETE  FROM ' . __MYSQL_VIDEO_FILE__ . '  ';
+                $cleanQuery .= " WHERE Library = '" . __LIBRARY__ . "' AND ";
+                $cleanQuery .= " fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
 
                 return $cleanQuery;
 
@@ -318,29 +348,29 @@ class Storage
                 break;
         }
 
-        $query .= __MYSQL_VIDEO_FILE__." WHERE Library = '".__LIBRARY__."' AND ";
+        $query .= __MYSQL_VIDEO_FILE__ . " WHERE Library = '" . __LIBRARY__ . "' AND ";
 
         if (Option::isTrue('filelist')) {
             foreach ($this->file_array as $key => $file) {
-                $where_clause[] = " video_key = '".$key."'";
+                $where_clause[] = " video_key = '" . $key . "'";
             }
             if (\count($where_clause) > 1) {
-                $where = '( ';
+                $where  = '( ';
                 $string = implode(' OR ', $where_clause);
-                $where = $where.$string.') ';
+                $where  = $where . $string . ') ';
             } else {
                 $where = $where_clause[0];
             }
         } else {
-            $where = " fullpath like '".__CURRENT_DIRECTORY__."%'";
+            $where = " fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
         }
         if (null !== $sel_cols) {
             $where = $sel_cols;
         }
         if (true == $limit) {
-            $limit = ' LIMIT '.$limit;
+            $limit = ' LIMIT ' . $limit;
         }
-        $sql = $query.$where.$limit;
+        $sql      = $query . $where . $limit;
 
         if (Option::Istrue('test')) {
             Mediatag::$output->writeln($sql);

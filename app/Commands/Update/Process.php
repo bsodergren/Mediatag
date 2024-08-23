@@ -5,8 +5,10 @@
 
 namespace Mediatag\Commands\Update;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Traits\Callables;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -67,6 +69,8 @@ class Process extends Mediatag
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         parent::boot($input, $output);
         $this->formatter   = new FormatterHelper();
         Mediatag::$output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
@@ -91,11 +95,13 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
 
         $this->VideoList = parent::getVideoArray();
 
-        if(count($this->VideoList['file']) == 0) {
+        if (count($this->VideoList['file']) == 0) {
             return SymCommand::SUCCESS;
         }
 

@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Database;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\mysql\MysqliDb;
 use Mediatag\Modules\Database\Maps\ArtistMap;
 use Mediatag\Modules\Database\Maps\StudioMap;
@@ -19,11 +22,15 @@ class DbMap extends Storage
 
     public function __construct()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
     }
 
     public function getVideoCount()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $query   = $this->queryBuilder('select', 'COUNT(*) as count');
         $results = $this->query($query);
 
@@ -32,6 +39,8 @@ class DbMap extends Storage
 
     public function emptydatabase()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $query   = $this->queryBuilder('cleandb');
         $results = $this->query($query);
         // $thumb = Thumbnail::videoToThumb(__CURRENT_DIRECTORY__);
@@ -40,6 +49,8 @@ class DbMap extends Storage
 
     public function listTag($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $table  = $this->getTagTable($tag);
         $result = $this->dbConn->get($table, null, $tag);
         if (\is_array($result)) {
@@ -57,19 +68,23 @@ class DbMap extends Storage
 
     public function addTag($tag, $text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-        $query = 'INSERT IGNORE INTO '.$table.'  ('.$tag.", replacement) VALUES ('".$key."','".$text."')";
+        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
         $this->dbConn->rawQuery($query);
     }
 
     public function getTag($tag, $string, $bypass = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $text   = $string;
         $table  = $this->getTagTable($tag);
         $where  = $this->getTagWhere($tag, $string);
 
-        $query  = 'SELECT * FROM '.$table.' WHERE '.$where;
+        $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
         $result = $this->dbConn->rawQuery($query);
 
         if (\is_array($result)) {
@@ -96,6 +111,8 @@ class DbMap extends Storage
 
     public function addNewTagReplacement($tag, $text, $addition, $show = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $existing = $this->getTag($tag, $text, true);
 
         if (\is_array($existing)) {
@@ -109,6 +126,8 @@ class DbMap extends Storage
 
     public function getReplacementString($tag, $text, $addition, $show = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $existing = $this->getTag($tag, $text, true);
 
         $string   = $this->sortTagList($existing, $addition);
@@ -118,6 +137,8 @@ class DbMap extends Storage
 
     public function updateTag($tag, $text, $replacement, $show = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $table    = $this->getTagTable($tag);
         $where    = $this->getTagWhere($tag, $text);
         $existing = $this->getTag($tag, $text, true);
@@ -127,10 +148,10 @@ class DbMap extends Storage
         if (null !== $replacement) {
             $replacement = $this->sortTagList($replacement);
 
-            $updates[]   = " replacement = '".$replacement."' ";
+            $updates[]   = " replacement = '" . $replacement . "' ";
         }
         if (null !== $show) {
-            $updates[] = ' keep = '.$show.' ';
+            $updates[] = ' keep = ' . $show . ' ';
         }
 
         $replace  = implode(',', $updates);
@@ -138,16 +159,18 @@ class DbMap extends Storage
             $this->addTag($tag, $text);
         }
 
-        $query    = 'UPDATE '.$table.' SET '.$replace.' WHERE  '.$where;
+        $query    = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
         $result   = $this->dbConn->rawQueryOne($query);
     }
 
     private function getTagWhere($tag, $text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $key   = $this->makeKey($text);
-        $where = $tag." = '".$key."';";
+        $where = $tag . " = '" . $key . "';";
         if (str_contains($text, '%')) {
-            $where = $tag." like '%".$key."%';";
+            $where = $tag . " like '%" . $key . "%';";
         }
 
         return $where;

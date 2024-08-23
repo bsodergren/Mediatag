@@ -5,6 +5,9 @@
 
 namespace Mediatag\Traits\Patterns;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Executable\JsExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
@@ -16,6 +19,8 @@ trait Title
      */
     public function getTitleRegex()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('title', 'pattern');
     }
 
@@ -24,6 +29,8 @@ trait Title
      */
     public function gettitleMatch()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('title', 'match');
     }
 
@@ -32,6 +39,8 @@ trait Title
      */
     public function getTitleDelim()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('title', 'delim');
     }
 
@@ -40,6 +49,8 @@ trait Title
      */
     public function getTitle()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
@@ -49,11 +60,11 @@ trait Title
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
 
-                $title = $output_array[$this->gettitleMatch()];
-                $title = str_replace('_s_', 's_', $title);
-                $title = str_replace($this->getTitleDelim(), ' ', $title);
-                $pretitle = $title;
-                $title = (new JsExec($video_key))->read($title);
+                $title     = $output_array[$this->gettitleMatch()];
+                $title     = str_replace('_s_', 's_', $title);
+                $title     = str_replace($this->getTitleDelim(), ' ', $title);
+                $pretitle  = $title;
+                $title     = (new JsExec($video_key))->read($title);
                 UTMLog::Logger('Title Tag', [$pretitle,$title]);
 
                 //   utmdump($title);

@@ -5,8 +5,10 @@
 
 namespace Mediatag\Commands\Show;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Display\ShowDisplay;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Symfony\Component\Console\Input\InputInterface;
@@ -44,12 +46,16 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         parent::boot($input, $output);
         // parent::$Display              = new ShowDisplay($output);
     }
 
     public function __call($m, $a)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('call', $m);
 
         return null;
@@ -57,6 +63,8 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // $meta = new metaReader($this->videoData);
         // return $meta->getTagArray();
         $this->VideoList = parent::getVideoArray();
@@ -65,6 +73,8 @@ class Process extends Mediatag
 
     public function print()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $filelist_array                = $this->VideoList['file'];
         Mediatag::$Display->LineBreaks = true;
         Mediatag::$Display->DisplayTable($filelist_array);
@@ -72,6 +82,8 @@ class Process extends Mediatag
 
     public function return()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->meta['print'] = true;
 
         return $this->meta;

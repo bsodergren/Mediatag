@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Traits\Patterns\Artist;
 use Mediatag\Traits\Patterns\Genre;
 use Mediatag\Traits\Patterns\Studio;
@@ -12,9 +15,9 @@ use Mediatag\Traits\Patterns\Title;
 
 // include_once __DATA_LISTS__.'/NamesList.php';
 
-include_once __DATA_MAPS__.'/StudioMap.php';
+include_once __DATA_MAPS__ . '/StudioMap.php';
 
-include_once __DATA_MAPS__.'/WordMap.php';
+include_once __DATA_MAPS__ . '/WordMap.php';
 class Patterns extends TagBuilder
 {
     use Artist;
@@ -105,6 +108,8 @@ class Patterns extends TagBuilder
      */
     public function __construct($object)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->className  = $object->className;
         $this->video_name = $object->video_name;
         $studio           = strtolower($object->getSubStudio());
@@ -112,7 +117,7 @@ class Patterns extends TagBuilder
         $this->studio_key = $this->mapStudio($this->studio_key);
         if ('' == $this->studio_key) {
             $this->studio_key = 'default';
-        }if (null === $this->regex) {
+        } if (null === $this->regex) {
             $this->regex = [];
         }
         $this->regex      = array_merge($this->default_regex, $this->regex);
@@ -123,17 +128,18 @@ class Patterns extends TagBuilder
         }
     }
 
-    public static function getClassObject($className,$obj) {
-        
-        return new class($obj) extends Patterns {
-          
-        };
+    public static function getClassObject($className, $obj)
+    {
+
+        return new class ($obj) extends Patterns {};
     }
     /**
      * getKeyValue.
      */
     private function getKeyValue($tag, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex         = $this->regex;
         $parent_studio = str_replace(' ', '', $this->studio);
         $parent_studio = $this->mapStudio($parent_studio);
@@ -143,7 +149,7 @@ class Patterns extends TagBuilder
         $this->getKeyName($studio);
 
         if (\array_key_exists($studio, $regex)) {
-           // $studio = $studio;
+            // $studio = $studio;
         } elseif (\array_key_exists($parent_studio, $regex)) {
             $studio = $parent_studio;
         } else {
@@ -180,13 +186,17 @@ class Patterns extends TagBuilder
      */
     public function getFilename($file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $file;
     }
 
     public function getStudio()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null !== $this->subStudio) {
-            return $this->studio.'/'.$this->subStudio;
+            return $this->studio . '/' . $this->subStudio;
         }
     }
 
@@ -195,6 +205,8 @@ class Patterns extends TagBuilder
      */
     /*    public static function customStudio($key_studio, $arr)
         {
+ utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
             if(is_array($arr)){
                 $studioArray[] = $key_studio;
                 foreach($arr as $studio){

@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Download;
 
 use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -18,16 +20,16 @@ class Process extends Mediatag
      *
      * @var array
      */
-    public $file_array = [];
+    public $file_array      = [];
 
-    public $newFiles = [];
+    public $newFiles        = [];
 
     public $barSection;
 
     public $textSection;
 
-    public $commandList = [
-        'json' => [
+    public $commandList     = [
+        'json'    => [
             'jSonCache' => null,
         ],
         'convert' => [
@@ -39,10 +41,12 @@ class Process extends Mediatag
         'moveDownloads' => null,
     ];
 
-    private $filesToRemove = [];
+    private $filesToRemove  = [];
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (__PLEX_DOWNLOAD__ != getcwd()) {
             chdir(__PLEX_DOWNLOAD__);
         }

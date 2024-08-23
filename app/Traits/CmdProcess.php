@@ -5,19 +5,24 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
 trait CmdProcess
 {
     public $default = [
-        'exec' => null,
+        'exec'  => null,
         'print' => null,
     ];
 
     public function runCommand()
     {
-        $array = $this->commandList;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $array   = $this->commandList;
 
         $default = $this->default;
         if (isset($this->defaultCommands)) {
@@ -45,7 +50,7 @@ trait CmdProcess
                                 }
                             }
                         }
-                        $args = $commandArgs;
+                        $args        = $commandArgs;
                     }
                     $Commands[$method] = $args; // => $value];
                     if ('default' == $method) {

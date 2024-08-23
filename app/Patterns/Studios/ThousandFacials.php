@@ -5,6 +5,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 const THOUSANDFACIALS_REGEX_COMMON = '/([a-zA-Z0-9\-]+)\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,5}.mp4/i';
 
 class ThousandFacials extends Blowpass

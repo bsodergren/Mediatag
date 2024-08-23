@@ -5,8 +5,10 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Utilities\Option;
 use Mediatag\Core\MediaCache;
 use Mediatag\Traits\Callables;
 use UTM\Bundle\Monolog\UTMLog;
@@ -93,13 +95,15 @@ class MediaFinder extends SFinder
 
     public $defaultCmd;
 
-    public static $depth = null;
+    public static $depth   = null;
 
     /**
      * renameCommaFiles.
      */
     public function renameCommaFiles($filelist, $spaces = false): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $first_part  = '';
         $rename_file = false;
         $oldName     = '';
@@ -173,6 +177,8 @@ class MediaFinder extends SFinder
      */
     public function ExecuteSearch(): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $FileArray = [];
         UTMLog::logger('Search');
 
@@ -200,6 +206,8 @@ class MediaFinder extends SFinder
 
     public function getRangeIds($total, $offset = 1)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $start = 0;
 
         if (Option::isTrue('range')) {
@@ -225,6 +233,8 @@ class MediaFinder extends SFinder
 
     public function getRangeArray($file_array): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $start          = 0;
         $total          = \count($file_array);
 
@@ -242,6 +252,8 @@ class MediaFinder extends SFinder
 
     public function getFileNumberArray($file_array): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $start      = 0;
         $total      = \count($file_array);
         $FileArray  = [];
@@ -286,6 +298,8 @@ class MediaFinder extends SFinder
      */
     public function Search($path, $search, $date = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->searchFiles($search, $path, $date);
     }
 
@@ -296,6 +310,8 @@ class MediaFinder extends SFinder
      */
     public static function find($file, $location)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return (new self())->searchFiles($file, $location);
     }
 
@@ -308,6 +324,8 @@ class MediaFinder extends SFinder
      */
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null === $path) {
             $path = getcwd();
         }
@@ -323,11 +341,11 @@ class MediaFinder extends SFinder
 
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $finder->files()->in($path);
-        if(self::$depth != null){
+        if (self::$depth != null) {
             $finder->depth('== 0');
         }
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
-        if($date !== null) {
+        if ($date !== null) {
             $finder->date('>= ' . $date);
         }
         if (null !== $this->excludeDir) {
@@ -360,10 +378,10 @@ class MediaFinder extends SFinder
             // }
 
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
-            if(is_array($file_array)) {
-                if(count($file_array) > 0) {
+            if (is_array($file_array)) {
+                if (count($file_array) > 0) {
                     $noFiles = count($file_array);
-                    Mediatag::$output->writeln('<info>'.$noFiles.' files found</info>');
+                    Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
 
                     if (Option::isTrue('dump')) {
                         $this->scriptNewFiles($file_array);
@@ -385,6 +403,8 @@ class MediaFinder extends SFinder
      */
     private function getFilelistOption()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (Option::isTrue('filelist')) {
             return Option::getValue('filelist');
         }
@@ -395,16 +415,18 @@ class MediaFinder extends SFinder
 
     public function onlyNew($path, $fileArray)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $db_array             = null;
         $New_Array            = [];
 
-        if(__SCRIPT_NAME__ == 'mediadb') {
+        if (__SCRIPT_NAME__ == 'mediadb') {
             return $fileArray;
         }
 
         $db_array             = Mediatag::$dbconn->getDbFileList();
 
-        if(is_array($db_array)) {
+        if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
             foreach ($fileArray as $key => $file) {
@@ -419,7 +441,7 @@ class MediaFinder extends SFinder
             }
         }
 
-        if(count($New_Array) > 0) {
+        if (count($New_Array) > 0) {
             return $New_Array;
         } else {
             return null;
@@ -430,6 +452,8 @@ class MediaFinder extends SFinder
 
     public function scriptNewFiles($file_array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);
             $obj->addCmd('update', ['-U', '-f'], true, true);

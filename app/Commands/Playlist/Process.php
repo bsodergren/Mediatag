@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Playlist;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 // use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Traits\Callables;
@@ -20,72 +22,72 @@ class Process extends Mediatag
     use Callables;
     use Helper;
 
-    public const ARCHIVE = __PLEX_PL_DIR__.'/ids/archive.txt';
+    public const ARCHIVE            = __PLEX_PL_DIR__ . '/ids/archive.txt';
 
-    public const IGNORED = __PLEX_PL_DIR__.'/ids/ignored_ids.txt';
+    public const IGNORED            = __PLEX_PL_DIR__ . '/ids/ignored_ids.txt';
 
-    public const DISABLED = __PLEX_PL_DIR__.'/ids/disabled.txt';
+    public const DISABLED           = __PLEX_PL_DIR__ . '/ids/disabled.txt';
 
-    public const MODELHUB = __PLEX_PL_DIR__.'/ids/modelhub.txt';
+    public const MODELHUB           = __PLEX_PL_DIR__ . '/ids/modelhub.txt';
 
-    public const ERRORIDS = __PLEX_PL_DIR__.'/ids/error.txt';
+    public const ERRORIDS           = __PLEX_PL_DIR__ . '/ids/error.txt';
 
-    public const NOTFOUND = __PLEX_PL_DIR__.'/ids/notfound.txt';
+    public const NOTFOUND           = __PLEX_PL_DIR__ . '/ids/notfound.txt';
 
-    public const FILELIST = __PLEX_PL_DIR__.'/lists/filelist.txt';
+    public const FILELIST           = __PLEX_PL_DIR__ . '/lists/filelist.txt';
 
-    public const DOWNLOADED = __PLEX_PL_DIR__.'/lists/downloaded.txt';
+    public const DOWNLOADED         = __PLEX_PL_DIR__ . '/lists/downloaded.txt';
 
-    public const FILEMAP = __PLEX_PL_DIR__.'/lists/all_files_list.txt';
+    public const FILEMAP            = __PLEX_PL_DIR__ . '/lists/all_files_list.txt';
 
-    public const PLAYLIST = __PLEX_PL_DIR__.'/all_playlist.txt';
+    public const PLAYLIST           = __PLEX_PL_DIR__ . '/all_playlist.txt';
 
-    public const JSONPLAYLIST = __PLEX_PL_DIR__.'/json_playlist.txt';
+    public const JSONPLAYLIST       = __PLEX_PL_DIR__ . '/json_playlist.txt';
 
-    public const ERRORPLAYLIST = __PLEX_PL_DIR__.'/error_playlist.txt';
+    public const ERRORPLAYLIST      = __PLEX_PL_DIR__ . '/error_playlist.txt';
 
-    public const MISSING_PLAYLIST = __PLEX_PL_DIR__.'/missing_playlist.txt';
+    public const MISSING_PLAYLIST   = __PLEX_PL_DIR__ . '/missing_playlist.txt';
 
-    public $defaultCommands = [
+    public $defaultCommands         = [
         'cleanBrkDownloads' => null,
-        'compact' => null,
-        'download' => null,
+        'compact'           => null,
+        'download'          => null,
     ];
 
-    public $commandList = [
-        'missing' => [
+    public $commandList             = [
+        'missing'           => [
             // 'exec'        => null,
             'missing' => null,
         ],
-        'find' => [
+        'find'              => [
             'find' => null,
-           // 'default' => null,
+            // 'default' => null,
         ],
         'cleanBrkDownloads' => [
             'cleanBrkDownloads' => null,
         ],
-        'compact' => [
+        'compact'           => [
             'compact' => null,
         ],
-        'clean' => [
+        'clean'             => [
             'clean' => null,
         ],
-        'max' => [
+        'max'               => [
             'trimPlaylist' => null,
-            'default' => null,
+            'default'      => null,
         ],
-        'json' => [
+        'json'              => [
             'cleanjSon' => null,
         ],
-        'watchlater' => [
+        'watchlater'        => [
             'youtubeWatchPlaylist' => null,
-            'compact' => null,
+            'compact'              => null,
         ],
     ];
 
-    public static $current_key = false;
+    public static $current_key      = false;
 
-    public static $trimmedPlaylist = false;
+    public static $trimmedPlaylist  = false;
 
     public static $originalPlaylist = false;
 
@@ -93,9 +95,9 @@ class Process extends Mediatag
 
     public $OrigPlaylist;
 
-    public $idList = [];
+    public $idList                  = [];
 
-    public $premiumIds = [];
+    public $premiumIds              = [];
 
     public $json_Array;
 
@@ -105,10 +107,11 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        define('SKIP_SEARCH',true);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        define('SKIP_SEARCH', true);
         parent::boot($input, $output);
-        if($file === null)
-        {
+        if ($file === null) {
             $file = Option::getValue('playlist');
         }
         $this->playlist = $file;
@@ -133,6 +136,8 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return null;
     }
 

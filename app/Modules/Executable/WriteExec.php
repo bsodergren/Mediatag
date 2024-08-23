@@ -5,9 +5,11 @@
 
 namespace Mediatag\Modules\Executable;
 
+use Mediatag\Core\Mediatag;
+
+
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\MediaCache;
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Callables;
 use Mediatag\Traits\ffmpeg;
@@ -29,12 +31,16 @@ class WriteExec extends MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->execMode = 'write';
         parent::__construct($videoData, $input, $output);
     }
 
     public function clearMeta($options = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null === Option::getValue('empty', 1)) {
             $this->addOptionArg('--metaEnema');
         } else {
@@ -49,6 +55,8 @@ class WriteExec extends MediatagExec
 
     public function writeChanges($options = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $update = false;
         if (\count($this->updateTags) > 0) {
             foreach (__META_TAGS__ as $tag) {
@@ -68,15 +76,17 @@ class WriteExec extends MediatagExec
 
     public function write()
     {
-        $this->errors = null;
-        $video_key = File::file($this->video_file, 'videokey');
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $command = [
+        $this->errors = null;
+        $video_key    = File::file($this->video_file, 'videokey');
+
+        $command      = [
             Mediatag::App(),
             $this->video_file,
         ];
 
-        $command = array_merge($command, $this->getOptionArgs());
+        $command      = array_merge($command, $this->getOptionArgs());
         // utmdd([__METHOD__,$command]);
         // UTMLog::Logger('Writing Metadata', $run_cmd);
 
@@ -94,10 +104,10 @@ class WriteExec extends MediatagExec
             $this->exec($command, $callback);
             Timer::watch('End Writing data');
             MediaCache::forget($video_key);
-            $results = ('' != $this->errors) ? $this->errors : $this->stdout;
+            $results  = ('' != $this->errors) ? $this->errors : $this->stdout;
         } else {
             $results = false;
-            $this->output->write("\t Skipping ".basename($command[1]));
+            $this->output->write("\t Skipping " . basename($command[1]));
         }
         if (true == $results) {
             if (str_contains($results, 'error')) {
@@ -113,8 +123,8 @@ class WriteExec extends MediatagExec
                     $this->repairVideo();
                     Timer::watch('End REparing Video');
                 } else {
-                    $this->output->write("\t ".$results.\PHP_EOL);
-                    $this->output->write("\t -- Running ".$this->runCommand);
+                    $this->output->write("\t " . $results . \PHP_EOL);
+                    $this->output->write("\t -- Running " . $this->runCommand);
 
                     exit;
                 }

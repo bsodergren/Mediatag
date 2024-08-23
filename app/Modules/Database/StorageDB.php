@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoData\Data\Duration;
 use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
@@ -63,6 +65,8 @@ class StorageDB extends Storage
 
     public function init($video_file)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $fs               = new File($video_file);
         $this->videoData  = $fs->get();
         $this->video_path = File::file($video_file, 'filepath');
@@ -76,6 +80,8 @@ class StorageDB extends Storage
     // end init()
     public function getDbFileList()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $fileListArray     = [];
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name, video_key");
@@ -98,6 +104,8 @@ class StorageDB extends Storage
 
     public function removeDBEntry()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $thumb  = $this->getThumbnailPath();
 
         if (null !== $thumb) {
@@ -146,6 +154,8 @@ class StorageDB extends Storage
 
     public function addDBArray($data)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video_string           = [];
         $vdata                        = [];
         Mediatag::$Display->BlockInfo = [];
@@ -156,7 +166,7 @@ class StorageDB extends Storage
             $vdata = ['video_file' => $row['fullpath'] . '/' . $row['filename']];
 
             $this->updateDBEntry($row['video_key'], $vdata, Option::istrue('all'));
-            if($this->progressbar !== null) {
+            if ($this->progressbar !== null) {
                 $this->progressbar->advance();
             }
             $this->progressbar1->advance();
@@ -170,6 +180,8 @@ class StorageDB extends Storage
 
     public static function getSubLibrary($video_path)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $sublibrary   = null;
         $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative($video_path, __PLEX_HOME__);
@@ -183,6 +195,8 @@ class StorageDB extends Storage
 
     public function createDbEntry($video_file, $video_key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->init($video_file);
 
         $data          = [
@@ -201,6 +215,8 @@ class StorageDB extends Storage
 
     public function getThumbnailPath()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $where = ["video_key = '" . $this->video_key . "'"];
 
         return $this->getValue($where, 'thumbnail');
@@ -208,6 +224,8 @@ class StorageDB extends Storage
 
     public function UpdateFilePath()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->video_string = [];
         $this->init($this->video_file);
         $data               = [
@@ -222,6 +240,8 @@ class StorageDB extends Storage
 
     public function updateDBEntry($key, $videoData, $all = true)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $video_file                            = $videoData['video_file'];
         $video_id                              = true;
         $exists                                = $this->videoExists($key);
@@ -231,7 +251,7 @@ class StorageDB extends Storage
         if (null === $exists) {
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);
-            if($video_id !== null) {
+            if ($video_id !== null) {
 
                 $query  = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
                 $query .= " (nextseq('" . __LIBRARY__ . "')," . $video_id . ",'" . $key . "','" . __LIBRARY__ . "')";
@@ -244,7 +264,7 @@ class StorageDB extends Storage
         }
 
         Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
-        if($video_id !== null) {
+        if ($video_id !== null) {
 
             // $this->vtags = new VideoTags();
             Mediatag::$Display->BlockInfo['MetaTags']  = (new VideoTags())->getVideoInfo($key, $video_file);

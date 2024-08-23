@@ -5,6 +5,9 @@
 
 namespace Mediatag\Utilities;
 
+use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -25,9 +28,11 @@ class Chooser
      */
     public static function changes(InputInterface $input, OutputInterface $output, string $questionText = 'Continue with this action'): bool
     {
-        $ask = new QuestionHelper();
-        $question = new Question('<question>'.$questionText.'? </question> yY|nN|A|N ');
-        $answer = $ask->ask($input, $output, $question);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $ask      = new QuestionHelper();
+        $question = new Question('<question>' . $questionText . '? </question> yY|nN|A|N ');
+        $answer   = $ask->ask($input, $output, $question);
 
         switch ($answer) {
             case 'N':

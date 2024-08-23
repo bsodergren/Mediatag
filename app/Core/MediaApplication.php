@@ -5,6 +5,9 @@
 
 namespace Mediatag\Core;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;
@@ -15,7 +18,6 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Bundle\Monolog\UTMLog;
 
-
 class MediaApplication extends Application
 {
     use Lang;
@@ -23,6 +25,7 @@ class MediaApplication extends Application
 
     protected function getDefaultInputDefinition(): InputDefinition
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         Translate::$Class = __CLASS__;
@@ -41,6 +44,7 @@ class MediaApplication extends Application
 
     public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
+
         utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
         register_shutdown_function([\get_class(UTMLog::$Logger), 'LogEnd']);

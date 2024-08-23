@@ -5,6 +5,9 @@
 
 namespace Mediatag\Traits\Patterns;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Utilities\MediaArray;
 
 trait Artist
@@ -14,6 +17,8 @@ trait Artist
      */
     public function getArtistRegex()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('artist', 'pattern');
     }
 
@@ -22,6 +27,8 @@ trait Artist
      */
     public function getArtistDelim()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('artist', 'delim');
     }
 
@@ -30,6 +37,8 @@ trait Artist
      */
     public function getArtistMatch()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('artist', 'match');
     }
 
@@ -38,6 +47,8 @@ trait Artist
      */
     public function getArtistFullNames()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getKeyValue('artist', 'artistFirstNameOnly');
     }
 
@@ -46,6 +57,8 @@ trait Artist
      */
     public function ignoreArtist($name)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $name_key = strtolower($name);
         $name_key = str_replace(' ', '_', $name_key);
         $name_key = str_replace('.', '', $name_key);
@@ -62,12 +75,14 @@ trait Artist
      */
     public function getArtistTransform($names, $delim = ', ')
     {
-        $namesArray = [];
-        $names = str_replace('_1080p', '', $names);
-        $names = str_replace($this->getArtistDelim(), $delim, $names);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $namesArray  = [];
+        $names       = str_replace('_1080p', '', $names);
+        $names       = str_replace($this->getArtistDelim(), $delim, $names);
         $names_array = explode($delim, $names);
 
-        $prev_name = '';
+        $prev_name   = '';
         /*$total_names = count($names_array);
         $new_array = [];
         $key = 0;
@@ -92,7 +107,7 @@ trait Artist
                 if (\array_key_exists($name_key, $this->artist_match)) {
                     $aName = $this->artist_match[$name_key];
                     if ('' != $aName) {
-                        $prev_name = $aName;
+                        $prev_name    = $aName;
                         $namesArray[] = $aName;
                     }
                 } else {
@@ -122,6 +137,8 @@ trait Artist
      */
     public function getArtistTextTransform($text)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $text;
     }
 
@@ -130,6 +147,8 @@ trait Artist
      */
     public function getArtist()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getArtistRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);

@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Traits\ffmpeg;
 use Mhor\MediaInfo\MediaInfo;
@@ -23,31 +25,37 @@ class Duration extends VideoData
     public $resultCount;
 
     public $VideoInfo;
-    private $actionText = '<comment>Updated Duration</comment>';
+    private $actionText    = '<comment>Updated Duration</comment>';
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
     public function getText()
     {
-        return  $this->actionText .' for '.basename($this->video_file);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        return $this->actionText . ' for ' . basename($this->video_file);
 
     }
 
     public function get($key, $file)
     {
-        $this->video_file = $file;
-        $this->video_key = $key;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $this->VideoInfo = $this->getVideoDuration();
+        $this->video_file = $file;
+        $this->video_key  = $key;
+
+        $this->VideoInfo  = $this->getVideoDuration();
 
         return ['duration' => $this->VideoInfo['duration'], 'video_key' => (string) $this->video_key];
     }
 
     public function getVideoDuration()
     {
-        $mediaInfo = new MediaInfo();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $mediaInfo          = new MediaInfo();
         $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
-        $videos = $mediaInfoContainer->getVideos();
-        $general = $mediaInfoContainer->getGeneral();
+        $videos             = $mediaInfoContainer->getVideos();
+        $general            = $mediaInfoContainer->getGeneral();
 
         foreach ($videos as $video) {
             if (
@@ -65,24 +73,28 @@ class Duration extends VideoData
 
     public function clearQuery($key = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $where = '';
         if (null !== $key) {
             $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
             if (null !== $exists) {
-                $where = "AND video_key = '".$key."'";
+                $where = "AND video_key = '" . $key . "'";
             }
         }
 
-        return 'update '.$this->VideoDataTable.' set duration = null WHERE Library = "'.__LIBRARY__.'" '.$where;
+        return 'update ' . $this->VideoDataTable . ' set duration = null WHERE Library = "' . __LIBRARY__ . '" ' . $where;
     }
 
     public function videoQuery()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
-        return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key 
-        FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."'
-        AND fullpath like '".__CURRENT_DIRECTORY__ ."%'
+
+        return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key
+        FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "'
+        AND fullpath like '" . __CURRENT_DIRECTORY__ . "%'
         AND (duration is null or duration < 50) ";
     }
 }

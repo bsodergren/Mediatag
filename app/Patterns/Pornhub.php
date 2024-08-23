@@ -5,23 +5,27 @@
 
 namespace Mediatag\Patterns;
 
-use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
+
+
+use Mediatag\Core\MediaCache;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Pornhubdb\Helpers\CVSUtils;
 use UTM\Utilities\Debug\Timer;
 
 class Pornhub extends Patterns
 {
-    public const PORNHUB_PLAYLIST = __PLEX_PL_DIR__.'/ph_playlist.txt';
+    public const PORNHUB_PLAYLIST = __PLEX_PL_DIR__ . '/ph_playlist.txt';
 
-    public $studio = '';
+    public $studio                = '';
 
     public function __construct($object)
     {
-        $video_details = false;
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $video_details   = false;
         //        $dbConn          = new PornhubDB();
-        include_once __DATA_MAPS__.'/filemap.php';
+        include_once __DATA_MAPS__ . '/filemap.php';
 
         parent::__construct($object);
         $this->video_key = $object->video_key;
@@ -32,10 +36,10 @@ class Pornhub extends Patterns
                 // $video_details = MediaCache::get($object->video_name);
                 if (false === $video_details) {
                     $peices = explode('_', basename($object->video_name, '.mp4'));
-                    $a = array_reverse($peices);
+                    $a      = array_reverse($peices);
                     //   $a[0] = '100000752';
                     Timer::watch('before if');
-                    $file = getVideoCSV($a[0]);
+                    $file   = getVideoCSV($a[0]);
                     Timer::watch('after if');
                     if (null !== $file) {
                         // Mediatag::$output->writeln($object->video_name.' in '.$file);
@@ -77,6 +81,8 @@ class Pornhub extends Patterns
 
     public function findLine($file, $key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //  $csv_file = __NEW_CSV_DIR__.'/'.$file.'.csv';
 
         //   return shell_exec("grep -w {$key} {$csv_file}");
@@ -84,6 +90,8 @@ class Pornhub extends Patterns
 
     private function getDataTag($tag)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $value = '';
         if (null === $this->videoInfo) {
             return false;
@@ -106,6 +114,8 @@ class Pornhub extends Patterns
 
     public function getArtist()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getDataTag('video_artist');
     }
 
@@ -113,11 +123,15 @@ class Pornhub extends Patterns
 
     public function getGenre()
     {
-        return $this->getDataTag('genres_a').','.$this->getDataTag('genres_b');
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        return $this->getDataTag('genres_a') . ',' . $this->getDataTag('genres_b');
     }
 
     public function getTitle($names = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return $this->getDataTag('video_title');
     }
 }

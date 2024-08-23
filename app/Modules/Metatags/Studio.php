@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Traits\Callables;
@@ -18,6 +20,8 @@ class Studio extends TagBuilder
 
     public function __construct($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // UTMLog::Logger('data', $this->videoData);
     }
 
@@ -25,6 +29,8 @@ class Studio extends TagBuilder
 
     public static function getStudioFile($type, $getpaths = true)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if ('A' == $type) {
             $fileDB = Mediatag::$amateurFile;
         } else {
@@ -42,16 +48,18 @@ class Studio extends TagBuilder
 
     public static function addStudiotoFile($type, $studio, $newPath = false)
     {
-        $type = strtoupper($type);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $type     = strtoupper($type);
 
         if ('A' == $type) {
             $fileName = Mediatag::$amateurFile;
-            $varName = 'amateurArray';
-            $fileDB = self::getStudioFile('A', false);
+            $varName  = 'amateurArray';
+            $fileDB   = self::getStudioFile('A', false);
         } else {
             $fileName = Mediatag::$channelFile;
-            $varName = 'channelArray';
-            $fileDB = self::getStudioFile('C', false);
+            $varName  = 'channelArray';
+            $fileDB   = self::getStudioFile('C', false);
         }
 
         foreach ($fileDB as $i => $line) {
@@ -65,7 +73,7 @@ class Studio extends TagBuilder
         }
 
         if (false !== $newPath) {
-            $studio = $studio.':'.$newPath;
+            $studio = $studio . ':' . $newPath;
         }
 
         $fileDB[] = $studio;

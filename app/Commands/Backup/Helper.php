@@ -5,29 +5,31 @@
 
 namespace Mediatag\Commands\Backup;
 
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Core\Mediatag;
+
 
 use Nette\Utils\Callback;
-use Symfony\Component\Process\Process as ExecProcess;
 use UTM\Utilities\Option;
+
+use Nette\Utils\FileSystem as NetteFile;
+use Symfony\Component\Process\Process as ExecProcess;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
+    private function mysqlDump($options, $backupFile)
+    {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
-    private function mysqlDump($options,$backupFile)
-    { utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
-
-
-        $baseCommand = [
+        $baseCommand   = [
             'mysqldump',
             '-h',
             'localhost',
             '-u',
             __SQL_USER__,
-            '-p'.__SQL_PASSWD__,
-            '--compact'
+            '-p' . __SQL_PASSWD__,
+            '--compact',
         ];
 
         $fileoutputCmd = [
@@ -36,12 +38,12 @@ trait Helper
         ];
 
 
-        $command     = array_merge($baseCommand, $options,$fileoutputCmd);
+        $command       = array_merge($baseCommand, $options, $fileoutputCmd);
 
-        $process = new ExecProcess($command);
+        $process       = new ExecProcess($command);
         $process->setTimeout(60000);
         $process->run();
-        $res = $process->getOutput();
+        $res           = $process->getOutput();
 
         unset($process);
     }
@@ -49,7 +51,8 @@ trait Helper
 
 
     public function backupDb()
-    { utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+    {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
 
         if (! is_dir($this->backupDirectory)) {
@@ -57,18 +60,18 @@ trait Helper
 
         }
 
-        $backupDbFile = $this->backupDirectory. DIRECTORY_SEPARATOR . __MYSQL_DATABASE__.".sql";
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . __MYSQL_DATABASE__ . ".sql";
 
-        $this->mysqlDump(['-d',__MYSQL_DATABASE__],$backupDbFile);
+        $this->mysqlDump(['-d',__MYSQL_DATABASE__], $backupDbFile);
         $this->backupFuncDb();
 
-        $defines = get_defined_constants(true);
-        foreach($defines['user'] as $key => $value) {
-            if(str_contains($key, "TABLE__")) {
+        $defines      = get_defined_constants(true);
+        foreach ($defines['user'] as $key => $value) {
+            if (str_contains($key, "TABLE__")) {
                 $tables[] = $value;
             }
         }
-        foreach($tables as $tableName) {
+        foreach ($tables as $tableName) {
             $this->backupTable($tableName);
         }
 
@@ -76,37 +79,43 @@ trait Helper
 
     public function backupTable($tableName)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
 
-        $backupDbFile = $this->backupDirectory. DIRECTORY_SEPARATOR . $tableName .".sql";
 
-        $this->mysqlDump(['--skip-extended-insert',__MYSQL_DATABASE__, $tableName],$backupDbFile);
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . $tableName . ".sql";
+
+        $this->mysqlDump(['--skip-extended-insert',__MYSQL_DATABASE__, $tableName], $backupDbFile);
     }
 
     public function backupFuncDb()
     {
-        $backupDbFile = $this->backupDirectory. DIRECTORY_SEPARATOR . "function.sql";
-        $this->mysqlDump(['--skip-triggers','--routines','--no-create-info','--no-data','--no-create-db','--skip-opt',__MYSQL_DATABASE__],$backupDbFile);
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . "function.sql";
+        $this->mysqlDump(['--skip-triggers','--routines','--no-create-info','--no-data','--no-create-db','--skip-opt',__MYSQL_DATABASE__], $backupDbFile);
 
     }
 
     public function sortDirectory($options = [])
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $dir_array = [];
-        $files = 0;
+        $files     = 0;
         // $arr= array_unique($this->video_array[$key]);
         if (Option::isTrue('backup')) {
             $key = Option::getValue('backup');
         }
 
         if (\array_key_exists($key, $this->video_array)) {
-            $arr = array_unique($this->video_array[$key]);
+            $arr                     = array_unique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 if (str_contains($video_path, $options)) {
                     $dir_array[] = $video_path;
                 }
             }
             $this->video_array[$key] = $dir_array;
-            $files = \count($this->video_array[$key]);
+            $files                   = \count($this->video_array[$key]);
         }
 
         if (0 == $files) {
@@ -116,18 +125,22 @@ trait Helper
 
     public function print()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
     }
 
     public function backupStudio($key)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $home = '/home/bjorn/plex/XXX';
         $path = '/media/backup/home/plex/XXX';
         if (\array_key_exists($key, $this->video_array)) {
             $files = \count($this->video_array[$key]);
 
-            echo "Rsyncing {$files}".\PHP_EOL;
+            echo "Rsyncing {$files}" . \PHP_EOL;
 
-            $arr = array_unique($this->video_array[$key]);
+            $arr   = array_unique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 $newPath = str_replace($home, $path, $video_path);
                 // $newFile = $newPath.DIRECTORY_SEPARATORvideo_pathvideo['video_name'];
@@ -136,14 +149,16 @@ trait Helper
                     FileSystem::createdir($newPath);
                 }
 
-                echo $video_path.' '.$newPath.\PHP_EOL;
-                $this->rsync($video_path.'/', $newPath.'/');
+                echo $video_path . ' ' . $newPath . \PHP_EOL;
+                $this->rsync($video_path . '/', $newPath . '/');
             }
         }
     }
 
     public function sort()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach ($this->VideoList['file'] as $key => $videoArray) {
             if (str_starts_with($key, 'x')) {
                 $this->video_array['studio'][] = $videoArray['video_path'];
@@ -155,12 +170,16 @@ trait Helper
 
     public function backupPh()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->backupStudio('ph');
     }
 
     public function rsync($old, $new)
     {
-        $command = [
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $command  = [
             'rsync',
             '--progress',
             '--update',
@@ -173,7 +192,7 @@ trait Helper
 
         $callback = Callback::check([$this, 'Output']);
 
-        $process = new ExecProcess($command);
+        $process  = new ExecProcess($command);
         $process->setTimeout(60000);
         //  utmdd([__METHOD__,$process->getcommandline()]);
         $process->start();

@@ -5,29 +5,33 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 const DOGHOUSEDIGITAL_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
 class DoghouseDigital extends MileHighMedia
 {
     public $subStudio = 'Doghouse Digital';
-    public $regex = [
+    public $regex     = [
         'doghousedigital' => [
             'artist' => [
-                'pattern' => DOGHOUSEDIGITAL_REGEX_COMMON,
-                'delim' => '_AND_',
-                'match' => 5,
+                'pattern'             => DOGHOUSEDIGITAL_REGEX_COMMON,
+                'delim'               => '_AND_',
+                'match'               => 5,
                 'artistFirstNameOnly' => false,
             ],
-            'title' => [
+            'title'  => [
                 'pattern' => DOGHOUSEDIGITAL_REGEX_COMMON,
-                'delim' => '-',
-                'match' => 1,
+                'delim'   => '-',
+                'match'   => 1,
             ],
         ],
     ];
 
     public function getTitle()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
@@ -42,10 +46,10 @@ class DoghouseDigital extends MileHighMedia
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid = 'E'.$output_array[2];
-                $epi = 'Scene '.$output_array[3];
+                $vid   = 'E' . $output_array[2];
+                $epi   = 'Scene ' . $output_array[3];
 
-                return ucwords($title).' '.$vid.' '.$epi;
+                return ucwords($title) . ' ' . $vid . ' ' . $epi;
             }
         }
 
@@ -54,6 +58,8 @@ class DoghouseDigital extends MileHighMedia
 
     private function artistTransform($artist)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $artist = str_replace(',', '_and_', $artist);
 
         return str_replace(' ', '_', $artist);

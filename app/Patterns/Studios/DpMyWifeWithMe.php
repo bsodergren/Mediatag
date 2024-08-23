@@ -5,6 +5,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 const DPMYWIFE_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)_?(.*)?\_[0-9pk]{1,5}.mp4/i';
 
 class DpMyWifeWithMe extends MileHighMedia

@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Rename;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Commands\Update\Helper as UpdateHelper;
 use Mediatag\Modules\Database\Storage;
 
@@ -23,7 +25,7 @@ class Process extends Mediatag
             'lowercase' => null,
         ],
         'rename'    => [
-            'exec' => null,
+            'exec'   => null,
             'rename' => null,
         ],
         'trans'     => [
@@ -43,6 +45,8 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->StorageConn = new Storage();
 
         if (!\defined('ARTIST_MAP')) {
@@ -52,6 +56,6 @@ class Process extends Mediatag
             $this->getArtistMap('IGNORE_NAME_MAP', $this->StorageConn->getIgnoredArists());
         }
 
-      //  utmdd([__METHOD__, parent::$SearchArray]);
+        //  utmdd([__METHOD__, parent::$SearchArray]);
     }
 }

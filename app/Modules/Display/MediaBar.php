@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Helper\ProgressBar;
 
 class MediaBar
@@ -23,10 +25,12 @@ class MediaBar
     public $bar;
     public $sectionName;
 
-    public $format = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
+    public $format         = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
 
     public function __construct($count, $section = null, $width = 50)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->width = $width;
 
         if (null === $section) {
@@ -36,13 +40,15 @@ class MediaBar
         }
 
         $this->count = $count;
-        $this->bar = new ProgressBar($section, $count);
+        $this->bar   = new ProgressBar($section, $count);
     }
 
     public function setMsgFormat($format = '<comment>%message%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%')
     {
-        
-        ProgressBar::setFormatDefinition('custom', $format );
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+
+        ProgressBar::setFormatDefinition('custom', $format);
         $this->format='custom';
         return $this;
 
@@ -50,8 +56,9 @@ class MediaBar
 
     public function setMessage($message)
     {
-        if($this->format != 'custom')
-        {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        if ($this->format != 'custom') {
             $this->setMsgFormat();
         }
         $this->bar->setMessage($message);
@@ -60,6 +67,8 @@ class MediaBar
 
     public function newBar($bar = '<comment>-</comment>', $lead = '<error>></error>')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // $this->bar->setBarCharacter($bar);
         // $this->bar->setProgressCharacter($lead);
         $this->bar->setFormat($this->format);
@@ -75,16 +84,22 @@ class MediaBar
 
     public function start()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->bar->start();
     }
 
     public function advance()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->bar->advance();
     }
 
     public function clear()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->bar->clear();
     }
 }

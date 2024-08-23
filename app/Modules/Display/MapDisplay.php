@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Display;
 
+use Mediatag\Core\Mediatag;
+
+
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
@@ -34,16 +37,20 @@ class MapDisplay
 
     public function __construct(OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->formatter = new FormatterHelper();
-        $outputStyle = new OutputFormatterStyle('red');
+        $outputStyle     = new OutputFormatterStyle('red');
         $output->getFormatter()->setStyle('indent', $outputStyle);
-        $this->output = $output;
+        $this->output    = $output;
     }
 
     public function drawTable($data)
     {
-        $output = $this->output;
-        $section = $output->section();
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $output      = $this->output;
+        $section     = $output->section();
         $this->table = new Table($section);
         $this->table->setStyle('box');
         $this->table->setHeaders(array_keys($data[0]));
@@ -53,6 +60,8 @@ class MapDisplay
 
     public function addRow($data)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $idx = 1;
         foreach ($data as $k => $row) {
             $row['id'] = $idx;

@@ -5,6 +5,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 class FuckingTheNeighbors extends DevilsFilm
 {
     // public $studio = 'Fucking The Neighbors';

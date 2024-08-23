@@ -5,6 +5,9 @@
 
 namespace Mediatag\Commands\Playlist;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;
@@ -19,6 +22,8 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         Translate::$Class = __CLASS__;
 
         return [
@@ -43,6 +48,8 @@ class Options extends MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         return [$varName, InputArgument::OPTIONAL, Translate::text('L__PLAYLIST_NAME')];
     }
 }

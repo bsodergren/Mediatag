@@ -5,8 +5,10 @@
 
 namespace Mediatag\Modules\Display;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -51,6 +53,8 @@ class Display
 
     public function __construct(OutputInterface $output)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $this->formatter        = new FormatterHelper();
 
         $outputStyle            = new OutputFormatterStyle('red');
@@ -73,6 +77,8 @@ class Display
 
     public function DisplayTable(array $filelist_array)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('start Display Table');
         $count = \count($filelist_array);
         if (0 == $count) {
@@ -107,11 +113,13 @@ class Display
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         UTMLog::logger('start Display Header');
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeLn('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
+            $this->fileCountSection->writeLn('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
             $this->fileInfoSection->writeLn('<info>   </info>');
             $this->processOutput->setMaxHeight(3);
         }
@@ -121,6 +129,8 @@ class Display
 
     public function displayFileInfo($fileinfo, $count, $idx)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $method             = 'overwrite';
 
         if (!\array_key_exists('currentTags', $fileinfo)) {
@@ -143,9 +153,9 @@ class Display
         ksort($this->blockDisplay);
         $in_directory       = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename           = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files '.Mediatag::$tmpText);
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
         Mediatag::$tmpText  = null;
-        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
+        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
         $this->MetaBlockSection->{$method}($this->blockDisplay);
 
         return true;
@@ -157,6 +167,8 @@ class Display
      */
     public function sortBlocks($block)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $returnArray = [];
         $array       = [];
         foreach ($block as $row) {
@@ -187,8 +199,10 @@ class Display
 
     public function formatTagLine($tag, $value, $style = 'comment')
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (null !== $value) {
-            $change_value = "\t<".$this->text_style.'>'.$this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35).'</>';
+            $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
 
             return $this->indent($this->formatter->formatSection($tag, $change_value, $style), $this->padbuffer);
         }
@@ -198,6 +212,8 @@ class Display
 
     public function indent($string, $spaces)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\is_string($string)) {
             return str_pad($string, \strlen($string) + $spaces, $this->padbufferChar, \STR_PAD_LEFT);
         }
@@ -207,6 +223,8 @@ class Display
 
     private function DisplayMetaBlock($fileinfo): array
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         foreach (__META_TAGS__ as $tag) {
             $MetatagBlock[] = $this->TagBlockDisplay($tag, $fileinfo);
         }
@@ -223,6 +241,8 @@ class Display
 
     private function TagBlockDisplay($tag, $fileinfo): string|null
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $tag              = strtolower($tag);
         $style            = 'update';
         $this->text_style = 'fg=white';
@@ -257,6 +277,8 @@ class Display
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $tag     = strtolower($tag);
         $string  = '';
         $changes = [];

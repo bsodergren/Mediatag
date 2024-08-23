@@ -6,6 +6,8 @@
 namespace Mediatag\Commands\Show;
 
 use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Process\DB\Process as DBProcess;
@@ -17,6 +19,8 @@ trait Helper
 {
     public function findMissing($options)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //   utmdd([__METHOD__,$options]);
         $missingTaglist = $options[0];
 
@@ -62,7 +66,7 @@ trait Helper
 
         if (\count($this->missing) > 0) {
             foreach ($this->missing as $tag => $missing_file) {
-                $obj = new ScriptWriter('missing_'.$tag.'.sh', __CURRENT_DIRECTORY__);
+                $obj = new ScriptWriter('missing_' . $tag . '.sh', __CURRENT_DIRECTORY__);
                 $obj->addCmd('update', ['-o', $tag, '-f']);
                 foreach ($missing_file as $k => $file) {
                     $obj->addFile($file['video_file'], false);
@@ -75,6 +79,8 @@ trait Helper
 
     public function newFiles()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $DBProcess    = DBProcess::getNewFiles(Mediatag::$SearchArray, Mediatag::$input, Mediatag::$output);
         $ScriptWriter = new ScriptWriter('newFiles.sh', __CURRENT_DIRECTORY__);
         $ScriptWriter->addCmd('update', ['-U', '-f']);
@@ -88,6 +94,8 @@ trait Helper
 
     public function createPlaylist()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
@@ -97,7 +105,7 @@ trait Helper
         }
         $file_string   = '';
         foreach ($video_keys as $v => $key) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . \PHP_EOL;
         }
 
         Filesystem::writeFile($playlist_file, $file_string);
@@ -105,6 +113,8 @@ trait Helper
 
     public function oldfiles()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
@@ -123,6 +133,8 @@ trait Helper
 
     public function duplicateFiles()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         utmdd([__METHOD__, Mediatag::$SearchArray]);
     }
 }

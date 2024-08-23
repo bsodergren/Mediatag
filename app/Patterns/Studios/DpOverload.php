@@ -5,6 +5,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
 class DpOverload extends TwentyFirstSextury
 {
     public $subStudio = 'DP Overload';

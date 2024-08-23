@@ -5,6 +5,8 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Core\Mediatag;
+
 const DESCRIPTION = 'Updates metatags on files';
 const NAME        = 'update';
 
@@ -15,7 +17,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
-
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 class Command extends MediaCommand
@@ -30,6 +31,8 @@ class Command extends MediaCommand
 
     public function handleSignal(int $signal): void
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
             echo 'Exiting, cleaning up';
@@ -45,6 +48,8 @@ class Command extends MediaCommand
     /*
     public function execute(InputInterface $input, OutputInterface $output): int
     {
+ utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
 
         if (true == Option::isTrue('rename')) {
             $options = Option:: getOptions();
@@ -55,11 +60,11 @@ class Command extends MediaCommand
                 'command' => 'rename',
                 '-R'  => true,
             ]);
-    
+
             $returnCode = $this->getApplication()->doRun($greetInput, $output);
             return SymCommand::SUCCESS;
         } else {
-        
+
         parent::execute($input, $output);
 
         return SymCommand::SUCCESS;

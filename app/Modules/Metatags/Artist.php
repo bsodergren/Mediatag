@@ -5,6 +5,9 @@
 
 namespace Mediatag\Modules\Metatags;
 
+use Mediatag\Core\Mediatag;
+
+
 use XMLWriter;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 
@@ -16,6 +19,8 @@ class Artist extends TagBuilder
 
     public static function ArtistXML($value)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::startArtistXML();
         $artist_array = explode(',', $value);
         self::$xml->startElement('array');
@@ -31,6 +36,8 @@ class Artist extends TagBuilder
 
     private static function artistElement($name)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$xml->startElement('dict');
         self::$xml->writeElement('key', 'name');
         self::$xml->writeElement('string', $name);
@@ -39,6 +46,8 @@ class Artist extends TagBuilder
 
     private static function startArtistXML()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$xml = new XMLWriter();
         self::$xml->openMemory();
         self::$xml->startDocument('1.0', 'UTF-8');
@@ -53,6 +62,8 @@ class Artist extends TagBuilder
 
     private static function endArtistXML()
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         self::$xml->fullEndElement();
         self::$xml->fullEndElement();
         self::$xml->fullEndElement();

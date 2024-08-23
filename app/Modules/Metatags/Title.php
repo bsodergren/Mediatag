@@ -5,8 +5,10 @@
 
 namespace Mediatag\Modules\Metatags;
 
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\Mediatag;
+
+
+use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\Strings;
 
@@ -14,11 +16,15 @@ class Title extends TagBuilder
 {
     public function __construct($videoData)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         // UTMLog::Logger('data', $this->videoData);
     }
 
     public static function writeTagList($text, $file = false)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         $file = Mediatag::$titleList;
 
         return parent::writeTagList($text, $file);
@@ -28,6 +34,8 @@ class Title extends TagBuilder
 
     public static function clean($text, $file = null)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         //        $genObj = new Genre();
         /*
                 $first = explode(" ",$text);
@@ -39,16 +47,16 @@ class Title extends TagBuilder
         */
         // $text      = strtolower($text);
         UTMLog::Logger('before', $text);
-        $text = Strings::clean($text);
-        $text = str_replace("\\'", "'", $text);
-        $text = str_replace('/', ' ', $text);
-        $text = str_replace('(', ' ', $text);
-        $text = str_replace(')', ' ', $text);
-        $text = str_replace(', ', ',', $text);
-        $text = str_replace(',,', '', $text);
+        $text      = Strings::clean($text);
+        $text      = str_replace("\\'", "'", $text);
+        $text      = str_replace('/', ' ', $text);
+        $text      = str_replace('(', ' ', $text);
+        $text      = str_replace(')', ' ', $text);
+        $text      = str_replace(', ', ',', $text);
+        $text      = str_replace(',,', '', $text);
         $titleText = trim($text);
 
-        $r = false;
+        $r         = false;
         foreach (TITLE_REPLACE_MAP as $filter) {
             $filter = strtolower($filter);
             if (str_contains(strtolower($text), $filter)) {
@@ -71,7 +79,7 @@ class Title extends TagBuilder
                 $titleText = str_ireplace('  ', ' ', $titleText);
 
                 $titleText = trim($titleText);
-                $r = true;
+                $r         = true;
             }
         }
 

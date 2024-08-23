@@ -5,6 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use Mediatag\Core\Mediatag;
+
+
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class Brazzers extends Patterns
@@ -78,6 +81,8 @@ class Brazzers extends Patterns
 
     public function __construct($object)
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         parent::__construct($object);
         parent::$StudioKey = $this->studio;
     }

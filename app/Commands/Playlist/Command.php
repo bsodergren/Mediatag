@@ -5,6 +5,8 @@
 
 namespace Mediatag\Commands\Playlist;
 
+use Mediatag\Core\Mediatag;
+
 const DESCRIPTION = 'download PH Playlist';
 const NAME        = 'playlist';
 
@@ -29,6 +31,8 @@ class Command extends MediaCommand
 
     public function handleSignal(int $signal): void
     {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
             echo 'Exiting, cleaning up';
@@ -47,8 +51,10 @@ class Command extends MediaCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $playlist         = $input->getArgument(self::CMD_NAME);
-        if($playlist === null) {
+        utminfo([Mediatag::$index++=>[__FILE__,__LINE__,__METHOD__]]);
+
+        $playlist          = $input->getArgument(self::CMD_NAME);
+        if ($playlist === null) {
             $playlist = Option::getValue('playlist');
         }
 
