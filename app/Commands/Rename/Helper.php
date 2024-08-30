@@ -218,7 +218,7 @@ trait Helper
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $dupeFile, true);
                 }
-                Mediatag::$Console->info('Duplicate', ['Video' => $video_name]);
+                Mediatag::$Console->error('Duplicate Video ' . $video_name);
             }
             // */
         }

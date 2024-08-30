@@ -138,6 +138,21 @@ trait CaseHelper {
         if ($this->in_range($number, 439473961,441441711 )) {
             return "/mnt/d/XXX/.cache/phdb/txt/ph_db_041.txt";
         }
+        if ($this->in_range($number, 441441721,443365731 )) {
+            return "/mnt/d/XXX/.cache/phdb/txt/ph_db_042.txt";
+        }
+        if ($this->in_range($number, 443365761,445309411 )) {
+            return "/mnt/d/XXX/.cache/phdb/txt/ph_db_043.txt";
+        }
+        if ($this->in_range($number, 445309431,447263731 )) {
+            return "/mnt/d/XXX/.cache/phdb/txt/ph_db_044.txt";
+        }
+        if ($this->in_range($number, 447263741,449046981 )) {
+            return "/mnt/d/XXX/.cache/phdb/txt/ph_db_045.txt";
+        }
+        if ($this->in_range($number, 449046991,449793601 )) {
+            return "/mnt/d/XXX/.cache/phdb/txt/ph_db_046.txt";
+        }
         if ($this->in_range($number, 455285731,456663611 )) {
             return "/mnt/d/XXX/.cache/phdb/txt/ph_db_050.txt";
         }
