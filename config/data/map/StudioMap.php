@@ -53,5 +53,6 @@ const STUDIO_MAP = [
     'jayspov'             => 'AdultTime',
     'newsensations'       => 'AdultTime',
     'roccosiffredi'       => 'AdultTime',
-    'nubiles' => 'AdultTime',
+    'nubiles'             => 'AdultTime',
+
 ];

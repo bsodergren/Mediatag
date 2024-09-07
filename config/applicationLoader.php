@@ -6,8 +6,8 @@
 use Mediatag\Core\MediaApplication;
 use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
-$cmdName = str_replace('media', '', __SCRIPT_NAME__);
-$className = 'Mediatag\\Commands\\'.ucfirst($cmdName).'\\Command';
+$cmdName     = str_replace('media', '', __SCRIPT_NAME__);
+$className   = 'Mediatag\\Commands\\' . ucfirst($cmdName) . '\\Command';
 
 // $customCommands = new FactoryCommandLoader([
 //     $cmdName      => function () use($className) {return new $className(); },
