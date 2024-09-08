@@ -269,6 +269,6 @@ class Thumbnail extends VideoData
             (new SFileSystem())->mkdir($path);
         }
 
-        (new SFileSystem())->rename($file, $newFile);
+        (new SFileSystem())->rename($file, $newFile, true);
     }
 }

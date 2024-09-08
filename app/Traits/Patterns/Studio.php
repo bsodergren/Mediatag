@@ -18,7 +18,6 @@ trait Studio
     public function mapStudio($studio)
     {
         utminfo();
-
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
@@ -48,8 +47,9 @@ trait Studio
         //  utmdd([__METHOD__,$this->getStudioRegex()]);
         if (true == $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
-                if (\array_key_exists($matches[1], $this->replace_studios)) {
-                    return $this->replace_studios[$matches[1]];
+                $studioKey = str_replace("-","",$matches[1]);
+                if (\array_key_exists($studioKey, $this->replace_studios)) {
+                    return $this->replace_studios[$studioKey];
                 }
 
                 return null;
@@ -68,6 +68,7 @@ trait Studio
     public static function customStudio($key_studio, $arr)
     {
         utminfo();
+        utmdump(__METHOD__);
 
         if (false == self::$StudioKey) {
             self::$StudioKey = $key_studio;

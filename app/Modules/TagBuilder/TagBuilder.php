@@ -6,7 +6,7 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
-
+use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
@@ -39,11 +39,11 @@ class TagBuilder
 
         if (! \defined('__UPDATE_SET_ONLY__')) {
             if (str_starts_with($this->video_key, 'x')) {
-                $updates = $this->ReaderObj->getFileValues();
+                $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
 
 
             } else {
-                $fileUpdates = $this->ReaderObj->getFileValues();
+                $fileUpdates =  (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
 
                 //  $fileUpdates['title'] = '';
@@ -64,6 +64,7 @@ class TagBuilder
         }
 
         if (isset($updates)) {
+            // utmdd($updates);
             // UTMlog::Logger('Reader', $updates);
         }
 
@@ -103,58 +104,59 @@ class TagBuilder
         return $videoInfo;
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function getTagValues()
-    {
-        utminfo();
+    // /**
+    //  * @return array|mixed
+    //  */
+    // public function getTagValues()
+    // {
+    //     utmdd("afdsfasdfsd");
 
-        foreach (__META_TAGS__ as $tag) {
-            if (\array_key_exists($tag, $tagList)) {
-                if ('' == $tagList[$tag]) {
-                    $getTags[] = $tag;
-                } else {
-                    $value         = $this->CleanMetaValue($tag, $tagList[$tag]);
-                    $tagList[$tag] = $value;
+    //     utminfo();
+    //     foreach (__META_TAGS__ as $tag) {
+    //         if (\array_key_exists($tag, $tagList)) {
+    //             if ('' == $tagList[$tag]) {
+    //                 $getTags[] = $tag;
+    //             } else {
+    //                 $value         = $this->CleanMetaValue($tag, $tagList[$tag]);
+    //                 $tagList[$tag] = $value;
 
-                    if ('genre' == $tag && '' != $value) {
-                        if (\array_key_exists('genre', $tagList)) {
-                            if ('' != $tagList['genre']) {
-                                $tagList['genre'] .= ',' . $value;
-                            } else {
-                                $tagList['genre'] = $value;
-                            }
-                            $tagList['genre'] .= ',' . $this->fileReader->getGenre();
-                            $tagList['genre'] = $this->CleanMetaValue('genre', $tagList['genre']);
-                        }
-                    }
+    //                 if ('genre' == $tag && '' != $value) {
+    //                     if (\array_key_exists('genre', $tagList)) {
+    //                         if ('' != $tagList['genre']) {
+    //                             $tagList['genre'] .= ',' . $value;
+    //                         } else {
+    //                             $tagList['genre'] = $value;
+    //                         }
+    //                         $tagList['genre'] .= ',' . $this->fileReader->getGenre();
+    //                         $tagList['genre'] = $this->CleanMetaValue('genre', $tagList['genre']);
+    //                     }
+    //                 }
 
-                    if ('studio' == $tag) {
-                        $tagList['studio'] = $this->fileReader->getStudio() . '/' . $tagList['studio'];
-                        $tagList['studio'] = $this->CleanMetaValue('studio', $tagList['studio']);
-                        $tagList['studio'] = trim($tagList['studio'], '/');
-                    }
-                }
-            } else {
-                $getTags[] = $tag;
-            }
-        }
+    //                 if ('studio' == $tag) {
+    //                     $tagList['studio'] = $this->fileReader->getStudio() . '/' . $tagList['studio'];
+    //                     $tagList['studio'] = $this->CleanMetaValue('studio', $tagList['studio']);
+    //                     $tagList['studio'] = trim($tagList['studio'], '/');
+    //                 }
+    //             }
+    //         } else {
+    //             $getTags[] = $tag;
+    //         }
+    //     }
 
-        if (\count($getTags) > 0) {
-            foreach ($getTags as $tag) {
-                $value = $this->getNewTagValue($tag);
+    //     if (\count($getTags) > 0) {
+    //         foreach ($getTags as $tag) {
+    //             $value = $this->getNewTagValue($tag);
 
-                if ('' != $value) {
-                    $value         = $this->CleanMetaValue($tag, $value);
+    //             if ('' != $value) {
+    //                 $value         = $this->CleanMetaValue($tag, $value);
 
-                    $tagList[$tag] = $value;
-                }
-            }
-        }
+    //                 $tagList[$tag] = $value;
+    //             }
+    //         }
+    //     }
 
-        return $tagList;
-    }
+    //     return $tagList;
+    // }
 
     private function compareTags(array $Current, array $New)
     {

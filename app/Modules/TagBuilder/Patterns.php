@@ -139,7 +139,6 @@ class Patterns extends TagBuilder
     private function getKeyValue($tag, $key)
     {
         utminfo();
-
         $regex         = $this->regex;
         $parent_studio = str_replace(' ', '', $this->studio);
         $parent_studio = $this->mapStudio($parent_studio);
@@ -191,14 +190,14 @@ class Patterns extends TagBuilder
         return $file;
     }
 
-    public function getStudio()
-    {
-        utminfo();
-
-        if (null !== $this->subStudio) {
-            return $this->studio . '/' . $this->subStudio;
-        }
-    }
+    // public function getStudio()
+    // {
+    //     utmdump($this->replace_studios);
+    //     utminfo();
+    //     if (null !== $this->subStudio) {
+    //         return $this->studio . '/' . $this->subStudio;
+    //     }
+    // }
 
     /*
      * customStudio.

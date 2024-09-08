@@ -103,6 +103,7 @@ define(
         'compilation',
         'bisexual',
         'Animation',
+        'feature',
         //  'Hot',
         //  'Clips',
         //  'misc',

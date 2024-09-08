@@ -36,7 +36,6 @@ trait MetaTags
     public function cleanGenre($text)
     {
         utminfo();
-
         return Genre::clean($text);
     }
 
@@ -85,11 +84,12 @@ trait MetaTags
         $studio_dir   = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
-        $key_studio   = $studio_array[0];
+       $key_studio   = $studio_array[0];
 
         if (isset(fileReader::$PatternClass)) {
-
-            $arr = fileReader::$PatternClass::customStudio($key_studio, $arr);
+            $studio_str = fileReader::$PatternClassObj->getStudio();
+            $studio_str = trim($key_studio .'/'. $studio_str,"/");
+            $arr = explode('/',  $studio_str);
         }
 
         return implode('/', $arr);
@@ -251,9 +251,9 @@ trait MetaTags
             $value = MetaTags::$tagDB->{$method}($tagValue);
 
             if ('Genre' == $tag) {
-                if (__LIBRARY__ == "Home") {
+                // if (__LIBRARY__ == "Home") {
                     $newList[] = $tagValue;
-                }
+                // }
 
 
                 //  utmdd([__METHOD__,$value,$tagValue]);
@@ -272,7 +272,7 @@ trait MetaTags
 
         $arr       = array_values($arr);
         if ('genre' == $tag) {
-            // utmdd([__METHOD__,$arr]);
+            
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
                     foreach ($arr as $v) {

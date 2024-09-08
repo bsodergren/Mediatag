@@ -31,7 +31,10 @@ class TeamSkeet extends Patterns
         'BusyGettingBanged'          => 'Busy Getting Banged',
         'DreamingOfFreeuse'          => 'Dreaming Of Freeuse',
         'badmilfs'                   => 'bad milfs',
+        'dadcrush'                   => 'Dad Crush',
         'dyked'                      => 'dyked',
+        'askyourmother'=>'ask your mother',
+        'theloft' =>'The Loft',
         'exxxtrasmall'               => 'exxxtra small',
         'familystrokes'              => 'family strokes',
         'gingerpatch'                => 'ginger patch',
@@ -42,6 +45,9 @@ class TeamSkeet extends Patterns
         'oyeloca'                    => 'oyeloca',
         'pervdriver'                 => 'perv driver',
         'pervmom'                    => 'perv mom',
+        'pervnana'                    => 'perv nana',
+        'sislovesme'               => 'Sis Loves Me',
+
         'povlife'                    => 'pov life',
         'rubateen'                   => 'rub a teen',
         'shesnew'                    => 'shes new',
@@ -83,6 +89,10 @@ class TeamSkeet extends Patterns
         'teamskeetxtoughlovex'       => 'tough love',
         'teamskeetxxanderporn'       => 'xander porn',
         'teamskeetxyoungbusty'       => 'young busty',
+        'teamskeetxslutinspection' => 'X Slut Inspection',
+        'teamskeetxspankmonster' => 'Spankmonster',
+        'teamskeetxharmonyfilms' =>'harmony films',
+        'teamskeetfeatures' => 'Feature Films',
     ];
 
     public function getArtistTextTransform($text)

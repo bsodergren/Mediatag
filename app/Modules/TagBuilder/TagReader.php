@@ -149,7 +149,6 @@ class TagReader
         utminfo();
 
         $file = new fileReader($this->videoData);
-
         return $file->getTagArray();
     }
 
@@ -181,6 +180,7 @@ class TagReader
 
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
+            
 
             if (\array_key_exists($tag, $this->tag_array)) {
 

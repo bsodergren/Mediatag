@@ -24,7 +24,7 @@ class Reader extends TagReader
     public $genre;
 
     public $studio    = '';
-
+    public $videoData = null;
     public $video_file;
 
     public $video_path;
@@ -41,11 +41,15 @@ class Reader extends TagReader
     private $PatternObject;
 
     public static $PatternClass;
+    public static $PatternClassObj;
+
 
     public function __construct($videoData)
     {
         utminfo();
-
+        // if($this->videoData === null){
+        //     $this->videoData = $videoData;
+        // }
         $this->expandArray($videoData);
 
         $className = 'Pornhub';
@@ -59,6 +63,8 @@ class Reader extends TagReader
                 $className = $this->getStudioClass($studioName);
             }
         }
+
+        // utmdd(class_exists($classPath . $this->video_library . '\\' . $className));
 
         if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
             // UTMlog::Logger('File Studio className', $className);
@@ -82,12 +88,12 @@ class Reader extends TagReader
         } else {
             $className = $classPath . $this->video_library . '\\' . $className;
         }
-
         if (class_exists($className)) {
 
             self::$PatternClass              = $className;
             $this->PatternObject             = new $className($this);
             $this->PatternObject->video_file = $this->video_file;
+            self::$PatternClassObj = $this->PatternObject;
         }
     }
 
@@ -109,10 +115,10 @@ class Reader extends TagReader
     public function __call($method, $arg)
     {
         utminfo();
-
         $getMethod = 'get' . ucfirst($method);
         // utmdd([__METHOD__,$method,$arg]);
         if (method_exists($this, $getMethod)) {
+
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {
             if (null !== $this->PatternObject) {
@@ -161,6 +167,7 @@ class Reader extends TagReader
 
                 $studio_dir = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
                 $arr        = explode('/', $studio_dir);
+
                 foreach ($arr as $idx => $studio_string) {
                     foreach (__SKIP_STUDIOS__ as $k) {
                         if ($studio_string == ucwords($k)) {
@@ -277,11 +284,11 @@ class Reader extends TagReader
             // utmdd([__METHOD__,$res]);
             $filename = $this->video_file;
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
-
             if (true == $success) {
                 $this->genre = $matches[1];
                 //  $genre = $matches[1];
             }
+
         }
 
 
@@ -328,6 +335,7 @@ class Reader extends TagReader
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
+            
             return $this->PatternObject->{$method}();
             //  } else {
             //      return $this->{$method}();
