@@ -5,14 +5,15 @@
 
 namespace Mediatag\Traits;
 
-use Mediatag\Core\Mediatag;
-
-
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
-use UTM\Utilities\Option;
 use Nette\Utils\Strings;
+
+
+use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use UTM\Bundle\Monolog\UTMLog;
 use Symfony\Component\Process\Process;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 trait Callables
 {
@@ -283,6 +284,9 @@ trait Callables
         //     // UTMlog::Logger('Ph Download', $buffer);
         // }
         //// UTMlog::Logger('Ph Download', $buffer);
+
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log",$buffer);
+
         switch ($buffer) {
             case str_contains($buffer, '[PornHub]'):
                 PlaylistProcess::$current_key = false;

@@ -345,9 +345,11 @@ trait Helper
             $videoData = $fs->get();
             $fileObj   = new fileReader($videoData);
             $file      = $fileObj->getFilename($file);
-            // utmdd([__METHOD__,$file]);
 
             $newName   = $this->cleanFilename($file);
+
+                        //utmdd([__METHOD__,$newName,$oldName]);
+
             $this->renameFile($oldName, $newName);
         }
 

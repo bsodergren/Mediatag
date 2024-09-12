@@ -40,8 +40,6 @@ class TagBuilder
         if (! \defined('__UPDATE_SET_ONLY__')) {
             if (str_starts_with($this->video_key, 'x')) {
                 $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
-
-
             } else {
                 $fileUpdates =  (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
@@ -53,7 +51,6 @@ class TagBuilder
                 $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
             }
         }
-
         $DbUpdates = $this->ReaderObj->getDbValues();
 
         if (null !== $DbUpdates) {

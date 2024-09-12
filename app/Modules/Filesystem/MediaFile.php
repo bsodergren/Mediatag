@@ -269,8 +269,14 @@ class MediaFile
     public static function file_append_file($file = '', $string = '')
     {
         utminfo();
+        $dir     = realpath($file);
+        if ($dir === false) {
+            $dirname = dirname($file);
 
-        $fp = fopen($file, 'a+');
+            NetteFile::createDir($dirname);
+        }
+
+        $fp      = fopen($file, 'a+');
         fwrite($fp, $string);
         fclose($fp);
     }

@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns;
+namespace Mediatag\Patterns\Pornhub;
 
 use Mediatag\Core\Mediatag;
 
@@ -38,9 +38,9 @@ class Pornhub extends Patterns
                     $peices = explode('_', basename($object->video_name, '.mp4'));
                     $a      = array_reverse($peices);
                     //   $a[0] = '100000752';
-                   
+
                     $file   = getVideoCSV($a[0]);
-                   
+
                     if (null !== $file) {
                         // Mediatag::$output->writeln($object->video_name.' in '.$file);
                         $csv_line = $this->findLine($file, $a[0]);
@@ -133,5 +133,12 @@ class Pornhub extends Patterns
         utminfo();
 
         return $this->getDataTag('video_title');
+    }
+
+    public function getFilename($file)
+    {
+       // utmdd(__METHOD__,$file);
+
+        return $file;
     }
 }

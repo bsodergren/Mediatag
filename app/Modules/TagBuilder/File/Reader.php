@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Option;
+use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 
 include_once __DATA_MAPS__ . '/StudioMap.php';
 
@@ -63,8 +64,21 @@ class Reader extends TagReader
                 $className = $this->getStudioClass($studioName);
             }
         }
+        // if ('Pornhub' == $this->video_library) {
 
-        // utmdd(class_exists($classPath . $this->video_library . '\\' . $className));
+        //     $json = new jsonReader($videoData);
+        //     $studioName =  $json->getTagArray();
+        //     // utmdd( $this->video_library, $studioName['studio']);
+
+            
+        //     if ('' != $studioName['studio']) {
+        //         $className = $this->getStudioClass($studioName['studio']);
+        //     }
+        //     if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
+        //         $className =  'Pornhub';
+        //     }
+        // }
+    
 
         if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
             // UTMlog::Logger('File Studio className', $className);
