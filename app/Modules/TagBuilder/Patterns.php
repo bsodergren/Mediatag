@@ -190,19 +190,21 @@ class Patterns extends TagBuilder
         return $file;
     }
 
-    // public function getStudio()
-    // {
-    //     utmdump($this->replace_studios);
-    //     utminfo();
-    //     if (null !== $this->subStudio) {
-    //         return $this->studio . '/' . $this->subStudio;
-    //     }
-    // }
+    public function getStudio()
+    {
+        //  utmdump([$this->subStudio,$this->studio]);
+        utminfo();
+        if (null !== $this->subStudio) {
+            return $this->studio . '/' . $this->subStudio;
+        }
+        return $this->studio;
+    }
 
     /*
      * customStudio.
      */
-    /*    public static function customStudio($key_studio, $arr)
+    // /*
+        public static function customStudio($key_studio, $arr)
         {
  utminfo();
 
@@ -217,5 +219,5 @@ class Patterns extends TagBuilder
             }
             return $studioArray;
         }
-      */
+    //   */
 }

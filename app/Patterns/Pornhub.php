@@ -93,6 +93,7 @@ class Pornhub extends Patterns
         utminfo();
 
         $value = '';
+        utmdump($this->videoInfo);
         if (null === $this->videoInfo) {
             return false;
         }
@@ -119,7 +120,12 @@ class Pornhub extends Patterns
         return $this->getDataTag('video_artist');
     }
 
-    public function getStudio() {}
+    public function getStudio()
+    {
+        // utminfo();
+
+        // return $this->getDataTag('video_artist');
+    }
 
     public function getGenre()
     {
@@ -137,7 +143,7 @@ class Pornhub extends Patterns
 
     public function getFilename($file)
     {
-       // utmdd(__METHOD__,$file);
+        // utmdd(__METHOD__,$file);
 
         return $file;
     }

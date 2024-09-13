@@ -39,18 +39,21 @@ class TagBuilder
 
         if (! \defined('__UPDATE_SET_ONLY__')) {
             if (str_starts_with($this->video_key, 'x')) {
-                $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
+                //$updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
+                $updates =  $this->ReaderObj->getFileValues();
             } else {
-                $fileUpdates =  (new FileReader($this->ReaderObj->videoData))->getTagArray();
+               $fileUpdates =  $this->ReaderObj->getFileValues();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
 
-                //  $fileUpdates['title'] = '';
+                //   $fileUpdates['title'] = '';
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 // UTMlog::Logger('jsonupdates', $jsonupdates);
-
+                // utmdd( $jsonupdates);
                 $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
             }
         }
+        
+
         $DbUpdates = $this->ReaderObj->getDbValues();
 
         if (null !== $DbUpdates) {
