@@ -46,7 +46,7 @@ define(
         'Pornhub',
         'Studio',
         'Studios',
-        'Home',
+        'Home Videos',
         'Downloads',
         'Playlists',
     ],

@@ -72,12 +72,12 @@ class GifCreator
 
         // Static data
         $this->version = 'GifCreator: Under development';
-        $this->errors  = array(
+        $this->errors  = [
             'ERR00' => 'Does not supported function for only one image.',
             'ERR01' => 'Source is not a GIF image.',
             'ERR02' => 'You have to give resource image variables, image URL or image binary sources in $frames array.',
             'ERR03' => 'Does not make animation from animated GIF source.',
-        );
+        ];
     }
 
     /**
@@ -89,7 +89,7 @@ class GifCreator
      *
      * @return string The GIF string source
      */
-    public function create($frames = array(), $durations = array(), $loop = 0)
+    public function create($frames = [], $durations = [], $loop = 0)
     {
         utminfo();
 

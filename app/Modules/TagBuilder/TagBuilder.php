@@ -1,13 +1,14 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *
+ *   Plexweb
+ *
  */
 
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
-
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
@@ -42,17 +43,16 @@ class TagBuilder
                 //$updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 $updates =  $this->ReaderObj->getFileValues();
             } else {
-               $fileUpdates =  $this->ReaderObj->getFileValues();
+                $fileUpdates =  $this->ReaderObj->getFileValues();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
 
                 //   $fileUpdates['title'] = '';
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 // UTMlog::Logger('jsonupdates', $jsonupdates);
-                // utmdd( $jsonupdates);
                 $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
             }
         }
-        
+
 
         $DbUpdates = $this->ReaderObj->getDbValues();
 

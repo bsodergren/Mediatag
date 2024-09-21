@@ -6,8 +6,6 @@
 namespace Mediatag\Utilities;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 
 class Strings extends \Nette\Utils\Strings

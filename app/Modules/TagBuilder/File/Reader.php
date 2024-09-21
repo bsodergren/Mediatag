@@ -1,13 +1,13 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *
+ *   Plexweb
+ *
  */
 
 namespace Mediatag\Modules\TagBuilder\File;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
@@ -53,7 +53,7 @@ class Reader extends TagReader
         // }
         $this->expandArray($videoData);
 
-        $className = 'Pornhub';
+        $className = '\\Pornhub\\Pornhub';
 
         $classPath = 'Mediatag\\Patterns\\';
 
@@ -70,7 +70,7 @@ class Reader extends TagReader
         //     $studioName =  $json->getTagArray();
         //     // utmdd( $this->video_library, $studioName['studio']);
 
-            
+
         //     if ('' != $studioName['studio']) {
         //         $className = $this->getStudioClass($studioName['studio']);
         //     }
@@ -78,7 +78,7 @@ class Reader extends TagReader
         //         $className =  'Pornhub';
         //     }
         // }
-    
+
 
         if (! class_exists($classPath . $this->video_library . '\\' . $className)) {
             // UTMlog::Logger('File Studio className', $className);
@@ -102,12 +102,13 @@ class Reader extends TagReader
         } else {
             $className = $classPath . $this->video_library . '\\' . $className;
         }
-        if (class_exists($className)) {
 
-            self::$PatternClass              = $className;
+
+        if (class_exists($className)) {
+           self::$PatternClass              = $className;
             $this->PatternObject             = new $className($this);
             $this->PatternObject->video_file = $this->video_file;
-            self::$PatternClassObj = $this->PatternObject;
+           self::$PatternClassObj           = $this->PatternObject;
         }
     }
 
@@ -349,7 +350,7 @@ class Reader extends TagReader
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
-            
+
             return $this->PatternObject->{$method}();
             //  } else {
             //      return $this->{$method}();

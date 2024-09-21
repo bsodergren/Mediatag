@@ -1,13 +1,13 @@
 <?php
 /**
- * Command like Metatag writer for video files.
+ *
+ *   Plexweb
+ *
  */
 
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
@@ -180,7 +180,7 @@ class TagReader
 
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
-            
+
 
             if (\array_key_exists($tag, $this->tag_array)) {
 
