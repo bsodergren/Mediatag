@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\TagBuilder;
@@ -40,7 +38,7 @@ class TagBuilder
 
         if (! \defined('__UPDATE_SET_ONLY__')) {
             if (str_starts_with($this->video_key, 'x')) {
-                //$updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
+                // $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 $updates =  $this->ReaderObj->getFileValues();
 
             } else {
@@ -57,14 +55,14 @@ class TagBuilder
         }
 
 
-        $DbUpdates = $this->ReaderObj->getDbValues();
+        // $DbUpdates = $this->ReaderObj->getDbValues();
 
-        if (null !== $DbUpdates) {
-            foreach ($DbUpdates as $tag => $value) {
-                $updates[$tag] = $value;
-            }
+        // if (null !== $DbUpdates) {
+        //     foreach ($DbUpdates as $tag => $value) {
+        //         $updates[$tag] = $value;
+        //     }
 
-        }
+        // }
 
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
@@ -79,13 +77,13 @@ class TagBuilder
             }
         }
         // UTMlog::Logger('updates', $updates);
-
         if (Option::isTrue('update')) {
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
             // UTMlog::Logger('getMetaValues', $current);
+
 
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
@@ -177,7 +175,6 @@ class TagBuilder
             if (\array_key_exists($tag, $New)) {
                 ${$new_tag} = $New[$tag];
             }
-
             if ('' != ${$new_tag}) {
                 $lev           = levenshtein(${$current_tag}, ${$new_tag});
                 $sim           = similar_text(${$current_tag}, ${$new_tag});

@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Traits\Patterns\Artist;
 use Mediatag\Traits\Patterns\Genre;
 use Mediatag\Traits\Patterns\Studio;
@@ -192,36 +190,29 @@ class Patterns extends TagBuilder
 
     public function getStudio()
     {
-        //  utmdump([$this->subStudio,$this->studio]);
         utminfo();
-    
-        utmdebug([$this->studio, $this->subStudio]);
 
-        // if (null !== $this->subStudio) {
-        //     return $this->studio . '/' . $this->subStudio;
-        // }
+        if (null !== $this->subStudio) {
+            return $this->studio . '/' . $this->subStudio;
+        }
 
         return $this->studio;
     }
 
-    /*
-     * customStudio.
-     */
-    // /*
-        public static function customStudio($key_studio, $arr)
-        {
- utminfo();
+  
+    public static function customStudio($key_studio, $arr)
+    {
+        utminfo();
 
-            if(is_array($arr)){
-                $studioArray[] = $key_studio;
-                foreach($arr as $studio){
-                    if($key_studio == $studio){
-                        continue;
-                    }
-                    $studioArray[] = $studio;
+        if (is_array($arr)) {
+            $studioArray[] = $key_studio;
+            foreach ($arr as $studio) {
+                if ($key_studio == $studio) {
+                    continue;
                 }
+                $studioArray[] = $studio;
             }
-            return $studioArray;
         }
-    //   */
+        return $studioArray;
+    }
 }

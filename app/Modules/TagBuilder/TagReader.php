@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\TagBuilder;
@@ -147,7 +145,6 @@ class TagReader
     public function getFileValues()
     {
         utminfo();
-
         $file = new fileReader($this->videoData);
         return $file->getTagArray();
     }
@@ -177,7 +174,6 @@ class TagReader
     public function getTagArray($clean = true)
     {
         utminfo();
-
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
 

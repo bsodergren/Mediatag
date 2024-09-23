@@ -1,8 +1,6 @@
 <?php
 /**
- *
- *   Plexweb
- *
+ * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\TagBuilder\File;
@@ -24,7 +22,7 @@ class Reader extends TagReader
 {
     public $genre;
 
-    public $studio    = '';
+    public $studio    = null;
     public $videoData = null;
     public $video_file;
 
@@ -58,7 +56,9 @@ class Reader extends TagReader
         $classPath = 'Mediatag\\Patterns\\';
 
         if ('Studios' == $this->video_library) {
+
             $studioName = strtolower($this->getSubStudio());
+            utmdump(['studio name'=>$studioName]);
 
             if ('' != $studioName) {
                 $className = $this->getStudioClass($studioName);
@@ -105,10 +105,10 @@ class Reader extends TagReader
 
 
         if (class_exists($className)) {
-           self::$PatternClass              = $className;
+            self::$PatternClass              = $className;
             $this->PatternObject             = new $className($this);
             $this->PatternObject->video_file = $this->video_file;
-           self::$PatternClassObj           = $this->PatternObject;
+            self::$PatternClassObj           = $this->PatternObject;
         }
     }
 
@@ -161,7 +161,6 @@ class Reader extends TagReader
     public function getSubStudio()
     {
         utminfo();
-        utmdebug($this->title_studio);
         if (null === $this->title_studio) {
             $this->getStudio();
         }
@@ -173,9 +172,8 @@ class Reader extends TagReader
         utminfo();
 
         $studio_array = [];
-   
-        utmdebug($this->studio);
-        if (null !== $this->studio) {
+
+        if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
                 $sub_studio = '';
                 $studio_dir = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
@@ -233,32 +231,34 @@ class Reader extends TagReader
                     }
 
                     $result       = $this->getFileTag('Studio');
-                    utmdebug($result,$studio,$sub_studio);
 
                     // UTMlog::Logger('this->getFileTag', $result);
                     if (true == $result) {
                         if (str_contains($result, '/')) {
                             $result_array        = explode('/', $result);
-                            $studio = $result_array[0];
+                            $sub_studio          = $studio;
+
+                            $studio              = $result_array[0];
                         } else {
+
                             $sub_studio = $studio;
                             $studio     = $result;
 
                         }
                     }
-                    utmdebug($result,$studio,$sub_studio);
                     if ((null != $sub_studio) && ($studio != $sub_studio)) {
                         // if($studio == "Pov") {
                         //     $sub_studio = $studio."/".$sub_studio;
                         //     $studio = '';
                         //  } else {
-                        $sub_studio = '/' . $sub_studio;
+                        $this->title_studio = $sub_studio;
+                        $sub_studio         = '/' . $sub_studio;
                     }
 
                     // }
+
                     $this->studio = $studio . $sub_studio;
 
-                    utmdebug($this->studio ,$this->title_studio);
                 } else {
                     $this->title_studio = 'Misc';
                 }
@@ -289,7 +289,6 @@ class Reader extends TagReader
         } else {
             $this->title_studio = false;
         }
-utmdebug($this->studio);
         return $this->studio;
     }
 
@@ -298,7 +297,7 @@ utmdebug($this->studio);
         utminfo();
 
         $genre = '';
-        if ('' == $this->genre) {
+        if (null === $this->genre) {
 
             // $res = $this->getFileTag('Genre');
             // utmdd([__METHOD__,$res]);

@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
@@ -64,14 +62,14 @@ trait MetaTags
     {
         utminfo();
 
-
         if (\is_array($text)) {
             $array = $text;
         } else {
             $array = explode('/', $text);
         }
+
         $array        = array_unique($array);
-        //   sort($array);
+        sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
             $arr[] = trim($tagValue);
@@ -83,14 +81,23 @@ trait MetaTags
 
         $studio_dir   = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
+        // if(array_key_exists(3,$studio_array)){
+        //        $key_studio   = $studio_array[1];
+        // } else {
+        //     $key_studio   = $studio_array[0];
+        // }
 
-       $key_studio   = $studio_array[0];
 
         if (isset(fileReader::$PatternClass)) {
+
             $studio_str = fileReader::$PatternClassObj->getStudio();
-            $studio_str = trim($key_studio .'/'. $studio_str,"/");
-            $arr = explode('/',  $studio_str);
+
+            // $studio_str = trim($key_studio .'/'. $studio_str,"/");
+            $arr        = explode('/', $studio_str);
+            $arr        = array_unique($arr);
+
         }
+
 
         return implode('/', $arr);
     }
@@ -126,7 +133,6 @@ trait MetaTags
     public static function mergeTag($tag, $first, $second)
     {
         utminfo();
-
 
 
         $firstCmp  = str_replace(" ", "", strtoupper($first));
@@ -231,7 +237,6 @@ trait MetaTags
         }
 
         $method    = 'get' . ucfirst($tag);
-
         $newList   = [];
         $i         = 0;
         $total     = 0;
@@ -249,10 +254,9 @@ trait MetaTags
             }
 
             $value = MetaTags::$tagDB->{$method}($tagValue);
-
             if ('Genre' == $tag) {
                 // if (__LIBRARY__ == "Home") {
-                    $newList[] = $tagValue;
+                $newList[] = $tagValue;
                 // }
 
 
@@ -265,14 +269,13 @@ trait MetaTags
 
         $string    = implode($delim, $newList);
         $arr       = explode($delim, $string);
-
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
         $arr       = array_unique($arr, \SORT_STRING);
 
         $arr       = array_values($arr);
         if ('genre' == $tag) {
-            
+
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
                     foreach ($arr as $v) {
