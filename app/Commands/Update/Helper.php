@@ -112,7 +112,7 @@ trait Helper
     public function getChanges($options)
     {
         utminfo();
-
+utmdebug("fasdf");
         if (null === $this->VideoList) {
             $this->exec();
         }

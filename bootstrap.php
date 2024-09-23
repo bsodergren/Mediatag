@@ -38,7 +38,7 @@ Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
 
 TimerStart();
-register_shutdown_function('utmshutdown', ['write'=>['info']]);
+register_shutdown_function('utmshutdown', ['print'=>['debug']]);
 
 // // UTMlog::$display = false;
 // $log = new UTMLog(__SCRIPT_NAME__);
