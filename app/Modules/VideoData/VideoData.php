@@ -74,11 +74,13 @@ class VideoData
         if (\count($file_array) > 0) {
             foreach ($file_array as $key => $file) {
                 if (file_exists($file)) {
-                    $this->getVideoInfo($key, $file);
+                   $res= $this->getVideoInfo($key, $file);
                     if (! Option::istrue('all')) {
                         $int = $this->resultCount--;
                         $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
-                        Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
+                        if($res !== false){
+                            Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
+                        }
                     }
                 }
             }
@@ -140,6 +142,18 @@ class VideoData
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
 
+        utmdump($this->VideoInfo);
+
+    if(array_key_exists('duration',$this->VideoInfo)){
+        if($this->VideoInfo['duration'] === null){
+            return false;
+        }
+    }  
+    if(array_key_exists('format',$this->VideoInfo)){
+        if($this->VideoInfo['format'] === null){
+            return false;
+        }
+    }  
         if (Mediatag::$dbconn->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> '.$this->videoData;
 

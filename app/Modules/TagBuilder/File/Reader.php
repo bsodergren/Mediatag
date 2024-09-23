@@ -161,11 +161,10 @@ class Reader extends TagReader
     public function getSubStudio()
     {
         utminfo();
-
-        if (null == $this->title_studio) {
+        utmdebug($this->title_studio);
+        if (null === $this->title_studio) {
             $this->getStudio();
         }
-
         return $this->title_studio;
     }
 
@@ -174,7 +173,8 @@ class Reader extends TagReader
         utminfo();
 
         $studio_array = [];
-
+   
+        utmdebug($this->studio);
         if (null !== $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
                 $sub_studio = '';
@@ -207,7 +207,7 @@ class Reader extends TagReader
                     if (\array_key_exists(2, $matches)) {
                         $sub_studio         = $matches[2];
                         $studio             = $matches[1];
-                        $this->title_studio = $matches[1];
+                        $this->title_studio = $matches[2];
                         foreach (__SKIP_STUDIOS__ as $k) {
                             if ($studio == $k) {
                                 $studio = null;
@@ -233,17 +233,20 @@ class Reader extends TagReader
                     }
 
                     $result       = $this->getFileTag('Studio');
-                    // UTMlog::Logger('this->getFileTag', $result);
+                    utmdebug($result,$studio,$sub_studio);
 
+                    // UTMlog::Logger('this->getFileTag', $result);
                     if (true == $result) {
                         if (str_contains($result, '/')) {
-                            $studio = $result;
+                            $result_array        = explode('/', $result);
+                            $studio = $result_array[0];
                         } else {
                             $sub_studio = $studio;
                             $studio     = $result;
+
                         }
                     }
-
+                    utmdebug($result,$studio,$sub_studio);
                     if ((null != $sub_studio) && ($studio != $sub_studio)) {
                         // if($studio == "Pov") {
                         //     $sub_studio = $studio."/".$sub_studio;
@@ -254,6 +257,8 @@ class Reader extends TagReader
 
                     // }
                     $this->studio = $studio . $sub_studio;
+
+                    utmdebug($this->studio ,$this->title_studio);
                 } else {
                     $this->title_studio = 'Misc';
                 }
@@ -284,7 +289,7 @@ class Reader extends TagReader
         } else {
             $this->title_studio = false;
         }
-
+utmdebug($this->studio);
         return $this->studio;
     }
 

@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Traits\ffmpeg;
 use Mhor\MediaInfo\MediaInfo;
@@ -66,6 +64,13 @@ class Duration extends VideoData
             } else {
                 $videoInfo['duration'] = (string) $video->get('duration');
             }
+        }
+
+        if (!isset($videoInfo)) {
+            $videoInfo['duration'] = null;
+            Mediatag::$output->writeln('<error>file is corrupt: ' . $this->video_file . '</error> ');
+
+            //utmdump("something wrong with " . $this->video_file);
         }
 
         return $videoInfo;

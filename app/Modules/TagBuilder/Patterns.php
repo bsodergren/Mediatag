@@ -194,9 +194,13 @@ class Patterns extends TagBuilder
     {
         //  utmdump([$this->subStudio,$this->studio]);
         utminfo();
-        if (null !== $this->subStudio) {
-            return $this->studio . '/' . $this->subStudio;
-        }
+    
+        utmdebug([$this->studio, $this->subStudio]);
+
+        // if (null !== $this->subStudio) {
+        //     return $this->studio . '/' . $this->subStudio;
+        // }
+
         return $this->studio;
     }
 

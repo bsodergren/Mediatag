@@ -53,6 +53,15 @@ class VideoInfo extends VideoData
             $videoInfo['height']   = (string) $video->get('height')->getAbsoluteValue();
         }
 
+        if (!isset($videoInfo)) {
+            $videoInfo['format'] = null;
+            $videoInfo['bit_rate'] = null;
+            $videoInfo['width'] = null;
+            $videoInfo['height'] = null;
+            Mediatag::$output->writeln('<error>file is corrupt: ' . $this->video_file . '</error> ');
+
+            //utmdump("something wrong with " . $this->video_file);
+        }
         return $videoInfo;
     }
 

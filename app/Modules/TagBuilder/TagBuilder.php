@@ -42,6 +42,7 @@ class TagBuilder
             if (str_starts_with($this->video_key, 'x')) {
                 //$updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 $updates =  $this->ReaderObj->getFileValues();
+
             } else {
                 $fileUpdates =  $this->ReaderObj->getFileValues();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
@@ -49,7 +50,9 @@ class TagBuilder
                 //   $fileUpdates['title'] = '';
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 // UTMlog::Logger('jsonupdates', $jsonupdates);
+
                 $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
+
             }
         }
 
@@ -64,7 +67,6 @@ class TagBuilder
         }
 
         if (isset($updates)) {
-            // utmdd($updates);
             // UTMlog::Logger('Reader', $updates);
         }
 

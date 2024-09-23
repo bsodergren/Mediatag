@@ -37,7 +37,9 @@ require_once __CONFIG_LIB__.'/variables.php';
 Debug::$AppRootDir = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
 TimerStart();
-register_shutdown_function('utmshutdown',__SCRIPT_NAME__.'_tracefile.log');
+
+register_shutdown_function('utmshutdown',['write'=>['info','debug'],'print'=>'debug']);
+
 // // UTMlog::$display = false;
 // $log = new UTMLog(__SCRIPT_NAME__);
 // // UTMlog::$Logger = $log;
