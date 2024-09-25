@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class TeamSkeet extends Patterns
@@ -58,23 +56,23 @@ class TeamSkeet extends Patterns
         'teensdoporn'                 => 'teens do porn',
         'thisgirlsucks'               => 'this girl sucks',
         'tittyattack'                 => 'titty attack',
-        'teamskeetclassics'           => 'teamskeet classics',
+        'teamskeetclassics'           => 'teamskeet extras',
         'teamskeetextras'             => 'teamskeet extras',
-        'teamskeetlabs'               => 'teamskeet labs',
+        'teamskeetlabs'               => 'teamskeet extras',
         'teamskeetselects'            => 'teamskeet selects',
-        'teamskeetxadultprime'        => 'adult prime',
-        'teamskeetxbaeb'              => 'baeb',
-        'teamskeetxfuckingawesome'    => 'fucking awesome',
-        'teamskeetxmrluckypov'        => 'mr lucky pov',
-        'teamskeetxpurgatoryx'        => 'purgatoryx',
-        'teamskeetxrawattack'         => 'raw attack',
-        'teamskeetxreislin'           => 'reislin',
-        'teamskeetxspizoo'            => 'spizoo',
-        'teamskeetxbananafever'       => 'banana fever',
-        'teamskeetxbrasilbimbos'      => 'brasil bimbos',
-        'teamskeetxcamsoda'           => 'cam soda',
+        'teamskeetxadultprime'        => 'teamskeet extras',
+        'teamskeetxbaeb'              => 'teamskeet extras',
+        'teamskeetxfuckingawesome'    => 'teamskeet extras',
+        'teamskeetxmrluckypov'        => 'teamskeet extras',
+        'teamskeetxpurgatoryx'        => 'teamskeet extras',
+        'teamskeetxrawattack'         => 'teamskeet extras',
+        'teamskeetxreislin'           => 'teamskeet extras',
+        'teamskeetxspizoo'            => 'teamskeet extras',
+        'teamskeetxbananafever'       => 'teamskeet extras',
+        'teamskeetxbrasilbimbos'      => 'teamskeet extras',
+        'teamskeetxcamsoda'           => 'teamskeet extras',
         'teamskeetxerotiquetvlive'    => 'erotiquetv live',
-        'teamskeetxevaelfie'          => 'evaelfie',
+        'teamskeetxevaelfie'          => 'teamskeet extras',
         'teamskeetxevilangel'         => 'evil angel',
         'teamskeetxherbcollins'       => 'herb collins',
         'teamskeetximpuredesire'      => 'impure desire',
@@ -90,12 +88,13 @@ class TeamSkeet extends Patterns
         'teamskeetxxanderporn'        => 'xander porn',
         'teamskeetxyoungbusty'        => 'young busty',
         'teamskeetxslutinspection'    => 'X Slut Inspection',
-        'teamskeetxspankmonster'      => 'Spank Monster',
-        'teamskeetxharmonyfilms'      => 'harmony films',
+        'teamskeetxspankmonster'      => 'teamskeet extras',
+        'teamskeetxharmonyfilms'      => 'teamskeet extras',
         'teamskeetfeatures'           => 'Feature Films',
-        'mylfxgrandmams'=> 'mylf x grandmams',
-        'freeusemilf' => 'freeuse milf',
-        'usepov' => 'Use POV',
+        'mylfxgrandmams'              => 'mylf x grandmams',
+        'freeusemilf'                 => 'freeuse milf',
+        'usepov'                      => 'Use POV',
+        'freeusefantasy'              => 'Freeuse Fantasy',
     ];
 
     public function getArtistTextTransform($text)

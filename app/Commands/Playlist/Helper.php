@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Playlist;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Executable\YoutubeExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
@@ -264,6 +262,11 @@ trait Helper
 
         if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
+
+            if (!file_exists($this->playlist)) {
+                Mediatag::$output->writeln('<info>File doesnt exist</info>');
+                exit;
+            }
 
             $f         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
             $before    = \count($f);
