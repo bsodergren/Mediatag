@@ -171,14 +171,14 @@ class Reader extends TagReader
     {
         utminfo();
 
-        $studio_array = [];
-  $parent_studio = null;
-  $studio = null;
+        $studio_array  = [];
+        $parent_studio = null;
+        $studio        = null;
 
 
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
-              
+
                 $studio_dir = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
 
                 $studio_dir = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
@@ -206,8 +206,8 @@ class Reader extends TagReader
                 if (true == $success) {
                     if (\array_key_exists(2, $matches)) {
                         $parent_studio         = $matches[1];
-                        $studio             = $matches[2];
-                        $this->parent_studio = $matches[2];
+                        $studio                = $matches[2];
+                        $this->parent_studio   = $matches[2];
                         foreach (__SKIP_STUDIOS__ as $k) {
                             if ($studio == $k) {
                                 $studio = null;
@@ -220,7 +220,7 @@ class Reader extends TagReader
                         $studio = $matches[1];
 
                         if ('' != $studio) {
-                           $this->parent_studio = $studio;
+                            $this->parent_studio = $studio;
 
                             foreach (__SKIP_STUDIOS__ as $k) {
                                 if ($studio == $k) {
@@ -232,7 +232,7 @@ class Reader extends TagReader
                             }
 
 
-                            $this->studio       = $studio;
+                            $this->studio        = $studio;
                         }
                     }
 
@@ -240,20 +240,20 @@ class Reader extends TagReader
                     // UTMlog::Logger('this->getFileTag', $result);
                     if (true == $result) {
                         if (str_contains($result, '/')) {
-                            $result_array        = explode('/', $result);
+                            $result_array           = explode('/', $result);
                             $parent_studio          = $studio;
 
-                            $studio              = $result_array[0];
+                            $studio                 = $result_array[0];
                         } else {
                             $parent_studio = $studio;
-                            $studio     = $result;
+                            $studio        = $result;
 
                         }
                     } else {
                         $parent_studio = $studio;
                         // $studio="misc";
                     }
-                       
+
 
                     if ((null != $parent_studio) && ($studio != $parent_studio)) {
 
@@ -262,14 +262,14 @@ class Reader extends TagReader
                         //     $parent_studio = $studio."/".$parent_studio;
                         //     $studio = '';
                         //  } else {
-                        $this->parent_studio = $studio;
-                        $parent_studio         = $parent_studio .'/';
-                    } else if($parent_studio == $studio){
+                        $this->parent_studio   = $studio;
+                        $parent_studio         = $parent_studio . '/';
+                    } elseif ($parent_studio == $studio) {
                         $parent_studio = '';
                     } else {
                         $parent_studio = $studio;
-                        $studio = '';
-                       // utmdd([$studio,$this->studio,$parent_studio ,$this->parent_studio]);
+                        $studio        = '';
+                        // utmdd([$studio,$this->studio,$parent_studio ,$this->parent_studio]);
                     }
 
                     // }
@@ -304,10 +304,9 @@ class Reader extends TagReader
                     $this->studio = 'Pornhub';
                 }
             }
-        } elseif($this->parent_studio === null) {
+        } elseif ($this->parent_studio === null) {
             $this->parent_studio = "What are we doing here";
         }
-        utmdump([[$parent_studio,$this->parent_studio],[$studio,$this->studio ]]);
 
         return $this->studio;
     }
@@ -374,7 +373,7 @@ class Reader extends TagReader
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
 
-        // utmdd(get_class($this->PatternObject));
+            // utmdd(get_class($this->PatternObject));
 
             return $this->PatternObject->{$method}();
             //  } else {

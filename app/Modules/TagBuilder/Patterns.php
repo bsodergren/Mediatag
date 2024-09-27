@@ -130,34 +130,34 @@ class Patterns extends TagBuilder
 
     public static function boot($obj)
     {
-        $classes    = class_parents($obj);
-        $class      = reset($classes);
+        $classes                  = class_parents($obj);
+        $class                    = reset($classes);
 
         [$classPath, $className ] = self::classStudio($class);
-        
+
 
         if ($classPath != "Studios"
         ) {
-            
-            if(Reader::$PatternClass !== null){
+
+            if (Reader::$PatternClass !== null) {
                 [$classPath, $className ] = self::classStudio(Reader::$PatternClass);
-                $obj->studio = $className;
+                $obj->studio              = $className;
             }
             return 0;
 
-        } 
+        }
 
-            $obj->parentStudio = $className;
+        $obj->parentStudio        = $className;
 
     }
     private static function classStudio($class)
     {
-        $classparts = explode("\\", $class);
-        $classPath  = $classparts[count($classparts)-2];
+        $classparts            = explode("\\", $class);
+        $classPath             = $classparts[count($classparts)-2];
 
-        $className  = end($classparts);
-        $className         = Strings::StudioName($className, false);
-        $parts             = preg_split('/(?=[A-Z])/', $className, -1, \PREG_SPLIT_NO_EMPTY);
+        $className             = end($classparts);
+        $className             = Strings::StudioName($className, false);
+        $parts                 = preg_split('/(?=[A-Z])/', $className, -1, \PREG_SPLIT_NO_EMPTY);
         $className             = implode(' ', $parts);
         return [$classPath,$className];
     }
@@ -229,15 +229,14 @@ class Patterns extends TagBuilder
 
         $studio = $this->metaStudio();
 
-        if($studio !== null && $studio != ""){
+        if ($studio !== null && $studio != "") {
             $this->studio =  $studio;
         }
-utmdump([__METHOD__,$this->parentStudio, $this->studio,$studio]);
         if (null !== $this->parentStudio) {
-            if($this->parentStudio == $this->studio){
+            if ($this->parentStudio == $this->studio) {
                 $this->studio = "Misc";
             }
-            return  $this->parentStudio .  '/' .$this->studio;
+            return  $this->parentStudio . '/' . $this->studio;
         }
 
         return $this->studio;
