@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\TagBuilder\DB;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\TagReader;
 
 class Reader extends TagReader
@@ -65,8 +63,8 @@ class Reader extends TagReader
 
         if (\array_key_exists($tag, $this->tag_array)) {
             if ('studio' == $tag) {
-                if (\array_key_exists('substudio', $this->tag_array)) {
-                    $this->tag_array[$tag] .= '/' . $this->tag_array['substudio'];
+                if (\array_key_exists('parentstudio', $this->tag_array)) {
+                    $this->tag_array[$tag] .= '/' . $this->tag_array['parentstudio'];
                 }
             }
 
@@ -89,7 +87,7 @@ class Reader extends TagReader
         }
 
         $tagArray   = __META_TAGS__;
-        $tagArray[] = 'substudio';
+        $tagArray[] = 'parentstudio';
 
         foreach ($tagArray as $tag) {
             if (null !== $result[0][$tag]) {

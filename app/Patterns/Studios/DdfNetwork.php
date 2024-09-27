@@ -38,10 +38,10 @@ class DdfNetwork extends Patterns
         'chloé' => 'chloe something',
     ];
 
-    public function __construct($object)
-    {
-        utminfo();
+    // public function __construct($object)
+    // {
+    //     utminfo();
 
-        parent::__construct($object);
-    }
+    //     parent::__construct($object);
+    // }
 }

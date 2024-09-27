@@ -14,6 +14,6 @@ const SISLOVESME_REGEX_COMMON = '//i';
 class SisLovesMe extends TeamSkeet
 {
 
-    public $subStudio = 'Sis Loves Me';
+    public $studio = 'Sis Loves Me';
 
 }

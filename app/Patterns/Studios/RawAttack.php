@@ -12,5 +12,5 @@ use Mediatag\Patterns\Studios\TeamSkeet;
 
 class RawAttack extends TeamSkeet
 {
-    public $subStudio = 'Raw Attack';
+    public $studio = 'Raw Attack';
 }

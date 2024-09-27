@@ -12,5 +12,5 @@ use Mediatag\Patterns\Studios\DevilsFilm;
 
 class OutOfTheFamily extends DevilsFilm
 {
-    public $subStudio = 'Out Of The Family';
+    public $studio = 'Out Of The Family';
 }

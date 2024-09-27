@@ -9,12 +9,17 @@ use Mediatag\Core\Mediatag;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 
-use Mediatag\Patterns\Studios\Blowpass;
+use Mediatag\Patterns\Studios\BlowPass;
 
 const IMMORALLIVE_REGEX_COMMON = '//i';
 
-class ImmoralLive extends Blowpass
+class ImmoralLive extends BlowPass
 {
-    public $subStudio = 'Immoral Live';
+     public $studio = 'Immoral Live';
+
+    public function __construct($object){
+        parent::boot($this);
+        parent::__construct($object);
+    }
 
 }

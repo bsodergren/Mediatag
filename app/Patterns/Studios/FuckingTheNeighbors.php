@@ -10,5 +10,5 @@ use Mediatag\Core\Mediatag;
 class FuckingTheNeighbors extends DevilsFilm
 {
     // public $studio = 'Fucking The Neighbors';
-    public $subStudio = 'Fucking The Neighbors';
+    public $studio = 'Fucking The Neighbors';
 }

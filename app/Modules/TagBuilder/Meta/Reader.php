@@ -40,14 +40,13 @@ class Reader extends TagReader
 
         $this->expandArray($videoData);
         $this->tag_array = $this->getvideoData($videoData);
-        // utmdd([__METHOD__,$this->tag_array,$videoData]);
+        //utmdd([__METHOD__,$this->tag_array,$videoData]);
 
     }
 
     public function __call($method, $arguments)
     {
         utminfo();
-
         $this->get($method);
     }
 

@@ -14,5 +14,5 @@ const MODERNDAYSINS_REGEX_COMMON = '//i';
 
 class ModernDaySins extends AdultTime
 {
-    public $subStudio = 'Modern Day Sins';
+    public $studio = 'Modern Day Sins';
 }

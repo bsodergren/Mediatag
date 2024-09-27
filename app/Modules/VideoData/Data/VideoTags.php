@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
@@ -44,6 +42,7 @@ class VideoTags extends VideoData
 
         $meta                  = new metaReader($vdata);
         // unset($tagList);
+
         $tagList               = $meta->getTagArray();
 
         if (\array_key_exists('title', $tagList)) {
@@ -52,11 +51,12 @@ class VideoTags extends VideoData
 
         if (\array_key_exists('studio', $tagList)) {
             if (str_contains($tagList['studio'], '/')) {
-                $studioArr            = explode('/', $tagList['studio']);
-                $tagList['studio']    = $studioArr[0];
-                $tagList['substudio'] = $studioArr[1];
+                $studioArr               = explode('/', $tagList['studio']);
+                $tagList['studio']       = $studioArr[1];
+                $tagList['parentstudio'] = $studioArr[0];
             }
         }
+
 
         $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
 

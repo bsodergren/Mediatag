@@ -14,7 +14,7 @@ const DPFANATICS_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9]{1
 
 class DpFanatics extends TwentyFirstSextury
 {
-    public $subStudio = 'Dp Fanatics';
+    public $studio = 'Dp Fanatics';
 
     public $regex     = [
         'dpfanatics' => [

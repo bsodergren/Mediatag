@@ -8,9 +8,9 @@ namespace Mediatag\Patterns\Studios;
 use Mediatag\Core\Mediatag;
 
 
-use Mediatag\Patterns\Studios\Blowpass;
+use Mediatag\Patterns\Studios\BlowPass;
 
-class OnlyTeenBlowjobs extends Blowpass
+class OnlyTeenBlowjobs extends BlowPass
 {
-    public $subStudio = 'Only Teen Blowjobs';
+    public $studio = 'Only Teen Blowjobs';
 }

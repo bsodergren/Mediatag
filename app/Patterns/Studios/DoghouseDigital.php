@@ -11,7 +11,7 @@ const DOGHOUSEDIGITAL_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)(
 
 class DoghouseDigital extends MileHighMedia
 {
-    public $subStudio = 'Doghouse Digital';
+    public $studio = 'Doghouse Digital';
     public $regex     = [
         'doghousedigital' => [
             'artist' => [

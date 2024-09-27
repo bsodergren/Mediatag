@@ -176,8 +176,7 @@ class TagReader
         utminfo();
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
-
-
+            
             if (\array_key_exists($tag, $this->tag_array)) {
 
                 if (null !== $this->tag_array[$tag]) {

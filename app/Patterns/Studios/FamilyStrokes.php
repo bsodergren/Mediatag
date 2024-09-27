@@ -13,7 +13,7 @@ const FAMILYSTROKES_REGEX_COMMON = '//i';
 
 class FamilyStrokes extends TeamSkeet
 {
-    public $subStudio = 'Family Strokes';
+    public $studio = 'Family Strokes';
     // public $regex     = [
     //     'familystrokes' => [
     //         'artist' => [

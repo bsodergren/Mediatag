@@ -223,7 +223,7 @@ EOD;
 
         if ($options !== null) {
             $extended_class = $options['ExtendClass'];
-            $studio         = "public \$subStudio = '" . $TitleStudio . "';";
+            $studio         = "public \$studio = '" . $TitleStudio . "';";
             $extended_use   = 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
         }
 

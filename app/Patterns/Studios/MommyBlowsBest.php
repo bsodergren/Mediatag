@@ -8,9 +8,16 @@ namespace Mediatag\Patterns\Studios;
 use Mediatag\Core\Mediatag;
 
 
-use Mediatag\Patterns\Studios\Blowpass;
+use Mediatag\Patterns\Studios\BlowPass;
 
-class MommyBlowsBest extends Blowpass
+class MommyBlowsBest extends BlowPass
 {
-    public $subStudio = 'Mommy Blows Best';
+    public $studio = 'Mommy Blows Best';
+    public function __construct($object){
+        $classes = class_parents($this);
+        $class = reset($classes);      
+        $classparts = explode("\\",$class);
+        $this->parentStudio = end($classparts);
+          parent::__construct($object);
+      }
 }

@@ -12,5 +12,6 @@ use Mediatag\Patterns\Studios\TeamSkeet;
 
 class BadMilfs extends TeamSkeet
 {
-    public $subStudio = 'Bad Milfs';
+    public $studio = 'Bad Milfs';
+  
 }

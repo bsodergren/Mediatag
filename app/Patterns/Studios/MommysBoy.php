@@ -11,5 +11,5 @@ const MOMMYSBOY_REGEX_COMMON = '//i';
 
 class MommysBoy extends AdultTime
 {
-    public $subStudio = 'Mommys Boy';
+    public $studio = 'Mommys Boy';
 }

@@ -58,7 +58,7 @@ trait MetaTags
         return Title::clean($text);
     }
 
-    public function cleanStudio($text)
+    public function cleanStudio($text): string
     {
         utminfo();
 
@@ -69,7 +69,7 @@ trait MetaTags
         }
 
         $array        = array_unique($array);
-        sort($array);
+        // sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
             $arr[] = trim($tagValue);
@@ -81,6 +81,7 @@ trait MetaTags
 
         $studio_dir   = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
+
         // if(array_key_exists(3,$studio_array)){
         //        $key_studio   = $studio_array[1];
         // } else {
@@ -97,8 +98,6 @@ trait MetaTags
             $arr        = array_unique($arr);
 
         }
-
-
         return implode('/', $arr);
     }
 
@@ -172,8 +171,8 @@ trait MetaTags
 
                     $data['studio'] = MetaTags::clean($first, $tag);
                 } else {
-                    $data['studio']    = MetaTags::clean($first, $tag);
-                    $data['substudio'] = MetaTags::clean($second, $tag);
+                    $data['studio']       = MetaTags::clean($first, $tag);
+                    $data['parentstudio'] = MetaTags::clean($second, $tag);
                 }
             } else {
                 $data[$tag] = MetaTags::clean($return, $tag);

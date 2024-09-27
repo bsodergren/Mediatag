@@ -15,6 +15,6 @@ const BLOWMEPOV_REGEX_COMMON = '//i';
 
 class BlowMePov extends PegasProductions
 {
-    public $subStudio = 'Blow Me Pov';
+     public $studio = 'Blow Me Pov';
 
 }

@@ -10,7 +10,8 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class TeamSkeet extends Patterns
 {
-    public $studio          = 'Team Skeet';
+    public $parentStudio          = 'Team Skeet';
+    //  public $studio = 'Team Skeet';
 
     public $regex           = [
         'teamskeet' => [
@@ -26,15 +27,16 @@ class TeamSkeet extends Patterns
     ];
 
     public $replace_studios = [
+        'teamskeetxdantecolle' => 'teamskeet extras',
         'busygettingbanged'           => 'Busy Getting Banged',
         'dreamingoffreeuse'           => 'Dreaming Of Freeuse',
-        'badmilfs'                    => 'bad milfs',
+        // 'badmilfs'                    => 'bad milfs',
         'dadcrush'                    => 'Dad Crush',
         'dyked'                       => 'dyked',
-        'askyourmother'               => 'ask your mother',
+        // 'askyourmother'               => 'ask your mother',
         'theloft'                     => 'The Loft',
         'exxxtrasmall'                => 'exxxtra small',
-        'familystrokes'               => 'family strokes',
+        // 'familystrokes'               => 'family strokes',
         'gingerpatch'                 => 'ginger patch',
         'imadeporn'                   => 'i made porn',
         'innocenthigh'                => 'innocent high',
@@ -42,15 +44,15 @@ class TeamSkeet extends Patterns
         'mybabysittersclub'           => 'my babysitters club',
         'oyeloca'                     => 'oyeloca',
         'pervdriver'                  => 'perv driver',
-        'pervmom'                     => 'perv mom',
+        // 'pervmom'                     => 'perv mom',
         'pervnana'                    => 'perv nana',
-        'sislovesme'                  => 'Sis Loves Me',
+        // 'sislovesme'                  => 'Sis Loves Me',
         'notmygrandpa'                => 'not my grandpa',
         'povlife'                     => 'pov life',
         'rubateen'                    => 'rub a teen',
         'shesnew'                     => 'shes new',
         'stayhomepov'                 => 'stay home pov',
-        'stepsiblings'                => 'step siblings',
+        // 'stepsiblings'                => 'step siblings',
         'teencurves'                  => 'teen curves',
         'teenpies'                    => 'teen pies',
         'teensdoporn'                 => 'teens do porn',
@@ -92,18 +94,18 @@ class TeamSkeet extends Patterns
         'teamskeetxharmonyfilms'      => 'teamskeet extras',
         'teamskeetfeatures'           => 'Feature Films',
         'mylfxgrandmams'              => 'mylf x grandmams',
-        'freeusemilf'                 => 'freeuse milf',
-        'usepov'                      => 'Use POV',
-        'freeusefantasy'              => 'Freeuse Fantasy',
+        // 'freeusemilf'                 => 'freeuse milf',
+        // 'usepov'                      => 'Use POV',
+        // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];
 
     public function getArtistTextTransform($text)
     {
         utminfo();
 
-        if ('Teamskeet Selects' == $this->getStudio()) {
-            return false;
-        }
+        // if ('Teamskeet Selects' == $this->getStudio()) {
+        //     return false;
+        // }
 
         return $text;
     }

@@ -39,30 +39,41 @@ trait Studio
     /**
      * getStudio.
      */
-    public function getStudio()
+    public function metaStudio()
     {
         utminfo();
 
         // UTMlog::Logger('Studio Key', $this->video_name);
-        //  utmdd([__METHOD__,$this->getStudioRegex()]);
+        // utmdump([$this->video_name,$this->getStudioRegex()]);
         if (true == $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
                 $studioKey = str_replace("-","",$matches[1]);
+                // utmdump($studioKey);
                 if (\array_key_exists($studioKey, $this->replace_studios)) {
                     return $this->replace_studios[$studioKey];
+                    
                 }
 
                 return null;
             }, $this->video_name);
+
             if ($return == $this->video_name) {
-                return false;
+                return null;
             }
             // UTMlog::Logger('file studio', $return);
 
             return ucwords($return);
         }
 
-        return false;
+
+        // if (null !== $this->parentStudio) {
+        //     return  $this->parentStudio . '/' . $this->studio;
+        // }
+
+        return $this->studio;
+
+
+        // return false;
     }
 
     public static function customStudio($key_studio, $arr)

@@ -16,7 +16,7 @@ const REALITYJUNKIES_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([
 
 class RealityJunkies extends MileHighMedia
 {
-    public $subStudio = 'Reality Junkies';
+    public $studio = 'Reality Junkies';
 
     public $regex     = [
         'realityjunkies' => [

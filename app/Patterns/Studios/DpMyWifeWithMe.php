@@ -11,9 +11,9 @@ const DPMYWIFE_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)_?(.*)?\
 
 class DpMyWifeWithMe extends MileHighMedia
 {
-    // public $studio    = 'Reality Junkies';
+    public $studio    = 'Dp My Wife With Me';
 
-    public $subStudio = 'DP My Wife With Me';
+    // public $parentStudio = 'Mile High Media';
 
     public $regex     = [
         'dpmywifewithme' => [
@@ -30,4 +30,9 @@ class DpMyWifeWithMe extends MileHighMedia
             ],
         ],
     ];
+
+    public function __construct($object){
+        parent::boot($this);
+        parent::__construct($object);
+    }
 }

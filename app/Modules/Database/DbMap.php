@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\mysql\MysqliDb;
 use Mediatag\Modules\Database\Maps\ArtistMap;
 use Mediatag\Modules\Database\Maps\StudioMap;
@@ -73,6 +71,7 @@ class DbMap extends Storage
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
         $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
+
         $this->dbConn->rawQuery($query);
     }
 

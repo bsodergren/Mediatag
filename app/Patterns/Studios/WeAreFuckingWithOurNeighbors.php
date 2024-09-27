@@ -9,6 +9,7 @@ use Mediatag\Core\Mediatag;
 
 class WeAreFuckingWithOurNeighbors extends DevilsFilm
 {
-    // public $studio = 'We Are Fucking With Our Neighbors';
-    public $subStudio = 'We Are Fucking With Our Neighbors';
+    public $studio = 'We Are Fucking With Our Neighbors';
+  //  public $parentStudio = 'Devils Film';
+  
 }

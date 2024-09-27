@@ -10,9 +10,9 @@ use Mediatag\Core\Mediatag;
 class PervMom extends TeamSkeet
 {
     // public $studio = 'Perv Mom';
-    public $subStudio = 'Perv Mom';
+    public $studio = 'Perv Mom';
 
-    // public $subStudio = '';
+    // public $studio = '';
     public $regex     = [
         'pervmom' => [
             'artist' => [

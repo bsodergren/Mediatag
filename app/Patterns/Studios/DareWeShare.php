@@ -15,6 +15,6 @@ const DAREWESHARE_REGEX_COMMON = '//i';
 
 class DareWeShare extends AdultTime
 {
-    public $subStudio = 'Dare We Share';
+    public $studio = 'Dare We Share';
 
 }

@@ -34,11 +34,11 @@ class Bang extends Patterns
         'trickery' => 'Trickery',
     ];
 
-    public function __construct($object)
-    {
-        utminfo();
+    // public function __construct($object)
+    // {
+    //     utminfo();
 
-        parent::__construct($object);
-        parent::$StudioKey = $this->studio;
-    }
+    //     parent::__construct($object);
+    //     parent::$StudioKey = $this->studio;
+    // }
 }

@@ -76,7 +76,7 @@ class Storage
             $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
         }
 
-        utmdd([__METHOD__,$res]);
+        // utmdd([__METHOD__,$res]);
     }
 
     public function __call($name, $arguments)
@@ -336,9 +336,12 @@ class Storage
 
             case 'cleandb':
 
-                $cleanQuery = 'DELETE  FROM ' . __MYSQL_VIDEO_FILE__ . '  ';
-                $cleanQuery .= " WHERE Library = '" . __LIBRARY__ . "' AND ";
-                $cleanQuery .= " fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
+                $cleanQuery = 'DELETE f FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
+                // $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
+                // $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
+                $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
+                $cleanQuery .= " f.fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
+                // $cleanQuery .= " and m.video_key = f.video_key ";
 
                 return $cleanQuery;
 

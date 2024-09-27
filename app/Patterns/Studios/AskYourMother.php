@@ -14,6 +14,8 @@ const ASKYOURMOTHER_REGEX_COMMON = '//i';
 class AskYourMother extends TeamSkeet
 {
 
-    public $subStudio = 'Ask Your Mother';
+    public $studio = 'Ask Your Mother';
+    // public $parentStudio = 'Team Skeet';
+
 
 }

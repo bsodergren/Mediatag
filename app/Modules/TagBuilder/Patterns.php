@@ -6,10 +6,12 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Patterns\Artist;
+use Mediatag\Modules\TagBuilder\File\Reader;
+use Mediatag\Utilities\Strings;
 use Mediatag\Traits\Patterns\Genre;
-use Mediatag\Traits\Patterns\Studio;
 use Mediatag\Traits\Patterns\Title;
+use Mediatag\Traits\Patterns\Artist;
+use Mediatag\Traits\Patterns\Studio;
 
 // include_once __DATA_LISTS__.'/NamesList.php';
 
@@ -24,7 +26,7 @@ class Patterns extends TagBuilder
     use Title;
 
     public $studio;
-    public $subStudio;
+    public $parentStudio;
     /**
      * studio_key.
      */
@@ -107,10 +109,10 @@ class Patterns extends TagBuilder
     public function __construct($object)
     {
         utminfo();
-
+        self::boot($this);
         $this->className  = $object->className;
         $this->video_name = $object->video_name;
-        $studio           = strtolower($object->getSubStudio());
+        $studio           = strtolower($object->getParentStudio());
         $this->studio_key = str_replace(' ', '', $studio);
         $this->studio_key = $this->mapStudio($this->studio_key);
         if ('' == $this->studio_key) {
@@ -119,13 +121,46 @@ class Patterns extends TagBuilder
             $this->regex = [];
         }
         $this->regex      = array_merge($this->default_regex, $this->regex);
-        if (null !== $this->subStudio) {
+        if (null !== $this->parentStudio) {
             if (null !== $this->studio) {
                 self::$StudioKey = $this->studio;
             }
         }
     }
 
+    public static function boot($obj)
+    {
+        $classes    = class_parents($obj);
+        $class      = reset($classes);
+
+        [$classPath, $className ] = self::classStudio($class);
+        
+
+        if ($classPath != "Studios"
+        ) {
+            
+            if(Reader::$PatternClass !== null){
+                [$classPath, $className ] = self::classStudio(Reader::$PatternClass);
+                $obj->studio = $className;
+            }
+            return 0;
+
+        } 
+
+            $obj->parentStudio = $className;
+
+    }
+    private static function classStudio($class)
+    {
+        $classparts = explode("\\", $class);
+        $classPath  = $classparts[count($classparts)-2];
+
+        $className  = end($classparts);
+        $className         = Strings::StudioName($className, false);
+        $parts             = preg_split('/(?=[A-Z])/', $className, -1, \PREG_SPLIT_NO_EMPTY);
+        $className             = implode(' ', $parts);
+        return [$classPath,$className];
+    }
     public static function getClassObject($className, $obj)
     {
 
@@ -192,14 +227,23 @@ class Patterns extends TagBuilder
     {
         utminfo();
 
-        if (null !== $this->subStudio) {
-            return $this->studio . '/' . $this->subStudio;
+        $studio = $this->metaStudio();
+
+        if($studio !== null && $studio != ""){
+            $this->studio =  $studio;
+        }
+utmdump([__METHOD__,$this->parentStudio, $this->studio,$studio]);
+        if (null !== $this->parentStudio) {
+            if($this->parentStudio == $this->studio){
+                $this->studio = "Misc";
+            }
+            return  $this->parentStudio .  '/' .$this->studio;
         }
 
         return $this->studio;
     }
 
-  
+
     public static function customStudio($key_studio, $arr)
     {
         utminfo();
