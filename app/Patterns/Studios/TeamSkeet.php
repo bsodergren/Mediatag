@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class TeamSkeet extends Patterns
 {
-    public $parentStudio          = 'Team Skeet';
+    public $network          = 'Team Skeet';
     //  public $studio = 'Team Skeet';
 
     public $regex           = [

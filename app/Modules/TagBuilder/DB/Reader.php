@@ -63,8 +63,8 @@ class Reader extends TagReader
 
         if (\array_key_exists($tag, $this->tag_array)) {
             if ('studio' == $tag) {
-                if (\array_key_exists('parentstudio', $this->tag_array)) {
-                    $this->tag_array[$tag] .= '/' . $this->tag_array['parentstudio'];
+                if (\array_key_exists('network', $this->tag_array)) {
+                    $this->tag_array[$tag] .= '/' . $this->tag_array['network'];
                 }
             }
 
@@ -87,7 +87,7 @@ class Reader extends TagReader
         }
 
         $tagArray   = __META_TAGS__;
-        $tagArray[] = 'parentstudio';
+        $tagArray[] = 'network';
 
         foreach ($tagArray as $tag) {
             if (null !== $result[0][$tag]) {

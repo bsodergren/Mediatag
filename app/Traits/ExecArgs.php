@@ -46,6 +46,8 @@ trait ExecArgs
             $this->addOptionArg('--albumArtist=' . $meta_value);
         } elseif ('studio' == $meta_tag) {
             $this->addOptionArg('--album=' . $meta_value);
+        } elseif ('network' == $meta_tag) {
+            $this->addOptionArg('--TVNetwork=' . $meta_value);
         } else {
             $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
         }

@@ -12,7 +12,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class DevilsFilm extends Patterns
 {
-    public $parentStudio = 'Devils Film';
+    public $network = 'Devils Film';
     public $studio = 'Devils Film';
 
     public $regex  = [

@@ -53,7 +53,7 @@ class VideoTags extends VideoData
             if (str_contains($tagList['studio'], '/')) {
                 $studioArr               = explode('/', $tagList['studio']);
                 $tagList['studio']       = $studioArr[1];
-                $tagList['parentstudio'] = $studioArr[0];
+                $tagList['network'] = $studioArr[0];
             }
         }
 

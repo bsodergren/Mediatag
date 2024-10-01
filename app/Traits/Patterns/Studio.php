@@ -66,8 +66,8 @@ trait Studio
         }
 
 
-        // if (null !== $this->parentStudio) {
-        //     return  $this->parentStudio . '/' . $this->studio;
+        // if (null !== $this->network) {
+        //     return  $this->network . '/' . $this->studio;
         // }
 
         return $this->studio;

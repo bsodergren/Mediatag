@@ -26,7 +26,7 @@ class Patterns extends TagBuilder
     use Title;
 
     public $studio;
-    public $parentStudio;
+    public $network;
     /**
      * studio_key.
      */
@@ -112,7 +112,7 @@ class Patterns extends TagBuilder
         self::boot($this);
         $this->className  = $object->className;
         $this->video_name = $object->video_name;
-        $studio           = strtolower($object->getParentStudio());
+        $studio           = strtolower($object->getnetwork());
         $this->studio_key = str_replace(' ', '', $studio);
         $this->studio_key = $this->mapStudio($this->studio_key);
         if ('' == $this->studio_key) {
@@ -121,7 +121,7 @@ class Patterns extends TagBuilder
             $this->regex = [];
         }
         $this->regex      = array_merge($this->default_regex, $this->regex);
-        if (null !== $this->parentStudio) {
+        if (null !== $this->network) {
             if (null !== $this->studio) {
                 self::$StudioKey = $this->studio;
             }
@@ -147,7 +147,7 @@ class Patterns extends TagBuilder
 
         }
 
-        $obj->parentStudio        = $className;
+        $obj->network        = $className;
 
     }
     private static function classStudio($class)
@@ -173,17 +173,17 @@ class Patterns extends TagBuilder
     {
         utminfo();
         $regex         = $this->regex;
-        $parent_studio = str_replace(' ', '', $this->studio);
-        $parent_studio = $this->mapStudio($parent_studio);
+        $network = str_replace(' ', '', $this->studio);
+        $network = $this->mapStudio($network);
         $studio        = strtolower($this->studio_key);
-        $parent_studio = strtolower($parent_studio);
+        $network = strtolower($network);
 
         $this->getKeyName($studio);
 
         if (\array_key_exists($studio, $regex)) {
             // $studio = $studio;
-        } elseif (\array_key_exists($parent_studio, $regex)) {
-            $studio = $parent_studio;
+        } elseif (\array_key_exists($network, $regex)) {
+            $studio = $network;
         } else {
             $studio = 'default';
         }
@@ -232,17 +232,22 @@ class Patterns extends TagBuilder
         if ($studio !== null && $studio != "") {
             $this->studio =  $studio;
         }
-        if (null !== $this->parentStudio) {
-            if ($this->parentStudio == $this->studio) {
-                $this->studio = "Misc";
-            }
-            return  $this->parentStudio . '/' . $this->studio;
-        }
+
+
+        // if (null !== $this->network) {
+        //     if ($this->network == $this->studio) {
+        //         $this->studio = "Misc";
+        //     }
+        //     return  $this->network . '/' . $this->studio;
+        // }
 
         return $this->studio;
     }
 
-
+public function getNetwork(){
+    utmdd(__METHOD__);
+    return 'network';
+}
     public static function customStudio($key_studio, $arr)
     {
         utminfo();

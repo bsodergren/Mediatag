@@ -82,6 +82,9 @@ class ReadExec extends MediatagExec
             '/(keyw).*contains\:\ (.*)/'  => function ($matches) {
                 return $this->metatags['keyword'] = $matches[2];
             },
+            '/(tvnn).*contains\:\ (.*)/'  => function ($matches) {
+                return $this->metatags['network'] = $matches[2];
+            },
         ], $text);
     }
 }

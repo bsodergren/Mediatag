@@ -57,6 +57,12 @@ trait MetaTags
 
         return Title::clean($text);
     }
+    public function cleanNetwork($text)
+    {
+        utminfo();
+
+        return Title::clean($text);
+    }
 
     public function cleanStudio($text): string
     {
@@ -172,7 +178,7 @@ trait MetaTags
                     $data['studio'] = MetaTags::clean($first, $tag);
                 } else {
                     $data['studio']       = MetaTags::clean($first, $tag);
-                    $data['parentstudio'] = MetaTags::clean($second, $tag);
+                    $data['network'] = MetaTags::clean($second, $tag);
                 }
             } else {
                 $data[$tag] = MetaTags::clean($return, $tag);

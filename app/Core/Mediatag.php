@@ -83,6 +83,7 @@ abstract class Mediatag extends Command
         'artist',
         'title',
         'keyword',
+        'network'
     ];
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
@@ -136,6 +137,7 @@ abstract class Mediatag extends Command
                 case 'genre':
                 case 'artist':
                 case 'keyword':
+                    case 'network':
                 case 'studio':
                     if (! \defined('__UPDATE_SET_ONLY__')) {
                         \define('__UPDATE_SET_ONLY__', true);

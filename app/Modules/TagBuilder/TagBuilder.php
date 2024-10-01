@@ -40,7 +40,6 @@ class TagBuilder
             if (str_starts_with($this->video_key, 'x')) {
                 // $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
                 $updates =  $this->ReaderObj->getFileValues();
-
             } else {
                 $fileUpdates =  $this->ReaderObj->getFileValues();
                 // UTMlog::Logger('fileUpdates', $fileUpdates);

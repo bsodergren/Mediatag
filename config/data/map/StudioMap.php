@@ -44,7 +44,7 @@ const STUDIO_MAP = [
     'tabooheat'           => 'AdultTime',
     'filthypov'           => 'AdultTime',
     'adamandeve'          => 'AdultTime',
-    'isthisreal'          => 'AdultTime',
+    // 'isthisreal'          => 'AdultTime',
     'jacquieetmichel'     => 'AdultTime',
 
     'realsensual'         => 'AdultTime',
