@@ -51,61 +51,59 @@ class Reader extends TagReader
         // }
         $this->expandArray($videoData);
 
-        $className = '\\Pornhub\\Pornhub';
-
+        $className = '';
         $classPath = 'Mediatag\\Patterns\\';
 
-        if ('Studios' == $this->video_library) {
 
             $this->getnetwork();
-       
-            $studioName = $this->getStudioClass($this->studio);
+
+            $studioName  = $this->getStudioClass($this->studio);
             $networkName = $this->getStudioClass($this->network);
 
-            $studioClass = $classPath . $this->video_library . '\\' . $networkName. '\\' .$studioName;
-            
-utmdump($studioClass);
-            // }
-        }
-      
+            $studioClass = $classPath . $this->video_library .  $networkName . $studioName;
 
-
+            $classAttm[] = $studioClass;
+           
         if (! class_exists($studioClass)) {
             // UTMlog::Logger('File Studio className', $className);
 
-            if (Option::isTrue('addClass')) {
-                $options     = Option::getValue('addClass', 1);
-                $classOption = null;
-                if (null !== $options) {
-                    $opt         = explode('=', $options);
-                    $classOption = ['Studio' => $opt[1],
-                        'ExtendClass'        => $this->getStudioClass($opt[1]),
-                    ];
-                }
-                ScriptWriter::addPattern($studioClass, ucwords($studioName), $classOption);
-                $studioClass   = $classPath . $this->video_library . '\\' . $className;
-            } else {
-                $studioClass = $classPath . $this->video_library . '\\' .  $this->getStudioClass($this->network);
+            // if (Option::isTrue('addClass')) {
+            //     $options       = Option::getValue('addClass', 1);
+            //     $classOption   = null;
+            //     if (null !== $options) {
+            //         $opt         = explode('=', $options);
+            //         $classOption = ['Studio' => $opt[1],
+            //             'ExtendClass'        => $this->getStudioClass($opt[1]),
+            //         ];
+            //     }
+            //     ScriptWriter::addPattern($studioClass, ucwords($studioName), $classOption);
+            //     $studioClass   = $classPath . $this->video_library . '\\' . $className;
+            // } else {
+                $studioClass                     = $classPath . $this->video_library .  $this->getStudioClass($this->network);
+
+                $classAttm[]                     = $studioClass;
+
                 if (! class_exists($studioClass)) {
-                    $studioClass = $classPath . $this->video_library . '\\' .   $className ;
+                    $studioClass = $classPath . $this->video_library . '\\' . $className ;
+                    $classAttm[] = $studioClass;
                 }
 
-                $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
-                $this->PatternObject->video_file = $this->video_file;
-            }
+      
+            // }
             //    $className = 'Mediatag\\Modules\\TagBuilder\\Patterns';
 
         }
-
-
+utmdump($classAttm);
         if (class_exists($studioClass)) {
+            //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
+            // $this->PatternObject->video_file = $this->video_file;
             self::$PatternClass              = $studioClass;
-            $this->PatternObject             = new $studioClass($this);
+           $this->PatternObject             = new $studioClass($this);
             $this->PatternObject->video_file = $this->video_file;
             self::$PatternClassObj           = $this->PatternObject;
         }
 
-        // utmdd($this->PatternObject );
+        //  utmdd($this->PatternObject );
 
     }
 
@@ -120,8 +118,11 @@ utmdump($studioClass);
         //                $className = str_replace('Private', 'PrivateVid', $className);
 
         $className = trim($className);
+        if($className == ""){
+            return "";
+        }
 
-        return $this->mapStudio($className);
+        return '\\' .$this->mapStudio($className);
     }
 
     public function __call($method, $arg)
@@ -129,7 +130,9 @@ utmdump($studioClass);
         utminfo();
 
         $getMethod = 'get' . ucfirst($method);
+
         if (method_exists($this, $getMethod)) {
+                           
 
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {
@@ -158,11 +161,13 @@ utmdump($studioClass);
     public function getNetwork()
     {
         utminfo();
+        
         if (null === $this->network) {
             $this->getStudio();
         }
+        utmdump($this->network);
         // utmdd()
-         return $this->network;
+        return $this->network;
     }
 
     public function getStudio()
@@ -172,7 +177,6 @@ utmdump($studioClass);
         $studio_array  = [];
         $network       = null;
         $studio        = null;
-
 
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
@@ -215,7 +219,6 @@ utmdump($studioClass);
                             }
                         }
 
-                        utmdump([$network,$studio]);
                     } else {
                         $studio = $matches[1];
                         if ('' != $studio) {
@@ -233,10 +236,8 @@ utmdump($studioClass);
                     //                    $this->studio        = $studio;
 
                     $result        = $this->getFileTag('Studio');
-                    utmdump([$result ,$network,$studio]);
                     // UTMlog::Logger('this->getFileTag', $result);
                     if (true == $result) {
-                        utmdump(["fdafdds",$result]);
                         if (str_contains($result, '/')) {
                             $result_array           = explode('/', $result);
                             $network                = $studio;
@@ -247,8 +248,8 @@ utmdump($studioClass);
                             $studio        = $result;
 
                         }
-                    // } else {
-                    //     $network = $studio;
+                        // } else {
+                        //     $network = $studio;
                         // $studio="misc";
                     }
 
@@ -280,6 +281,7 @@ utmdump($studioClass);
                     $this->network = $network;
                 }
             }
+
             if (true == File::isPornhubfile($this->video_file)) {
                 $studio_dir   = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
                 $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
@@ -294,19 +296,33 @@ utmdump($studioClass);
                         $studio_array[$idx] = $studio_string;
                     }
                 }
-
                 $string       = implode('/', $studio_array);
                 $studio_array = explode('/', $string);
-
                 $this->studio = $studio_array[0];
                 if ('' == $this->studio) {
-                    $this->studio = 'Pornhub';
+                    $this->studio = '';
+                }
+
+                if ('' == $this->network) {
+                    $this->network = '';
+
+
+                    if (null !== $this->PatternObject) {
+
+                        
+            
+                        $this->network = $this->PatternObject->getNetwork();
+                    }
+
+                    if ('Studios' == $this->video_library) {
+                        $this->network = 'Pornhub';
+                    }
+                   
                 }
             }
         } elseif ($this->network === null) {
             $this->network = "What are we doing here";
         }
-        // utmdd([$this->network,$this->studio]);
 
         return $this->studio;
     }
@@ -318,14 +334,14 @@ utmdump($studioClass);
         $genre = '';
         if (null === $this->genre) {
 
-            // $res = $this->getFileTag('Genre');
-            // utmdd([__METHOD__,$res]);
+            $res = $this->getFileTag('Genre');
             $filename = $this->video_file;
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             if (true == $success) {
                 $this->genre = $matches[1];
                 //  $genre = $matches[1];
             }
+           // utmdd([__METHOD__,$this->genre ]);
 
         }
 
@@ -359,6 +375,7 @@ utmdump($studioClass);
 
     public function getKeyword()
     {
+
         utminfo();
 
     }

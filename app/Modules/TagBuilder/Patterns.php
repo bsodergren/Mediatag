@@ -178,6 +178,7 @@ class Patterns extends TagBuilder
         $studio        = strtolower($this->studio_key);
         $network = strtolower($network);
 
+        
         $this->getKeyName($studio);
 
         if (\array_key_exists($studio, $regex)) {
@@ -226,7 +227,6 @@ class Patterns extends TagBuilder
     public function getStudio()
     {
         utminfo();
-
         $studio = $this->metaStudio();
 
         if ($studio !== null && $studio != "") {

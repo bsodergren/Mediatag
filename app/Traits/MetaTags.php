@@ -95,10 +95,10 @@ trait MetaTags
         // }
 
 
-        if (isset(fileReader::$PatternClass)) {
+if (isset(fileReader::$PatternClass)) {
 
+            // utmdd($this);
             $studio_str = fileReader::$PatternClassObj->getStudio();
-
             // $studio_str = trim($key_studio .'/'. $studio_str,"/");
             $arr        = explode('/', $studio_str);
             $arr        = array_unique($arr);
@@ -288,14 +288,15 @@ trait MetaTags
                             continue;
                         }
                         if ('Double Penetration' == $v) {
+
                             continue;
                         }
-                        if ('MFF' == $v) {
-                            continue;
+                        if ('MMF' == $v) {
+                            //continue;
                         }
 
                         if ('MFF' == $v) {
-                            continue;
+                           // continue;
                         }
                         $narr[] = $v;
                     }
@@ -303,6 +304,16 @@ trait MetaTags
                     $arr = $narr;
                 }
             }
+            
+    if (isset(fileReader::$PatternClass)) {
+
+        // utmdd($this);
+        $genre = fileReader::$PatternClassObj->getGenre();
+        utmdump($genre);
+        $arr[] = $genre;
+    }
+    utmdump($arr);
+
         }
 
         $max       = \count($arr);

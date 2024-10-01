@@ -12,6 +12,9 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class PrivateVid extends Patterns
 {
+    public $studio = 'Private';
+    public $network = '';
+
     public $regex = [
         'privatevid' => [
             'artist' => [

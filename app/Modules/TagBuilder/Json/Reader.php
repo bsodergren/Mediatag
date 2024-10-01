@@ -148,6 +148,7 @@ class Reader extends TagReader
 
 
         $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
+
         if (file_exists($this->json_file)) {
             $this->json_string = FileSystem::read($this->json_file);
 
@@ -157,7 +158,6 @@ class Reader extends TagReader
             $exec->youtubeGetJson($this->video_key);
 
             $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
-
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
 
