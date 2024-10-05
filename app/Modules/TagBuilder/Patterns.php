@@ -184,7 +184,7 @@ class Patterns extends TagBuilder
         if (\array_key_exists($studio, $regex)) {
             // $studio = $studio;
         } elseif (\array_key_exists($network, $regex)) {
-            $studio = $network;
+          //  $studio = $network;
         } else {
             $studio = 'default';
         }
@@ -244,10 +244,10 @@ class Patterns extends TagBuilder
         return $this->studio;
     }
 
-public function getNetwork(){
-    utmdd(__METHOD__);
-    return 'network';
-}
+// public function getNetwork(){
+//     utmdd(__METHOD__);
+//     return 'network';
+// }
     public static function customStudio($key_studio, $arr)
     {
         utminfo();
