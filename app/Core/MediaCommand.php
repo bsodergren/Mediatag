@@ -27,6 +27,8 @@ use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use UTM\Utilities\Debug\UtmStopWatch;
+use Symfony\Component\Filesystem\Filesystem;
+
 
 class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInterface
 {
@@ -268,5 +270,20 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
             chdir($path);
         }
         $this->getLibrary($className::USE_LIBRARY);
+
+        $this->loadDirs();
+    }
+
+    protected function loadDirs()
+    {
+
+        $filesystem = new Filesystem();
+        
+        foreach(__CREATE_DIRS__ as  $dir ){
+            if (!is_dir($dir)) {
+                $filesystem->mkdir($dir);
+            }
+
+        }
     }
 }

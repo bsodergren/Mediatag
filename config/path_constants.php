@@ -27,6 +27,10 @@ const __LOGFILE_DIR__ = __APP_HOME__.'/var/log';
 
 const __PLEX_PL_DIR__ = __PLEX_HOME__.'/Playlists';
 const __PLEX_PL_TMP_DIR__ = __PLEX_PL_DIR__.'/.tmp';
+const __PLEX_PL_ID_DIR__ = __PLEX_PL_DIR__.'/ids';
+const __PLEX_PL_LIST_DIR__ = __PLEX_PL_DIR__.'/lists';
+
+
 const __PLEX_DOWNLOAD__ = __PLEX_HOME__.'/Downloads';
 const __CACHE_DIR__ = __PLEX_HOME__.'/.cache';
 const __JSON_CACHE_DIR__ = __CACHE_DIR__.'/json';
@@ -67,10 +71,15 @@ const __FINISHED_CSV_DIR__ = __CSV_DIR__.'/done';
 
 define(
     '__CREATE_DIRS__',
-    [__NEW_CSV_DIR__,
-        __PREVIOUS_CSV_DIR__,
-        __FINISHED_CSV_DIR__,
-        __JSON_DIR__,
-        __IMPORT_DIFF_DIR__,
+    [__JSON_CACHE_DIR__,
+    __PLEX_PL_DIR__,
+    __PLEX_DOWNLOAD__,
+    __PLEX_PL_ID_DIR__,
+    __PLEX_PL_LIST_DIR__,
+    __INC_WEB_THUMB_URL__,
+    __INC_WEB_PREVIEW_DIR__,
+    __INC_WEB_CHAPTER_DIR__,
+
+
     ]
 );

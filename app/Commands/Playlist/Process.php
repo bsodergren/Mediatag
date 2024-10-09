@@ -22,23 +22,23 @@ class Process extends Mediatag
     use Callables;
     use Helper;
 
-    public const ARCHIVE            = __PLEX_PL_DIR__ . '/ids/archive.txt';
+    public const ARCHIVE            = __PLEX_PL_ID_DIR__ . '/archive.txt';
 
-    public const IGNORED            = __PLEX_PL_DIR__ . '/ids/ignored_ids.txt';
+    public const IGNORED            = __PLEX_PL_ID_DIR__ . '/ignored_ids.txt';
 
-    public const DISABLED           = __PLEX_PL_DIR__ . '/ids/disabled.txt';
+    public const DISABLED           = __PLEX_PL_ID_DIR__ . '/disabled.txt';
 
-    public const MODELHUB           = __PLEX_PL_DIR__ . '/ids/modelhub.txt';
+    public const MODELHUB           = __PLEX_PL_ID_DIR__ . '/modelhub.txt';
 
-    public const ERRORIDS           = __PLEX_PL_DIR__ . '/ids/error.txt';
+    public const ERRORIDS           = __PLEX_PL_ID_DIR__ . '/error.txt';
 
-    public const NOTFOUND           = __PLEX_PL_DIR__ . '/ids/notfound.txt';
+    public const NOTFOUND           = __PLEX_PL_ID_DIR__ . '/notfound.txt';
 
-    public const FILELIST           = __PLEX_PL_DIR__ . '/lists/filelist.txt';
+    public const FILELIST           = __PLEX_PL_LIST_DIR__ . '/filelist.txt';
 
-    public const DOWNLOADED         = __PLEX_PL_DIR__ . '/lists/downloaded.txt';
+    public const DOWNLOADED         = __PLEX_PL_LIST_DIR__ . '/downloaded.txt';
 
-    public const FILEMAP            = __PLEX_PL_DIR__ . '/lists/all_files_list.txt';
+    public const FILEMAP            = __PLEX_PL_LIST_DIR__ . '/all_files_list.txt';
 
     public const PLAYLIST           = __PLEX_PL_DIR__ . '/all_playlist.txt';
 
