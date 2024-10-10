@@ -8,11 +8,9 @@ const STUDIO_MAP = [
     'myhusbandbroughthomehismistress' => 'MyHusband',
     'mommysboy'                       => 'AdultTime',
     'prettydirty'                     => 'AdultTime',
-    'thagson'                         => 'AdultTime',
     'mylifeinmiami'                   => 'AdultTime',
     'puretaboo'                       => 'AdultTime',
     'tushy'                           => 'AdultTime',
-    'mypervyfamily'                   => 'AdultTime',
 
     'spizoo'                          => 'AdultTime',
     'spankmonster'                    => 'AdultTime',
@@ -25,6 +23,11 @@ const STUDIO_MAP = [
 
 
     */
+
+    // 'mypervyfamily'                   => 'mypervyfamily',
+
+    // 'thagson'                         => 'AdultTime',
+
     '21stsextury'         => 'TwentyFirstSextury',
     '1000facials'         => 'ThousandFacials',
     // 'private'             => 'PrivateVid',

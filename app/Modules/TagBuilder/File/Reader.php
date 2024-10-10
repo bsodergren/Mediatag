@@ -60,7 +60,7 @@ class Reader extends TagReader
         $studioName  = $this->getStudioClass($this->studio);
         $networkName = $this->getStudioClass($this->network);
 
-        $studioClass = $classPath . $this->video_library . $networkName . $studioName;
+        $studioClass = $classPath . $this->video_library . $studioName;
 
         $classAttm[] = $studioClass;
 
@@ -283,7 +283,6 @@ class Reader extends TagReader
             }
 
             if (true == File::isPornhubfile($this->video_file)) {
-                utmdd("fsdafsda");
                 $studio_dir   = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
                 $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
                 $arr          = explode('/', $studio_dir);

@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 const PURETABOO_REGEX_COMMON = '/([a-zA-Z0-9\-]+)\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i';
