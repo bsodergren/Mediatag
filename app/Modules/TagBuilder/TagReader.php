@@ -174,9 +174,10 @@ class TagReader
     public function getTagArray($clean = true)
     {
         utminfo();
+        
         foreach (__META_TAGS__ as $tag) {
-            $this->{$tag}();
 
+            $this->{$tag}();
             if (\array_key_exists($tag, $this->tag_array)) {
 
                 if (null !== $this->tag_array[$tag]) {
@@ -187,6 +188,7 @@ class TagReader
                 }
             }
         }
+       
 
         return $this->tag_array;
     }

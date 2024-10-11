@@ -34,7 +34,7 @@ class TeamSkeet extends Patterns
         'dadcrush'                    => 'Dad Crush',
         'dyked'                       => 'dyked',
         // 'askyourmother'               => 'ask your mother',
-        'theloft'                     => 'The Loft',
+        // 'theloft'                     => 'The Loft',
         'exxxtrasmall'                => 'exxxtra small',
         // 'familystrokes'               => 'family strokes',
         'gingerpatch'                 => 'ginger patch',

@@ -17,7 +17,7 @@ const MILEHIGHMEDIA_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)_?(
 
 class MileHighMedia extends Patterns
 {
-    public $studio = 'Mile High Media';
+    public $studio,$network = 'Mile High Media';
 
     public $regex  = [
         'milehighmedia' => [

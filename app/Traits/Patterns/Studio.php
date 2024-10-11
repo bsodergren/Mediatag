@@ -6,8 +6,6 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 
 trait Studio
@@ -46,11 +44,10 @@ trait Studio
         // UTMlog::Logger('Studio Key', $this->video_name);
         if (false !== $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
-                $studioKey = str_replace("-","",$matches[1]);
-                // utmdump($studioKey);
+                $studioKey = str_replace("-", "", $matches[1]);
                 if (\array_key_exists($studioKey, $this->replace_studios)) {
                     return $this->replace_studios[$studioKey];
-                    
+
                 }
 
                 return null;
@@ -60,26 +57,16 @@ trait Studio
             if ($return == $this->video_name) {
                 return null;
             }
-            // UTMlog::Logger('file studio', $return);
 
             return ucwords($return);
         }
 
         return null;
-        // if (null !== $this->network) {
-        //     return  $this->network . '/' . $this->studio;
-        // }
-
-        // return $this->studio;
-
-
-        // return false;
     }
 
     public static function customStudio($key_studio, $arr)
     {
         utminfo();
-        utmdump(__METHOD__);
 
         if (false == self::$StudioKey) {
             self::$StudioKey = $key_studio;

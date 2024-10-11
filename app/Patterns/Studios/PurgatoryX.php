@@ -12,6 +12,8 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class PurgatoryX extends Patterns
 {
+    public $studio = 'Purgatory X';
+    
     public $regex        = [
         'purgatoryx' => [
             'artist' => [

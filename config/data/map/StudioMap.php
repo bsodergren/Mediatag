@@ -4,25 +4,25 @@
  */
 
 const STUDIO_MAP = [
-    /*
-    'myhusbandbroughthomehismistress' => 'MyHusband',
-    'mommysboy'                       => 'AdultTime',
-    'prettydirty'                     => 'AdultTime',
-    'mylifeinmiami'                   => 'AdultTime',
-    'puretaboo'                       => 'AdultTime',
-    'tushy'                           => 'AdultTime',
+    
+    // 'myhusbandbroughthomehismistress' => 'MyHusband',
+    // 'mommysboy'                       => 'AdultTime',
+    // 'prettydirty'                     => 'AdultTime',
+    // 'mylifeinmiami'                   => 'AdultTime',
+    // 'puretaboo'                       => 'AdultTime',
+    // 'tushy'                           => 'AdultTime',
 
-    'spizoo'                          => 'AdultTime',
-    'spankmonster'                    => 'AdultTime',
-
-
-    'dareweshare'                     => 'AdultTime',
-    'pegasproductions'                => 'AdultTime',
-
-    'throated'            => 'AdultTime',
+    // 'spizoo'                          => 'AdultTime',
+    // 'spankmonster'                    => 'AdultTime',
 
 
-    */
+    // 'pegasproductions'                => 'AdultTime',
+
+    // 'throated'            => 'AdultTime',
+
+
+    
+    // 'dareweshare'                     => 'Adult Time',
 
     // 'mypervyfamily'                   => 'mypervyfamily',
 
@@ -31,29 +31,29 @@ const STUDIO_MAP = [
     '21stsextury'         => 'TwentyFirstSextury',
     '1000facials'         => 'ThousandFacials',
     // 'private'             => 'PrivateVid',
-    'riggs'               => 'AdultTime',
-    'gostuckyourself'     => 'AdultTime',
-    'cheatingwhorewives'  => 'AdultTime',
-    'archangel'           => 'AdultTime',
-    'lezcuties'           => 'AdultTime',
-    'nuru'                => 'AdultTime',
-    'sinematica'          => 'AdultTime',
-    'deeper'              => 'AdultTime',
-    'lightsoutherncinema' => 'AdultTime',
-    'pervcity'            => 'AdultTime',
-    'evilangel'           => 'AdultTime',
-    'lukespov'            => 'AdultTime',
-    'pinkoclub'           => 'AdultTime',
-    'tabooheat'           => 'AdultTime',
-    // 'filthypov'           => 'AdultTime',
-    'adamandeve'          => 'AdultTime',
-    // 'isthisreal'          => 'AdultTime',
-    'jacquieetmichel'     => 'AdultTime',
+    // 'riggs'               => 'AdultTime',
+    // 'gostuckyourself'     => 'AdultTime',
+    // 'cheatingwhorewives'  => 'AdultTime',
+    // 'archangel'           => 'AdultTime',
+    // 'lezcuties'           => 'AdultTime',
+    // 'nuru'                => 'AdultTime',
+    // 'sinematica'          => 'AdultTime',
+    // 'deeper'              => 'AdultTime',
+    // 'lightsoutherncinema' => 'AdultTime',
+    // 'pervcity'            => 'AdultTime',
+    // 'evilangel'           => 'AdultTime',
+    // 'lukespov'            => 'AdultTime',
+    // 'pinkoclub'           => 'AdultTime',
+    // 'tabooheat'           => 'AdultTime',
+    // // 'filthypov'           => 'AdultTime',
+    // 'adamandeve'          => 'AdultTime',
+    // // 'isthisreal'          => 'AdultTime',
+    // 'jacquieetmichel'     => 'AdultTime',
 
-    'realsensual'         => 'AdultTime',
-    'vixen'               => 'AdultTime',
-    'jayspov'             => 'AdultTime',
-    'newsensations'       => 'AdultTime',
-    'roccosiffredi'       => 'AdultTime',
+    // 'realsensual'         => 'AdultTime',
+    // 'vixen'               => 'AdultTime',
+    // 'jayspov'             => 'AdultTime',
+    // 'newsensations'       => 'AdultTime',
+    // 'roccosiffredi'       => 'AdultTime',
 
 ];

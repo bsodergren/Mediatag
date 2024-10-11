@@ -54,14 +54,13 @@ trait MetaTags
     public function cleanTitle($text)
     {
         utminfo();
-
         return Title::clean($text);
     }
     public function cleanNetwork($text)
     {
         utminfo();
 
-        return Title::clean($text);
+        return $text;
     }
 
     public function cleanStudio($text): string
@@ -104,6 +103,7 @@ if (isset(fileReader::$PatternClass)) {
             $arr        = array_unique($arr);
 
         }
+
         return implode('/', $arr);
     }
 

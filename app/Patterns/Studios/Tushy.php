@@ -14,6 +14,8 @@ const TUSHY_REGEX_COMMON = '/([a-zA-Z0-9_]+)(_s[0-9]{2,3}_|\-_)([a-zA-Z_]+)_[0-9
 
 class Tushy extends Patterns
 {
+
+public $studio = "Tushy";
     public $regex        = [
         'tushy' => [
             'artist' => [

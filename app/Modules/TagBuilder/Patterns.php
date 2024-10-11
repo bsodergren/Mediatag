@@ -6,12 +6,14 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\TagBuilder\File\Reader;
+use UTM\Utilities\Debug\Debug;
 use Mediatag\Utilities\Strings;
 use Mediatag\Traits\Patterns\Genre;
 use Mediatag\Traits\Patterns\Title;
 use Mediatag\Traits\Patterns\Artist;
 use Mediatag\Traits\Patterns\Studio;
+use Mediatag\Traits\Patterns\Network;
+use Mediatag\Modules\TagBuilder\File\Reader;
 
 // include_once __DATA_LISTS__.'/NamesList.php';
 
@@ -24,9 +26,10 @@ class Patterns extends TagBuilder
     use Genre;
     use Studio;
     use Title;
+    use Network;
 
-    public $studio;
-    public $network;
+    public $studio ;
+    public $network ;
     /**
      * studio_key.
      */
@@ -106,54 +109,73 @@ class Patterns extends TagBuilder
     /**
      * __construct.
      */
-    public function __construct($object)
+    public function __construct($object = null)
     {
+
         utminfo();
-        self::boot($this);
-        $this->className  = $object->className;
-        $this->video_name = $object->video_name;
-        $studio           = strtolower($object->getnetwork());
-        $this->studio_key = str_replace(' ', '', $studio);
-        $this->studio_key = $this->mapStudio($this->studio_key);
-        if ('' == $this->studio_key) {
-            $this->studio_key = 'default';
-        } if (null === $this->regex) {
-            $this->regex = [];
-        }
-        $this->regex      = array_merge($this->default_regex, $this->regex);
-        if (null !== $this->network) {
-            if (null !== $this->studio) {
-                self::$StudioKey = $this->studio;
+        if ($object !== null) {
+            self::boot($this);
+            $this->className  = $object->className;
+            $this->video_name = $object->video_name;
+
+
+            $studio           = strtolower($object->getStudio());
+            $this->studio_key = str_replace(' ', '', $studio);
+            $this->studio_key = $this->mapStudio($this->studio_key);
+         ///   $this->network =  $object->getNetwork();
+            if ($this->network === null) {
+                $this->network = $this->metaNetwork();
             }
+
+            if ('' == $this->studio_key) {
+                $this->studio_key = 'default';
+            }
+
+            if (null === $this->regex) {
+                $this->regex = [];
+            }
+            $this->regex      = array_merge($this->default_regex, $this->regex);
+            if (null !== $this->network) {
+                if (null !== $this->studio) {
+                    self::$StudioKey = $this->studio;
+                }
+            }
+            // utmdd($this->network);
         }
     }
 
     public static function boot($obj)
     {
+        $mainClass = get_class($obj);
         $classes                  = class_parents($obj);
         $class                    = reset($classes);
+        if (str_contains($class, "Patterns")) {
+            $class = $mainClass;
+        }
 
         [$classPath, $className ] = self::classStudio($class);
 
 
-        if ($classPath != "Studios"
-        ) {
+
+        if ($classPath != "Studios") {
 
             if (Reader::$PatternClass !== null) {
                 [$classPath, $className ] = self::classStudio(Reader::$PatternClass);
                 $obj->studio              = $className;
+                utmdd([ $classPath, $className ]);
             }
+            // $obj->network        = $className;
             return 0;
 
         }
 
-        $obj->network        = $className;
+        return $obj;
 
     }
     private static function classStudio($class)
     {
         $classparts            = explode("\\", $class);
-        $classPath             = $classparts[count($classparts)-2];
+        $classPath             = $classparts[count($classparts) - 2];
 
         $className             = end($classparts);
         $className             = Strings::StudioName($className, false);
@@ -161,11 +183,13 @@ class Patterns extends TagBuilder
         $className             = implode(' ', $parts);
         return [$classPath,$className];
     }
+
     public static function getClassObject($className, $obj)
     {
 
         return new class ($obj) extends Patterns {};
     }
+
     /**
      * getKeyValue.
      */
@@ -173,27 +197,26 @@ class Patterns extends TagBuilder
     {
         utminfo();
         $regex         = $this->regex;
-        $network = str_replace(' ', '', $this->studio);
-        $network = $this->mapStudio($network);
         $studio        = strtolower($this->studio_key);
+
+        $network = str_replace(' ', '', $this->network);
         $network = strtolower($network);
 
-        
-        $this->getKeyName($studio);
-
+        // $this->getKeyName($studio);
         if (\array_key_exists($studio, $regex)) {
             // $studio = $studio;
         } elseif (\array_key_exists($network, $regex)) {
-          //  $studio = $network;
+            $studio = $network;
         } else {
             $studio = 'default';
         }
 
         $array         = $regex[$studio];
+
+
         if (!\array_key_exists($tag, $array)) {
             $array = $regex['default'];
-
-            return null;
+            return false;
         }
         $array         = $array[$tag];
         if (!\array_key_exists($key, $array)) {
@@ -201,18 +224,24 @@ class Patterns extends TagBuilder
             $array = $array[$tag];
         }
 
+
         return $array[$key];
     }
 
     /**
      * getKeyName.
      */
-    public function getKeyName($key) {}
+    public function getKeyName($key)
+    {
+        // utmdd($key);
+    }
 
     /**
      * getKeyword.
      */
-    public function getKeyword() {}
+    public function getKeyword()
+    {
+    }
 
     /**
      * getFilename.
@@ -233,7 +262,6 @@ class Patterns extends TagBuilder
             $this->studio =  $studio;
         }
 
-
         // if (null !== $this->network) {
         //     if ($this->network == $this->studio) {
         //         $this->studio = "Misc";
@@ -244,10 +272,13 @@ class Patterns extends TagBuilder
         return $this->studio;
     }
 
-// public function getNetwork(){
-//     utmdd(__METHOD__);
-//     return 'network';
-// }
+    public function getNetwork()
+    {
+        $network = $this->metaNetwork();
+        $this->network =  $network ;
+        return  $network ;
+    }
+
     public static function customStudio($key_studio, $arr)
     {
         utminfo();

@@ -15,6 +15,7 @@ const PORNWORLD_REGEX_COMMON = '/(FS[0-9]+|GP[0-9]+)?_?(.*)_([HDP0-9]+.mp4)/i';
 
 class PornWorld extends Patterns
 {
+    public $studio = "Porn World";
     public $regex = [
         'pornworld' => [
             'artist' => [

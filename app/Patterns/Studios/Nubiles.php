@@ -10,6 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 class Nubiles extends Patterns
 {
     public $studio = 'Nubiles';
+    public $network = 'Nubiles';
     public $regex  = [
         'nubiles' => [
 
