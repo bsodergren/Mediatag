@@ -13,6 +13,7 @@ const ADULTTIME_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{
 class AdultTime extends Patterns
 {
     public  $studio   = 'Adult Time';
+    
     public $network = 'Adult Time';
 
     public $regex           = [
