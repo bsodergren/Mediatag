@@ -216,22 +216,23 @@ EOD;
     {
         utminfo();
 
-        $TitleStudio = trim($TitleStudio,'\\');
-        $class = trim($class,'\\');
+        $TitleStudio = trim($TitleStudio, '\\');
+        $class = trim($class, '\\');
         $extended_class = 'Patterns';
         $studio         = "public \$studio = '" . $TitleStudio . "';";
-        // $extended_use   = 'use Mediatag\\Modules\\TagBuilder\\Patterns;';
+        $extended_use   = ' ';
 
         if ($options !== null) {
-            if(array_key_exists('ExtendClass',$options)){
-            $extended_class =trim( $options['ExtendClass'],'\\');;
-            $studio         = "public \$studio = '" . $TitleStudio . "';";
+            if (array_key_exists('ExtendClass', $options)) {
+                $extended_class = trim($options['ExtendClass'], '\\');
+                ;
+                $studio         = "public \$studio = '" . $TitleStudio . "';";
 
-                  $extended_use   = 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
+                $extended_use   = PHP_EOL. 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
+
+            }
 
         }
-
-    }
 
         $Pattern_file   = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';
 
