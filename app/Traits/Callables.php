@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Nette\Utils\Strings;
-
-
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
@@ -285,7 +283,7 @@ trait Callables
         // }
         //// UTMlog::Logger('Ph Download', $buffer);
 
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log",$buffer);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log", $buffer);
 
         switch ($buffer) {
             case str_contains($buffer, '[PornHub]'):
@@ -353,7 +351,7 @@ trait Callables
 
             case str_contains($buffer, '[download]'):
                 PlaylistProcess::$current_key = $this->key;
-                $outputText                   = '<download>' . $buffer . '                           </>';
+                $outputText                   = '<download>' . $buffer . '</>';
 
                 if (str_contains($buffer, 'Destination')) {
                     $outputText = str_replace('[download]', '</text>' . $line_id . ' <text>[download]', $buffer);
