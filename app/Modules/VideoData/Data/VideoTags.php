@@ -60,7 +60,6 @@ class VideoTags extends VideoData
 
 
         $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
-        utmdump($tagList);
 
         $this->tagList         = $tagList;
         return $tagList;
