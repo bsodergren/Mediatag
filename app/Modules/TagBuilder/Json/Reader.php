@@ -106,7 +106,6 @@ class Reader extends TagReader
         utminfo();
 
         $tag = strtolower($tag);
-
         if (! \array_key_exists($tag, $this->tag_array)) {
             $json_key = $tag;
             if ('genre' == $tag) {
@@ -138,7 +137,9 @@ class Reader extends TagReader
                 // UTMlog::Logger('json data ' . $tag, $value);
                 $this->tag_array[$tag] = $value;
             }
+
         }
+
     }
 
     private function getJsonFile()

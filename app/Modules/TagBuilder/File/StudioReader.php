@@ -3,6 +3,7 @@
 namespace Mediatag\Modules\TagBuilder\File;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 
 trait StudioReader
 {
@@ -29,13 +30,16 @@ trait StudioReader
     }
     private function isPhFile()
     {
-        $string = $this->studioParse();
-        $studio_array = explode('/', $string);
-        $this->studio = $studio_array[0];
-        if ('' == $this->studio) {
-            $this->studio = '';
-        }
 
+        $json = new jsonReader($this->videoData);
+        $return = $json->getTagArray();
+
+        // $string = $this->studioParse();
+        // $studio_array = explode('/', $string);
+        // $this->studio = $studio_array[0];
+        // if ('' == $this->studio) {
+        //     $this->studio = '';
+        // }
 
     }
     private function notPhFile()

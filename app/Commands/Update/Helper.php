@@ -226,7 +226,6 @@ trait Helper
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
         Mediatag::$Display->displayTimer = $this->displayTimer;
         foreach ($videoList as $key => $videoArray) {
-            utmdump($videoArray);
             $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display             = Mediatag::$Display;
             Mediatag::$Display->BlockInfo = [];

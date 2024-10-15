@@ -52,6 +52,7 @@ class Reader extends TagReader
         // if($this->videoData === null){
         //     $this->videoData = $videoData;
         // }
+        $this->videoData = $videoData;
         $this->expandArray($videoData);
 
         $className   = $this->video_library;
@@ -68,10 +69,8 @@ class Reader extends TagReader
         $studioClass = $classPath . $this->video_library . $studioName;
 
         $classAttm[] = $studioClass;
-
-        if (! class_exists($studioClass) || Option::isTrue('addClass')) 
+        if ((! class_exists($studioClass) || Option::isTrue('addClass') )&& ($this->video_library == 'Studios')) 
         {
-
             // UTMlog::Logger('File Studio className', $className);
 
 
