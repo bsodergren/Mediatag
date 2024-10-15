@@ -160,9 +160,11 @@ class Patterns extends TagBuilder
         if ($classPath != "Studios") {
 
             if (Reader::$PatternClass !== null) {
+
+                                // utmdd([ $classPath, $className ]);
+
                 [$classPath, $className ] = self::classStudio(Reader::$PatternClass);
                 $obj->studio              = $className;
-                utmdd([ $classPath, $className ]);
             }
             // $obj->network        = $className;
             return 0;

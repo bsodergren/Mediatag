@@ -112,7 +112,6 @@ trait Helper
     public function getChanges($options)
     {
         utminfo();
-utmdebug("fasdf");
         if (null === $this->VideoList) {
             $this->exec();
         }
@@ -227,6 +226,7 @@ utmdebug("fasdf");
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
         Mediatag::$Display->displayTimer = $this->displayTimer;
         foreach ($videoList as $key => $videoArray) {
+            utmdump($videoArray);
             $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display             = Mediatag::$Display;
             Mediatag::$Display->BlockInfo = [];

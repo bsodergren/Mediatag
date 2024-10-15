@@ -15,5 +15,6 @@ class %%CLASSNAME%% extends %%CLASS_EXTEND%%
 {
 
     %%STUDIO%%
+    %%NETWORK%%
 
 }

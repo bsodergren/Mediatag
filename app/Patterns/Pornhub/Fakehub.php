@@ -19,9 +19,6 @@ class Fakehub extends Patterns
     public $network = "Fake Hub";
     public $studio = "Fake Hub";
 
-    public function getNetwork()
-    {
-        return $this->network;
-    }
+
 }
    

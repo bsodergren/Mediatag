@@ -221,22 +221,23 @@ EOD;
         $extended_class = 'Patterns';
         $studio         = "public \$studio = '" . $TitleStudio . "';";
         $extended_use   = ' ';
-
+        $network   = ' ';
         if ($options !== null) {
-            if (array_key_exists('ExtendClass', $options)) {
+            if (array_key_exists('ExtendClass', $options))
+            {
                 $extended_class = trim($options['ExtendClass'], '\\');
-                ;
-                $studio         = "public \$studio = '" . $TitleStudio . "';";
-
+                // $studio         = "public \$studio = '" . $TitleStudio . "';";
+                if (array_key_exists('network', $options)) {
+                    $network = "public \$network = '" . $options['network'] . "';";
+                }
                 $extended_use   = PHP_EOL. 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
-
             }
 
         }
 
         $Pattern_file   = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';
 
-        if (! file_exists($Pattern_file)) {
+        // if (! file_exists($Pattern_file)) {
 
             $finder            = new Finder();
             $filesystem        = new SymFs();
@@ -253,6 +254,7 @@ EOD;
                 'CLASS_EXTEND' => $extended_class,
                 'CLASSNAME'    => $class,
                 'STUDIO'       => $studio,
+                'NETWORK'       => $network,
                 'CLASSNAME_LC' => strtolower($class),
                 'CLASSNAME_UC' => strtoupper($class),
                 'LIBRARY'      => __LIBRARY__,
@@ -266,6 +268,8 @@ EOD;
 
             Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
             $filesystem->dumpFile($Pattern_file, $Patterns_template);
+
+            require_once $Pattern_file;
         }
-    }
+    // }
 }

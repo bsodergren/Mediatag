@@ -6,14 +6,11 @@
 namespace Mediatag\Commands\Db;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputInterface;
-
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
 
@@ -48,6 +45,10 @@ class Process extends Mediatag
     ];
 
     public $commandList     = [
+        // 'all' =>
+        // ['execThumb' => null,
+        // 'execDuration' => null,
+        // 'execInfo' => null,],
         'thumbnail'    => ['execThumb' => null, 'checkClean' => null],
         'markers'      => ['execMarkers' => null],
         'videopreview' => ['execPreview' => null, 'checkClean' => null],
@@ -72,6 +73,7 @@ class Process extends Mediatag
         if (Option::istrue('thumbnail') ||
         Option::istrue('duration')      ||
         Option::istrue('info')          ||
+         Option::istrue('all')          ||
         Option::istrue('videopreview')
         ) {
 

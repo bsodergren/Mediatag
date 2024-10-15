@@ -94,7 +94,7 @@ trait MetaTags
         // }
 
 
-if (isset(fileReader::$PatternClass)) {
+        if (isset(fileReader::$PatternClass)) {
 
             // utmdd($this);
             $studio_str = fileReader::$PatternClassObj->getStudio();
@@ -296,7 +296,7 @@ if (isset(fileReader::$PatternClass)) {
                         }
 
                         if ('MFF' == $v) {
-                           // continue;
+                            // continue;
                         }
                         $narr[] = $v;
                     }
@@ -304,15 +304,13 @@ if (isset(fileReader::$PatternClass)) {
                     $arr = $narr;
                 }
             }
-            
-    if (isset(fileReader::$PatternClass)) {
 
-        // utmdd($this);
-        $genre = fileReader::$PatternClassObj->getGenre();
-        utmdump($genre);
-        $arr[] = $genre;
-    }
-    utmdump($arr);
+            if (isset(fileReader::$PatternClass)) {
+
+                // utmdd($this);
+                $genre = fileReader::$PatternClassObj->getGenre();
+                $arr[] = $genre;
+            }
 
         }
 

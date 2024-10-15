@@ -4,9 +4,9 @@
  */
 
 const STUDIO_MAP = [
-    
+
     // 'myhusbandbroughthomehismistress' => 'MyHusband',
-    // 'mommysboy'                       => 'AdultTime',
+    // 'harmonyfilms'                       => 'Harmony Films',
     // 'prettydirty'                     => 'AdultTime',
     // 'mylifeinmiami'                   => 'AdultTime',
     // 'puretaboo'                       => 'AdultTime',
@@ -21,7 +21,7 @@ const STUDIO_MAP = [
     // 'throated'            => 'AdultTime',
 
 
-    
+
     // 'dareweshare'                     => 'Adult Time',
 
     // 'mypervyfamily'                   => 'mypervyfamily',

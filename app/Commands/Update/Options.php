@@ -31,6 +31,7 @@ class Options extends MediaOptions
             ['update', 'U', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['rename', 'R', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],
+            ['addNetwork', 'P', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],
             ['cache', '', InputOption::VALUE_NONE, Translate::text('L__UPDATE_NEWFILES_REPLACEMENT')],
             // ['cacheUpdate', 'u', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['break'],
