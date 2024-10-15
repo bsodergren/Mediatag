@@ -45,6 +45,7 @@ class VideoTags extends VideoData
 
         $tagList               = $meta->getTagArray();
 
+
         if (\array_key_exists('title', $tagList)) {
             $tagList['title'] = Strings::clean($tagList['title']);
         }
@@ -52,13 +53,14 @@ class VideoTags extends VideoData
         if (\array_key_exists('studio', $tagList)) {
             if (str_contains($tagList['studio'], '/')) {
                 $studioArr               = explode('/', $tagList['studio']);
-                $tagList['studio']       = $studioArr[1];
-                $tagList['network'] = $studioArr[0];
+                $tagList['studio']       = $studioArr[0];
+                // $tagList['network'] = $studioArr[1];
             }
         }
 
 
         $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
+        utmdump($tagList);
 
         $this->tagList         = $tagList;
         return $tagList;

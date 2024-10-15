@@ -17,7 +17,6 @@ trait Network
     public function metaNetwork()
     {
         utminfo();
-        utmdump($this->network);
 
         if ($this->network === null) {
             $class = get_parent_class($this);
@@ -26,7 +25,6 @@ trait Network
             $this->network = $obj->network;
 
         }
-        utmdump($this->network);
 
 
         return $this->network;

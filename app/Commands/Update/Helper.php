@@ -225,7 +225,26 @@ trait Helper
         }
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
         Mediatag::$Display->displayTimer = $this->displayTimer;
+        
         foreach ($videoList as $key => $videoArray) {
+            $tmpNetwork = '';
+            $tmpStudio = '';
+
+            if(array_key_exists("updateTags",$videoArray)){
+                $videoUpdates = $videoArray['updateTags'];
+                if(array_key_exists("studio",$videoUpdates)){
+                    $tmpStudio = $videoUpdates['studio'];
+                }
+                if(array_key_exists("network",$videoUpdates)){
+                    
+                    $tmpNetwork = $videoUpdates['network'];
+                    if($tmpNetwork !== null){
+                        $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+                    }
+                }
+
+            }
+
             $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display             = Mediatag::$Display;
             Mediatag::$Display->BlockInfo = [];
