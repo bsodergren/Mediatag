@@ -35,6 +35,7 @@ define(
         'New',
         'Premium',
         'Sort',
+        // 'Misc'
     ],
 );
 
@@ -59,7 +60,7 @@ define(
         'Models',
         'Amateur',
         'Animation',
-        'Misc',
+        // 'Misc',
         'Downloads',
         'Favorite',
         'Premium',

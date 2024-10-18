@@ -33,13 +33,28 @@ trait StudioReader
 
         $json = new jsonReader($this->videoData);
         $return = $json->getTagArray();
+        if (count($return) > 0) {
+            if (array_key_exists('studio', $return)) {
+                $this->studio = $return['studio'];
+            }
+        }
 
-        // $string = $this->studioParse();
-        // $studio_array = explode('/', $string);
-        // $this->studio = $studio_array[0];
-        // if ('' == $this->studio) {
-        //     $this->studio = '';
-        // }
+        if (null === $this->studio) {
+            $string = $this->studioParse();
+            $studio_array = explode('/', $string);
+            // utmdump(["studio_array",$studio_array]);
+
+            if (null !== $studio_array[0]) {
+
+                $this->studio = $studio_array[0];
+                if (array_key_exists('1', $studio_array)) {
+                    $this->studio = $studio_array[1];
+
+
+                }
+                $this->network = "Pornhub";
+            }
+        }
 
     }
     private function notPhFile()
@@ -62,10 +77,7 @@ trait StudioReader
                 foreach (__SKIP_STUDIOS__ as $k) {
                     if ($studio == $k) {
                         $studio = null;
-                    }
-                    // if ($network == $k) {
-                    //     $network = null;
-                    // }
+                    }                 
                 }
 
             } else {
@@ -75,16 +87,13 @@ trait StudioReader
                         if ($studio == $k) {
                             $studio = null;
                         }
-                        // if ($network == $k) {
-                        //     $network = null;
-                        // }
                     }
                 }
             }
 
-           
+
         }
-         $this->studio  = $studio;
+        $this->studio  = $studio;
     }
 
 }

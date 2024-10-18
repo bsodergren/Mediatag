@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Update;
 
 use Nette\Utils\Callback;
-
-
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Traits\CaseHelper;
@@ -142,9 +140,10 @@ trait Helper
             $progressBar2->start(null, $nidx - 1);
         }
 
-        $tagObj       = new tagReader();
 
         foreach ($videoArray as $key => $videoInfo) {
+
+            $tagObj       = new tagReader();
             $tagObj->loadVideo($videoInfo);
             $tagBuilder = new tagBuilder($key, $tagObj);
 
@@ -225,22 +224,32 @@ trait Helper
         }
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
         Mediatag::$Display->displayTimer = $this->displayTimer;
-        
+
         foreach ($videoList as $key => $videoArray) {
             $tmpNetwork = '';
             $tmpStudio = '';
-
-            if(array_key_exists("updateTags",$videoArray)){
+            // utmdump($videoArray);
+            if (array_key_exists("updateTags", $videoArray)) {
                 $videoUpdates = $videoArray['updateTags'];
-                if(array_key_exists("studio",$videoUpdates)){
+                if (array_key_exists("studio", $videoUpdates)) {
                     $tmpStudio = $videoUpdates['studio'];
                 }
-                if(array_key_exists("network",$videoUpdates)){
-                    
+                if (array_key_exists("network", $videoUpdates)) {
+
                     $tmpNetwork = $videoUpdates['network'];
-                    if($tmpNetwork !== null){
-                        $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+                    if ($tmpNetwork !== null) {
+                        if($tmpStudio != $tmpNetwork){
+                            $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+                        }
                     }
+                } elseif (array_key_exists("network", $videoArray['currentTags'])) {
+                    $tmpNetwork = $videoArray['currentTags']['network'];
+                    if ($tmpNetwork !== null) {
+                        if($tmpStudio != $tmpNetwork){
+                            $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+                        }
+                    }
+
                 }
 
             }

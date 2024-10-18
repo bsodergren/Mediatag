@@ -57,7 +57,7 @@ class Reader extends TagReader
 
         $className   = $this->video_library;
         $classPath   = 'Mediatag\\Patterns\\';
-        
+
 
         //  $this->getnetwork();
         $this->getStudio();
@@ -69,36 +69,35 @@ class Reader extends TagReader
         $studioClass = $classPath . $this->video_library . $studioName;
 
         $classAttm[] = $studioClass;
-        if ((! class_exists($studioClass) || Option::isTrue('addClass') )&& ($this->video_library == 'Studios')) 
-        {
+        if ((! class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
             // UTMlog::Logger('File Studio className', $className);
 
 
             // if (Option::isTrue('addClass')) {
-                $networkName = '';
+            $networkName = '';
 
-                $options       = Option::getValue('addClass', 1);
-                if (null === $options) {
-                    if (Option::isTrue('addNetwork')) {
-                        $networkName = Option::getValue('addNetwork',1);
-                        $options = "=".$networkName;
-            
-                    }
-                    $options = $this->studio . $options;
+            $options       = Option::getValue('addClass', 1);
+            if (null === $options) {
+                if (Option::isTrue('addNetwork')) {
+                    $networkName = Option::getValue('addNetwork', 1);
+                    $options = "=".$networkName;
 
                 }
-                $classOption   = [];
-                if (null !== $options) {
-                    $opt         = explode('=', $options);
-                    if (count($opt) > 1) {
-                        $classOption = ['Studio' => $opt[1],
-                            'ExtendClass'        => $this->getStudioClass($opt[1]),
-                            'network' => $networkName,
-                        ];
-                    }
-                    ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
+                $options = $this->studio . $options;
 
-                }                
+            }
+            $classOption   = [];
+            if (null !== $options) {
+                $opt         = explode('=', $options);
+                if (count($opt) > 1) {
+                    $classOption = ['Studio' => $opt[1],
+                        'ExtendClass'        => $this->getStudioClass($opt[1]),
+                        'network' => $networkName,
+                    ];
+                }
+                ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
+
+            }
             // }
 
             $classAttm[]                     = $studioClass;
@@ -129,8 +128,6 @@ class Reader extends TagReader
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);
         $className = str_replace('&', '_', $className);
-        //                $className = str_replace('1000', 'Thousand', $className);
-        //                $className = str_replace('Private', 'PrivateVid', $className);
 
         $className = trim($className);
         if ($className == "") {
@@ -180,8 +177,11 @@ class Reader extends TagReader
     public function getNetwork()
     {
         utminfo();
+        // utmdump(["Network",$this->network]);
+        if ($this->network === null) {
+            $this->network        = $this->getFileTag('Network');
 
-        $this->network        = $this->getFileTag('Network');
+        }
         return $this->network;
     }
 
@@ -190,11 +190,13 @@ class Reader extends TagReader
         utminfo();
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
+                // utmdump("Not PH File");
                 $this->notPhFile();
 
             }
 
             if (true == File::isPornhubfile($this->video_file)) {
+                // utmdump("IS PH File");
                 $this->isPhFile();
             }
 
@@ -272,7 +274,6 @@ class Reader extends TagReader
             //  } else {
             //     $result =  $this->{$method}();
         }
-
         return  $result;
     }
 }

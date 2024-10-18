@@ -101,6 +101,7 @@ trait Helper
             $video_file = $videoData['video_file'];
             $message    = $videoData['msg'];
             $metatags   = (new TagReader())->loadVideo($videoData)->getMetaValues();
+
             if (!\is_array($message)) {
                 $message = [];
                 //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
@@ -147,8 +148,9 @@ trait Helper
                 $studio_dir = 'Misc/';
             } else {
                 $studios    = explode('/', $studio);
-                $Arraykey   = array_key_last($studios);
+                $Arraykey   = array_key_first($studios);
                 $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+
                 if (false == $studio_dir) {
                     // continue;
                     $studio_dir = 'New/' . $studios[$Arraykey];
@@ -159,6 +161,7 @@ trait Helper
             if (true == $SortDir) {
                 $video_path = 'Sort/' . $studio_dir;
             }
+                // utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
             $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__;
