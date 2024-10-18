@@ -150,10 +150,15 @@ trait Helper
                 $studios    = explode('/', $studio);
                 $Arraykey   = array_key_first($studios);
                 $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
-
                 if (false == $studio_dir) {
+                    $Arraykey   = array_key_last($studios);
+                    $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+                                    utmdump(["dir",$studio_dir]);
+                                    if (false == $studio_dir) {
+
                     // continue;
                     $studio_dir = 'New/' . $studios[$Arraykey];
+                                    }
                 }
             }
 
@@ -161,7 +166,7 @@ trait Helper
             if (true == $SortDir) {
                 $video_path = 'Sort/' . $studio_dir;
             }
-                // utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
+                //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
             $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__;

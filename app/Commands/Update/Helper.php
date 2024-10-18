@@ -229,30 +229,30 @@ trait Helper
             $tmpNetwork = '';
             $tmpStudio = '';
             // utmdump($videoArray);
-            if (array_key_exists("updateTags", $videoArray)) {
-                $videoUpdates = $videoArray['updateTags'];
-                if (array_key_exists("studio", $videoUpdates)) {
-                    $tmpStudio = $videoUpdates['studio'];
-                }
-                if (array_key_exists("network", $videoUpdates)) {
+            // if (array_key_exists("updateTags", $videoArray)) {
+            //     $videoUpdates = $videoArray['updateTags'];
+            //     if (array_key_exists("studio", $videoUpdates)) {
+            //         $tmpStudio = $videoUpdates['studio'];
+            //     }
+            //     if (array_key_exists("network", $videoUpdates)) {
 
-                    $tmpNetwork = $videoUpdates['network'];
-                    if ($tmpNetwork !== null) {
-                        if($tmpStudio != $tmpNetwork){
-                            $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
-                        }
-                    }
-                } elseif (array_key_exists("network", $videoArray['currentTags'])) {
-                    $tmpNetwork = $videoArray['currentTags']['network'];
-                    if ($tmpNetwork !== null) {
-                        if($tmpStudio != $tmpNetwork){
-                            $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
-                        }
-                    }
+            //         $tmpNetwork = $videoUpdates['network'];
+            //         if ($tmpNetwork !== null) {
+            //             if($tmpStudio != $tmpNetwork){
+            //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+            //             }
+            //         }
+            //     } elseif (array_key_exists("network", $videoArray['currentTags'])) {
+            //         $tmpNetwork = $videoArray['currentTags']['network'];
+            //         if ($tmpNetwork !== null) {
+            //             if($tmpStudio != $tmpNetwork){
+            //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+            //             }
+            //         }
 
-                }
+            //     }
 
-            }
+            // }
 
             $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display             = Mediatag::$Display;

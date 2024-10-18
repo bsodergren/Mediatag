@@ -33,16 +33,18 @@ trait StudioReader
 
         $json = new jsonReader($this->videoData);
         $return = $json->getTagArray();
+
         if (count($return) > 0) {
             if (array_key_exists('studio', $return)) {
                 $this->studio = $return['studio'];
             }
         }
+        // 
 
         if (null === $this->studio) {
             $string = $this->studioParse();
             $studio_array = explode('/', $string);
-            // utmdump(["studio_array",$studio_array]);
+            // utmdd(["studio_array",$studio_array]);
 
             if (null !== $studio_array[0]) {
 
@@ -55,7 +57,7 @@ trait StudioReader
                 $this->network = "Pornhub";
             }
         }
-
+// utmdd([$this->network , $this->studio ]);
     }
     private function notPhFile()
     {

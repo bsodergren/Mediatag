@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoData\Data\Duration;
 use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
@@ -186,8 +184,11 @@ class StorageDB extends Storage
         $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative($video_path, __PLEX_HOME__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
-        if (Arrays::contains(__CHANNELS__, $match[2])) {
-            $sublibrary = $match[2];
+        if (array_key_exists(2, $match)) {
+
+            if (Arrays::contains(__CHANNELS__, $match[2])) {
+                $sublibrary = $match[2];
+            }
         }
 
         return $sublibrary;

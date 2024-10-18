@@ -34,6 +34,8 @@ class Reader extends TagReader
         $this->db = new TagDB();
 
         $this->expandArray($videoData);
+                   
+
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
         }
@@ -144,10 +146,11 @@ class Reader extends TagReader
     {
         utminfo();
         if (!str_starts_with($this->video_key, "x")) {
-            $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
+            $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
+
                 if ($this->json_string == "") {
                     return false;
                 }
