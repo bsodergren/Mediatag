@@ -17,6 +17,8 @@ use Symfony\Component\Console\Input\InputArgument;
 
 
 define("__PORNHUB_DB_DIR__",__CACHE_DIR__."/phdb");
+define("__PORNHUB_RAW_DIR__",__PORNHUB_DB_DIR__."/raw");
+
 define("__PORNHUB_CSV_DIR__",__PORNHUB_DB_DIR__."/csv");
 define("__PORNHUB_TXT_DIR__",__PORNHUB_DB_DIR__."/txt");
 define("__PORNHUB_FINISHED_DIR__",__PORNHUB_DB_DIR__."/finished");
@@ -40,9 +42,12 @@ class Options extends MediaOptions
 
         Translate::$Class = __CLASS__;
         return [
+            ['split', 's', InputOption::VALUE_NONE, Translate::text('L__PHDB_DESC')],
+
             ['convert', 'c', InputOption::VALUE_NONE, Translate::text('L__PHDB_DESC')],
             ['file', 'f', InputOption::VALUE_REQUIRED, Translate::text('L__PHDB_DESC')],
             ['map', 'm', InputOption::VALUE_NONE, Translate::text('L__PHDB_DESC')],
+            ['import', 'i', InputOption::VALUE_NONE, Translate::text('L__PHDB_DESC')],
 
         ];
 

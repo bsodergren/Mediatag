@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Phdb;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFinder;
 use UTM\Utilities\Option;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,10 +27,15 @@ class Process extends Mediatag
             'map'          => null,
             // 'writeChanges' => true,
         ],
-        //     'move'          => [
-        //         'exec'        => null,
-        //         'moveStudios' => null,
-        //     ],
+        'import'             => [
+            'exec'         => null,
+            'import'          => null,
+            // 'writeChanges' => true,
+        ],
+            'split'          => [
+                'exec'        => null,
+                'splitDb' => null,
+            ],
         //     'numberofFiles' => [
         //         'exec'             => null,
         //         'getNumberofFiles' => null,
@@ -63,39 +66,41 @@ class Process extends Mediatag
     {
         utminfo();
 
-
+        $path = __CURRENT_DIRECTORY__;
         if (str_contains($this->ph_csv, ",")) {
             $this->ph_csv = explode(",", $this->ph_csv);
         } else {
-        
-            MediaFinder::$depth = 1;
-         
 
-            if (Option::isTrue('map')){
+            MediaFinder::$depth = 1;
+
+
+            if (Option::isTrue('map') || Option::isTrue('import')) {
                 $fileSearch         = "ph_db*.txt";
                 $path = __PORNHUB_TXT_DIR__;
 
             }
-            if (Option::isTrue('convert')){
+            if (Option::isTrue('convert')) {
                 $fileSearch         = "ph_db*.csv";
                 $path = __PORNHUB_CSV_DIR__;
 
             }
 
+            if (Option::isTrue('split')) {
+                $path = __CURRENT_DIRECTORY__;
+
+            }
+
             if (Option::isTrue('file')) {
-                $fileSearch         = Option::getValue('file');               
-            } 
-         
-            $this->ph_csv       = MediaFinder::find($fileSearch,  $path );
-
-
+                $fileSearch         = Option::getValue('file');
+            }
+            $this->ph_csv       = MediaFinder::find($fileSearch, $path);
         }
-        // utmdd( $this->ph_csv );
-
 
     }
 
-    public function print() {}
+    public function print()
+    {
+    }
 
 
 }

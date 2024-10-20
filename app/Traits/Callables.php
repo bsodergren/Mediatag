@@ -15,6 +15,14 @@ use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 trait Callables
 {
+
+    public function splitFileOutput($type,$buffer)
+    {
+        Mediatag::$output->writeln($buffer);
+        echo $buffer;
+        //$this->Console->writeln($buffer);
+
+    }
     public function Output($type, $buffer)
     {
         echo $buffer;

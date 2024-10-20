@@ -60,12 +60,20 @@ class Storage
         utminfo();
 
         $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+        $this->dbConn->setTrace (true);
+
         $this->mapClass    = new DbMap();
         $this->output      = Mediatag::$output;
         $this->input       = Mediatag::$input;
         $this->FileNumber  = $this->output->section();
         $this->headerBlock = $this->output->section();
         $this->RowBlock    = $this->output->section();
+    }
+
+    public function trace()
+    {
+        utmdump($this->dbConn->trace);
+
     }
 
     public function truncate()
@@ -164,13 +172,13 @@ class Storage
     public function insertMulti($data, $table = __MYSQL_VIDEO_FILE__, $quiet = false)
     {
         utminfo();
-
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
             $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
+        
         $ids = $this->dbConn->insertMulti($table, $data);
         if (! $ids) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];

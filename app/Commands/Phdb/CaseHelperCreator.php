@@ -6,18 +6,14 @@
 namespace Mediatag\Commands\Phdb;
 
 use Mediatag\Core\Mediatag;
-
-
 use Nette\Utils\Strings;
 use Nette\Utils\Callback;
-
 use UTM\Utilities\Option;
 use Nette\Utils\FileSystem;
 use Mediatag\Traits\Callables;
 use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFinder;
-
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Symfony\Component\Process\Process as ExecProcess;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
@@ -101,15 +97,16 @@ EOF;
         if (!is_array($this->ph_csv)) {
             $this->ph_csv = [$this->ph_csv];
         }
-        // utmdd($this->phDbCaseHelper);
+        // utmdd($this->ph_csv);
+        //utmdd($this->phDbCaseHelper);
         $filesystem->remove($this->phDbCaseHelper);
 
 
         $filesystem->appendToFile($this->phDbCaseHelper, $this->CaseHelperHeader);
 
         foreach ($this->ph_csv as $thisFile) {
-            [$_a,$firstLine] = explode(";", $this->firstLine($thisFile));
-            [$_b,$lastLine]  = explode(";", $this->lastLine($thisFile));
+            [$_a,$firstLine] = explode("|", $this->firstLine($thisFile));
+            [$_b,$lastLine]  = explode("|", $this->lastLine($thisFile));
 
             $string          = <<<"EOT"
                     if (\$this->in_range(\$number, $firstLine,$lastLine )) {
