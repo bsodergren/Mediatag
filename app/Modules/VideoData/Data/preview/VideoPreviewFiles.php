@@ -6,19 +6,12 @@
 namespace Mediatag\Modules\VideoData\Data\preview;
 
 use Mediatag\Core\Mediatag;
-
-
 use FFMpeg\Coordinate\TimeCode;
-
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use GifCreator\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-
-
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 //use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -54,10 +47,14 @@ class VideoPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = sys_get_temp_dir() . "/build";
+        $temp     = __PLEX_VAR_DIR__ . "/build";
+        $options = array(
+            'temporary_directory' => $temp
+        )
+              utmdd($options);
         (new FileSystem())->mkdir($temp);
         // Use FFProbe to get the duration of the video.
-        $ffprobe  = FFprobe::create();
+        $ffprobe  = FFprobe::create($options);
         $duration = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
@@ -68,7 +65,7 @@ class VideoPreviewFiles extends VideoPreview
         }
 
         // Create an FFMpeg instance and open the video.
-        $ffmpeg   = FFMpeg::create();
+        $ffmpeg   = FFMpeg::create($options);
         $video    = $ffmpeg->open($this->video_file);
 
         // This array holds our "points" that we are going to extract from the
@@ -78,6 +75,7 @@ class VideoPreviewFiles extends VideoPreview
 
         // This will hold our finished frames.
         $frames   = [];
+  
 
         foreach ($points as $point) {
 
@@ -86,7 +84,7 @@ class VideoPreviewFiles extends VideoPreview
 
             // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
-
+            utmdump($time_secs);
             // Extract the frame.
             $frame      = $video->frame(TimeCode::fromSeconds($time_secs));
             $frame->save($point_file);

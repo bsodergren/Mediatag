@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Db;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Executable\YoutubeExec;
@@ -20,7 +18,6 @@ use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Mediatag\Traits\Translate;
-
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -74,7 +71,7 @@ trait Helper
     {
         utminfo();
 
-        // utmdd([__METHOD__,$this->db_array, $this->file_array]);
+        // utmdd([__METHOD__,count($this->db_array), count($this->file_array)]);
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
         $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
         foreach ($this->file_array as $key => $file) {
@@ -340,7 +337,9 @@ trait Helper
         }
     }
 
-    public function findRemoved() {}
+    public function findRemoved()
+    {
+    }
 
     public function execUpdate()
     {

@@ -54,10 +54,13 @@ class GifPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = sys_get_temp_dir() . "/build";
+        $temp     = __PLEX_VAR_DIR__ . "/build";
+        $options = array(
+            'temporary_directory' => $temp
+        );
         (new FileSystem())->mkdir($temp);
         // Use FFProbe to get the duration of the video.
-        $ffprobe  = FFprobe::create();
+        $ffprobe  = FFprobe::create($options);
         $duration = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
@@ -68,15 +71,15 @@ class GifPreviewFiles extends VideoPreview
         }
 
         // Create an FFMpeg instance and open the video.
-        $ffmpeg   = FFMpeg::create();
+        $ffmpeg   = FFMpeg::create($options);
         $video    = $ffmpeg->open($this->video_file);
 
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-        $points   = range(0, 100, 10);
+        $points   = range(10, 40, 3);
 
-        // This will hold our finished frames.
+// This will hold our finished frames.
         $frames   = [];
 
         foreach ($points as $point) {

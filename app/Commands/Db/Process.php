@@ -13,6 +13,8 @@ use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
+use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
 
 class Process extends Mediatag
 {
@@ -96,6 +98,21 @@ class Process extends Mediatag
             $key                    = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
+
+                $movedFile = str_replace("/".__LIBRARY__, "/Dupes/".__LIBRARY__, $file);
+                $dupePath = dirname($movedFile);
+                $filename = basename($file);
+
+                $dupePath   = nFileSystem::normalizePath($dupePath);
+                if (!is_dir($dupePath)) {
+                    //     if (!Option::isTrue('test')) {
+                    nFileSystem::createDir($dupePath, 0755);
+                    //     }
+                }
+                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+
+
+
 
                 continue;
             }

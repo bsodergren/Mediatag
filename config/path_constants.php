@@ -23,7 +23,8 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 const __DATA_LIB__            = __CONFIG_LIB__ . '/data';
 const __DB_BACKUP_ROOT__      = __PROJECT_ROOT__ . '/db';
 
-const __LOGFILE_DIR__         = __APP_HOME__ . '/var/log';
+const __PLEX_VAR_DIR__          = __APP_HOME__ . '/var';
+const __LOGFILE_DIR__         = __PLEX_VAR_DIR__ . '/log';
 
 const __PLEX_PL_DIR__         = __PLEX_HOME__ . '/Playlists';
 const __PLEX_PL_TMP_DIR__     = __PLEX_PL_DIR__ . '/.tmp';
@@ -36,7 +37,7 @@ const __CACHE_DIR__           = __PLEX_HOME__ . '/.cache';
 const __JSON_CACHE_DIR__      = __CACHE_DIR__ . '/json';
 const __PH_CACHE_DIR__        = __CACHE_DIR__ . '/Pornhub';
 
-const __APP_CACHE_DIR__       = __APP_HOME__ . '/var/cache';
+const __APP_CACHE_DIR__       = __PLEX_VAR_DIR__ . '/cache';
 
 const __PATTERNS_LIB_DIR__    = __APP_HOME__ . '/app/Patterns';
 const __INC_WEB_THUMB_ROOT__  = __WEB_HOME__;

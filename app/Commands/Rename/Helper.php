@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Rename;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -153,12 +151,12 @@ trait Helper
                 if (false == $studio_dir) {
                     $Arraykey   = array_key_last($studios);
                     $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
-                                    utmdump(["dir",$studio_dir]);
-                                    if (false == $studio_dir) {
+                    utmdump(["dir",$studio_dir]);
+                    if (false == $studio_dir) {
 
-                    // continue;
-                    $studio_dir = 'New/' . $studios[$Arraykey];
-                                    }
+                        // continue;
+                        $studio_dir = 'New/' . $studios[$Arraykey];
+                    }
                 }
             }
 
@@ -166,10 +164,10 @@ trait Helper
             if (true == $SortDir) {
                 $video_path = 'Sort/' . $studio_dir;
             }
-                //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
+            //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
-            $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__;
+            $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__. '/' . $video_path;
             $newPath    = nFileSystem::normalizePath($newPath);
             $dupePath   = nFileSystem::normalizePath($dupePath);
             if (!is_dir($newPath)) {
@@ -356,7 +354,7 @@ trait Helper
 
             $newName   = $this->cleanFilename($file);
 
-                        //utmdd([__METHOD__,$newName,$oldName]);
+            //utmdd([__METHOD__,$newName,$oldName]);
 
             $this->renameFile($oldName, $newName);
         }

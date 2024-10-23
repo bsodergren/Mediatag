@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Utilities\Option;
 use Mediatag\Core\MediaCache;
 use Mediatag\Traits\Callables;
@@ -188,7 +186,6 @@ class MediaFinder extends SFinder
         } else {
             $file_array = $this->searchFiles();
         }
-
         if (\is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
                 $FileArray = $this->getFileNumberArray($file_array);

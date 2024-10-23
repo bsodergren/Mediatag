@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Traits\Callables;
 use UTM\Utilities\Debug\Debug;
 use Mediatag\Utilities\Strings;
@@ -86,7 +84,7 @@ class MediaFile
         $alpha   = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
         $numeric = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5];
         // $text = basename($text);
-        $text    = strtolower($text);
+        //  $text    = strtolower($text);
         $key     =  md5($text);
         // $key = str_replace($alpha, $numeric, $text);
         // $key = str_replace(['_', '-', '.', '/', ' '], '', $key);
