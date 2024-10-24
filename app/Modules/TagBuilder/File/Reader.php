@@ -25,8 +25,8 @@ class Reader extends TagReader
 
     public $genre;
 
-    public $studio    = null;
-    public $network    = null;
+    public $studio = null;
+    public $network = null;
     public $videoData = null;
     public $video_file;
 
@@ -55,44 +55,45 @@ class Reader extends TagReader
         $this->videoData = $videoData;
         $this->expandArray($videoData);
 
-        $className   = $this->video_library;
-        $classPath   = 'Mediatag\\Patterns\\';
+        $className = $this->video_library;
+        $classPath = 'Mediatag\\Patterns\\';
 
 
         //  $this->getnetwork();
         $this->getStudio();
 
 
-        $studioName  = $this->getStudioClass($this->studio);
+        $studioName = $this->getStudioClass($this->studio);
         // $networkName = $this->getStudioClass($this->network);
 
         $studioClass = $classPath . $this->video_library . $studioName;
 
         $classAttm[] = $studioClass;
-        if ((! class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
+        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
             // UTMlog::Logger('File Studio className', $className);
 
 
             // if (Option::isTrue('addClass')) {
             $networkName = '';
 
-            $options       = Option::getValue('addClass', 1);
+            $options = Option::getValue('addClass', 1);
             if (null === $options) {
                 if (Option::isTrue('addNetwork')) {
                     $networkName = Option::getValue('addNetwork', 1);
-                    $options = "=".$networkName;
+                    $options     = "=" . $networkName;
 
                 }
                 $options = $this->studio . $options;
 
             }
-            $classOption   = [];
+            $classOption = [];
             if (null !== $options) {
-                $opt         = explode('=', $options);
+                $opt = explode('=', $options);
                 if (count($opt) > 1) {
-                    $classOption = ['Studio' => $opt[1],
-                        'ExtendClass'        => $this->getStudioClass($opt[1]),
-                        'network' => $networkName,
+                    $classOption = [
+                        'Studio'      => $opt[1],
+                        'ExtendClass' => $this->getStudioClass($opt[1]),
+                        'network'     => $networkName,
                     ];
                 }
                 ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
@@ -100,9 +101,9 @@ class Reader extends TagReader
             }
             // }
 
-            $classAttm[]                     = $studioClass;
+            $classAttm[] = $studioClass;
 
-            if (! class_exists($studioClass)) {
+            if (!class_exists($studioClass)) {
                 $studioClass = "Mediatag\\Modules\\TagBuilder\\Patterns";
                 $classAttm[] = $studioClass;
             }
@@ -137,6 +138,12 @@ class Reader extends TagReader
         return '\\' . $this->mapStudio($className);
     }
 
+    /**
+     * Summary of __call
+     * @param mixed $method
+     * @param mixed $arg
+     * @return mixed
+     */
     public function __call($method, $arg)
     {
         utminfo(func_get_args());
@@ -154,11 +161,12 @@ class Reader extends TagReader
                 if (method_exists($this->PatternObject, $method)) {
                     return $this->PatternObject->{$method}($arg[0]);
                 }
-                utmdd([__METHOD__,$this->PatternObject,$method, Debug::tracepath()]);
+                utmdd([__METHOD__, $this->PatternObject, $method, Debug::tracepath()]);
 
             }
 
         }
+        return null;
         // utmdump([$method,$this->tag_array]);
     }
 
@@ -179,7 +187,7 @@ class Reader extends TagReader
         utminfo(func_get_args());
         // utmdump(["Network",$this->network]);
         if ($this->network === null) {
-            $this->network        = $this->getFileTag('Network');
+            $this->network = $this->getFileTag('Network');
 
         }
         return $this->network;
@@ -264,16 +272,16 @@ class Reader extends TagReader
 
         $result = null;
         $method = 'get' . $tag;
-        $use = 0;
+        $use    = 0;
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
 
-            $result =  $this->PatternObject->{$method}();
-            $use = 1;
+            $result = $this->PatternObject->{$method}();
+            $use    = 1;
             //  } else {
             //     $result =  $this->{$method}();
         }
-        return  $result;
+        return $result;
     }
 }

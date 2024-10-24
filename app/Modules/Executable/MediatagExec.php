@@ -62,7 +62,7 @@ class MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo(func_get_args());
+        utminfo($videoData);
 
         //        $this->getTags();
 

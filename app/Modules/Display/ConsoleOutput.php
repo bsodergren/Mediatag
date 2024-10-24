@@ -20,7 +20,7 @@ class ConsoleOutput
 
     public function __construct($output, $input)
     {
-        utminfo(func_get_args());
+        utminfo();
 
         /*
         black, red, green, yellow, blue,

@@ -21,7 +21,7 @@ class ReadExec extends MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo(func_get_args());
+        utminfo($videoData);
 
         $this->execMode = 'read';
         parent::__construct($videoData, $input, $output);

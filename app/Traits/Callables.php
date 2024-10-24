@@ -78,7 +78,6 @@ trait Callables
 
     public function parseArchive($line)
     {
-        utminfo(func_get_args());
 
         $key = Strings::after($line, ' ');
         if (!\array_key_exists($key, $this->json_Array)) {
@@ -90,7 +89,6 @@ trait Callables
 
     public function filemap($line)
     {
-        utminfo(func_get_args());
 
         if ('' != $line) {
             $ph_id            = Strings::after($line, '=');
@@ -110,7 +108,6 @@ trait Callables
 
     public function getpremiumListIds($line)
     {
-        utminfo(func_get_args());
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
@@ -122,7 +119,6 @@ trait Callables
 
     public function compactPlaylist($line)
     {
-        utminfo(func_get_args());
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {

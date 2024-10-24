@@ -23,7 +23,7 @@ class MediaCache
 
     public static function init(InputInterface $input = null, OutputInterface $output = null)
     {
-        utminfo(func_get_args());
+        utminfo();
 
         Option::init($input);
         if (! \defined('__LIBRARY__')) {

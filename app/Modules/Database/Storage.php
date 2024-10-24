@@ -57,7 +57,7 @@ class Storage
 
     public function __construct()
     {
-        utminfo(func_get_args());
+        utminfo();
 
         $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->dbConn->setTrace (true);

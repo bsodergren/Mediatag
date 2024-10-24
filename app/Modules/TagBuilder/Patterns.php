@@ -112,7 +112,7 @@ class Patterns extends TagBuilder
     public function __construct($object = null)
     {
 
-        utminfo(func_get_args());
+        utminfo($object);
         if ($object !== null) {
             self::boot($this);
             $this->className  = $object->className;
@@ -146,7 +146,10 @@ class Patterns extends TagBuilder
 
     public static function boot($obj)
     {
+        
+
         $mainClass = get_class($obj);
+        utminfo($mainClass);
         $classes                  = class_parents($obj);
         $class                    = reset($classes);
         if (str_contains($class, "Patterns")) {

@@ -53,7 +53,7 @@ class Display
 
     public function __construct(OutputInterface $output)
     {
-        utminfo(func_get_args());
+        utminfo();
 
         $this->formatter        = new FormatterHelper();
 
@@ -113,7 +113,9 @@ class Display
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-        utminfo(func_get_args());
+        utminfo(
+            $options
+        );
 
         // UTMlog::logger('start Display Header');
 
