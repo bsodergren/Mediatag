@@ -20,7 +20,7 @@ class ConsoleOutput
 
     public function __construct($output, $input)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         /*
         black, red, green, yellow, blue,
@@ -45,28 +45,28 @@ class ConsoleOutput
 
     public function debug($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $formattedLine = $this->io->getErrorStyle()->info($text);
     }
 
     public function info(...$args)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->io->definitionList(...$args);
     }
 
     public function error($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->writeln($text, 'error');
     }
 
     public function write($text, $style = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (null !== $style) {
             $text = '<' . $style . '>' . $text . '</' . $style . '>';
@@ -77,7 +77,7 @@ class ConsoleOutput
 
     public function writeln($text, $style = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (null !== $style) {
             $text = '<' . $style . '>' . $text . '</' . $style . '>';

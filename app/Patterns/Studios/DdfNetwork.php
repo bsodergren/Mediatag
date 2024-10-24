@@ -40,7 +40,7 @@ class DdfNetwork extends Patterns
 
     // public function __construct($object)
     // {
-    //     utminfo();
+    //     utminfo(func_get_args());
 
     //     parent::__construct($object);
     // }

@@ -17,7 +17,7 @@ trait MediaLibrary
 {
     public function getLibrary($exit = true): void
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $curent_dir   = getcwd();
         // UTMlog::logger('Current Directory', $curent_dir);

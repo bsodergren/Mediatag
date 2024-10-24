@@ -14,7 +14,7 @@ trait Test
 {
     public function test($text, $exit = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (Option::isTrue('test')) {
             $this->output->write($text);

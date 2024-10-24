@@ -36,9 +36,18 @@ require_once __CONFIG_LIB__ . '/variables.php';
 
 Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
+Debug::$PrettyLogs  = false;
 
+
+// define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
 TimerStart();
-register_shutdown_function('utmshutdown', ['print'=>['debug']]);
+utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
+utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
+
+register_shutdown_function('utmshutdown', ['write'=> ['info'],
+    'print'                                       => 'debug']);
+// TimerStart();
+// register_shutdown_function('utmshutdown', ['print'=>['debug']]);
 
 // // UTMlog::$display = false;
 // $log = new UTMLog(__SCRIPT_NAME__);

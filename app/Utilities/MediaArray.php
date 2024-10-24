@@ -19,7 +19,7 @@ class MediaArray
      */
     public static function diff($array, $compare, $diff = 'key')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $return_array = [];
         if ('key' == $diff) {
@@ -40,7 +40,7 @@ class MediaArray
      */
     public static function search($arr, $string, $exact = false, $nodelim = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
             if (\is_array($value)) {
@@ -88,7 +88,7 @@ class MediaArray
 
     public static function matchArtist($array, $string)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $namesArray = [];
         foreach ($array as $key => $parts) {
@@ -122,7 +122,7 @@ class MediaArray
      */
     public static function VideoFiles(array $array, string $field, $exists = true): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $videoArray = [];
 

@@ -19,7 +19,7 @@ trait Helper
 {
     private function mysqlDump($options, $backupFile)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         $baseCommand   = [
@@ -52,7 +52,7 @@ trait Helper
 
     public function backupDb()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         if (! is_dir($this->backupDirectory)) {
@@ -79,7 +79,7 @@ trait Helper
 
     public function backupTable($tableName)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . $tableName . ".sql";
@@ -89,7 +89,7 @@ trait Helper
 
     public function backupFuncDb()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . "function.sql";
         $this->mysqlDump(['--skip-triggers','--routines','--no-create-info','--no-data','--no-create-db','--skip-opt',__MYSQL_DATABASE__], $backupDbFile);
@@ -98,7 +98,7 @@ trait Helper
 
     public function sortDirectory($options = [])
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $dir_array = [];
         $files     = 0;
@@ -125,13 +125,13 @@ trait Helper
 
     public function print()
     {
-        utminfo();
+        utminfo(func_get_args());
 
     }
 
     public function backupStudio($key)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $home = '/home/bjorn/plex/XXX';
         $path = '/media/backup/home/plex/XXX';
@@ -157,7 +157,7 @@ trait Helper
 
     public function sort()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($this->VideoList['file'] as $key => $videoArray) {
             if (str_starts_with($key, 'x')) {
@@ -170,14 +170,14 @@ trait Helper
 
     public function backupPh()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->backupStudio('ph');
     }
 
     public function rsync($old, $new)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $command  = [
             'rsync',

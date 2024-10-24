@@ -20,7 +20,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
@@ -34,7 +34,7 @@ class Options extends MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return [$varName, InputArgument::OPTIONAL, Translate::text('L__BACKUP_DATABASE_NAME')];
     }
@@ -54,7 +54,7 @@ class Options extends MediaOptions
     /*
     public function Arguments($varName=null,$description = null)
     {
- utminfo();
+ utminfo(func_get_args());
 
         return [$varName, InputArgument::OPTIONAL, $description];
     }

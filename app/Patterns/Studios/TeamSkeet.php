@@ -101,7 +101,7 @@ class TeamSkeet extends Patterns
 
     public function getArtistTextTransform($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // if ('Teamskeet Selects' == $this->getStudio()) {
         //     return false;

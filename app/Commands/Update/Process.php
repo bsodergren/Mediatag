@@ -69,7 +69,7 @@ class Process extends Mediatag
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         parent::boot($input, $output);
         $this->formatter   = new FormatterHelper();
@@ -95,7 +95,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
 

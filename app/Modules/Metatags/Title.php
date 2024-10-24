@@ -16,14 +16,14 @@ class Title extends TagBuilder
 {
     public function __construct($videoData)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // // UTMlog::Logger('data', $this->videoData);
     }
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $file = Mediatag::$titleList;
 
@@ -34,7 +34,7 @@ class Title extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         //        $genObj = new Genre();
         /*

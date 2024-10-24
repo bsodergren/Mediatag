@@ -20,7 +20,7 @@ trait CmdProcess
 
     public function runCommand()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $array   = $this->commandList;
 

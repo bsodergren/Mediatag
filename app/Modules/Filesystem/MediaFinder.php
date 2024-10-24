@@ -100,7 +100,7 @@ class MediaFinder extends SFinder
      */
     public function renameCommaFiles($filelist, $spaces = false): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $first_part  = '';
         $rename_file = false;
@@ -175,7 +175,7 @@ class MediaFinder extends SFinder
      */
     public function ExecuteSearch(): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $FileArray = [];
         // UTMlog::logger('Search');
@@ -203,7 +203,7 @@ class MediaFinder extends SFinder
 
     public function getRangeIds($total, $offset = 1)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $start = 0;
 
@@ -230,7 +230,7 @@ class MediaFinder extends SFinder
 
     public function getRangeArray($file_array): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $start          = 0;
         $total          = \count($file_array);
@@ -249,7 +249,7 @@ class MediaFinder extends SFinder
 
     public function getFileNumberArray($file_array): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $start      = 0;
         $total      = \count($file_array);
@@ -295,7 +295,7 @@ class MediaFinder extends SFinder
      */
     public function Search($path, $search, $date = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $this->searchFiles($search, $path, $date);
     }
@@ -307,7 +307,7 @@ class MediaFinder extends SFinder
      */
     public static function find($file, $location)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return (new self())->searchFiles($file, $location);
     }
@@ -321,7 +321,7 @@ class MediaFinder extends SFinder
      */
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (null === $path) {
             $path = getcwd();
@@ -400,7 +400,7 @@ class MediaFinder extends SFinder
      */
     private function getFilelistOption()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (Option::isTrue('filelist')) {
             return Option::getValue('filelist');
@@ -412,7 +412,7 @@ class MediaFinder extends SFinder
 
     public function onlyNew($path, $fileArray)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $db_array             = null;
         $New_Array            = [];
@@ -449,7 +449,7 @@ class MediaFinder extends SFinder
 
     public function scriptNewFiles($file_array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (\count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);

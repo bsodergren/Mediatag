@@ -57,7 +57,7 @@ EOF;
     }
     private function firstLine($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $callback = Callback::check([$this, 'csvmapCallback']);
 
@@ -73,7 +73,7 @@ EOF;
     }
     private function lastLine($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $callback = Callback::check([$this, 'csvmapCallback']);
 
@@ -90,7 +90,7 @@ EOF;
 
     public function map()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filesystem = new SFilesystem();
 

@@ -30,7 +30,7 @@ class MediaFilesystem extends SFilesystem
 
     public static function __callStatic($method, $params)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $methodArray = get_class_methods(NetteFile::class);
         if (null !== MediaArray::search($methodArray, $method)) {
@@ -47,7 +47,7 @@ class MediaFilesystem extends SFilesystem
      */
     public static function getRelative(string $path): string
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $new_path = (new SFilesystem())->makePathRelative($path, __CURRENT_DIRECTORY__);
 
@@ -59,7 +59,7 @@ class MediaFilesystem extends SFilesystem
      */
     public static function writeFile($file, $content, $backup = true)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (!file_exists($file)) {
             touch($file);
@@ -79,7 +79,7 @@ class MediaFilesystem extends SFilesystem
 
     public static function writePlaylist($file, $content)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $lineArray = [];
         foreach ($content as $line) {
@@ -101,7 +101,7 @@ class MediaFilesystem extends SFilesystem
      */
     public static function writeArray($file, $arrayName, array $content)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($content as $i => $line) {
             $studio          = $line;
@@ -121,7 +121,7 @@ class MediaFilesystem extends SFilesystem
 
     public static function backupPlaylist($filename, $directory = false, $move = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (!file_exists($filename)) {
             return 0;
@@ -195,7 +195,7 @@ class MediaFilesystem extends SFilesystem
      */
     public static function RenameDir($old, $new)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $file_array = [];
         $finder     = new SFinder();
@@ -233,7 +233,7 @@ class MediaFilesystem extends SFilesystem
 
     public static function readLines($file, $callback = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (!file_exists($file)) {
             return false;
@@ -280,7 +280,7 @@ class MediaFilesystem extends SFilesystem
      */
     public static function renameFile($old, $new, $overwrite = true)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filesystem = new SFilesystem();
         if (!is_dir(dirname($new))) {
@@ -291,7 +291,7 @@ class MediaFilesystem extends SFilesystem
 
     public static function prunedirs($path = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (null === $path) {
             $path = __CURRENT_DIRECTORY__;

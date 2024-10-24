@@ -37,7 +37,7 @@ class MileHighMedia extends Patterns
 
     public function getTitle()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $regex = $this->getTitleRegex();
         if ($regex) {

@@ -30,7 +30,7 @@ class VideoInfo extends VideoData
 
     public function getText()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $this->actionText . ' for ' . basename($this->video_file);
 
@@ -38,7 +38,7 @@ class VideoInfo extends VideoData
 
     public function get($key, $file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $mediaInfo          = new MediaInfo();
         $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
@@ -67,7 +67,7 @@ class VideoInfo extends VideoData
 
     public function videoQuery()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $sql = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
         $sql .= 'FROM ' . $this->VideoFileTable . ' f ';
@@ -79,7 +79,7 @@ class VideoInfo extends VideoData
 
     public function clearQuery($key = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $where = '';
         if (null !== $key) {

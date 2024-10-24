@@ -34,35 +34,35 @@ class VideoPreview extends VideoData
 
     public function getPreviewFiles()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
     }
 
     public function previewToVideo($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
     }
 
     public function videoToPreview($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
     }
 
     public function build_video_thumbnail()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
     }
 
     public function clean()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         $missing                                  = [];
@@ -118,7 +118,7 @@ class VideoPreview extends VideoData
 
     public function get($key, $file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->video_file = $file;
         $this->video_key  = (string) $key;
@@ -131,7 +131,7 @@ class VideoPreview extends VideoData
 
     public function BuildPreview()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
 
@@ -161,7 +161,7 @@ class VideoPreview extends VideoData
      */
     private function getExistingList(): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $missing_thumb = [];
         $missing_mp4   = [];
@@ -190,7 +190,7 @@ class VideoPreview extends VideoData
 
     public function videoQuery()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $where = ' preview is null ';
 

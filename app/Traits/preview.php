@@ -14,7 +14,7 @@ trait preview
 {
     public function preview($text, $exit = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (Option::isTrue('preview')) {
             $this->output->write($text);

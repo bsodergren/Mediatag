@@ -57,7 +57,7 @@ class Storage
 
     public function __construct()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->dbConn->setTrace (true);
@@ -78,7 +78,7 @@ class Storage
 
     public function truncate()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach (__MYSQL_TRUNC_TABLES__ as $table) {
             $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
@@ -89,7 +89,7 @@ class Storage
 
     public function __call($name, $arguments)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $method = $name;
         // Note: value of $name is case sensitive.
@@ -117,7 +117,7 @@ class Storage
 
     public function query($sql)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $res = $this->dbConn->rawQuery($sql);
 
@@ -127,14 +127,14 @@ class Storage
 
     public function queryOne($sql)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $this->dbConn->rawQueryOne($sql);
     }
 
     public function videoExists($video_key, $where = null, $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->dbConn->where('video_key', $video_key);
         $this->dbConn->where('library', __LIBRARY__);
@@ -147,7 +147,7 @@ class Storage
 
     public function insertVideoDb($data)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($data as $videokey => $rowData) {
             $this->dbConn->startTransaction();
@@ -171,7 +171,7 @@ class Storage
 
     public function insertMulti($data, $table = __MYSQL_VIDEO_FILE__, $quiet = false)
     {
-        utminfo();
+        utminfo(func_get_args());
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
             $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
@@ -190,7 +190,7 @@ class Storage
 
     public function update($data, $where = [], $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
@@ -227,7 +227,7 @@ class Storage
 
     public function getValue($where_clause, $column = 'count(*)', $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($where_clause as $where) {
             $this->dbConn->where($where);
@@ -239,7 +239,7 @@ class Storage
 
     public function insert($data, $table = __MYSQL_VIDEO_FILE__)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $id         = null;
         if (Option::Istrue('test')) {
@@ -287,7 +287,7 @@ class Storage
 
     public function makeKey($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $key = strtolower($text);
 
@@ -304,7 +304,7 @@ class Storage
 
     public function getTagTable($tag)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         switch ($tag) {
             case 'genre':
@@ -317,7 +317,7 @@ class Storage
 
     protected function queryBuilder($query_cmd, $search = null, $limit = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $sel_cols = null;
         $die      = false;

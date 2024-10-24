@@ -22,7 +22,7 @@ trait Helper
 
     public function youtubeWatchPlaylist()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         Mediatag::$output->writeln('<info> downloading the watchlater list </info>');
 
@@ -35,7 +35,7 @@ trait Helper
 
     public function download()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $youtube          = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
@@ -45,7 +45,7 @@ trait Helper
 
     public function missing()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
@@ -70,7 +70,7 @@ trait Helper
 
     public function find()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $files           = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub');
 
@@ -118,7 +118,7 @@ trait Helper
 
     public function cleanBrkDownloads()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $files = Finder::Find('*.ytdl', __PLEX_DOWNLOAD__);
         if (null !== $files) {
@@ -136,7 +136,7 @@ trait Helper
 
     public static function Cleanup()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $archive_array = [];
         $playlistArray = [];
@@ -170,7 +170,7 @@ trait Helper
 
     public function trimPlaylist()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $playlist_array         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
@@ -191,7 +191,7 @@ trait Helper
 
     public function cleanjSon()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $file_string = '';
         $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json');
@@ -220,7 +220,7 @@ trait Helper
 
     public function clean()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $array                 = [];
         $playlist              = [];
@@ -258,7 +258,7 @@ trait Helper
 
     public function compact()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
@@ -295,7 +295,7 @@ trait Helper
 
     public function getDownloadedIds()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (Option::isTrue('ignore')) {
             return [];
@@ -334,7 +334,7 @@ trait Helper
 
     public function getpremiumIds()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);

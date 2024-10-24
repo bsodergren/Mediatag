@@ -48,7 +48,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo();
+        utminfo(func_get_args());
         // if($this->videoData === null){
         //     $this->videoData = $videoData;
         // }
@@ -123,7 +123,7 @@ class Reader extends TagReader
 
     public function getStudioClass($studio)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);
@@ -139,7 +139,7 @@ class Reader extends TagReader
 
     public function __call($method, $arg)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $getMethod = 'get' . ucfirst($method);
 
@@ -164,7 +164,7 @@ class Reader extends TagReader
 
     public function mapStudio($studio)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
@@ -176,7 +176,7 @@ class Reader extends TagReader
 
     public function getNetwork()
     {
-        utminfo();
+        utminfo(func_get_args());
         // utmdump(["Network",$this->network]);
         if ($this->network === null) {
             $this->network        = $this->getFileTag('Network');
@@ -187,7 +187,7 @@ class Reader extends TagReader
 
     public function getStudio()
     {
-        utminfo();
+        utminfo(func_get_args());
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
                 // utmdump("Not PH File");
@@ -207,7 +207,7 @@ class Reader extends TagReader
 
     public function getGenre()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $genre = '';
         if (null === $this->genre) {
@@ -229,7 +229,7 @@ class Reader extends TagReader
 
     public function getTitle()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $res = $this->getFileTag('Title');
         if (false === $res) {
@@ -241,7 +241,7 @@ class Reader extends TagReader
 
     public function getArtist()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $res = $this->getFileTag('Artist');
         if (false === $res) {
@@ -254,13 +254,13 @@ class Reader extends TagReader
     public function getKeyword()
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
     }
 
     public function getFileTag($tag)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $result = null;
         $method = 'get' . $tag;

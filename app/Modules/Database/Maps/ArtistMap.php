@@ -11,7 +11,7 @@ trait ArtistMap
 {
     public function addArtist($artist, $ignore = 0, $replacement = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         if (null !== $replacement) {
@@ -27,7 +27,7 @@ trait ArtistMap
 
     public function dropArtist($artist)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $query = 'DELETE FROM ' . __MYSQL_ARTISTS__ . ' WHERE name = "' . $artist . '"';
         $this->dbConn->rawQuery($query);
@@ -35,7 +35,7 @@ trait ArtistMap
 
     public function getArtistMap()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $query = 'SELECT name,replacement FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 0';
         //   $query = 'SELECT name FROM '.__MYSQL_ARTISTS__.' WHERE hide = 0';
@@ -50,7 +50,7 @@ trait ArtistMap
 
     public function getIgnoredArists()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $query = 'SELECT name FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 1';
         $res   = $this->dbConn->rawQuery($query);

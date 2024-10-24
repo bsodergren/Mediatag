@@ -53,7 +53,7 @@ class ShowDisplay
 
     public function __construct(OutputInterface $output)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->formatter        = new FormatterHelper();
         $outputStyle            = new OutputFormatterStyle('red');
@@ -71,7 +71,7 @@ class ShowDisplay
 
     public function DisplayTable(array $filelist_array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // UTMlog::logger('start Display Table');
         $count = \count($filelist_array);
@@ -107,7 +107,7 @@ class ShowDisplay
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // UTMlog::logger('start Display Header');
 
@@ -124,7 +124,7 @@ class ShowDisplay
 
     public function displayFileInfo($fileinfo, $count, $idx)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $method       = 'overwrite';
 
@@ -157,7 +157,7 @@ class ShowDisplay
 
     private function TagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $tag           = strtolower($tag);
         $style         = 'comment';
@@ -188,7 +188,7 @@ class ShowDisplay
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $tag     = strtolower($tag);
         $string  = '';

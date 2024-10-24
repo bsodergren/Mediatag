@@ -78,7 +78,7 @@ trait Callables
 
     public function parseArchive($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $key = Strings::after($line, ' ');
         if (!\array_key_exists($key, $this->json_Array)) {
@@ -90,7 +90,7 @@ trait Callables
 
     public function filemap($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' != $line) {
             $ph_id            = Strings::after($line, '=');
@@ -110,7 +110,7 @@ trait Callables
 
     public function getpremiumListIds($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
@@ -122,7 +122,7 @@ trait Callables
 
     public function compactPlaylist($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $ph_id = Strings::after($line, '=');
         if (str_contains($ph_id, '&')) {
@@ -139,7 +139,7 @@ trait Callables
 
     public function studioList($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' != $line) {
             $studioReplacement = '';
@@ -157,7 +157,7 @@ trait Callables
 
     public function studioPaths($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' != $line) {
             if (!str_contains($line, ':')) {
@@ -177,7 +177,7 @@ trait Callables
 
     public function toList($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' != $line) {
             $Replacement = $line;
@@ -203,7 +203,7 @@ trait Callables
 
     public function toArray($line)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' != $line) {
             $Replacement = null;

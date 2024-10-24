@@ -19,7 +19,7 @@ trait Helper
 {
     public function findMissing($options)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         //   utmdd([__METHOD__,$options]);
         $missingTaglist = $options[0];
@@ -79,7 +79,7 @@ trait Helper
 
     public function newFiles()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $DBProcess    = DBProcess::getNewFiles(Mediatag::$SearchArray, Mediatag::$input, Mediatag::$output);
         $ScriptWriter = new ScriptWriter('newFiles.sh', __CURRENT_DIRECTORY__);
@@ -94,7 +94,7 @@ trait Helper
 
     public function createPlaylist()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
@@ -113,7 +113,7 @@ trait Helper
 
     public function oldfiles()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
@@ -133,7 +133,7 @@ trait Helper
 
     public function duplicateFiles()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         utmdd([__METHOD__, Mediatag::$SearchArray]);
     }

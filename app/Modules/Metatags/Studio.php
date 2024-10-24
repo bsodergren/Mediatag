@@ -20,7 +20,7 @@ class Studio extends TagBuilder
 
     public function __construct($videoData)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // // UTMlog::Logger('data', $this->videoData);
     }
@@ -29,7 +29,7 @@ class Studio extends TagBuilder
 
     public static function getStudioFile($type, $getpaths = true)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('A' == $type) {
             $fileDB = Mediatag::$amateurFile;
@@ -48,7 +48,7 @@ class Studio extends TagBuilder
 
     public static function addStudiotoFile($type, $studio, $newPath = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $type     = strtoupper($type);
 

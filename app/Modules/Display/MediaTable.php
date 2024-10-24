@@ -22,7 +22,7 @@ class MediaTable
 
     public function __construct(OutputInterface $output)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $output->{$this}->output = $output;
         $this->section1          = $output->section();
@@ -30,7 +30,7 @@ class MediaTable
 
     public function displayTable($videoInfo)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->table = new Table($this->section1);
         $this->table->setStyle('box');
@@ -48,7 +48,7 @@ class MediaTable
 
     public function row($key, $value)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return [
             new TableCell($key, ['style' => new TableCellStyle(['cellFormat' => '<info>%s</info>'])]),

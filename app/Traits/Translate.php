@@ -13,7 +13,7 @@ trait Translate
 
     public static function text($constant, $vars = [])
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $class     = self::$Class;
         $thisClass = new \ReflectionClass($class);

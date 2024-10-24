@@ -21,13 +21,13 @@ class Genre extends TagBuilder
 
     public function __construct()
     {
-        utminfo();
+        utminfo(func_get_args());
 
     }
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (null === parent::$dbConn) {
             parent::$dbConn = new TagDB();
@@ -44,7 +44,7 @@ class Genre extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return parent::clean($text, 'Genre');
     }

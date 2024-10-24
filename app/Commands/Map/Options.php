@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Map;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
@@ -16,12 +14,11 @@ class Options extends MediaOptions
 {
     use Lang;
     use Translate;
-    public $options                          = ['Default' => false,'Meta'=>false,'Test'=>false,'Display' => true];
+    public $options                          = ['Default' => false,'Meta' => false,'Test' => false,'Display' => true];
 
     public function Definitions()
     {
         utminfo();
-
         Translate::$Class = __CLASS__;
         return [
             ['lang', 'l',  InputOption::VALUE_REQUIRED, Translate::text('L__MAP_LANG')],

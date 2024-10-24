@@ -39,7 +39,7 @@ trait ffmpeg
 
     public function ffmpegExec($cmdOptions, $callback = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->ffmpeg = [CONFIG['FFMPEG_CMD']];
 
@@ -57,7 +57,7 @@ trait ffmpeg
 
     public function convertVideo($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $new_file       = str_replace('.mkv', '.mp4', $file);
         $this->progress = new ProgressBar($this->barSection);
@@ -77,7 +77,7 @@ trait ffmpeg
 
     public function repairVideo()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // UTMlog::logNotice('processing with FFMPEG');
         $orig_file    = $this->video_file;
@@ -98,7 +98,7 @@ trait ffmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $cmdOptions    = [
             '-ss', $time, '-i', $video_file, '-vf',

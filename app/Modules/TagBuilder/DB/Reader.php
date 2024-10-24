@@ -32,7 +32,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->expandArray($videoData);
         $this->tag_array = $this->getvideoData($videoData);
@@ -40,14 +40,14 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->get($method);
     }
 
     public function getvideoData(array $file_array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $video_info = $this->getVideoInfo($file_array['video_key']);
         if (null === $video_info) {
@@ -59,7 +59,7 @@ class Reader extends TagReader
 
     private function get($tag)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (\array_key_exists($tag, $this->tag_array)) {
             if ('studio' == $tag) {
@@ -76,7 +76,7 @@ class Reader extends TagReader
 
     private function getVideoInfo($key)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
 

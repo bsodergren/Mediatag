@@ -28,7 +28,7 @@ class Duration extends VideoData
 
     public function getText()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $this->actionText . ' for ' . basename($this->video_file);
 
@@ -36,7 +36,7 @@ class Duration extends VideoData
 
     public function get($key, $file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->video_file = $file;
         $this->video_key  = $key;
@@ -48,7 +48,7 @@ class Duration extends VideoData
 
     public function getVideoDuration()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $mediaInfo          = new MediaInfo();
         $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
@@ -78,7 +78,7 @@ class Duration extends VideoData
 
     public function clearQuery($key = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $where = '';
         if (null !== $key) {
@@ -93,7 +93,7 @@ class Duration extends VideoData
 
     public function videoQuery()
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
 

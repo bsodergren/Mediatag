@@ -24,7 +24,7 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
@@ -32,7 +32,7 @@ class TagBuilder
 
     public function getTags($videoInfo)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         if (! \defined('__UPDATE_SET_ONLY__')) {
@@ -151,7 +151,7 @@ class TagBuilder
     // {
     //     utmdd("afdsfasdfsd");
 
-    //     utminfo();
+    //     utminfo(func_get_args());
     //     foreach (__META_TAGS__ as $tag) {
     //         if (\array_key_exists($tag, $tagList)) {
     //             if ('' == $tagList[$tag]) {
@@ -200,7 +200,7 @@ class TagBuilder
 
     private function compareTags(array $Current, array $New)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $updates = [];
         foreach (__META_TAGS__ as $tag) {

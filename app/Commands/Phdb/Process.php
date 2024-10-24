@@ -54,7 +54,7 @@ class Process extends Mediatag
     ];
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         $this->ph_csv = $args;
@@ -64,7 +64,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $path = __CURRENT_DIRECTORY__;
         if (str_contains($this->ph_csv, ",")) {

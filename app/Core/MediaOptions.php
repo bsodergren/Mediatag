@@ -29,21 +29,21 @@ class MediaOptions
 
     public function Arguments($varName = null, $description = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return null;
     }
 
     public function Definitions()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return null;
     }
 
     public static function getClassObject($command)
     {
-        utminfo();
+        utminfo(func_get_args());
         $command   = ucfirst(strtolower($command));
         $command   = str_replace('Db', 'DB', $command);
         //        $command = str_replace("Ph","PH",$command);
@@ -69,7 +69,7 @@ class MediaOptions
     public static function getDefinition($command = null)
     {
 
-        utminfo();
+        utminfo(func_get_args());
         $testOptions    = [];
         $metaOptions    = [];
         $commandOptions = [];
@@ -110,7 +110,7 @@ class MediaOptions
     public static function getArguments($varName = null, $description = null)
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         //    self::getClassObject();
         if (\is_object(self::$classObj)) {
@@ -123,7 +123,7 @@ class MediaOptions
     public static function getOptions($optionArray)
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         if (! \is_array($optionArray)) {
             return [];
@@ -158,7 +158,7 @@ class MediaOptions
     public static function getDefaultOptions()
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
@@ -178,7 +178,7 @@ class MediaOptions
     public static function getTestOptions()
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
@@ -198,7 +198,7 @@ class MediaOptions
     public static function getMetaOptions()
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
         $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
@@ -219,7 +219,7 @@ class MediaOptions
     public static function getDisplayOptions()
     {
 
-        utminfo();
+        utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
         $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));

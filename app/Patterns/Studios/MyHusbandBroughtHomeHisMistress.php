@@ -51,7 +51,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getArtistTransform($artist_string, $delim = ', ')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $checkTitle  = false;
         $names       = false;
@@ -109,7 +109,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getTitle($names = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $regex = $this->getTitleRegex();
         if ($regex) {
@@ -167,7 +167,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
     public function getFilename($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filename = basename($file);
         if (!str_starts_with($filename, 'MHBHM')) {

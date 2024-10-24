@@ -14,7 +14,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function videoDuration($duration)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $seconds = round($duration / 1000);
         $hours   = floor($seconds / 3600);
@@ -28,7 +28,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function clean($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' == $text) {
             return $text;
@@ -39,7 +39,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function cleanFileName($filename)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' == $filename) {
             return $filename;
@@ -70,7 +70,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function truncateString($string, $maxlength, $ellipsis = false, $reverse = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (mb_strlen($string) <= $maxlength) {
             return $string;
@@ -100,14 +100,14 @@ class Strings extends \Nette\Utils\Strings
 
     public static function showStatus($done, $total, $size = 30, $label = '')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return self::showStatusBar($done, $total, $size, $label);
     }
 
     public static function showStatusBar($done, $total, $size = 30, $label = '')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         //  static $start_time;
 
@@ -161,7 +161,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function geturl($string)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $array = explode('"', $string);
 
@@ -170,7 +170,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function getkey($string)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $array = explode('/', $string);
 
@@ -179,7 +179,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function wrapimplode($array, $before = '', $after = '', $separator = '')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (! $array) {
             return '';
@@ -190,14 +190,14 @@ class Strings extends \Nette\Utils\Strings
 
     public static function translate($text, $sep = '_')
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $text;
     }
 
     private static function cleanSpecialChars($text, $file = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $file_special_chars = [];
         $special_chars      = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
@@ -246,7 +246,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function getFilePath($filename)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
     }

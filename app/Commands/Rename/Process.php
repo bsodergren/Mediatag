@@ -45,7 +45,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->StorageConn = new Storage();
 

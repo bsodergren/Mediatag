@@ -23,7 +23,7 @@ trait MetaTags
 
     public function CleanMetaValue(string $tag, string $text): string
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
@@ -33,39 +33,39 @@ trait MetaTags
 
     public function cleanGenre($text)
     {
-        utminfo();
+        utminfo(func_get_args());
         return Genre::clean($text);
     }
 
     public function cleanArtist($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $text;
     }
 
     public function cleanKeyword($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return Keyword::clean($text);
     }
 
     public function cleanTitle($text)
     {
-        utminfo();
+        utminfo(func_get_args());
         return Title::clean($text);
     }
     public function cleanNetwork($text)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $text;
     }
 
     public function cleanStudio($text): string
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (\is_array($text)) {
             $array = $text;
@@ -109,7 +109,7 @@ trait MetaTags
 
     public function sortTagList($genre, $new = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (\is_array($genre)) {
             $array = $genre;
@@ -137,7 +137,7 @@ trait MetaTags
 
     public static function mergeTag($tag, $first, $second)
     {
-        utminfo();
+        utminfo(func_get_args());
 
 
         $firstCmp  = str_replace(" ", "", strtoupper($first));
@@ -197,7 +197,7 @@ trait MetaTags
 
     public function mergetags($tag_array, $tag_array2, $obj)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
@@ -214,7 +214,7 @@ trait MetaTags
 
     public static function clean($text, $tag)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // UTMlog::Logger('Clean', [$tag, $text]);
         if ('artist' == $tag && null === $text) {
@@ -339,7 +339,7 @@ trait MetaTags
 
     public function expandArray($array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($array as $key => $value) {
             $this->{$key} = $value;

@@ -14,7 +14,7 @@ trait Genre
      */
     public function getGenre()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if ('' == $this->genre) {
             $filename = $this->video_file;

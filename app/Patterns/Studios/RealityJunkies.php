@@ -37,7 +37,7 @@ class RealityJunkies extends MileHighMedia
 
     public function getTitle()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $regex = $this->getTitleRegex();
         if ($regex) {
@@ -64,7 +64,7 @@ class RealityJunkies extends MileHighMedia
 
     private function artistTransform($artist)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $artist = str_replace(',', '_and_', $artist);
 
@@ -73,7 +73,7 @@ class RealityJunkies extends MileHighMedia
 
     public function getFilename($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filename     = basename($file);
 

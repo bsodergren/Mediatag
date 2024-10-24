@@ -15,7 +15,7 @@ class HTTPClient extends AbstractBrowser
 {
     protected function doRequest($request): Response
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // ... convert request into a response
 

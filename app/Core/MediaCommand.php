@@ -61,7 +61,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function getSubscribedSignals(): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         // return here any of the constants defined by PCNTL extension
         return [];
@@ -69,7 +69,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function handleSignal(int $signal): void
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
@@ -84,7 +84,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function configure(): void
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
@@ -113,7 +113,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
      */
     public function run(InputInterface $input, OutputInterface $output): int
     {
-        utminfo();
+        utminfo(func_get_args());
 
         self::$Console = new ConsoleOutput($output, $input);
 
@@ -190,7 +190,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
         //     $returnCode = $obj->getApplication()->doRun($greetInput, $output);
         // }
-        utminfo();
+        utminfo(func_get_args());
         $className = static::class;
         $classPath = rtrim($className, 'Command');
         $classPath .= 'Process';
@@ -202,7 +202,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        utminfo();
+        utminfo(func_get_args());
         $args              = [$input, $output];
 
         Mediatag::$IoStyle = new SymfonyStyle($input, $output);
@@ -261,7 +261,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
 
-        utminfo();
+        utminfo(func_get_args());
         $className = static::class;
         Option::init($input);
         UtmStopWatch::init($input, $output);

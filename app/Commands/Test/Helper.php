@@ -16,14 +16,14 @@ trait Helper
 {
     public function t1($val, $min, $max)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $val >= $min && $val < $max;
     }
 
     public function sortFiles()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $min            = 0;
@@ -74,7 +74,7 @@ trait Helper
 
     public function symlinkFiles($video_array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filesystem = new Filesystem();
 
@@ -96,7 +96,7 @@ trait Helper
 
     public function mvFiles($video_array)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $filesystem = new Filesystem();
         // foreach ($video_array as $dir => $fileArray)
@@ -127,7 +127,7 @@ trait Helper
 
     public function getPhKeys()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $ph_video    = [];
         $video_array = [];

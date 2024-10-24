@@ -41,7 +41,7 @@ class Thumbnail extends VideoData
 
     public function clean()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $missing                                = [];
         [$dbList,$missing_file, $missing_thumb] = $this->getExistingList();
@@ -99,7 +99,7 @@ class Thumbnail extends VideoData
 
     public function getText()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return $this->returnText . basename($this->video_name, '.mp4') . '.jpg';// .' for '.basename($this->video_file);
 
@@ -107,7 +107,7 @@ class Thumbnail extends VideoData
 
     public function get($key, $file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->video_file = $file;
         $this->video_key  = (string) $key;
@@ -120,7 +120,7 @@ class Thumbnail extends VideoData
 
     public function getThumbImg()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $this->video_name = basename($this->video_file);
         $this->video_path = \dirname($this->video_file);
@@ -175,7 +175,7 @@ class Thumbnail extends VideoData
 
     public function videoQuery()
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $where = ' thumbnail is null ';
 
@@ -194,7 +194,7 @@ class Thumbnail extends VideoData
 
     public function clearQuery($key = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $where = '';
         if (null !== $key) {
@@ -212,7 +212,7 @@ class Thumbnail extends VideoData
      */
     private function getExistingList(): array
     {
-        utminfo();
+        utminfo(func_get_args());
 
         $missing_thumb = [];
         $missing_mp4   = [];
@@ -241,21 +241,21 @@ class Thumbnail extends VideoData
 
     public static function videoToThumb($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return str_replace('.mp4', '.jpg', __INC_WEB_THUMB_DIR__ . str_replace(__PLEX_HOME__, '', $file));
     }
 
     public static function thumbToVideo($file)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return str_replace('.jpg', '.mp4', __PLEX_HOME__ . str_replace(__INC_WEB_THUMB_DIR__, '', $file));
     }
 
     public function renameThumb($file, $delete = false)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         if (true === $delete) {
             unlink($file);

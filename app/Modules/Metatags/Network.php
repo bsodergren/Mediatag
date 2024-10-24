@@ -21,12 +21,12 @@ class Network extends TagBuilder
 
     public function __construct()
     {
-        utminfo();
+        utminfo(func_get_args());
 
     }
     public static function clean($text, $file = null)
     {
-        utminfo();
+        utminfo(func_get_args());
 
         return parent::clean($text, 'network');
     }
