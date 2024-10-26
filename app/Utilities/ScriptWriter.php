@@ -223,8 +223,7 @@ EOD;
         $extended_use   = ' ';
         $network   = ' ';
         if ($options !== null) {
-            if (array_key_exists('ExtendClass', $options))
-            {
+            if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
                 // $studio         = "public \$studio = '" . $TitleStudio . "';";
                 if (array_key_exists('network', $options)) {
@@ -239,37 +238,37 @@ EOD;
 
         // if (! file_exists($Pattern_file)) {
 
-            $finder            = new Finder();
-            $filesystem        = new SymFs();
+        $finder            = new Finder();
+        $filesystem        = new SymFs();
 
-            $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
-            foreach ($finder as $file) {
-                $name    = $file->getFilenameWithoutExtension();
-                ${$name} = $file->getContents();
-                // $output->writeln($$name );
-                //...
-            }
-            $command_array     = [
-                'EXTEND_USE'   => $extended_use,
-                'CLASS_EXTEND' => $extended_class,
-                'CLASSNAME'    => $class,
-                'STUDIO'       => $studio,
-                'NETWORK'       => $network,
-                'CLASSNAME_LC' => strtolower($class),
-                'CLASSNAME_UC' => strtoupper($class),
-                'LIBRARY'      => __LIBRARY__,
-            ];
-            foreach ($command_array as $key => $value) {
-                $key = '%%' . strtoupper($key) . '%%';
-                if (null != $value) {
-                    $Patterns_template = str_replace($key, $value, $Patterns_template);
-                }
-            }
-
-            Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
-            $filesystem->dumpFile($Pattern_file, $Patterns_template);
-
-            require_once $Pattern_file;
+        $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
+        foreach ($finder as $file) {
+            $name    = $file->getFilenameWithoutExtension();
+            ${$name} = $file->getContents();
+            // $output->writeln($$name );
+            //...
         }
+        $command_array     = [
+            'EXTEND_USE'   => $extended_use,
+            'CLASS_EXTEND' => $extended_class,
+            'CLASSNAME'    => $class,
+            'STUDIO'       => $studio,
+            'NETWORK'       => $network,
+            'CLASSNAME_LC' => strtolower($class),
+            'CLASSNAME_UC' => strtoupper($class),
+            'LIBRARY'      => __LIBRARY__,
+        ];
+        foreach ($command_array as $key => $value) {
+            $key = '%%' . strtoupper($key) . '%%';
+            if (null != $value) {
+                $Patterns_template = str_replace($key, $value, $Patterns_template);
+            }
+        }
+
+        Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
+        $filesystem->dumpFile($Pattern_file, $Patterns_template);
+
+        require_once $Pattern_file;
+    }
     // }
 }

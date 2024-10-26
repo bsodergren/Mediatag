@@ -251,14 +251,14 @@ class Strings extends \Nette\Utils\Strings
         return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
     }
 
-    public static function StudioName($name,$forward=true)
+    public static function StudioName($name, $forward = true)
     {
-        if($forward === true){
-        $name = str_replace('1000','Thousand',$name);
-        $name = str_replace('21st','TwentyFirst',$name);
+        if ($forward === true) {
+            $name = str_replace('1000', 'Thousand', $name);
+            $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
-        $name = str_replace('TwentyFirst','21st',$name);
-        $name = str_replace('Thousand','1000',$name);
+            $name = str_replace('TwentyFirst', '21st', $name);
+            $name = str_replace('Thousand', '1000', $name);
         }
         return $name;
     }
