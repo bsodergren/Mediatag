@@ -71,9 +71,14 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        // utmdd([__METHOD__,count($this->db_array), count($this->file_array)]);
+        
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
+
+
         $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
+
+        // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
+        // ,count($this->Deleted_Array), count($this->New_Array)]);
         foreach ($this->file_array as $key => $file) {
             if (\array_key_exists($key, $this->New_Array)) {
                 continue;
@@ -101,7 +106,7 @@ trait Helper
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
             }
-            $changed_string = implode("\n", $changed_files);
+          //  $changed_string = implode("\n", $changed_files);
         }
 
         // utmdd($this->Changed_Array);
@@ -268,7 +273,7 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        $chunkSize = 50;
+        $chunkSize = 10;
         $barWidth  = 50;
         $total     = \count($this->New_Array);
         if ($total > 0) {
@@ -281,13 +286,14 @@ trait Helper
             foreach ($this->New_Array as $video_key => $video_file) {
                 //$progressbar->advance();
 
-                $data_array[] = (new StorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
+                $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
                 ++$idx;
             }
             $idx                          = 1;
 
-            $data_array                   = array_chunk($data_array, $chunkSize);
+            $data_array                   = array_chunk($videoDataArray, $chunkSize);
             $chunks                       = \count($data_array);
+                // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);

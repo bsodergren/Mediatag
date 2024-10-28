@@ -7,6 +7,7 @@ namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Mediatag;
 
+use UTM\Utilities\Debug\UtmStopWatch;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Filesystem\MediaFile as File;
@@ -41,8 +42,10 @@ class ReadExec extends MediatagExec
             ];
 
             $callback = Callback::check([$this, 'ReadMetaOutput']);
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__,  $command);
 
             $this->exec($command, $callback);
+            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
             $array    = [
                 $this->video_key => [

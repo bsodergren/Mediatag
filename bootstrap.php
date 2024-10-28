@@ -8,6 +8,7 @@ use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Debug\UtmStopWatch;
 
 // die(get_include_path());
 
@@ -19,13 +20,13 @@ set_include_path(get_include_path() . \PATH_SEPARATOR . __COMPOSER_LIB__);
 require_once __COMPOSER_LIB__ . '/autoload.php';
 
 
-$config = new Config(__ROOT_DIRECTORY__ . \DIRECTORY_SEPARATOR . 'config.ini');
+$config             = new Config(__ROOT_DIRECTORY__ . \DIRECTORY_SEPARATOR . 'config.ini');
 define('CONFIG', $config['path']);
 
 EnvLoader::LoadEnv(__ROOT_DIRECTORY__)->load();
 (new \UTM\Utm());
 
-$container = require __CONFIG_LIB__ . '/container.php';
+$container          = require __CONFIG_LIB__ . '/container.php';
 
 
 define('__SQL_USER__', CONFIG['DB_USER']);
@@ -35,26 +36,22 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 require_once __CONFIG_LIB__ . '/path_constants.php';
 require_once __CONFIG_LIB__ . '/variables.php';
 
-Debug::$AppRootDir = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
+Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
-Debug::$PrettyLogs = false;
+Debug::$PrettyLogs  = false;
+Debug::$RealTimeLog = false;
 
-
+UtmStopWatch::$display = false;
+UtmStopWatch::$writeNow = false;
 // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
 TimerStart();
 utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 
 register_shutdown_function('utmshutdown', ['write' => ['info'],
-    'print' => 'debug']);
-// TimerStart();
-// register_shutdown_function('utmshutdown', ['print'=>['debug']]);
+    'write'                                        => 'debug']);
 
-// // UTMlog::$display = false;
-// $log = new UTMLog(__SCRIPT_NAME__);
-// // UTMlog::$Logger = $log;
-
-// // UTMlog::LogStart(__SCRIPT_NAME__);
+    
 
 AppFactory::setContainer($container);
 

@@ -159,6 +159,7 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo = [];
         $this->MultiIDX               = 1;
         $total                        = \count($data);
+
         foreach ($data as $k => $row) {
             // $VideoQuery[$row['video_key']][__MYSQL_VIDEO_FILE__] = $row;
             $vdata = ['video_file' => $row['fullpath'] . '/' . $row['filename']];
