@@ -35,7 +35,7 @@ define(
         'New',
         'Premium',
         'Sort',
-        // 'Misc'
+        'Misc',
     ],
 );
 

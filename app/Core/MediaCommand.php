@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Mediatag\Core\MediaInputDefinition as InputDefinition;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
@@ -58,6 +59,19 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     //   private array $synopsis = [];
     //  private array $usages = [];
     //  private ?HelperSet $helperSet = null;
+
+    public static LoggerInterface $logger;
+
+    // public const USE_LIBRARY     = false;
+
+    public function __construct(LoggerInterface $logger = null)
+    {
+       
+        //$this->logger = $logger;
+        parent::__construct();
+
+        self::$logger= $logger;
+    }
 
     public function getSubscribedSignals(): array
     {

@@ -6,19 +6,12 @@
 namespace Mediatag\Modules\VideoData\Data\preview;
 
 use Mediatag\Core\Mediatag;
-
-
 use FFMpeg\Coordinate\TimeCode;
-
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use Mediatag\Utilities\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
-
-
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 //use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -54,11 +47,12 @@ class GifPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = __PLEX_VAR_DIR__ . "/build";
-        $options = array(
-            'temporary_directory' => $temp
-        );
+        $temp     = __PLEX_VAR_DIR__ . "/build/".md5($this->video_file);
+        $options  = [
+            'temporary_directory' => $temp,
+        ];
         (new FileSystem())->mkdir($temp);
+
         // Use FFProbe to get the duration of the video.
         $ffprobe  = FFprobe::create($options);
         $duration = floor($ffprobe
@@ -77,9 +71,9 @@ class GifPreviewFiles extends VideoPreview
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-        $points   = range(10, 40, 3);
+        $points   = range(0, 25, 3);
 
-// This will hold our finished frames.
+        // This will hold our finished frames.
         $frames   = [];
 
         foreach ($points as $point) {
@@ -102,8 +96,9 @@ class GifPreviewFiles extends VideoPreview
                     $constraint->aspectRatio();
                     $constraint->upsize();
                 });
-
                 $image->tojpeg()->save($point_file, 40);
+                                
+
                 // $image->destroy();
             }
 
@@ -129,7 +124,7 @@ class GifPreviewFiles extends VideoPreview
                 unlink($file);
             }
         }
-
+        (new FileSystem())->remove($temp);
 
         return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         //        return null;
