@@ -46,8 +46,8 @@ class Process extends Mediatag
         utminfo(func_get_args());
 
         parent::boot($input, $output);
-        
-      //  utmdd(Command::$logger);
+
+        //  utmdd(Command::$logger);
 
         // parent::$Display              = new ShowDisplay($output);
     }
@@ -82,42 +82,41 @@ class Process extends Mediatag
         //     ->streams($file[1]) // extracts streams informations
         //     ->videos()                      // filters video streams
         //     ->first()                       // returns the first video stream
-        //     ->all();  
-// utmdd($ret);
-        $ffmpeg          = FFMpeg::create(['timeout' => 3000],Command::$logger);
+        //     ->all();
+        // utmdd($ret);
+        $ffmpeg          = FFMpeg::create(['timeout' => 3000], Command::$logger);
         $video           = $ffmpeg->open($file[1]);
-        
-        $tmpFile = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_".basename($file[1]);
+
+        $tmpFile         = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
 
         $video->filters()->clip(TimeCode::fromSeconds(3.5));
-       $format = new \FFMpeg\Format\Video\X264('copy','copy');
-       $format->setPasses(1);
+        $format          = new \FFMpeg\Format\Video\X264('copy', 'copy');
+        $format->setPasses(1);
         $video->save($format, $tmpFile);
         //  $r = $video->getFFMpegDriver()->getProcessRunner();
         // utmdump($r);
         unset($ffmpeg);
         unset($video);
 
-        $ffmpeg          = FFMpeg::create(['timeout' => 3000],Command::$logger);
+        $ffmpeg          = FFMpeg::create(['timeout' => 3000], Command::$logger);
         $video           = $ffmpeg->open($file[0]);
-        
-        if($outputFile === null)
-        {
-            $key = $videoInfo['video_key'];
-            $filename = basename($file[1],'.mp4');
-            $firstVideo = basename($file[0],'.mp4');
+
+        if ($outputFile === null) {
+            $key        = $videoInfo['video_key'];
+            $filename   = basename($file[1], '.mp4');
+            $firstVideo = basename($file[0], '.mp4');
             $secondName = str_split($filename);
-            $firstName =  str_split($firstVideo);
-            foreach($secondName as $i=> $char){
-                if($firstName[$i] == $char){
+            $firstName  =  str_split($firstVideo);
+            foreach ($secondName as $i=> $char) {
+                if ($firstName[$i] == $char) {
                     $name[]=$char;
                     continue;
                 }
                 break;
             }
-            
+
             //$filename = str_replace("-".$key,'',);
-            $outputFile = dirname($file[1]) . DIRECTORY_SEPARATOR . implode('',$name) . '.mp4' ;
+            $outputFile = dirname($file[1]) . DIRECTORY_SEPARATOR . implode('', $name) . '.mp4' ;
         }
 
         // utmdd($outputFile);
@@ -125,6 +124,7 @@ class Process extends Mediatag
         // $r = $video->getFFMpegDriver()->getProcessRunner();
         // utmdump($r);
         unlink($tmpFile);
+        // unlink($outputFile);
         //echo $exec->stdout;
         return 1;
 
