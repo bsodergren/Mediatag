@@ -5,19 +5,20 @@
 
 namespace Mediatag\Commands\Rename;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
-use Mediatag\Modules\TagBuilder\TagReader;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Strings;
+use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\TagBuilder\TagReader;
 use Nette\Utils\FileSystem as nFileSystem;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
 use Symfony\Component\Finder\Finder as SFinder;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Process\Process as ExecProcess;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
@@ -81,7 +82,9 @@ trait Helper
         if (0 == \count($file_array)) {
             utmdd([__METHOD__, 'no files']);
         }
-
+  $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, count($file_array));
+        $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
+        $progressBar->start();
         foreach ($file_array as $__ => $file) {
             $message                             = '';
             // $oldName                             = $file;
@@ -92,9 +95,12 @@ trait Helper
             $videoData                           = $fs->get();
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
+            
+           
         }
         $SortDir    = false;
         foreach ($videoArray as $k => $videoData) {
+             $progressBar->advance();
             $text       = [];
             $video_file = $videoData['video_file'];
             $message    = $videoData['msg'];
@@ -167,9 +173,9 @@ trait Helper
             //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
-            $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__. '/' . $video_path;
             $newPath    = nFileSystem::normalizePath($newPath);
-            $dupePath   = nFileSystem::normalizePath($dupePath);
+
+
             if (!is_dir($newPath)) {
                 if (!Option::isTrue('test')) {
                     nFileSystem::createDir($newPath, 0755);
@@ -186,16 +192,9 @@ trait Helper
                 }
             }
 
-            if (!is_dir($dupePath)) {
-                // Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
-                if (!Option::isTrue('test')) {
-                    nFileSystem::createDir($dupePath, 0755);
-                }
-            }
 
             $video_name = basename($video_file);
             $newFile    = $newPath . '/' . $video_name;
-            $dupeFile   = $dupePath . '/' . $video_name;
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -222,6 +221,18 @@ trait Helper
                 }
             } else {
                 if (!Option::isTrue('test')) {
+
+                    $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__ . '/' . $video_path;
+
+                    $dupePath   = nFileSystem::normalizePath($dupePath);
+                    $dupeFile   = $dupePath . '/' . $video_name;
+
+                    if (!is_dir($dupePath)) {
+                        // Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
+                        if (!Option::isTrue('test')) {
+                            nFileSystem::createDir($dupePath, 0755);
+                        }
+                    }
                     (new SfSystem())->rename($video_file, $dupeFile, true);
                 }
                 Mediatag::$Console->error('Duplicate Video ' . $video_name);

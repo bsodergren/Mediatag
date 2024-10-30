@@ -24,7 +24,7 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
-        utminfo($key,get_class($tagObj));
+        utminfo($key, get_class($tagObj));
 
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
@@ -78,8 +78,15 @@ class TagBuilder
         }
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
+
+
+            // if ($tag == 'studio') {
+            $updates['studio']        = $this->addNetwork($updates, $updates);
+            // }
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
+
+
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
             // UTMlog::Logger('getMetaValues', $current);
@@ -104,7 +111,7 @@ class TagBuilder
 
             $videoInfo['updateTags']  = $this->compareTags($current, $updates);
         }
-
+        // utmdd($videoInfo);
         return $videoInfo;
     }
 
@@ -114,12 +121,13 @@ class TagBuilder
     private function addNetwork($current, $updates)
     {
 
-       
+        // utmdump([$current,$updates]);
         if (array_key_exists("studio", $current)) {
             $studio = $current['studio'];
         }
         if ($studio === null) {
-            $studio = __LIBRARY__;        }
+            $studio = __LIBRARY__;
+        }
         if (array_key_exists("studio", $updates)) {
             $tmpStudio = $updates['studio'];
         }
@@ -127,6 +135,7 @@ class TagBuilder
             $tmpNetwork = $updates['network'];
 
             if ($tmpNetwork !== null) {
+                // UtmDump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio . "/" . $tmpNetwork;
                 }

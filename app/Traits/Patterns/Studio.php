@@ -13,16 +13,16 @@ trait Studio
     /**
      * mapStudio.
      */
-    public function mapStudio($studio)
-    {
-        utminfo(func_get_args());
-        $key = strtolower($studio);
-        if (\array_key_exists($key, STUDIO_MAP)) {
-            return STUDIO_MAP[$key];
-        }
+    // public function mapStudio($studio)
+    // {
+    //     utminfo(func_get_args());
+    //     $key = strtolower($studio);
+    //     if (\array_key_exists($key, STUDIO_MAP)) {
+    //         return STUDIO_MAP[$key];
+    //     }
 
-        return $studio;
-    }
+    //     return $studio;
+    // }
 
     /**
      * getStudioRegex.

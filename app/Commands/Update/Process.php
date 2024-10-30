@@ -56,7 +56,7 @@ class Process extends Mediatag
     public $defaultCommands = [
         'exec'         => null,
         'getChanges'   => null,
-        'writeChanges' => null,
+        // 'writeChanges' => null,
     ];
 
     protected $json_file;

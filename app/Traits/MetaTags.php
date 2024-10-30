@@ -96,11 +96,11 @@ trait MetaTags
 
         if (isset(fileReader::$PatternClass)) {
 
-            // utmdd($this);
             $studio_str = fileReader::$PatternClassObj->getStudio();
             // $studio_str = trim($key_studio .'/'. $studio_str,"/");
             $arr        = explode('/', $studio_str);
             $arr        = array_unique($arr);
+
 
         }
 
@@ -178,7 +178,7 @@ trait MetaTags
                     $data['studio'] = MetaTags::clean($first, $tag);
                 } else {
                     $data['studio']       = MetaTags::clean($first, $tag);
-                    $data['network'] = MetaTags::clean($second, $tag);
+                    $data['network']      = MetaTags::clean($second, $tag);
                 }
             } else {
                 $data[$tag] = MetaTags::clean($return, $tag);

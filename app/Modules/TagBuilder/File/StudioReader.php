@@ -12,7 +12,7 @@ trait StudioReader
         $studio_dir   = (new FileSystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
         $arr          = explode('/', $studio_dir);
-
+        $studio_array = [];
         foreach ($arr as $idx => $studio_string) {
             foreach (__SKIP_STUDIOS__ as $k) {
                 if ($studio_string == $k) {
@@ -54,7 +54,7 @@ trait StudioReader
 
 
                 }
-                $this->network = "Pornhub";
+                //$this->network = "Pornhub";
             }
         }
 // utmdd([$this->network , $this->studio ]);
