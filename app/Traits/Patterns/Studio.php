@@ -13,16 +13,15 @@ trait Studio
     /**
      * mapStudio.
      */
-    // public function mapStudio($studio)
-    // {
-    //     utminfo(func_get_args());
-    //     $key = strtolower($studio);
-    //     if (\array_key_exists($key, STUDIO_MAP)) {
-    //         return STUDIO_MAP[$key];
-    //     }
-
-    //     return $studio;
-    // }
+    public function mapStudio($studio)
+    {
+        utminfo(func_get_args());
+        $key = strtolower($studio);
+        if (\array_key_exists($key, STUDIO_MAP)) {
+            return STUDIO_MAP[$key];
+        }
+        return $studio;
+    }
 
     /**
      * getStudioRegex.
@@ -53,7 +52,6 @@ trait Studio
                 return null;
             }, $this->video_name);
 
-
             if ($return == $this->video_name) {
                 return null;
             }
@@ -81,7 +79,6 @@ trait Studio
                 }
             }
         }
-
         return $arr;
     }
 }

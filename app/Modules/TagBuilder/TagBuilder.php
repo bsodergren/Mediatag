@@ -43,6 +43,7 @@ class TagBuilder
             } else {
 
                 $fileUpdates =  $this->ReaderObj->getFileValues();
+
                 // UTMlog::Logger('fileUpdates', $fileUpdates);
 
                 //   $fileUpdates['title'] = '';
@@ -52,7 +53,6 @@ class TagBuilder
             }
         }
 
-        // utmdd($updates);
 
 
         // $DbUpdates = $this->ReaderObj->getDbValues();
@@ -76,12 +76,16 @@ class TagBuilder
 
             }
         }
+
+        // utmdd($updates);
+
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
 
 
             // if ($tag == 'studio') {
             $updates['studio']        = $this->addNetwork($updates, $updates);
+
             // }
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
@@ -106,9 +110,9 @@ class TagBuilder
                 }
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
+
                 }
             }
-
             $videoInfo['updateTags']  = $this->compareTags($current, $updates);
         }
         // utmdd($videoInfo);
@@ -121,13 +125,15 @@ class TagBuilder
     private function addNetwork($current, $updates)
     {
 
-        // utmdump([$current,$updates]);
         if (array_key_exists("studio", $current)) {
-            $studio = $current['studio'];
+            if ($current['studio'] !== null) {
+                $studio = $current['studio'];
+            }
+
         }
-        if ($studio === null) {
-            $studio = __LIBRARY__;
-        }
+        // if ($studio === null) {
+        //     $studio = __LIBRARY__;
+        // }
         if (array_key_exists("studio", $updates)) {
             $tmpStudio = $updates['studio'];
         }
@@ -139,6 +145,8 @@ class TagBuilder
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio . "/" . $tmpNetwork;
                 }
+            } else {
+                $studio = $tmpStudio ;
             }
 
         } elseif (array_key_exists("network", $current)) {
@@ -147,6 +155,8 @@ class TagBuilder
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio . "/" . $tmpNetwork;
                 }
+            } else {
+                $studio = $tmpStudio ;
             }
 
         }
