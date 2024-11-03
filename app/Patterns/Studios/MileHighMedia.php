@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -17,9 +15,10 @@ const MILEHIGHMEDIA_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)_?(
 
 class MileHighMedia extends Patterns
 {
-    public $studio,$network = 'Mile High Media';
+    public $studio;
+    public $network = 'Mile High Media';
 
-    public $regex  = [
+    public $regex   = [
         'milehighmedia' => [
             'artist' => [
                 'pattern'             => MILEHIGHMEDIA_REGEX_COMMON,

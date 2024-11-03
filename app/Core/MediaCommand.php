@@ -6,8 +6,6 @@
 namespace Mediatag\Core;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
@@ -29,7 +27,6 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
 use UTM\Utilities\Debug\UtmStopWatch;
 use Symfony\Component\Filesystem\Filesystem;
-
 
 class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInterface
 {
@@ -66,7 +63,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
     public function __construct(LoggerInterface $logger = null)
     {
-       
+
         //$this->logger = $logger;
         parent::__construct();
 
@@ -292,8 +289,8 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     {
 
         $filesystem = new Filesystem();
-        
-        foreach(__CREATE_DIRS__ as  $dir ){
+
+        foreach (__CREATE_DIRS__ as $dir) {
             if (!is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }

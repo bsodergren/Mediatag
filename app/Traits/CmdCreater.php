@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use Nette\Utils\FileSystem;
 
 trait CmdCreater

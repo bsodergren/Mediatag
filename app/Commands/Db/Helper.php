@@ -71,7 +71,7 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        
+
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
 
 
@@ -106,7 +106,7 @@ trait Helper
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
             }
-          //  $changed_string = implode("\n", $changed_files);
+            //  $changed_string = implode("\n", $changed_files);
         }
 
         // utmdd($this->Changed_Array);
@@ -293,7 +293,7 @@ trait Helper
 
             $data_array                   = array_chunk($videoDataArray, $chunkSize);
             $chunks                       = \count($data_array);
-                // utmdd($data_array,$videoDataArray);
+            // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
@@ -343,9 +343,7 @@ trait Helper
         }
     }
 
-    public function findRemoved()
-    {
-    }
+    public function findRemoved() {}
 
     public function execUpdate()
     {

@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Show;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Process\DB\Process as DBProcess;

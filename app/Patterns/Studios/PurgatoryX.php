@@ -6,14 +6,12 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class PurgatoryX extends Patterns
 {
-    public $studio = 'Purgatory X';
-    
+    public $studio       = 'Purgatory X';
+
     public $regex        = [
         'purgatoryx' => [
             'artist' => [

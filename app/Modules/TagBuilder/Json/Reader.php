@@ -34,7 +34,7 @@ class Reader extends TagReader
         $this->db = new TagDB();
 
         $this->expandArray($videoData);
-                   
+
 
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);

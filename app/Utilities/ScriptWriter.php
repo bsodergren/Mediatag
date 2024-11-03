@@ -216,12 +216,12 @@ EOD;
     {
         utminfo(func_get_args());
 
-        $TitleStudio = trim($TitleStudio, '\\');
-        $class = trim($class, '\\');
-        $extended_class = 'Patterns';
-        $studio         = "public \$studio = '" . $TitleStudio . "';";
-        $extended_use   = ' ';
-        $network   = ' ';
+        $TitleStudio       = trim($TitleStudio, '\\');
+        $class             = trim($class, '\\');
+        $extended_class    = 'Patterns';
+        $studio            = "public \$studio = '" . $TitleStudio . "';";
+        $extended_use      = ' ';
+        $network           = ' ';
         if ($options !== null) {
             if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
@@ -229,12 +229,12 @@ EOD;
                 if (array_key_exists('network', $options)) {
                     $network = "public \$network = '" . $options['network'] . "';";
                 }
-                $extended_use   = PHP_EOL. 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
+                $extended_use   = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
             }
 
         }
 
-        $Pattern_file   = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';
+        $Pattern_file      = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';
 
         // if (! file_exists($Pattern_file)) {
 
@@ -249,14 +249,14 @@ EOD;
             //...
         }
         $command_array     = [
-            'EXTEND_USE'   => $extended_use,
-            'CLASS_EXTEND' => $extended_class,
-            'CLASSNAME'    => $class,
-            'STUDIO'       => $studio,
+            'EXTEND_USE'    => $extended_use,
+            'CLASS_EXTEND'  => $extended_class,
+            'CLASSNAME'     => $class,
+            'STUDIO'        => $studio,
             'NETWORK'       => $network,
-            'CLASSNAME_LC' => strtolower($class),
-            'CLASSNAME_UC' => strtoupper($class),
-            'LIBRARY'      => __LIBRARY__,
+            'CLASSNAME_LC'  => strtolower($class),
+            'CLASSNAME_UC'  => strtoupper($class),
+            'LIBRARY'       => __LIBRARY__,
         ];
         foreach ($command_array as $key => $value) {
             $key = '%%' . strtoupper($key) . '%%';

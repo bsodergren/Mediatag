@@ -17,25 +17,25 @@ class Process extends Mediatag
 
     public $ph_csv              = null;
     public $commandList         = [
-        'convert'         => [
+        'convert'            => [
             'exec'         => null,
             'convert'      => null,
 
         ],
-        'map'             => [
+        'map'                => [
             'exec'         => null,
             'map'          => null,
             // 'writeChanges' => true,
         ],
         'import'             => [
-            'exec'         => null,
+            'exec'            => null,
             'import'          => null,
             // 'writeChanges' => true,
         ],
-            'split'          => [
-                'exec'        => null,
-                'splitDb' => null,
-            ],
+        'split'              => [
+            'exec'        => null,
+            'splitDb'     => null,
+        ],
         //     'numberofFiles' => [
         //         'exec'             => null,
         //         'getNumberofFiles' => null,
@@ -76,12 +76,12 @@ class Process extends Mediatag
 
             if (Option::isTrue('map') || Option::isTrue('import')) {
                 $fileSearch         = "ph_db*.txt";
-                $path = __PORNHUB_TXT_DIR__;
+                $path               = __PORNHUB_TXT_DIR__;
 
             }
             if (Option::isTrue('convert')) {
                 $fileSearch         = "ph_db*.csv";
-                $path = __PORNHUB_CSV_DIR__;
+                $path               = __PORNHUB_CSV_DIR__;
 
             }
 
@@ -98,9 +98,7 @@ class Process extends Mediatag
 
     }
 
-    public function print()
-    {
-    }
+    public function print() {}
 
 
 }

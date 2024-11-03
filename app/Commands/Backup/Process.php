@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Backup;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Traits\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

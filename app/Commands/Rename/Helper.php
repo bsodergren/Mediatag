@@ -43,8 +43,8 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        $file_array = [];
-        $tagConn    = new DbMap();
+        $file_array   = [];
+        $tagConn      = new DbMap();
 
         if (Option::isTrue('filelist')) {
             $file         = Option::getValue('filelist', 1);
@@ -82,7 +82,7 @@ trait Helper
         if (0 == \count($file_array)) {
             utmdd([__METHOD__, 'no files']);
         }
-  $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, count($file_array));
+        $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, count($file_array));
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
         $progressBar->start();
         foreach ($file_array as $__ => $file) {
@@ -95,12 +95,12 @@ trait Helper
             $videoData                           = $fs->get();
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
-            
-           
+
+
         }
-        $SortDir    = false;
+        $SortDir      = false;
         foreach ($videoArray as $k => $videoData) {
-             $progressBar->advance();
+            $progressBar->advance();
             $text       = [];
             $video_file = $videoData['video_file'];
             $message    = $videoData['msg'];

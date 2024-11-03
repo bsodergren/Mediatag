@@ -6,9 +6,6 @@
 namespace Mediatag\Commands\Backup;
 
 use Mediatag\Core\Mediatag;
-
-
-
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command as SymCommand;

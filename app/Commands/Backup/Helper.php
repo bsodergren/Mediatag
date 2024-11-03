@@ -6,11 +6,8 @@
 namespace Mediatag\Commands\Backup;
 
 use Mediatag\Core\Mediatag;
-
-
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
-
 use Nette\Utils\FileSystem as NetteFile;
 use Symfony\Component\Process\Process as ExecProcess;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;

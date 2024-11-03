@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;

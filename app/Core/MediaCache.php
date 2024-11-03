@@ -6,8 +6,6 @@
 namespace Mediatag\Core;
 
 use Mediatag\Core\Mediatag;
-
-
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Bundle\Stash\Cache;

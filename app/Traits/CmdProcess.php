@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 

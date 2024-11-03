@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Test;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,7 +24,7 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-          
+
             ['output', 'o', InputOption::VALUE_REQUIRED, Translate::text('L__SHOW_PLAYLIST')],
         ];
     }

@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Map;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Display\MapDisplay;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Utilities\MediaArray;

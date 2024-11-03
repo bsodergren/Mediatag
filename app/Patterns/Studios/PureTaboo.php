@@ -12,8 +12,8 @@ const PURETABOO_REGEX_COMMON = '/([a-zA-Z0-9\-]+)\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}
 
 class PureTaboo extends Patterns
 {
-    public $studio = "Pure Taboo";
-    
+    public $studio       = "Pure Taboo";
+
     public $regex        = [
         'puretaboo' => [
             'artist' => [

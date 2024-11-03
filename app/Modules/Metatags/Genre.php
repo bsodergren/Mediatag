@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Traits\Callables;

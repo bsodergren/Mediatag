@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Browser;
 
 use Mediatag\Core\Mediatag;
-
-
 use Symfony\Component\BrowserKit\AbstractBrowser;
 use Symfony\Component\BrowserKit\Response;
 

@@ -12,7 +12,7 @@ const MOMSBOYTOY_REGEX_COMMON = '//i';
 
 class MomsBoyToy extends Nubiles
 {
-    public $studio = 'Moms Boy Toy';
+    public $studio    = 'Moms Boy Toy';
     public $regex     = [
         'momsboytoy' => [
 

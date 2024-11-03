@@ -6,8 +6,6 @@
 namespace Mediatag\Core;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;

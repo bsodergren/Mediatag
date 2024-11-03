@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
-
-
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;

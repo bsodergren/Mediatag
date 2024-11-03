@@ -13,7 +13,7 @@ class TeamSkeet extends Patterns
     public $network          = 'Team Skeet';
     //  public $studio = 'Team Skeet';
 
-    public $regex           = [
+    public $regex            = [
         'teamskeet' => [
             'artist' => [
                 'pattern'             => '/[a-z-]{1,}\_([a-zA-Z_]{1,})[0-9]?\_full.*[0-9]{1,4}.*\.mp4/i',
@@ -26,8 +26,8 @@ class TeamSkeet extends Patterns
         ],
     ];
 
-    public $replace_studios = [
-        'teamskeetxdantecolle' => 'teamskeet extras',
+    public $replace_studios  = [
+        'teamskeetxdantecolle'        => 'teamskeet extras',
         'busygettingbanged'           => 'Busy Getting Banged',
         'dreamingoffreeuse'           => 'Dreaming Of Freeuse',
         // 'badmilfs'                    => 'bad milfs',

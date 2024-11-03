@@ -25,8 +25,8 @@ class Reader extends TagReader
 
     public $genre;
 
-    public $studio = null;
-    public $network = null;
+    public $studio    = null;
+    public $network   = null;
     public $videoData = null;
     public $video_file;
 
@@ -55,20 +55,20 @@ class Reader extends TagReader
         $this->videoData = $videoData;
         $this->expandArray($videoData);
 
-        $className = $this->video_library;
-        $classPath = 'Mediatag\\Patterns\\';
+        $className       = $this->video_library;
+        $classPath       = 'Mediatag\\Patterns\\';
 
 
         //  $this->getnetwork();
         $this->getStudio();
 
 
-        $studioName = $this->getStudioClass($this->studio);
+        $studioName      = $this->getStudioClass($this->studio);
         // $networkName = $this->getStudioClass($this->network);
 
-        $studioClass = $classPath . $this->video_library . $studioName;
+        $studioClass     = $classPath . $this->video_library . $studioName;
 
-        $classAttm[] = $studioClass;
+        $classAttm[]     = $studioClass;
         if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
             // UTMlog::Logger('File Studio className', $className);
 
@@ -76,7 +76,7 @@ class Reader extends TagReader
             // if (Option::isTrue('addClass')) {
             $networkName = '';
 
-            $options = Option::getValue('addClass', 1);
+            $options     = Option::getValue('addClass', 1);
             if (null === $options) {
                 if (Option::isTrue('addNetwork')) {
                     $networkName = Option::getValue('addNetwork', 1);

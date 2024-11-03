@@ -29,7 +29,7 @@ trait Helper
     public function splitDb()
     {
 
-        $callback = Callback::check([$this, 'splitFileOutput']);
+        $callback         = Callback::check([$this, 'splitFileOutput']);
 
         utminfo(func_get_args());
 
@@ -37,14 +37,14 @@ trait Helper
             $this->ph_csv = $this->ph_csv[0];
         }
 
-        $rawFileDir      = __PORNHUB_CSV_DIR__;
+        $rawFileDir       = __PORNHUB_CSV_DIR__;
 
         FileSystem::createDir($rawFileDir);
 
         chdir($rawFileDir);
 
-        $command = ["split", "--verbose", "-l", "100000", "-d", "-a2", "--additional-suffix=.csv" ,$this->ph_csv,
-        "ph_db_raw_"];
+        $command          = ["split", "--verbose", "-l", "100000", "-d", "-a2", "--additional-suffix=.csv" ,$this->ph_csv,
+            "ph_db_raw_"];
 
         $process          = new Process($command);
         $process->setTimeout(60000);
@@ -70,11 +70,11 @@ trait Helper
             $this->ph_csv = [$this->ph_csv];
         }
 
-        $newFileDir      = __PORNHUB_TXT_DIR__;
+        $newFileDir                   = __PORNHUB_TXT_DIR__;
 
         FileSystem::createDir($newFileDir);
 
-        $finishedFileDir = __PORNHUB_FINISHED_DIR__;
+        $finishedFileDir              = __PORNHUB_FINISHED_DIR__;
         FileSystem::createDir($finishedFileDir);
 
         $progressbar                  = new MediaBar(100000, 'three', 80);
@@ -92,7 +92,7 @@ trait Helper
 
             foreach (file($thisFile) as $input_line) {
                 $parts = explode("|", $input_line);
-                $s = preg_match('/.*src="([:a-z0-9\/.]+)".*\/([0-9]+)\/[a-z].*/', $input_line, $output_array);
+                $s     = preg_match('/.*src="([:a-z0-9\/.]+)".*\/([0-9]+)\/[a-z].*/', $input_line, $output_array);
                 // utmdd($output_array);
 
                 if ($s == true) {
@@ -117,14 +117,14 @@ trait Helper
 
     public function import()
     {
-        $this->dbConn = new Storage();
+        $this->dbConn                 = new Storage();
         if (!is_array($this->ph_csv)) {
             $this->ph_csv = [$this->ph_csv];
         }
 
-        $newFileDir      = __PORNHUB_TXT_DIR__;
-        $finishedFileDir = __PORNHUB_FINISHED_DIR__;
-        $maxInsert = 500;
+        $newFileDir                   = __PORNHUB_TXT_DIR__;
+        $finishedFileDir              = __PORNHUB_FINISHED_DIR__;
+        $maxInsert                    = 500;
         $progressbar                  = new MediaBar(100000 / $maxInsert, 'three', 80);
 
         foreach ($this->ph_csv as $thisFile) {
@@ -133,36 +133,36 @@ trait Helper
             $currentDir      = dirname($thisFile);
             $filename        = basename($thisFile);
 
-            $fileTmpAr = explode("_", basename($thisFile, '.txt'));
+            $fileTmpAr       = explode("_", basename($thisFile, '.txt'));
 
-            $fileId = $fileTmpAr[array_key_last($fileTmpAr)];
+            $fileId          = $fileTmpAr[array_key_last($fileTmpAr)];
             //   $newFile         = $newFileDir . DIRECTORY_SEPARATOR . str_replace("csv", "txt", $filename);
             $idx             = 1;
-            $data = [];
-            $qidx = 0;
+            $data            = [];
+            $qidx            = 0;
 
             $progressbar->setMessage($filename)->newbar()->start();
-            $fileContents =            file($thisFile);
+            $fileContents    =            file($thisFile);
             //   $fileContents=  array_slice($fileContents, 73924+480);
             // utmdd(count($fileContents));
             foreach ($fileContents as $seKey => $input_line) {
-                $array = explode("|", $input_line);
+                $array    = explode("|", $input_line);
                 $urlArray = explode("/", $array[0]);
-                $key = array_key_last($urlArray);
+                $key      = array_key_last($urlArray);
 
                 if ($qidx < $maxInsert) {
 
                     $data[]  = [
-                        'file' => $fileId ,
-                        'url' => $array[0],
+                        'file'      => $fileId ,
+                        'url'       => $array[0],
                         'video_key' => $urlArray[$key],
 
-                        'video_id' => $array[1],
+                        'video_id'  => $array[1],
 
-                        'title' => Strings::clean($array[2]),
-                        'genres_a' => Strings::clean($array[3]),
-                        'genres_b' => Strings::clean($array[4]),
-                        'artist' => trim(Strings::clean($array[5])),
+                        'title'     => Strings::clean($array[2]),
+                        'genres_a'  => Strings::clean($array[3]),
+                        'genres_b'  => Strings::clean($array[4]),
+                        'artist'    => trim(Strings::clean($array[5])),
                     ];
                     // $data[] = $insert;
                 }

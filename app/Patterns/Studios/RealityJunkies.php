@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Patterns\Studios\MileHighMedia;
@@ -17,7 +15,7 @@ const REALITYJUNKIES_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([
 
 class RealityJunkies extends MileHighMedia
 {
-    public $studio = 'Reality Junkies';
+    public $studio    = 'Reality Junkies';
 
     public $regex     = [
         'realityjunkies' => [

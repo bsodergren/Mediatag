@@ -114,13 +114,13 @@ trait Helper
             $this->exec();
         }
 
-        $VideoList   = $this->VideoList['file'];
-        $count        = \count($VideoList);
-        $current_dir  = null;
-        $prev_dir     = null;
+        $VideoList                       = $this->VideoList['file'];
+        $count                           = \count($VideoList);
+        $current_dir                     = null;
+        $prev_dir                        = null;
 
-        $nidx         = 0;
-        $pidx         = 1;
+        $nidx                            = 0;
+        $pidx                            = 1;
 
         if (Option::isTrue('range')) {
             [$count, $nidx] = Mediatag::$finder->getRangeIds($count, 0);
@@ -147,9 +147,9 @@ trait Helper
 
             $tagObj       = new tagReader();
             $tagObj->loadVideo($videoInfo);
-            $tagBuilder = new tagBuilder($key, $tagObj);
+            $tagBuilder   = new tagBuilder($key, $tagObj);
 
-            $videoArray  = $tagBuilder->getTags($videoInfo);
+            $videoArray   = $tagBuilder->getTags($videoInfo);
 
             if (\count($videoArray['updateTags']) > 0) {
                 // $progressBar2->setFormat('custom');
@@ -166,17 +166,17 @@ trait Helper
                     $Command->writeChanges();
                     $this->updateDbEntry($videoArray);
                 }
-    
+
                 foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
                     $value            = trim($value);
-    
+
                     $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
                 }
                 if (\is_array($videoBlockInfo)) {
                     $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
                     Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
                 }
-    
+
                 if ($count != $idx) {
                     $line_array = [];
                     for ($n = 0; $n < 9; ++$n) {
@@ -191,12 +191,12 @@ trait Helper
                 // $progressBar2->setMessage($nidx, 'index');
                 // $progressBar2->setMessage($message, 'videoname');
                 unset($videoArray[$key]);
-              
-                $Command = null;
+
+                $Command                      = null;
             }
 
-            $tagObj = null;
-            $tagBuilder = null;
+            $tagObj       = null;
+            $tagBuilder   = null;
             // $progressBar->advance();
             // $progressBar2->advance();
         }
@@ -260,8 +260,8 @@ trait Helper
         Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
-            $tmpNetwork = '';
-            $tmpStudio = '';
+            $tmpNetwork                   = '';
+            $tmpStudio                    = '';
             // utmdump($videoArray);
             // if (array_key_exists("updateTags", $videoArray)) {
             //     $videoUpdates = $videoArray['updateTags'];

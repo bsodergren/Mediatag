@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -114,7 +112,7 @@ class Display
     public function displayHeader(OutputInterface $output, array $options): void
     {
         utminfo(
-            $options
+            $options,
         );
 
         // UTMlog::logger('start Display Header');

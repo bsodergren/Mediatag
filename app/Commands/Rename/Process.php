@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Rename;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Commands\Update\Helper as UpdateHelper;
 use Mediatag\Modules\Database\Storage;
 

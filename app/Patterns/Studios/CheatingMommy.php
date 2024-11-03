@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\Nubiles;
 
 class CheatingMommy extends Nubiles
 {
-    public $studio = 'Cheating Mommy';
+    public $studio    = 'Cheating Mommy';
     public $regex     = [
         'cheatingmommy' => [
 

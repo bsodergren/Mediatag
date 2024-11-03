@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Map;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\TagDB;
 use Symfony\Component\Console\Input\InputInterface;

@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 const MYLIFEINMIAMI_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i';
@@ -15,7 +13,7 @@ const MYLIFEINMIAMI_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9
 class MyLifeInMiami extends Patterns
 {
     public $studio = "My Life In Miami";
-    public $regex = [
+    public $regex  = [
         'mylifeinmiami' => [
             'artist' => [
                 'pattern'             => MYLIFEINMIAMI_REGEX_COMMON,

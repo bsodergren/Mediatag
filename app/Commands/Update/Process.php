@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Update;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Traits\Callables;

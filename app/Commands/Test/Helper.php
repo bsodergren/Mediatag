@@ -6,9 +6,6 @@
 namespace Mediatag\Commands\Test;
 
 use Mediatag\Core\Mediatag;
-
-
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
 

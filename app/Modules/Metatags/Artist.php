@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
-
-
 use XMLWriter;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 

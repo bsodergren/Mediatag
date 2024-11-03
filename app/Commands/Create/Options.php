@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Create;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Core\MediaOptions;
 use Symfony\Component\Console\Input\InputArgument;
 

@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Backup;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;

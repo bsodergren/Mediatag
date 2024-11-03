@@ -6,15 +6,13 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class PrivateVid extends Patterns
 {
     public $studio = 'Private';
 
-    public $regex = [
+    public $regex  = [
         'privatevid' => [
             'artist' => [
                 'pattern'             => '/([a-zA-Z0-9\- ]+)\_[a-z]{2,4}[0-9]{2,8}\_.*/i',

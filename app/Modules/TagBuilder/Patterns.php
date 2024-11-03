@@ -122,7 +122,7 @@ class Patterns extends TagBuilder
             $studio           = strtolower($object->getStudio());
             $this->studio_key = str_replace(' ', '', $studio);
             $this->studio_key = $this->mapStudio($this->studio_key);
-         ///   $this->network =  $object->getNetwork();
+            ///   $this->network =  $object->getNetwork();
             if ($this->network === null) {
                 $this->network = $this->metaNetwork();
             }
@@ -146,9 +146,9 @@ class Patterns extends TagBuilder
 
     public static function boot($obj)
     {
-        
 
-        $mainClass = get_class($obj);
+
+        $mainClass                = get_class($obj);
         utminfo($mainClass);
         $classes                  = class_parents($obj);
         $class                    = reset($classes);
@@ -164,7 +164,7 @@ class Patterns extends TagBuilder
 
             if (Reader::$PatternClass !== null) {
 
-                                // utmdd([ $classPath, $className ]);
+                // utmdd([ $classPath, $className ]);
 
                 [$classPath, $className ] = self::classStudio(Reader::$PatternClass);
                 $obj->studio              = $className;
@@ -204,8 +204,8 @@ class Patterns extends TagBuilder
         $regex         = $this->regex;
         $studio        = strtolower($this->studio_key);
 
-        $network = str_replace(' ', '', $this->network);
-        $network = strtolower($network);
+        $network       = str_replace(' ', '', $this->network);
+        $network       = strtolower($network);
 
         // $this->getKeyName($studio);
         if (\array_key_exists($studio, $regex)) {
@@ -244,9 +244,7 @@ class Patterns extends TagBuilder
     /**
      * getKeyword.
      */
-    public function getKeyword()
-    {
-    }
+    public function getKeyword() {}
 
     /**
      * getFilename.
@@ -279,7 +277,7 @@ class Patterns extends TagBuilder
 
     public function getNetwork()
     {
-        $network = $this->metaNetwork();
+        $network       = $this->metaNetwork();
         $this->network =  $network ;
         return  $network ;
     }

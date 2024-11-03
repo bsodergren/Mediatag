@@ -19,9 +19,9 @@ trait Network
         utminfo(func_get_args());
 
         if ($this->network === null) {
-            $class = get_parent_class($this);
-            
-            $obj = new $class();
+            $class         = get_parent_class($this);
+
+            $obj           = new $class();
             $this->network = $obj->network;
 
         }

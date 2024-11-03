@@ -83,7 +83,7 @@ abstract class Mediatag extends Command
         'artist',
         'title',
         'keyword',
-        'network'
+        'network',
     ];
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
@@ -270,13 +270,9 @@ abstract class Mediatag extends Command
         }
     }
 
-    public function exec($option = null)
-    {
-    }
+    public function exec($option = null) {}
 
-    public function print()
-    {
-    }
+    public function print() {}
 
     public function getNumberofFiles()
     {

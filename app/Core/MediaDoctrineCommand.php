@@ -6,8 +6,6 @@
 namespace Mediatag\Core;
 
 use Mediatag\Core\Mediatag;
-
-
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 
 class MediaDoctrineCommand extends DoctrineCommand

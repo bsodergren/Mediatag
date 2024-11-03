@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Patterns\Studios\DevilsFilm;
 
@@ -15,7 +13,7 @@ const MHBHM_REGEX_COMMON = '/MHBHM[_se0-9]+?([a-zA-Z0-9]{4,})?-([_a-zA-Z]{1,})\_
 
 class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 {
-    public $studio    = 'My Husband Brought Home his Mistress';
+    public $studio       = 'My Husband Brought Home his Mistress';
 
     public $artistNames;
 

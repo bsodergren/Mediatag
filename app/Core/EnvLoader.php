@@ -6,8 +6,6 @@
 namespace Mediatag\Core;
 
 use Mediatag\Core\Mediatag;
-
-
 use Dotenv\Dotenv;
 
 class EnvLoader

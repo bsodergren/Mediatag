@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\TagBuilder\File;
 
@@ -31,7 +34,7 @@ trait StudioReader
     private function isPhFile()
     {
 
-        $json = new jsonReader($this->videoData);
+        $json   = new jsonReader($this->videoData);
         $return = $json->getTagArray();
 
         if (count($return) > 0) {
@@ -39,10 +42,10 @@ trait StudioReader
                 $this->studio = $return['studio'];
             }
         }
-        // 
+        //
 
         if (null === $this->studio) {
-            $string = $this->studioParse();
+            $string       = $this->studioParse();
             $studio_array = explode('/', $string);
             // utmdd(["studio_array",$studio_array]);
 
@@ -57,19 +60,19 @@ trait StudioReader
                 //$this->network = "Pornhub";
             }
         }
-// utmdd([$this->network , $this->studio ]);
+        // utmdd([$this->network , $this->studio ]);
     }
     private function notPhFile()
     {
 
-        $studio_dir = $this->studioParse();
-        $studio = '';
+        $studio_dir    = $this->studioParse();
+        $studio        = '';
         if ('' != $studio_dir) {
             $studio_dir = '/' . $studio_dir;
             $studio_dir = str_replace('//', '/', $studio_dir);
         }
 
-        $success    = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
+        $success       = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
 
         // UTMlog::Logger('File Studio Dir', $matches);
         if (true == $success) {
@@ -79,7 +82,7 @@ trait StudioReader
                 foreach (__SKIP_STUDIOS__ as $k) {
                     if ($studio == $k) {
                         $studio = null;
-                    }                 
+                    }
                 }
 
             } else {

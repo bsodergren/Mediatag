@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Timer;
 use Nette\Utils\Arrays;
@@ -28,7 +26,7 @@ trait MediaLibrary
 
         $success      = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
-       
+
         if (0 == \count($match)) {
             self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
 

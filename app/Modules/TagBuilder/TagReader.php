@@ -174,7 +174,7 @@ class TagReader
     public function getTagArray($clean = true)
     {
         utminfo(func_get_args());
-        
+
         foreach (__META_TAGS__ as $tag) {
 
             $this->{$tag}();
@@ -188,7 +188,7 @@ class TagReader
                 }
             }
         }
-       
+
 
         return $this->tag_array;
     }

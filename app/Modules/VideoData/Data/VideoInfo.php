@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Traits\ffmpeg;
 use Mhor\MediaInfo\MediaInfo;
@@ -54,10 +52,10 @@ class VideoInfo extends VideoData
         }
 
         if (!isset($videoInfo)) {
-            $videoInfo['format'] = null;
+            $videoInfo['format']   = null;
             $videoInfo['bit_rate'] = null;
-            $videoInfo['width'] = null;
-            $videoInfo['height'] = null;
+            $videoInfo['width']    = null;
+            $videoInfo['height']   = null;
             Mediatag::$output->writeln('<error>file is corrupt: ' . $this->video_file . '</error> ');
 
             //utmdump("something wrong with " . $this->video_file);

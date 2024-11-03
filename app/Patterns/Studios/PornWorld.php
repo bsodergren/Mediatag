@@ -6,8 +6,6 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Patterns;
 
@@ -16,7 +14,7 @@ const PORNWORLD_REGEX_COMMON = '/(FS[0-9]+|GP[0-9]+)?_?(.*)_([HDP0-9]+.mp4)/i';
 class PornWorld extends Patterns
 {
     public $studio = "Porn World";
-    public $regex = [
+    public $regex  = [
         'pornworld' => [
             'artist' => [
                 'pattern'             => PORNWORLD_REGEX_COMMON,

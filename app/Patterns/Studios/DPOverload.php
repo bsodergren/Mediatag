@@ -10,7 +10,7 @@ use Mediatag\Patterns\Studios\TwentyFirstSextury;
 
 class DPOverload extends TwentyFirstSextury
 {
-    public $studio = 'DP Overload';
+    public $studio  = 'DP Overload';
     public $network = "21st Sextury";
     // public function __construct($object){
     //     parent::boot($this);

@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem;
 use UTM\Bundle\Monolog\UTMLog;

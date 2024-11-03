@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\TagBuilder\Meta;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Executable\ReadExec;
 use Mediatag\Modules\TagBuilder\TagReader;
 

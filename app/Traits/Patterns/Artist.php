@@ -6,8 +6,6 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Utilities\MediaArray;
 
 trait Artist

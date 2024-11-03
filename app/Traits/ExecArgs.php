@@ -6,8 +6,6 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Metatags\Artist;
 
 trait ExecArgs

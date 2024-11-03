@@ -47,7 +47,7 @@ class GifPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = __PLEX_VAR_DIR__ . "/build/".md5($this->video_file);
+        $temp     = __PLEX_VAR_DIR__ . "/build/" . md5($this->video_file);
         $options  = [
             'temporary_directory' => $temp,
         ];
@@ -97,7 +97,7 @@ class GifPreviewFiles extends VideoPreview
                     $constraint->upsize();
                 });
                 $image->tojpeg()->save($point_file, 40);
-                                
+
 
                 // $image->destroy();
             }

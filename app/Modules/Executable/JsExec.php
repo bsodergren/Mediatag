@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\Callables;

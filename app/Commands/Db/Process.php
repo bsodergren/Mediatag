@@ -99,9 +99,9 @@ class Process extends Mediatag
 
             if (\array_key_exists($key, $this->file_array)) {
 
-                $movedFile = str_replace("/".__LIBRARY__, "/Dupes/".__LIBRARY__, $file);
-                $dupePath = dirname($movedFile);
-                $filename = basename($file);
+                $movedFile  = str_replace("/" . __LIBRARY__, "/Dupes/" . __LIBRARY__, $file);
+                $dupePath   = dirname($movedFile);
+                $filename   = basename($file);
 
                 $dupePath   = nFileSystem::normalizePath($dupePath);
                 if (!is_dir($dupePath)) {
@@ -109,7 +109,7 @@ class Process extends Mediatag
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+                (new SfSystem())->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
 
 
 

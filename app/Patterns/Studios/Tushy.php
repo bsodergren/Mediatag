@@ -6,16 +6,13 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\TagBuilder\Patterns;
 
 const TUSHY_REGEX_COMMON = '/([a-zA-Z0-9_]+)(_s[0-9]{2,3}_|\-_)([a-zA-Z_]+)_[0-9pk]{2,6}/i';
 
 class Tushy extends Patterns
 {
-
-public $studio = "Tushy";
+    public $studio       = "Tushy";
     public $regex        = [
         'tushy' => [
             'artist' => [

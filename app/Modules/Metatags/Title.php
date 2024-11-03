@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\Strings;

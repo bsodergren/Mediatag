@@ -6,15 +6,12 @@
 namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Traits\Callables;
 use Mediatag\Traits\CmdProcess;
 use Mediatag\Traits\ExecArgs;
 use Mediatag\Traits\preview;
-
 use Mediatag\Traits\Test;
 use Symfony\Component\Process\Process;
 use UTM\Bundle\Monolog\UTMLog;

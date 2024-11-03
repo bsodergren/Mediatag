@@ -11,6 +11,6 @@ use Mediatag\Patterns\Studios\DevilsFilm;
 class WeAreFuckingWithOurNeighbors extends DevilsFilm
 {
     public $studio = 'We Are Fucking With Our Neighbors';
-  //  public $network = 'Devils Film';
-  
+    //  public $network = 'Devils Film';
+
 }

@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Utilities\Strings;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
@@ -60,7 +58,7 @@ class Storage
         utminfo();
 
         $this->dbConn      = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-        $this->dbConn->setTrace (true);
+        $this->dbConn->setTrace(true);
 
         $this->mapClass    = new DbMap();
         $this->output      = Mediatag::$output;
@@ -178,7 +176,7 @@ class Storage
 
             return false;
         }
-        
+
         $ids = $this->dbConn->insertMulti($table, $data);
         if (! $ids) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];

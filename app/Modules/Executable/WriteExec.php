@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Filesystem\MediaFile as File;
@@ -100,9 +98,9 @@ class WriteExec extends MediatagExec
 
         if (true === Chooser::$bypass || true === $go) {
             $callback = Callback::check([$this, 'WriteMetaOutput']);
-           
+
             $this->exec($command, $callback);
-           
+
             MediaCache::forget($video_key);
             $results  = ('' != $this->errors) ? $this->errors : $this->stdout;
         } else {
@@ -118,10 +116,10 @@ class WriteExec extends MediatagExec
                     // UTMlog::logError('process with FFMPEG');
 
                     $this->Display->processOutput->overwrite('<info>Reparing Video</info>');
-                   
+
 
                     $this->repairVideo();
-                   
+
                 } else {
                     $this->output->write("\t " . $results . \PHP_EOL);
                     $this->output->write("\t -- Running " . $this->runCommand);

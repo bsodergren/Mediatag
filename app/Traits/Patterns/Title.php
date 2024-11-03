@@ -6,8 +6,6 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Executable\JsExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;

@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Playlist;
 
 use Mediatag\Core\Mediatag;
-
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 // use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Traits\Callables;

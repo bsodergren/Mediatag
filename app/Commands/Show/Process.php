@@ -6,8 +6,6 @@
 namespace Mediatag\Commands\Show;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Display\ShowDisplay;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;

@@ -6,8 +6,6 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
-
-
 use UTM\Bundle\mysql\MysqliDb;
 use Mediatag\Modules\Database\DbMap;
 
