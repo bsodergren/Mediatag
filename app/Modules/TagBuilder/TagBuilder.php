@@ -33,37 +33,20 @@ class TagBuilder
     public function getTags($videoInfo)
     {
         utminfo(func_get_args());
-
+        $DbUpdates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         if (! \defined('__UPDATE_SET_ONLY__')) {
-            if (str_starts_with($this->video_key, 'x')) {
-                // $updates = (new FileReader($this->ReaderObj->videoData))->getTagArray();
-                $updates =  $this->ReaderObj->getFileValues();
-
-            } else {
-
-                $fileUpdates =  $this->ReaderObj->getFileValues();
-
-                // UTMlog::Logger('fileUpdates', $fileUpdates);
-
-                //   $fileUpdates['title'] = '';
+            $updates     =  $this->ReaderObj->getFileValues();
+            if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
-                // UTMlog::Logger('jsonupdates', $jsonupdates);
-                $updates     = $this->mergetags($fileUpdates, $jsonupdates, $this->video_key);
+                $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
+            $DbUpdates   = $this->ReaderObj->getDbValues();
         }
-
-
-
-        // $DbUpdates = $this->ReaderObj->getDbValues();
-
-        // if (null !== $DbUpdates) {
-        //     foreach ($DbUpdates as $tag => $value) {
-        //         $updates[$tag] = $value;
-        //     }
-
-        // }
-
+        if (null !== $DbUpdates) {
+            $updates     = $this->mergetags($updates, $DbUpdates, $this->video_key);
+        }
+utmdump($DbUpdates);
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
         }
@@ -81,41 +64,21 @@ class TagBuilder
 
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
-
-
-            // if ($tag == 'studio') {
             $updates['studio']        = $this->addNetwork($updates, $updates);
-
-            // }
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
-
-
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
-            // UTMlog::Logger('getMetaValues', $current);
-
-
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
-
-                if (str_starts_with($value, 'if:')) {
-                    if (\array_key_exists($tag, $videoInfo['currentTags'])) {
-                        if (true == $videoInfo['currentTags'][$tag]) {
-                            unset($updates[$tag]);
-                        } else {
-                            $updates[$tag] = str_replace('if:', '', $value);
-                        }
-                    }
-                }
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
-
                 }
             }
             $videoInfo['updateTags']  = $this->compareTags($current, $updates);
+
         }
-        // utmdd($videoInfo);
+        utmdump($videoInfo);
         return $videoInfo;
     }
 

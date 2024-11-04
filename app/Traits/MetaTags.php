@@ -208,7 +208,6 @@ trait MetaTags
             $tagArray[$tag] = MetaTags::clean($value, $tag);
             $tagArray[$tag] = $value;
         }
-
         return $tagArray;
     }
 
@@ -306,12 +305,12 @@ trait MetaTags
             }
 
             if (isset(fileReader::$PatternClass)) {
-
                 // utmdd($this);
                 $genre = fileReader::$PatternClassObj->getGenre();
-                $arr[] = $genre;
+                if (false == MediaArray::search($arr,  $genre)) {
+                    $arr[] = $genre;
+                }
             }
-
         }
 
         $max       = \count($arr);
