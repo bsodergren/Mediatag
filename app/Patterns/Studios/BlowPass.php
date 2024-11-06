@@ -13,6 +13,7 @@ const BLOWPASS_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1
 class BlowPass extends Patterns
 {
     public $studio = 'Blow Pass';
+    public $network = 'Blow Pass';
 
 
     public $regex  = [
