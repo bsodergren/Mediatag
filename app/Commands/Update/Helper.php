@@ -114,13 +114,13 @@ trait Helper
             $this->exec();
         }
 
-        $VideoList                       = $this->VideoList['file'];
-        $count                           = \count($VideoList);
-        $current_dir                     = null;
-        $prev_dir                        = null;
+        $videoArray   = $this->VideoList['file'];
+        $count        = \count($videoArray);
+        $current_dir  = null;
+        $prev_dir     = null;
 
-        $nidx                            = 0;
-        $pidx                            = 1;
+        $nidx         = 0;
+        $pidx         = 1;
 
         if (Option::isTrue('range')) {
             [$count, $nidx] = Mediatag::$finder->getRangeIds($count, 0);
@@ -130,79 +130,47 @@ trait Helper
         if (Option::isTrue('quiet') == true) {
             echo $count;
         }
-        // $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, $count);
-        // $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
+        $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, $count);
+        $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
 
-        // $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
-        // $progressBar2->setFormat(' ');
+        $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+        $progressBar2->setFormat(' ');
         if (Option::isTrue('range')) {
-            // $progressBar->start(null, $nidx - 1);
-            // $progressBar2->start(null, $nidx - 1);
+            $progressBar->start(null, $nidx - 1);
+            $progressBar2->start(null, $nidx - 1);
         }
-        $idx                             = 1;
-        Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
-        Mediatag::$Display->displayTimer = $this->displayTimer;
 
-        foreach ($VideoList as $key => $videoInfo) {
+
+        foreach ($videoArray as $key => $videoInfo) {
 
             $tagObj       = new tagReader();
             $tagObj->loadVideo($videoInfo);
             $tagBuilder   = new tagBuilder($key, $tagObj);
 
-            $videoArray   = $tagBuilder->getTags($videoInfo);
+            $vInfo    = $tagBuilder->getTags($videoInfo);
 
-            if (\count($videoArray['updateTags']) > 0) {
-                // $progressBar2->setFormat('custom');
+            // utmdd($videoInfo);
 
-                // $name                 = $videoInfo['video_path'] . '/' . $videoInfo['video_name'];
-                // $message              = $name;
-                // $videoArray = $videoInfo;
-                $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
-                $Command->Display             = Mediatag::$Display;
-                Mediatag::$Display->BlockInfo = [];
-                $videoBlockInfo               = null;
-                Mediatag::$Display->displayFileInfo($videoArray, $count, $idx);
-                if (! Option::isTrue('preview')) {
-                    $Command->writeChanges();
-                    $this->updateDbEntry($videoArray);
-                }
+            $message      = 'No Update';
 
-                foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-                    $value            = trim($value);
+            if (\count($vInfo['updateTags']) > 0) {
+                $progressBar2->setFormat('custom');
 
-                    $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
-                }
-                if (\is_array($videoBlockInfo)) {
-                    $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
-                    Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
-                }
-
-                if ($count != $idx) {
-                    $line_array = [];
-                    for ($n = 0; $n < 9; ++$n) {
-                        $line_array[] = '';
-                    }
-                    $line       = implode(\PHP_EOL, $line_array);
-                    Mediatag::$output->write($line);
-                }
-                ++$idx;
+                $name                 = $vInfo['video_path'] . '/' . $vInfo['video_name'];
+                $message              = $name;
+                $this->ChangesArray[] = $vInfo;
                 ++$nidx;
                 //                Mediatag::$Console->writeln($nidx . " -> " . $message);
-                // $progressBar2->setMessage($nidx, 'index');
-                // $progressBar2->setMessage($message, 'videoname');
-                unset($videoArray[$key]);
-
-                $Command                      = null;
+                $progressBar2->setMessage($nidx, 'index');
+                $progressBar2->setMessage($message, 'videoname');
             }
 
-            $tagObj       = null;
-            $tagBuilder   = null;
-            // $progressBar->advance();
-            // $progressBar2->advance();
+            $progressBar->advance();
+            $progressBar2->advance();
         }
 
-        // $progressBar->finish();
-        // $progressBar2->finish();
+        $progressBar->finish();
+        $progressBar2->finish();
     }
 
     public function saveChanges($json_file = '')
@@ -255,14 +223,12 @@ trait Helper
             $ScriptWriter->updatePreview($videoList);
             $ScriptWriter->write();
         }
-        $idx                             = 1;
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
         Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
             $tmpNetwork                   = '';
             $tmpStudio                    = '';
-            // utmdump($videoArray);
             // if (array_key_exists("updateTags", $videoArray)) {
             //     $videoUpdates = $videoArray['updateTags'];
             //     if (array_key_exists("studio", $videoUpdates)) {

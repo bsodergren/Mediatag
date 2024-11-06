@@ -46,7 +46,6 @@ class TagBuilder
         if (null !== $DbUpdates) {
             $updates     = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
-utmdump($DbUpdates);
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
         }
@@ -78,7 +77,6 @@ utmdump($DbUpdates);
             $videoInfo['updateTags']  = $this->compareTags($current, $updates);
 
         }
-        utmdump($videoInfo);
         return $videoInfo;
     }
 
