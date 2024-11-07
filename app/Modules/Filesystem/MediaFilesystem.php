@@ -250,7 +250,6 @@ class MediaFilesystem extends SFilesystem
         // }
 
         $text  = NetteFile::readLines($file);
-
         $array = [];
 
         foreach ($text as $lineNum => $line) {

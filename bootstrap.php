@@ -40,7 +40,7 @@ Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
-
+ini_set('error_log',__LOGFILE_DIR__.'/phperror.log');
 UtmStopWatch::$display = false;
 UtmStopWatch::$writeNow = false;
 // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));

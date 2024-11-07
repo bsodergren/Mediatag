@@ -157,7 +157,6 @@ trait Helper
                 if (false == $studio_dir) {
                     $Arraykey   = array_key_last($studios);
                     $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
-                    utmdump(["dir",$studio_dir]);
                     if (false == $studio_dir) {
 
                         // continue;

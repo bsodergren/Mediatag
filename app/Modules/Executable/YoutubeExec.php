@@ -113,9 +113,9 @@ class YoutubeExec extends MediatagExec
         if (! Option::istrue('ignore') && ! Option::istrue('skip')) {
             $options = array_merge($options, ['--download-archive', __PLEX_PL_DIR__ . '/ids/archive.txt']);
         }
-
-        if (Option::istrue('skip')) {
+        if (Option::istrue('skip') || $this->downloadFiles === false) {
             $options = array_merge($options, ['--skip-download']);
+
         }
 
         $playlist_opt = ['-a', $this->playlist];
@@ -136,6 +136,9 @@ class YoutubeExec extends MediatagExec
         $command      = array_merge($this->commonOptions, ['--get-id', $url]);
         $this->exec($command, Callback::check([$this, 'watchlistCallback']));
     }
+
+
+    
 
     public function downloadPlaylist($downloadFiles = true)
     {
@@ -171,30 +174,34 @@ class YoutubeExec extends MediatagExec
         file_put_contents($keyfile, $this->key . \PHP_EOL, \FILE_APPEND);
     }
 
-    private function updatePlaylist($type)
+    private function updatePlaylist($type,$file = null)
     {
         utminfo(func_get_args());
+        if($file === null)
+        {
+            $file = $this->playlist;
+        }
 
         if ('watchlaterPr' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            $this->Console->writeln($url);
-            file_put_contents($this->playlist, $url . \PHP_EOL, \FILE_APPEND);
+           // $this->Console->writeln($url);
+            file_put_contents($file, $url . \PHP_EOL, \FILE_APPEND);
 
             return 1;
         }
         if ('watchlater' == $type) {
             $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-            $this->Console->writeln($url);
-            file_put_contents($this->playlist, $url . \PHP_EOL, \FILE_APPEND);
+            //$this->Console->writeln($url);
+            file_put_contents($file, $url . \PHP_EOL, \FILE_APPEND);
 
             return 1;
         }
 
         if ('premium' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            $this->Console->writeln($url);
+           // $this->Console->writeln($url);
 
-            if (! str_contains('premium', $this->playlist)) {
+            if (! str_contains('premium', $file)) {
                 file_put_contents($this->premium, $url . \PHP_EOL, \FILE_APPEND);
             }
 
@@ -203,7 +210,7 @@ class YoutubeExec extends MediatagExec
 
         if ('modelhub' == $type) {
             $url = 'https://www.modelhub.com/video/' . $this->key;
-            if (! str_contains('model_hub', $this->playlist)) {
+            if (! str_contains('model_hub', $file)) {
                 file_put_contents($this->model_hub, $url . \PHP_EOL, \FILE_APPEND);
             }
 

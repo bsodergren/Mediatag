@@ -123,6 +123,7 @@ trait Callables
         if (str_contains($ph_id, '&')) {
             $ph_id = Strings::before($ph_id, '&');
         }
+
         if (!\in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
                 return $line;
@@ -269,6 +270,8 @@ trait Callables
 
     public function downloadCallback($type, $buffer)
     {
+
+
         $outputText = '';
         $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
 
@@ -286,10 +289,10 @@ trait Callables
         // }
         //// UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log", $buffer);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log", $buffer . PHP_EOL);
 
         switch ($buffer) {
-            case str_contains($buffer, '[PornHub]'):
+            case str_starts_with($buffer, '[PornHub]'):
                 PlaylistProcess::$current_key = false;
                 if (str_contains($buffer, 'pc webpage')) {
                     --$this->num_of_lines;
@@ -331,25 +334,38 @@ trait Callables
             case str_contains($buffer, 'HTTPError'):
                 PlaylistProcess::$current_key = false;
                 $outputText                   = $line_id . ' <error> ' . $this->key . ' NOT FOUND </error>';
+                $this->premiumIds[]           = $this->key;
+
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'Upgrade now'):
                 PlaylistProcess::$current_key = false;
-                $outputText                   = "\n\t <playlist> Premium Video </playlist>";
+                $outputText                   = "<playlist> Premium Video </playlist>";
                 $this->updatePlaylist('premium');
                 $this->premiumIds[]           = $this->key;
+                $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'encoded url'):
                 PlaylistProcess::$current_key = false;
 
-                $outputText                   = "\n\t <playlist> ModelHub Video </playlist>";
+                $outputText                   = "<playlist> ModelHub Video </playlist>";
                 $this->updatePlaylist('modelhub');
                 $this->updateIdList(PlaylistProcess::MODELHUB);
 
+                break;
+
+                case str_starts_with($buffer, '[info]'):
+                    if($this->downloadFiles === false) {
+                    if (str_contains($buffer, 'Downloading')) {
+                        $outputText = $line_id . ' <file> file '.$this->key.' is downloadable </file>' . \PHP_EOL;
+                        $this->updatePlaylist('watchlater','trimmed_list.txt');
+                        $this->DownloadableIds[]           = $this->key;
+                    }
+                }
                 break;
 
             case str_contains($buffer, '[download]'):

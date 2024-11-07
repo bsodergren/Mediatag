@@ -42,6 +42,7 @@ class TagBuilder
                 $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
             $DbUpdates   = $this->ReaderObj->getDbValues();
+
         }
         if (null !== $DbUpdates) {
             $updates     = $this->mergetags($updates, $DbUpdates, $this->video_key);
@@ -86,43 +87,66 @@ class TagBuilder
     private function addNetwork($current, $updates)
     {
 
-        if (array_key_exists("studio", $current)) {
-            if ($current['studio'] !== null) {
-                $studio = $current['studio'];
-            }
+        $studio     = null;
+        $tmpStudio  = null;
+        $network    = null;
+        $tmpNetwork = null;
 
+        foreach ($current as $tag => $value) {
+            if ($value === null) {
+                unset($current[$tag]);
+            }
         }
-        // if ($studio === null) {
-        //     $studio = __LIBRARY__;
-        // }
+        foreach ($updates as $tag => $value) {
+            if ($value === null) {
+                unset($updates[$tag]);
+            }
+        }
+
+
+        if (array_key_exists("studio", $current)) {
+            $studio = $current['studio'];
+        }
+
         if (array_key_exists("studio", $updates)) {
             $tmpStudio = $updates['studio'];
         }
+
         if (array_key_exists("network", $updates)) {
             $tmpNetwork = $updates['network'];
 
             if ($tmpNetwork !== null) {
-                // UtmDump([$tmpNetwork,$tmpStudio]);
+                UtmDump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio . "/" . $tmpNetwork;
-                }
-            } else {
+                } else {
                 $studio = $tmpStudio ;
+                }
             }
 
-        } elseif (array_key_exists("network", $current)) {
-            $tmpNetwork = $current['network'];
-            if ($tmpNetwork !== null) {
-                if ($tmpStudio != $tmpNetwork) {
-                    $studio = $tmpStudio . "/" . $tmpNetwork;
+        } else {
+            if (array_key_exists("network", $current)) {
+                $tmpNetwork = $current['network'];
+                if ($tmpNetwork !== null) {
+                    if ($tmpStudio != $tmpNetwork) {
+                        $studio = $tmpStudio . "/" . $tmpNetwork;
+                    }
+                } else {
+                    $studio = $tmpStudio ;
                 }
-            } else {
+            }else {
                 $studio = $tmpStudio ;
             }
-
         }
-        $studio = trim($studio, '/');
+
+
+        if (!isset($studio)) {
+            utmdump( [$current, $updates, $tmpStudio]);
+            return null;
+        }
+        $studio     = trim($studio, '/');
         return $studio;
+
     }
     // /**
     //  * @return array|mixed

@@ -36,6 +36,9 @@ class Process extends Mediatag
 
     public const DOWNLOADED         = __PLEX_PL_LIST_DIR__ . '/downloaded.txt';
 
+    public const TRIMMED         = __PLEX_PL_LIST_DIR__ . '/trimmed_list.txt';
+
+
     public const FILEMAP            = __PLEX_PL_LIST_DIR__ . '/all_files_list.txt';
 
     public const PLAYLIST           = __PLEX_PL_DIR__ . '/all_playlist.txt';
@@ -81,6 +84,12 @@ class Process extends Mediatag
             'youtubeWatchPlaylist' => null,
             'compact'              => null,
         ],
+        'premium'           => [
+            // 'exec'        => null,
+            'premium' => null,
+            'compact' => null,
+        ],
+        
     ];
 
     public static $current_key      = false;

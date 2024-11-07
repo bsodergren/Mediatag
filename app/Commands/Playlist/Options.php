@@ -31,6 +31,8 @@ class Options extends MediaOptions
             ['watchlater', 'w', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_WATCHLATER')],
             ['url', 'u', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_URL')],
             ['download', null, InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_DOWNLoAD')],
+            ['premium', 'P', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_PREMIUM')],
+
             ['break'],
             ['missing', 'm', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_MISSING')],
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_MAX')],

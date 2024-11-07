@@ -19,7 +19,7 @@ trait Helper
 {
     public $url    = 'https://www.pornhub.com/playlist/watchlater';
     public $idList = [];
-
+public $DownloadableIds = [];
     public function youtubeWatchPlaylist()
     {
         utminfo(func_get_args());
@@ -42,6 +42,18 @@ trait Helper
         $this->premiumIds = $youtube->premiumIds;
         $this->compact();
     }
+
+public function premium()
+{
+    $youtube          = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
+        $youtube->downloadPlaylist(false);
+        $this->premiumIds = $youtube->premiumIds;
+        $this->DownloadableIds = $youtube->DownloadableIds;
+        $this->compact();
+    
+
+}
+
 
     public function missing()
     {
@@ -262,7 +274,6 @@ trait Helper
 
         if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
-
             if (!file_exists($this->playlist)) {
                 Mediatag::$output->writeln('<info>File doesnt exist</info>');
                 exit;
@@ -270,6 +281,9 @@ trait Helper
 
             $f         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
             $before    = \count($f);
+
+            $idCnt    = \count($this->ids);
+            //utmdd([$before,$idCnt]);
             if ($before > 0) {
                 $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
                 $array        = array_unique($array);
@@ -308,12 +322,14 @@ trait Helper
             }
         }
 
+        $this->idList = array_unique($this->idList);
 
         $fileidArray     = [
             0 => [self::DISABLED, 0],
-            1 => [self::MODELHUB, 0],
-            2 => [self::IGNORED, 1],
+            1 => [self::MODELHUB, 1],
+            2 => [self::IGNORED, 0],
             3 => [self::ERRORIDS, 0],
+            // 4 => [self::TRIMMED, 1],
         ];
 
         foreach ($fileidArray as $i => $fileId) {
@@ -327,8 +343,8 @@ trait Helper
             }
         }
         $this->getpremiumIds();
-        $this->idList    = array_merge($this->idList, $this->premiumIds);
-
+       $this->idList    = array_merge($this->idList, $this->premiumIds);
+        $this->idList    = array_merge($this->idList, $this->DownloadableIds);
         return $this->idList;
     }
 
