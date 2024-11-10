@@ -30,7 +30,7 @@ class Duration extends VideoData
     {
         utminfo(func_get_args());
 
-        return $this->actionText . ' for ' . basename($this->video_file);
+        return $this->actionText;
 
     }
 
@@ -69,8 +69,6 @@ class Duration extends VideoData
         if (!isset($videoInfo)) {
             $videoInfo['duration'] = null;
             Mediatag::$output->writeln('<error>file is corrupt: ' . $this->video_file . '</error> ');
-
-            //utmdump("something wrong with " . $this->video_file);
         }
 
         return $videoInfo;
@@ -94,8 +92,6 @@ class Duration extends VideoData
     public function videoQuery()
     {
         utminfo(func_get_args());
-
-
 
         return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key
         FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "'

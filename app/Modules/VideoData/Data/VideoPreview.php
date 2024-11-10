@@ -27,9 +27,14 @@ class VideoPreview extends VideoData
     public $previewName;
 
 
+    public $returnText;
+
+    // public $actionText =
+    public $actionText     = 'Preview</>';
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
+    
     public function getPreviewFiles()
     {
         utminfo(func_get_args());
@@ -76,8 +81,9 @@ class VideoPreview extends VideoData
                 $videoFile = $this->previewToVideo($file);
                 if (! file_exists($videoFile)) {
                     unlink($file);
-                    Mediatag::$output->writeln('<fg=red>UNLINK ' . $file . '</>');
+                    Mediatag::$output->writeln('<comment>Deleting ' . $file . ' </comment>');
 
+                    // Mediatag::$output->writeln('<fg=red>UNLINK ' . $file . '</>');
                     continue;
                 }
             }
@@ -130,27 +136,21 @@ class VideoPreview extends VideoData
     public function BuildPreview()
     {
         utminfo(func_get_args());
-
-
-
-
-        //$this->video_file = $this->video_file;
+        
         $this->previewName  = $this->videoToPreview($this->video_file);
         $this->video_name   = basename($this->video_file);
-        if (file_exists($this->previewName)) {
-            $this->video_name = $this->video_name . " Exists";
+        // $type             = $this->actionText;
+        // $action           = $;
+        $this->returnText = $this->updatedText . $this->actionText;
 
+        if (file_exists($this->previewName)) {
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
-            //   return false;
         }
 
         $this->preview_path = \dirname($this->previewName);
         (new FileSystem())->mkdir($this->preview_path);
 
         return $this->build_video_thumbnail();
-        //utmdd($this->preview_path);
-
-
 
     }
 

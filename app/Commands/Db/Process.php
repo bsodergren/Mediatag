@@ -47,10 +47,13 @@ class Process extends Mediatag
     ];
 
     public $commandList     = [
-        // 'all' =>
-        // ['execThumb' => null,
-        // 'execDuration' => null,
-        // 'execInfo' => null,],
+        'all'          =>
+                            [
+                                'execThumb'       => null,
+                                'execDuration'    => null,
+                                'execInfo'        => null,
+                                'execPreview'     => null,
+                            ],
         'thumbnail'    => ['execThumb' => null, 'checkClean' => null],
         'markers'      => ['execMarkers' => null],
         'videopreview' => ['execPreview' => null, 'checkClean' => null],
@@ -72,16 +75,15 @@ class Process extends Mediatag
         utminfo(func_get_args());
 
 
-        if (Option::istrue('thumbnail') ||
-        Option::istrue('duration')      ||
-        Option::istrue('info')          ||
-         Option::istrue('all')          ||
-        Option::istrue('videopreview')
-        ) {
-
+        if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
+
+            if (Option::istrue('all')) {
+                $this->init();
+                $this->exec();
+            }
         }
     }
 
@@ -110,15 +112,11 @@ class Process extends Mediatag
                     //     }
                 }
                 (new SfSystem())->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
-
-
-
-
                 continue;
             }
             $this->file_array[$key] = $file;
         }
-        // utmdd([__METHOD__,count($file_array), count($this->file_array)]);
+
         parent::$dbconn->file_array = $this->file_array;
         $this->db_array             = parent::$dbconn->getDbFileList();
 

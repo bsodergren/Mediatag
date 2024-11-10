@@ -48,10 +48,9 @@ class VideoPreviewFiles extends VideoPreview
 
         // Create a temp directory for building.
         $temp     = __PLEX_VAR_DIR__ . "/build";
-        $options = array(
-            'temporary_directory' => $temp
-        )
-              utmdd($options);
+        $options  = [
+            'temporary_directory' => $temp,
+        ]
         (new FileSystem())->mkdir($temp);
         // Use FFProbe to get the duration of the video.
         $ffprobe  = FFprobe::create($options);
@@ -75,7 +74,7 @@ class VideoPreviewFiles extends VideoPreview
 
         // This will hold our finished frames.
         $frames   = [];
-  
+
 
         foreach ($points as $point) {
 

@@ -32,20 +32,20 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        $data          = ['name' => __LIBRARY__ . '_last_updated',
-            'value'              => parent::$dbconn->dbConn->now(),
-            'type'               => 'update'];
+        $data = ['name' => __LIBRARY__ . '_last_updated',
+            'value'     => parent::$dbconn->dbConn->now(),
+            'type'      => 'update'];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
         parent::$dbconn->dbConn->onDuplicate($updateColumns, $lastInsertId);
-        $id            = parent::$dbconn->dbConn->insert(__MYSQL_SETTINGS__, $data);
+        $id = parent::$dbconn->dbConn->insert(__MYSQL_SETTINGS__, $data);
     }
 
     public function lastUpdated()
     {
         utminfo(func_get_args());
 
-        $db  = Mediatag::$dbconn->dbConn;
+        $db = Mediatag::$dbconn->dbConn;
         $db->where('name', __LIBRARY__ . '_last_updated');
 
         $res = $db->getValue(__MYSQL_SETTINGS__, 'value');
@@ -75,7 +75,7 @@ trait Helper
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
 
 
-        $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
+        $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
 
         // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
         // ,count($this->Deleted_Array), count($this->New_Array)]);
@@ -101,7 +101,7 @@ trait Helper
             parent::$output->writeln('New files ' . print_r($this->New_Array, 1));
         }
 
-        $changed_string      = 0;
+        $changed_string = 0;
         if (\count($this->Changed_Array) > 0) {
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
@@ -142,12 +142,13 @@ trait Helper
         if (Option::istrue('yes')) {
             $go     = true;
             $answer = 'y';
-        } else {
+        }
+        else {
             Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
             $ask      = new QuestionHelper();
             $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
 
-            $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         }
         // $answer            = 'y';
         switch ($answer) {
@@ -221,7 +222,8 @@ trait Helper
 
         if (Option::istrue('clean')) {
             $this->obj->clean();
-        } elseif (Option::istrue('empty')) {
+        }
+        elseif (Option::istrue('empty')) {
             // $this->obj->clearDBValues();
         }
     }
@@ -289,10 +291,10 @@ trait Helper
                 $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
                 ++$idx;
             }
-            $idx                          = 1;
+            $idx = 1;
 
-            $data_array                   = array_chunk($videoDataArray, $chunkSize);
-            $chunks                       = \count($data_array);
+            $data_array = array_chunk($videoDataArray, $chunkSize);
+            $chunks     = \count($data_array);
             // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {
@@ -332,12 +334,13 @@ trait Helper
         foreach ($this->Changed_Array as $video_key => $video_file) {
             parent::$dbconn->video_file = $video_file;
             // parent::$dbconn->video_key  = $video_key;
-            $video_name                 = basename($video_file);
+            $video_name = basename($video_file);
             if (! Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db ' . $video_name);
 
                 parent::$dbconn->UpdateFilePath();
-            } else {
+            }
+            else {
                 parent::$dbconn->RowBlock->overwrite('Updateing file ' . $video_name . \PHP_EOL);
             }
         }
@@ -349,7 +352,7 @@ trait Helper
     {
         utminfo(func_get_args());
 
-        $date       = null;
+        $date = null;
         if (! Option::istrue('yes')) {
             $date = $this->lastUpdated();
         }
@@ -358,7 +361,7 @@ trait Helper
         if (! \is_array($file_array)) {
             return 0;
         }
-        $total      = \count($file_array);
+        $total = \count($file_array);
         if ($total > 0) {
             $storagedb           = new StorageDB();
             $storagedb->MultiIDX = \count($file_array);
@@ -391,17 +394,20 @@ trait Helper
 
                     if (Mediatag::$filesystem->exists($json_file)) {
                         parent::$output->writeln('<info>adding json ' . basename($return) . ' </info>');
-                    } else {
+                    }
+                    else {
                         parent::$output->writeln('<error>adding fake json for ' . basename($file) . ' </error>');
                         MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '"}', false);
                     }
                     //utmdd($file,$json_key);
-                } else {
+                }
+                else {
                     parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
                 }
 
 
-            } else {
+            }
+            else {
                 parent::$output->writeln('<comment>skipping ' . basename($file) . ' </comment>');
             }
         }

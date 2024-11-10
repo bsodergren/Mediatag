@@ -17,13 +17,23 @@ class VideoData
     public $video_file;
 
     public $returnText;
-
+    public $updatedText = "<comment>Updated ";
+    public $newText     = "<fg=red>Wrote ";
     public $resultCount;
 
     public $VideoInfo;
 
     public $VideoDataTable;
     public $VideoFileTable = __MYSQL_VIDEO_FILE__;
+
+
+    public function getText()
+    {
+        utminfo(func_get_args());
+
+        return $this->returnText;// . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
+
+    }
 
     public function getVideoDetails()
     {
@@ -43,7 +53,7 @@ class VideoData
     {
         utminfo(func_get_args());
 
-        return $this->getText();
+        return $this->getText() . ' for ' . basename($this->video_file);
     }
 
     public function getVideoInfo($key, $file)
@@ -58,7 +68,7 @@ class VideoData
             Mediatag::$dbconn->insert($data_array);
         }
 
-        $this->VideoInfo  = $this->getVideoDetails();
+        $this->VideoInfo = $this->getVideoDetails();
 
         return $this->saveVideoDetails();
     }
@@ -72,14 +82,14 @@ class VideoData
         if (\count($file_array) > 0) {
             foreach ($file_array as $key => $file) {
                 if (file_exists($file)) {
-                    $res= $this->getVideoInfo($key, $file);
-                    if (! Option::istrue('all')) {
-                        $int = $this->resultCount--;
-                        $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
-                        if ($res !== false) {
-                            Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
-                        }
+                    $res = $this->getVideoInfo($key, $file);
+                    // if (! Option::istrue('all')) {
+                    $int = $this->resultCount--;
+                    $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
+                    if ($res !== false) {
+                        Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
                     }
+                    // }
                 }
             }
         }
@@ -97,10 +107,10 @@ class VideoData
     {
         utminfo(func_get_args());
 
-        $file_array        = [];
+        $file_array = [];
         if (Option::istrue('filelist')) {
 
-            $fileList          = Mediatag::$SearchArray;
+            $fileList = Mediatag::$SearchArray;
             foreach ($fileList as $filename) {
 
                 $key              = MediaFile::getVideoKey($filename);
@@ -112,7 +122,7 @@ class VideoData
             //            utmdd( $file_array);
 
         }
-        $query             = $this->videoQuery();
+        $query = $this->videoQuery();
 
         if (!Option::istrue('clean')) {
             if (Option::isTrue('max')) {
@@ -121,8 +131,7 @@ class VideoData
             }
         }
 
-        $result            = Mediatag::$dbconn->query($query);
-
+        $result = Mediatag::$dbconn->query($query);
         //
         foreach ($result as $_ => $row) {
             $file_array[$row['video_key']] = $row['file_name'];
@@ -182,10 +191,10 @@ class VideoData
 
     }
 
-    public function getText()
-    {
-        utminfo(func_get_args());
+    // public function getText()
+    // {
+    //     utminfo(func_get_args());
 
-        return '';
-    }
+    //     return '';
+    // }
 }

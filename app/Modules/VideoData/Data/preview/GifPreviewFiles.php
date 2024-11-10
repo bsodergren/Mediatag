@@ -19,13 +19,13 @@ use Mediatag\Modules\VideoData\Data\VideoPreview;
 
 class GifPreviewFiles extends VideoPreview
 {
-    public function getText()
-    {
-        utminfo(func_get_args());
+    // public function getText()
+    // {
+    //     utminfo(func_get_args());
 
-        return $this->returnText . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
+    //     return $this->returnText . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
 
-    }
+    // }
 
     public function previewToVideo($file)
     {
@@ -47,15 +47,15 @@ class GifPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = __PLEX_VAR_DIR__ . "/build/" . md5($this->video_file);
-        $options  = [
+        $temp             = __PLEX_VAR_DIR__ . "/build/" . md5($this->video_file);
+        $options          = [
             'temporary_directory' => $temp,
         ];
         (new FileSystem())->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
-        $ffprobe  = FFprobe::create($options);
-        $duration = floor($ffprobe
+        $ffprobe          = FFprobe::create($options);
+        $duration         = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
 
@@ -65,16 +65,16 @@ class GifPreviewFiles extends VideoPreview
         }
 
         // Create an FFMpeg instance and open the video.
-        $ffmpeg   = FFMpeg::create($options);
-        $video    = $ffmpeg->open($this->video_file);
+        $ffmpeg           = FFMpeg::create($options);
+        $video            = $ffmpeg->open($this->video_file);
 
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-        $points   = range(0, 25, 3);
+        $points           = range(0, 25, 3);
 
         // This will hold our finished frames.
-        $frames   = [];
+        $frames           = [];
 
         foreach ($points as $point) {
 
@@ -125,6 +125,11 @@ class GifPreviewFiles extends VideoPreview
             }
         }
         (new FileSystem())->remove($temp);
+        $type             = $this->actionText;
+        $action             = $this->newText;
+
+        // $action           = $this->updatedText;
+        $this->returnText = $action . $type;
 
         return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         //        return null;

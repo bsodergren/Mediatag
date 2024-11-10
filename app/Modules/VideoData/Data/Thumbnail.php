@@ -29,11 +29,9 @@ class Thumbnail extends VideoData
 
     public $resultCount;
 
-    public $returnText;
 
-    private $updatedText   = "<comment>Updated ";
-    private $newText       = "<fg=red>Wrote ";
-    private $actionText    = 'Thumbnail</> ';
+
+    private $actionText    = 'Thumbnail</>';
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
@@ -95,13 +93,13 @@ class Thumbnail extends VideoData
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
 
-    public function getText()
-    {
-        utminfo(func_get_args());
+    // public function getText()
+    // {
+    //     utminfo(func_get_args());
 
-        return $this->returnText . basename($this->video_name, '.mp4') . '.jpg';// .' for '.basename($this->video_file);
+    //     return $this->returnText . basename($this->video_name, '.mp4') . '.jpg';// .' for '.basename($this->video_file);
 
-    }
+    // }
 
     public function get($key, $file)
     {

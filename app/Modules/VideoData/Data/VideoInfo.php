@@ -24,13 +24,13 @@ class VideoInfo extends VideoData
 
     public $VideoDataTable = __MYSQL_VIDEO_INFO__;
 
-    private $actionText    = "<comment>Updated Video Data</comment>";
+    public $actionText    = "<comment>Updated Video Data</comment>";
 
     public function getText()
     {
         utminfo(func_get_args());
 
-        return $this->actionText . ' for ' . basename($this->video_file);
+        return $this->actionText;// . ' for ' . basename($this->video_file);
 
     }
 
