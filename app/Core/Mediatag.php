@@ -163,7 +163,7 @@ abstract class Mediatag extends Command
         // UTMlog::Logger('Meta Tags', __META_TAGS__);
 
         self::$Display            = new Display($output);
-
+        // self::$Console            = new Display($output);
         self::$dbconn             = new StorageDB($input, $output);
         $this->StorageConn        = new Storage();
 

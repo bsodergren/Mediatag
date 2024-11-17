@@ -66,7 +66,7 @@ class MediaCache
     {
         utminfo(func_get_args());
 
-        self::$stash->flush();
+        // self::$stash->flush();
 
         // exit('cache flushed');
     }

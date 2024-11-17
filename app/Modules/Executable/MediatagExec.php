@@ -29,7 +29,7 @@ class MediatagExec
         Test::test as testTrait;
     }
 
-    public $metatags      = [];
+    public $metatags = [];
 
     public $stdout;
 
@@ -51,9 +51,9 @@ class MediatagExec
 
     public $runCommand;
 
-    public $updateTags    = [];
+    public $updateTags = [];
 
-    public $execMode      = '';
+    public $execMode = 'write';
 
     protected $optionArgs = [];
 
@@ -91,18 +91,18 @@ class MediatagExec
     {
         utminfo(func_get_args());
 
-        if ('write' == $this->execMode) {
-            //   $this->previewTrait("\t Running ".$this->runCommand, true);
-        }
+        if (null !== $this->execMode) {
+            $this->previewTrait("Running " . $this->runCommand, false);
+         }
     }
 
     public function test()
     {
         utminfo(func_get_args());
-
-        if ('write' == $this->execMode) {
-            $this->testTrait("\t Running " . $this->runCommand, true);
-        }
+        //utmdd("fadsf");
+         if (null !== $this->execMode) {
+        $this->testTrait("\t Running " . $this->runCommand, true);
+         }
     }
 
     public function getTags()
@@ -156,11 +156,12 @@ class MediatagExec
     {
         utminfo(func_get_args());
 
-        $process          = new Process($command);
+        $process = new Process($command);
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        // UTMlog::Logger('Executing', $this->runCommand);
+        // utmdd('Executing', $this->runCommand);
+        // utmdump($this->execMode);
         $this->preview();
         $this->test();
 

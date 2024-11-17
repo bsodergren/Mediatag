@@ -88,6 +88,7 @@ class JsExec extends MediatagExec
         ];
 
         $callback = Callback::check([$this, 'ReadOutput']);
+        $this->execMode = null;
 
         $this->exec($command, $callback);
 
@@ -98,13 +99,9 @@ class JsExec extends MediatagExec
     {
         utminfo(func_get_args());
 
-        if ($this->video_key === null) {
+       
             $cacheFile = md5($string);
-        } else {
-            $cacheFile = $this->video_key;
-        }
-
-        $title = MediaCache::get($cacheFile);
+            $title = MediaCache::get($cacheFile);
 
         if ($title === false) {
             $title = $this->getTitle($string);
@@ -115,7 +112,8 @@ class JsExec extends MediatagExec
             }
         }
 
-        MediaCache::put($cacheFile, $title);
+        $r = MediaCache::put($cacheFile, $title);
+              //  $title = MediaCache::get($cacheFile);
 
         return $title;
 

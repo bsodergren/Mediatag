@@ -13,9 +13,10 @@ trait Test
     public function test($text, $exit = false)
     {
         utminfo(func_get_args());
-
         if (Option::isTrue('test')) {
-            $this->output->write($text);
+
+            Mediatag::$output->writeln($text);
+
             if (true === $exit) {
                 exit;
             }

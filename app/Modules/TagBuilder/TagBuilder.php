@@ -116,7 +116,7 @@ class TagBuilder
             $tmpNetwork = $updates['network'];
 
             if ($tmpNetwork !== null) {
-                UtmDump([$tmpNetwork,$tmpStudio]);
+                // UtmDump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio . "/" . $tmpNetwork;
                 } else {

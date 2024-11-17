@@ -15,10 +15,11 @@ trait preview
         utminfo(func_get_args());
 
         if (Option::isTrue('preview')) {
-            $this->output->write($text);
-            if (true === $exit) {
-                exit;
-            }
+            Mediatag::$Console->info($text);
+            // $this->output->write($text);
+            // if (true === $exit) {
+            //     exit;
+            // }
         }
     }
 }
