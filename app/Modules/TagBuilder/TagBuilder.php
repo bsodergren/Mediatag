@@ -42,7 +42,7 @@ class TagBuilder
                 $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
             $DbUpdates   = $this->ReaderObj->getDbValues();
-
+// utmdd($DBUpdates);
         }
         if (null !== $DbUpdates) {
             $updates     = $this->mergetags($updates, $DbUpdates, $this->video_key);

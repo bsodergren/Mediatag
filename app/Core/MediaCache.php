@@ -33,6 +33,7 @@ class MediaCache
 
         self::$stash = Cache::file(function (): void {
             $this->setCacheDir(__APP_CACHE_DIR__ . '/' . __LIBRARY__);
+
         });
 
         if (true == Option::isTrue('flush')) {

@@ -5,6 +5,8 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
+use UTM\Utilities\Option;
+use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Filesystem\Filesystem;
 use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 
@@ -100,5 +102,42 @@ trait StudioReader
         }
         $this->studio  = $studio;
     }
+
+
+    public function writeStudioClass(){
+
+        $networkName = '';
+        $studioName = $this->getStudioClass($this->studio);
+  
+        $options = Option::getValue('addClass', 1);
+        if (null === $options)
+        {
+            $options = $this->studio;
+        }
+
+        if (Option::isTrue('addNetwork')) {
+            $networkName      = Option::getValue('addNetwork', 1);
+            $options = $options . "=" . $networkName;
+        }
+
+      
+
+        $classOption = [];
+        if (null !== $options) {
+            $opt = explode('=', $options);
+            if (count($opt) > 1) {
+
+                $classOption = [
+                    'Studio'      => $opt[1],
+                    'ExtendClass' => $this->getStudioClass($opt[1]),
+                    'network'     => $networkName,
+                ];
+            }
+            ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
+
+        }
+    }
+
+
 
 }

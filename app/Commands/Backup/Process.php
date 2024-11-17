@@ -17,7 +17,7 @@ class Process extends Mediatag
     public $video_array;
     public $backupDirectory;
 
-    public $commandList     = [
+    public $commandList = [
         'db'        => [
             'backupDb' => null,
         ],

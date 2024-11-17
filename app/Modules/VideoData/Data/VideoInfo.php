@@ -17,6 +17,7 @@ class VideoInfo extends VideoData
     public $video_key;
 
     public $video_file;
+    public $video_name;
 
     public $resultCount;
 

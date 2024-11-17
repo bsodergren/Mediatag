@@ -1,19 +1,21 @@
 <?php
 /**
  * Command like Metatag writer for video files.
+ *
  */
 
 namespace Mediatag\Patterns\Studios;
-
 use Mediatag\Modules\TagBuilder\Patterns;
+
+
 use Mediatag\Patterns\Studios\FantasyMassage;
 
-const NURUMASSAGE_REGEX_COMMON = '//i';
+const MILKINGTABLE_REGEX_COMMON = '//i';
 
-class NuruMassage extends FantasyMassage
+class MilkingTable extends FantasyMassage
 {
-    public $studio = 'Nuru Massage';
 
+    public $studio = 'Milking Table';
     public $network = 'Fantasy Massage';
 
 }

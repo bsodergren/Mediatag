@@ -226,12 +226,12 @@ EOD;
             if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
                 // $studio         = "public \$studio = '" . $TitleStudio . "';";
-                if (array_key_exists('network', $options)) {
-                    $network = "public \$network = '" . $options['network'] . "';";
-                }
+              
                 $extended_use   = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
             }
-
+              if (array_key_exists('network', $options)) {
+                    $network = "public \$network = '" . $options['network'] . "';";
+                }
         }
 
         $Pattern_file      = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';

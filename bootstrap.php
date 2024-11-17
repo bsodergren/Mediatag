@@ -40,6 +40,11 @@ Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
+
+if(file_exists(__LOGFILE_DIR__.'/phperror.log')){
+    unlink(__LOGFILE_DIR__.'/phperror.log');
+}
+
 ini_set('error_log',__LOGFILE_DIR__.'/phperror.log');
 UtmStopWatch::$display = false;
 UtmStopWatch::$writeNow = false;

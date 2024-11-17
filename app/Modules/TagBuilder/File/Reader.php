@@ -55,50 +55,48 @@ class Reader extends TagReader
         $this->videoData = $videoData;
         $this->expandArray($videoData);
 
-        $className       = $this->video_library;
-        $classPath       = 'Mediatag\\Patterns\\';
+        $className = $this->video_library;
+        $classPath = 'Mediatag\\Patterns\\';
 
 
-        //  $this->getnetwork();
+
+        $networkName = '';
+
+
+
+
+        //        $this->getnetwork();
         $this->getStudio();
+        $studioName  = $this->getStudioClass($this->studio);
+        $studioClass = $classPath . $this->video_library . $studioName;
 
-
-        $studioName      = $this->getStudioClass($this->studio);
         // $networkName = $this->getStudioClass($this->network);
 
-        $studioClass     = $classPath . $this->video_library . $studioName;
+        if (Option::isTrue('addNetwork')) {
+            $networkName      = Option::getValue('addNetwork', 1);
+            $networkClassName = $this->getStudioClass($networkName);
+            $networkClass     = $classPath . $this->video_library . $networkClassName;
 
-        $classAttm[]     = $studioClass;
+            if (!class_exists($networkClass)) {
+                $classOption = [
+                    'Studio'      => $networkName,
+                    'network'     => $networkName,
+                ];
+                ScriptWriter::addPattern($networkClassName, ucwords($networkName), $classOption);
+            }
+        }
+
+        $classAttm[] = $studioClass;
         if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
             // UTMlog::Logger('File Studio className', $className);
 
 
             // if (Option::isTrue('addClass')) {
-            $networkName = '';
 
-            $options     = Option::getValue('addClass', 1);
-            if (null === $options) {
-                if (Option::isTrue('addNetwork')) {
-                    $networkName = Option::getValue('addNetwork', 1);
-                    $options     = "=" . $networkName;
+            $this->writeStudioClass();
 
-                }
-                $options = $this->studio . $options;
 
-            }
-            $classOption = [];
-            if (null !== $options) {
-                $opt = explode('=', $options);
-                if (count($opt) > 1) {
-                    $classOption = [
-                        'Studio'      => $opt[1],
-                        'ExtendClass' => $this->getStudioClass($opt[1]),
-                        'network'     => $networkName,
-                    ];
-                }
-                ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
 
-            }
             // }
 
             $classAttm[] = $studioClass;
@@ -112,8 +110,10 @@ class Reader extends TagReader
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
             // $this->PatternObject->video_file = $this->video_file;
-            self::$PatternClass              = $studioClass;
-            $this->PatternObject             = new $studioClass($this);
+            self::$PatternClass  = $studioClass;
+            $this->PatternObject = new $studioClass($this);
+
+           // utmdd($this->PatternObject->network);
             $this->PatternObject->video_file = $this->video_file;
             self::$PatternClassObj           = $this->PatternObject;
         }
