@@ -15,7 +15,7 @@ trait Studio
      */
     public function mapStudio($studio)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $key = strtolower($studio);
         if (\array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
@@ -28,7 +28,7 @@ trait Studio
      */
     public function getStudioRegex()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('studio', 'pattern');
     }
@@ -38,7 +38,7 @@ trait Studio
      */
     public function metaStudio()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // UTMlog::Logger('Studio Key', $this->video_name);
         if (false !== $this->getStudioRegex()) {
@@ -64,7 +64,7 @@ trait Studio
 
     public static function customStudio($key_studio, $arr)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (false == self::$StudioKey) {
             self::$StudioKey = $key_studio;

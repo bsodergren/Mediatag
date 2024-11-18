@@ -52,7 +52,7 @@ class PureTaboo extends Patterns
 
     public function getArtistTransform($artist_string, $delim = ', ')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $delim       = ', ';
         $checkTitle  = false;

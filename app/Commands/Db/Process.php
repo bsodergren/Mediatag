@@ -72,7 +72,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
@@ -89,7 +89,7 @@ class Process extends Mediatag
 
     public function init()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
 
@@ -125,7 +125,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->getFileArray();
 

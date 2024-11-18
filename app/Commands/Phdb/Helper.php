@@ -31,7 +31,7 @@ trait Helper
 
         $callback         = Callback::check([$this, 'splitFileOutput']);
 
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (is_array($this->ph_csv)) {
             $this->ph_csv = $this->ph_csv[0];
@@ -63,7 +63,7 @@ trait Helper
     }
     public function convert()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         if (!is_array($this->ph_csv)) {

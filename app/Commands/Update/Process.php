@@ -47,14 +47,14 @@ class Process extends Mediatag
         'list'      => [
             'exec'        => null,
             'getChanges'  => null,
-            'saveChanges' => 'isset',
+          //  'saveChanges' => 'isset',
         ],
     ];
 
     public $defaultCommands = [
         'exec'         => null,
         'getChanges'   => null,
-        'writeChanges' => null,
+       // 'writeChanges' => null,
     ];
 
     protected $json_file;
@@ -67,7 +67,7 @@ class Process extends Mediatag
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-        utminfo();
+        // utminfo();
 
         parent::boot($input, $output);
         $this->formatter   = new FormatterHelper();
@@ -93,7 +93,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
 

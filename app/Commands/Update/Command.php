@@ -23,32 +23,19 @@ class Command extends MediaCommand
 {
     use Lang;
 
-    public const USE_LIBRARY   = true;
+    public const USE_LIBRARY = true;
 
     public $process;
 
     public static $AskQuestion = 'question';
 
-    public function handleSignal(int $signal): void
-    {
-        utminfo(func_get_args());
-
-        if (\SIGINT === $signal) {
-            echo \PHP_EOL;
-            echo 'Exiting, cleaning up';
-            echo \PHP_EOL;
-            if (Option::isTrue('list')) {
-                $this->process->videoArraytoJson($this->process->ChangesArray);
-            }
-
-            exit;
-        }
-    }
+ 
+    
 
     /*
     public function execute(InputInterface $input, OutputInterface $output): int
     {
- utminfo(func_get_args());
+ // utminfo(func_get_args());
 
 
         if (true == Option::isTrue('rename')) {

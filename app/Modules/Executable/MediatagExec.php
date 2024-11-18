@@ -59,7 +59,7 @@ class MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo($videoData);
+        // utminfo($videoData);
 
         //        $this->getTags();
 
@@ -89,7 +89,7 @@ class MediatagExec
 
     public function preview()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (null !== $this->execMode) {
             $this->previewTrait("Running " . $this->runCommand, false);
@@ -98,7 +98,7 @@ class MediatagExec
 
     public function test()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         //utmdd("fadsf");
          if (null !== $this->execMode) {
         $this->testTrait("\t Running " . $this->runCommand, true);
@@ -107,7 +107,7 @@ class MediatagExec
 
     public function getTags()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach (__META_TAGS__ as $value) {
             $this->metatags[$value] = '';
@@ -116,7 +116,7 @@ class MediatagExec
 
     protected function createOptionArg($meta_tag, $meta_value)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $this->getCmdArgs($meta_tag, $meta_value);
@@ -154,7 +154,7 @@ class MediatagExec
     // }
     protected function exec($command, $callback = null): mixed
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $process = new Process($command);
         $process->setTimeout(60000);

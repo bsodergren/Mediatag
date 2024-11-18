@@ -11,10 +11,14 @@ trait Translate
 {
     public static $Class;
 
+    public static function getClass()
+    {
+        return Translate::$Class;
+    }
     public static function text($constant, $vars = [])
     {
 
-        $class     = self::$Class;
+        $class     = self::getClass();
         $thisClass = new \ReflectionClass($class);
         $text      = $thisClass->getConstant($constant);
 

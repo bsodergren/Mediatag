@@ -43,7 +43,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         parent::boot($input, $output);
 
@@ -54,14 +54,14 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return null;
     }
 
     public function exec($option = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->VideoList = parent::getVideoArray();
 
@@ -132,7 +132,7 @@ class Process extends Mediatag
 
     public function print()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
     }
 }

@@ -26,7 +26,7 @@ trait Helper
 
     public static function __callStatic($method, $args): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         //  $genre = str_replace('get', '', $method);
         return self::get($method, $args[0]['genre']);
@@ -34,14 +34,14 @@ trait Helper
 
     public function prunedirs()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         Filesystem::prunedirs();
     }
 
     public function moveStudios()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file_array   = [];
         $tagConn      = new DbMap();
@@ -242,7 +242,7 @@ trait Helper
 
     public function getGenres($metadata)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $genreArray      = explode(',', $metadata['genre']);
         $this->genrePath = [];
@@ -260,7 +260,7 @@ trait Helper
 
     public static function get($genre, $arg)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $genre = strtolower($genre);
         $genre = str_replace('_', ' ', $genre);
@@ -275,7 +275,7 @@ trait Helper
 
     public static function compare($object)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         self::$selfClass = $object->genrePath;
 
@@ -326,7 +326,7 @@ trait Helper
 
     public static function istrue($var)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $var = strtolower($var);
         foreach (self::$selfClass as $genre => $value) {
@@ -342,7 +342,7 @@ trait Helper
 
     public function translate($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $filename = Strings::translate($text);
         // $filename = $this->cleanFilename($filename);
@@ -352,7 +352,7 @@ trait Helper
 
     public function rename($option = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach (Mediatag::$SearchArray as $key => $file) {
             $oldName   = $file;
@@ -374,7 +374,7 @@ trait Helper
 
     public function cleanFilename($file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file_name = basename($file);
         $file_dir  = \dirname($file);
@@ -385,7 +385,7 @@ trait Helper
 
     public function renameFile($oldName, $newName, $write = true)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $color       = 'comment';
         $rtn_message = '';

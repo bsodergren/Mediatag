@@ -24,7 +24,7 @@ class JsExec extends MediatagExec
 
     public function __construct($video_key = null, $input = null, $output = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $this->getWordMap();
@@ -42,7 +42,7 @@ class JsExec extends MediatagExec
 
     private function identical_values($arrayA, $arrayB)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         sort($arrayA);
         sort($arrayB);
@@ -52,7 +52,7 @@ class JsExec extends MediatagExec
 
     public function getWordMap()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $archive_content = Filesystem::readLines($this->wordMap, function ($line) {return trim($line);});
@@ -76,7 +76,7 @@ class JsExec extends MediatagExec
 
     public function getTitle($string)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // return $string;
 
@@ -88,7 +88,7 @@ class JsExec extends MediatagExec
         ];
 
         $callback = Callback::check([$this, 'ReadOutput']);
-        $this->execMode = null;
+        $this->execMode = 'write';
 
         $this->exec($command, $callback);
 
@@ -97,9 +97,10 @@ class JsExec extends MediatagExec
 
     public function read($string)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
-       
+    //    return $string;
+
             $cacheFile = md5($string);
             $title = MediaCache::get($cacheFile);
 

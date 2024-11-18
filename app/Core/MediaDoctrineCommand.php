@@ -12,7 +12,7 @@ class MediaDoctrineCommand extends DoctrineCommand
 {
     public function configure(): void
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);

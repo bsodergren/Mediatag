@@ -18,7 +18,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo();
+        // utminfo();
 
         Translate::$Class = __CLASS__;
 

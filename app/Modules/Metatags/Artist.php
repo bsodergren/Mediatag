@@ -17,7 +17,7 @@ class Artist extends TagBuilder
 
     public static function ArtistXML($value)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         self::startArtistXML();
         $artist_array = explode(',', $value);
@@ -34,7 +34,7 @@ class Artist extends TagBuilder
 
     private static function artistElement($name)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         self::$xml->startElement('dict');
         self::$xml->writeElement('key', 'name');
@@ -44,7 +44,7 @@ class Artist extends TagBuilder
 
     private static function startArtistXML()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         self::$xml = new XMLWriter();
         self::$xml->openMemory();
@@ -60,7 +60,7 @@ class Artist extends TagBuilder
 
     private static function endArtistXML()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         self::$xml->fullEndElement();
         self::$xml->fullEndElement();

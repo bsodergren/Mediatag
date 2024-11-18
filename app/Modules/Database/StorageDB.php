@@ -63,7 +63,7 @@ class StorageDB extends Storage
 
     public function init($video_file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $fs               = new File($video_file);
         $this->videoData  = $fs->get();
@@ -78,7 +78,7 @@ class StorageDB extends Storage
     // end init()
     public function getDbFileList()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $fileListArray     = [];
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
@@ -102,7 +102,7 @@ class StorageDB extends Storage
 
     public function removeDBEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $thumb  = $this->getThumbnailPath();
 
@@ -152,7 +152,7 @@ class StorageDB extends Storage
 
     public function addDBArray($data)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->video_string           = [];
         $vdata                        = [];
@@ -179,7 +179,7 @@ class StorageDB extends Storage
 
     public static function getSubLibrary($video_path)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $sublibrary   = null;
         $filesystem   = new SFilesystem();
@@ -197,7 +197,7 @@ class StorageDB extends Storage
 
     public function createDbEntry($video_file, $video_key)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->init($video_file);
 
@@ -217,7 +217,7 @@ class StorageDB extends Storage
 
     public function getThumbnailPath()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $where = ["video_key = '" . $this->video_key . "'"];
 
@@ -226,7 +226,7 @@ class StorageDB extends Storage
 
     public function UpdateFilePath()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->video_string = [];
         $this->init($this->video_file);
@@ -242,7 +242,7 @@ class StorageDB extends Storage
 
     public function updateDBEntry($key, $videoData, $all = true)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $video_file                            = $videoData['video_file'];
         $video_id                              = true;

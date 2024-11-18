@@ -50,11 +50,11 @@ UtmStopWatch::$display = false;
 UtmStopWatch::$writeNow = false;
 // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
 TimerStart();
-utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
-utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
+// utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
+// utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 
-register_shutdown_function('utmshutdown', ['write' => ['info'],
-    'write'                                        => 'debug']);
+// register_shutdown_function('utmshutdown', ['write' => ['info'],
+    // 'write'                                        => 'debug']);
 
     
 

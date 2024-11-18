@@ -16,7 +16,7 @@ trait Network
      */
     public function metaNetwork()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if ($this->network === null) {
             $class         = get_parent_class($this);

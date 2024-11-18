@@ -30,7 +30,7 @@ trait Helper
 {
     public function updateNow()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $data = ['name' => __LIBRARY__ . '_last_updated',
             'value'     => parent::$dbconn->dbConn->now(),
@@ -43,7 +43,7 @@ trait Helper
 
     public function lastUpdated()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $db = Mediatag::$dbconn->dbConn;
         $db->where('name', __LIBRARY__ . '_last_updated');
@@ -57,7 +57,7 @@ trait Helper
 
     public static function getNewFiles(array $array, InputInterface $input, OutputInterface $output): array
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $obj = (new self($input, $output))->init()->getFileArray();
 
@@ -69,7 +69,7 @@ trait Helper
 
     public function getFileArray()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
@@ -134,7 +134,7 @@ trait Helper
 
     public function execEmpty()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         Translate::$Class             = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
@@ -176,7 +176,7 @@ trait Helper
 
     public function execThumb()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->obj = new Thumbnail();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
@@ -185,7 +185,7 @@ trait Helper
 
     public function execMarkers()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->obj = new Markers();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
@@ -194,7 +194,7 @@ trait Helper
 
     public function execDuration()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->obj = new Duration();
         $this->obj->updateVideoData();
@@ -202,7 +202,7 @@ trait Helper
 
     public function execInfo()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->obj = new VideoInfo();
         $this->obj->updateVideoData();
@@ -210,7 +210,7 @@ trait Helper
 
     public function execPreview()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->obj = new GifPreviewFiles();
         $this->obj->updateVideoData();
@@ -218,7 +218,7 @@ trait Helper
 
     public function checkClean()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (Option::istrue('clean')) {
             $this->obj->clean();
@@ -235,7 +235,7 @@ trait Helper
      */
     public function updateEntry($key, $video_file, $exists = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->OutputText   = [];
         $this->OutputText[] = '<info>' . $this->count . '</info>:<comment>' . basename($video_file) . '</comment> ';
@@ -259,7 +259,7 @@ trait Helper
 
     public function removeDBEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
@@ -273,7 +273,7 @@ trait Helper
 
     public function addDBEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $chunkSize = 10;
         $barWidth  = 50;
@@ -329,7 +329,7 @@ trait Helper
 
     public function changeDBEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach ($this->Changed_Array as $video_key => $video_file) {
             parent::$dbconn->video_file = $video_file;
@@ -350,7 +350,7 @@ trait Helper
 
     public function execUpdate()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $date = null;
         if (! Option::istrue('yes')) {
@@ -377,7 +377,7 @@ trait Helper
 
     public function getJson()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $file_array = Mediatag::$SearchArray;

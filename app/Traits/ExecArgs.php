@@ -12,21 +12,21 @@ trait ExecArgs
 {
     public function getOptionArgs()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->optionArgs;
     }
 
     public function addOptionArg($option)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->optionArgs[] = $option;
     }
 
     public function getCmdArgs($meta_tag, $meta_value)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if ('artist' == $meta_tag) {
             $this->addOptionArg('--rDNSatom');

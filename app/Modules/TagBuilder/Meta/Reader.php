@@ -33,7 +33,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $this->expandArray($videoData);
@@ -44,13 +44,13 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $this->get($method);
     }
 
     public function getvideoData(array $file_array)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $read       = new ReadExec($file_array, Mediatag::$input, Mediatag::$output);
         $video_info = $read->read();
@@ -59,7 +59,7 @@ class Reader extends TagReader
 
     private function get($tag)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (!\array_key_exists($tag, $this->tag_array)) {
             $this->tag_array[$tag] = null;

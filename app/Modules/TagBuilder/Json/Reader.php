@@ -30,7 +30,7 @@ class Reader extends TagReader
 
     public function __construct($videoData)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $this->db = new TagDB();
 
         $this->expandArray($videoData);
@@ -43,7 +43,7 @@ class Reader extends TagReader
 
     public function __call($method, $arguments)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // UTMlog::logger('Call in json', $method);
 
@@ -52,7 +52,7 @@ class Reader extends TagReader
 
     public function artist()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->title();
 
@@ -69,7 +69,7 @@ class Reader extends TagReader
 
     private function getPageDetails($webpage_url)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $key          = 'ph_webpage_' . ltrim(strrchr($webpage_url, '='), '=');
         $artist_array = MediaCache::get($key);
@@ -103,7 +103,7 @@ class Reader extends TagReader
 
     private function get($tag)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag = strtolower($tag);
         if (! \array_key_exists($tag, $this->tag_array)) {
@@ -144,7 +144,7 @@ class Reader extends TagReader
 
     private function getJsonFile()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         if (!str_starts_with($this->video_key, "x")) {
 
             $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
@@ -175,7 +175,7 @@ class Reader extends TagReader
 
     private function matchArtist($string)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $artists_array = $this->getPageDetails($this->json_array['webpage_url']);
 

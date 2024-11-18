@@ -33,7 +33,7 @@ class Command extends MediaCommand
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $phcsv_file         = $input->getArgument(self::CMD_NAME);
         parent::$optionArg  = [$phcsv_file];
 

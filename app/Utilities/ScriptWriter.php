@@ -65,7 +65,7 @@ class ScriptWriter
      */
     public function __construct(string $script_name, string $directory)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->directory = $directory;
         $this->script    = $directory . '/' . $script_name;
@@ -79,7 +79,7 @@ class ScriptWriter
      */
     public function updatePreview(array $VideoArray)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         foreach ($VideoArray as $n => $video) {
@@ -97,7 +97,7 @@ class ScriptWriter
      */
     public function addHeader()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $directory           = '"' . __CURRENT_DIRECTORY__ . '"';
         $this->script_header = <<<EOD
@@ -118,7 +118,7 @@ EOD;
      */
     public function addCmd(string $command, array $cmdOptions = [], bool $comment = true, bool $singleLine = false)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $eol     = " ";
 
@@ -147,7 +147,7 @@ EOD;
      */
     public function addFile(string $file, bool $string = true)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file = '"' . $file . '"';
         if (true === $string) {
@@ -164,7 +164,7 @@ EOD;
      */
     public function addFileList(array $file_array)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $fileArray = MediaArray::VideoFiles($file_array, 'video_file');
         array_walk($fileArray, function (&$value, $key) {
@@ -182,7 +182,7 @@ EOD;
      */
     public function write(bool $singleLine = true)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (file_exists($this->script)) {
             Filesystem::delete($this->script);
@@ -214,7 +214,7 @@ EOD;
      */
     public static function addPattern(string $class, string $TitleStudio, array $options = [])
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $TitleStudio       = trim($TitleStudio, '\\');
         $class             = trim($class, '\\');

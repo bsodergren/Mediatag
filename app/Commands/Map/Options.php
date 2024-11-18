@@ -18,7 +18,7 @@ class Options extends MediaOptions
 
     public function Definitions()
     {
-        utminfo();
+        // utminfo();
         Translate::$Class = __CLASS__;
         return [
             ['lang', 'l',  InputOption::VALUE_REQUIRED, Translate::text('L__MAP_LANG')],

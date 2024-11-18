@@ -27,7 +27,7 @@ class MediaBar
 
     public function __construct($count, $section = null, $width = 50)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->width = $width;
 
@@ -43,7 +43,7 @@ class MediaBar
 
     public function setMsgFormat($format = '<comment>%message%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         ProgressBar::setFormatDefinition('custom', $format);
@@ -54,7 +54,7 @@ class MediaBar
 
     public function setMessage($message)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if ($this->format != 'custom') {
             $this->setMsgFormat();
@@ -65,7 +65,7 @@ class MediaBar
 
     public function newBar($bar = '<comment>-</comment>', $lead = '<error>></error>')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $this->bar->setBarCharacter($bar);
         // $this->bar->setProgressCharacter($lead);
@@ -82,21 +82,21 @@ class MediaBar
 
     public function start()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->bar->start();
     }
 
     public function advance()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->bar->advance();
     }
 
     public function clear()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->bar->clear();
     }

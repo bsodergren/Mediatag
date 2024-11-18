@@ -12,7 +12,7 @@ trait preview
 {
     public function preview($text, $exit = false)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (Option::isTrue('preview')) {
             Mediatag::$Console->info($text);

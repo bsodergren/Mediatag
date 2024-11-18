@@ -29,7 +29,7 @@ class VideoData
 
     public function getText()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->returnText;// . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
 
@@ -37,28 +37,28 @@ class VideoData
 
     public function getVideoDetails()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->get($this->video_key, $this->video_file);
     }
 
     public function saveVideoDetails()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->save();
     }
 
     public function getVideoText()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getText() . ' for ' . basename($this->video_file);
     }
 
     public function getVideoInfo($key, $file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->video_file = $file;
         $this->video_key  = $key;
@@ -75,7 +75,7 @@ class VideoData
 
     public function updateVideoData()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file_array = $this->getDbList();
 
@@ -97,7 +97,7 @@ class VideoData
 
     public function clearDBValues($key = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $query  = $this->clearQuery($key);
         $result = Mediatag::$dbconn->query($query);
@@ -105,7 +105,7 @@ class VideoData
 
     public function getDbList()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file_array = [];
         if (Option::istrue('filelist')) {
@@ -144,7 +144,7 @@ class VideoData
 
     public function save()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
@@ -169,31 +169,31 @@ class VideoData
 
     public function get($key, $file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
     }
 
     public function clean()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
     }
 
     public function videoQuery()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
     }
 
     public function clearQuery($key = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
     }
 
     // public function getText()
     // {
-    //     utminfo(func_get_args());
+    //     // utminfo(func_get_args());
 
     //     return '';
     // }

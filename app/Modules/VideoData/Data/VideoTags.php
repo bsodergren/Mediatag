@@ -21,7 +21,7 @@ class VideoTags extends VideoData
 
     public function getText()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
 
@@ -30,7 +30,7 @@ class VideoTags extends VideoData
     }
     public function get($key, $file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $parts                 = pathinfo($this->video_file);
 

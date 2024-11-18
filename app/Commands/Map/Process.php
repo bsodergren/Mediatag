@@ -45,7 +45,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         define('SKIP_SEARCH', true);
 

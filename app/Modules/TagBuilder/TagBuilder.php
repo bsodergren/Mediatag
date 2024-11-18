@@ -24,7 +24,7 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
-        utminfo($key, get_class($tagObj));
+        // utminfo($key, get_class($tagObj));
 
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
@@ -32,7 +32,7 @@ class TagBuilder
 
     public function getTags($videoInfo)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $DbUpdates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         if (! \defined('__UPDATE_SET_ONLY__')) {
@@ -155,7 +155,7 @@ class TagBuilder
     // {
     //     utmdd("afdsfasdfsd");
 
-    //     utminfo(func_get_args());
+    //     // utminfo(func_get_args());
     //     foreach (__META_TAGS__ as $tag) {
     //         if (\array_key_exists($tag, $tagList)) {
     //             if ('' == $tagList[$tag]) {
@@ -204,7 +204,7 @@ class TagBuilder
 
     private function compareTags(array $Current, array $New)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
@@ -218,6 +218,11 @@ class TagBuilder
 
             if (\array_key_exists($tag, $New)) {
                 ${$new_tag} = $New[$tag];
+            }
+
+            if(${$current_tag} === null){
+                $updates[$tag] = ${$new_tag};
+                continue;
             }
             if ('' != ${$new_tag}) {
                 $lev           = levenshtein(${$current_tag}, ${$new_tag});

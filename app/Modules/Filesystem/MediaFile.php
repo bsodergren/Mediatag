@@ -47,7 +47,7 @@ class MediaFile
 
     public function __construct($filename = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (null !== $filename) {
             $this->video_file = $filename;
@@ -64,7 +64,7 @@ class MediaFile
      */
     public function get(): array
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->video = [
             'video_file'    => $this->fullname(),
@@ -79,7 +79,7 @@ class MediaFile
 
     private static function get64BitNumber($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $alpha   = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
         $numeric = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5];
@@ -96,7 +96,7 @@ class MediaFile
 
     public static function getVideoKey($filename)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         // $filename = realpath($filename);
@@ -119,7 +119,7 @@ class MediaFile
      */
     public function videokey()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if ('' != $this->video_file) {
             if (false == $this->video_key) {
@@ -136,7 +136,7 @@ class MediaFile
      */
     public function fullname(): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->path('fullname');
     }
@@ -146,7 +146,7 @@ class MediaFile
      */
     public function filepath(): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->path('fullpath');
     }
@@ -156,7 +156,7 @@ class MediaFile
      */
     public function filename(): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->path('filename');
     }
@@ -166,7 +166,7 @@ class MediaFile
      */
     public function library(): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if ($this->video_file) {
             $directory = $this->filepath();
@@ -188,7 +188,7 @@ class MediaFile
      */
     public function studioName(): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->path('studioName');
     }
@@ -201,7 +201,7 @@ class MediaFile
      */
     public static function file(string $filename, string $method = 'get'): mixed
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $obj = new static($filename);
 
@@ -210,7 +210,7 @@ class MediaFile
 
     public static function splitFile($source, $targetpath = './logs/', $lines = 10, $filename = 'videos_', $ext = '')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $i      = 0;
         $j      = 1;
@@ -248,7 +248,7 @@ class MediaFile
 
     public static function saveToFile(&$buffer, $fname)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (!$fhandle = @fopen($fname, 'w')) {
             echo "Cannot open file ({$fname})";
@@ -266,7 +266,7 @@ class MediaFile
 
     public static function file_append_file($file = '', $string = '')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $dir     = realpath($file);
         if ($dir === false) {
             $dirname = dirname($file);
@@ -284,7 +284,7 @@ class MediaFile
      */
     private function path($method = 'filename'): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->full_filename = realpath($this->video_file);
         $path_parts          = pathinfo($this->full_filename);
@@ -298,7 +298,7 @@ class MediaFile
 
     public static function isPornhubfile($filename)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);

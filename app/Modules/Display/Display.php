@@ -16,6 +16,7 @@ use Symfony\Component\Filesystem\Filesystem;
 class Display
 {
     public $BarSection1;
+    public $BarBottom;
 
     public $LineBreaks    = false;
 
@@ -51,7 +52,7 @@ class Display
 
     public function __construct(OutputInterface $output)
     {
-        utminfo();
+        // utminfo();
 
         $this->formatter        = new FormatterHelper();
 
@@ -71,11 +72,13 @@ class Display
         $this->MetaBlockSection = Mediatag::$output->section();
         $this->processOutput    = Mediatag::$output->section();
         $this->VideoInfoSection = Mediatag::$output->section();
+        $this->BarBottom = Mediatag::$output->section();
+
     }
 
     public function DisplayTable(array $filelist_array)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // UTMlog::logger('start Display Table');
         $count = \count($filelist_array);
@@ -111,7 +114,7 @@ class Display
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-        utminfo(
+        // utminfo(
             $options,
         );
 
@@ -119,8 +122,8 @@ class Display
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeLn('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
-            $this->fileInfoSection->writeLn('<info>   </info>');
+            $this->fileCountSection->writeln('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
+            $this->fileInfoSection->writeln('<info>   </info>');
             $this->processOutput->setMaxHeight(3);
         }
 
@@ -129,10 +132,10 @@ class Display
 
     public function displayFileInfo($fileinfo, $count, $idx)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $method             = 'overwrite';
-
+        $tagCount  = 0;
         if (!\array_key_exists('currentTags', $fileinfo)) {
             $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
             // utmdd([__METHOD__,$fileinfo]);
@@ -141,16 +144,25 @@ class Display
         } else {
             $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
         }
+
+
+        $this->MetaBlockSection->setMaxHeight($tagCount+6);
+        $this->VideoInfoSection->setMaxHeight(4);
+
         if (0 == $tagCount) {
+            utmdd($tagCount);
+            $this->fileCountSection->{$method}("bl");
+            $this->fileInfoSection->{$method}("bllll");
+            $this->MetaBlockSection->{$method}("clllllllllllll");
             return false;
         }
-        $tagCount += 6;
-        $this->MetaBlockSection->setMaxHeight($tagCount);
-        $this->VideoInfoSection->setMaxHeight(4);
+        // $tagCount += 6;
+   
 
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
+
         $in_directory       = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename           = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
         $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
@@ -167,7 +179,7 @@ class Display
      */
     public function sortBlocks($block)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $returnArray = [];
         $array       = [];
@@ -199,10 +211,12 @@ class Display
 
     public function formatTagLine($tag, $value, $style = 'comment')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (null !== $value) {
-            $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
+            //$change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
+            $change_value = "\t<" . $this->text_style . '>' . $value . '</>';
+
 
             return $this->indent($this->formatter->formatSection($tag, $change_value, $style), $this->padbuffer);
         }
@@ -212,7 +226,7 @@ class Display
 
     public function indent($string, $spaces)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (\is_string($string)) {
             return str_pad($string, \strlen($string) + $spaces, $this->padbufferChar, \STR_PAD_LEFT);
@@ -223,7 +237,7 @@ class Display
 
     private function DisplayMetaBlock($fileinfo): array
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach (__META_TAGS__ as $tag) {
             $MetatagBlock[] = $this->TagBlockDisplay($tag, $fileinfo);
@@ -241,7 +255,7 @@ class Display
 
     private function TagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag              = strtolower($tag);
         $style            = 'update';
@@ -277,7 +291,7 @@ class Display
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag     = strtolower($tag);
         $string  = '';

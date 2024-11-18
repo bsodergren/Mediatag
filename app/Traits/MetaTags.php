@@ -23,7 +23,7 @@ trait MetaTags
 
     public function CleanMetaValue(string $tag, string $text): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
@@ -33,39 +33,39 @@ trait MetaTags
 
     public function cleanGenre($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         return Genre::clean($text);
     }
 
     public function cleanArtist($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $text;
     }
 
     public function cleanKeyword($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return Keyword::clean($text);
     }
 
     public function cleanTitle($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         return Title::clean($text);
     }
     public function cleanNetwork($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $text;
     }
 
     public function cleanStudio($text): string
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (\is_array($text)) {
             $array = $text;
@@ -109,7 +109,7 @@ trait MetaTags
 
     public function sortTagList($genre, $new = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (\is_array($genre)) {
             $array = $genre;
@@ -137,7 +137,7 @@ trait MetaTags
 
     public static function mergeTag($tag, $first, $second)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $firstCmp  = str_replace(" ", "", strtoupper($first));
@@ -197,7 +197,7 @@ trait MetaTags
 
     public function mergetags($tag_array, $tag_array2, $obj)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
@@ -213,7 +213,7 @@ trait MetaTags
 
     public static function clean($text, $tag)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // UTMlog::Logger('Clean', [$tag, $text]);
         if ('artist' == $tag && null === $text) {
@@ -224,9 +224,8 @@ trait MetaTags
             $delim = '/';
         }
 
-        if (null === MetaTags::$tagDB) {
-            MetaTags::$tagDB = new TagDB();
-        }
+      $tagDB = new TagDB();
+        
 
         if ('title' == $tag) {
             $arr      = explode(' ', $text);
@@ -249,7 +248,7 @@ trait MetaTags
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
 
-            if (! method_exists(MetaTags::$tagDB, $method)) {
+            if (! method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;
@@ -257,7 +256,7 @@ trait MetaTags
                 continue;
             }
 
-            $value = MetaTags::$tagDB->{$method}($tagValue);
+            $value = $tagDB->{$method}($tagValue);
             if ('Genre' == $tag) {
                 // if (__LIBRARY__ == "Home") {
                 $newList[] = $tagValue;
@@ -338,7 +337,7 @@ trait MetaTags
 
     public function expandArray($array)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach ($array as $key => $value) {
             $this->{$key} = $value;

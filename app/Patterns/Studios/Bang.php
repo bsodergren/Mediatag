@@ -34,7 +34,7 @@ class Bang extends Patterns
 
     // public function __construct($object)
     // {
-    //     utminfo(func_get_args());
+    //     // utminfo(func_get_args());
 
     //     parent::__construct($object);
     //     parent::$StudioKey = $this->studio;

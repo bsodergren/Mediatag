@@ -32,7 +32,7 @@ class PornWorld extends Patterns
 
     // public function __construct($object)
     // {
-    //     utminfo(func_get_args());
+    //     // utminfo(func_get_args());
 
 
 
@@ -42,14 +42,14 @@ class PornWorld extends Patterns
 
     public function getArtistTextTransform($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return str_replace(['La_','De_'], ['La','De'], $text);
     }
 
     public function getArtistTransform($names, $delim = ', ')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $namesArray  = [];
         $names       = str_replace($this->getArtistDelim(), $delim, $names);

@@ -21,7 +21,7 @@ class MediaConfig
 
     public function __construct(array $env)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->config = [
             'environment' => ($env['APP_ENVIRONMENT'] ?? 'development'),
@@ -37,7 +37,7 @@ class MediaConfig
 
     public function __get(string $name)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->config[$name] ?? null;
     }

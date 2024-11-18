@@ -22,7 +22,7 @@ trait Helper
 public $DownloadableIds = [];
     public function youtubeWatchPlaylist()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         Mediatag::$output->writeln('<info> downloading the watchlater list </info>');
 
@@ -35,7 +35,7 @@ public $DownloadableIds = [];
 
     public function download()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $youtube          = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
@@ -57,7 +57,7 @@ public function premium()
 
     public function missing()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
@@ -82,7 +82,7 @@ public function premium()
 
     public function find()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $files           = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub');
 
@@ -130,7 +130,7 @@ public function premium()
 
     public function cleanBrkDownloads()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $files = Finder::Find('*.ytdl', __PLEX_DOWNLOAD__);
         if (null !== $files) {
@@ -148,7 +148,7 @@ public function premium()
 
     public static function Cleanup()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $archive_array = [];
         $playlistArray = [];
@@ -182,7 +182,7 @@ public function premium()
 
     public function trimPlaylist()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $playlist_array         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
@@ -203,7 +203,7 @@ public function premium()
 
     public function cleanjSon()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $file_string = '';
         $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json');
@@ -232,7 +232,7 @@ public function premium()
 
     public function clean()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $array                 = [];
         $playlist              = [];
@@ -270,7 +270,7 @@ public function premium()
 
     public function compact()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
@@ -309,7 +309,7 @@ public function premium()
 
     public function getDownloadedIds()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (Option::isTrue('ignore')) {
             return [];
@@ -350,7 +350,7 @@ public function premium()
 
     public function getpremiumIds()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);

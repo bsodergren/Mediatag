@@ -15,14 +15,14 @@ class TagDB extends Storage
 
     public function __construct()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
     }
 
     public function getGenre($arguments)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag = 'genre';
 
@@ -31,7 +31,7 @@ class TagDB extends Storage
 
     public function getKeyword($arguments)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $tag = 'keyword';
 

@@ -19,7 +19,7 @@ class Keyword extends TagBuilder
 
     public function __construct($videoData)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // // UTMlog::Logger(__CLASS__, $this->videoData);
     }
@@ -28,7 +28,7 @@ class Keyword extends TagBuilder
 
     public static function writeTagList($text, $file = false)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (null === parent::$dbConn) {
             parent::$dbConn = new TagDB();
@@ -47,7 +47,7 @@ class Keyword extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return parent::clean($text, 'keyword');
     }

@@ -29,7 +29,7 @@ class WriteExec extends MediatagExec
 
     public function __construct($videoData, $input = null, $output = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->execMode = 'write';
         parent::__construct($videoData, $input, $output);
@@ -37,7 +37,7 @@ class WriteExec extends MediatagExec
 
     public function clearMeta($options = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (null === Option::getValue('empty', 1)) {
             $this->addOptionArg('--metaEnema');
@@ -53,7 +53,7 @@ class WriteExec extends MediatagExec
 
     public function writeChanges($options = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $update = false;
         if (\count($this->updateTags) > 0) {
@@ -74,7 +74,7 @@ class WriteExec extends MediatagExec
 
     public function write()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->errors = null;
         $video_key    = File::file($this->video_file, 'videokey');

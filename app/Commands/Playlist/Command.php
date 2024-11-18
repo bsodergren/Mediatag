@@ -31,7 +31,7 @@ class Command extends MediaCommand
 
     public function handleSignal(int $signal): void
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (\SIGINT === $signal) {
             echo \PHP_EOL;
@@ -51,7 +51,7 @@ class Command extends MediaCommand
      */
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $playlist          = $input->getArgument(self::CMD_NAME);
         if ($playlist === null) {

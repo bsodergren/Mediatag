@@ -5,14 +5,19 @@
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\Mediatag;
 use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
+use Mediatag\Core\Mediatag;
+use Psr\Log\LoggerInterface;
 use Mediatag\Traits\Translate;
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Traits\MediaLibrary;
+use UTM\Utilities\Debug\UtmStopWatch;
 use Symfony\Component\Console\Application;
 use Mediatag\Modules\Display\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Contracts\EventDispatcher\Event;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Question\Question;
@@ -21,28 +26,46 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Mediatag\Core\MediaInputDefinition as InputDefinition;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
-use UTM\Utilities\Debug\UtmStopWatch;
-use Symfony\Component\Filesystem\Filesystem;
 
-class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInterface
+class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandInterface
 {
     use Lang;
     use MediaLibrary;
     use Translate;
 
+
+
+    // public readonly Command $command;
+    // public int $exitCode;
+    // public ?int $interruptedBySignal = null;
+    // public bool $ignoreValidation;
+    // public bool $isInteractive    = false;
+    // public string $duration       = 'n/a';
+    // public string $maxMemoryUsage = 'n/a';
+    // public InputInterface $input;
+    // public OutputInterface $output;
+    // /** @var array<string, mixed> */
+    // public array $arguments;
+    // /** @var array<string, mixed> */
+    // public array $options;
+    // /** @var array<string, mixed> */
+    // public array $interactiveInputs = [];
+    // public array $handledSignals    = [];
+
+
+
     public static $optionArg;
 
     public static $Console;
 
-    public const USE_LIBRARY             = false;
+    public const USE_LIBRARY = false;
 
     //    private ?Application $application = null;
     //    private ?string $name = null;
-    private ?string $processTitle        = null;
+    private ?string $processTitle = null;
 
     //    private array $aliases = [];
     //    private InputDefinition $definition;
@@ -52,7 +75,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     //   private ?InputDefinition $fullDefinition = null;
     private bool $ignoreValidationErrors = false;
 
-    private ?\Closure $code              = null;
+    private ?\Closure $code = null;
     //   private array $synopsis = [];
     //  private array $usages = [];
     //  private ?HelperSet $helperSet = null;
@@ -66,43 +89,27 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
         //$this->logger = $logger;
         parent::__construct();
+        self::$logger = $logger;
 
-        self::$logger= $logger;
+
+
     }
-
-    public function getSubscribedSignals(): array
+    public function cleanOnEvent()
     {
-        // utminfo(func_get_args());
-
-        // return here any of the constants defined by PCNTL extension
-        return [];
+        //utmdd(get_class_vars(Mediatag::class));
     }
 
-    public function handleSignal(int $signal): void
-    {
-        // utminfo(func_get_args());
-
-        if (\SIGINT === $signal) {
-            echo \PHP_EOL;
-            echo 'Exiting, cleaning up';
-            echo \PHP_EOL;
-
-            exit;
-        }
-
-        // ...
-    }
 
     public function configure(): void
     {
-        // utminfo(func_get_args());
+        // // utminfo(func_get_args());
 
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
         $this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
 
-        $arguments                  = MediaOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
+        $arguments = MediaOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
         if (\is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
@@ -124,7 +131,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
      */
     public function run(InputInterface $input, OutputInterface $output): int
     {
-        utminfo();
+        // utminfo();
 
         self::$Console = new ConsoleOutput($output, $input);
 
@@ -201,7 +208,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
 
         //     $returnCode = $obj->getApplication()->doRun($greetInput, $output);
         // }
-        utminfo();
+        // utminfo();
         $className = static::class;
         $classPath = rtrim($className, 'Command');
         $classPath .= 'Process';
@@ -213,16 +220,16 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     public function execute(InputInterface $input, OutputInterface $output)
     {
 
-        utminfo();
-        $args              = [$input, $output];
+        // utminfo();
+        $args = [$input, $output];
 
         Mediatag::$IoStyle = new SymfonyStyle($input, $output);
 
         if (null !== self::$optionArg) {
             $args = array_merge($args, self::$optionArg);
         }
-        $class             = self::getProcessClass();
-        $Process           = new $class(...$args);
+        $class   = self::getProcessClass();
+        $Process = new $class(...$args);
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();
 
@@ -239,7 +246,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
             $ask      = new QuestionHelper();
             $question = new Question(Translate::text('L__PHDB_ASK_CONTINUE', ['NEXT' => $Process->actions]));
 
-            $answer   = $ask->ask($input, $output, $question);
+            $answer = $ask->ask($input, $output, $question);
 
             switch ($answer) {
                 case 'y':
@@ -272,7 +279,7 @@ class MediaCommand extends MediaDoctrineCommand implements SignalableCommandInte
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
 
-        utminfo();
+        // utminfo();
         $className = static::class;
         Option::init($input);
         UtmStopWatch::init($input, $output);

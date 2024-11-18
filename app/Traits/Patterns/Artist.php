@@ -15,7 +15,7 @@ trait Artist
      */
     public function getArtistRegex()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('artist', 'pattern');
     }
@@ -25,7 +25,7 @@ trait Artist
      */
     public function getArtistDelim()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('artist', 'delim');
     }
@@ -35,7 +35,7 @@ trait Artist
      */
     public function getArtistMatch()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('artist', 'match');
     }
@@ -45,7 +45,7 @@ trait Artist
      */
     public function getArtistFullNames()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('artist', 'artistFirstNameOnly');
     }
@@ -55,7 +55,7 @@ trait Artist
      */
     public function ignoreArtist($name)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $name_key = strtolower($name);
         $name_key = str_replace(' ', '_', $name_key);
@@ -73,7 +73,7 @@ trait Artist
      */
     public function getArtistTransform($names, $delim = ', ')
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $namesArray  = [];
         $names       = str_replace('_1080p', '', $names);
@@ -135,7 +135,7 @@ trait Artist
      */
     public function getArtistTextTransform($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $text;
     }
@@ -145,7 +145,7 @@ trait Artist
      */
     public function getArtist()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $regex = $this->getArtistRegex();
         if ($regex) {

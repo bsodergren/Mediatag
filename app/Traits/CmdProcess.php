@@ -18,7 +18,7 @@ trait CmdProcess
 
     public function runCommand()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $array   = $this->commandList;
 

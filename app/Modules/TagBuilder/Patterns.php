@@ -112,7 +112,7 @@ class Patterns extends TagBuilder
     public function __construct($object = null)
     {
 
-        utminfo($object);
+        // utminfo($object);
         if ($object !== null) {
             self::boot($this);
             $this->className  = $object->className;
@@ -149,7 +149,7 @@ class Patterns extends TagBuilder
 
 
         $mainClass                = get_class($obj);
-        utminfo($mainClass);
+        // utminfo($mainClass);
         $classes                  = class_parents($obj);
         $class                    = reset($classes);
         if (str_contains($class, "Patterns")) {
@@ -200,7 +200,7 @@ class Patterns extends TagBuilder
      */
     private function getKeyValue($tag, $key)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $regex         = $this->regex;
         $studio        = strtolower($this->studio_key);
 
@@ -251,14 +251,14 @@ class Patterns extends TagBuilder
      */
     public function getFilename($file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $file;
     }
 
     public function getStudio()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         $studio = $this->metaStudio();
 
         if ($studio !== null && $studio != "") {
@@ -284,7 +284,7 @@ class Patterns extends TagBuilder
 
     public static function customStudio($key_studio, $arr)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (is_array($arr)) {
             $studioArray[] = $key_studio;

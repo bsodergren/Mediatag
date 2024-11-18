@@ -43,7 +43,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (__PLEX_DOWNLOAD__ != getcwd()) {
             chdir(__PLEX_DOWNLOAD__);

@@ -57,7 +57,7 @@ class YoutubeExec extends MediatagExec
 
     public function __construct($playlist, $input = null, $output = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->playlist      = $playlist;
 
@@ -76,7 +76,7 @@ class YoutubeExec extends MediatagExec
 
     public function youtubeGetJson($video_key)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->options);
@@ -102,7 +102,7 @@ class YoutubeExec extends MediatagExec
 
     public function youtubeCmdOptions()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $options      = [
             // '--write-thumbnail',
@@ -125,7 +125,7 @@ class YoutubeExec extends MediatagExec
 
     public function createWatchList($url)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->Console->writeln('<info> Downloading video URLs from playlist </info>');
         $this->pltype = 'watchlater';
@@ -142,7 +142,7 @@ class YoutubeExec extends MediatagExec
 
     public function downloadPlaylist($downloadFiles = true)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->Console->writeln('<info> Downloaded new Playlist </info>');
 
@@ -169,14 +169,14 @@ class YoutubeExec extends MediatagExec
 
     private function updateIdList($keyfile)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         file_put_contents($keyfile, $this->key . \PHP_EOL, \FILE_APPEND);
     }
 
     private function updatePlaylist($type,$file = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         if($file === null)
         {
             $file = $this->playlist;
@@ -226,7 +226,7 @@ class YoutubeExec extends MediatagExec
 
     public function moveJson($json_file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $old_name = $videoInfo['video_name'];
         // $old_path = $videoInfo['video_path'];

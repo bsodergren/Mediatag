@@ -12,7 +12,7 @@ trait Test
 {
     public function test($text, $exit = false)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
         if (Option::isTrue('test')) {
 
             Mediatag::$output->writeln($text);

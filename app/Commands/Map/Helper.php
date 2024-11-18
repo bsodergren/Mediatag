@@ -21,7 +21,7 @@ trait Helper
 
     public function artistMap()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $artistMap                  = Option::getValue('artistMap', 1);
 
@@ -49,7 +49,7 @@ trait Helper
 
     public function addText()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
 
         $word  = Option::getValue('word', 1);
@@ -74,7 +74,7 @@ trait Helper
 
     public function limit()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $offset = null;
 
@@ -89,7 +89,7 @@ trait Helper
 
     public function SearchDB($keyword)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $where = '';
 
@@ -132,7 +132,7 @@ trait Helper
 
     public function searchDBEntry($value)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $search  = $this->SearchDB($value);
 
@@ -149,7 +149,7 @@ trait Helper
 
     public function keywordMap($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->tagMap('keyword', $text);
     }
@@ -159,7 +159,7 @@ trait Helper
      */
     public function genreMap($text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $text = Option::getValue('genre', 1);
         $this->tagMap('genre', $text);
@@ -167,7 +167,7 @@ trait Helper
 
     public function tagMap($tag, $text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         switch ($tag) {
             case 'genre':
@@ -234,7 +234,7 @@ trait Helper
 
     public function Replace()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         if (Option::isTrue('show')) {
             return 1;
@@ -248,7 +248,7 @@ trait Helper
 
     public function addStudioEntry($library, $text)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $library         = Option::getValue('channel', 1);
         // $text         = Option::getValue('studio', 1);
@@ -275,7 +275,7 @@ trait Helper
 
     public function addStudioChannelEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $library = Option::getValue('channel');
         $studio  = Option::getValue('studio');
@@ -307,7 +307,7 @@ trait Helper
 
     public function addartistentry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $name        = Option::getValue('artist');
         $replacement = null;
@@ -356,7 +356,7 @@ trait Helper
 
     public function addTitleEntry()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $ignore = 0;
         $drop   = false;
@@ -377,21 +377,21 @@ trait Helper
 
     public function getArtistMap()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->StorageConn->getArtistMap();
     }
 
     public function getIgnoredArtists()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->StorageConn->getIgnoredArists();
     }
 
     public function videoTag()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $videos = parent::$SearchArray;
         $name   = Option::getValue('video');
@@ -400,7 +400,7 @@ trait Helper
 
     public function listMap()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $namesArr     = [];
         $namesIgnore  = [];
@@ -458,7 +458,7 @@ trait Helper
 
     public function AddLangugage()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $lang        = Option::getValue('lang');
         $replacement = Option::getValue('replacement');
@@ -481,7 +481,7 @@ trait Helper
 
     private function addConst($const, $value, $file)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $contents = file_get_contents($file);
         // $contents = str_replace("\n\n","\n",$contents);

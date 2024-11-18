@@ -24,7 +24,7 @@ class MediaApplication extends Application
     protected function getDefaultInputDefinition(): InputDefinition
     {
 
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
@@ -42,7 +42,7 @@ class MediaApplication extends Application
 
     public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
-        utminfo();
+        // utminfo();
         parent::run($input, $output);
     }
 }

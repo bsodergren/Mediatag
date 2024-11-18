@@ -35,7 +35,7 @@ class MapDisplay
 
     public function __construct(OutputInterface $output)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->formatter = new FormatterHelper();
         $outputStyle     = new OutputFormatterStyle('red');
@@ -45,7 +45,7 @@ class MapDisplay
 
     public function drawTable($data)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $output      = $this->output;
         $section     = $output->section();
@@ -58,7 +58,7 @@ class MapDisplay
 
     public function addRow($data)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $idx = 1;
         foreach ($data as $k => $row) {

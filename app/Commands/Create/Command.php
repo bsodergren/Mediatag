@@ -32,7 +32,7 @@ class Command extends MediaCommand
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $CommandName                  = $input->getArgument(self::CMD_NAME);
 

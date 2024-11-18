@@ -44,7 +44,7 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         parent::boot($input, $output);
         // parent::$Display              = new ShowDisplay($output);
@@ -52,7 +52,7 @@ class Process extends Mediatag
 
     public function __call($m, $a)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // UTMlog::logger('call', $m);
 
@@ -61,7 +61,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         // $meta = new metaReader($this->videoData);
         // return $meta->getTagArray();
@@ -71,7 +71,7 @@ class Process extends Mediatag
 
     public function print()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $filelist_array                = $this->VideoList['file'];
         Mediatag::$Display->LineBreaks = true;
@@ -80,7 +80,7 @@ class Process extends Mediatag
 
     public function return()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $this->meta['print'] = true;
 

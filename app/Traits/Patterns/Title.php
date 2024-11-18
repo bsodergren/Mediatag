@@ -17,7 +17,7 @@ trait Title
      */
     public function getTitleRegex()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('title', 'pattern');
     }
@@ -27,7 +27,7 @@ trait Title
      */
     public function gettitleMatch()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('title', 'match');
     }
@@ -37,7 +37,7 @@ trait Title
      */
     public function getTitleDelim()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         return $this->getKeyValue('title', 'delim');
     }
@@ -47,7 +47,7 @@ trait Title
      */
     public function getTitle()
     {
-        utminfo(func_get_args());
+        // utminfo(func_get_args());
 
         $regex = $this->getTitleRegex();
         if ($regex) {
