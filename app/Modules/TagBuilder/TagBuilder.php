@@ -5,7 +5,6 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
@@ -35,28 +34,27 @@ class TagBuilder
         // utminfo(func_get_args());
         $DbUpdates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
-        if (! \defined('__UPDATE_SET_ONLY__')) {
-            $updates     =  $this->ReaderObj->getFileValues();
+        if (!\defined('__UPDATE_SET_ONLY__')) {
+            $updates = $this->ReaderObj->getFileValues();
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
-            $DbUpdates   = $this->ReaderObj->getDbValues();
-// utmdd($DBUpdates);
+            $DbUpdates = $this->ReaderObj->getDbValues();
+            // utmdd($DBUpdates);
         }
         if (null !== $DbUpdates) {
-            $updates     = $this->mergetags($updates, $DbUpdates, $this->video_key);
+            $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
         }
 
         foreach (Option::getOptions() as $option => $value) {
-            $method = 'set' . $option;
+            $method = 'set'.$option;
             if (method_exists($this->ReaderObj, $method)) {
                 // UTMlog::Logger('Option ' . $option, $method, $value);
                 $updates[$option] = $this->ReaderObj->{$method}($value, $videoInfo['video_key']);
-
             }
         }
 
@@ -71,82 +69,76 @@ class TagBuilder
             $current                  = $this->ReaderObj->getMetaValues();
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
-                if ($tag == 'studio') {
+                if ('studio' == $tag) {
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
-            $videoInfo['updateTags']  = $this->compareTags($current, $updates);
-
+            $videoInfo['updateTags'] = $this->compareTags($current, $updates);
         }
+
         return $videoInfo;
     }
 
-
-
-
     private function addNetwork($current, $updates)
     {
-
         $studio     = null;
         $tmpStudio  = null;
         $network    = null;
         $tmpNetwork = null;
 
         foreach ($current as $tag => $value) {
-            if ($value === null) {
+            if (null === $value) {
                 unset($current[$tag]);
             }
         }
         foreach ($updates as $tag => $value) {
-            if ($value === null) {
+            if (null === $value) {
                 unset($updates[$tag]);
             }
         }
 
-
-        if (array_key_exists("studio", $current)) {
+        if (\array_key_exists('studio', $current)) {
             $studio = $current['studio'];
         }
 
-        if (array_key_exists("studio", $updates)) {
+        if (\array_key_exists('studio', $updates)) {
             $tmpStudio = $updates['studio'];
         }
 
-        if (array_key_exists("network", $updates)) {
+        if (\array_key_exists('network', $updates)) {
             $tmpNetwork = $updates['network'];
 
-            if ($tmpNetwork !== null) {
+            if (null !== $tmpNetwork) {
                 // UtmDump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
-                    $studio = $tmpStudio . "/" . $tmpNetwork;
+                    $studio = $tmpStudio.'/'.$tmpNetwork;
                 } else {
-                $studio = $tmpStudio ;
+                    $studio = $tmpStudio;
                 }
             }
-
         } else {
-            if (array_key_exists("network", $current)) {
+            if (\array_key_exists('network', $current)) {
                 $tmpNetwork = $current['network'];
-                if ($tmpNetwork !== null) {
+                if (null !== $tmpNetwork) {
                     if ($tmpStudio != $tmpNetwork) {
-                        $studio = $tmpStudio . "/" . $tmpNetwork;
+                        $studio = $tmpStudio.'/'.$tmpNetwork;
                     }
                 } else {
-                    $studio = $tmpStudio ;
+                    $studio = $tmpStudio;
                 }
-            }else {
-                $studio = $tmpStudio ;
+            } else {
+                $studio = $tmpStudio;
             }
         }
 
-
         if (!isset($studio)) {
-            utmdump( [$current, $updates, $tmpStudio]);
+            utmdump([$current, $updates, $tmpStudio]);
+
             return null;
         }
-        $studio     = trim($studio, '/');
-        return $studio;
+        $studio = trim($studio, '/');
 
+        return $studio;
     }
     // /**
     //  * @return array|mixed
@@ -208,9 +200,9 @@ class TagBuilder
 
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
-            $current_tag    = $tag . '_current';
+            $current_tag    = $tag.'_current';
             ${$current_tag} = '';
-            $new_tag        = $tag . '_new';
+            $new_tag        = $tag.'_new';
             ${$new_tag}     = '';
             if (\array_key_exists($tag, $Current)) {
                 ${$current_tag} = $Current[$tag];
@@ -220,8 +212,12 @@ class TagBuilder
                 ${$new_tag} = $New[$tag];
             }
 
-            if(${$current_tag} === null){
-                $updates[$tag] = ${$new_tag};
+            if (null === ${$current_tag}) {
+                if (null === ${$new_tag}) {
+                    unset($updates[$tag]);
+                } else {
+                    $updates[$tag] = ${$new_tag};
+                }
                 continue;
             }
             if ('' != ${$new_tag}) {

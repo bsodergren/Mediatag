@@ -116,7 +116,7 @@ trait Helper
         $current_dir = null;
         $prev_dir    = null;
 
-        $nidx = 0;
+        $nidx = 1;
         $pidx = 1;
 
         if (Option::isTrue('range')) {
@@ -147,10 +147,6 @@ trait Helper
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $vInfo = $tagBuilder->getTags($videoInfo);
-
-            // utmdd($videoInfo);
-
-            $message = 'No Update';
 
             if (\count($vInfo['updateTags']) > 0) {
                 // $progressBar2->setFormat('custom');
