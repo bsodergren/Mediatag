@@ -6,14 +6,14 @@
 namespace Mediatag\Commands\Update;
 
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Traits\Callables;
+use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command as SymCommand;
+use UTM\Bundle\Monolog\UTMLog;
 
 class Process extends Mediatag
 {
@@ -27,13 +27,13 @@ class Process extends Mediatag
 
     public $meta;
 
-    public $displayTimer    = 0;
+    public $displayTimer = 0;
 
-    public $ChangesArray    = [];
+    public $ChangesArray = [];
 
     public $VideoList;
 
-    public $commandList     = [
+    public $commandList = [
         'empty'     => [
             'exec'      => null,
             'clearMeta' => null,
@@ -47,14 +47,14 @@ class Process extends Mediatag
         'list'      => [
             'exec'        => null,
             'getChanges'  => null,
-          //  'saveChanges' => 'isset',
+            //  'saveChanges' => 'isset',
         ],
     ];
 
     public $defaultCommands = [
         'exec'         => null,
         'getChanges'   => null,
-       // 'writeChanges' => null,
+        // 'writeChanges' => null,
     ];
 
     protected $json_file;
@@ -70,7 +70,7 @@ class Process extends Mediatag
         // utminfo();
 
         parent::boot($input, $output);
-        $this->formatter   = new FormatterHelper();
+        $this->formatter = new FormatterHelper();
         Mediatag::$output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
         Mediatag::$output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
         Mediatag::$output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
@@ -86,7 +86,6 @@ class Process extends Mediatag
         if (!\defined('IGNORE_NAME_MAP')) {
             $this->getArtistMap('IGNORE_NAME_MAP', $this->StorageConn->getIgnoredArists());
             // utmdd(IGNORE_NAME_MAP);
-
         }
         //        utmdd([__METHOD__,IGNORE_NAME_MAP]);
     }
@@ -95,11 +94,9 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-
-
         $this->VideoList = parent::getVideoArray();
-
-        if (count($this->VideoList['file']) == 0) {
+        // utmdd($this->VideoList);
+        if (0 == \count($this->VideoList['file'])) {
             return SymCommand::SUCCESS;
         }
 

@@ -5,24 +5,25 @@
 
 namespace Mediatag\Commands\Update;
 
-use Nette\Utils\Callback;
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\CaseHelper;
-use Mediatag\Utilities\ScriptWriter;
-use Symfony\Component\Process\Process;
 use Mediatag\Modules\Executable\WriteMeta;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Modules\TagBuilder\TagBuilder;
-use Symfony\Component\HttpClient\HttpClient;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+// use Mediatag\Traits\CaseHelper;
+use Mediatag\Modules\TagBuilder\TagBuilder;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Utilities\ScriptWriter;
+use Nette\Utils\Callback;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Process\Process;
+use UTM\Utilities\Option;
 
 trait Helper
 {
-    use CaseHelper;
+    // use CaseHelper;
 
     public $lineOut = false;
+
     /**
      * process.
      */
@@ -77,7 +78,6 @@ trait Helper
         }
 
         foreach ($artistMap as $key => $nameArray) {
-
             if (\is_array($nameArray)) {
                 $replacement = trim($nameArray[1]);
                 $replacement = str_replace(' ', '_', $replacement);
@@ -85,13 +85,9 @@ trait Helper
                 $name      = trim($nameArray[0]);
                 $name      = str_replace(' ', '_', $name);
                 $nameMap[] = ['name' => strtolower($name), 'replacement' => $replacement];
-
             } else {
-
                 $nameMap[] = strtolower(str_replace(' ', '_', $nameArray));
-
             }
-
         }
         \define($constant, $nameMap);
     }
@@ -130,7 +126,7 @@ trait Helper
         // ProgressBar::setFormatDefinition('fileList', '<text>%index%</text> <file>%videoname%</file>');
         ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
 
-        if (Option::isTrue('quiet') == true) {
+        if (true == Option::isTrue('quiet')) {
             echo $count;
         }
         $progressBar = new ProgressBar(Mediatag::$Display->BarBottom, $count);
@@ -145,12 +141,10 @@ trait Helper
             // $progressBar2->start(null, $nidx - 1);
         }
 
-
         foreach ($videoArray as $key => $videoInfo) {
-
-            $tagObj = new tagReader();
+            $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);
-            $tagBuilder = new tagBuilder($key, $tagObj);
+            $tagBuilder = new TagBuilder($key, $tagObj);
 
             $vInfo = $tagBuilder->getTags($videoInfo);
 
@@ -161,9 +155,9 @@ trait Helper
             if (\count($vInfo['updateTags']) > 0) {
                 // $progressBar2->setFormat('custom');
 
-                $name    = $vInfo['video_path'] . '/' . $vInfo['video_name'];
+                $name    = $vInfo['video_path'].'/'.$vInfo['video_name'];
                 $message = $name;
-                // 
+
                 if (!Option::isTrue('list')) {
                     $this->writeMetaToVideo($vInfo, $count, $nidx);
                 } else {
@@ -174,11 +168,6 @@ trait Helper
                 //                Mediatag::$Console->writeln($nidx . " -> " . $message);
                 // $progressBar2->setMessage($nidx, 'index');
                 // $progressBar2->setMessage($message, 'videoname');
-
-
-
-
-
             }
 
             $progressBar->advance();
@@ -232,25 +221,23 @@ trait Helper
     //     }
     // }
 
-
     public function writeMetaToVideo($videoArray, $count = null, $index = null)
     {
-
         $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;
 
-        if ($count === null) {
+        if (null === $count) {
             $count = 1;
         }
-        if ($index === null) {
+        if (null === $index) {
             $index = 0;
         }
 
         Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
-        if (! Option::isTrue('preview')) {
+        if (!Option::isTrue('preview')) {
             $Command->writeChanges();
             $this->updateDbEntry($videoArray);
         }
@@ -274,7 +261,6 @@ trait Helper
         //     // Mediatag::$output->write($line);
         // }
     }
-
 
     // public function writeChanges($options = '')
     // {
@@ -327,7 +313,6 @@ trait Helper
     //     }
     // }
 
-
     public function updateDbEntry($videoData)
     {
         // utminfo(func_get_args());
@@ -339,29 +324,25 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        Mediatag::$output->writeln("Checking files...");
+        Mediatag::$output->writeln('Checking files...');
 
         foreach ($this->VideoList['file'] as $videoInfo) {
-
             $video_filename = $videoInfo['video_name'];
 
             $match = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
-            if ($match == 1) {
+            if (1 == $match) {
                 $number = $output_array[1];
                 $file   = $this->getphdbUrl($number);
                 $found  = $this->findUrl($number, $file);
-                if ($found !== false) {
-                    Mediatag::$output->write("<info>" . $video_filename . "</info>");
+                if (false !== $found) {
+                    Mediatag::$output->write('<info>'.$video_filename.'</info>');
 
-                    Mediatag::$output->write(" was found in <comment>" . basename($file) . "</comment>");
-                    [$url,$id] = explode(";", $found);
+                    Mediatag::$output->write(' was found in <comment>'.basename($file).'</comment>');
+                    [$url,$id] = explode(';', $found);
                     $this->checkurl($url);
                     // Mediatag::$output->writeln("");
-
                 }
-
             }
-
         }
     }
 
@@ -376,13 +357,12 @@ trait Helper
         );
 
         $statusCode = $response->getStatusCode();
-        if ($statusCode != '404') {
-            Mediatag::$output->writeln(" and is " . $url);
+        if ('404' != $statusCode) {
+            Mediatag::$output->writeln(' and is '.$url);
         } else {
-            Mediatag::$output->writeln(" but is 404");
+            Mediatag::$output->writeln(' but is 404');
         }
     }
-
 
     public function urlCallback($type, $buffer)
     {
@@ -394,10 +374,10 @@ trait Helper
             $this->lineOut = trim($buffer);
         }
     }
+
     private function findUrl($number, $file)
     {
         // utminfo(func_get_args());
-
 
         $this->lineOut = false;
         $callback      = Callback::check([$this, 'urlCallback']);
@@ -410,8 +390,7 @@ trait Helper
         $proccess = new Process($command);
         // utmdd($proccess->getCommandLine());
         $proccess->run($callback);
+
         return $this->lineOut;
     }
-
-
 }
