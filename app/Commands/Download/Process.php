@@ -18,15 +18,15 @@ class Process extends Mediatag
      *
      * @var array
      */
-    public $file_array      = [];
+    public $file_array = [];
 
-    public $newFiles        = [];
+    public $newFiles = [];
 
     public $barSection;
 
     public $textSection;
 
-    public $commandList     = [
+    public $commandList = [
         'json'    => [
             'jSonCache' => null,
         ],
@@ -39,7 +39,7 @@ class Process extends Mediatag
         'moveDownloads' => null,
     ];
 
-    private $filesToRemove  = [];
+    private $filesToRemove = [];
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {

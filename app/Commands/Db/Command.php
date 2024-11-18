@@ -6,7 +6,6 @@
 
 namespace Mediatag\Commands\Db;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -17,5 +16,4 @@ class Command extends MediaCommand
 {
     use Lang;
     public const USE_LIBRARY = true;
-    
 }

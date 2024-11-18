@@ -5,7 +5,6 @@
 
 namespace Mediatag\Commands\Db;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
@@ -26,11 +25,11 @@ class Options extends MediaOptions
         return [
             ['thumbnail', 't', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_UPDATE')],
             ['videopreview', 'P', InputOption::VALUE_NONE, Translate::text('L__DB_VPREVIEW_UPDATE')],
-            ['json','j', InputOption::VALUE_NONE, Translate::text('L__DB_JSON_UPDATE')],
+            ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DB_JSON_UPDATE')],
             ['duration', 'D', InputOption::VALUE_NONE, Translate::text('L__DB_DURATION_UPDATE')],
             ['info', 'i', InputOption::VALUE_NONE, Translate::text('L__DB_FILEINFO_UPDATE')],
             ['all', 'a', InputOption::VALUE_NONE, Translate::text('L__DB_ADD')],
-            ['markers','m', InputOption::VALUE_NONE, Translate::text('L__DB_MARKERS_UPDATE')],
+            ['markers', 'm', InputOption::VALUE_NONE, Translate::text('L__DB_MARKERS_UPDATE')],
             ['break'],
             ['update', 'u', InputOption::VALUE_NONE, Translate::text('L__DB_FILE_UPDATE')],
             ['clean', 'c', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_CLEAN')],

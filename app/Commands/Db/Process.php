@@ -10,11 +10,11 @@ use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\Translate;
+use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
-use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
@@ -23,21 +23,21 @@ class Process extends Mediatag
     use Lang;
     use Translate;
 
-    public $db_array        = [];
+    public $db_array = [];
 
-    public $file_array      = [];
+    public $file_array = [];
 
     public $read;
 
     public $meta;
 
-    public $OutputText      = [];
+    public $OutputText = [];
 
-    public $New_Array       = [];
+    public $New_Array = [];
 
-    public $Deleted_Array   = [];
+    public $Deleted_Array = [];
 
-    public $Changed_Array   = [];
+    public $Changed_Array = [];
 
     public $duration;
 
@@ -46,14 +46,13 @@ class Process extends Mediatag
         'exec' => null,
     ];
 
-    public $commandList     = [
-        'all'          =>
-                            [
-                                'execThumb'       => null,
-                                'execDuration'    => null,
-                                'execInfo'        => null,
-                                'execPreview'     => null,
-                            ],
+    public $commandList = [
+        'all'          => [
+            'execThumb'       => null,
+            'execDuration'    => null,
+            'execInfo'        => null,
+            'execPreview'     => null,
+        ],
         'thumbnail'    => ['execThumb' => null, 'checkClean' => null],
         'markers'      => ['execMarkers' => null],
         'videopreview' => ['execPreview' => null, 'checkClean' => null],
@@ -74,7 +73,6 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-
         if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
@@ -91,27 +89,24 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-
-
-        $file_array                 = parent::$SearchArray;
-        $this->DbMap                = new DbMap();
+        $file_array  = parent::$SearchArray;
+        $this->DbMap = new DbMap();
 
         foreach ($file_array as $k => $file) {
-            $key                    = File::getVideoKey($file);
+            $key = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
+                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
+                $dupePath  = \dirname($movedFile);
+                $filename  = basename($file);
 
-                $movedFile  = str_replace("/" . __LIBRARY__, "/Dupes/" . __LIBRARY__, $file);
-                $dupePath   = dirname($movedFile);
-                $filename   = basename($file);
-
-                $dupePath   = nFileSystem::normalizePath($dupePath);
+                $dupePath = nFileSystem::normalizePath($dupePath);
                 if (!is_dir($dupePath)) {
                     //     if (!Option::isTrue('test')) {
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                (new SfSystem())->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
+                (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
                 continue;
             }
             $this->file_array[$key] = $file;
