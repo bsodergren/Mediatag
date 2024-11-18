@@ -8,7 +8,7 @@ namespace Mediatag\Commands\Db;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Modules\Executable\YoutubeExec;
+use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
@@ -388,7 +388,7 @@ trait Helper
 
 
                 if (! Mediatag::$filesystem->exists($json_file)) {
-                    $exec   = new YoutubeExec('');
+                    $exec   = new Youtube('');
                     $return = $exec->youtubeGetJson($json_key);
 
 

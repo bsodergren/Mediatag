@@ -6,7 +6,7 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\JsExec;
+use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
 
@@ -62,7 +62,7 @@ trait Title
                 $title     = str_replace('_s_', 's_', $title);
                 $title     = str_replace($this->getTitleDelim(), ' ', $title);
                 $pretitle  = $title;
-                $title     = (new JsExec($video_key))->read($title);
+                $title     = (new Javascript($video_key))->read($title);
                 // UTMlog::Logger('Title Tag', [$pretitle,$title]);
 
 

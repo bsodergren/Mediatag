@@ -11,7 +11,7 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\Callables;
 use Nette\Utils\Callback;
 
-class JsExec extends MediatagExec
+class Javascript extends MediatagExec
 {
     use Callables;
 

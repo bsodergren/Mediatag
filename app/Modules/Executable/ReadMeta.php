@@ -12,7 +12,7 @@ use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Callables;
 use Nette\Utils\Callback;
 
-class ReadExec extends MediatagExec
+class ReadMeta extends MediatagExec
 {
     use Callables;
 

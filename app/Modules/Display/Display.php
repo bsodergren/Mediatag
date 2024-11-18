@@ -114,9 +114,7 @@ class Display
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-        // utminfo(
-            $options,
-        );
+      
 
         // UTMlog::logger('start Display Header');
 

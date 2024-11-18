@@ -9,12 +9,15 @@ use Nette\Utils\Strings;
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Traits\CallableHelper;
 use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 trait Callables
 {
+    use CallableHelper;
+
     public function splitFileOutput($type, $buffer)
     {
         Mediatag::$output->writeln($buffer);
@@ -90,7 +93,7 @@ trait Callables
     {
 
         if ('' != $line) {
-            $ph_id            = Strings::after($line, '=');
+            $ph_id = Strings::after($line, '=');
             if (str_contains($ph_id, '&')) {
                 $ph_id = Strings::before($ph_id, '&');
             }
@@ -185,11 +188,11 @@ trait Callables
                     $Replacement = null;
                 }
             }
-            $key         = strtolower($match);
-            $key         = str_replace(' ', '_', $key);
-            $key         = str_replace('+', '', $key);
-            $key         = str_replace('(', '', $key);
-            $key         = str_replace(')', '', $key);
+            $key = strtolower($match);
+            $key = str_replace(' ', '_', $key);
+            $key = str_replace('+', '', $key);
+            $key = str_replace('(', '', $key);
+            $key = str_replace(')', '', $key);
 
             return [$key => $Replacement];
         }
@@ -208,11 +211,11 @@ trait Callables
                 $match       = Strings::before($line, ':');
                 $Replacement = Strings::after($line, ':');
             }
-            $key         = strtolower($match);
-            $key         = str_replace(' ', '_', $key);
-            $key         = str_replace('+', '', $key);
-            $key         = str_replace('(', '', $key);
-            $key         = str_replace(')', '', $key);
+            $key = strtolower($match);
+            $key = str_replace(' ', '_', $key);
+            $key = str_replace('+', '', $key);
+            $key = str_replace('(', '', $key);
+            $key = str_replace(')', '', $key);
 
             return [$key => $Replacement];
         }
@@ -254,7 +257,7 @@ trait Callables
             }
         }
 
-        $buffer     = str_replace("\n", '', $buffer);
+        $buffer = str_replace("\n", '', $buffer);
         switch ($buffer) {
             case str_contains($buffer, '[info]'):
                 //
@@ -273,7 +276,7 @@ trait Callables
 
 
         $outputText = '';
-        $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
+        $line_id    = '<id>' . $this->num_of_lines . '</id>';
 
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
@@ -283,143 +286,106 @@ trait Callables
             }
         }
 
-        $buffer     = str_replace("\n", '', $buffer);
+        $buffer = str_replace("\n", '', $buffer);
         // if (!str_contains($buffer, '[download]') && !str_contains($buffer, 'ETA')) {
         //     // UTMlog::Logger('Ph Download', $buffer);
         // }
         //// UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/".$this->key.".log", $buffer . PHP_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[PornHub]'):
-                PlaylistProcess::$current_key = false;
-                if (str_contains($buffer, 'pc webpage')) {
-                    --$this->num_of_lines;
-                    $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
-
-                    $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
-                }
-
+                $outputText = $this->Pornhub($buffer, $line_id);
                 break;
 
             case str_contains($buffer, 'Interrupted by user'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = $line_id . '  <error> ' . $this->key . ' cancelled </error>';
-                $this->Console->writeln($outputText);
 
+                $this->error($buffer, $line_id, 'cancelled');
                 return 0;
 
             case str_contains($buffer, 'private.'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = $line_id . '  <error>  ' . $this->key . ' is private </error>';
-                $this->updateIdList(PlaylistProcess::DISABLED);
+
+                $outputText = $this->error($buffer, $line_id, 'private');
+                // $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'restriction'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = $line_id . '  <error>  ' . $this->key . ' is restricted </error>';
-                $this->updateIdList(PlaylistProcess::DISABLED);
-
+                $outputText = $this->error($buffer, $line_id, 'is restricted ');
+                // $this->updateIdList(PlaylistProcess::DISABLED);
                 break;
 
             case str_contains($buffer, 'disabled'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = $line_id . '  <error>  ' . $this->key . ' has been disabled </error>';
-                $this->updateIdList(PlaylistProcess::DISABLED);
+
+                $outputText = $this->error($buffer, $line_id, ' has been disabled ');
+                // $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'HTTPError'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = $line_id . ' <error> ' . $this->key . ' NOT FOUND </error>';
-                $this->premiumIds[]           = $this->key;
 
-                $this->updateIdList(PlaylistProcess::DISABLED);
+                $outputText = $this->error($buffer, $line_id, 'NOT FOUND');
+
+                $this->premiumIds[] = $this->key;
+
+                // $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'Upgrade now'):
-                PlaylistProcess::$current_key = false;
-                $outputText                   = "<playlist> Premium Video </playlist>";
-                $this->updatePlaylist('premium');
-                $this->premiumIds[]           = $this->key;
-                $this->updateIdList(PlaylistProcess::DISABLED);
+
+                $outputText = $this->error($buffer, $line_id, ' Premium Video');
+                // $this->updatePlaylist('premium');
+                // $this->premiumIds[] = $this->key;
 
                 break;
 
             case str_contains($buffer, 'encoded url'):
-                PlaylistProcess::$current_key = false;
-
-                $outputText                   = "<playlist> ModelHub Video </playlist>";
-                $this->updatePlaylist('modelhub');
-                $this->updateIdList(PlaylistProcess::MODELHUB);
+                $outputText = $this->error($buffer, $line_id, 'ModelHub Video');
+                // $this->updatePlaylist('modelhub');
+                // $this->updateIdList(PlaylistProcess::MODELHUB);
 
                 break;
 
-                case str_starts_with($buffer, '[info]'):
-                    if($this->downloadFiles === false) {
-                    if (str_contains($buffer, 'Downloading')) {
-                        $outputText = $line_id . ' <file> file '.$this->key.' is downloadable </file>' . \PHP_EOL;
-                        $this->updatePlaylist('watchlater','trimmed_list.txt');
-                        $this->DownloadableIds[]           = $this->key;
-                    }
+            case str_starts_with($buffer, '[info]'):
+                if ($this->downloadFiles === false) {
+                    $outputText = $this->downloadableIds($buffer);
                 }
                 break;
 
             case str_contains($buffer, '[download]'):
-                PlaylistProcess::$current_key = $this->key;
-                $outputText                   = '<download>' . $buffer . '</>';
-
-                if (str_contains($buffer, 'Destination')) {
-                    $outputText = str_replace('[download]', '</text>' . $line_id . ' <text>[download]', $buffer);
-                    $outputText = $line_id . ' <text>' . str_replace(__PLEX_DOWNLOAD__, '', $outputText) . '</file>' . \PHP_EOL;
-                    $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
-
-                    break;
-                }
-
-                if (str_contains($buffer, 'already been')) {
-                    $outputText = $line_id . '<error> Already been downloaded </error>';
-
-                    break;
-                }
+                $outputText = $this->downloadVideo($buffer, $line_id);
 
                 break;
 
             case str_contains($buffer, '[FixupM3u8]'):
 
 
-                // if (!Option::istrue('ignore')) {
-                //     $this->updateIdList(PlaylistProcess::IGNORED);
-                // }
+                $outputText = $this->fixVideo($buffer, $line_id);
 
-                $outputText                   = str_replace('[FixupM3u8]', $line_id . ' <text>[FixupM3u8]', $buffer);
-
-                $outputText                   = str_replace(__PLEX_DOWNLOAD__, '', $outputText);
-                $outputText                   = str_replace('container of', 'container of</text> <file>', $outputText);
-                $outputText                   = $outputText . '</file>' . \PHP_EOL;
                 break;
 
             case str_contains($buffer, 'ERROR'):
-                $outputText                   = "\n <error>Uncaught Error </>  <comment>" . $buffer . '</comment>' . \PHP_EOL;
+
+                $outputText = $this->error($buffer, $line_id, "Uncaught Error </>  <comment>" . $buffer . '</comment><error>');
                 // $this->updatePlaylist('error');
                 // $this->updateIdList(PlaylistProcess::ERRORIDS);
 
                 break;
         }
 
-        if (Option::istrue('debug')) {
-            $style      = 'info';
-            $style_end  = 'info';
-            if (preg_match('/(ERROR):(.*)/', $buffer, $matches)) {
-                $style     = 'fg=bright-magenta';
-                $style_end = '';
-            }
-            $outputText = __LINE__ . '<comment>' . $this->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' . \PHP_EOL;
+        // if (Option::istrue('debug')) {
+        //     $style     = 'info';
+        //     $style_end = 'info';
+        //     if (preg_match('/(ERROR):(.*)/', $buffer, $matches)) {
+        //         $style     = 'fg=bright-magenta';
+        //         $style_end = '';
+        //     }
+        //     $outputText = __LINE__ . '<comment>' . $this->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' ;
+        // }
+        if ($outputText != '') {
+            $this->Console->write($outputText);
         }
-
-        $this->Console->write($outputText);
     }
 }

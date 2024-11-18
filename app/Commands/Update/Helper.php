@@ -11,7 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Traits\CaseHelper;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Process\Process;
-use Mediatag\Modules\Executable\WriteExec;
+use Mediatag\Modules\Executable\WriteMeta;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Symfony\Component\HttpClient\HttpClient;
@@ -101,7 +101,7 @@ trait Helper
         // utminfo(func_get_args());
 
         foreach ($this->VideoList['file'] as $key => $videoArray) {
-            $Command          = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
+            $Command          = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display = Mediatag::$Display;
             $Command->clearMeta($options);
             unset($Command);
@@ -236,7 +236,7 @@ trait Helper
     public function writeMetaToVideo($videoArray, $count = null, $index = null)
     {
 
-        $Command                      = new WriteExec($videoArray, Mediatag::$input, Mediatag::$output);
+        $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;

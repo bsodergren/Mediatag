@@ -14,7 +14,7 @@ use Mediatag\Core\Mediatag;
 use Psr\Log\LoggerInterface;
 use FFMpeg\Coordinate\TimeCode;
 use Symfony\Component\Panther\Client;
-use Mediatag\Modules\Executable\JsExec;
+use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Display\ShowDisplay;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\HttpClient\HttpClient;
@@ -30,16 +30,16 @@ class Process extends Mediatag
 {
     use Helper;
 
-    public $VideoList       = [];
+    public $VideoList = [];
 
     public $defaultCommands = [
         'exec' => null,
     ];
 
-    public $commandList     = [
+    public $commandList = [
     ];
 
-    public $csvfilename     = __DOWNLOAD_DIR__ . '/pornhub.com-db.csv';
+    public $csvfilename = __DOWNLOAD_DIR__ . '/pornhub.com-db.csv';
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
     {
@@ -75,7 +75,7 @@ class Process extends Mediatag
 
 
         }
-        $outputFile      = Option::getValue('output', true);
+        $outputFile = Option::getValue('output', true);
 
         // $ffprobe = FFProbe::create();
         // $ret = $ffprobe
@@ -84,13 +84,13 @@ class Process extends Mediatag
         //     ->first()                       // returns the first video stream
         //     ->all();
         // utmdd($ret);
-        $ffmpeg          = FFMpeg::create(['timeout' => 3000], Command::$logger);
-        $video           = $ffmpeg->open($file[1]);
+        $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
+        $video  = $ffmpeg->open($file[1]);
 
-        $tmpFile         = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
+        $tmpFile = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
 
         $video->filters()->clip(TimeCode::fromSeconds(3.5));
-        $format          = new \FFMpeg\Format\Video\X264('copy', 'copy');
+        $format = new \FFMpeg\Format\Video\X264('copy', 'copy');
         $format->setPasses(1);
         $video->save($format, $tmpFile);
         //  $r = $video->getFFMpegDriver()->getProcessRunner();
@@ -98,18 +98,18 @@ class Process extends Mediatag
         unset($ffmpeg);
         unset($video);
 
-        $ffmpeg          = FFMpeg::create(['timeout' => 3000], Command::$logger);
-        $video           = $ffmpeg->open($file[0]);
+        $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
+        $video  = $ffmpeg->open($file[0]);
 
         if ($outputFile === null) {
             $key        = $videoInfo['video_key'];
             $filename   = basename($file[1], '.mp4');
             $firstVideo = basename($file[0], '.mp4');
             $secondName = str_split($filename);
-            $firstName  =  str_split($firstVideo);
+            $firstName  = str_split($firstVideo);
             foreach ($secondName as $i=> $char) {
                 if ($firstName[$i] == $char) {
-                    $name[]=$char;
+                    $name[] = $char;
                     continue;
                 }
                 break;

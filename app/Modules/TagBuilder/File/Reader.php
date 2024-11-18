@@ -87,7 +87,7 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
-        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ($this->video_library == 'Studios')) {
+        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && $this->video_library == 'Studios') {
             // UTMlog::Logger('File Studio className', $className);
 
 

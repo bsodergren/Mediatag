@@ -6,7 +6,7 @@
 namespace Mediatag\Modules\TagBuilder\Meta;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\ReadExec;
+use Mediatag\Modules\Executable\ReadMeta;
 use Mediatag\Modules\TagBuilder\TagReader;
 
 class Reader extends TagReader
@@ -52,7 +52,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $read       = new ReadExec($file_array, Mediatag::$input, Mediatag::$output);
+        $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
         $video_info = $read->read();
         return $video_info[$this->video_key]['metatags'];
     }

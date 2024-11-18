@@ -6,7 +6,7 @@
 namespace Mediatag\Commands\Playlist;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\YoutubeExec;
+use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -17,9 +17,9 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
-    public $url    = 'https://www.pornhub.com/playlist/watchlater';
-    public $idList = [];
-public $DownloadableIds = [];
+    public $url             = 'https://www.pornhub.com/playlist/watchlater';
+    public $idList          = [];
+    public $DownloadableIds = [];
     public function youtubeWatchPlaylist()
     {
         // utminfo(func_get_args());
@@ -29,7 +29,7 @@ public $DownloadableIds = [];
         if (Option::istrue('url')) {
             $this->url = Option::getValue('url');
         }
-        $youtube = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
+        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->createWatchList($this->url);
     }
 
@@ -37,22 +37,22 @@ public $DownloadableIds = [];
     {
         // utminfo(func_get_args());
 
-        $youtube          = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
+        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
         $this->premiumIds = $youtube->premiumIds;
         $this->compact();
     }
 
-public function premium()
-{
-    $youtube          = new YoutubeExec($this->playlist, Mediatag::$input, Mediatag::$output);
+    public function premium()
+    {
+        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist(false);
-        $this->premiumIds = $youtube->premiumIds;
+        $this->premiumIds      = $youtube->premiumIds;
         $this->DownloadableIds = $youtube->DownloadableIds;
         $this->compact();
-    
 
-}
+
+    }
 
 
     public function missing()
@@ -72,7 +72,7 @@ public function premium()
                 $missing[] = $id;
             }
         }
-        $file_string   = '';
+        $file_string = '';
         foreach ($missing as $v => $key) {
             $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . \PHP_EOL;
         }
@@ -84,11 +84,11 @@ public function premium()
     {
         // utminfo(func_get_args());
 
-        $files           = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub');
+        $files = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub');
 
 
         foreach ($files as $file) {
-            $key            = File::getVideoKey(basename($file));
+            $key = File::getVideoKey(basename($file));
             if (str_starts_with($key, 'x')) {
                 continue;
             }
@@ -98,7 +98,7 @@ public function premium()
         }
 
         Mediatag::$output->writeln('<info> found ' . count($archive_ids) . ' files</info>');
-        $this->ids       = $existing_ids;
+        $this->ids = $existing_ids;
 
         $archive_content = Filesystem::readLines(self::ARCHIVE);
         $archive_content = array_merge($archive_content, $archive_ids);
@@ -109,14 +109,14 @@ public function premium()
             $f      = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
             $before = \count($f);
             if ($before > 0) {
-                $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array        = array_unique($array);
-                $after        = \count($array);
+                $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+                $array = array_unique($array);
+                $after = \count($array);
 
                 Mediatag::$output->writeln('before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
                 $trimmedLines = $before - $after;
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text         = 'trimmed ' . $trimmedLines . ' from the playlist';
+                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
                 Mediatag::$output->writeln('<info>' . $text . '</info>');
                 if (0 == $after) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
@@ -162,7 +162,7 @@ public function premium()
             }
             Filesystem::writeFile(self::ARCHIVE, $archive_array);
 
-            $files           = Finder::Find('*' . $current_key . '*', __PLEX_DOWNLOAD__);
+            $files = Finder::Find('*' . $current_key . '*', __PLEX_DOWNLOAD__);
             foreach ($files as $k => $file) {
                 Filesystem::delete($file);
             }
@@ -170,8 +170,8 @@ public function premium()
 
         if (false !== self::$trimmedPlaylist) {
             if (false !== self::$originalPlaylist) {
-                $trimmedArray  = Filesystem::readLines(self::$trimmedPlaylist);
-                $orginalArray  = Filesystem::readLines(self::$originalPlaylist);
+                $trimmedArray = Filesystem::readLines(self::$trimmedPlaylist);
+                $orginalArray = Filesystem::readLines(self::$originalPlaylist);
 
                 $playlistArray = array_merge($trimmedArray, $orginalArray);
                 $playlistArray = array_unique($playlistArray, \SORT_STRING);
@@ -184,15 +184,15 @@ public function premium()
     {
         // utminfo(func_get_args());
 
-        $playlist_array         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
+        $playlist_array = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
-        (int) $max              = Option::getValue('max');
-        $trimed_playlist        = \array_slice($playlist_array, 0, $max);
+        (int) $max       = Option::getValue('max');
+        $trimed_playlist = \array_slice($playlist_array, 0, $max);
 
-        $remaining_playlist     = \array_slice($playlist_array, $max);
+        $remaining_playlist = \array_slice($playlist_array, $max);
 
-        $this->OrigPlaylist     = $this->playlist;
-        $this->playlist         = Mediatag::$filesystem->tempnam(__PLEX_PL_TMP_DIR__, 'playlist_', '.txt');
+        $this->OrigPlaylist = $this->playlist;
+        $this->playlist     = Mediatag::$filesystem->tempnam(__PLEX_PL_TMP_DIR__, 'playlist_', '.txt');
 
         self::$trimmedPlaylist  = $this->playlist;
         self::$originalPlaylist = $this->OrigPlaylist;
@@ -234,8 +234,8 @@ public function premium()
     {
         // utminfo(func_get_args());
 
-        $array                 = [];
-        $playlist              = [];
+        $array    = [];
+        $playlist = [];
 
         Mediatag::$SearchArray = Mediatag::$finder->ExecuteSearch();
         $ids                   = $this->getDownloadedIds();
@@ -279,20 +279,20 @@ public function premium()
                 exit;
             }
 
-            $f         = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
-            $before    = \count($f);
+            $f      = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
+            $before = \count($f);
 
-            $idCnt    = \count($this->ids);
+            $idCnt = \count($this->ids);
             //utmdd([$before,$idCnt]);
             if ($before > 0) {
-                $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array        = array_unique($array);
-                $after        = \count($array);
+                $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+                $array = array_unique($array);
+                $after = \count($array);
 
                 Mediatag::$output->writeln('before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
                 $trimmedLines = $before - $after;
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text         = 'trimmed ' . $trimmedLines . ' from the playlist';
+                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
                 Mediatag::$output->writeln('<info>' . $text . '</info>');
                 if (0 == $after) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
@@ -324,7 +324,7 @@ public function premium()
 
         $this->idList = array_unique($this->idList);
 
-        $fileidArray     = [
+        $fileidArray = [
             0 => [self::DISABLED, 0],
             1 => [self::MODELHUB, 1],
             2 => [self::IGNORED, 0],
@@ -343,8 +343,8 @@ public function premium()
             }
         }
         $this->getpremiumIds();
-       $this->idList    = array_merge($this->idList, $this->premiumIds);
-        $this->idList    = array_merge($this->idList, $this->DownloadableIds);
+        $this->idList = array_merge($this->idList, $this->premiumIds);
+        $this->idList = array_merge($this->idList, $this->DownloadableIds);
         return $this->idList;
     }
 

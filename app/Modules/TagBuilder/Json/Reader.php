@@ -9,7 +9,7 @@ use Mediatag\Core\Mediatag;
 use Facebook\WebDriver\Exception\WebDriverException;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Database\TagDB;
-use Mediatag\Modules\Executable\YoutubeExec;
+use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\FileSystem;
@@ -157,7 +157,7 @@ class Reader extends TagReader
 
                 return true;
             } else {
-                $exec            = new YoutubeExec('');
+                $exec            = new Youtube('');
 
                 $exec->youtubeGetJson($this->video_key);
                 $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';

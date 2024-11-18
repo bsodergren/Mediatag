@@ -16,7 +16,7 @@ use UTM\Utilities\Debug\Timer;
 use UTM\Utilities\Option;
 use Nette\Utils\Callback;
 
-class WriteExec extends MediatagExec
+class WriteMeta extends MediatagExec
 {
     use Callables;
     use ffmpeg;

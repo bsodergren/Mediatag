@@ -47,10 +47,11 @@ class VideoPreviewFiles extends VideoPreview
 
 
         // Create a temp directory for building.
-        $temp     = __PLEX_VAR_DIR__ . "/build";
-        $options  = [
+        $temp    = __PLEX_VAR_DIR__ . "/build";
+        $options = [
             'temporary_directory' => $temp,
-        ]
+        ];
+
         (new FileSystem())->mkdir($temp);
         // Use FFProbe to get the duration of the video.
         $ffprobe  = FFprobe::create($options);
@@ -64,28 +65,28 @@ class VideoPreviewFiles extends VideoPreview
         }
 
         // Create an FFMpeg instance and open the video.
-        $ffmpeg   = FFMpeg::create($options);
-        $video    = $ffmpeg->open($this->video_file);
+        $ffmpeg = FFMpeg::create($options);
+        $video  = $ffmpeg->open($this->video_file);
 
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-        $points   = range(0, 100, 10);
+        $points = range(0, 100, 10);
 
         // This will hold our finished frames.
-        $frames   = [];
+        $frames = [];
 
 
         foreach ($points as $point) {
 
             // Point is a percent, so get the actual seconds into the video.
-            $time_secs  = floor($duration * ($point / 100));
+            $time_secs = floor($duration * ($point / 100));
 
             // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
             utmdump($time_secs);
             // Extract the frame.
-            $frame      = $video->frame(TimeCode::fromSeconds($time_secs));
+            $frame = $video->frame(TimeCode::fromSeconds($time_secs));
             $frame->save($point_file);
             // utmdd($point_file);
             // If the frame was successfully extracted, resize it down to
@@ -114,7 +115,7 @@ class VideoPreviewFiles extends VideoPreview
             $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.
-            $gc        = new GifCreator();
+            $gc = new GifCreator();
             $gc->create($frames, $durations, 0);
             file_put_contents($this->previewName, $gc->getGif());
 

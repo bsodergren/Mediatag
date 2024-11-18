@@ -15,6 +15,7 @@ class ConsoleOutput
     public $formatter;
 
     public $output;
+    public $io;
 
     public function __construct($output, $input)
     {

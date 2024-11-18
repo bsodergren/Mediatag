@@ -13,19 +13,19 @@ use Mediatag\Traits\Callables;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
-class YoutubeExec extends MediatagExec
+class Youtube extends MediatagExec
 {
     use Callables;
 
-    public $execMode      = 'write';
+    public $execMode = 'write';
 
     public $premium;
 
     public $num_of_lines;
 
-    public $disabled      = [];
+    public $disabled = [];
 
-    public $premiumIds    = [];
+    public $premiumIds = [];
 
     public $playlist;
 
@@ -37,7 +37,7 @@ class YoutubeExec extends MediatagExec
 
     public $commonOptions;
 
-    private $options      = [
+    private $options = [
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         '-o',
@@ -46,20 +46,20 @@ class YoutubeExec extends MediatagExec
         '-w',
         '-c',
         '--no-part',
-        '--write-info-json',
+        // '--write-info-json',
     ];
 
     public $Console;
     public $yt_json_string;
     public $pltype;
 
-    public $buffer_file   = __APP_HOME__ . '/var/log/buffer.txt';
+    public $buffer_file = __APP_HOME__ . '/var/log/buffer.txt';
 
     public function __construct($playlist, $input = null, $output = null)
     {
         // utminfo(func_get_args());
 
-        $this->playlist      = $playlist;
+        $this->playlist = $playlist;
 
         $this->Console       = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
         $this->commonOptions = [
@@ -80,11 +80,11 @@ class YoutubeExec extends MediatagExec
 
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->options);
-        $options   = array_merge($options, ['--skip-download']);
+        $options   = array_merge($options, ['--skip-download', '--write-info-json']);
         $video_url = 'https://www.pornhub.com/view_video.php?viewkey=' . $video_key;
         $command   = array_merge($options, [$video_url]);
 
-        $callback  = Callback::check([$this, 'downloadJsonCallback']);
+        $callback = Callback::check([$this, 'downloadJsonCallback']);
 
         $this->exec($command, $callback);
 
@@ -102,24 +102,21 @@ class YoutubeExec extends MediatagExec
 
     public function youtubeCmdOptions()
     {
-        // utminfo(func_get_args());
-
-        $options      = [
-            // '--write-thumbnail',
-            '--embed-thumbnail',
-        ];
-
-        $options      = array_merge($this->commonOptions, $this->options, $options);
-        if (! Option::istrue('ignore') && ! Option::istrue('skip')) {
-            $options = array_merge($options, ['--download-archive', __PLEX_PL_DIR__ . '/ids/archive.txt']);
+       
+        $options = array_merge($this->commonOptions, $this->options);
+        if (! Option::istrue('ignore') && ! Option::istrue('skip') && $this->downloadFiles === true) {
+            $options = array_merge($options, [
+                '--download-archive',
+                __PLEX_PL_DIR__ . '/ids/archive.txt',
+                '--write-info-json',
+                '--embed-thumbnail',
+            ]);
         }
         if (Option::istrue('skip') || $this->downloadFiles === false) {
             $options = array_merge($options, ['--skip-download']);
-
         }
 
         $playlist_opt = ['-a', $this->playlist];
-
         return array_merge($options, $playlist_opt);
     }
 
@@ -133,12 +130,12 @@ class YoutubeExec extends MediatagExec
             $this->pltype = 'watchlaterPr';
         }
 
-        $command      = array_merge($this->commonOptions, ['--get-id', $url]);
+        $command = array_merge($this->commonOptions, ['--get-id', $url]);
         $this->exec($command, Callback::check([$this, 'watchlistCallback']));
     }
 
 
-    
+
 
     public function downloadPlaylist($downloadFiles = true)
     {
@@ -148,11 +145,10 @@ class YoutubeExec extends MediatagExec
 
         $this->downloadFiles = $downloadFiles;
 
-        $names               = file($this->playlist);
-        $this->num_of_lines  = \count($names) + 1;
+        $names              = file($this->playlist);
+        $this->num_of_lines = \count($names) + 1;
 
-        $command             = $this->youtubeCmdOptions();
-
+        $command = $this->youtubeCmdOptions();
         if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
             Filesystem::backupPlaylist($this->premium);
@@ -163,7 +159,7 @@ class YoutubeExec extends MediatagExec
             Filesystem::backupPlaylist($this->model_hub);
         }
 
-        $callback            = Callback::check([$this, 'downloadCallback']);
+        $callback = Callback::check([$this, 'downloadCallback']);
         $this->exec($command, $callback);
     }
 
@@ -174,17 +170,16 @@ class YoutubeExec extends MediatagExec
         file_put_contents($keyfile, $this->key . \PHP_EOL, \FILE_APPEND);
     }
 
-    private function updatePlaylist($type,$file = null)
+    private function updatePlaylist($type, $file = null)
     {
         // utminfo(func_get_args());
-        if($file === null)
-        {
+        if ($file === null) {
             $file = $this->playlist;
         }
 
         if ('watchlaterPr' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-           // $this->Console->writeln($url);
+            // $this->Console->writeln($url);
             file_put_contents($file, $url . \PHP_EOL, \FILE_APPEND);
 
             return 1;
@@ -199,7 +194,7 @@ class YoutubeExec extends MediatagExec
 
         if ('premium' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-           // $this->Console->writeln($url);
+            // $this->Console->writeln($url);
 
             if (! str_contains('premium', $file)) {
                 file_put_contents($this->premium, $url . \PHP_EOL, \FILE_APPEND);
@@ -230,7 +225,7 @@ class YoutubeExec extends MediatagExec
 
         // $old_name = $videoInfo['video_name'];
         // $old_path = $videoInfo['video_path'];
-        $json_key     = '';
+        $json_key = '';
         // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
         if (Mediatag::$filesystem->exists($json_file)) {
 
