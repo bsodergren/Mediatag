@@ -5,7 +5,6 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;
@@ -25,7 +24,6 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-
             ['playlist', '', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_FILE')],
             ['find', 'f', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_FIND')],
             ['watchlater', 'w', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_WATCHLATER')],
@@ -34,6 +32,8 @@ class Options extends MediaOptions
             ['premium', 'P', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_PREMIUM')],
 
             ['break'],
+            ['split', 'S', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_SPLIT')],
+
             ['missing', 'm', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_MISSING')],
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_MAX')],
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_JSON')],

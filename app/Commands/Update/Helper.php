@@ -129,13 +129,13 @@ trait Helper
         if (true == Option::isTrue('quiet')) {
             echo $count;
         }
-        $progressBar = new ProgressBar(Mediatag::$Display->BarBottom, $count);
+        $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         // $progressBar->setFormat('verbose');
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
 
-        // $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
-        // $progressBar2->setFormat(' ');
+        $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+        $progressBar2->setFormat(' ');
         if (Option::isTrue('range')) {
             $progressBar->start(null, $nidx - 1);
             // $progressBar2->start(null, $nidx - 1);
