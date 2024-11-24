@@ -38,7 +38,6 @@ class WriteMeta extends MediatagExec
     public function clearMeta($options = null)
     {
         // utminfo(func_get_args());
-
         if (null === Option::getValue('empty', 1)) {
             $this->addOptionArg('--metaEnema');
         } else {
@@ -48,6 +47,7 @@ class WriteMeta extends MediatagExec
         }
 
         $this->addOptionArg('--overWrite');
+        MediaCache::forget($this->video_key);
         $this->write();
     }
 
@@ -64,7 +64,19 @@ class WriteMeta extends MediatagExec
                 }
             }
             if (true === $update) {
+
+                $videoData[$this->video_key] = $this->videoData;
+                $videoData[$this->video_key]['metatags'] = array_merge($this->videoData['currentTags'],$this->videoData['updateTags']);
+
+                unset($videoData[$this->video_key]['currentTags']);
+                unset($videoData[$this->video_key]['updateTags']);
+                unset($videoData[$this->video_key]['video_key']);
+                
+                // utmdd($videoData);
+
                 $this->addOptionArg('--overWrite');
+                MediaCache::forget($this->video_key);
+             //   MediaCache::put($this->video_key,$videoData);
                 $this->write();
             }
         }
@@ -77,7 +89,6 @@ class WriteMeta extends MediatagExec
         // utminfo(func_get_args());
 
         $this->errors = null;
-        $video_key    = File::file($this->video_file, 'videokey');
 
         $command      = [
             Mediatag::App(),
@@ -101,7 +112,6 @@ class WriteMeta extends MediatagExec
 
             $this->exec($command, $callback);
 
-            MediaCache::forget($video_key);
             $results  = ('' != $this->errors) ? $this->errors : $this->stdout;
         } else {
             $results = false;

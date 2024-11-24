@@ -34,14 +34,17 @@ class TagBuilder
         // utminfo(func_get_args());
         $DbUpdates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
+
+      
         if (!\defined('__UPDATE_SET_ONLY__')) {
             $updates = $this->ReaderObj->getFileValues();
+            //utmdd($updates);
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
             $DbUpdates = $this->ReaderObj->getDbValues();
-            // utmdd($DBUpdates);
+            //
         }
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
@@ -67,6 +70,7 @@ class TagBuilder
             $videoInfo['currentTags'] = [];
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
+         
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ('studio' == $tag) {

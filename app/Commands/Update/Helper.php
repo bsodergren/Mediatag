@@ -95,12 +95,19 @@ trait Helper
     public function clearMeta($options = [])
     {
         // utminfo(func_get_args());
+        $VideoList   = $this->VideoList['file'];
+        $count       = \count($VideoList);
+
+        $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
+        $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
 
         foreach ($this->VideoList['file'] as $key => $videoArray) {
             $Command          = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
             $Command->Display = Mediatag::$Display;
             $Command->clearMeta($options);
             unset($Command);
+            $progressBar->advance();
+
         }
     }
 
@@ -146,7 +153,6 @@ trait Helper
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
-
             if (\count($videoArray['updateTags']) > 0) {
                 // $progressBar2->setFormat('custom');
 

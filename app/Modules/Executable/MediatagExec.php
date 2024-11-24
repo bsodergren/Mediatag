@@ -5,7 +5,6 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Traits\Callables;
@@ -14,7 +13,6 @@ use Mediatag\Traits\ExecArgs;
 use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
 use Symfony\Component\Process\Process;
-use UTM\Bundle\Monolog\UTMLog;
 
 class MediatagExec
 {
@@ -50,7 +48,7 @@ class MediatagExec
     public $output;
 
     public $runCommand;
-
+    public $videoData;
     public $updateTags = [];
 
     public $execMode = 'write';
@@ -60,8 +58,9 @@ class MediatagExec
     public function __construct($videoData, $input = null, $output = null)
     {
         // utminfo($videoData);
-
+        $this->videoData = $videoData;
         //        $this->getTags();
+        // $this->video_key = File::file($this->video_file, 'videokey');
 
         if (\is_string($videoData)) {
             if (file_exists($videoData)) {
@@ -92,17 +91,17 @@ class MediatagExec
         // utminfo(func_get_args());
 
         if (null !== $this->execMode) {
-            $this->previewTrait("Running " . $this->runCommand, false);
-         }
+            $this->previewTrait('Running '.$this->runCommand, false);
+        }
     }
 
     public function test()
     {
         // utminfo(func_get_args());
-        //utmdd("fadsf");
-         if (null !== $this->execMode) {
-        $this->testTrait("\t Running " . $this->runCommand, true);
-         }
+        // utmdd("fadsf");
+        if (null !== $this->execMode) {
+            $this->testTrait("\t Running ".$this->runCommand, true);
+        }
     }
 
     public function getTags()
@@ -117,7 +116,6 @@ class MediatagExec
     protected function createOptionArg($meta_tag, $meta_value)
     {
         // utminfo(func_get_args());
-
 
         $this->getCmdArgs($meta_tag, $meta_value);
 
@@ -149,7 +147,6 @@ class MediatagExec
     //     $this->runCommand = $process->getCommandLine();
     //     utmdd($this->runCommand);
 
-
     //     return true;
     // }
     protected function exec($command, $callback = null): mixed
@@ -167,6 +164,7 @@ class MediatagExec
 
         $process->start();
         $process->wait($callback);
+
         return $this->errors;
     }
 }

@@ -19,6 +19,8 @@ class MediaCache
 
     public $output;
 
+    public static $expire = 900;
+
     public static function init(InputInterface $input = null, OutputInterface $output = null)
     {
         // utminfo();
@@ -40,6 +42,8 @@ class MediaCache
             self::$stash->flush();
             exit('cache flushed');
         }
+
+      
     }
 
     public static function get($key)
@@ -47,34 +51,35 @@ class MediaCache
         // utminfo(func_get_args());
 
         if (true == Option::isTrue('nocache')) {
-            return false;
-        }
 
-        return self::$stash->get($key);
+            
+            return false; 
+        }
+        $value =  self::$stash->get($key);
+        // utmdump(["getting key " . $key . " with data",$value]);
+        return $value;
     }
 
     public static function put($key, $value)
     {
-        // utminfo(func_get_args());
+        // utmdump(["saving key " . $key . " with data",$value]);
 
-        // self::forget($key);
-
-        return self::$stash->put($key, $value);
+          return self::$stash->put($key, $value,self::$expire);
     }
 
     public static function flush()
     {
         // utminfo(func_get_args());
 
-        // self::$stash->flush();
+        self::$stash->flush();
 
-        // exit('cache flushed');
+        exit('cache flushed');
     }
 
     public static function forget($key)
     {
         // utminfo(func_get_args());
-
+    // utmdump("forgetting " . $key);
         self::$stash->forget($key);
     }
 }

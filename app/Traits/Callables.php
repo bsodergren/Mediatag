@@ -36,6 +36,8 @@ trait Callables
 
     public function ReadMetaOutput($type, $buffer)
     {
+                    // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata/" . $this->video_key . ".log", $buffer . PHP_EOL);
+
         if (Process::ERR === $type) {
             $this->errors .= $buffer;
         } else {
