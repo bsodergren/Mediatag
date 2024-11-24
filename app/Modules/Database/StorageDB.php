@@ -250,6 +250,7 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo          = ['No' => '<info>' . $this->MultiIDX . '</info>'];
         $videoBlockInfo                        = null;
         $action                                = '<comment>Updated</comment> ';
+
         if (null === $exists) {
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);

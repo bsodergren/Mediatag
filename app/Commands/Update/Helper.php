@@ -111,87 +111,184 @@ trait Helper
             $this->exec();
         }
 
-        $videoArray  = $this->VideoList['file'];
-        $count       = \count($videoArray);
+        $VideoList   = $this->VideoList['file'];
+        $count       = \count($VideoList);
         $current_dir = null;
         $prev_dir    = null;
 
-        $nidx = 1;
+        $nidx = 0;
         $pidx = 1;
 
         if (Option::isTrue('range')) {
             [$count, $nidx] = Mediatag::$finder->getRangeIds($count, 0);
         }
 
-        // ProgressBar::setFormatDefinition('fileList', '<text>%index%</text> <file>%videoname%</file>');
         ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
-
         if (true == Option::isTrue('quiet')) {
             echo $count;
         }
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
-        // $progressBar->setFormat('verbose');
-        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
 
         $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
         $progressBar2->setFormat(' ');
         if (Option::isTrue('range')) {
             $progressBar->start(null, $nidx - 1);
-            // $progressBar2->start(null, $nidx - 1);
+            $progressBar2->start(null, $nidx - 1);
         }
+        $idx = 1;
+        Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
+        Mediatag::$Display->displayTimer = $this->displayTimer;
 
-        foreach ($videoArray as $key => $videoInfo) {
+        foreach ($VideoList as $key => $videoInfo) {
             $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);
             $tagBuilder = new TagBuilder($key, $tagObj);
 
-            $vInfo = $tagBuilder->getTags($videoInfo);
+            $videoArray = $tagBuilder->getTags($videoInfo);
 
-            if (\count($vInfo['updateTags']) > 0) {
+            if (\count($videoArray['updateTags']) > 0) {
                 // $progressBar2->setFormat('custom');
 
-                $name    = $vInfo['video_path'].'/'.$vInfo['video_name'];
-                $message = $name;
-
-                if (!Option::isTrue('list')) {
-                    $this->writeMetaToVideo($vInfo, $count, $nidx);
-                } else {
-                    $this->ChangesArray[] = $vInfo;
+                // $name                 = $videoInfo['video_path'] . '/' . $videoInfo['video_name'];
+                // $message              = $name;
+                // $videoArray = $videoInfo;
+                $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
+                $Command->Display             = Mediatag::$Display;
+                Mediatag::$Display->BlockInfo = [];
+                $videoBlockInfo               = null;
+                Mediatag::$Display->displayFileInfo($videoArray, $count, $idx);
+                if (!Option::isTrue('preview')) {
+                    $Command->writeChanges();
+                   // $this->updateDbEntry($videoArray);
                 }
 
+                foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
+                    $value = trim($value);
+
+                    $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
+                }
+                if (\is_array($videoBlockInfo)) {
+                    $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
+                    Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
+                }
+
+                if ($count != $idx) {
+                    $line_array = [];
+                    for ($n = 0; $n < 9; ++$n) {
+                        $line_array[] = '';
+                    }
+                    $line = implode(\PHP_EOL, $line_array);
+                    // Mediatag::$output->write($line);
+                }
+                ++$idx;
                 ++$nidx;
                 //                Mediatag::$Console->writeln($nidx . " -> " . $message);
                 // $progressBar2->setMessage($nidx, 'index');
                 // $progressBar2->setMessage($message, 'videoname');
+                unset($videoArray[$key]);
+
+                $Command = null;
             }
 
+            $tagObj     = null;
+            $tagBuilder = null;
             $progressBar->advance();
             // $progressBar2->advance();
         }
 
-        $progressBar->finish();
+        // $progressBar->finish();
         // $progressBar2->finish();
     }
+
+    // public function getChanges($options)
+    // {
+    //     // utminfo(func_get_args());
+    //     if (null === $this->VideoList) {
+    //         $this->exec();
+    //     }
+
+    //     $videoArray  = $this->VideoList['file'];
+    //     $count       = \count($videoArray);
+    //     $current_dir = null;
+    //     $prev_dir    = null;
+
+    //     $nidx = 1;
+    //     $pidx = 1;
+
+    //     if (Option::isTrue('range')) {
+    //         [$count, $nidx] = Mediatag::$finder->getRangeIds($count, 0);
+    //     }
+
+    //     // ProgressBar::setFormatDefinition('fileList', '<text>%index%</text> <file>%videoname%</file>');
+    //     ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
+
+    //     if (true == Option::isTrue('quiet')) {
+    //         echo $count;
+    //     }
+    //     $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
+    //     // $progressBar->setFormat('verbose');
+    //     $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
+    //     $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
+
+    //     $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+    //     $progressBar2->setFormat(' ');
+    //     if (Option::isTrue('range')) {
+    //         $progressBar->start(null, $nidx - 1);
+    //         // $progressBar2->start(null, $nidx - 1);
+    //     }
+
+    //     foreach ($videoArray as $key => $videoInfo) {
+    //         $tagObj = new TagReader();
+    //         $tagObj->loadVideo($videoInfo);
+    //         $tagBuilder = new TagBuilder($key, $tagObj);
+
+    //         $vInfo = $tagBuilder->getTags($videoInfo);
+
+    //         if (\count($vInfo['updateTags']) > 0) {
+    //             // $progressBar2->setFormat('custom');
+
+    //             $name    = $vInfo['video_path'].'/'.$vInfo['video_name'];
+    //             $message = $name;
+
+    //             if (!Option::isTrue('list')) {
+    //                 $this->writeMetaToVideo($vInfo, $count, $nidx);
+    //             } else {
+    //                 $this->ChangesArray[] = $vInfo;
+    //             }
+
+    //             ++$nidx;
+    //             //                Mediatag::$Console->writeln($nidx . " -> " . $message);
+    //             // $progressBar2->setMessage($nidx, 'index');
+    //             // $progressBar2->setMessage($message, 'videoname');
+    //         }
+
+    //         $progressBar->advance();
+    //         // $progressBar2->advance();
+    //     }
+
+    //     $progressBar->finish();
+    //     // $progressBar2->finish();
+    // }
 
     // public function saveChanges($json_file = '')
     // {
     //     // utminfo(func_get_args());
 
     //     $this->json_file = $json_file;
-    //     $i=0;
+    //     $i               = 0;
     //     if (null !== $json_file) {
     //         if (file_exists($json_file)) {
-    //             $json               = file_get_contents($json_file);
+    //             $json       = file_get_contents($json_file);
     //             $videoArray = json_decode($json, 1);
     //             utmdd($videoArray);
     //             $this->displayTimer = 250000;
-    //             $count = count($videoArray);
+    //             $count              = \count($videoArray);
     //             foreach ($videoArray as $key => $videoInfo) {
-    //                 $this->writeMetaToVideo($videoInfo,$count,$i++);
+    //                 $this->writeMetaToVideo($videoInfo, $count, $i++);
     //             }
 
-    //                 unlink($json_file);
+    //             unlink($json_file);
 
     //             return true;
     //         }
@@ -206,7 +303,7 @@ trait Helper
     //     if (null !== $this->json_file) {
     //         $json_file = $this->json_file;
     //     } else {
-    //         $json_file = getcwd() . '/tagList.json';
+    //         $json_file = getcwd().'/tagList.json';
     //     }
     //     if (\count($array) > 0) {
     //         if (file_exists($json_file)) {
@@ -217,46 +314,46 @@ trait Helper
     //     }
     // }
 
-    public function writeMetaToVideo($videoArray, $count = null, $index = null)
-    {
-        $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
-        $Command->Display             = Mediatag::$Display;
-        Mediatag::$Display->BlockInfo = [];
-        $videoBlockInfo               = null;
+    // public function writeMetaToVideo($videoArray, $count = null, $index = null)
+    // {
+    //     $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
+    //     $Command->Display             = Mediatag::$Display;
+    //     Mediatag::$Display->BlockInfo = [];
+    //     $videoBlockInfo               = null;
 
-        if (null === $count) {
-            $count = 1;
-        }
-        if (null === $index) {
-            $index = 0;
-        }
+    //     if (null === $count) {
+    //         $count = 1;
+    //     }
+    //     if (null === $index) {
+    //         $index = 0;
+    //     }
 
-        Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
+    //     Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
-        if (!Option::isTrue('preview')) {
-            $Command->writeChanges();
-            $this->updateDbEntry($videoArray);
-        }
+    //     if (!Option::isTrue('preview')) {
+    //         $Command->writeChanges();
+    //         $this->updateDbEntry($videoArray);
+    //     }
 
-        foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-            $value = trim($value);
+    //     foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
+    //         $value = trim($value);
 
-            $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
-        }
-        if (\is_array($videoBlockInfo)) {
-            $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
-            Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
-        }
+    //         $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
+    //     }
+    //     if (\is_array($videoBlockInfo)) {
+    //         $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
+    //         Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
+    //     }
 
-        // if ($count != $index) {
-        //     $line_array = [];
-        //     for ($n = 0; $n < 9; ++$n) {
-        //         $line_array[] = '';
-        //     }
-        //     $line = implode(\PHP_EOL, $line_array);
-        //     // Mediatag::$output->write($line);
-        // }
-    }
+    //     // if ($count != $index) {
+    //     //     $line_array = [];
+    //     //     for ($n = 0; $n < 9; ++$n) {
+    //     //         $line_array[] = '';
+    //     //     }
+    //     //     $line = implode(\PHP_EOL, $line_array);
+    //     //     // Mediatag::$output->write($line);
+    //     // }
+    // }
 
     // public function writeChanges($options = '')
     // {
@@ -266,7 +363,7 @@ trait Helper
     //     $count     = \count($videoList);
     //     $idx       = 1;
     //     if (Option::isTrue('preview')) {
-    //         $ScriptWriter = new ScriptWriter('changes.sh', __PLEX_HOME__ . '/Pornhub');
+    //         $ScriptWriter = new ScriptWriter('changes.sh', __PLEX_HOME__.'/Pornhub');
     //         // $ScriptWriter->addCmd('update', ['-f']);
     //         $ScriptWriter->updatePreview($videoList);
     //         $ScriptWriter->write();
@@ -313,7 +410,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        //  Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData);
+         Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData,false);
     }
 
     public function download()

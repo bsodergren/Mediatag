@@ -326,9 +326,9 @@ class MediaFinder extends SFinder
         if (null === $path) {
             $path = getcwd();
         }
-
         if (Option::isTrue('new')) {
-            $date = 'now - 12 hours';
+            // $this->db_array             = Mediatag::$dbconn->getDbFileList();
+
         }
 
         // UTMlog::logger('Search Directory', $path);
@@ -341,10 +341,7 @@ class MediaFinder extends SFinder
         if (self::$depth != null) {
             $finder->depth('== 0');
         }
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
-        if ($date !== null) {
-            $finder->date('>= ' . $date);
-        }
+       
         if (null !== $this->excludeDir) {
 
             $finder->exclude($this->excludeDir);
@@ -367,12 +364,15 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
+
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
-            // if (Option::isTrue('new')) {
+            if (Option::isTrue('new')) {
 
-            //     $file_array = $this->onlyNew($path, $file_array);
-            // }
+                $file_array = $this->onlyNew($path, $file_array);
+                //  utmdd($file_array);
+            }
+            // 
 
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             if (is_array($file_array)) {
