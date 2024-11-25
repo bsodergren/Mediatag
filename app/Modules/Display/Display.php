@@ -142,9 +142,12 @@ class Display
         } else {
             $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
         }
+        
+
+        // utmdd($fileinfo,$tagCount);
 
 
-        $this->MetaBlockSection->setMaxHeight($tagCount+6);
+        $this->MetaBlockSection->setMaxHeight($tagCount+8);
         $this->VideoInfoSection->setMaxHeight(4);
 
         if (0 == $tagCount) {
@@ -160,7 +163,6 @@ class Display
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
-
         $in_directory       = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename           = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
         $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
@@ -168,7 +170,7 @@ class Display
         $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
         $this->MetaBlockSection->{$method}($this->blockDisplay);
 
-        return true;
+        return count($this->blockDisplay);
         // usleep($this->displayTimer);
     }
 

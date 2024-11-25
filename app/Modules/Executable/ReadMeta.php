@@ -14,7 +14,6 @@ class ReadMeta extends MediatagExec
 {
     use Callables;
 
-
     public $execMode;
 
     public function __construct($videoData, $input = null, $output = null)
@@ -24,12 +23,12 @@ class ReadMeta extends MediatagExec
         parent::__construct($videoData, $input, $output);
     }
 
-
     public function read()
     {
         // utminfo(func_get_args());
 
         $array = MediaCache::get($this->video_key);
+        // utmdump([$this->video_key, $array]);
         // $array = false;
         if (false === $array) {
             $command = [
@@ -52,9 +51,9 @@ class ReadMeta extends MediatagExec
                 ],
             ];
 
-            if (\count($this->metatags) > 0) {
-                MediaCache::put($this->video_key, $array);
-            }
+            // if (\count($this->metatags) > 0) {
+            MediaCache::put($this->video_key, $array);
+            // }
         }
 
         return $array;
@@ -63,7 +62,6 @@ class ReadMeta extends MediatagExec
     private function getMetaValue($text)
     {
         // utminfo(func_get_args());
-      
 
         return preg_replace_callback_array([
             '/.*(alb).*contains\:\ (.*)/' => function ($matches) {

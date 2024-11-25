@@ -95,8 +95,8 @@ trait Helper
     public function clearMeta($options = [])
     {
         // utminfo(func_get_args());
-        $VideoList   = $this->VideoList['file'];
-        $count       = \count($VideoList);
+        $VideoList = $this->VideoList['file'];
+        $count     = \count($VideoList);
 
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
@@ -107,11 +107,48 @@ trait Helper
             $Command->clearMeta($options);
             unset($Command);
             $progressBar->advance();
-
         }
     }
 
     public function getChanges($options)
+    {
+        if (null === $this->VideoList) {
+            $this->exec();
+        }
+
+        $VideoList   = $this->VideoList['file'];
+        $count       = \count($VideoList);
+        $idx         = 1;
+        $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
+        $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
+        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
+
+        ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
+
+        $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+        $progressBar2->setFormat(' ');
+        foreach ($VideoList as $key => $videoInfo) {
+            $tagObj = new TagReader();
+            $tagObj->loadVideo($videoInfo);
+            $tagBuilder = new TagBuilder($key, $tagObj);
+
+            $videoArray = $tagBuilder->getTags($videoInfo);
+            $name       = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']).'/'.$videoInfo['video_name'];
+            $message    = $name;
+            if (\count($videoArray['updateTags']) > 0) {
+                $progressBar2->setFormat('custom');
+                $this->ChangesArray[] = $videoArray;
+                $progressBar2->setMessage($idx, 'index');
+                $progressBar2->setMessage($message, 'videoname');
+                ++$idx;
+                $progressBar2->advance();
+            }
+            $progressBar->advance();
+        }
+        $progressBar2->finish();
+    }
+
+    public function getChanges2($options)
     {
         // utminfo(func_get_args());
         if (null === $this->VideoList) {
@@ -159,6 +196,7 @@ trait Helper
                 // $name                 = $videoInfo['video_path'] . '/' . $videoInfo['video_name'];
                 // $message              = $name;
                 // $videoArray = $videoInfo;
+
                 $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
                 $Command->Display             = Mediatag::$Display;
                 Mediatag::$Display->BlockInfo = [];
@@ -166,7 +204,7 @@ trait Helper
                 Mediatag::$Display->displayFileInfo($videoArray, $count, $idx);
                 if (!Option::isTrue('preview')) {
                     $Command->writeChanges();
-                   // $this->updateDbEntry($videoArray);
+                    // $this->updateDbEntry($videoArray);
                 }
 
                 foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
@@ -320,103 +358,107 @@ trait Helper
     //     }
     // }
 
-    // public function writeMetaToVideo($videoArray, $count = null, $index = null)
-    // {
-    //     $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
-    //     $Command->Display             = Mediatag::$Display;
-    //     Mediatag::$Display->BlockInfo = [];
-    //     $videoBlockInfo               = null;
+    public function writeMetaToVideo($videoArray, $count = null, $index = null)
+    {
+        $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
+        $Command->Display             = Mediatag::$Display;
+        Mediatag::$Display->BlockInfo = [];
+        $videoBlockInfo               = null;
 
-    //     if (null === $count) {
-    //         $count = 1;
-    //     }
-    //     if (null === $index) {
-    //         $index = 0;
-    //     }
+        if (null === $count) {
+            $count = 1;
+        }
+        if (null === $index) {
+            $index = 1;
+        }
 
-    //     Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
+        $lines = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
-    //     if (!Option::isTrue('preview')) {
-    //         $Command->writeChanges();
-    //         $this->updateDbEntry($videoArray);
-    //     }
+        if (1 != $index) {
+            if ($count != $index) {
+                $line_array = [];
+                for ($n = 0; $n < $lines + 6; ++$n) {
+                    $line_array[] = '';
+                }
+                $line = implode(\PHP_EOL, $line_array);
+                Mediatag::$output->write($line);
+            }
+        }
 
-    //     foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-    //         $value = trim($value);
+        foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
+            $value = trim($value);
 
-    //         $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
-    //     }
-    //     if (\is_array($videoBlockInfo)) {
-    //         $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
-    //         Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
-    //     }
+            $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
+        }
+        // utmdump($videoBlockInfo);
 
-    //     // if ($count != $index) {
-    //     //     $line_array = [];
-    //     //     for ($n = 0; $n < 9; ++$n) {
-    //     //         $line_array[] = '';
-    //     //     }
-    //     //     $line = implode(\PHP_EOL, $line_array);
-    //     //     // Mediatag::$output->write($line);
-    //     // }
-    // }
+        if (\is_array($videoBlockInfo)) {
+            $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
+            Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
+        }
+        if (!Option::isTrue('preview')) {
+            $Command->writeChanges();
+            // $this->updateDbEntry($videoArray);
+        }
+    }
 
-    // public function writeChanges($options = '')
-    // {
-    //     // utminfo(func_get_args());
+    public function writeChanges($options = '')
+    {
+        //     // utminfo(func_get_args());
 
-    //     $videoList = $this->ChangesArray;
-    //     $count     = \count($videoList);
-    //     $idx       = 1;
-    //     if (Option::isTrue('preview')) {
-    //         $ScriptWriter = new ScriptWriter('changes.sh', __PLEX_HOME__.'/Pornhub');
-    //         // $ScriptWriter->addCmd('update', ['-f']);
-    //         $ScriptWriter->updatePreview($videoList);
-    //         $ScriptWriter->write();
-    //     }
-    //     Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
-    //     Mediatag::$Display->displayTimer = $this->displayTimer;
+        $videoList = $this->ChangesArray;
+        $count     = \count($videoList);
+        // utmdd([$videoList, $count]);
+        $idx = 1;
+        //     if (Option::isTrue('preview')) {
+        //         $ScriptWriter = new ScriptWriter('changes.sh', __PLEX_HOME__.'/Pornhub');
+        //         // $ScriptWriter->addCmd('update', ['-f']);
+        //         $ScriptWriter->updatePreview($videoList);
+        //         $ScriptWriter->write();
+        //     }
+        Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
+        Mediatag::$Display->displayTimer = $this->displayTimer;
 
-    //     foreach ($videoList as $key => $videoArray) {
-    //         $tmpNetwork = '';
-    //         $tmpStudio  = '';
-    //         // if (array_key_exists("updateTags", $videoArray)) {
-    //         //     $videoUpdates = $videoArray['updateTags'];
-    //         //     if (array_key_exists("studio", $videoUpdates)) {
-    //         //         $tmpStudio = $videoUpdates['studio'];
-    //         //     }
-    //         //     if (array_key_exists("network", $videoUpdates)) {
+        foreach ($videoList as $key => $videoArray) {
+            //         $tmpNetwork = '';
+            //         $tmpStudio  = '';
+            //         // if (array_key_exists("updateTags", $videoArray)) {
+            //         //     $videoUpdates = $videoArray['updateTags'];
+            //         //     if (array_key_exists("studio", $videoUpdates)) {
+            //         //         $tmpStudio = $videoUpdates['studio'];
+            //         //     }
+            //         //     if (array_key_exists("network", $videoUpdates)) {
 
-    //         //         $tmpNetwork = $videoUpdates['network'];
-    //         //         if ($tmpNetwork !== null) {
-    //         //             if($tmpStudio != $tmpNetwork){
-    //         //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
-    //         //             }
-    //         //         }
-    //         //     } elseif (array_key_exists("network", $videoArray['currentTags'])) {
-    //         //         $tmpNetwork = $videoArray['currentTags']['network'];
-    //         //         if ($tmpNetwork !== null) {
-    //         //             if($tmpStudio != $tmpNetwork){
-    //         //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
-    //         //             }
-    //         //         }
+            //         //         $tmpNetwork = $videoUpdates['network'];
+            //         //         if ($tmpNetwork !== null) {
+            //         //             if($tmpStudio != $tmpNetwork){
+            //         //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+            //         //             }
+            //         //         }
+            //         //     } elseif (array_key_exists("network", $videoArray['currentTags'])) {
+            //         //         $tmpNetwork = $videoArray['currentTags']['network'];
+            //         //         if ($tmpNetwork !== null) {
+            //         //             if($tmpStudio != $tmpNetwork){
+            //         //                 $videoArray['updateTags']['studio'] = $tmpStudio . "/" . $tmpNetwork;
+            //         //             }
+            //         //         }
 
-    //         //     }
+            //         //     }
 
-    //         // }
-    //         $this->writeMetaToVideo($videoArray, $count, $idx);
+            //         // }
+            $this->writeMetaToVideo($videoArray, $count, $idx);
 
-    //         ++$idx;
+            ++$idx;
 
-    //         // $cursor->clearOutput();
-    //     }
-    // }
+            //         // $cursor->clearOutput();
+        }
+    }
 
     public function updateDbEntry($videoData)
     {
         // utminfo(func_get_args());
 
-         Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData,false);
+        Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData, false);
     }
 
     public function download()

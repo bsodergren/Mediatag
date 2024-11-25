@@ -167,7 +167,6 @@ class MediaOptions
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_RANGE')],
             ['filenumber', 'F', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_FILENUMBER')],
             ['new', '', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_SHOW_NEWFILES')],
-            ['command','', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_NEXT_COMMAND')],
 
         ];
 
