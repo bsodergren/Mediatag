@@ -84,12 +84,12 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
 
     // public const USE_LIBRARY     = false;
 
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct()
     {
 
-        //$this->logger = $logger;
+    //     //$this->logger = $logger;
         parent::__construct();
-        self::$logger = $logger;
+    //     self::$logger = $logger;
 
 
 

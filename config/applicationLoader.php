@@ -23,18 +23,13 @@ $output = new ConsoleOutput();
 
 $cmdName   = str_replace('media', '', __SCRIPT_NAME__);
 $className = 'Mediatag\\Commands\\' . ucfirst($cmdName) . '\\Command';
-$logger    = interface_exists(LoggerInterface::class) ? new ConsoleLogger($output->getErrorOutput()) : null;
+// $logger    = interface_exists(LoggerInterface::class) ? new ConsoleLogger($output->getErrorOutput()) : null;
 
 // $customCommands = new FactoryCommandLoader([
 //     $cmdName      => function () use($className) {return new $className(); },
 // ]);
+
 $application = new MediaApplication(__SCRIPT_NAME__, '1.0.0');
-$application->add(new $className($logger));
-
-// $dispatcher          = require __CONFIG_LIB__ . '/ConsoleEventListeners.php';
-
-// $application->setDispatcher($dispatcher);
+$application->add(new $className());
 $application->setDefaultCommand($cmdName, true);
-
-
 $application->run();
