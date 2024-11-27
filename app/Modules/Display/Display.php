@@ -103,7 +103,7 @@ class Display
                             $line_array[] = '';
                         }
                         $line       = implode(\PHP_EOL, $line_array);
-                        Mediatag::$output->write($line);
+                      //  Mediatag::$output->write($line);
                     }
                 }
             }
@@ -147,7 +147,7 @@ class Display
         // utmdd($fileinfo,$tagCount);
 
 
-        $this->MetaBlockSection->setMaxHeight($tagCount+8);
+        $this->MetaBlockSection->setMaxHeight($tagCount+6);
         $this->VideoInfoSection->setMaxHeight(4);
 
         if (0 == $tagCount) {

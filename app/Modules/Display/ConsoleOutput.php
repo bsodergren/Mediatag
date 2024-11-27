@@ -42,6 +42,11 @@ class ConsoleOutput
         $this->output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
     }
 
+
+    public function __call($method,$args)
+    {
+        $this->io->$method($args);
+    }
     public function debug($text)
     {
         // utminfo(func_get_args());

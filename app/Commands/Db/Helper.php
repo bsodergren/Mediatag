@@ -112,16 +112,16 @@ trait Helper
             'Database Updates',
             ['Files found'   => \count($this->file_array)],
             ['Deleted files' => \count($this->Deleted_Array)],
-            ['Changed files' => $changed_string],
+            ['Changed files' => \count($this->Changed_Array)],
             ['New files'     => \count($this->New_Array)],
         );
 
         // utmdd([__METHOD__,
-        //     'files' => count($this->file_array),
-        //      'new' => $this->New_Array,
-        //      'changed' => count($this->Changed_Array),
-        //      'deleted' => count($this->Deleted_Array),
-        //  ]);
+        //     'files'   => \count($this->file_array),
+        //     'new'     => $this->New_Array,
+        //     'changed' => \count($this->Changed_Array),
+        //     'deleted' => \count($this->Deleted_Array),
+        // ]);
 
         return [
             'new'     => $this->New_Array,

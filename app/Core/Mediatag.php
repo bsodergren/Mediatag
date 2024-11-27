@@ -14,6 +14,8 @@ use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Cursor;
+
 use Symfony\Component\Console\Input\ArrayInput;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
@@ -30,7 +32,7 @@ abstract class Mediatag extends Command
     public static $SearchArray = [];
 
     public static $finder;
-
+    public static $Cursor;
     public static $filesystem;
 
     public static $Console;
@@ -124,7 +126,7 @@ abstract class Mediatag extends Command
         MediaCache::init($input, $output);
 
         Option::init($input, $options);
-
+        self::$Cursor = new Cursor($output);
         self::$Console = new ConsoleOutput($output, $input);
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {

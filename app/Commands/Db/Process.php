@@ -106,7 +106,8 @@ class Process extends Mediatag
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+                Mediatag::$output->writeln($file.'is dup');
+                //  (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
                 continue;
             }
             $this->file_array[$key] = $file;
@@ -115,6 +116,7 @@ class Process extends Mediatag
         parent::$dbconn->file_array = $this->file_array;
         $this->db_array             = parent::$dbconn->getDbFileList();
 
+        // utmdd( $this->db_array  );
         return $this;
     }
 
