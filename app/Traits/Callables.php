@@ -248,8 +248,9 @@ trait Callables
 
     public function downloadJsonCallback($type, $buffer)
     {
-        $outputText = '';
-        $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
+        // $outputText = '';
+        // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
 
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
@@ -279,7 +280,6 @@ trait Callables
 
         $outputText = '';
         $line_id    = '<id>' . $this->num_of_lines . '</id>';
-
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
                 if ('' != $matches[2]) {
