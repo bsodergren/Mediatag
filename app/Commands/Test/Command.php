@@ -16,7 +16,7 @@ const NAME        = 'test';
 class Command extends MediaCommand
 {
     use Lang;
-    // public const USE_LIBRARY     = false;
+    public const USE_LIBRARY     = false;
 
  
 }

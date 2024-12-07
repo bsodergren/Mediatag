@@ -5,9 +5,8 @@
 
 namespace Mediatag\Commands\Test;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
 
 class Options extends MediaOptions
@@ -17,6 +16,7 @@ class Options extends MediaOptions
     // public $options                          = ['Default'=>false];
     // public $options = ['Default'=>true, 'Test'=>true];
     public $options = ['Default',  'Test'];
+
     public function Definitions()
     {
         // utminfo(func_get_args());
@@ -24,7 +24,7 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-
+            ['convert', 'c', InputOption::VALUE_NONE, Translate::text('L__SHOW_CMDT')],
             ['output', 'o', InputOption::VALUE_REQUIRED, Translate::text('L__SHOW_PLAYLIST')],
         ];
     }

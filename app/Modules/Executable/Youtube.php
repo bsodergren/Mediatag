@@ -46,7 +46,7 @@ class Youtube extends MediatagExec
         '-w',
         '-c',
         '--no-part',
-        // '--write-info-json',
+        '--write-info-json',
     ];
 
     // private $jsonoptions = [

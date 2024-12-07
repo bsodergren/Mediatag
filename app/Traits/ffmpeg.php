@@ -8,30 +8,40 @@ namespace Mediatag\Traits;
 use Mediatag\Core\Mediatag;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem;
-use UTM\Bundle\Monolog\UTMLog;
-use Symfony\Component\Process\Process;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use UTM\Bundle\Monolog\UTMLog;
 
 trait ffmpeg
 {
-    public $ffmpeg     = [];
+    public $ffmpeg = [];
 
     public $ffmpegArgs = ['-y', '-hide_banner', '-loglevel', 'verbose'];
 
     public function ProgressbarOutput($type, $buffer)
     {
+        $outputText = '';
         $this->progress->advance();
+        $buffer = str_replace("\n", '', $buffer);
+        switch ($buffer) {
+            case str_starts_with($buffer, 'frame='):
+                $outputText = $buffer;
+                break;
+        }
+        if ('' != $outputText) {
+            Mediatag::$output->write($outputText);
+        }
+
+        //        
     }
 
     public function Outputdebug($type, $buffer)
     {
-
         if (Process::ERR === $type) {
             // Mediatag::$output->writeln($buffer);
             //  Mediatag::$output->writeln($this->cmdline);
-            //echo 'ERR > '.$buffer;
-
+            // echo 'ERR > '.$buffer;
         }
     }
 
@@ -41,9 +51,9 @@ trait ffmpeg
 
         $this->ffmpeg = [CONFIG['FFMPEG_CMD']];
 
-        $command      = array_merge($this->ffmpeg, $this->ffmpegArgs, $cmdOptions);
+        $command = array_merge($this->ffmpeg, $this->ffmpegArgs, $cmdOptions);
 
-        $process      = new Process($command);
+        $process = new Process($command);
 
         $process->setTimeout(null);
         $process->start();
@@ -53,24 +63,29 @@ trait ffmpeg
         }
     }
 
-    public function convertVideo($file)
+    public function convertVideo($file, $output_file)
     {
         // utminfo(func_get_args());
 
-        $new_file       = str_replace('.mkv', '.mp4', $file);
-        $this->progress = new ProgressBar($this->barSection);
+        // $new_file       = str_ireplace('.mov', '.mp4', $file);
+        $this->progress = new ProgressBar(Mediatag::$Display->BarSection1, 100);
         $this->progress->setFormat('%bar%');
+        // $this->progress->setBarWidth(100);
+
         $this->progress->start();
 
-        $cmdOptions     = ['-i', $file, '-map', '0', '-c:v', 'copy', '-c:a', 'aac', $new_file];
-        $callback       = Callback::check([$this, 'ProgressbarOutput']);
+        // $cmdOptions = ['-i', $file, '-map', '0', '-c:v', 'copy', '-c:a', 'aac', $new_file];
+        $cmdOptions = ['-i', $file, '-qscale', '0', $output_file];
+        $callback   = Callback::check([$this, 'ProgressbarOutput']);
 
         $this->ffmpegExec($cmdOptions, $callback);
 
-        $this->progress->finish();
-        $dmg_dir        = str_replace('/XXX', '/XXX/mkv', \dirname($file));
+        $this->progress->clear();
+        // Mediatag::$output->writeln('<comment>Transcoding Video '.$file.'</comment>');
+
+        $dmg_dir = str_replace('/XXX', '/XXX/mkv', \dirname($file));
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($file, $dmg_dir . '/' . basename($file));
+        FileSystem::rename($file, $dmg_dir.'/'.basename($file));
     }
 
     public function repairVideo()
@@ -83,12 +98,12 @@ trait ffmpeg
         $new_tmp_file = str_replace('.mp4', '_new.mp4', $this->video_file);
         // // UTMlog::logNotice('new file', [$orig_file, $new_file, $new_tmp_file]);
 
-        $cmdOptions   = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
+        $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
         $this->ffmpegExec($cmdOptions);
 
-        $dmg_dir      = str_replace('/XXX', '/XXX/dmg', $this->video_path);
+        $dmg_dir = str_replace('/XXX', '/XXX/dmg', $this->video_path);
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($orig_file, $dmg_dir . '/' . $this->video_name);
+        FileSystem::rename($orig_file, $dmg_dir.'/'.$this->video_name);
         FileSystem::rename($new_tmp_file, $new_file);
 
         $this->write();
@@ -98,7 +113,7 @@ trait ffmpeg
     {
         // utminfo(func_get_args());
 
-        $cmdOptions    = [
+        $cmdOptions = [
             '-ss', $time, '-i', $video_file, '-vf',
             'scale=320:240:force_original_aspect_ratio=decrease',
             '-vframes', '1', $thumbnail,

@@ -8,9 +8,31 @@ namespace Mediatag\Commands\Test;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
+use Mediatag\Traits\ffmpeg;
 
 trait Helper
 {
+    use ffmpeg;
+
+    public function convert()
+    {
+        foreach ($this->VideoList['file'] as $key => $vidArray) {
+           
+            $video_file = $vidArray['video_file'];
+            $video_path = $vidArray['video_path'];
+            $video_name = $vidArray['video_name'];
+ Mediatag::$output->writeln('<info>Transcoding Video '.$video_name.'</info>');
+
+            $pcs        = explode('.', $video_name);
+            Filesystem::createDir($video_path.\DIRECTORY_SEPARATOR.'mp4');
+
+            $new_file = $video_path.\DIRECTORY_SEPARATOR.'mp4'.\DIRECTORY_SEPARATOR.$pcs[0].'.mp4';
+            $this->convertVideo($video_file, $new_file);
+            
+        }
+        exit;
+    }
+
     public function t1($val, $min, $max)
     {
         // utminfo(func_get_args());
@@ -23,24 +45,24 @@ trait Helper
         // utminfo(func_get_args());
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-            $min            = 0;
-            $hours          = 0;
-            $minutes        = 0;
-            $seconds        = 0;
+            $min     = 0;
+            $hours   = 0;
+            $minutes = 0;
+            $seconds = 0;
 
             $this->duration = new Duration(Mediatag::$input, Mediatag::$output);
             $duration       = $this->duration->getDbDuration($vidArray['video_key'], $vidArray['video_file']);
             $duration       = (int) $duration;
 
-            $seconds        = round($duration / 1000);
-            $hours          = floor($seconds / 3600);
+            $seconds = round($duration / 1000);
+            $hours   = floor($seconds / 3600);
 
-            $min            = round((float) $seconds / 60 % 60);
+            $min = round((float) $seconds / 60 % 60);
 
-            $sec            = round($seconds % 60);
-            $minutes        = $min + ($hours * 60);
+            $sec     = round($seconds % 60);
+            $minutes = $min + ($hours * 60);
 
-            $dur            = $minutes;
+            $dur = $minutes;
             if ($this->t1($minutes, 0, 10)) {
                 $video_array['0_9'][] = $vidArray['video_file'];
             }
@@ -76,15 +98,15 @@ trait Helper
         $filesystem = new Filesystem();
 
         foreach ($video_array as $dir => $fileArray) {
-            $new_path = __PLEX_HOME__ . '/Duration/' . $dir;
-            if (! is_dir($new_path)) {
+            $new_path = __PLEX_HOME__.'/Duration/'.$dir;
+            if (!is_dir($new_path)) {
                 $filesystem->mkdir($new_path);
             }
             foreach ($fileArray as $file) {
-                $new_filePath = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__, $new_path, $file);
-                if (! file_exists($new_filePath)) {
+                $new_filePath = str_replace(__PLEX_HOME__.'/'.__LIBRARY__, $new_path, $file);
+                if (!file_exists($new_filePath)) {
                     $filesystem->symlink($file, $new_filePath);
-                    echo 'creating symlink for ' . basename($file) . "\n";
+                    echo 'creating symlink for '.basename($file)."\n";
                     // utmdd([__METHOD__,$new_filePath, $file]);
                 }
             }
@@ -98,22 +120,22 @@ trait Helper
         $filesystem = new Filesystem();
         // foreach ($video_array as $dir => $fileArray)
         // {
-        $new_path   = __PLEX_HOME__ . '/backup_ph';
+        $new_path = __PLEX_HOME__.'/backup_ph';
         foreach ($video_array as $file) {
             $file         = trim($file);
-            $new_fileName = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__ . '/Pornhub', $new_path, $file);
-            $new_fileName = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__ . '/Studios', $new_path, $new_fileName);
+            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Pornhub', $new_path, $file);
+            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Studios', $new_path, $new_fileName);
 
             //                $new_fileName = str_replace($new_path.'/Studios', $new_path, $new_fileName);
             $new_filePath = str_replace(basename($new_fileName), '', $new_fileName);
-            if (! is_dir($new_filePath)) {
+            if (!is_dir($new_filePath)) {
                 $filesystem->mkdir($new_filePath);
             }
 
             if (file_exists($file)) {
-                if (! file_exists($new_fileName)) {
+                if (!file_exists($new_fileName)) {
                     $filesystem->rename($file, $new_fileName);
-                    echo 'mving for ' . basename($file) . "\n";
+                    echo 'mving for '.basename($file)."\n";
                     //   utmdd([__METHOD__,$new_fileName, $file]);
                 }
             }
@@ -131,17 +153,15 @@ trait Helper
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $filename = basename($vidArray['video_file']);
             //            if(str_contains($filename,$dir)){
-            if (! str_starts_with($key, 'x')) {
-                $ph_video[]    = 'https://www.pornhub.com/view_video.php?viewkey=' . $key . \PHP_EOL;
-                echo 'adding ' . basename($vidArray['video_file']) . "\n";
-                $video_array[] = $vidArray['video_file'] . \PHP_EOL;
+            if (!str_starts_with($key, 'x')) {
+                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+                echo 'adding '.basename($vidArray['video_file'])."\n";
+                $video_array[] = $vidArray['video_file'].\PHP_EOL;
             }
         }
-        file_put_contents(__LIBRARY__ . '_playlist.txt', $ph_video);
-        file_put_contents(__LIBRARY__ . 'files.txt', $video_array);
+        file_put_contents(__LIBRARY__.'_playlist.txt', $ph_video);
+        file_put_contents(__LIBRARY__.'files.txt', $video_array);
 
         $this->mvFiles($video_array);
     }
-
-
 }

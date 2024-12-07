@@ -5,29 +5,18 @@
 
 namespace Mediatag\Commands\Test;
 
-use Diff;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Psr\Log\LoggerInterface;
-use Diff_Renderer_Text_Unified;
 use FFMpeg\Coordinate\TimeCode;
-use Symfony\Component\Panther\Client;
-use Mediatag\Services\MessageGenerator;
 use Mediatag\Modules\Display\ShowDisplay;
-use Nette\Utils\FileSystem as nFileSystem;
-use Mediatag\Modules\Executable\Javascript;
-use Symfony\Component\HttpClient\HttpClient;
-use SiteOrigin\StringSplitter\StringSplitter;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Symfony\Component\Console\Input\ArrayInput;
 
-
-include_once __DATA_MAPS__ . '/WordMap.php';
+include_once __DATA_MAPS__.'/WordMap.php';
 
 class Process extends Mediatag
 {
@@ -40,14 +29,18 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
+        'convert'     => [
+            'exec'         => null,
+            'convert'      => null,
+        ],
     ];
 
-    public $csvfilename = __DOWNLOAD_DIR__ . '/pornhub.com-db.csv';
+    public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
-    public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
+    public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // utminfo(func_get_args());
-
+        define('SKIP_SEARCH', true);
         parent::boot($input, $output);
 
         //  utmdd(Command::$logger);
@@ -62,24 +55,23 @@ class Process extends Mediatag
         return null;
     }
 
-  
     public function exec($option = null)
     {
-
-       
-       
         // utminfo(func_get_args());
+            $path = getcwd();
+        
+$finder = new MediaFinder();
+$this->VideoList =$finder->Search($path,'/\.mov$/i');
 
-        // $this->VideoList = parent::getVideoArray();
-
-
+parent::$SearchArray = $this->VideoList ;
+        $this->VideoList = parent::getVideoArray();
+// utmdd($this->VideoList );
         // //
         // foreach ($this->VideoList['file'] as $key => $videoInfo) {
         //     // $preview    = new VideoPreview();
         //     // $previewLoc = $preview->BuildPreview($videoInfo);
 
         //     $file[] = $videoInfo['video_file'];
-
 
         // }
         // $outputFile = Option::getValue('output', true);
@@ -134,12 +126,10 @@ class Process extends Mediatag
         // // unlink($outputFile);
         // //echo $exec->stdout;
         // return 1;
-
     }
 
     public function print()
     {
         // utminfo(func_get_args());
-
     }
 }
