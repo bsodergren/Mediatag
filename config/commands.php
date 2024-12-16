@@ -8,6 +8,7 @@ namespace Mediatag\Config;
 use Mediatag\Commands\Create\Command as CreateCommand;
 use Mediatag\Commands\Db\Command as DBCommand;
 use Mediatag\Commands\Download\Command as DlCommand;
+use Mediatag\Commands\Gallery\Command as GalleryCommand;
 use Mediatag\Commands\Map\Command as MapCommand;
 use Mediatag\Commands\Playlist\Command as PlaylistCommand;
 use Mediatag\Commands\Rename\Command as RenameCommand;
@@ -29,6 +30,7 @@ return new FactoryCommandLoader([
     'update'    => function () {return new UpdateCommand(); },
     'show'      => function () {return new ShowCommand(); },
     'db'        => function () {return new DBCommand(); },
+    'gallery'   => function () {return new GalleryCommand(); },
     'rename'    => function () {return new RenameCommand(); },
     // %%NEW_CMD%%
 ]);

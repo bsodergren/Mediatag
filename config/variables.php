@@ -3,9 +3,9 @@
  * Command like Metatag writer for video files.
  */
 
-$dbConfig           = __CONFIG_LIB__ . \DIRECTORY_SEPARATOR . 'database.yaml';
+$dbConfig = __CONFIG_LIB__.\DIRECTORY_SEPARATOR.'database.yaml';
 
-UTM\Utilities\Loader::loadDatabase($dbConfig, "__MYSQL_", "__", "__");
+UTM\Utilities\Loader::loadDatabase($dbConfig, '__MYSQL_', '__', '__');
 
 define(
     '__MYSQL_TRUNC_TABLES__',
@@ -50,6 +50,7 @@ define(
         'Home Videos',
         'Downloads',
         'Playlists',
+        'Home Pictures',
     ],
 );
 
@@ -111,21 +112,21 @@ define(
     ],
 );
 
-$genre_regex_string = strtolower(implode("|", __GENRE_LIST__));
+$genre_regex_string = strtolower(implode('|', __GENRE_LIST__));
 define(
     '__GENRE_REGEX__',
-    '/[a-zA-Z _0-9\.\/]*\/(' . $genre_regex_string . ')(.*)?(\/*.mp4)?/i',
+    '/[a-zA-Z _0-9\.\/]*\/('.$genre_regex_string.')(.*)?(\/*.mp4)?/i',
 );
 // '/[a-zA-Z _0-9\.\/]*\/(group|mmf|mff|single|only girls|bimale|trans|only blowjobs|compilation)(.*)?(\/*.mp4)?/i'
 
 // $console_width = (int) @exec('tput cols');
 // if($console_width == 0) {
-$console_width      = 120;
+$console_width = 120;
 // }
 
 define('__CONSOLE_WIDTH__', $console_width);
 
-//define('__CONSOLE_WIDTH__', 900);
+// define('__CONSOLE_WIDTH__', 900);
 
 define('__LIMIT_CRON_QUERY__', 1000);
 
@@ -134,5 +135,5 @@ define('__CACHE_TIMEOUT__', 240);
 define('__TIMER_LOG__', true);
 define('__TIMER_DISPLAY__', false);
 
-const PHP_DBL       = \PHP_EOL . \PHP_EOL;
-const PHP_TAB       = "\t";
+const PHP_DBL = \PHP_EOL.\PHP_EOL;
+const PHP_TAB = "\t";
