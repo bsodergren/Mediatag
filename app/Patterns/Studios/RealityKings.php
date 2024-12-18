@@ -18,9 +18,9 @@ class RealityKings extends Patterns
                 'pattern' => '/^([a-zA-Z]{1,5})_.*/i',
             ],
             'title'  => [
-                'pattern' => '/^([a-zA-Z]{1,5})_([_a-zA-Z0-9]+).mp4/i',
-                'delim'   => '_',
-                'match'   => 2,
+                'pattern' => '/([_a-zA-Z0-9-]+)_[0-9kp]{1,5}.mp4/i',
+                'delim'   => '-',
+                'match'   => 1,
             ],
         ],
     ];

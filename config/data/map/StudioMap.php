@@ -30,7 +30,7 @@ const STUDIO_MAP = [
 
     '21stsextury'         => 'TwentyFirstSextury',
     '1000facials'         => 'ThousandFacials',
-    // 'private'             => 'PrivateVid',
+    'private'             => 'PrivateVid',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',

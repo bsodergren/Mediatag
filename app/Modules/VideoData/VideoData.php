@@ -15,7 +15,7 @@ class VideoData
     public $video_key;
 
     public $video_file;
-
+public $video_id;
     public $returnText;
     public $updatedText = "<comment>Updated ";
     public $newText     = "<fg=red>Wrote ";
@@ -189,7 +189,18 @@ class VideoData
         // utminfo(func_get_args());
 
     }
+    public function getvideoId($key){
 
+        $this->VideoInfo   = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
+        $this->video_id = null;
+        if($this->VideoInfo === null){
+            return null;
+        }
+        $this->video_id = $this->VideoInfo['id'];
+        return $this->video_id;
+        //utmdd($exists);
+        
+    }
     // public function getText()
     // {
     //     // utminfo(func_get_args());

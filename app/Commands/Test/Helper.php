@@ -5,8 +5,10 @@
 
 namespace Mediatag\Commands\Test;
 
+use Mediatag\Commands\Test\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\Data\Markers;
 use Mediatag\Modules\VideoData\Duration;
 use Mediatag\Traits\ffmpeg;
 
@@ -14,21 +16,61 @@ trait Helper
 {
     use ffmpeg;
 
+    use MarkerHelper;
+
+    public $Marker;
+
+    public function createClip()
+    {
+        foreach ($this->VideoList['file'] as $key => $vidArray) {
+            $this->Marker = new Markers();
+            $this->Marker->getvideoId($key);
+            if (null !== $this->Marker->video_id) {
+                $query = $this->Marker->videoQuery($this->Marker->video_id);
+
+                $result = Mediatag::$dbconn->query($query);
+
+                $markers = $this->getVideoMarks($result);
+                //  utmdd($markers);
+
+                // utmdump([$this->Marker->video_id,$query,$markers ]);
+                if (\count($markers) > 0) {
+                    $markerArray[] = $markers;
+                }
+            }
+        }
+
+        foreach ($markerArray as $i =>$fileRow) {
+            foreach ($fileRow as $K =>$FILE) {
+                $filename = $FILE['filename'];
+                if (\count($FILE['markers']) > 0) {
+                    foreach ($FILE['markers'] as $idx =>$marker) {
+                        $outputFile = str_replace('/XXX', '/Clips', $filename);
+                        $outputFile = str_replace('.mp4', '_'.$marker['text'].'_'.$idx.'.mp4', $outputFile);
+                        Filesystem::createDir(\dirname($outputFile));
+                        $this->ffmpegCreateClip($filename, $marker['start'], $marker['end'], $outputFile);
+                        // utmdump([$filename, $marker['start'], $marker['end'], $outputFile]);
+                    }
+                }
+            }
+        }
+
+        // exit;
+    }
+
     public function convert()
     {
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-           
             $video_file = $vidArray['video_file'];
             $video_path = $vidArray['video_path'];
             $video_name = $vidArray['video_name'];
- Mediatag::$output->writeln('<info>Transcoding Video '.$video_name.'</info>');
+            Mediatag::$output->writeln('<info>Transcoding Video '.$video_name.'</info>');
 
-            $pcs        = explode('.', $video_name);
+            $pcs = explode('.', $video_name);
             Filesystem::createDir($video_path.\DIRECTORY_SEPARATOR.'mp4');
 
             $new_file = $video_path.\DIRECTORY_SEPARATOR.'mp4'.\DIRECTORY_SEPARATOR.$pcs[0].'.mp4';
             $this->convertVideo($video_file, $new_file);
-            
         }
         exit;
     }

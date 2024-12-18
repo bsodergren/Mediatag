@@ -5,16 +5,16 @@
 
 namespace Mediatag\Commands\Test;
 
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Modules\Display\ShowDisplay;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
@@ -33,6 +33,10 @@ class Process extends Mediatag
             'exec'         => null,
             'convert'      => null,
         ],
+        'clip'        => [
+            'exec'=>null,
+            'createClip' => null,
+        ],
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
@@ -40,7 +44,9 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // utminfo(func_get_args());
-        define('SKIP_SEARCH', true);
+        if (!Option::isTrue('clip')) {
+          //  \define('SKIP_SEARCH', true);
+        }
         parent::boot($input, $output);
 
         //  utmdd(Command::$logger);
@@ -58,14 +64,13 @@ class Process extends Mediatag
     public function exec($option = null)
     {
         // utminfo(func_get_args());
-            $path = getcwd();
-        
-$finder = new MediaFinder();
-$this->VideoList =$finder->Search($path,'/\.mov$/i');
+        $path = getcwd();
 
-parent::$SearchArray = $this->VideoList ;
-        $this->VideoList = parent::getVideoArray();
-// utmdd($this->VideoList );
+        // $finder          = new MediaFinder();
+        // $this->VideoList = $finder->Search($path, '/\.mov$/i');
+
+        // parent::$SearchArray = $this->VideoList;
+        $this->VideoList     = parent::getVideoArray();
         // //
         // foreach ($this->VideoList['file'] as $key => $videoInfo) {
         //     // $preview    = new VideoPreview();

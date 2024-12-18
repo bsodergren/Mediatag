@@ -268,7 +268,6 @@ class StorageDB extends Storage
 
         Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
         if ($video_id !== null) {
-            utmdd("fsdf");
 
             // $this->vtags = new VideoTags();
             Mediatag::$Display->BlockInfo['MetaTags']  = (new VideoTags())->getVideoInfo($key, $video_file);

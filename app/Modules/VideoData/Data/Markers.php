@@ -31,14 +31,15 @@ class Markers extends VideoData
 
     public $returnText;
 
-    private $updatedText   = "<comment>Updated ";
-    private $newText       = "<fg=red>Wrote ";
-    private $actionText    = 'Thumbnail</> ';
+    public $updatedText   = "<comment>Updated ";
+    public $newText       = "<fg=red>Wrote ";
+    public $actionText    = 'Thumbnail</> ';
 
     public $VideoDataTable = __MYSQL_VIDEO_CHAPTER__;
 
 
-    private function videoDuration($duration)
+   
+    public function videoDuration($duration)
     {
         // utminfo(func_get_args());
 
@@ -180,23 +181,28 @@ class Markers extends VideoData
         return $thumbnailImages;
     }
 
-    public function videoQuery()
+    public function videoQuery($video_id = null)
     {
         // utminfo(func_get_args());
-
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode,vm.id ";
+        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id ";
+        $order = '';
+        if($video_id === null){
         $where  = ' vm.markerThumbnail is null ';
-
+        } else {
+            $where  = ' vm.video_id =  ' . $video_id .' ';
+            $fields = $fields  . ', vm.markerText ';
+            $order = ' ORDER BY `vm`.`timeCode` ASC';
+        }
         if (Option::istrue('update')) {
             $where = ' vm.markerThumbnail is not null ';
         }
 
         $where  = $where . ' AND f.id = vm.video_id ';
 
-        return "SELECT " . $fields . " FROM
 
-         " . $this->VideoDataTable . " vm,
-         " . __MYSQL_VIDEO_FILE__ . " f WHERE " . $where;
+        
+
+        return "SELECT " . $fields . " FROM " . $this->VideoDataTable . " vm, " . __MYSQL_VIDEO_FILE__ . " f WHERE " . $where . $order;
     }
 
 

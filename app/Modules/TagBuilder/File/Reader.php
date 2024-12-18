@@ -5,19 +5,15 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Debug\Debug;
-use Mediatag\Utilities\ScriptWriter;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
-use Symfony\Component\Filesystem\Filesystem;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\TagBuilder\File\StudioReader;
-use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
+use Mediatag\Utilities\ScriptWriter;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Option;
 
-include_once __DATA_MAPS__ . '/StudioMap.php';
+include_once __DATA_MAPS__.'/StudioMap.php';
 
 class Reader extends TagReader
 {
@@ -25,15 +21,14 @@ class Reader extends TagReader
 
     public $genre;
 
-    public $studio    = null;
-    public $network   = null;
-    public $videoData = null;
+    public $studio;
+    public $network;
+    public $videoData;
     public $video_file;
 
     public $video_path;
 
     public $tag_array = [];
-
 
     public $video_key;
     public $className;
@@ -44,7 +39,6 @@ class Reader extends TagReader
 
     public static $PatternClass;
     public static $PatternClassObj;
-
 
     public function __construct($videoData)
     {
@@ -58,24 +52,20 @@ class Reader extends TagReader
         $className = $this->video_library;
         $classPath = 'Mediatag\\Patterns\\';
 
-
-
         $networkName = '';
-
-
-
 
         //        $this->getnetwork();
         $this->getStudio();
-        $studioName  = $this->getStudioClass($this->studio);
-        $studioClass = $classPath . $this->video_library . $studioName;
+        $studioName = $this->getStudioClass($this->studio);
+
+        $studioClass = $classPath.$this->video_library.$studioName;
 
         // $networkName = $this->getStudioClass($this->network);
 
         if (Option::isTrue('addNetwork')) {
             $networkName      = Option::getValue('addNetwork', 1);
             $networkClassName = $this->getStudioClass($networkName);
-            $networkClass     = $classPath . $this->video_library . $networkClassName;
+            $networkClass     = $classPath.$this->video_library.$networkClassName;
 
             if (!class_exists($networkClass)) {
                 $classOption = [
@@ -87,22 +77,19 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
-        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && $this->video_library == 'Studios') {
+        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && 'Studios' == $this->video_library) {
             // UTMlog::Logger('File Studio className', $className);
-
 
             // if (Option::isTrue('addClass')) {
 
             $this->writeStudioClass();
-
-
 
             // }
 
             $classAttm[] = $studioClass;
 
             if (!class_exists($studioClass)) {
-                $studioClass = "Mediatag\\Modules\\TagBuilder\\Patterns";
+                $studioClass = 'Mediatag\\Modules\\TagBuilder\\Patterns';
                 $classAttm[] = $studioClass;
             }
         }
@@ -113,13 +100,12 @@ class Reader extends TagReader
             self::$PatternClass  = $studioClass;
             $this->PatternObject = new $studioClass($this);
 
-           // utmdd($this->PatternObject->network);
+            // utmdd($this->PatternObject->network);
             $this->PatternObject->video_file = $this->video_file;
             self::$PatternClassObj           = $this->PatternObject;
         }
 
         //  utmdd($this->PatternObject );
-
     }
 
     public function getStudioClass($studio)
@@ -131,30 +117,26 @@ class Reader extends TagReader
         $className = str_replace('&', '_', $className);
 
         $className = trim($className);
-        if ($className == "") {
-            return "";
+        if ('' == $className) {
+            return '';
         }
 
-        return '\\' . $this->mapStudio($className);
+        return '\\'.$this->mapStudio($className);
     }
 
     /**
-     * Summary of __call
-     * @param mixed $method
-     * @param mixed $arg
-     * @return mixed
+     * Summary of __call.
      */
     public function __call($method, $arg)
     {
         // utminfo(func_get_args());
 
-        $getMethod = 'get' . ucfirst($method);
+        $getMethod = 'get'.ucfirst($method);
 
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {
             if (null !== $this->PatternObject) {
-
                 if (method_exists($this->PatternObject, $getMethod)) {
                     $this->tag_array[$method] = $this->PatternObject->{$getMethod}($arg);
                 }
@@ -162,10 +144,9 @@ class Reader extends TagReader
                     return $this->PatternObject->{$method}($arg[0]);
                 }
                 utmdd([__METHOD__, $this->PatternObject, $method, Debug::tracepath()]);
-
             }
-
         }
+
         return null;
         // utmdump([$method,$this->tag_array]);
     }
@@ -186,10 +167,10 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // utmdump(["Network",$this->network]);
-        if ($this->network === null) {
+        if (null === $this->network) {
             $this->network = $this->getFileTag('Network');
-
         }
+
         return $this->network;
     }
 
@@ -198,16 +179,14 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
-                // utmdump("Not PH File");
+                // utmdump('Not PH File', $this->video_file);
                 $this->notPhFile();
-
             }
 
             if (true == File::isPornhubfile($this->video_file)) {
-                // utmdump("IS PH File");
+                // utmdump('IS PH File', $this->video_file);
                 $this->isPhFile();
             }
-
         }
 
         return $this->studio;
@@ -219,18 +198,15 @@ class Reader extends TagReader
 
         $genre = '';
         if (null === $this->genre) {
-
             $res      = $this->getFileTag('Genre');
-            $filename = $this->video_file;
+            $filename = dirname($this->video_file);
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             if (true == $success) {
                 $this->genre = $matches[1];
                 //  $genre = $matches[1];
             }
             // utmdd([__METHOD__,$this->genre ]);
-
         }
-
 
         return $this->genre;
     }
@@ -261,9 +237,7 @@ class Reader extends TagReader
 
     public function getKeyword()
     {
-
         // utminfo(func_get_args());
-
     }
 
     public function getFileTag($tag)
@@ -271,17 +245,17 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $result = null;
-        $method = 'get' . $tag;
+        $method = 'get'.$tag;
         $use    = 0;
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
-
             $result = $this->PatternObject->{$method}();
             $use    = 1;
             //  } else {
             //     $result =  $this->{$method}();
         }
+
         return $result;
     }
 }

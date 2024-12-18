@@ -31,7 +31,7 @@ trait CallableHelper
         PlaylistProcess::$current_key = false;
         $outputText                   = $line_id . '  <error> ' . $this->key . ' ' . $error . ' </error>';
        // $this->Console->writeln($outputText);
-       $this->updateIdList(PlaylistProcess::DISABLED);
+      // $this->updateIdList(PlaylistProcess::DISABLED);
 
         return $outputText. PHP_EOL;
     }

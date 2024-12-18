@@ -76,9 +76,11 @@ class Process extends Mediatag
         if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
+
             parent::boot($input, $output);
 
             if (Option::istrue('all')) {
+                
                 $this->init();
                 $this->exec();
             }
@@ -133,4 +135,5 @@ class Process extends Mediatag
 
         //  $this->execUpdate();
     }
+
 }

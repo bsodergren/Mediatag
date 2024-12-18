@@ -133,14 +133,15 @@ class Storage
     public function videoExists($video_key, $where = null, $table = __MYSQL_VIDEO_FILE__)
     {
         // utminfo(func_get_args());
-
         $this->dbConn->where('video_key', $video_key);
         $this->dbConn->where('library', __LIBRARY__);
         if (null !== $where) {
             $this->dbConn->where($where, null, 'IS');
         }
 
-        return $this->dbConn->getOne($table);
+        $ret = $this->dbConn->getOne($table);
+        // utmdd($this->dbConn->getLastQuery(),__LIBRARY__);
+        return $ret;
     }
 
     public function insertVideoDb($data)

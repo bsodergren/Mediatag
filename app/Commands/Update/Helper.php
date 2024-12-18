@@ -121,7 +121,6 @@ trait Helper
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
-
         ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
 
         $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
@@ -137,6 +136,7 @@ trait Helper
             if (\count($videoArray['updateTags']) > 0) {
                 $progressBar2->setFormat('custom');
                 $this->ChangesArray[] = $videoArray;
+
                 $progressBar2->setMessage($idx, 'index');
                 $progressBar2->setMessage($message, 'videoname');
                 ++$idx;
@@ -196,7 +196,6 @@ trait Helper
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;
-
         if (null === $count) {
             $count = 1;
         }
@@ -205,8 +204,6 @@ trait Helper
         }
 
         $lines = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
-
-       
 
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
             $value = trim($value);
@@ -220,17 +217,7 @@ trait Helper
             Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
         }
 
-        if (1 != $index) {
-            if ($count != $index) {
-                // $line_array = [];
-                for ($n = 0; $n < 8; ++$n) {
-                    // $line_array[] = '-';
-                    // Mediatag::$output->writeln('--');
-                }
-                // $line = implode(\PHP_EOL, $line_array);
-                // Mediatag::$output->write($line);
-            }
-        }
+       
         if (!Option::isTrue('preview')) {
             $Command->writeChanges();
             // $this->updateDbEntry($videoArray);
@@ -250,11 +237,23 @@ trait Helper
         // Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
+            $updateCount = count($videoArray['updateTags']);
             $this->writeMetaToVideo($videoArray, $count, $idx);
-
+          
+                    
+                    if($count != $idx){
+                        $line_array = [];
+                    for ($n = 0; $n < $updateCount + 5; ++$n) {
+                        $line_array[] = ' ';
+                        // Mediatag::$output->writeln($count.' '.$n);
+                    }
+                    $line = implode(\PHP_EOL, $line_array);
+                    Mediatag::$output->write($line);
+                }
+          
             ++$idx;
 
-           // Mediatag::$Cursor->clearOutput();
+            // Mediatag::$Cursor->clearOutput();
         }
     }
 
