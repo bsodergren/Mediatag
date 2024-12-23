@@ -76,10 +76,10 @@ class Youtube extends MediatagExec
         $this->commonOptions = [
             CONFIG['YOUTUBEDL_CMD'],
             '-i',
-            '--username',
-           CONFIG['USERNAME'],
-            '--password',
-            CONFIG['PASSWORD'],
+        //     '-u',
+        //    CONFIG['USERNAME'],
+        //     '-p',
+        //     CONFIG['PASSWORD'],
             '--no-warnings',
             '--ignore-config',
         ];
@@ -92,12 +92,12 @@ class Youtube extends MediatagExec
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->options);
         $options   = array_merge($options, ['--skip-download', '--write-info-json']);
-        $video_url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$video_key;
+        $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
 
         $command   = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
-
+// utmdump($command);
         $this->exec($command, $callback);
 
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);

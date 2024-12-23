@@ -181,7 +181,7 @@ class Reader extends TagReader
 
         $res = MediaArray::matchArtist(ARTIST_MAP, $string);
         if (null === $res) {
-            utmdump($string);
+            // utmdump($string);
         }
         if (null !== $res) {
             // if (is_array($artists_array))

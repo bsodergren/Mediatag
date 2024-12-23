@@ -31,6 +31,7 @@ const STUDIO_MAP = [
     '21stsextury'         => 'TwentyFirstSextury',
     '1000facials'         => 'ThousandFacials',
     'private'             => 'PrivateVid',
+    'self' => 'SelfVids',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',
@@ -55,5 +56,6 @@ const STUDIO_MAP = [
     // 'jayspov'             => 'AdultTime',
     // 'newsensations'       => 'AdultTime',
     // 'roccosiffredi'       => 'AdultTime',
+    // 'Home' =>'Home Videos',
 
 ];

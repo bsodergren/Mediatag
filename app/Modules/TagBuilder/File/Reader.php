@@ -77,7 +77,8 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
-        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && 'Studios' == $this->video_library) {
+
+        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ('Studios' == $this->video_library || 'HomeVideos' == $this->video_library)) {
             // UTMlog::Logger('File Studio className', $className);
 
             // if (Option::isTrue('addClass')) {
@@ -104,25 +105,22 @@ class Reader extends TagReader
             $this->PatternObject->video_file = $this->video_file;
             self::$PatternClassObj           = $this->PatternObject;
 
-            foreach(ARTIST_MAP as $k => $v){
+            foreach (ARTIST_MAP as $k => $v) {
                 $key = $v['name'];
                 $rep = $v['replacement'];
-                if($rep == ''){
+                if ('' == $rep) {
                     $rep = $key;
                 }
-                $rep = ucwords(str_replace("_"," ",$rep));
+                $rep                  = ucwords(str_replace('_', ' ', $rep));
                 $artist_matches[$key] = $rep;
-                
             }
-            foreach($this->PatternObject->artist_match as $key => $rep){
-                
-                if($rep == ''){
+            foreach ($this->PatternObject->artist_match as $key => $rep) {
+                if ('' == $rep) {
                     $rep = $key;
                 }
-                $key = strtolower(str_replace(" ","_",$key));
-                $rep = ucwords(str_replace("_"," ",$rep));
+                $key                  = strtolower(str_replace(' ', '_', $key));
+                $rep                  = ucwords(str_replace('_', ' ', $rep));
                 $artist_matches[$key] = $rep;
-                
             }
             // utmdd($artist_matches);
             $this->PatternObject->artist_match = $artist_matches;
@@ -222,7 +220,7 @@ class Reader extends TagReader
         $genre = '';
         if (null === $this->genre) {
             $res      = $this->getFileTag('Genre');
-            $filename = dirname($this->video_file);
+            $filename = \dirname($this->video_file);
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             if (true == $success) {
                 $this->genre = $matches[1];

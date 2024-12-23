@@ -5,20 +5,19 @@
 
 namespace Mediatag\Commands\Rename;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Utilities\Strings;
 use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Nette\Utils\FileSystem as nFileSystem;
-use Symfony\Component\Finder\Finder as SFinder;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Process\Process as ExecProcess;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Utilities\Strings;
+use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use Symfony\Component\Finder\Finder as SFinder;
+use UTM\Utilities\Option;
 
 trait Helper
 {
@@ -43,12 +42,12 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $file_array   = [];
-        $tagConn      = new DbMap();
+        $file_array = [];
+        $tagConn    = new DbMap();
 
         if (Option::isTrue('filelist')) {
-            $file         = Option::getValue('filelist', 1);
-            $video_file   = realpath($file);
+            $file       = Option::getValue('filelist', 1);
+            $video_file = realpath($file);
 
             if (!file_exists($video_file)) {
                 utmdd([__METHOD__, 'File doesnt exist']);
@@ -62,14 +61,14 @@ trait Helper
             $finder->files()->in(__CURRENT_DIRECTORY__)->sortByName();
 
             if (Option::isTrue('depth')) {
-                $depth = '< ' . Option::getValue('depth', 1)[0];
+                $depth = '< '.Option::getValue('depth', 1)[0];
 
                 $finder->depth($depth);
             }
 
             if ($finder->hasResults()) {
                 foreach ($finder as $file) {
-                    $video_file   = $file->getRealPath();
+                    $video_file = $file->getRealPath();
                     if (str_contains($video_file, '-temp-')) {
                         continue;
                     }
@@ -82,11 +81,11 @@ trait Helper
         if (0 == \count($file_array)) {
             utmdd([__METHOD__, 'no files']);
         }
-        $progressBar  = new ProgressBar(Mediatag::$Display->BarSection1, count($file_array));
+        $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, \count($file_array));
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
         $progressBar->start();
         foreach ($file_array as $__ => $file) {
-            $message                             = '';
+            $message = '';
             // $oldName                             = $file;
             // $newName                             = $this->cleanFilename($file);
             // [$file,$message]                     = $this->renameFile($oldName, $newName, false);
@@ -95,10 +94,8 @@ trait Helper
             $videoData                           = $fs->get();
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
-
-
         }
-        $SortDir      = false;
+        $SortDir = false;
         foreach ($videoArray as $k => $videoData) {
             $progressBar->advance();
             $text       = [];
@@ -108,15 +105,15 @@ trait Helper
 
             if (!\is_array($message)) {
                 $message = [];
-                //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
+            //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
             } else {
                 $tbsep  = new TableSeparator();
                 $text[] = $tbsep;
             }
 
-            $genrePath  = '';
-            $studio     = '';
-            $prefix     = '';
+            $genrePath = '';
+            $studio    = '';
+            $prefix    = '';
             if (\array_key_exists('studio', $metatags)) {
                 $studio = $metatags['studio'];
             }
@@ -126,10 +123,10 @@ trait Helper
                 $genrePath = '/Sort';
                 $SortDir   = true;
 
-                $genDir    = $this->getGenres($metatags);
+                $genDir = $this->getGenres($metatags);
                 if (false !== $genDir) {
                     $SortDir   = false;
-                    $genrePath = '/' . $genDir;
+                    $genrePath = '/'.$genDir;
                 }
             }
             foreach (__SKIP_STUDIOS__ as $k) {
@@ -142,7 +139,7 @@ trait Helper
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
 
             if (Option::isTrue('studio')) {
-                $prefix = '/' . Option::getValue('studio', 1)[0];
+                $prefix = '/'.Option::getValue('studio', 1)[0];
             }
             if (self::istrue('pov')) {
                 //   $prefix = '/POV';
@@ -158,22 +155,20 @@ trait Helper
                     $Arraykey   = array_key_last($studios);
                     $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
                     if (false == $studio_dir) {
-
                         // continue;
-                        $studio_dir = 'New/' . $studios[$Arraykey];
+                        $studio_dir = 'New/'.$studios[$Arraykey];
                     }
                 }
             }
 
-            $video_path = $studio_dir . $genrePath;
+            $video_path = $studio_dir.$genrePath;
             if (true == $SortDir) {
-                $video_path = 'Sort/' . $studio_dir;
+                $video_path = 'Sort/'.$studio_dir;
             }
             //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
-            $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
-            $newPath    = nFileSystem::normalizePath($newPath);
-
+            $newPath = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;
+            $newPath = nFileSystem::normalizePath($newPath);
 
             if (!is_dir($newPath)) {
                 if (!Option::isTrue('test')) {
@@ -182,7 +177,7 @@ trait Helper
             }
             if (true == $SortDir) {
                 foreach (['Group', 'MMF', 'MFF', 'Single', 'Compilation'] as $geneDir) {
-                    $gebrePath = $newPath . '/' . $geneDir;
+                    $gebrePath = $newPath.'/'.$geneDir;
                     if (!is_dir($gebrePath)) {
                         if (!Option::isTrue('test')) {
                             nFileSystem::createDir($gebrePath, 0755);
@@ -191,9 +186,8 @@ trait Helper
                 }
             }
 
-
             $video_name = basename($video_file);
-            $newFile    = $newPath . '/' . $video_name;
+            $newFile    = $newPath.'/'.$video_name;
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -212,7 +206,7 @@ trait Helper
                 $text[] = ['Moving' => $video_name];
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
-                    $text[]  = ['New Path' => $video_path];
+                    $text[] = ['New Path' => $video_path];
 
                     $infoMsg = array_merge($message, $text);
 
@@ -220,11 +214,10 @@ trait Helper
                 }
             } else {
                 if (!Option::isTrue('test')) {
+                    $dupePath = __PLEX_HOME__.'/Dupes/'.__LIBRARY__.'/'.$video_path;
 
-                    $dupePath   = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__ . '/' . $video_path;
-
-                    $dupePath   = nFileSystem::normalizePath($dupePath);
-                    $dupeFile   = $dupePath . '/' . $video_name;
+                    $dupePath = nFileSystem::normalizePath($dupePath);
+                    $dupeFile = $dupePath.'/'.$video_name;
 
                     if (!is_dir($dupePath)) {
                         // Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
@@ -234,7 +227,7 @@ trait Helper
                     }
                     (new SfSystem())->rename($video_file, $dupeFile, true);
                 }
-                Mediatag::$Console->error('Duplicate Video ' . $video_name);
+                Mediatag::$Console->error('Duplicate Video '.$video_name);
             }
             // */
         }
@@ -247,9 +240,9 @@ trait Helper
         $genreArray      = explode(',', $metadata['genre']);
         $this->genrePath = [];
         foreach ($genreArray as $genre) {
-            $genre                   = str_replace(' ', '_', $genre);
-            $genre                   = strtolower($genre);
-            $res                     = self::$genre($metadata);
+            $genre = str_replace(' ', '_', $genre);
+            $genre = strtolower($genre);
+            $res   = self::$genre($metadata);
 
             // $results[$genre] = $res;
             $this->genrePath[$genre] = $res;
@@ -321,6 +314,7 @@ trait Helper
         if (self::istrue('Bisexual')) {
             return 'Bisexual';
         }
+
         return false;
     }
 
@@ -355,16 +349,22 @@ trait Helper
         // utminfo(func_get_args());
 
         foreach (Mediatag::$SearchArray as $key => $file) {
-            $oldName   = $file;
+            $oldName = $file;
 
             $fs        = new File($file);
             $videoData = $fs->get();
             $fileObj   = new fileReader($videoData);
             $file      = $fileObj->getFilename($file);
 
-            $newName   = $this->cleanFilename($file);
+            $newName = $this->cleanFilename($file);
 
-            //utmdd([__METHOD__,$newName,$oldName]);
+            //  utmdd([__METHOD__, $file, $newName, $oldName]);
+            if (!str_starts_with($oldName, __PLEX_HOME__)) {
+                return 0;
+            }
+            if (!str_starts_with($newName, __PLEX_HOME__)) {
+                return 0;
+            }
 
             $this->renameFile($oldName, $newName);
         }
@@ -380,7 +380,7 @@ trait Helper
         $file_dir  = \dirname($file);
         $file_name = Strings::cleanFileName($file_name);
 
-        return $file_dir . '/' . $file_name;
+        return $file_dir.'/'.$file_name;
     }
 
     public function renameFile($oldName, $newName, $write = true)
@@ -405,8 +405,8 @@ trait Helper
                     Filesystem::renameFile($oldName, $newName);
                 }
                 if (true == $write) {
-                    $message = 'Renaming file from <' . $color . '>' . basename($oldName) . '</' . $color . '> to <' . $color . '>' . basename($newName) . '</' . $color . '> ';
-                    Mediatag::$output->writeln('<info>' . $message . '</info>');
+                    $message = 'Renaming file from <'.$color.'>'.basename($oldName).'</'.$color.'> to <'.$color.'>'.basename($newName).'</'.$color.'> ';
+                    Mediatag::$output->writeln('<info>'.$message.'</info>');
                 } else {
                     $rtn_message = ['Renaming files', ['Old' => basename($oldName)], ['New' => basename($newName)]];
                 }

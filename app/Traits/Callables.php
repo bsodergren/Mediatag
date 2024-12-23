@@ -250,7 +250,7 @@ trait Callables
     {
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
 
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
@@ -338,8 +338,8 @@ trait Callables
             case str_contains($buffer, 'Upgrade now'):
 
                 $outputText = $this->error($buffer, $line_id, ' Premium Video');
-                // $this->updatePlaylist('premium');
-                // $this->premiumIds[] = $this->key;
+                $this->updatePlaylist('premium');
+                $this->premiumIds[] = $this->key;
 
                 break;
 
