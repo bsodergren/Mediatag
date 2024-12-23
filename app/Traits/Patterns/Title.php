@@ -45,24 +45,29 @@ trait Title
     /**
      * getTitle.
      */
-    public function getTitle()
+    public function getTitle($names = null)
     {
         // utminfo(func_get_args());
 
         $regex = $this->getTitleRegex();
+
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
+
             if (0 != $success) {
                 if (! \array_key_exists($this->gettitleMatch(), $output_array)) {
+
                     return null;
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
 
                 $title     = $output_array[$this->gettitleMatch()];
+
                 $title     = str_replace('_s_', 's_', $title);
                 $title     = str_replace($this->getTitleDelim(), ' ', $title);
                 $pretitle  = $title;
                 $title     = (new Javascript($video_key))->read($title);
+
                 // UTMlog::Logger('Title Tag', [$pretitle,$title]);
 
 
@@ -93,7 +98,12 @@ trait Title
                                 $title = str_replace(' -', '-', $title);
                                 $title = str_replace('  ', ' ', $title);
                 */
+            // if($names !== null){
+            //     $parts = preg_split('/(?=[A-Z])/', $title, -1, \PREG_SPLIT_NO_EMPTY);
+            //     utmdump($parts);
 
+            //     return $parts;
+            // }
                 return str_replace('- ', '-', $title);
             }
         }

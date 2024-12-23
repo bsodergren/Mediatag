@@ -103,6 +103,29 @@ class Reader extends TagReader
             // utmdd($this->PatternObject->network);
             $this->PatternObject->video_file = $this->video_file;
             self::$PatternClassObj           = $this->PatternObject;
+
+            foreach(ARTIST_MAP as $k => $v){
+                $key = $v['name'];
+                $rep = $v['replacement'];
+                if($rep == ''){
+                    $rep = $key;
+                }
+                $rep = ucwords(str_replace("_"," ",$rep));
+                $artist_matches[$key] = $rep;
+                
+            }
+            foreach($this->PatternObject->artist_match as $key => $rep){
+                
+                if($rep == ''){
+                    $rep = $key;
+                }
+                $key = strtolower(str_replace(" ","_",$key));
+                $rep = ucwords(str_replace("_"," ",$rep));
+                $artist_matches[$key] = $rep;
+                
+            }
+            // utmdd($artist_matches);
+            $this->PatternObject->artist_match = $artist_matches;
         }
 
         //  utmdd($this->PatternObject );

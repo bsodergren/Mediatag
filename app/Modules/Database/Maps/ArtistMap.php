@@ -37,7 +37,7 @@ trait ArtistMap
     {
         // utminfo(func_get_args());
 
-        $query = 'SELECT name,replacement FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 0';
+        $query = 'SELECT name,replacement FROM ' . __MYSQL_ARTISTS__ . ' WHERE hide = 0 order by name';
         //   $query = 'SELECT name FROM '.__MYSQL_ARTISTS__.' WHERE hide = 0';
         $res   = $this->dbConn->rawQuery($query);
         foreach ($res as $k => $val) {

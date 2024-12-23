@@ -5,8 +5,6 @@
 
 namespace Mediatag\Utilities;
 
-use Mediatag\Core\Mediatag;
-
 /**
  * Summary of MediaArray.
  */
@@ -43,38 +41,39 @@ class MediaArray
         // utminfo(func_get_args());
 
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
-            if (\is_array($value)) {
-                if (str_contains($string, $value['name'])) {
-                    if ('' != $value['replacement']) {
-                        return $value['replacement'];
-                    }
+         
 
-                    return $value['name'];
-                    // utmdd([__METHOD__,__LINE__,$name]);
-                }
+                if (\is_array($value)) {
+                    if (str_contains($string, $value['name'])) {
+                        if ('' != $value['replacement']) {
+                            return $value['replacement'];
+                        }
+
+                        return $value['name'];
+                        // utmdd([__METHOD__,__LINE__,$name]);
+                    }
 
                 // return 0;
-            } else {
-                if (true === $exact) {
+                } else {
+                    if (true === $exact) {
+                        $value = strtolower($value);
+                        $value = str_replace(' ', '_', $value);
 
-                    $value = strtolower($value);
-                    $value = str_replace(' ', '_', $value);
+                        if (true === $nodelim) {
+                            $value  = str_replace('_', '', $value);
+                            $string = str_replace('_', '', $string);
+                        }
 
-                    if (true === $nodelim) {
-                        $value  = str_replace('_', '', $value);
-                        $string = str_replace('_', '', $string);
+                        if ($value == $string) {
+                            return 1;
+                        }
 
+                        return 0;
                     }
-
-                    if ($value == $string) {
-                        return 1;
+                    if (str_contains($value, $string)) {
+                        return $value;
                     }
-
-                    return 0;
-                }
-                if (str_contains($value, $string)) {
-                    return $value;
-                }
+                
             }
         });
 
@@ -89,26 +88,45 @@ class MediaArray
     public static function matchArtist($array, $string)
     {
         // utminfo(func_get_args());
+        $str_array = explode(' ', $string);
+        $x = 0;
+                    $namesArray = [];
+        foreach ($str_array as $i => $string) {
 
-        $namesArray = [];
-        foreach ($array as $key => $parts) {
-            if (str_contains($string, $parts['name'])) {
-                if ('' != $parts['replacement']) {
-                    $namesArray[] = $parts['replacement'];
-                } else {
-                    $namesArray[] = $parts['name'];
-                }
+            $string = strtolower($string);
+            if(strlen($string)< 3){
                 continue;
             }
-            $shortName = str_replace("_", "", $parts['name']);
-            if (str_contains($string, $shortName)) {
-                if ('' != $parts['replacement']) {
-                    $namesArray[] = $parts['replacement'];
-                } else {
-                    $namesArray[] = $parts['name'];
-                }
-            }
+                       
 
+            foreach ($array as $key => $parts) {
+
+                if (str_starts_with( $parts['name'],$string))
+                {
+                    utmdump([$parts['name'],$string]);
+                    if($parts['name'] == $string."_".$str_array[$i+1]){
+                        utmdump($parts['name']);
+                        //continue;
+                    }
+                    if ('' != $parts['replacement']) {
+                        $namesArray[] = $parts['replacement'];
+                    } else {
+                        $namesArray[] = $parts['name'];
+                    }
+                 
+
+                    continue;
+                }
+
+                // $shortName = str_replace('_', '', $parts['name']);
+                // if (str_starts_with( $shortName,$string)) {
+                //     if ('' != $parts['replacement']) {
+                //         $namesArray[] = $parts['replacement'];
+                //     } else {
+                //         $namesArray[] = $parts['name'];
+                //     }
+                // }
+            }
         }
         if (0 == \count($namesArray)) {
             return null;
