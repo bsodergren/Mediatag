@@ -41,39 +41,36 @@ class MediaArray
         // utminfo(func_get_args());
 
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
-         
-
-                if (\is_array($value)) {
-                    if (str_contains($string, $value['name'])) {
-                        if ('' != $value['replacement']) {
-                            return $value['replacement'];
-                        }
-
-                        return $value['name'];
-                        // utmdd([__METHOD__,__LINE__,$name]);
+            if (\is_array($value)) {
+                if (str_contains($string, $value['name'])) {
+                    if ('' != $value['replacement']) {
+                        return $value['replacement'];
                     }
 
-                // return 0;
-                } else {
-                    if (true === $exact) {
-                        $value = strtolower($value);
-                        $value = str_replace(' ', '_', $value);
+                    return $value['name'];
+                    // utmdd([__METHOD__,__LINE__,$name]);
+                }
 
-                        if (true === $nodelim) {
-                            $value  = str_replace('_', '', $value);
-                            $string = str_replace('_', '', $string);
-                        }
+            // return 0;
+            } else {
+                if (true === $exact) {
+                    $value = strtolower($value);
+                    $value = str_replace(' ', '_', $value);
 
-                        if ($value == $string) {
-                            return 1;
-                        }
-
-                        return 0;
+                    if (true === $nodelim) {
+                        $value  = str_replace('_', '', $value);
+                        $string = str_replace('_', '', $string);
                     }
-                    if (str_contains($value, $string)) {
-                        return $value;
+
+                    if ($value == $string) {
+                        return 1;
                     }
-                
+
+                    return 0;
+                }
+                if (str_contains($value, $string)) {
+                    return $value;
+                }
             }
         });
 
@@ -88,32 +85,30 @@ class MediaArray
     public static function matchArtist($array, $string)
     {
         // utminfo(func_get_args());
-        $str_array = explode(' ', $string);
-        $x = 0;
-                    $namesArray = [];
+        $str_array  = explode(' ', $string);
+        $x          = 0;
+        $namesArray = [];
         foreach ($str_array as $i => $string) {
-
             $string = strtolower($string);
-            if(strlen($string)< 3){
+            if (\strlen($string) < 3) {
                 continue;
             }
-                       
 
             foreach ($array as $key => $parts) {
-
-                if (str_starts_with( $parts['name'],$string))
-                {
-                    utmdump([$parts['name'],$string]);
-                    if($parts['name'] == $string."_".$str_array[$i+1]){
+                if (str_starts_with($parts['name'], $string)) {
+                    utmdump([$parts['name'], $string]);
+                    if (!\array_key_exists($i + 1, $str_array)) {
+                        continue;
+                    }
+                    if ($parts['name'] == $string.'_'.$str_array[$i + 1]) {
                         utmdump($parts['name']);
-                        //continue;
+                        // continue;
                     }
                     if ('' != $parts['replacement']) {
                         $namesArray[] = $parts['replacement'];
                     } else {
                         $namesArray[] = $parts['name'];
                     }
-                 
 
                     continue;
                 }

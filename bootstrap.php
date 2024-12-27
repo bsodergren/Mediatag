@@ -6,47 +6,44 @@
 use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
-use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Debug\UtmStopWatch;
 
 // die(get_include_path());
 
 define('__PROJECT_ROOT__', __ROOT_DIRECTORY__);
-define('__COMPOSER_LIB__', __ROOT_DIRECTORY__ . '/vendor');
+define('__COMPOSER_LIB__', __ROOT_DIRECTORY__.'/vendor');
 
-set_include_path(get_include_path() . \PATH_SEPARATOR . __COMPOSER_LIB__);
+set_include_path(get_include_path().\PATH_SEPARATOR.__COMPOSER_LIB__);
 
-require_once __COMPOSER_LIB__ . '/autoload.php';
+require_once __COMPOSER_LIB__.'/autoload.php';
 
-
-$config             = new Config(__ROOT_DIRECTORY__ . \DIRECTORY_SEPARATOR . 'config.ini');
+$config = new Config(__ROOT_DIRECTORY__.\DIRECTORY_SEPARATOR.'config.ini');
 define('CONFIG', $config['path']);
 
 EnvLoader::LoadEnv(__ROOT_DIRECTORY__)->load();
-(new \UTM\Utm());
+new UTM\Utm();
 
-$container          = require __CONFIG_LIB__ . '/container.php';
-
+$container = require __CONFIG_LIB__.'/container.php';
 
 define('__SQL_USER__', CONFIG['DB_USER']);
 define('__SQL_PASSWD__', CONFIG['DB_PASS']);
 define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
-require_once __CONFIG_LIB__ . '/path_constants.php';
-require_once __CONFIG_LIB__ . '/variables.php';
+require_once __CONFIG_LIB__.'/path_constants.php';
+require_once __CONFIG_LIB__.'/variables.php';
 
-Debug::$AppRootDir  = __APP_HOME__ . DIRECTORY_SEPARATOR . 'app';
+Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 Debug::$AppTraceDir = __LOGFILE_DIR__;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
 
-if(file_exists(__LOGFILE_DIR__.'/phperror.log')){
+if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
     unlink(__LOGFILE_DIR__.'/phperror.log');
 }
 
-// ini_set('error_log',__LOGFILE_DIR__.'/phperror.log');
-UtmStopWatch::$display = false;
+ini_set('error_log', __LOGFILE_DIR__.'/phperror.log');
+UtmStopWatch::$display  = false;
 UtmStopWatch::$writeNow = false;
 // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
 TimerStart();
@@ -54,9 +51,7 @@ TimerStart();
 // utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 
 // register_shutdown_function('utmshutdown', ['write' => ['info'],
-    // 'write'                                        => 'debug']);
-
-    
+// 'write'                                        => 'debug']);
 
 AppFactory::setContainer($container);
 

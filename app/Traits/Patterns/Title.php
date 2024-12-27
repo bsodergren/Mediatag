@@ -5,7 +5,6 @@
 
 namespace Mediatag\Traits\Patterns;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
@@ -45,7 +44,7 @@ trait Title
     /**
      * getTitle.
      */
-    public function getTitle($names = null)
+    public function getTitle()
     {
         // utminfo(func_get_args());
 
@@ -55,22 +54,19 @@ trait Title
             $success = preg_match($regex, $this->video_name, $output_array);
 
             if (0 != $success) {
-                if (! \array_key_exists($this->gettitleMatch(), $output_array)) {
-
+                if (!\array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
 
-                $title     = $output_array[$this->gettitleMatch()];
+                $title = $output_array[$this->gettitleMatch()];
 
-                $title     = str_replace('_s_', 's_', $title);
-                $title     = str_replace($this->getTitleDelim(), ' ', $title);
-                $pretitle  = $title;
-                $title     = (new Javascript($video_key))->read($title);
+                $title    = str_replace('_s_', 's_', $title);
+                $title    = str_replace($this->getTitleDelim(), ' ', $title);
+                $pretitle = $title;
+                $title    = (new Javascript($video_key))->read($title);
 
                 // UTMlog::Logger('Title Tag', [$pretitle,$title]);
-
-
 
                 /*
                                 foreach (BASIC_WORD_MAP as $find => $replace) {
@@ -98,12 +94,12 @@ trait Title
                                 $title = str_replace(' -', '-', $title);
                                 $title = str_replace('  ', ' ', $title);
                 */
-            // if($names !== null){
-            //     $parts = preg_split('/(?=[A-Z])/', $title, -1, \PREG_SPLIT_NO_EMPTY);
-            //     utmdump($parts);
+                // if($names !== null){
+                //     $parts = preg_split('/(?=[A-Z])/', $title, -1, \PREG_SPLIT_NO_EMPTY);
+                //     utmdump($parts);
 
-            //     return $parts;
-            // }
+                //     return $parts;
+                // }
                 return str_replace('- ', '-', $title);
             }
         }
