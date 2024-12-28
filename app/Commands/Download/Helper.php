@@ -7,6 +7,7 @@ namespace Mediatag\Commands\Download;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Traits\ffmpeg;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings;
@@ -15,15 +16,23 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
+    use ffmpeg;
     public function convertVideos()
     {
         // utminfo(func_get_args());
 
         $file_array = [];
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mkv');
+       
+
         if (null === $file_array) {
             return 0;
         }
+         if (Option::isTrue('max')) {
+            $total = (int) Option::getValue('max') ;
+            $file_array = array_slice($file_array,0,$total);
+        }
+
         $count = \count($file_array);
         if ($count > 0) {
             $this->textSection = Mediatag::$output->section();
@@ -31,7 +40,7 @@ trait Helper
             $this->textSection->writeln('<info> Found '.$count.' files to convert</info>');
             foreach ($file_array as $k => $file) {
                 $this->textSection->write('<comment> Converting <info>'.basename($file, '.mkv').'</info>... </comment>');
-                $this->convertVideo($file);
+                $this->convertVideo($file,str_ireplace('.mkv', '.mp4', $file));
                 $this->textSection->overwrite('<comment> finished </comment>');
             }
         }

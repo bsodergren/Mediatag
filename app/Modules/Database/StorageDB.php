@@ -238,6 +238,8 @@ class StorageDB extends Storage
         $where              = ['video_key' => $this->video_key];
         $this->video_string = [$this->video_name . ' has been updated '];
         $this->update($data, $where);
+
+        $o = (new VideoTags())->getVideoInfo($this->video_key, $this->video_file);
     }
 
     public function updateDBEntry($key, $videoData, $all = true)

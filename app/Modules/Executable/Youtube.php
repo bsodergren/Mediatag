@@ -203,7 +203,7 @@ class Youtube extends MediatagExec
         if ('premium' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
             // $this->Console->writeln($url);
-
+utmdump([$type,$file,$this->premium]);
             if (!str_contains('premium', $file)) {
                 file_put_contents($this->premium, $url.\PHP_EOL, \FILE_APPEND);
             }

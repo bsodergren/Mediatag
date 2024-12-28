@@ -8,6 +8,7 @@ namespace Mediatag\Traits;
 use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
+use Mhor\MediaInfo\MediaInfo;
 use UTM\Bundle\Monolog\UTMLog;
 use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -18,16 +19,19 @@ trait ffmpeg
 {
     public $ffmpeg = [];
 
-    public $ffmpegArgs = ['-y', '-hide_banner', '-loglevel', 'debug'];
+    public $ffmpegArgs = ['-y', '-hide_banner', '-stats'];
 
     public function ProgressbarOutput($type, $buffer)
     {
         $outputText = '';
-        $this->progress->advance();
         $buffer = str_replace("\n", '', $buffer);
+
         switch ($buffer) {
             case str_starts_with($buffer, 'frame='):
                 $outputText = $buffer;
+                // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/ffmpeg_convert.log", $buffer . PHP_EOL);
+                $this->progress->advance();
+
                 break;
         }
         if ('' != $outputText) {
@@ -42,7 +46,7 @@ trait ffmpeg
 
         // $buffer = str_replace("\n", '', $buffer);
 
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/ffmpeg.log", $buffer . PHP_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/ffmpeg.log", $buffer . PHP_EOL);
                     // Mediatag::$output->writeln($buffer);
             //  Mediatag::$output->writeln($this->cmdline);
 
@@ -60,6 +64,7 @@ trait ffmpeg
         $command = array_merge($this->ffmpeg, $this->ffmpegArgs, $cmdOptions);
 
         $process = new Process($command);
+        // utmdd($process->getCommandLine());
         $process->setTimeout(null);
         $process->start();
         // $process->run($callback);
@@ -72,12 +77,19 @@ trait ffmpeg
 
     public function convertVideo($file, $output_file)
     {
-        // utminfo(func_get_args());
 
+        $mediaInfo             = new MediaInfo();
+        $mediaInfoContainer    = $mediaInfo->getInfo($file);
+        $videos                = $mediaInfoContainer->getVideos();
+        $general               = $mediaInfoContainer->getGeneral();
+        $this->frame_count = $videos[0]->get('frame_count');
+        
+        // utminfo(func_get_args());
         // $new_file       = str_ireplace('.mov', '.mp4', $file);
-        $this->progress = new ProgressBar(Mediatag::$Display->BarSection1, 100);
-        $this->progress->setFormat('%bar%');
-        // $this->progress->setBarWidth(100);
+        $this->progress = new ProgressBar(Mediatag::$Display->BarSection1, $this->frame_count );
+        // $this->progress->setFormat('%bar%');
+        $this->progress->setFormat(' %current%/%max% [%bar%] %percent:3s%%');
+        $this->progress->setBarWidth(100);
 
         $this->progress->start();
 

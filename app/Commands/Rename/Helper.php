@@ -5,19 +5,21 @@
 
 namespace Mediatag\Commands\Rename;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
-use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\Strings;
+use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\TagBuilder\TagReader;
 use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Finder\Finder as SFinder;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Symfony\Component\Finder\Finder as SFinder;
-use UTM\Utilities\Option;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
 
 trait Helper
 {
@@ -81,9 +83,9 @@ trait Helper
         if (0 == \count($file_array)) {
             utmdd([__METHOD__, 'no files']);
         }
-        $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, \count($file_array));
-        $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
-        $progressBar->start();
+        // $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, \count($file_array));
+        // $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
+        // $progressBar->start();
         foreach ($file_array as $__ => $file) {
             $message = '';
             // $oldName                             = $file;
@@ -97,7 +99,7 @@ trait Helper
         }
         $SortDir = false;
         foreach ($videoArray as $k => $videoData) {
-            $progressBar->advance();
+            // $progressBar->advance();
             $text       = [];
             $video_file = $videoData['video_file'];
             $message    = $videoData['msg'];
@@ -214,6 +216,9 @@ trait Helper
                 }
             } else {
                 if (!Option::isTrue('test')) {
+
+                    [$newFile,$video_file] = VideoInfo::compareDupes($newFile, $video_file);
+
                     $dupePath = __PLEX_HOME__.'/Dupes/'.__LIBRARY__.'/'.$video_path;
 
                     $dupePath = nFileSystem::normalizePath($dupePath);
@@ -225,9 +230,19 @@ trait Helper
                             nFileSystem::createDir($dupePath, 0755);
                         }
                     }
+                    // if (!file_exists($newFile)) {
+                    
                     (new SfSystem())->rename($video_file, $dupeFile, true);
+                    Mediatag::$output->writeln($video_file.PHP_EOL. $dupeFile);
+                    if (!file_exists($video_file)) {
+                        Mediatag::$output->writeln($newFile.PHP_EOL. $video_file);
+                        (new SfSystem())->rename($newFile, $video_file, false);
+                    }
+                    
+                    // utmdd([$video_file, $newFile, $dupeFile]);
                 }
-                Mediatag::$Console->error('Duplicate Video '.$video_name);
+                Mediatag::$output->writeln($video_name.' is dup');
+                // Mediatag::$Console->error('Duplicate Video '.$video_name);
             }
             // */
         }

@@ -5,16 +5,17 @@
 
 namespace Mediatag\Commands\Db;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\Translate;
+use Mediatag\Modules\Database\DbMap;
 use Nette\Utils\FileSystem as nFileSystem;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
@@ -76,11 +77,9 @@ class Process extends Mediatag
         if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
-
             parent::boot($input, $output);
 
             if (Option::istrue('all')) {
-                
                 $this->init();
                 $this->exec();
             }
@@ -98,6 +97,10 @@ class Process extends Mediatag
             $key = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
+                utmdump($this->file_array[$key]);
+
+                [$keep,$move] = VideoInfo::compareDupes($this->file_array[$key], $file);
+
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
                 $dupePath  = \dirname($movedFile);
                 $filename  = basename($file);
@@ -108,8 +111,8 @@ class Process extends Mediatag
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($file.'is dup');
-                //  (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+                Mediatag::$output->writeln($file.' is dup');
+                (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
                 continue;
             }
             $this->file_array[$key] = $file;
@@ -121,6 +124,8 @@ class Process extends Mediatag
         // utmdd( $this->db_array  );
         return $this;
     }
+
+  
 
     public function exec($option = null)
     {
@@ -135,5 +140,4 @@ class Process extends Mediatag
 
         //  $this->execUpdate();
     }
-
 }

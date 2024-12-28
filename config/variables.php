@@ -27,6 +27,7 @@ define(
     '__CHANNELS__',
     [
         'Studios',
+        'Favorite',
         'OnlyFans',
         'Animation',
         'Models',
@@ -63,7 +64,7 @@ define(
         'Animation',
         // 'Misc',
         'Downloads',
-        'Favorite',
+        // 'Favorite',
         'Premium',
         'Pornhub',
         'fav',

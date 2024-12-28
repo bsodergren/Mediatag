@@ -233,9 +233,12 @@ class MediaFinder extends SFinder
         // utminfo(func_get_args());
 
         $start          = 0;
-        $total          = \count($file_array);
+        $ftotal          = \count($file_array);
 
-        [$total,$start] = $this->getRangeIds($total);
+        [$total,$start] = $this->getRangeIds($ftotal);
+        if($total > $ftotal){
+            $total = $ftotal;
+        }
         for ($q = $start; $q < $total; ++$q) {
             $file_name             = $file_array[$q];
 

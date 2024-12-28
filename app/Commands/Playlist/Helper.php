@@ -98,10 +98,31 @@ trait Helper
         $this->ids = $existing_ids;
 
         $archive_content = Filesystem::readLines(self::ARCHIVE);
-        $archive_content = array_merge($archive_content, $archive_ids);
-        $archive_array   = array_unique($archive_content);
+        $diff            = array_diff($archive_content, $archive_ids);
+        if (\is_array($diff)) {
+            Mediatag::$output->writeln('<info> found '.\count($diff).' missing files</info>');
+            if (\count($diff) > 0) {
+                foreach ($diff as $lineNum => $line) {
+                    $idList[] = Strings::after($line, ' ');
+                }
+
+                $file_string = '';
+                foreach ($idList as $v => $key) {
+                    $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+                }
+                
+                Filesystem::writeFile(self::MISSING_PLAYLIST, $file_string);
+            }
+        }
+
+        // utmdd($file_string);
+        // $archive_content = array_merge($archive_content, $archive_ids);
+        // $archive_array   = array_unique($archive_content);
+        $archive_array = array_unique($archive_ids);
+
         Filesystem::writeFile(self::ARCHIVE, $archive_array);
 
+        return 0;
         if (isset($this->playlist)) {
             $f      = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
             $before = \count($f);
