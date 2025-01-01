@@ -23,10 +23,8 @@ class GifPreviewFiles extends VideoPreview
     public $videoRange  = 75;
     public $videoSlides = 10;
 
-
     public function build_video_thumbnail()
     {
-
         // Create a temp directory for building.
         $temp    = __PLEX_VAR_DIR__.'/build/'.md5($this->video_file);
         $options = [
@@ -117,7 +115,7 @@ class GifPreviewFiles extends VideoPreview
         }
         (new Filesystem())->remove($temp);
 
-        $this->progressBar = true;        
+        $this->progressBar = true;
 
         return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         //        return null;

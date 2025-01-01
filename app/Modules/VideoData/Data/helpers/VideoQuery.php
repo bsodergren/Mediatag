@@ -48,9 +48,9 @@ trait VideoQuery
     public function videoQuery()
     {
         // utminfo(func_get_args());
-       
 
-        $where = $this->thumbType.' is null ';
+        $searchPath = '';
+        $where      = $this->thumbType.' is null ';
 
         if (Option::istrue('update') || Option::istrue('clear')) {
             $where = $this->thumbType.' is not null ';
@@ -62,15 +62,15 @@ trait VideoQuery
 
         $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
 
-
         if ('info' == $this->thumbType) {
             $sql = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
             $sql .= 'FROM '.$this->VideoFileTable.' f ';
             $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
-            $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' " . $searchPath;
+            $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' ".$searchPath;
+
             return $sql;
         }
-        $where = $where.$searchPath;
+        $where .= $searchPath;
 
         $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable." WHERE  Library = '".__LIBRARY__."' AND  ".$where;
 

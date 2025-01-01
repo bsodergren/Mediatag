@@ -5,14 +5,10 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
-use Mediatag\Core\Mediatag;
 // use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-
 use Mediatag\Modules\VideoData\VideoData;
-use UTM\Utilities\Option;
 
 class VideoPreview extends VideoData
 {
@@ -30,15 +26,15 @@ class VideoPreview extends VideoData
 
     public $returnText;
 
-    public $thumbType = "preview";
+    public $thumbType = 'preview';
 
-    public $thumbExt = ".gif";
+    public $thumbExt = '.gif';
     public $thumbDir = __INC_WEB_PREVIEW_DIR__;
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
+    public $actionText = '';
 
-   
     public function get($key, $file)
     {
         // utminfo(func_get_args());
@@ -59,12 +55,13 @@ class VideoPreview extends VideoData
         $this->previewName = $this->videoToThumb($this->video_file);
         $this->video_name  = basename($this->video_file);
         // $type             = $this->actionText;
-        $action       = $this->updatedText;
+        $action           = $this->updatedText;
         $this->returnText = $this->updatedText.$this->actionText;
 
         if (file_exists($this->previewName)) {
             // --$this->fileCount;
-            $this->actionText = $action . $this->thumbType;
+            $this->actionText = $action.$this->thumbType;
+
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         }
 
@@ -73,6 +70,4 @@ class VideoPreview extends VideoData
 
         return $this->build_video_thumbnail();
     }
-
-  
 }

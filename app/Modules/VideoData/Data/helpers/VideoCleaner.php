@@ -73,7 +73,7 @@ trait VideoCleaner
                     $videoData = $fs->get();
                     $this->get($videoData['video_key'], $file);
                     // Mediatag::$output->writeln($this->returnText); // .'</info>');
-                // } else {
+                    // } else {
                     // Mediatag::$output->writeln('');
                 }
             }

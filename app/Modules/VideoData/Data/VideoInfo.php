@@ -22,9 +22,9 @@ class VideoInfo extends VideoData
     public $resultCount;
 
     public $VideoInfo;
-    public $thumbType = "info";
+    public $thumbType = 'info';
 
-    public $maxLen  = 75;
+    public $maxLen = 75;
 
     public $VideoDataTable = __MYSQL_VIDEO_INFO__;
 
@@ -66,8 +66,6 @@ class VideoInfo extends VideoData
 
         return $videoInfo;
     }
-
-
 
     public static function compareDupes($file, $sfile)
     {

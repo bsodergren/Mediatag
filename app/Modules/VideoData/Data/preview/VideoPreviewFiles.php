@@ -5,56 +5,55 @@
 
 namespace Mediatag\Modules\VideoData\Data\preview;
 
-use Mediatag\Core\Mediatag;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use GifCreator\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-//use Intervention\Image\Image;
+// use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 
 class VideoPreviewFiles extends VideoPreview
 {
-    public function getText()
-    {
-        // utminfo(func_get_args());
+    // public function getText()
+    // {
+    //     // utminfo(func_get_args());
 
-        return $this->returnText . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
+    //     return $this->returnText . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
 
-    }
+    // }
 
     public static function gifToVideo($file)
     {
         // utminfo(func_get_args());
 
-        return str_replace('.gif', '.mp4', __PLEX_HOME__ . str_replace(__INC_WEB_PREVIEW_DIR__, '', $file));
+        return str_replace('.gif', '.mp4', __PLEX_HOME__.str_replace(__INC_WEB_PREVIEW_DIR__, '', $file));
     }
 
     public static function videoToPreview($file)
     {
         // utminfo(func_get_args());
 
-        return str_replace('.mp4', '.gif', __INC_WEB_PREVIEW_DIR__ . str_replace(__PLEX_HOME__, '', $file));
+        return str_replace('.mp4', '.gif', __INC_WEB_PREVIEW_DIR__.str_replace(__PLEX_HOME__, '', $file));
     }
 
     public function build_video_thumbnail()
     {
         // utminfo(func_get_args());
 
-
         // Create a temp directory for building.
-        $temp    = __PLEX_VAR_DIR__ . "/build";
+        $temp    = __PLEX_VAR_DIR__.'/build';
         $options = [
             'temporary_directory' => $temp,
         ];
 
-        (new FileSystem())->mkdir($temp);
+        (new Filesystem())->mkdir($temp);
         // Use FFProbe to get the duration of the video.
-        $ffprobe  = FFprobe::create($options);
+        $ffprobe  = FFProbe::create($options);
         $duration = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
@@ -76,9 +75,7 @@ class VideoPreviewFiles extends VideoPreview
         // This will hold our finished frames.
         $frames = [];
 
-
         foreach ($points as $point) {
-
             // Point is a percent, so get the actual seconds into the video.
             $time_secs = floor($duration * ($point / 100));
 
@@ -109,10 +106,9 @@ class VideoPreviewFiles extends VideoPreview
         }
 
         // If we have frames that were successfully extracted.
-        if (! empty($frames)) {
-
+        if (!empty($frames)) {
             // We show each frame for 100 ms.
-            $durations = array_fill(0, count($frames), 100);
+            $durations = array_fill(0, \count($frames), 100);
 
             // Create a new GIF and save it.
             $gc = new GifCreator();
@@ -125,7 +121,6 @@ class VideoPreviewFiles extends VideoPreview
             }
         }
 
-
         return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         //        return null;
     }
@@ -134,6 +129,6 @@ class VideoPreviewFiles extends VideoPreview
     {
         // utminfo(func_get_args());
 
-        return Mediatag::$finder->Search(__INC_WEB_PREVIEW_DIR__ . '/' . __LIBRARY__, '*.gif');
+        return Mediatag::$finder->Search(__INC_WEB_PREVIEW_DIR__.'/'.__LIBRARY__, '*.gif');
     }
 }

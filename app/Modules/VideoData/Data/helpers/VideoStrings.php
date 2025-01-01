@@ -1,17 +1,15 @@
-<?php 
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Modules\VideoData\Data\helpers;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\VideoData\Data\helpers\VideoCleaner;
 use Mediatag\Utilities\Strings;
-use UTM\Utilities\Option;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-
 
 trait VideoStrings
 {
+    public $actionText = '';
 
     public function getText()
     {

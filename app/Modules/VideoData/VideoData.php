@@ -24,7 +24,7 @@ class VideoData
     public $updatedText = '<fg=green>Updated ';
     public $newText     = '<fg=red>Wrote ';
     public $resultCount;
-
+    public $actionText = ""; 
     public $VideoInfo;
     public $fileCount;
     public $maxLen  = 40;

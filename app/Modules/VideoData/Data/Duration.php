@@ -22,14 +22,13 @@ class Duration extends VideoData
     public $returnText;
 
     public $resultCount;
-    public $thumbType = "duration";
+    public $thumbType = 'duration';
 
-    public $maxLen  = 75;
+    public $maxLen = 75;
 
     public $VideoInfo;
-    public $actionText    = '<info>Updated Duration</info>';
+    public $actionText     = '<info>Updated Duration</info>';
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
-
 
     public function get($key, $file)
     {
@@ -38,7 +37,7 @@ class Duration extends VideoData
         $this->video_file = $file;
         $this->video_key  = $key;
 
-        $this->VideoInfo  = $this->getVideoDuration();
+        $this->VideoInfo = $this->getVideoDuration();
 
         return ['duration' => $this->VideoInfo['duration'], 'video_key' => (string) $this->video_key];
     }
@@ -65,12 +64,9 @@ class Duration extends VideoData
 
         if (!isset($videoInfo)) {
             $videoInfo['duration'] = null;
-            Mediatag::$output->writeln('<error>file is corrupt: ' . $this->video_file . '</error> ');
+            Mediatag::$output->writeln('<error>file is corrupt: '.$this->video_file.'</error> ');
         }
 
         return $videoInfo;
     }
-
-
-
 }

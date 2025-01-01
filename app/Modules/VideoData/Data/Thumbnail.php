@@ -5,15 +5,12 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Traits\ffmpeg;
 use Mediatag\Utilities\Strings;
 use Mhor\MediaInfo\MediaInfo;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-use UTM\Utilities\Option;
 
 class Thumbnail extends VideoData
 {
@@ -33,11 +30,10 @@ class Thumbnail extends VideoData
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
-    public $thumbType = "thumbnail";
-    public $maxLen  = 75;
+    public $thumbType = 'thumbnail';
+    public $maxLen    = 75;
 
-
-    public $thumbExt = ".jpg";
+    public $thumbExt = '.jpg';
     public $thumbDir = __INC_WEB_THUMB_DIR__;
 
     public function get($key, $file)
@@ -98,16 +94,14 @@ class Thumbnail extends VideoData
             }
 
             (new Filesystem())->mkdir($img_location);
-            //
+
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
-            
+
             $action = $this->newText;
         }
 
-        $this->actionText = $action . $this->thumbType;
+        $this->actionText = $action.$this->thumbType;
+
         return $img_url_path;
     }
-
-    
-
 }
