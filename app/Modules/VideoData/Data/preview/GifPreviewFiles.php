@@ -20,7 +20,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 
 class GifPreviewFiles extends VideoPreview
 {
-    public $videoRange  = 75;
+    public $videoRange  = 80;
     public $videoSlides = 10;
 
     public function build_video_thumbnail()
@@ -29,6 +29,7 @@ class GifPreviewFiles extends VideoPreview
         $temp    = __PLEX_VAR_DIR__.'/build/'.md5($this->video_file);
         $options = [
             'temporary_directory' => $temp,
+            'loglevel' =>'quiet'
         ];
         (new Filesystem())->mkdir($temp);
 
@@ -49,13 +50,15 @@ class GifPreviewFiles extends VideoPreview
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-        $points = range(0, $this->videoRange, $this->videoRange / $this->videoSlides);
+$videoRange = $this->videoRange;
+$videoSlides = $this->videoSlides;
+        $points =array_map(function($n) use ($videoRange,$videoSlides) { return round($n,0); }, range(1, $videoRange, $videoRange / $videoSlides) );
+        //$points = range(0, $this->videoRange, $this->videoRange / $this->videoSlides);
         // This will hold our finished frames.
         $frames = [];
-
         $progressBar = new ProgressBar(Mediatag::$output, \count($points));
 
-        $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
+        $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing Preview</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
         $progressBar->setMessage($this->fileCount--, 'no');
 
         $message = $this->setMessage($this->video_file);
@@ -70,6 +73,7 @@ class GifPreviewFiles extends VideoPreview
 
             // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
+            // utmdump([$time_secs,TimeCode::fromSeconds($time_secs),$point_file]);
 
             // Extract the frame.
             $frame = $video->frame(TimeCode::fromSeconds($time_secs));
@@ -78,6 +82,8 @@ class GifPreviewFiles extends VideoPreview
             // If the frame was successfully extracted, resize it down to
             // 320x200 keeping aspect ratio.
             if (file_exists($point_file)) {
+                // utmdump(filesize($point_file));
+                // if (filesize($point_file) == 0) {
                 $img = new ImageManager(new Driver());
                 // $image = $img->read($point_file)->resize(320, 180, function ($constraint) {
                 //     $constraint->aspectRatio();
