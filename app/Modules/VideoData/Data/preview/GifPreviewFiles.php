@@ -29,7 +29,7 @@ class GifPreviewFiles extends VideoPreview
         $temp    = __PLEX_VAR_DIR__.'/build/'.md5($this->video_file);
         $options = [
             'temporary_directory' => $temp,
-            'loglevel' =>'quiet'
+            'loglevel'            => 'quiet',
         ];
         (new Filesystem())->mkdir($temp);
 
@@ -50,12 +50,12 @@ class GifPreviewFiles extends VideoPreview
         // This array holds our "points" that we are going to extract from the
         // video. Each one represents a percentage into the video we will go in
         // extracitng a frame. 0%, 10%, 20% ..
-$videoRange = $this->videoRange;
-$videoSlides = $this->videoSlides;
-        $points =array_map(function($n) use ($videoRange,$videoSlides) { return round($n,0); }, range(1, $videoRange, $videoRange / $videoSlides) );
-        //$points = range(0, $this->videoRange, $this->videoRange / $this->videoSlides);
+        $videoRange  = $this->videoRange;
+        $videoSlides = $this->videoSlides;
+        $points      = array_map(function ($n) { return round($n, 0); }, range(1, $videoRange, $videoRange / $videoSlides));
+        // $points = range(0, $this->videoRange, $this->videoRange / $this->videoSlides);
         // This will hold our finished frames.
-        $frames = [];
+        $frames      = [];
         $progressBar = new ProgressBar(Mediatag::$output, \count($points));
 
         $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing Preview</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
