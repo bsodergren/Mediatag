@@ -157,9 +157,9 @@ class StorageDB extends Storage
         $this->video_string           = [];
         $vdata                        = [];
         Mediatag::$Display->BlockInfo = [];
-        $this->MultiIDX               = 1;
+        // $this->MultiIDX               = 1;
         $total                        = \count($data);
-
+// utmdd($this->MultiIDX );
         foreach ($data as $k => $row) {
             // $VideoQuery[$row['video_key']][__MYSQL_VIDEO_FILE__] = $row;
             $vdata = ['video_file' => $row['fullpath'] . '/' . $row['filename']];
@@ -168,10 +168,10 @@ class StorageDB extends Storage
             if ($this->progressbar !== null) {
                 $this->progressbar->advance();
             }
-            $this->progressbar1->advance();
+           $this->progressbar1->advance();
 
             //            $this->video_string[] = '<info>'.$this->MultiIDX.'</info> : Video <comment>'.$row['filename'].'</comment> added to db ';
-            ++$this->MultiIDX;
+            $this->MultiIDX--;
         }
         $this->video_string[]         = ' ' . \PHP_EOL;
         //   $this->RowBlock->overwrite($this->video_string);

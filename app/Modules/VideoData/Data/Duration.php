@@ -22,18 +22,14 @@ class Duration extends VideoData
     public $returnText;
 
     public $resultCount;
+    public $thumbType = "duration";
+
+    public $maxLen  = 75;
 
     public $VideoInfo;
-    private $actionText    = '<comment>Updated Duration</comment>';
+    public $actionText    = '<info>Updated Duration</info>';
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
-    public function getText()
-    {
-        // utminfo(func_get_args());
-
-        return $this->actionText;
-
-    }
 
     public function get($key, $file)
     {
@@ -75,28 +71,6 @@ class Duration extends VideoData
         return $videoInfo;
     }
 
-    public function clearQuery($key = null)
-    {
-        // utminfo(func_get_args());
 
-        $where = '';
-        if (null !== $key) {
-            $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
-            if (null !== $exists) {
-                $where = "AND video_key = '" . $key . "'";
-            }
-        }
 
-        return 'update ' . $this->VideoDataTable . ' set duration = null WHERE Library = "' . __LIBRARY__ . '" ' . $where;
-    }
-
-    public function videoQuery()
-    {
-        // utminfo(func_get_args());
-
-        return "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key
-        FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "'
-        AND fullpath like '" . __CURRENT_DIRECTORY__ . "%'
-        AND (duration is null or duration < 50) ";
-    }
 }

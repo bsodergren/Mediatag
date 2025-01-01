@@ -49,7 +49,7 @@ const __INC_WEB_CHAPTER_URL__ = '/images/plex/chapterImages';
 const __INC_WEB_CHAPTER_DIR__ = __INC_WEB_THUMB_ROOT__ . __INC_WEB_CHAPTER_URL__;
 
 
-const __INC_WEB_PREVIEW_URL__ = '/images/plex/preview';
+const __INC_WEB_PREVIEW_URL__ = '/images/plex/thumbnails';
 const __INC_WEB_PREVIEW_DIR__ = __INC_WEB_THUMB_ROOT__ . __INC_WEB_PREVIEW_URL__;
 
 

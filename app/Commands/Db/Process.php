@@ -48,17 +48,19 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'all'          => [
-            'execThumb'       => null,
-            'execDuration'    => null,
-            'execInfo'        => null,
-            'execPreview'     => null,
-        ],
-        'thumbnail'    => ['execThumb' => null, 'checkClean' => null],
+        // 'all'          => [
+        //     'init' => null,
+        // 'exec' => null,
+        // //     'execThumb'       => null,
+        // //     'execDuration'    => null,
+        // //     'execInfo'        => null,
+        // //     'execPreview'     => null,
+        // ],
+        'thumbnail'    => ['execThumb' => null],
         'markers'      => ['execMarkers' => null],
-        'videopreview' => ['execPreview' => null, 'checkClean' => null],
-        'duration'     => ['execDuration' => null, 'checkClean' => null],
-        'info'         => ['execInfo' => null, 'checkClean' => null],
+        'videopreview' => ['execPreview' => null],
+        'duration'     => ['execDuration' => null ],
+        'info'         => ['execInfo' => null],
         'update'       => ['execUpdate' => 'default'],
         'empty'        => ['execEmpty' => 'default'],
         'json'         => ['getJson' => null],
@@ -79,10 +81,10 @@ class Process extends Mediatag
         } else {
             parent::boot($input, $output);
 
-            if (Option::istrue('all')) {
-                $this->init();
-                $this->exec();
-            }
+            // if (Option::istrue('all')) {
+            //     $this->init();
+            //     $this->exec();
+            // }
         }
     }
 
@@ -97,7 +99,6 @@ class Process extends Mediatag
             $key = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
-                utmdump($this->file_array[$key]);
 
                 [$keep,$move] = VideoInfo::compareDupes($this->file_array[$key], $file);
 

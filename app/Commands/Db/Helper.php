@@ -137,17 +137,17 @@ trait Helper
         Translate::$Class             = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
         $videos                       = Mediatag::$dbconn->getVideoCount();
-        if (Option::istrue('yes')) {
+
+        // if (Option::istrue('yes')) {
             $go     = true;
             $answer = 'y';
-        } else {
-            Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper();
-            $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
+        // } else {
+        //     Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
+        //     $ask      = new QuestionHelper();
+        //     $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
 
-            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
-        }
-        // $answer            = 'y';
+        //     $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+        // }
         switch ($answer) {
             case 'y':
                 $go = true;
@@ -176,6 +176,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $this->obj = new Thumbnail();
+        $this->checkClean();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
     }
@@ -194,6 +195,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $this->obj = new Duration();
+        // $this->checkClean();
         $this->obj->updateVideoData();
     }
 
@@ -202,6 +204,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $this->obj = new VideoInfo();
+        // $this->checkClean();
         $this->obj->updateVideoData();
     }
 
@@ -210,6 +213,9 @@ trait Helper
         // utminfo(func_get_args());
 
         $this->obj = new GifPreviewFiles();
+
+        $this->checkClean();
+
         $this->obj->updateVideoData();
     }
 
@@ -219,8 +225,13 @@ trait Helper
 
         if (Option::istrue('clean')) {
             $this->obj->clean();
+            exit;
+        } elseif (Option::istrue('clear')) {
+            $this->obj->clear();
+            exit;
         } elseif (Option::istrue('empty')) {
             // $this->obj->clearDBValues();
+            exit;
         }
     }
 
@@ -274,20 +285,23 @@ trait Helper
         $chunkSize = 10;
         $barWidth  = 50;
         $total     = \count($this->New_Array);
+
         if ($total > 0) {
-            $idx                          = 1;
+            $idx                          = $total;
             $progressbar                  = new MediaBar($total, 'three', $barWidth);
-            parent::$dbconn->progressbar1 = $progressbar;
-            $progressbar->newbar();
+            MediaBar::addFormat('<fg=bright-magenta>%message:13s%</> %current:4s%/%max:4s% [%bar%] %percent:3s%%');
+
+
+            $progressbar->setMsgFormat()->setMessage("All Files",'message')->newbar();
             $progressbar->start();
+            parent::$dbconn->progressbar1 = $progressbar;
 
             foreach ($this->New_Array as $video_key => $video_file) {
-                // $progressbar->advance();
-
-                $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
-                ++$idx;
+                $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key);
+                $idx--;
             }
-            $idx = 1;
+            $idx = $total;
+            parent::$dbconn->MultiIDX = $total;
 
             $data_array = array_chunk($videoDataArray, $chunkSize);
             $chunks     = \count($data_array);
@@ -296,26 +310,16 @@ trait Helper
             if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
                 parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
-                $progressbar2->newbar()->start();
+                $progressbar2->setMsgFormat()->setMessage( $chunks ." Chunks",'message')->newbar()->start();
             }
 
             foreach ($data_array as $data) {
                 if ($total > $chunkSize) {
-                    parent::$dbconn->progressbar->newbar()->start();
+                    parent::$dbconn->progressbar->setMsgFormat()->setMessage("Chunk pcs",'message')->newbar()->start();
                     $progressbar2->advance();
                 }
 
-                // if (Option::istrue('preview')) {
-                //     //   $video_string = [];
-                //     foreach ($data as $k => $row) {
-                //         $video_string[] = '<info>'.$idx++.'</info> : Video <comment>'.$row['filename'].'</comment> added to db ';
-                //     }
-
-                //     $video_string[] = ' '.\PHP_EOL;
-                //     //    parent::$dbconn->RowBlock->overwrite($video_string);
-                // } else {
-                $res = parent::$dbconn->addDBArray($data);
-                // }
+               parent::$dbconn->addDBArray($data);
             }
             $this->updateNow();
         }

@@ -296,7 +296,6 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
     {
 
         $filesystem = new Filesystem();
-
         foreach (__CREATE_DIRS__ as $dir) {
             if (!is_dir($dir)) {
                 $filesystem->mkdir($dir);

@@ -41,25 +41,33 @@ class MediaBar
         $this->bar   = new ProgressBar($section, $count);
     }
 
-    public function setMsgFormat($format = '<comment>%message%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%')
+
+    public static function addFormat($format = '<comment>%message:10s%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%', $name='custom')
+    {
+        ProgressBar::setFormatDefinition($name, $format);
+
+    }
+    public function setMsgFormat($name='custom')
     {
         // utminfo(func_get_args());
 
 
-        ProgressBar::setFormatDefinition('custom', $format);
-        $this->format='custom';
+        // ProgressBar::setFormatDefinition($name, $format);
+        $this->format=$name;
+        $this->bar->setFormat($this->format);
+
         return $this;
 
     }
 
-    public function setMessage($message)
+    public function setMessage($message,$name)
     {
         // utminfo(func_get_args());
 
-        if ($this->format != 'custom') {
-            $this->setMsgFormat();
-        }
-        $this->bar->setMessage($message);
+        // if ($this->format != 'custom') {
+        //     $this->setMsgFormat();
+        // }
+        $this->bar->setMessage($message,$name);
         return $this;
     }
 
@@ -69,7 +77,6 @@ class MediaBar
 
         // $this->bar->setBarCharacter($bar);
         // $this->bar->setProgressCharacter($lead);
-        $this->bar->setFormat($this->format);
 
         $this->bar->setRedrawFrequency(100);
         $this->bar->maxSecondsBetweenRedraws(0.2);

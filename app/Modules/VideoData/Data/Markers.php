@@ -232,7 +232,6 @@ class Markers extends VideoData
         $missing_mp4   = [];
         $query         = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  thumbnail is not null";
 
-        utmdd($query);
         $result        = Mediatag::$dbconn->query($query);
         $dblist        = [];
         foreach ($result as $_ => $row) {

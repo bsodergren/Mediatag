@@ -14,7 +14,7 @@ use Mediatag\Utilities\Strings;
 class VideoTags extends VideoData
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
-    public $video_name;
+    public $tagList;
 
     private $actionText    = "<comment>Updated Meta Tags</comment>";
 

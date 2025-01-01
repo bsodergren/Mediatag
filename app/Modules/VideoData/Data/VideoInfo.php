@@ -22,17 +22,20 @@ class VideoInfo extends VideoData
     public $resultCount;
 
     public $VideoInfo;
+    public $thumbType = "info";
+
+    public $maxLen  = 75;
 
     public $VideoDataTable = __MYSQL_VIDEO_INFO__;
 
-    public $actionText = '<comment>Updated Video Data</comment>';
+    public $actionText = '<info>Updated Video Data</info>';
 
-    public function getText()
-    {
-        // utminfo(func_get_args());
+    // public function getText()
+    // {
+    //     // utminfo(func_get_args());
 
-        return $this->actionText; // . ' for ' . basename($this->video_file);
-    }
+    //     return $this->actionText; // . ' for ' . basename($this->video_file);
+    // }
 
     public function get($key, $file)
     {
@@ -64,32 +67,7 @@ class VideoInfo extends VideoData
         return $videoInfo;
     }
 
-    public function videoQuery()
-    {
-        // utminfo(func_get_args());
 
-        $sql = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
-        $sql .= 'FROM '.$this->VideoFileTable.' f ';
-        $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
-        $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."'";
-
-        return $sql;
-    }
-
-    public function clearQuery($key = null)
-    {
-        // utminfo(func_get_args());
-
-        $where = '';
-        if (null !== $key) {
-            $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
-            if (null !== $exists) {
-                $where = "AND video_key = '".$key."'";
-            }
-        }
-
-        return 'delete from '.$this->VideoDataTable.' WHERE Library = "'.__LIBRARY__.'" '.$where;
-    }
 
     public static function compareDupes($file, $sfile)
     {
@@ -136,7 +114,6 @@ class VideoInfo extends VideoData
                 $videoinfo['duration'] = (string) $video->get('duration');
             }
         }
-        utmdump($videoinfo);
 
         return $videoinfo;
     }

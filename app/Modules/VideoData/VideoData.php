@@ -6,35 +6,44 @@
 namespace Mediatag\Modules\VideoData;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use UTM\Utilities\Option;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\Data\helpers\VideoCleaner;
+use Mediatag\Modules\VideoData\Data\helpers\VideoQuery;
+use Mediatag\Modules\VideoData\Data\helpers\VideoStrings;
 
 class VideoData
 {
+    use VideoCleaner;
+    use VideoQuery;
+    use VideoStrings;
     public $video_key;
 
     public $video_file;
-public $video_id;
+    public $video_id;
     public $returnText;
-    public $updatedText = "<comment>Updated ";
-    public $newText     = "<fg=red>Wrote ";
+    public $updatedText = '<fg=green>Updated ';
+    public $newText     = '<fg=red>Wrote ';
     public $resultCount;
 
     public $VideoInfo;
+    public $fileCount;
+    public $maxLen  = 40;
+    public $fileLen = 0;
+
+    public $thumbExt  = '.jpg';
+    public $thumbDir  = __INC_WEB_THUMB_DIR__;
+    public $thumbType = 'preview';
+
+    public $progressbar = false;
 
     public $VideoDataTable;
     public $VideoFileTable = __MYSQL_VIDEO_FILE__;
 
-
-    public function getText()
-    {
-        // utminfo(func_get_args());
-
-        return $this->returnText;// . basename($this->video_name, '.mp4') . '.gif';// .' for '.basename($this->video_file);
-
-    }
-
+    /**
+     * Summary of getVideoDetails.
+     *
+     * @return array
+     */
     public function getVideoDetails()
     {
         // utminfo(func_get_args());
@@ -47,13 +56,6 @@ public $video_id;
         // utminfo(func_get_args());
 
         return $this->save();
-    }
-
-    public function getVideoText()
-    {
-        // utminfo(func_get_args());
-
-        return $this->getText() . ' for ' . basename($this->video_file);
     }
 
     public function getVideoInfo($key, $file)
@@ -69,6 +71,7 @@ public $video_id;
         }
 
         $this->VideoInfo = $this->getVideoDetails();
+
         return $this->saveVideoDetails();
     }
 
@@ -77,20 +80,28 @@ public $video_id;
         // utminfo(func_get_args());
 
         $file_array = $this->getDbList();
-
+        $this->getMessageLen($file_array);
         if (\count($file_array) > 0) {
+            $this->fileCount = \count($file_array);
+            Mediatag::$output->writeln('<info>Found '.$this->fileCount.' files</info>');
+
+            // $this->maxLen = 0;
+
             foreach ($file_array as $key => $file) {
                 if (file_exists($file)) {
                     $res = $this->getVideoInfo($key, $file);
-                    // if (! Option::istrue('all')) {
-                    $int = $this->resultCount--;
-                    $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
-                    if ($res !== false) {
-                        Mediatag::$output->writeln('<info>' . $int . '</info> : ' . $this->getVideoText());
+
+                    if (false !== $res) {
+                        if (false === $this->progressBar) {
+                            Mediatag::$output->writeln($this->printNo($this->fileCount).$this->getVideoText());
+                            --$this->fileCount;
+                        }
+                        $this->progressBar = false;
                     }
-                    // }
                 }
             }
+        } else {
+            Mediatag::$output->writeln('All '.$this->thumbType.' files are updated');
         }
     }
 
@@ -102,45 +113,6 @@ public $video_id;
         $result = Mediatag::$dbconn->query($query);
     }
 
-    public function getDbList()
-    {
-        // utminfo(func_get_args());
-
-        $file_array = [];
-        if (Option::istrue('filelist')) {
-
-            $fileList = Mediatag::$SearchArray;
-            foreach ($fileList as $filename) {
-
-                $key              = MediaFile::getVideoKey($filename);
-                $file_array[$key] = $filename;
-            }
-            $this->resultCount = \count($file_array);
-
-            return $file_array;
-            //            utmdd( $file_array);
-
-        }
-        $query = $this->videoQuery();
-
-        if (!Option::istrue('clean')) {
-            if (Option::isTrue('max')) {
-                $total = (int) Option::getValue('max');
-                $query = $query . " LIMIT " . $total;
-            }
-        }
-
-        $result = Mediatag::$dbconn->query($query);
-        //
-        foreach ($result as $_ => $row) {
-            $file_array[$row['video_key']] = $row['file_name'];
-        }
-        $this->resultCount = \count($file_array);
-
-
-        return $file_array;
-    }
-
     public function save()
     {
         // utminfo(func_get_args());
@@ -148,63 +120,61 @@ public $video_id;
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
 
+        if (\array_key_exists('duration', $this->VideoInfo)) {
+            if (null === $this->VideoInfo['duration']) {
+                return false;
+            }
+        }
+        if (\array_key_exists('format', $this->VideoInfo)) {
+            if (null === $this->VideoInfo['format']) {
+                return false;
+            }
+        }
+        // utmdump($this->VideoInfo);
 
-        if (array_key_exists('duration', $this->VideoInfo)) {
-            if ($this->VideoInfo['duration'] === null) {
-                return false;
-            }
-        }
-        if (array_key_exists('format', $this->VideoInfo)) {
-            if ($this->VideoInfo['format'] === null) {
-                return false;
-            }
-        }
         if (Mediatag::$dbconn->insert($this->VideoInfo, $this->VideoDataTable)) {
-            // $this->returnText = '<comment>Updated</comment> '.$this->videoData;
-
+            // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;
+            // utmdd(["ffdssd",$this->getVideoText(),$this->returnText]);
             return $this->getVideoText();
         }
     }
 
     public function get($key, $file)
     {
-        // utminfo(func_get_args());
+    }
 
+    /**
+     * clearQuery.
+     *
+     * @return void
+     */
+    public function clearQuery($key = null)
+    {
+        // utminfo(func_get_args());
+    }
+
+    /**
+     * getvideoId.
+     *
+     * @return void
+     */
+    public function getvideoId($key)
+    {
+        $this->VideoInfo = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
+        $this->video_id  = null;
+        if (null === $this->VideoInfo) {
+            return null;
+        }
+        $this->video_id = $this->VideoInfo['id'];
+
+        return $this->video_id;
+        // utmdd($exists);
     }
 
     public function clean()
     {
-        // utminfo(func_get_args());
-
+        $this->doClean();
+        Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
+        Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
-
-    public function videoQuery()
-    {
-        // utminfo(func_get_args());
-
-    }
-
-    public function clearQuery($key = null)
-    {
-        // utminfo(func_get_args());
-
-    }
-    public function getvideoId($key){
-
-        $this->VideoInfo   = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
-        $this->video_id = null;
-        if($this->VideoInfo === null){
-            return null;
-        }
-        $this->video_id = $this->VideoInfo['id'];
-        return $this->video_id;
-        //utmdd($exists);
-        
-    }
-    // public function getText()
-    // {
-    //     // utminfo(func_get_args());
-
-    //     return '';
-    // }
 }
