@@ -16,11 +16,13 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
+use Mediatag\Core\Helper\MediaExecute;
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
-class Command extends MediaCommand
+final class Command extends MediaCommand
 {
     use Lang;
+    use MediaExecute;
 
     public const CMD_NAME        = NAME;
     public const CMD_DESCRIPTION = DESCRIPTION;
@@ -49,18 +51,13 @@ class Command extends MediaCommand
      * @param InputInterface  $input  [explicite description]
      * @param OutputInterface $output [explicite description]
      */
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
-        // utminfo(func_get_args());
+    // protected function execute(InputInterface $input, OutputInterface $output): int
+    // {
+    //     // utminfo(func_get_args());
 
-        $playlist          = $input->getArgument(self::CMD_NAME);
-        if ($playlist === null) {
-            $playlist = Option::getValue('playlist');
-        }
+    
+    //     parent::execute($input, $output);
 
-        parent::$optionArg = [$playlist];
-        parent::execute($input, $output);
-
-        return SymCommand::SUCCESS;
-    }
+    //     return SymCommand::SUCCESS;
+    // }
 }

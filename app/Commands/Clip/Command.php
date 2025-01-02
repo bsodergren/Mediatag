@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Test;
+namespace Mediatag\Commands\Clip;
 
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
@@ -19,8 +19,8 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use UTM\Utilities\Option;
 
-const DESCRIPTION = 'Test Command';
-const NAME        = 'test';
+const DESCRIPTION = 'Clip Command';
+const NAME        = 'clip';
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 final class Command extends MediaCommand
 {

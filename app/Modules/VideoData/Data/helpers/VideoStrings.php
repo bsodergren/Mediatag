@@ -53,4 +53,13 @@ trait VideoStrings
 
         return $this->getText().' for '.$this->setMessage($this->video_file);
     }
+
+
+    private function getTableField(){
+        $thumbType = $this->thumbType;
+        if ('markers' == $this->thumbType) {
+            $thumbType = 'thumbnail';
+        }      
+        return $thumbType;
+    }
 }

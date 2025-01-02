@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Test\Markers;
+namespace Mediatag\Commands\Clip\Markers;
 
 use Mediatag\Modules\VideoData\Data\Duration;
 

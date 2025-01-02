@@ -126,7 +126,6 @@ trait Artist
         foreach ($titleNames as $k => $name) {
             
             $tname = strtolower(str_replace('_', '', $name));
-            utmdump([$video,$tname,str_contains($video, $tname)]);
 
             if (!str_contains($video, $tname)) {
                 unset($titleNames[$k]);

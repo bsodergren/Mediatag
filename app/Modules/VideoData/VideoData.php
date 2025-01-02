@@ -34,7 +34,7 @@ class VideoData
     public $thumbDir  = __INC_WEB_THUMB_DIR__;
     public $thumbType = 'preview';
 
-    public $progressbar = false;
+    public $progressBar = false;
 
     public $VideoDataTable;
     public $VideoFileTable = __MYSQL_VIDEO_FILE__;
@@ -139,25 +139,6 @@ class VideoData
         }
     }
 
-    public function get($key, $file)
-    {
-    }
-
-    /**
-     * clearQuery.
-     *
-     * @return void
-     */
-    public function clearQuery($key = null)
-    {
-        // utminfo(func_get_args());
-    }
-
-    /**
-     * getvideoId.
-     *
-     * @return void
-     */
     public function getvideoId($key)
     {
         $this->VideoInfo = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);

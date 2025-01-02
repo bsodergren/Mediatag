@@ -5,6 +5,7 @@
 
 namespace Mediatag\Commands\Playlist;
 
+use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 // use Nette\Utils\FileSystem as NetteFile;
@@ -19,6 +20,7 @@ class Process extends Mediatag
 {
     use Callables;
     use Helper;
+    use MediaProcess;
 
     public const ARCHIVE = __PLEX_PL_ID_DIR__.'/archive.txt';
 
@@ -120,34 +122,18 @@ class Process extends Mediatag
 
         \define('SKIP_SEARCH', true);
         parent::boot($input, $output);
+        
+        $this->setupFormat();
+        $this->setupDb();
+
         if (null === $file) {
             $file = Option::getValue('playlist');
         }
         $this->playlist = $file;
-
+        
         if (!is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
     }
 
-    // public function __construct(InputInterface $input, OutputInterface $output)
-    // {
-    //     parent::boot($input, $output);
-    //     $file = Option::getValue('playlist');
-    //  // utmdd(["f",$file]);
-    //     $this->playlist = $file;
-
-    //     if (! is_dir(__PLEX_PL_TMP_DIR__)) {
-    //         Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
-    //     }
-    // }
-
-    public function __call($m, $a)
-    {
-        // utminfo(func_get_args());
-
-        return null;
-    }
-
-    // end print()
 }

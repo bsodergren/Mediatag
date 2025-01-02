@@ -1,12 +1,9 @@
-<?php
-/**
- * Command like Metatag writer for video files.
- */
-
-namespace Mediatag\Traits;
+<?php 
+namespace Mediatag\Modules\FFMpeg;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mhor\MediaInfo\MediaInfo;
 use Nette\Utils\Callback;
@@ -15,81 +12,22 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Option;
 
-trait ffmpeg
+class Ffmpeg
 {
 
-    public $progress;
+    use FfExec;
     public $ffmpeg = [];
 
     public $barAdvance = 50;
 
     public $ffmpegArgs = ['-y', '-hide_banner'];
 
-    public function FrameCountCallback($type, $buffer)
-    {
-    }
-
-    public function ProgressbarOutput($type, $buffer)
-    {
-        $outputText = '';
-        $buffer     = str_replace("\n", '', $buffer);
-        // utmdd($buffer);
-
-        if (null !== $this->progress) {
-            $this->progress->advance();
-        }
-    }
-
-    public function Outputdebug($type, $buffer)
-    {
-        // $buffer = str_replace("\n", '', $buffer);
-        // utmdd($buffer);
-        if (null !== $this->progress) {
-            $this->progress->advance();
-        }
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/ffmpeg.log", $buffer . PHP_EOL);
-        // Mediatag::$output->writeln($buffer);
-        //  Mediatag::$output->writeln($this->cmdline);
-
-        if (Process::ERR === $type) {
-            // echo 'ERR > '.$buffer;
-        }
-    }
-
-    private function ffExec($exec, $cmdOptions, $callback)
-    {
-        // $this->ffmpeg = [CONFIG['FFMPEG_CMD']];
-
-        $command = array_merge([$exec], $this->ffmpegArgs, $cmdOptions);
-
-        $process = new Process($command);
-        $process->setTimeout(null);
-        // $process->start($callback);
-        $process->start();
-        $process->wait($callback);
-
-        //  $process->start();
-
-        if (!$process->isSuccessful()) {
-            throw new ProcessFailedException($process);
-        }
-
-        return $process;
-    }
-
     public function ffmpegExec($cmdOptions, $callback = null)
     {
         $this->ffExec(CONFIG['FFMPEG_CMD'], $cmdOptions, $callback);
     }
-
-    public function ffmpegProbe($cmdOptions, $callback = null)
-    {
-        $probe = $this->ffExec(CONFIG['FFPROBE_CMD'], $cmdOptions, $callback);
-
-        return json_decode($probe->getOutput(), true);
-    }
+    
 
     public function convertVideo($file, $output_file)
     {
@@ -158,45 +96,13 @@ trait ffmpeg
         $this->ffmpegExec($cmdOptions, $callback);
     }
 
-    public function ffmprobeGetFrames($file, $start, $stop)
-    {
-        $cache_name = md5($start.'%'.$stop.basename($file));
-        $frame_json = MediaCache::get($cache_name);
-        if (false === $frame_json) {
-            $cmdOptions = [
-                '-read_intervals', $start.'%'.$stop,
-                '-count_frames',
-                '-show_entries', 'stream', '-of', 'json',
-                '-v', 'quiet',
-                '-i', $file,
-            ];
-            $this->cmdline = $cmdOptions;
-
-            // $callback = Callback::check([$this, 'FrameCountCallback']);
-            // utmdd($cmdOptions);
-
-            $this->startIndicator('Getting frames from '.$start.' to '.$stop.' for '.basename($file));
-
-            $callback   = Callback::check([$this, 'Outputdebug']);
-            $frame_json = $this->ffmpegProbe($cmdOptions, $callback);
-            $r          = MediaCache::put($cache_name, $frame_json);
-            $this->finishIndicator('Finished getting frames');
-        }
-
-        return $frame_json;
-    }
-
     public function ffmpegCreateClip($file, $marker, $idx)
     {
-        $outputFile = $this->getClipFilename($file);
+        $outputFile = str_replace('/XXX', '/Clips', $file);
         $outputFile = str_replace('.mp4', '_'.$marker['text'].'_'.$idx.'.mp4', $outputFile);
         FileSystem::createDir(\dirname($outputFile));
 
-        if (file_exists($outputFile)) {
-            if (!Option::istrue('yes')) {
-                return;
-            }
-        }
+      
         // utmdd('fr');
         // ffmpeg -ss 00:01:00 -to 00:02:00 -i input.mp4 -c copy output.mp4
         $cmdOptions = [
@@ -210,38 +116,13 @@ trait ffmpeg
         $this->cmdline = $cmdOptions;
 
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
-        $this->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
+        $this->progress->start("Clipping ".$marker['text'] . " at ".$marker['start']. " to ". $marker['end'] );
 
-        $callback = Callback::check([$this, 'Outputdebug']);
+        $callback      = Callback::check([$this, 'Outputdebug']);
 
         $this->ffmpegExec($cmdOptions, $callback);
         sleep(3);
-        $this->finishIndicator('Finished '.$marker['text']);
-    }
+        $this->progress->finish('Finished ' . $marker['text']);
 
-    public function createCompilation($listFile, $ClipName)
-    {
-        if (file_exists($ClipName)) {
-            if (!Option::istrue('yes')) {
-                return;
-            }
-        }
-        $cmdOptions = [
-            '-v', 'debug',
-            '-safe', '0',
-            '-f', 'concat',
-            '-i', $listFile,
-            '-codec', 'copy',
-            $ClipName,
-        ];
-        $this->cmdline = $cmdOptions;
-
-        $this->startIndicator('Creating Compilation');
-        $callback = Callback::check([$this, 'Outputdebug']);
-
-        $this->ffmpegExec($cmdOptions, $callback);
-        $this->finishIndicator('Finished Compilation');
-
-        utmdd($listFile, $ClipName);
     }
 }

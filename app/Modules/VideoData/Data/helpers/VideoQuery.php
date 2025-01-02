@@ -45,12 +45,17 @@ trait VideoQuery
         return $file_array;
     }
 
-    public function videoQuery()
+    public function videoQuery($video_id = null)
     {
-        // utminfo(func_get_args());
+        if ('info' == $this->thumbType) {
+            return $this->InfoVideoQuery($video_id);
+        }
+        if ('markers' == $this->thumbType) {
+            return $this->MarkersVideoQuery($video_id);
+        }
+        $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
 
-        $searchPath = '';
-        $where      = $this->thumbType.' is null ';
+        $where = $this->thumbType.' is null ';
 
         if (Option::istrue('update') || Option::istrue('clear')) {
             $where = $this->thumbType.' is not null ';
@@ -60,16 +65,6 @@ trait VideoQuery
             $where = ' (duration is null or duration < 50) ';
         }
 
-        $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
-
-        if ('info' == $this->thumbType) {
-            $sql = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
-            $sql .= 'FROM '.$this->VideoFileTable.' f ';
-            $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
-            $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' ".$searchPath;
-
-            return $sql;
-        }
         $where .= $searchPath;
 
         $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable." WHERE  Library = '".__LIBRARY__."' AND  ".$where;
@@ -89,6 +84,37 @@ trait VideoQuery
             }
         }
 
-        return 'update '.$this->VideoDataTable.' set '.$this->thumbType.' = null WHERE Library = "'.__LIBRARY__.'"'.$where;
+        return 'update '.$this->VideoDataTable.' set '.$this->getTableField().' = null WHERE Library = "'.__LIBRARY__.'"'.$where;
+    }
+
+    private function InfoVideoQuery($video_id = null)
+    {
+        $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
+        $sql        = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
+        $sql .= 'FROM '.$this->VideoFileTable.' f ';
+        $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
+        $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' ".$searchPath;
+
+        return $sql;
+    }
+
+    private function MarkersVideoQuery($video_id = null)
+    {
+        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id ";
+        $order  = '';
+        if (null === $video_id) {
+            $where = ' vm.markerThumbnail is null ';
+        } else {
+            $where = ' vm.video_id =  '.$video_id.' ';
+            $fields .= ', vm.markerText ';
+            $order = ' ORDER BY `vm`.`timeCode` ASC';
+        }
+        if (Option::istrue('update')) {
+            $where = ' vm.markerThumbnail is not null ';
+        }
+
+        $where .= ' AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
+
+        return 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
     }
 }

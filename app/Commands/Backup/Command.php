@@ -20,15 +20,15 @@ class Command extends MediaCommand
     use Lang;
     public const USE_LIBRARY = false;
 
-    public function execute(InputInterface $input, OutputInterface $output): int
-    {
+    // public function execute(InputInterface $input, OutputInterface $output): int
+    // {
 
-        // utminfo(func_get_args());
+    //     // utminfo(func_get_args());
 
-        $backupDirectory[] = $input->getArgument(self::CMD_NAME);
-        parent::$optionArg = $backupDirectory;
-        parent::execute($input, $output);
+    //     $backupDirectory[] = $input->getArgument(self::CMD_NAME);
+    //     parent::$optionArg = $backupDirectory;
+    //     parent::execute($input, $output);
 
-        return SymCommand::SUCCESS;
-    }
+    //     return SymCommand::SUCCESS;
+    // }
 }

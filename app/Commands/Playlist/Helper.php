@@ -288,7 +288,6 @@ trait Helper
     public function compact()
     {
         // utminfo(func_get_args());
-
         if (!Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
             if (!file_exists($this->playlist)) {

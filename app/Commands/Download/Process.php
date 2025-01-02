@@ -5,10 +5,10 @@
 
 namespace Mediatag\Commands\Download;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
@@ -53,7 +53,7 @@ class Process extends Mediatag
         if (Option::istrue('convert')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
-        parent::boot($input, $output);
+            parent::boot($input, $output);
         }
     }
 }

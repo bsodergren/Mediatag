@@ -35,6 +35,7 @@ class GifPreviewFiles extends VideoPreview
 
         // Use FFProbe to get the duration of the video.
         $ffprobe  = FFProbe::create($options);
+        
         $duration = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));

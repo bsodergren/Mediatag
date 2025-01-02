@@ -5,6 +5,7 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Traits\Callables;
@@ -19,13 +20,14 @@ class Process extends Mediatag
 {
     use Callables;
     use Helper;
+    use MediaProcess;
 
     /**
      * meta.
      */
     public $formatter;
 
-    public $meta;
+    public $StorageConn;
 
     public $displayTimer = 0;
 
@@ -70,36 +72,13 @@ class Process extends Mediatag
         // utminfo();
 
         parent::boot($input, $output);
-        $this->formatter = new FormatterHelper();
-        Mediatag::$output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
-        Mediatag::$output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
-        Mediatag::$output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
-        Mediatag::$output->getFormatter()->setStyle('playlist', new OutputFormatterStyle('bright-magenta'));
-        Mediatag::$output->getFormatter()->setStyle('download', new OutputFormatterStyle('bright-blue'));
-        Mediatag::$output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
-        $this->StorageConn = new Storage();
+      
+        $this->setupFormat();
+        $this->setupDb();
+        $this->setupMap();
 
-        if (!\defined('ARTIST_MAP')) {
-            $this->getArtistMap('ARTIST_MAP', $this->StorageConn->getArtistMap());
-        }
-
-        if (!\defined('IGNORE_NAME_MAP')) {
-            $this->getArtistMap('IGNORE_NAME_MAP', $this->StorageConn->getIgnoredArists());
-            // utmdd(IGNORE_NAME_MAP);
-        }
         //        utmdd([__METHOD__,IGNORE_NAME_MAP]);
     }
 
-    public function exec($option = null)
-    {
-        // utminfo(func_get_args());
-
-        $this->VideoList = parent::getVideoArray();
-        //  utmdd($this->VideoList);
-        if (0 == \count($this->VideoList['file'])) {
-            return SymCommand::SUCCESS;
-        }
-
-        // UTMlog::logger('Videos found', \count($this->VideoList['file']));
-    }
+   
 }

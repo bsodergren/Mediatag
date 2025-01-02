@@ -36,6 +36,12 @@ class Markers extends VideoData
 
     public $VideoDataTable = __MYSQL_VIDEO_CHAPTER__;
 
+    public $thumbType = 'markers';
+    public $maxLen    = 75;
+
+    public $thumbExt = '.jpg';
+    public $thumbDir = __INC_WEB_CHAPTER_DIR__;
+
     public function videoDuration($duration)
     {
         // utminfo(func_get_args());
@@ -50,64 +56,64 @@ class Markers extends VideoData
         return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
     }
 
-    public function clean()
-    {
-        // utminfo(func_get_args());
+    // public function clean()
+    // {
+    //     // utminfo(func_get_args());
 
-        $missing                                = [];
-        [$dbList,$missing_file, $missing_thumb] = $this->getExistingList();
-        $res                                    = Mediatag::$finder->Search(__INC_WEB_CHAPTER_DIR__.'/'.__LIBRARY__, '*.jpg');
-        if (null === $res) {
-            $res = [];
-        }
+    //     $missing                                = [];
+    //     [$dbList,$missing_file, $missing_thumb] = $this->getExistingList();
+    //     $res                                    = Mediatag::$finder->Search(__INC_WEB_CHAPTER_DIR__.'/'.__LIBRARY__, '*.jpg');
+    //     if (null === $res) {
+    //         $res = [];
+    //     }
 
-        $missing = array_diff($res, $dbList);
+    //     $missing = array_diff($res, $dbList);
 
-        foreach ($res as $k => $file) {
-            if (!array_search($file, $dbList)) {
-                $videoFile = self::thumbToVideo($file);
-                if (file_exists($videoFile)) {
-                    $fs        = new File($videoFile);
-                    $videoData = $fs->get();
-                    $this->get($videoData['video_key'], $videoFile);
-                    Mediatag::$output->writeln($this->returnText.'</info>');
-                }
-            }
-        }
+    //     foreach ($res as $k => $file) {
+    //         if (!array_search($file, $dbList)) {
+    //             $videoFile = $this->thumbToVideo($file);
+    //             if (file_exists($videoFile)) {
+    //                 $fs        = new File($videoFile);
+    //                 $videoData = $fs->get();
+    //                 $this->get($videoData['video_key'], $videoFile);
+    //                 Mediatag::$output->writeln($this->returnText.'</info>');
+    //             }
+    //         }
+    //     }
 
-        if (\count($missing) > 0) {
-            foreach ($missing as $k => $file) {
-                $videoFile = self::thumbToVideo($file);
-                if (!file_exists($videoFile)) {
-                    $this->renameThumb($file, true);
-                    Mediatag::$output->writeln('<comment>Deleting '.$file.' </comment>');
-                }
-            }
-        }
+    //     if (\count($missing) > 0) {
+    //         foreach ($missing as $k => $file) {
+    //             $videoFile = $this->thumbToVideo($file);
+    //             if (!file_exists($videoFile)) {
+    //                 $this->renameThumb($file, true);
+    //                 Mediatag::$output->writeln('<comment>Deleting '.$file.' </comment>');
+    //             }
+    //         }
+    //     }
 
-        if (\count($missing_thumb) > 0) {
-            foreach ($missing_thumb as $k => $file) {
-                $query = 'update '.$this->VideoDataTable.' set thumbnail = null WHERE id = '.$k.'';
+    //     if (\count($missing_thumb) > 0) {
+    //         foreach ($missing_thumb as $k => $file) {
+    //             $query = 'update '.$this->VideoDataTable.' set thumbnail = null WHERE id = '.$k.'';
 
-                $result = Mediatag::$dbconn->query($query);
-                $file   = $this->thumbToVideo($file);
+    //             $result = Mediatag::$dbconn->query($query);
+    //             $file   = $this->thumbToVideo($file);
 
-                Mediatag::$output->write('<comment>Changing '.$k.' to null, '.$file.' </comment>');
+    //             Mediatag::$output->write('<comment>Changing '.$k.' to null, '.$file.' </comment>');
 
-                if (file_exists($file)) {
-                    $fs        = new File($file);
-                    $videoData = $fs->get();
-                    $this->get($videoData['video_key'], $file);
-                    Mediatag::$output->writeln($this->returnText); // .'</info>');
-                } else {
-                    Mediatag::$output->writeln('');
-                }
-            }
-        }
-        Filesystem::prunedirs(__INC_WEB_CHAPTER_DIR__.'/'.__LIBRARY__);
+    //             if (file_exists($file)) {
+    //                 $fs        = new File($file);
+    //                 $videoData = $fs->get();
+    //                 $this->get($videoData['video_key'], $file);
+    //                 Mediatag::$output->writeln($this->returnText); // .'</info>');
+    //             } else {
+    //                 Mediatag::$output->writeln('');
+    //             }
+    //         }
+    //     }
+    //     Filesystem::prunedirs(__INC_WEB_CHAPTER_DIR__.'/'.__LIBRARY__);
 
-        Mediatag::$output->writeln('<comment> All Clean </comment>');
-    }
+    //     Mediatag::$output->writeln('<comment> All Clean </comment>');
+    // }
 
     public function get($key, $file)
     {
@@ -168,106 +174,8 @@ class Markers extends VideoData
         return $thumbnailImages;
     }
 
-    public function videoQuery($video_id = null)
-    {
-        // utminfo(func_get_args());
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id ";
-        $order  = '';
-        if (null === $video_id) {
-            $where = ' vm.markerThumbnail is null ';
-        } else {
-            $where = ' vm.video_id =  '.$video_id.' ';
-            $fields .= ', vm.markerText ';
-            $order = ' ORDER BY `vm`.`timeCode` ASC';
-        }
-        if (Option::istrue('update')) {
-            $where = ' vm.markerThumbnail is not null ';
-        }
+  
 
-        $where .= ' AND f.id = vm.video_id ';
-
-        return 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
-    }
-
-    public function clearQuery($key = null)
-    {
-        // utminfo(func_get_args());
-
-        $where = '';
-        if (null !== $key) {
-            $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
-            if (null !== $exists) {
-                $where = "AND video_key = '".$key."'";
-            }
-        }
-
-        return 'update '.$this->VideoDataTable.' set thumbnail = null WHERE Library = "'.__LIBRARY__.'"';
-    }
-
-    /**
-     * getExistingList.
-     */
-    private function getExistingList(): array
-    {
-        // utminfo(func_get_args());
-
-        $missing_thumb = [];
-        $missing_mp4   = [];
-        $query         = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  thumbnail is not null";
-
-        $result = Mediatag::$dbconn->query($query);
-        $dblist = [];
-        foreach ($result as $_ => $row) {
-            $thumb = self::videoToThumb($row['file_name']);
-            if (!file_exists($row['file_name'])) {
-                $missing_mp4[$row['id']] = $thumb;
-
-                continue;
-            }
-
-            if (!file_exists($thumb)) {
-                $missing_thumb[$row['id']] = $row['file_name'];
-
-                continue;
-            }
-            $dblist[$row['id']] = $thumb;
-        }
-
-        return [$dblist, $missing_mp4, $missing_thumb];
-    }
-
-    public static function videoToThumb($file)
-    {
-        // utminfo(func_get_args());
-
-        return str_replace('.mp4', '.jpg', __INC_WEB_CHAPTER_DIR__.str_replace(__PLEX_HOME__, '', $file));
-    }
-
-    public static function thumbToVideo($file)
-    {
-        // utminfo(func_get_args());
-
-        return str_replace('.jpg', '.mp4', __PLEX_HOME__.str_replace(__INC_WEB_CHAPTER_DIR__, '', $file));
-    }
-
-    public function renameThumb($file, $delete = false)
-    {
-        // utminfo(func_get_args());
-
-        if (true === $delete) {
-            unlink($file);
-
-            return 0;
-        }
-        $newFile = str_replace('thumbnails', 'backup', $file);
-        $path    = \dirname($newFile);
-
-        if (!is_dir($path)) {
-            (new SFilesystem())->mkdir($path);
-        }
-
-        (new SFilesystem())->rename($file, $newFile);
-    }
 
     public function getVideoInfo($key, $row)
     {
@@ -303,29 +211,29 @@ class Markers extends VideoData
         }
     }
 
-    public function getDbList()
-    {
-        // utminfo(func_get_args());
+    // public function getDbList()
+    // {
+    //     // utminfo(func_get_args());
 
-        $file_array = [];
+    //     $file_array = [];
 
-        $query  = $this->videoQuery();
-        $result = Mediatag::$dbconn->query($query);
+    //     $query  = $this->videoQuery();
+    //     $result = Mediatag::$dbconn->query($query);
 
-        foreach ($result as $_ => $row) {
-            $video_key = $row['video_key'];
-            if (!\array_key_exists($video_key, $file_array)) {
-                // } else {
-                $file_array[$video_key] = [
-                    'filename' => $row['file_name'],
-                    'timeCode' => []];
-            }
-            $file_array[$video_key]['timeCode'][] = [$row['id']=>$row['timeCode']];
-            //  $file_array[$row['video_key']]['filename'][] = $row['timeCode'];
-        }
+    //     foreach ($result as $_ => $row) {
+    //         $video_key = $row['video_key'];
+    //         if (!\array_key_exists($video_key, $file_array)) {
+    //             // } else {
+    //             $file_array[$video_key] = [
+    //                 'filename' => $row['file_name'],
+    //                 'timeCode' => []];
+    //         }
+    //         $file_array[$video_key]['timeCode'][] = [$row['id']=>$row['timeCode']];
+    //         //  $file_array[$row['video_key']]['filename'][] = $row['timeCode'];
+    //     }
 
-        // $this->resultCount = \count($file_array);
+    //     // $this->resultCount = \count($file_array);
 
-        return $file_array;
-    }
+    //     return $file_array;
+    // }
 }

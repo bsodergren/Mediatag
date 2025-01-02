@@ -5,38 +5,34 @@
 
 namespace Mediatag\Core;
 
-use UTM\Utilities\Option;
-use Mediatag\Locales\Lang;
-use Mediatag\Core\Mediatag;
-use Psr\Log\LoggerInterface;
-use Mediatag\Traits\Translate;
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Traits\MediaLibrary;
-use UTM\Utilities\Debug\UtmStopWatch;
-use Symfony\Component\Console\Application;
-use Mediatag\Modules\Display\ConsoleOutput;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Contracts\EventDispatcher\Event;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Output\OutputInterface;
 use Mediatag\Core\MediaInputDefinition as InputDefinition;
-use Symfony\Component\Console\Exception\ExceptionInterface;
+use Mediatag\Locales\Lang;
+use Mediatag\Modules\Display\ConsoleOutput;
+use Mediatag\Traits\MediaLibrary;
+use Mediatag\Traits\Translate;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Command\SignalableCommandInterface;
+use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\UtmStopWatch;
+use UTM\Utilities\Option;
 
-class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandInterface
+class MediaCommand extends MediaDoctrineCommand // implements SignalableCommandInterface
 {
     use Lang;
     use MediaLibrary;
     use Translate;
-
-
 
     // public readonly Command $command;
     // public int $exitCode;
@@ -55,9 +51,6 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
     // public array $interactiveInputs = [];
     // public array $handledSignals    = [];
 
-
-
-    public static $optionArg;
 
     public static $Console;
 
@@ -86,19 +79,15 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
 
     public function __construct()
     {
-
-    //     //$this->logger = $logger;
+        //     //$this->logger = $logger;
         parent::__construct();
-    //     self::$logger = $logger;
-
-
-
+        //     self::$logger = $logger;
     }
+
     public function cleanOnEvent()
     {
-        //utmdd(get_class_vars(Mediatag::class));
+        // utmdd(get_class_vars(Mediatag::class));
     }
-
 
     public function configure(): void
     {
@@ -107,6 +96,7 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
         $this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
+        
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
 
         $arguments = MediaOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
@@ -184,7 +174,7 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
             //  stopwatch();
 
             if (!\is_int($statusCode)) {
-                throw new \TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
+                throw new \TypeError(\sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
             }
         }
 
@@ -193,7 +183,6 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
 
     public static function getProcessClass()
     {
-
         // utmdd([__METHOD__,Option::Istrue('completion')]);
 
         // if (true == Option::isTrue('completion')) {
@@ -217,68 +206,8 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
         return $classPath;
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-
-        // utminfo();
-        $args = [$input, $output];
-
-        Mediatag::$IoStyle = new SymfonyStyle($input, $output);
-
-        if (null !== self::$optionArg) {
-            $args = array_merge($args, self::$optionArg);
-        }
-        $class   = self::getProcessClass();
-        $Process = new $class(...$args);
-        if (Option::istrue('trunc')) {
-            Mediatag::$dbconn->truncate();
-
-            return SymCommand::SUCCESS;
-        }
-        if (isset(parent::$AskQuestion)) {
-            $Process->helper = $this->getHelper(parent::$AskQuestion);
-        }
-
-        $Process->process();
-
-        if (null !== $Process->actions) {
-            $go       = false;
-            $ask      = new QuestionHelper();
-            $question = new Question(Translate::text('L__PHDB_ASK_CONTINUE', ['NEXT' => $Process->actions]));
-
-            $answer = $ask->ask($input, $output, $question);
-
-            switch ($answer) {
-                case 'y':
-                    $go = true;
-
-                    break;
-
-                case 'Y':
-                    $go = true;
-
-                    break;
-
-                default:
-                    $go = false;
-
-                    break;
-            }
-            if (true == $go) {
-                $greetInput = new ArrayInput([
-                    // the command name is passed as first argument
-                    'command' => strtolower($Process->actions),
-                ]);
-                $returnCode = $this->getApplication()->doRun($greetInput, $output);
-            }
-        }
-
-        return SymCommand::SUCCESS;
-    }
-
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
-
         // utminfo();
         $className = static::class;
         Option::init($input);
@@ -294,13 +223,11 @@ class MediaCommand extends MediaDoctrineCommand //implements SignalableCommandIn
 
     protected function loadDirs()
     {
-
         $filesystem = new Filesystem();
         foreach (__CREATE_DIRS__ as $dir) {
             if (!is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }
-
         }
     }
 }
