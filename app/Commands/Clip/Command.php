@@ -5,19 +5,20 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Core\Helper\MediaExecute;
-use Mediatag\Core\MediaCommand;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Attribute\AsCommand;
-use Symfony\Component\Console\Command\Command as SynCmd;
-use Symfony\Component\Console\Helper\QuestionHelper;
+use Mediatag\Core\MediaCommand;
+use Mediatag\Commands\Clip\Lang;
+use Mediatag\Core\Helper\MediaExecute;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use UTM\Utilities\Option;
+use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command as SynCmd;
 
 const DESCRIPTION = 'Clip Command';
 const NAME        = 'clip';

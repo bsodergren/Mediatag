@@ -45,13 +45,13 @@ trait VideoQuery
         return $file_array;
     }
 
-    public function videoQuery($video_id = null)
+    public function videoQuery($video_id = null, $search = null)
     {
         if ('info' == $this->thumbType) {
             return $this->InfoVideoQuery($video_id);
         }
         if ('markers' == $this->thumbType) {
-            return $this->MarkersVideoQuery($video_id);
+            return $this->MarkersVideoQuery($video_id,$search);
         }
         $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
 
@@ -98,7 +98,7 @@ trait VideoQuery
         return $sql;
     }
 
-    private function MarkersVideoQuery($video_id = null)
+    private function MarkersVideoQuery($video_id = null, $search = null)
     {
         $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id ";
         $order  = '';
@@ -114,7 +114,9 @@ trait VideoQuery
         }
 
         $where .= ' AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
-
+        if (null !== $search) {
+            $where .= ' AND  vm.markerText like "'.$search.'%" ';
+        }
         return 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
     }
 }

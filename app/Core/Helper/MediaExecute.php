@@ -26,7 +26,6 @@ trait MediaExecute
         }
         if (\count($input->getArguments()) > 0) {
             $cmdArgument = $input->getArgument(self::CMD_NAME);
-            utmdump([$input->getArguments(), $cmdArgument]);
             if (null !== $cmdArgument) {
                 self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
             }

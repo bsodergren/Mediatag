@@ -59,12 +59,12 @@ trait MediaProcess
         Mediatag::$output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
     }
 
-    public function __call($m, $a)
-    {
-        // utminfo(func_get_args());
+    // public function __call($m, $a)
+    // {
+    //     // utminfo(func_get_args());
 
-        return null;
-    }
+    //     return null;
+    // }
 
     public function print()
     {

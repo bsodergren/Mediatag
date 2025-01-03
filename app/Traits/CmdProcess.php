@@ -28,10 +28,15 @@ trait CmdProcess
         }
 
         foreach (Option::getOptions() as $option => $value) {
+
             if (\array_key_exists($option, $array)) {
+
                 $cmd = $option;
+                               
+
                 foreach ($array[$option] as $method => $args) {
-                    if (null !== $args) {
+                    if (null !== $args) 
+                    {
                         if ('default' == $args) {
                             $default = [$method => null];
 
@@ -50,7 +55,11 @@ trait CmdProcess
                         }
                         $args        = $commandArgs;
                     }
+
                     $Commands[$method] = $args; // => $value];
+
+                    // utmdd( [$Commands[$method],$method,$args] );
+
                     if ('default' == $method) {
                         unset($Commands[$method]);
                         $Commands = array_merge($Commands, $default);

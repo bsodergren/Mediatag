@@ -91,10 +91,10 @@ class MediaOptions
             }
 
             $definitions = self::$classObj->Definitions();
-
             if (\is_array($definitions)) {
                 $cmdOptions = self::getOptions($definitions);
             }
+
         }
 
         foreach ($commandOptions as $Options) {

@@ -5,14 +5,9 @@
 
 namespace Mediatag\Commands\Clip;
 
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ShowDisplay;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
@@ -22,6 +17,7 @@ include_once __DATA_MAPS__.'/WordMap.php';
 class Process extends Mediatag
 {
     use Helper;
+    use Lang;
     use MediaProcess;
 
     public $VideoList = [];
@@ -31,21 +27,19 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'convert'     => [
-            'exec'         => null,
-            'getfileList' => null,
+        'convert'       => [
+            'exec'          => null,
+            'getfileList'   => null,
             'getClips'      => null,
         ],
-        'clip'        => [
-            'exec'=>null,
+        'clip'          => [
+            'exec'        => null,
             'getfileList' => null,
-            'createClip' => null,
+            'createClip'  => null,
         ],
         'delete'        => [
-            
             'deleteClips' => null,
         ],
-
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
@@ -54,8 +48,9 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
         if (!Option::isTrue('clip')) {
-          //  \define('SKIP_SEARCH', true);
+            \define('SKIP_SEARCH', true);
         }
+
         parent::boot($input, $output);
         $this->setupFormat();
         $this->setupDb();
@@ -63,5 +58,4 @@ class Process extends Mediatag
 
         // parent::$Display              = new ShowDisplay($output);
     }
-
 }

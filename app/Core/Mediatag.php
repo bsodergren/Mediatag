@@ -188,6 +188,7 @@ abstract class Mediatag extends Command
         $ClassCmds = $this->runCommand();
 
         foreach ($ClassCmds as $cmd => $option) {
+            // utmdd(get_class($this),method_exists($this, $cmd));
             if (method_exists($this, $cmd)) {
                 $this->{$cmd}($option);
             } else {
