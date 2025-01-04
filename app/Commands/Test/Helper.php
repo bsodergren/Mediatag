@@ -15,6 +15,28 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 
 trait Helper
 {
+
+
+    public function colors()
+    {
+        $colors = [
+            'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray', 
+            'bright-red', 'bright-green', 'bright-yellow', 'bright-blue', 'bright-magenta', 'bright-cyan' , 'bright-white'
+        ];
+
+        foreach($colors as $color){
+            $text = "<fg=".$color.">".$color."</>";
+            $text .= " <fg=".$color.";options=bold> bold ".$color."</>";
+            $text .= " <fg=".$color.";options=underscore> underscore ".$color."</>";
+            $text .= " <fg=".$color.";options=blink> blink ".$color."</>";
+            $text .= " <fg=".$color.";options=reverse> Reverse ".$color."</>";
+
+
+            mediatag::$output->writeln($text);
+        }
+
+        return true;
+    }
     
     public function t1($val, $min, $max)
     {

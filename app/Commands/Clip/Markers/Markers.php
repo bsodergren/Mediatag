@@ -5,8 +5,6 @@
 
 namespace Mediatag\Commands\Clip\Markers;
 
-use Mediatag\Modules\VideoData\Data\Duration;
-
 trait Markers
 {
     public function getVideoMarks($videoInfo)
@@ -14,7 +12,7 @@ trait Markers
         $videoKey  = 0;
         $markers   = [];
         $markerPos = [];
-        //utmdd($videoInfo);
+        // utmdd($videoInfo);
         foreach ($videoInfo as $k => $row) {
             if (!\array_key_exists('timeCode', $row)) {
                 return null;
@@ -33,33 +31,17 @@ trait Markers
 
             if (str_contains(strtolower($markerKey), 'start')) {
                 $start = $this->Marker->videoDuration($row['timeCode']);
-               // continue;
-            // } else {
+            }
 
-            //     if (!str_contains(strtolower($markerKey), 'end')) {
-            //         $duration = new Duration();
-            //         $ret = $duration->get($videoKey,$row['file_name']);
-            //         $end = $this->Marker->videoDuration($ret['duration']);
-                }
+            if (str_contains(strtolower($markerKey), 'end')) {
+                $end = $this->Marker->videoDuration($row['timeCode']);
 
-                if (str_contains(strtolower($markerKey), 'end')) {
-                    $end = $this->Marker->videoDuration($row['timeCode']);
-
-        $markerPos[$markerIdx] = [
-            'text' => $markerText,
-            'start'=> $start,
-            'end'  => $end];
-        $markerIdx++;
-                }
-
-               
-        // }
-        
-                // $start = '';
-            
-
-           
-            // $markerIdx++;
+                $markerPos[$markerIdx] = [
+                    'text' => $markerText,
+                    'start'=> $start,
+                    'end'  => $end];
+                ++$markerIdx;
+            }
 
             $markers[$row['video_key']]['markers'] = $markerPos;
         }

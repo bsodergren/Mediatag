@@ -29,14 +29,10 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'convert'     => [
-            'exec'         => null,
-            'convert'      => null,
+        'colors'     => [
+            'colors'      => null,
         ],
-        'clip'        => [
-            'exec'=>null,
-            'createClip' => null,
-        ],
+        
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
@@ -44,8 +40,8 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // utminfo(func_get_args());
-        if (!Option::isTrue('clip')) {
-          //  \define('SKIP_SEARCH', true);
+        if (Option::isTrue('colors')) {
+           \define('SKIP_SEARCH', true);
         }
         parent::boot($input, $output);
 

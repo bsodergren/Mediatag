@@ -5,11 +5,9 @@
 
 namespace Mediatag\Traits;
 
-use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Debug\Timer;
 use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
 
 trait MediaLibrary
 {
@@ -17,18 +15,17 @@ trait MediaLibrary
     {
         // utminfo(func_get_args());
 
-        $curent_dir   = getcwd();
+        $curent_dir = getcwd();
         // UTMlog::logger('Current Directory', $curent_dir);
         if (false === $exit) {
             return;
         }
         $in_directory = (new Filesystem())->makePathRelative($curent_dir, __PLEX_HOME__);
 
-        $success      = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
-
+        $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
         if (0 == \count($match)) {
-            self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
+            self::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
 
             // UTMlog::logger('Wrong spot?', $curent_dir);
             if (true === $exit) {
@@ -42,7 +39,7 @@ trait MediaLibrary
             if (!Arrays::contains(__LIBRARIES__, $match[1])) {
                 // UTMlog::logger('Not in a Library directory?', $curent_dir);
 
-                self::$Console->writeLn('your in a wrong spot ' . $curent_dir, 'error');
+                self::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
                 if (true === $exit) {
                     exit;
                 }
@@ -53,6 +50,9 @@ trait MediaLibrary
 
                 // UTMlog::logger('In Directory', __LIBRARY__);
             }
+        }
+        if (!\defined('__LIBRARY_HOME__')) {
+            \define('__LIBRARY_HOME__', __PLEX_HOME__.\DIRECTORY_SEPARATOR.__LIBRARY__);
         }
     }
 }

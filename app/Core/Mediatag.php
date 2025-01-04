@@ -5,28 +5,26 @@
 
 namespace Mediatag\Core;
 
-use UTM\Utilities\Option;
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Traits\CmdProcess;
-use Mediatag\Modules\Display\Display;
+use Mediatag\Core\Helper\MediaCommand;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\ConsoleOutput;
-use Symfony\Component\Filesystem\Filesystem;
+use Mediatag\Modules\Display\Display;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFinder as Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Cursor;
-
-use Symfony\Component\Console\Input\ArrayInput;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
 abstract class Mediatag extends Command
 {
-    use CmdProcess;
+    use MediaCommand;
 
-    public  $application       ;
+    public $application;
     public const PH_META_CACHE = __CACHE_DIR__.'/pornhub.hash';
 
     public static $SearchArray = [];
@@ -126,7 +124,7 @@ abstract class Mediatag extends Command
         MediaCache::init($input, $output);
 
         Option::init($input, $options);
-        self::$Cursor = new Cursor($output);
+        self::$Cursor  = new Cursor($output);
         self::$Console = new ConsoleOutput($output, $input);
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {
@@ -197,10 +195,7 @@ abstract class Mediatag extends Command
                 return 0;
             }
         }
-
-
     }
-
 
     public static function App(): string
     {

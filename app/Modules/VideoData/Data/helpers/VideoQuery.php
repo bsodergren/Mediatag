@@ -115,7 +115,9 @@ trait VideoQuery
 
         $where .= ' AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
         if (null !== $search) {
+            
             $where .= ' AND  vm.markerText like "'.$search.'%" ';
+            
         }
         return 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
     }

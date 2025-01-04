@@ -9,6 +9,10 @@ use Mediatag\Core\Mediatag;
 
 trait Lang
 {
+
+    public const L__DEFAULT_QUESTION_YES = 'Are you sure Y/N: ';
+    public const L__DEFAULT_ASK_FILE = 'Ask to overwrite';
+    public const L__DEFAULT_OVERWRITE_FILE = "Overwite existing file";
     public const L__APP_DEFAULT_CMD       = 'The command to execute';
     public const L__APP_DEFAULT_HELP      = 'Display help for the given command. When no command is given display help for the <info>%%CMD%%</info> command';
     public const L__APP_DEFAULT_QUIET     = 'Do not output any message';

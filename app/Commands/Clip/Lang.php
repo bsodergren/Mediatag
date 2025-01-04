@@ -17,6 +17,6 @@ trait Lang
     public const L__CLIP_DELETE_CLIPS = "Delete Clips from Cur Directory";
     public const L__CLIP_VIDEO_COUNT = '%%VID%% Clips will be deleted';
 
-    public const L__CLIP_ASK_CONTINUE = 'Are you sure Y/N: ';
+  public const L__CLIP_MERGED_NAME = 'Name of Merged Video File';
     public const L__CLIP_DELETE_YES = ' Delete clips in path';
 }

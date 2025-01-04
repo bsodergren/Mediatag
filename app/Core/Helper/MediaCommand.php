@@ -3,13 +3,13 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Traits;
+namespace Mediatag\Core\Helper;
 
 use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
-trait CmdProcess
+trait MediaCommand
 {
     public $default = [
         'exec'  => null,

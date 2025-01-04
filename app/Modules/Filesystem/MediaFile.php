@@ -5,9 +5,7 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Traits\Callables;
-use UTM\Utilities\Debug\Debug;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem as NetteFile;
@@ -23,7 +21,7 @@ class MediaFile
 
     public $video_name;
 
-    public $video           = [];
+    public $video = [];
 
     public $output;
 
@@ -85,30 +83,29 @@ class MediaFile
         $numeric = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5];
         // $text = basename($text);
         //  $text    = strtolower($text);
-        $key     =  md5($text);
+        $key = md5($text);
         // $key = str_replace($alpha, $numeric, $text);
         // $key = str_replace(['_', '-', '.', '/', ' '], '', $key);
         // $len = \strlen($key);
-        $xkey    = 'x' . substr($key, 0, 31);
-        return $xkey;
+        $xkey = 'x'.substr($key, 0, 31);
 
+        return $xkey;
     }
 
     public static function getVideoKey($filename)
     {
         // utminfo(func_get_args());
 
-
         // $filename = realpath($filename);
 
         $filename = basename($filename);
 
-        $success  = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             $video_key = $matches[1];
         } else {
             $video_key = self::get64BitNumber($filename);
-            //$video_key = 'x'.$video_key;
+            // $video_key = 'x'.$video_key;
         }
 
         return $video_key;
@@ -126,6 +123,7 @@ class MediaFile
                 $this->video_key = self::getVideoKey($this->video_file);
             }
         }
+
         return $this->video_key;
 
         // return [$this->video_key,$success,$matches];
@@ -228,8 +226,8 @@ class MediaFile
             $buffer .= @fgets($handle, 4096);
             ++$i;
 
-            $file_name = sprintf('%s%02d%s', $filename, $j, $ext);
-            $fname     = $targetpath . $file_name;
+            $file_name = \sprintf('%s%02d%s', $filename, $j, $ext);
+            $fname     = $targetpath.$file_name;
 
             Strings::showstatus($i, $lines, 80, $file_name);
             if ($i >= $lines) {
@@ -267,14 +265,14 @@ class MediaFile
     public static function file_append_file($file = '', $string = '')
     {
         // utminfo(func_get_args());
-        $dir     = realpath($file);
-        if ($dir === false) {
-            $dirname = dirname($file);
+        $dir = realpath($file);
+        if (false === $dir) {
+            $dirname = \dirname($file);
 
             NetteFile::createDir($dirname);
         }
 
-        $fp      = fopen($file, 'a+');
+        $fp = fopen($file, 'a+');
         fwrite($fp, $string);
         fclose($fp);
     }
@@ -309,7 +307,7 @@ class MediaFile
             $library = $match[1];
         }
 
-        $success      = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             return true;
         }
@@ -327,5 +325,26 @@ class MediaFile
         }
 
         return false;
+    }
+
+    public static function getFilename($fileName)
+    {
+        $fileDirectory = pathinfo($fileName, \PATHINFO_DIRNAME);
+        $fileExtension = pathinfo($fileName, \PATHINFO_EXTENSION);
+        $fileBaseName  = pathinfo($fileName, \PATHINFO_FILENAME);
+
+        $newFileName = $fileBaseName;
+        $counter     = 1;
+
+        // Check if file exists and generate a new name if it does
+        while (file_exists($fileDirectory.\DIRECTORY_SEPARATOR.$newFileName.'.'.$fileExtension)) {
+            $newFileName = $fileBaseName.'_'.$counter;
+            ++$counter;
+        }
+
+        $finalFileName = $newFileName.'.'.$fileExtension;
+        $destination   = $fileDirectory.\DIRECTORY_SEPARATOR.$finalFileName;
+
+        return $destination;
     }
 }

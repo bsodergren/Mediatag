@@ -7,12 +7,13 @@ namespace Mediatag\Commands\Clip;
 
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Display\MediaIndicator;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Data\Markers;
 use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Helper\ProgressIndicator;
-use Symfony\Component\Console\Helper\QuestionHelper;
+use Mediatag\Utilities\Chooser;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
 
@@ -24,22 +25,27 @@ trait Helper
     public $Marker;
     public $markerArray;
 
-    public $BarStyle = ['*----', '-*---', '--*--', '---*-', '----*', '---*-', '--*--', '-*---'];
 
-    public function CreateNewIndicator()
-    {
-        $this->progress = null;
-        $this->progress = new ProgressIndicator(Mediatag::$Display->BarSection1, 'normal', 50, $this->BarStyle, '🎉');
-    }
+    public function timeCodetoSec($time){
 
-    public function startIndicator($message)
-    {
-        $this->progress->start('<fg=bright-cyan>'.$message.'</>');
-    }
+        $pcs = explode(":",$time);
+        $seconds =0;
+        $minutes = 0;
+        $hours = 0;
 
-    public function finishIndicator($message)
-    {
-        $this->progress->finish('<fg=green>'.$message.'</>');
+        rsort($pcs);
+        $seconds = $pcs[0];
+        if(array_key_exists(1,$pcs)){
+        $minutes = $pcs[1]*60;
+        }
+        if(array_key_exists(2,$pcs)){
+            $hours = $pcs[2]*60*60;
+        }
+
+        $time = ($seconds + $minutes + $hours);
+        return $time;
+
+
     }
 
     public function getClipDirectory($filename, $level = 1)
@@ -61,8 +67,18 @@ trait Helper
     {
         $name = str_replace(' ', '_', $name);
 
-        $filename = __CURRENT_DIRECTORY__.\DIRECTORY_SEPARATOR.'Compilation'.\DIRECTORY_SEPARATOR.$name.'.mp4';
+        $filename = __LIBRARY_HOME__.\DIRECTORY_SEPARATOR.'Home Videos'.\DIRECTORY_SEPARATOR.'Compilation'.\DIRECTORY_SEPARATOR.$name.'.mp4';
         Filesystem::createDir(\dirname($filename));
+
+        if (file_exists($filename)) {
+            if (Chooser::changes(' Overwrite File ', 'overwrite', __LINE__)) {
+                unlink($filename);
+                // } else {
+                //     exit;
+            }
+        }
+
+        $filename = MediaFile::getFilename($filename);
 
         return $filename;
     }
@@ -80,58 +96,66 @@ trait Helper
         $file_array = Mediatag::$finder->Search($directory, '*.mp4');
 
         $videos = \count($file_array);
+        // $question = new Question(Translate::text('L__CLIP_ASK_CONTINUE'));
+        // Mediatag::$output->writeln();
 
-        if (Option::istrue('yes')) {
-            $go     = true;
-            $answer = 'y';
-        } else {
-            Mediatag::$output->writeln(Translate::text('L__CLIP_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper();
-            $question = new Question(Translate::text('L__CLIP_ASK_CONTINUE'));
+        $go = Chooser::changes(Translate::text('L__CLIP_VIDEO_COUNT', ['VID' => $videos]), 'yes', __LINE__);
 
-            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
-        }
-        switch ($answer) {
-            case 'y':
-                $go = true;
-
-                break;
-
-            case 'Y':
-                $go = true;
-
-                break;
-
-            default:
-                $go = false;
-
-                break;
-        }
-
-        if (true == $go) {
+        if (true === $go) {
             Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
-
             foreach ($file_array as $file) {
-                unlink($file);
-
+                Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
+                Mediatag::$filesystem->remove($file);
                 utmdump($file);
             }
         }
+    }
+    public function addMarker()
+    {
+        $time = Option::getValue('time');
+        $name = Option::getValue('name', true);
+        
 
-        utmdd(
-            ''
-        );
+        $video_id = (new Markers)->getvideoId(key($this->VideoList['file']));
+
+        // utmdd($video_id);
+        $suffix=['Start','End'];
+        foreach($time as $i => $t){
+            $data = [
+                'timeCode'       => $this->timeCodetoSec($t),
+                'video_id'       => $video_id,
+                'markerText'     => $name."_".$suffix[$i],
+            ];    
+
+            $res  = Mediatag::$dbconn->insert( $data,__MYSQL_VIDEO_CHAPTER__);
+                    // utmdd($data);
+
+            utmdump($res);
+        }
+        // $start = $time[0];
+        // $end = $time[1];
+
+        // 
+        // $data = [
+        //     'timeCode'       => $this->data['timeCode'],
+        //     'video_id'       => $this->data['videoId'],
+        //     'markerText'     => $this->data['markerText'],
+        // ];
+        // $res  = Mediatag::$dbconn->insert(__MYSQL_VIDEO_CHAPTER__, $data);
     }
 
-    public function getClips()
+    public function mergeClips()
     {
-        $name      = Option::getValue('convert', true);
-        
+        $fileSearch = Option::getValue('merge', true);
+
+        $name      = Option::getValue('name', true);
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
-        if($name !== null) {
+        if (null !== $fileSearch) {
             $search = '/.*_('.$name.')_\d+\.mp4/i';
-        } else { 
-            $search = "*.mp4";
+        } else {
+            $search = '*.mp4';
+        }
+        if (null === $name) {
             $name = 'Compilation';
         }
         $file_array = Mediatag::$finder->Search($directory, $search);
@@ -162,10 +186,12 @@ trait Helper
         $string   = implode("\n", $strArray);
         $listFile = $this->setffmpegFilename($name);
         Filesystem::write($listFile, $string, 0755);
-        $ClipName = $this->setClipFilename($name);
-        $this->CreateNewIndicator();
+        $ClipName       = $this->setClipFilename($name);
+        $this->progress = new MediaIndicator('one');
 
-        $this->createCompilation($listFile, $ClipName);
+        // utmdd($file);
+
+        $this->createCompilation($listFile, $ClipName, $name);
     }
 
     public function getfileList()
@@ -174,20 +200,21 @@ trait Helper
         $this->FileIdx = 0;
 
         $search = Option::getValue('clip', true);
-
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers();
 
             $this->Marker->getvideoId($key);
 
             if (null !== $this->Marker->video_id) {
-                ++$this->FileIdx;
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Mediatag::$dbconn->query($query);
 
                 $markers = $this->getVideoMarks($result);
                 //  utmdd($markers);
+
                 if (\count($markers) > 0) {
+                    ++$this->FileIdx;
+
                     $markerArray[] = $markers;
                 }
             }
@@ -197,18 +224,18 @@ trait Helper
         return $this->markerArray;
     }
 
-    public function createClip()
+    public function createClips()
     {
-        $this->CreateNewIndicator();
+        $this->progress = new MediaIndicator('one');
         foreach ($this->markerArray as $i =>$fileRow) {
             foreach ($fileRow as $K =>$FILE) {
                 $filename = $FILE['filename'];
 
                 if (\count($FILE['markers']) > 0) {
-                    Mediatag::$output->writeln('<comment>'.$this->FileIdx--.'</> <fg=green>'.basename($filename).'</>');
+                    // Mediatag::$output->writeln('<comment>'.$this->FileIdx--.'</> <fg=green>'.basename($filename).'</>');
                     foreach ($FILE['markers'] as $idx =>$marker) {
-                        $frame_json   = $this->ffmprobeGetFrames($filename, $marker['start'], $marker['end']);
-                        $this->frames = $frame_json['streams'][0]['nb_read_frames'];
+                        // $frame_json   = $this->ffmprobeGetFrames($filename, $marker['start'], $marker['end']);
+                        // $this->frames = $frame_json['streams'][0]['nb_read_frames'];
 
                         $this->ffmpegCreateClip($filename, $marker, $idx);
                     }

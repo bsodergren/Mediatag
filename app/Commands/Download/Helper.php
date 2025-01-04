@@ -202,7 +202,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $go = Chooser::changes(Mediatag::$input, Mediatag::$output, 'Remove Duplicate files');
+        $go = Chooser::changes('Remove Duplicate files');
 
         if (true == $go) {
             foreach ($this->filesToRemove as $file) {

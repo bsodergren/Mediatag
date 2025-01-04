@@ -24,10 +24,8 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-            ['clip', 'C', InputOption::VALUE_NONE, Translate::text('L__TEST_CLIP')],
+            ['colors', 'C', InputOption::VALUE_NONE, Translate::text('L__TEST_CLIP')],
 
-            ['convert', 'c', InputOption::VALUE_NONE, Translate::text('L__SHOW_CMDT')],
-            ['output', 'o', InputOption::VALUE_REQUIRED, Translate::text('L__SHOW_PLAYLIST')],
         ];
     }
 }

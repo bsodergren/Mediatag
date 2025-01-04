@@ -27,18 +27,22 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'convert'       => [
+        'merge'       => [
             'exec'          => null,
             'getfileList'   => null,
-            'getClips'      => null,
+            'mergeClips'      => null,
         ],
-        'clip'          => [
+        'create'          => [
             'exec'        => null,
             'getfileList' => null,
-            'createClip'  => null,
+            'createClips'  => null,
         ],
         'delete'        => [
             'deleteClips' => null,
+        ],
+        'add'        => [
+            'exec'        => null,
+            'addMarker' => null,
         ],
     ];
 
@@ -47,10 +51,9 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // utminfo(func_get_args());
-        if (!Option::isTrue('clip')) {
-            \define('SKIP_SEARCH', true);
-        }
-
+        // if (!Option::isTrue('clip')) {
+        //     // \define('SKIP_SEARCH', true);
+        // }
         parent::boot($input, $output);
         $this->setupFormat();
         $this->setupDb();

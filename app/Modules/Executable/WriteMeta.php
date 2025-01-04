@@ -98,7 +98,7 @@ class WriteMeta extends MediatagExec
 
         if (1 == Option::isTrue('changes')) {
             if (null === Chooser::$bypass) {
-                $go = Chooser::changes($this->input, $this->output);
+                $go = Chooser::changes();
             }
         } else {
             $go = true;

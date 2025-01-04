@@ -173,6 +173,27 @@ class MediaOptions
         return self::getOptions($options);
     }
 
+
+    public static function getQuestionOptions()
+    {
+
+        // utminfo(func_get_args());
+
+        Translate::$Class = __CLASS__;
+
+        $options          = [
+            ['ask', null, InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_ASK_FILE')],
+            ['overwrite', 'o', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_OVERWRITE_FILE')],
+            ['yes', 'y', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_QUESTION_YES')],
+
+        ];
+
+        return self::getOptions($options);
+    }
+
+
+
+
     public static function getTestOptions()
     {
 
