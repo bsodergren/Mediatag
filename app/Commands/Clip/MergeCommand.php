@@ -20,7 +20,13 @@ class MergeCommand extends MediaCommand
     public const USE_LIBRARY = true;
 
   
-
+    public $command = [
+        'merge'           => [
+            'exec'            => null,
+            'getfileList'     => null,
+            'mergeClips'      => null,
+        ],
+    ];
 
     // public function MergeFunction()
     // {

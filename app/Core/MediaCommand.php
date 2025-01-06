@@ -56,6 +56,10 @@ class MediaCommand extends MediaDoctrineCommand
     public static $Console;
 
     public const USE_LIBRARY = false;
+    public const SKIP_SEARCH = false;
+
+    public $command = [];
+
 
     //    private ?Application $application = null;
     //    private ?string $name = null;
@@ -93,6 +97,7 @@ class MediaCommand extends MediaDoctrineCommand
         }
 
         $class     = static::class;
+        // utmdd($this->command);
         $arguments = $input->getArguments();
         if (\count($arguments) > 0) {
                 $cmdArgument = $input->getArgument($this->getName());
@@ -109,6 +114,7 @@ class MediaCommand extends MediaDoctrineCommand
         $class   = self::getProcessClass();
         // utmdd($class);
         $Process = new $class(...array_merge([$input, $output], self::$optionArg));
+        $Process->commandList = $this->command;
         $method = "process";
 
         if (\array_key_exists('command', $arguments)) {
@@ -231,6 +237,7 @@ class MediaCommand extends MediaDoctrineCommand
             chdir($path);
         }
         $this->getLibrary($className::USE_LIBRARY);
+        Option::set('SKIP_SEARCH',$className::SKIP_SEARCH);
 
         $this->loadDirs();
     }

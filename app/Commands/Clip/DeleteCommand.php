@@ -14,6 +14,9 @@ class DeleteCommand extends MediaCommand
 {
     use Lang;
     public const USE_LIBRARY     = true;
-   
+    public $command = [
+        'delete'          => [
+            'deleteClips' => null,
+        ],    ];
 
 }

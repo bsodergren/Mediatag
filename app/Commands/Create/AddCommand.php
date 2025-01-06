@@ -17,20 +17,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 
-#[AsCommand(name: 'create', description: 'Create a new Command')]
-final class Command extends MediaCommand
+#[AsCommand(name: 'add', description: 'add a new Command')]
+final class AddCommand extends MediaCommand
 {
     use Lang;
     use MediaExecute;
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 
-
-
     public $command = [
-
-        'create'    => ['createCommand' => null],
+        'add'    => ['addCommand' => null],
     ];
-
-
 }

@@ -28,25 +28,25 @@ class Process extends Mediatag
         'exec' => null,
     ];
 
-    public $commandList = [
-        'merge'           => [
-            'exec'            => null,
-            'getfileList'     => null,
-            'mergeClips'      => null,
-        ],
-        'create'          => [
-            'exec'         => null,
-            'getfileList'  => null,
-            'createClips'  => null,
-        ],
-        'delete'          => [
-            'deleteClips' => null,
-        ],
-        'add'             => [
-            'exec'        => null,
-            'addMarker'   => null,
-        ],
-    ];
+    // public $commandList = [
+    //     'merge'           => [
+    //         'exec'            => null,
+    //         'getfileList'     => null,
+    //         'mergeClips'      => null,
+    //     ],
+    //     'create'          => [
+    //         'exec'         => null,
+    //         'getfileList'  => null,
+    //         'createClips'  => null,
+    //     ],
+    //     'delete'          => [
+    //         'deleteClips' => null,
+    //     ],
+    //     'add'             => [
+    //         'exec'        => null,
+    //         'addMarker'   => null,
+    //     ],
+    // ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
