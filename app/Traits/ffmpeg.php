@@ -5,20 +5,25 @@
 
 namespace Mediatag\Traits;
 
-use Mediatag\Core\MediaCache;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Utilities\Chooser;
-use Mhor\MediaInfo\MediaInfo;
 use Nette\Utils\Callback;
+use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
+use Mediatag\Core\MediaCache;
+use Mhor\MediaInfo\MediaInfo;
+use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Utilities\Chooser;
+use Mediatag\Modules\Display\MediaBar;
+use Symfony\Component\Process\Process;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Traits\Callables\ProcessCallbacks;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-use UTM\Bundle\Monolog\UTMLog;
 
 trait ffmpeg
 {
+
+    use ProcessCallbacks;
+
     public $progress;
     public $ffmpeg = [];
 
@@ -26,15 +31,21 @@ trait ffmpeg
 
     public $ffmpegArgs = ['-y', '-hide_banner'];
 
+
     public function FrameCountCallback($type, $buffer)
     {
+       
+        $buffer = $this->cleanBuffer($buffer);
+        if (null !== $this->progress) {
+            if (preg_match('/fps=\s([0-9.]+)/', $buffer, $output_array)) {
+                $this->progress->advance($output_array[1]);
+            }
+        }
     }
 
     public function ProgressbarOutput($type, $buffer)
     {
-        $outputText = '';
-        $buffer     = str_replace("\n", '', $buffer);
-        // utmdd($buffer);
+        $buffer = $this->cleanBuffer($buffer);
 
         if (null !== $this->progress) {
             $this->progress->advance();
@@ -43,12 +54,13 @@ trait ffmpeg
 
     public function Outputdebug($type, $buffer)
     {
-        // $buffer = str_replace("\n", '', $buffer);
-        // utmdd($buffer);
+        $buffer = $this->cleanBuffer($buffer); 
+        
+        
         if (null !== $this->progress) {
             $this->progress->advance();
         }
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/ffmpeg.log", $buffer . PHP_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__.'/buffer/ffmpeg.log', $buffer.\PHP_EOL);
         // Mediatag::$output->writeln($buffer);
         //  Mediatag::$output->writeln($this->cmdline);
 
@@ -65,7 +77,7 @@ trait ffmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
-        // utmdump($process->getCommandLine());
+        // utmdd($process->getCommandLine());
         // $process->start($callback);
         $process->start();
         $process->wait($callback);
@@ -229,25 +241,20 @@ trait ffmpeg
         $this->progress->finishIndicator('Finished '.$marker['text']);
     }
 
-    public function createCompilation($listFile, $ClipName, $name)
+    public function createCompilation($files, $ClipName, $name)
     {
-        $cmdOptions = [
-            '-v', 'debug',
-            // '-filter_complex', 'xfade=transition=fade:duration=2:offset=5',
-            '-safe', '0',
-            '-f', 'concat',
-            '-i', $listFile,
-            '-codec', 'copy',
-            $ClipName,
-        ];
-        $this->cmdline = $cmdOptions;
+        $cmd      = $this->generateFfmpegCommand($files, 'slideleft', 5);
+        $cmdArray = array_merge($cmd, [$ClipName]);
 
-        $this->progress->startIndicator('Creating Compilation '.$name);
-        $callback = Callback::check([$this, 'Outputdebug']);
+        $this->cmdline = $cmdArray;
 
-        $this->ffmpegExec($cmdOptions, $callback);
-        $this->progress->finishIndicator('Finished Compilation '.$name);
+        $this->progress = new MediaBar((int) $this->clipLength / 30, 'one', 120);
+        MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
+        // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
+        $this->progress->start();
+        // $this->progress->startIndicator('Creating Compilation '.$name);
+        $callback = Callback::check([$this, 'FrameCountCallback']);
 
-        return true;
+        $this->ffmpegExec($cmdArray, $callback);
     }
 }

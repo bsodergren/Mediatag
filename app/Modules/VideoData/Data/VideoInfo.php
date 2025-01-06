@@ -91,13 +91,22 @@ class VideoInfo extends VideoData
 
     public static function getVidInfo($file)
     {
-        $mediaInfo             = new MediaInfo();
-        $mediaInfoContainer    = $mediaInfo->getInfo($file);
-        $videos                = $mediaInfoContainer->getVideos();
-        $general               = $mediaInfoContainer->getGeneral();
+        $mediaInfo          = new MediaInfo();
+        $mediaInfoContainer = $mediaInfo->getInfo($file);
+        $videos             = $mediaInfoContainer->getVideos();
+        $general            = $mediaInfoContainer->getGeneral();
+        $audios              = $mediaInfoContainer->getAudios();
+
         $videoinfo['file']     = $file;
         $videoinfo['filesize'] = filesize($file);
+        foreach ($audios as $audio) {
+            $videoinfo['codec_type'] = (string) $audio->get('kind_of_stream');
+        }
+
+
         foreach ($videos as $video) {
+            //            $videoInfo['codec_type'] = (string) $audio->get('codec_type');
+
             $videoinfo['format']   = (string) $general->get('format');
             $videoinfo['bit_rate'] = (string) $video->get('bit_rate')->getAbsoluteValue();
             $videoinfo['width']    = (string) $video->get('width')->getAbsoluteValue();

@@ -5,30 +5,28 @@
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\MediaInputDefinition as InputDefinition;
+use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
-use Mediatag\Modules\Display\ConsoleOutput;
-use Mediatag\Traits\MediaLibrary;
-use Mediatag\Traits\Translate;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LoggerAwareTrait;
+use Mediatag\Traits\Translate;
+use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Traits\MediaLibrary;
+use Psr\Log\LoggerAwareInterface;
+use UTM\Utilities\Debug\UtmStopWatch;
 use Symfony\Component\Console\Application;
+use Mediatag\Modules\Display\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Command\Command as SymCommand;
-use Symfony\Component\Console\Command\SignalableCommandInterface;
-use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\Filesystem\Filesystem;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Debug\UtmStopWatch;
-use UTM\Utilities\Option;
+use Mediatag\Core\MediaInputDefinition as InputDefinition;
+use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Command\SignalableCommandInterface;
 
-class MediaCommand extends MediaDoctrineCommand // implements SignalableCommandInterface
+class MediaCommand extends MediaDoctrineCommand 
 {
     use Lang;
     use MediaLibrary;
@@ -51,7 +49,6 @@ class MediaCommand extends MediaDoctrineCommand // implements SignalableCommandI
     // public array $interactiveInputs = [];
     // public array $handledSignals    = [];
 
-
     public static $Console;
 
     public const USE_LIBRARY = false;
@@ -73,7 +70,6 @@ class MediaCommand extends MediaDoctrineCommand // implements SignalableCommandI
     //  private array $usages = [];
     //  private ?HelperSet $helperSet = null;
 
-    public static LoggerInterface $logger;
 
     // public const USE_LIBRARY     = false;
 
@@ -96,7 +92,7 @@ class MediaCommand extends MediaDoctrineCommand // implements SignalableCommandI
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
         $this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
-        
+
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
 
         $arguments = MediaOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);

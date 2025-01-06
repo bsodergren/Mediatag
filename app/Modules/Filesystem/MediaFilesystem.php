@@ -6,7 +6,7 @@
 namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;

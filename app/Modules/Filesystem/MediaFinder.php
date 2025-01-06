@@ -8,7 +8,7 @@ namespace Mediatag\Modules\Filesystem;
 use Mediatag\Core\Mediatag;
 use UTM\Utilities\Option;
 use Mediatag\Core\MediaCache;
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;

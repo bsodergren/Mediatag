@@ -8,7 +8,7 @@ namespace Mediatag\Modules\Metatags;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 

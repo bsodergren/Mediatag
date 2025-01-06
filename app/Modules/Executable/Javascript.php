@@ -5,15 +5,16 @@
 
 namespace Mediatag\Modules\Executable;
 
+use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
+use Mediatag\Traits\Callables\Callables;
+use Mediatag\Traits\Callables\ProcessCallbacks;;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Traits\Callables;
-use Nette\Utils\Callback;
 
 class Javascript extends MediatagExec
 {
-    use Callables;
+     use ProcessCallbacks;
 
     public $wordList     = "";
     private $cacheUpdate = false;

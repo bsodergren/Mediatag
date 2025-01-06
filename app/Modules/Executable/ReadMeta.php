@@ -5,10 +5,10 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\MediaCache;
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Callables;
 use Nette\Utils\Callback;
+use Mediatag\Core\Mediatag;
+use Mediatag\Core\MediaCache;
+use Mediatag\Traits\Callables\Callables;
 
 class ReadMeta extends MediatagExec
 {

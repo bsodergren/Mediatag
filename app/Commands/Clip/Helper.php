@@ -12,6 +12,7 @@ use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Data\Markers;
 use Mediatag\Traits\ffmpeg;
+use Mediatag\Traits\ffmpegTransition;
 use Mediatag\Traits\Translate;
 use Mediatag\Utilities\Chooser;
 use Symfony\Component\Console\Question\Question;
@@ -20,32 +21,31 @@ use UTM\Utilities\Option;
 trait Helper
 {
     use ffmpeg;
+    use ffmpegTransition;
 
     use MarkerHelper;
     public $Marker;
     public $markerArray;
 
-
-    public function timeCodetoSec($time){
-
-        $pcs = explode(":",$time);
-        $seconds =0;
+    public function timeCodetoSec($time)
+    {
+        $pcs     = explode(':', $time);
+        $seconds = 0;
         $minutes = 0;
-        $hours = 0;
+        $hours   = 0;
 
         rsort($pcs);
         $seconds = $pcs[0];
-        if(array_key_exists(1,$pcs)){
-        $minutes = $pcs[1]*60;
+        if (\array_key_exists(1, $pcs)) {
+            $minutes = $pcs[1] * 60;
         }
-        if(array_key_exists(2,$pcs)){
-            $hours = $pcs[2]*60*60;
+        if (\array_key_exists(2, $pcs)) {
+            $hours = $pcs[2] * 60 * 60;
         }
 
         $time = ($seconds + $minutes + $hours);
+
         return $time;
-
-
     }
 
     public function getClipDirectory($filename, $level = 1)
@@ -110,32 +110,32 @@ trait Helper
             }
         }
     }
+
     public function addMarker()
     {
         $time = Option::getValue('time');
         $name = Option::getValue('name', true);
-        
 
-        $video_id = (new Markers)->getvideoId(key($this->VideoList['file']));
+        $video_id = (new Markers())->getvideoId(key($this->VideoList['file']));
 
         // utmdd($video_id);
-        $suffix=['Start','End'];
-        foreach($time as $i => $t){
+        $suffix = ['Start', 'End'];
+        foreach ($time as $i => $t) {
             $data = [
                 'timeCode'       => $this->timeCodetoSec($t),
                 'video_id'       => $video_id,
-                'markerText'     => $name."_".$suffix[$i],
-            ];    
+                'markerText'     => $name.'_'.$suffix[$i],
+            ];
 
-            $res  = Mediatag::$dbconn->insert( $data,__MYSQL_VIDEO_CHAPTER__);
-                    // utmdd($data);
+            $res = Mediatag::$dbconn->insert($data, __MYSQL_VIDEO_CHAPTER__);
+            // utmdd($data);
 
             utmdump($res);
         }
         // $start = $time[0];
         // $end = $time[1];
 
-        // 
+        //
         // $data = [
         //     'timeCode'       => $this->data['timeCode'],
         //     'video_id'       => $this->data['videoId'],
@@ -180,18 +180,19 @@ trait Helper
             ++$index;
         }
         ksort($fileList);
-        foreach ($fileList as $line) {
-            $strArray[] = "file '".$line."'";
-        }
-        $string   = implode("\n", $strArray);
-        $listFile = $this->setffmpegFilename($name);
-        Filesystem::write($listFile, $string, 0755);
+
+        // foreach ($fileList as $line) {
+        //     $strArray[] = "file '".$line."'";
+        // }
+        // $string   = implode("\n", $strArray);
+        // $listFile = $this->setffmpegFilename($name);
+        // Filesystem::write($listFile, $string, 0755);
         $ClipName       = $this->setClipFilename($name);
-        $this->progress = new MediaIndicator('one');
+        // $this->progress = new MediaIndicator('one');
 
         // utmdd($file);
 
-        $this->createCompilation($listFile, $ClipName, $name);
+        $this->createCompilation($fileList, $ClipName, $name);
     }
 
     public function getfileList()
@@ -227,6 +228,11 @@ trait Helper
     public function createClips()
     {
         $this->progress = new MediaIndicator('one');
+
+       
+
+
+
         foreach ($this->markerArray as $i =>$fileRow) {
             foreach ($fileRow as $K =>$FILE) {
                 $filename = $FILE['filename'];

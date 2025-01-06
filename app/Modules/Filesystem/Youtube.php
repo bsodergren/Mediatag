@@ -9,7 +9,7 @@ use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 

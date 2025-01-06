@@ -5,18 +5,18 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\Helper\MediaCommand;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Metatags\Artist;
-use Mediatag\Traits\Callables;
-use Mediatag\Traits\ExecArgs;
-use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
+use Mediatag\Traits\preview;
+use Mediatag\Traits\ExecArgs;
+use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Core\Helper\MediaCommand;
 use Symfony\Component\Process\Process;
+use Mediatag\Traits\Callables\ProcessCallbacks;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 
 class MediatagExec
 {
-    use Callables;
+    use ProcessCallbacks;
     use ExecArgs;
     use MediaCommand;
 

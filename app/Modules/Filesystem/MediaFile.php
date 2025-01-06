@@ -5,7 +5,7 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem as NetteFile;

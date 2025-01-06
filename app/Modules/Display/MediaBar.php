@@ -94,11 +94,11 @@ class MediaBar
         $this->bar->start();
     }
 
-    public function advance()
+    public function advance($int = 1)
     {
         // utminfo(func_get_args());
 
-        $this->bar->advance();
+        $this->bar->advance($int);
     }
 
     public function clear()

@@ -8,7 +8,6 @@ namespace Mediatag\Commands\Update;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
-use Mediatag\Traits\Callables;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
@@ -18,7 +17,6 @@ use UTM\Bundle\Monolog\UTMLog;
 
 class Process extends Mediatag
 {
-    use Callables;
     use Helper;
     use MediaProcess;
 

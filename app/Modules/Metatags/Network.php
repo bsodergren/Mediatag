@@ -8,7 +8,7 @@ namespace Mediatag\Modules\Metatags;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Traits\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Mediatag\Utilities\MediaArray;
 
 class Network extends TagBuilder
