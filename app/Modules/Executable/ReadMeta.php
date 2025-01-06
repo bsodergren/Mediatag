@@ -59,7 +59,7 @@ class ReadMeta extends MediatagExec
         return $array;
     }
 
-    private function getMetaValue($text)
+    public function getMetaValue($text)
     {
         // utminfo(func_get_args());
 

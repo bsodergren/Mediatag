@@ -6,14 +6,11 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Traits\ffmpeg;
 use Mhor\MediaInfo\MediaInfo;
+use Mediatag\Modules\VideoData\VideoData;
 
 class VideoInfo extends VideoData
 {
-    use ffmpeg;
-
     public $video_key;
 
     public $video_file;
@@ -41,38 +38,20 @@ class VideoInfo extends VideoData
     {
         // utminfo(func_get_args());
 
-        $mediaInfo          = new MediaInfo();
-        $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
-        $videos             = $mediaInfoContainer->getVideos();
-        $general            = $mediaInfoContainer->getGeneral();
+        return self::getVidInfo($file);
 
-        foreach ($videos as $video) {
-            $videoInfo['format']   = (string) $general->get('format');
-            $videoInfo['bit_rate'] = (string) $video->get('bit_rate')->getAbsoluteValue();
-
-            $videoInfo['width']  = (string) $video->get('width')->getAbsoluteValue();
-            $videoInfo['height'] = (string) $video->get('height')->getAbsoluteValue();
-        }
-
-        if (!isset($videoInfo)) {
-            $videoInfo['format']   = null;
-            $videoInfo['bit_rate'] = null;
-            $videoInfo['width']    = null;
-            $videoInfo['height']   = null;
-            Mediatag::$output->writeln('<error>file is corrupt: '.$this->video_file.'</error> ');
-
-            // utmdump("something wrong with " . $this->video_file);
-        }
-
-        return $videoInfo;
-    }
+           }
 
     public static function compareDupes($file, $sfile)
     {
         $return = 'A';
 
         $video1Info = self::getVidInfo($file);
+        $video1Info['file'] = $file;
+
         $video2Info = self::getVidInfo($sfile);
+        $video2Info['file'] = $sfile;
+
         $keys       = ['duration', 'bit_rate', 'filesize'];
         foreach ($keys as $key) {
             if ($video1Info[$key] > $video2Info[$key]) {
@@ -97,31 +76,18 @@ class VideoInfo extends VideoData
         $general            = $mediaInfoContainer->getGeneral();
         $audios              = $mediaInfoContainer->getAudios();
 
-        $videoinfo['file']     = $file;
-        $videoinfo['filesize'] = filesize($file);
+       // $videoInfo['file']     = $file;
+        $videoInfo['filesize'] = filesize($file);
         foreach ($audios as $audio) {
-            $videoinfo['codec_type'] = (string) $audio->get('kind_of_stream');
+            $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
         }
-
-
         foreach ($videos as $video) {
-            //            $videoInfo['codec_type'] = (string) $audio->get('codec_type');
-
-            $videoinfo['format']   = (string) $general->get('format');
-            $videoinfo['bit_rate'] = (string) $video->get('bit_rate')->getAbsoluteValue();
-            $videoinfo['width']    = (string) $video->get('width')->getAbsoluteValue();
-            $videoinfo['height']   = (string) $video->get('height')->getAbsoluteValue();
-
-            if (
-                null !== $video->get('source_duration')
-                && \array_key_exists('0', $video->get('source_duration'))
-            ) {
-                $videoinfo['duration'] = (string) $video->get('source_duration')[0];
-            } else {
-                $videoinfo['duration'] = (string) $video->get('duration');
-            }
+            $videoInfo['format']   = (string) $general->get('format');
+            $videoInfo['bit_rate'] = (string) $video->get('bit_rate')->getAbsoluteValue();
+            $videoInfo['width']    = (string) $video->get('width')->getAbsoluteValue();
+            $videoInfo['height']  = (string) $video->get('height')->getAbsoluteValue();
+            $videoInfo['duration'] = $video->get('duration')->getMilliseconds();
         }
-
-        return $videoinfo;
+        return $videoInfo;
     }
 }

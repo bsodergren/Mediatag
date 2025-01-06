@@ -190,15 +190,6 @@ trait Helper
         $this->obj->updateVideoData();
     }
 
-    public function execDuration()
-    {
-        // utminfo(func_get_args());
-
-        $this->obj = new Duration();
-        // $this->checkClean();
-        $this->obj->updateVideoData();
-    }
-
     public function execInfo()
     {
         // utminfo(func_get_args());
@@ -252,10 +243,7 @@ trait Helper
             $this->OutputText[] = "\t<fg=bright-cyan>".$this->thumb->getVideoText().'</> ';
         }
 
-        if (null !== parent::$dbconn->videoExists($key, 'duration')) {
-            $this->duration->get($key, $video_file);
-            $this->OutputText[] = "\t<fg=bright-cyan>".$this->duration->getVideoText().'</> ';
-        }
+       
         if ($exists == parent::$dbconn->videoExists($key, null, __MYSQL_VIDEO_INFO__)) {
             $this->vinfo->get($key, $video_file);
             $this->OutputText[] = "\t<fg=cyan>".$this->vinfo->getVideoText().'</> ';

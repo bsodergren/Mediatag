@@ -5,9 +5,10 @@
 
 namespace Mediatag\Commands\Db;
 
-use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
+use Mediatag\Core\MediaOptions;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 class Options extends MediaOptions
 {
@@ -26,7 +27,6 @@ class Options extends MediaOptions
             ['thumbnail', 't', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_UPDATE')],
             ['videopreview', 'P', InputOption::VALUE_NONE, Translate::text('L__DB_VPREVIEW_UPDATE')],
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DB_JSON_UPDATE')],
-            ['duration', 'D', InputOption::VALUE_NONE, Translate::text('L__DB_DURATION_UPDATE')],
             ['info', 'i', InputOption::VALUE_NONE, Translate::text('L__DB_FILEINFO_UPDATE')],
             ['all', 'a', InputOption::VALUE_NONE, Translate::text('L__DB_ADD')],
             ['markers', 'm', InputOption::VALUE_NONE, Translate::text('L__DB_MARKERS_UPDATE')],
@@ -36,5 +36,12 @@ class Options extends MediaOptions
             ['empty', 'e', InputOption::VALUE_NONE, Translate::text('L__DB_EMPTY')],
             ['yes', 'y', InputOption::VALUE_NONE, Translate::text('L__DB_YES')],
         ];
+    }
+
+    public function Arguments($varName = null, $description = null)
+    {
+        // utminfo(func_get_args());
+
+        return [$varName, InputArgument::OPTIONAL, $description];
     }
 }

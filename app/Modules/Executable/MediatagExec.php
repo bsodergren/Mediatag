@@ -18,7 +18,7 @@ class MediatagExec
 {
     use ProcessCallbacks;
     use ExecArgs;
-    use MediaCommand;
+    // use MediaCommand;
 
     use preview {
         preview::preview as previewTrait;

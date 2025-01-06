@@ -10,14 +10,14 @@ use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Traits\ffmpeg;
+use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use UTM\Utilities\Option;
 
 class Markers extends VideoData
 {
-    use ffmpeg;
-
+    use MediaFFmpeg;
     public $video_key;
 
     public $video_file;

@@ -11,8 +11,8 @@ use Mediatag\Modules\Display\MediaIndicator;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\ffmpegTransition;
+use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Traits\Translate;
 use Mediatag\Utilities\Chooser;
 use Symfony\Component\Console\Question\Question;
@@ -20,7 +20,7 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
-    use ffmpeg;
+    use MediaFFmpeg;
     use ffmpegTransition;
 
     use MarkerHelper;
@@ -105,7 +105,7 @@ trait Helper
             Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
             foreach ($file_array as $file) {
                 Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
-                Mediatag::$filesystem->remove($file);
+                //Mediatag::$filesystem->remove($file);
                 utmdump($file);
             }
         }
@@ -227,9 +227,7 @@ trait Helper
 
     public function createClips()
     {
-        $this->progress = new MediaIndicator('one');
-
-       
+        $this->progress = new MediaIndicator('one');   
 
 
 
@@ -238,8 +236,8 @@ trait Helper
                 $filename = $FILE['filename'];
 
                 if (\count($FILE['markers']) > 0) {
-                    // Mediatag::$output->writeln('<comment>'.$this->FileIdx--.'</> <fg=green>'.basename($filename).'</>');
                     foreach ($FILE['markers'] as $idx =>$marker) {
+                    Mediatag::$output->writeln('<comment>'.$this->FileIdx--.'</> <fg=green>'.basename($filename).'</>');
                         // $frame_json   = $this->ffmprobeGetFrames($filename, $marker['start'], $marker['end']);
                         // $this->frames = $frame_json['streams'][0]['nb_read_frames'];
 

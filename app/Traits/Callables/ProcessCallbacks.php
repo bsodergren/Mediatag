@@ -1,14 +1,14 @@
 <?php
 
-namespace Mediatag\Traits\Callables\Callables;
+namespace Mediatag\Traits\Callables;
 
 use Nette\Utils\Strings;
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Traits\Callables\CallableHelper;
 use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Traits\Callables\CallableHelper;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 

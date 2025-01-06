@@ -5,17 +5,16 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
+use Mediatag\Utilities\Strings;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Traits\ffmpeg;
-use Mediatag\Utilities\Strings;
-use Mhor\MediaInfo\MediaInfo;
 
 class Thumbnail extends VideoData
 {
-    use ffmpeg;
 
+    use MediaFFmpeg;
     public $video_key;
 
     public $video_file;
@@ -64,38 +63,26 @@ class Thumbnail extends VideoData
         $img_url_path = __INC_WEB_THUMB_URL__.'/'.$img_web_path.$img_name;
         $action       = $this->updatedText;
         // $type         = $this->actionText;
+
         if (!file_exists($img_file)) {
-            $mediaInfo          = new MediaInfo();
-            $mediaInfoContainer = $mediaInfo->getInfo($this->video_file);
-            $videos             = $mediaInfoContainer->getVideos();
-
-            foreach ($videos as $video) {
-                if (
-                    null !== $video->get('source_duration')
-                    && \array_key_exists('0', $video->get('source_duration'))
-                ) {
-                    $duration = (string) $video->get('source_duration')[0];
-                } else {
-                    $duration = (string) $video->get('duration');
-                }
-            }
-
+            (new Filesystem())->mkdir($img_location);
+            $ffprobe  = FFProbe::create();
+            $duration = $ffprobe->format($this->video_file)->get('duration');
+    
             $time = '00:01:00.00';
-
-            if ((int) $duration < 70000) {
+    
+            if ((int) $duration < 7000) {
                 $time = '00:00:15.00';
             }
-            if ((int) $duration < 16000) {
+            if ((int) $duration < 1600) {
                 $time = '00:00:05.00';
             }
-
-            if ((int) $duration < 5000) {
+    
+            if ((int) $duration < 500) {
                 $time = '00:00:01.00';
             }
-
-            (new Filesystem())->mkdir($img_location);
-
-            $this->ffmegCreateThumb($this->video_file, $img_file, $time);
+            $this->ffmegCreateThumb($this->video_file,$img_file,$time);
+          
 
             $action = $this->newText;
         }

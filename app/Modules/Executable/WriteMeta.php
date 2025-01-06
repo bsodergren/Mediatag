@@ -9,7 +9,7 @@ use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Callables\Callables;
-use Mediatag\Traits\ffmpeg;
+use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;
 use UTM\Bundle\Monolog\UTMLog;
@@ -18,7 +18,7 @@ use UTM\Utilities\Option;
 class WriteMeta extends MediatagExec
 {
     use Callables;
-    use ffmpeg;
+    use MediaFFmpeg;
 
     public $execMode = 'write';
 

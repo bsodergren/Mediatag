@@ -9,6 +9,7 @@ use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
 use Mediatag\Commands\Clip\Lang;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 class Options extends MediaOptions
 {
@@ -16,6 +17,11 @@ class Options extends MediaOptions
     use Translate;
    
     public $options = ['Default','Question'];
+
+
+
+
+
 
     public function Definitions()
     {
@@ -26,9 +32,12 @@ class Options extends MediaOptions
             ['add','',InputOption::VALUE_NONE, Translate::text('L__CLIP_MERGED_NAME')],
             ['time','',InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             ['name', '', InputOption::VALUE_OPTIONAL| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
-            ['create', 'c', InputOption::VALUE_OPTIONAL| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_CREATE_CLIPS')],
-            ['merge', 'm', InputOption::VALUE_OPTIONAL| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_CREATE_COMP')],
-            ['delete', 'd', InputOption::VALUE_NONE, Translate::text('L__CLIP_DELETE_CLIPS')],
         ];
+    }
+    public function Arguments($varName = null, $description = null)
+    {
+        // utminfo(func_get_args());
+
+        return [$varName, InputArgument::OPTIONAL, $description];
     }
 }

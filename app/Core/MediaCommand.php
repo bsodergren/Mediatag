@@ -14,12 +14,14 @@ use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Traits\MediaLibrary;
 use Psr\Log\LoggerAwareInterface;
 use UTM\Utilities\Debug\UtmStopWatch;
+use Mediatag\Core\Helper\MediaExecute;
 use Symfony\Component\Console\Application;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\HelperSet;
 use Symfony\Component\Console\Input\ArrayInput;
+use Mediatag\Core\Helper\MediaCommand as MCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Mediatag\Core\MediaInputDefinition as InputDefinition;
@@ -31,6 +33,8 @@ class MediaCommand extends MediaDoctrineCommand
     use Lang;
     use MediaLibrary;
     use Translate;
+    use MCommand;
+    use MediaExecute;
 
     // public readonly Command $command;
     // public int $exitCode;
@@ -80,6 +84,40 @@ class MediaCommand extends MediaDoctrineCommand
         //     self::$logger = $logger;
     }
 
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if (Option::istrue('trunc')) {
+            Mediatag::$dbconn->truncate();
+
+            return Command::SUCCESS;
+        }
+
+        $class     = static::class;
+        $arguments = $input->getArguments();
+        if (\count($arguments) > 0) {
+                $cmdArgument = $input->getArgument($this->getName());
+                if (null !== $cmdArgument)
+                {
+                    self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
+                }
+
+        }
+      
+    //  utmdd(self::$optionArg);
+
+
+        $class   = self::getProcessClass();
+        // utmdd($class);
+        $Process = new $class(...array_merge([$input, $output], self::$optionArg));
+        $method = "process";
+
+        if (\array_key_exists('command', $arguments)) {
+            $method = $arguments['command'];
+        } 
+        $Process->$method();
+        return Command::SUCCESS;
+    }
+
     public function cleanOnEvent()
     {
         // utmdd(get_class_vars(Mediatag::class));
@@ -90,12 +128,13 @@ class MediaCommand extends MediaDoctrineCommand
         // // utminfo(func_get_args());
 
         $child                      = static::class;
+        // // utmdd($this->getName());
         MediaOptions::$callingClass = $child;
-        $this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
+        // //$this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
 
-        $arguments = MediaOptions::getArguments($child::CMD_NAME, $child::CMD_DESCRIPTION);
+        $arguments = MediaOptions::getArguments($this->getName(), $this->getDescription());
         if (\is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
@@ -123,7 +162,6 @@ class MediaCommand extends MediaDoctrineCommand
 
         // add the application arguments and options
         $this->mergeApplicationDefinition();
-
         // bind the input against the command specific arguments/options
         try {
             $input->bind($this->getDefinition());
@@ -160,13 +198,16 @@ class MediaCommand extends MediaDoctrineCommand
         if ($input->hasArgument('command') && null === $input->getArgument('command')) {
             $input->setArgument('command', $this->getName());
         }
+        
 
         $input->validate();
 
         if ($this->code) {
+            utmdd($this->code);
             $statusCode = ($this->code)($input, $output);
         } else {
             $statusCode = $this->execute($input, $output);
+
             //  stopwatch();
 
             if (!\is_int($statusCode)) {
@@ -177,30 +218,7 @@ class MediaCommand extends MediaDoctrineCommand
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 
-    public static function getProcessClass()
-    {
-        // utmdd([__METHOD__,Option::Istrue('completion')]);
-
-        // if (true == Option::isTrue('completion')) {
-
-        //     $greetInput = new ArrayInput([
-        //         // the command name is passed as first argument
-        //         'command' => 'completion',
-        //         'name'    => 'bash',
-
-        //     ]);
-        //     utmdd([__METHOD__,$greetInput]);
-
-        //     $returnCode = $obj->getApplication()->doRun($greetInput, $output);
-        // }
-        // utminfo();
-        $className = static::class;
-        $classPath = rtrim($className, 'Command');
-        $classPath .= 'Process';
-        // UTMlog::logger('Process Class', $classPath);
-
-        return $classPath;
-    }
+  
 
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
@@ -226,4 +244,6 @@ class MediaCommand extends MediaDoctrineCommand
             }
         }
     }
+
+  
 }

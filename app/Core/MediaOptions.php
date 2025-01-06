@@ -53,7 +53,6 @@ class MediaOptions
         $className = str_replace('\\', '/', $className);
         $className = \dirname($className) . '/Options';
         $className = str_replace('/', '\\', $className);
-
         if (class_exists($className)) {
             self::$classObj = new $className();
         }
@@ -71,11 +70,11 @@ class MediaOptions
         $testOptions    = [];
         $metaOptions    = [];
         $commandOptions = [];
-        $displayOptions = [];
+        $definitions = null;
         $cmdOptions     = [];
-
         self::getClassObject($command);
         if (\is_object(self::$classObj)) {
+
             if (isset(self::$classObj->options)) {
                 foreach (self::$classObj->options as $option => $value) {
                     if (\is_string($option)) {
@@ -86,11 +85,14 @@ class MediaOptions
                         $value = $option;
                     }
                     $cmd              = "get" . $value . "Options";
-                    $commandOptions[] = self::$cmd();
+                    if(method_exists(__CLASS__,$cmd)){
+                        $commandOptions[] = self::$cmd();
+                    } 
                 }
             }
 
-            $definitions = self::$classObj->Definitions();
+           
+            $definitions = self::$classObj->Definitions();        
             if (\is_array($definitions)) {
                 $cmdOptions = self::getOptions($definitions);
             }

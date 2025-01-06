@@ -1,16 +1,16 @@
 <?php
+namespace Mediatag\Traits\Callables;
 /**
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Traits\Callables\Callables;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Modules\Filesystem\MediaFile;
 
 trait CallableHelper
 {
-    private function cleanBuffer($buffer)
+    public function cleanBuffer($buffer)
     {
         $buffer = str_replace(["\n", "\r"], '', $buffer);
 

@@ -21,4 +21,5 @@ class MediaDoctrineCommand extends DoctrineCommand
 
         $this->setDefinition($definition);
     }
+  
 }

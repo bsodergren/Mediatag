@@ -1,14 +1,17 @@
 <?php
+namespace Mediatag\Traits\Callables;
 /**
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Traits\Callables\Callables;
 
 use Nette\Utils\Strings;
+use Mediatag\Traits\Callables\ProcessCallbacks;
 
 trait Callables
 {
+
+    use ProcessCallbacks;
     public function parseArchive($line)
     {
         $key = Strings::after($line, ' ');

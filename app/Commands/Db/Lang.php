@@ -7,9 +7,9 @@ namespace Mediatag\Commands\Db;
 
 trait Lang
 {
-    public const CMD_DESCRIPTION = DESCRIPTION;
+    // public const CMD_DESCRIPTION = DESCRIPTION;
 
-    public const CMD_NAME = NAME;
+    // public const CMD_NAME = NAME;
 
     public const L__DB_THUMBNAIL_CLEAN = 'Cleans up Thumbnail images';
 

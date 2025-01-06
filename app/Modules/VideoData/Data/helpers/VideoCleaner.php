@@ -22,7 +22,11 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
             foreach ($missing as $k => $file) {
                 $videoFile = $this->thumbToVideo($file);
+                utmdump(["VideoFile",$videoFile ]);
+
                 if (!file_exists($videoFile)) {
+                    utmdump(["file",$file  ]);
+
                     $this->renameThumb($file, false);
                     // unlink($file);
 
@@ -44,6 +48,8 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing_file as $k => $file) {
+                utmdump(["file ",$file ]);
+
                 $query  = 'update '.$this->VideoDataTable.' set '.$this->getTableField().' = null WHERE id = '.$k.'';
                 $result = Mediatag::$dbconn->query($query);
                 $file   = $this->thumbToVideo($file);
@@ -67,6 +73,7 @@ trait VideoCleaner
                 $result = Mediatag::$dbconn->query($query);
                 $file   = $this->thumbToVideo($file);
                 Mediatag::$output->writeln($this->printNo($fileCount--).'<info>Changing '.$this->setMessage($file).' to null </info>');
+                utmdump(["file ",$file ]);
 
                 if (file_exists($file)) {
                     $fs        = new MediaFile($file);

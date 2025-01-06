@@ -5,16 +5,18 @@
 
 namespace Mediatag\Commands\Clip;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
+use Mediatag\Commands\Clip\Helper;
+use Mediatag\Commands\Clip\Lang;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ShowDisplay;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
-class Process extends Mediatag 
+class Process extends Mediatag
 {
     use Helper;
     use Lang;
@@ -27,22 +29,22 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'merge'       => [
-            'exec'          => null,
-            'getfileList'   => null,
+        'merge'           => [
+            'exec'            => null,
+            'getfileList'     => null,
             'mergeClips'      => null,
         ],
         'create'          => [
-            'exec'        => null,
-            'getfileList' => null,
+            'exec'         => null,
+            'getfileList'  => null,
             'createClips'  => null,
         ],
-        'delete'        => [
+        'delete'          => [
             'deleteClips' => null,
         ],
-        'add'        => [
+        'add'             => [
             'exec'        => null,
-            'addMarker' => null,
+            'addMarker'   => null,
         ],
     ];
 
@@ -50,16 +52,9 @@ class Process extends Mediatag
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-        // utminfo(func_get_args());
-        // if (!Option::isTrue('clip')) {
-        //     // \define('SKIP_SEARCH', true);
-        // }
+       
         parent::boot($input, $output);
-
         $this->setupFormat();
         $this->setupDb();
-        //  utmdd(Command::$logger);
-
-        // parent::$Display              = new ShowDisplay($output);
     }
 }

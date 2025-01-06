@@ -5,6 +5,11 @@
 
 namespace Mediatag\Traits;
 
+
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
@@ -15,11 +20,11 @@ use Mediatag\Utilities\Chooser;
 use Mediatag\Modules\Display\MediaBar;
 use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Traits\Callables\ProcessCallbacks;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Traits\Callables\ProcessCallbacks;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 
-trait ffmpeg
+trait MediaFFmpeg
 {
 
     use ProcessCallbacks;
@@ -96,13 +101,6 @@ trait ffmpeg
         $this->ffExec(CONFIG['FFMPEG_CMD'], $cmdOptions, $callback);
     }
 
-    public function ffmpegProbe($cmdOptions, $callback = null)
-    {
-        $probe = $this->ffExec(CONFIG['FFPROBE_CMD'], $cmdOptions, $callback);
-
-        return json_decode($probe->getOutput(), true);
-    }
-
     public function convertVideo($file, $output_file)
     {
         $mediaInfo          = new MediaInfo();
@@ -157,7 +155,16 @@ trait ffmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
-        // utminfo(func_get_args());
+
+       
+
+        $ffmpeg = FFMpeg::create();
+        $video  = $ffmpeg->open($this->video_file);
+        $video->filters()->resize(new Dimension(320, 240));
+        $frame = $video->frame(TimeCode::fromString($time));
+        $frame->save($img_file);
+
+
 
         $cmdOptions = [
             '-ss', $time, '-i', $video_file, '-vf',
@@ -168,43 +175,6 @@ trait ffmpeg
         $callback      = Callback::check([$this, 'Outputdebug']);
 
         $this->ffmpegExec($cmdOptions, $callback);
-    }
-
-    public function ffmprobeGetFrames($file, $start, $stop)
-    {
-        $cache_name = md5($start.'%'.$stop.basename($file));
-        $frame_json = MediaCache::get($cache_name);
-
-        if (false !== $frame_json) {
-            if (Chooser::changes(__METHOD__.' Overwrite frameCount', 'overwrite', __LINE__)) {
-                $frame_json = false;
-                // Mediatag::$output->writeln('overwrite frameCount');
-            }
-        }
-
-        if (false === $frame_json) {
-            $cmdOptions = [
-                '-read_intervals', $start.'%'.$stop,
-                '-count_frames',
-                '-show_entries', 'stream', '-of', 'json',
-                // '-v','trace',
-                '-i', $file,
-            ];
-            $this->cmdline = $cmdOptions;
-
-            // $callback = Callback::check([$this, 'FrameCountCallback']);
-            // utmdd($cmdOptions);
-            // Mediatag::$output->writeln('Getting Frame Count');
-
-            $this->progress->startIndicator('Getting frames from '.$start.' to '.$stop.' for '.basename($file));
-
-            $callback   = Callback::check([$this, 'Outputdebug']);
-            $frame_json = $this->ffmpegProbe($cmdOptions, $callback);
-            $r          = MediaCache::put($cache_name, $frame_json);
-            $this->progress->finishIndicator('Finished getting frames');
-        }
-
-        return $frame_json;
     }
 
     public function ffmpegCreateClip($file, $marker, $idx)

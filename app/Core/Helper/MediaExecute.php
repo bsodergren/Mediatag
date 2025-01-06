@@ -9,33 +9,25 @@ use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Command\Command as SynCmd;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use UTM\Utilities\Option;
 
 trait MediaExecute
 {
     public static $optionArg = [];
 
-    protected function execute(InputInterface $input, OutputInterface $output): int
+   
+
+    public static function getProcessClass()
     {
-        Mediatag::$IoStyle = new SymfonyStyle($input, $output);
-        if (Option::istrue('trunc')) {
-            Mediatag::$dbconn->truncate();
+        $className = static::class;
 
-            return SynCmd::SUCCESS;
+        if ($pos = strrpos($className, '\\')) {
+            $class = substr($className, $pos + 1);
         }
-        if (\count($input->getArguments()) > 0) {
-            $cmdArgument = $input->getArgument(self::CMD_NAME);
-            if (null !== $cmdArgument) {
-                self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
-            }
-        }
-        // $args = ;
+        $classPath = rtrim($className, $class);
+        $classPath .= 'Process';
 
-        $class   = self::getProcessClass();
-        $Process = new $class(...array_merge([$input, $output], self::$optionArg));
-        $Process->process();
-
-        return SynCmd::SUCCESS;
+        // UTMlog::logger('Process Class', $classPath);
+        return $classPath;
     }
 }

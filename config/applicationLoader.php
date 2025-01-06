@@ -2,12 +2,20 @@
 /**
  * Command like Metatag writer for video files.
  */
+use Nette\Utils\Callback;
 
-use Mediatag\Core\MediaApplication;
+use Psr\Log\LoggerInterface;
 // use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\Console\Input\ArgvInput;
+use Mediatag\Core\MediaApplication;
 // use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Console\Input\ArgvInput;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 // use Symfony\Component\EventDispatcher\EventDispatcher;
 // use Symfony\Component\Console\Event\ConsoleSignalEvent;
 // use Symfony\Component\Console\Event\ConsoleCommandEvent;
@@ -20,15 +28,43 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 $input  = new ArgvInput();
 $output = new ConsoleOutput();
 
-$cmdName   = str_replace('media', '', __SCRIPT_NAME__);
-$className = 'Mediatag\\Commands\\' . ucfirst($cmdName) . '\\Command';
-// $logger    = interface_exists(LoggerInterface::class) ? new ConsoleLogger($output->getErrorOutput()) : null;
-
-// $customCommands = new FactoryCommandLoader([
-//     $cmdName      => function () use($className) {return new $className(); },
-// ]);
 
 $application = new MediaApplication(__SCRIPT_NAME__, '1.0.0');
-$application->add(new $className( ));
-$application->setDefaultCommand($cmdName, true);
+
+
+$cmdName   = str_replace('media', '', __SCRIPT_NAME__);
+
+$commandClasses = [];
+$commandsDir = implode(DIRECTORY_SEPARATOR,[__APP_HOME__ , 'app','Commands',ucfirst($cmdName) ] );
+
+$default = false;
+
+if(file_exists($commandsDir)) {
+    $finder = new Finder();
+    $finder->files()->in($commandsDir)->name("*Command.php");
+    foreach ($finder as $file) {
+        $CommandClassName =  basename($file->getPathname(),'.php');
+        $commandClasses[] = 'Mediatag\\Commands\\' . ucfirst($cmdName) . '\\' .$CommandClassName;
+        if($CommandClassName == "Command"){
+            $default = true;        
+        }
+    }
+} 
+$SingleCommand = false;
+
+if(count($commandClasses) == 1){
+    $default = true;
+    $SingleCommand = true;
+}
+
+foreach($commandClasses as $className)
+{
+    $Command = new $className();
+    $application->add($Command);
+}
+
+if($default === true) {
+   
+    $application->setDefaultCommand($cmdName, $SingleCommand);
+}
 $application->run();

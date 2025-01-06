@@ -9,7 +9,7 @@ use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\Helper\MediaProcess;
 // use Nette\Utils\FileSystem as NetteFile;
-use Mediatag\Traits\Callables\Callables\Callables;
+use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;

@@ -7,9 +7,9 @@ namespace Mediatag\Commands\Db;
 
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\ffmpeg;
 use Mediatag\Traits\Translate;
 use Mediatag\Modules\Database\DbMap;
+use Mediatag\Core\Helper\MediaProcess;
 use Nette\Utils\FileSystem as nFileSystem;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Mediatag\Modules\Filesystem\MediaFile as File;
@@ -19,10 +19,10 @@ use Symfony\Component\Filesystem\Filesystem as SfSystem;
 
 class Process extends Mediatag
 {
-    use ffmpeg;
     use Helper;
     use Lang;
     use Translate;
+    use MediaProcess;
 
     public $db_array = [];
 
@@ -39,8 +39,6 @@ class Process extends Mediatag
     public $Deleted_Array = [];
 
     public $Changed_Array = [];
-
-    public $duration;
 
     public $defaultCommands = [
         'init' => null,
@@ -59,7 +57,6 @@ class Process extends Mediatag
         'thumbnail'    => ['execThumb' => null],
         'markers'      => ['execMarkers' => null],
         'videopreview' => ['execPreview' => null],
-        'duration'     => ['execDuration' => null ],
         'info'         => ['execInfo' => null],
         'update'       => ['execUpdate' => 'default'],
         'empty'        => ['execEmpty' => 'default'],
@@ -76,7 +73,7 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        if (Option::istrue('thumbnail') || Option::istrue('duration') || Option::istrue('info') || Option::istrue('videopreview')) {
+        if (Option::istrue('thumbnail') ||  Option::istrue('info') || Option::istrue('videopreview')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
             parent::boot($input, $output);

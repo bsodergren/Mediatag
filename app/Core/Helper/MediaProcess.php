@@ -59,15 +59,21 @@ trait MediaProcess
         Mediatag::$output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
     }
 
-    // public function __call($m, $a)
-    // {
-    //     // utminfo(func_get_args());
-
-    //     return null;
-    // }
-
-    public function print()
+    public function __call($method, $args)
     {
-        // utminfo(func_get_args());
+        if (\array_key_exists($method, $this->commandList)) {
+            foreach ($this->commandList[$method] as $cmd => $option) {
+                if (method_exists($this, $cmd)) {
+                    $this->{$cmd}($option);
+                } else {
+                    self::$output->writeln('<info>'.$cmd.' doesnt exist</info>');
+
+                    return 0;
+                }
+            }
+        } else {
+            $this->process();
+        }
     }
+
 }
