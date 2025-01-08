@@ -11,13 +11,14 @@ use Mediatag\Commands\Clip\Lang;
 use Mediatag\Commands\Clip\Helper;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Modules\Display\ShowDisplay;
-use Mediatag\Commands\Clip\Helpers\AddHelper;
-use Mediatag\Commands\Clip\Helpers\ShowHelper;
-use Mediatag\Commands\Clip\Helpers\MergeHelper;
-use Mediatag\Commands\Clip\Helpers\CreateHelper;
-use Mediatag\Commands\Clip\Helpers\DeleteHelper;
+
+use Mediatag\Commands\Clip\Commands\Add\AddHelper;
 use Symfony\Component\Console\Input\InputInterface;
+use Mediatag\Commands\Clip\Commands\Show\ShowHelper;
 use Symfony\Component\Console\Output\OutputInterface;
+use Mediatag\Commands\Clip\Commands\Merge\MergeHelper;
+use Mediatag\Commands\Clip\Commands\Create\CreateHelper;
+use Mediatag\Commands\Clip\Commands\Delete\DeleteHelper;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 

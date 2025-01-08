@@ -5,18 +5,18 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Display\MediaIndicator;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Traits\ffmpegTransition;
-use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Traits\Translate;
 use Mediatag\Utilities\Chooser;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Traits\ffmpegTransition;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Display\MediaIndicator;
+use Mediatag\Modules\VideoData\Data\Markers;
 use Symfony\Component\Console\Question\Question;
-use UTM\Utilities\Option;
+use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {

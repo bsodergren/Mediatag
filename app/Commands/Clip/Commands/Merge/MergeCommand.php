@@ -1,9 +1,9 @@
 <?php
+namespace Mediatag\Commands\Clip\Commands\Merge;
 /**
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Clip;
 
 use Mediatag\Commands\Clip\Helper;
 use Mediatag\Core\MediaCommand;
@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'merge', description: 'Merge Command')]
 class MergeCommand extends MediaCommand 
 {
-    use Lang;
+    // use Lang;
     // use MediaExecute;
     // use Helper;
     public const USE_LIBRARY = true;

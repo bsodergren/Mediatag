@@ -97,10 +97,13 @@ class MediaCommand extends MediaDoctrineCommand
         }
 
         $class     = static::class;
-        // utmdd($this->command);
         $arguments = $input->getArguments();
+
         if (\count($arguments) > 0) {
+
                 $cmdArgument = $input->getArgument($this->getName());
+                // utmdump($cmdArgument);
+
                 if (null !== $cmdArgument)
                 {
                     self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
@@ -112,7 +115,7 @@ class MediaCommand extends MediaDoctrineCommand
 
 
         $class   = self::getProcessClass();
-        // utmdd($class);
+        //  utmdd($class);
         $Process = new $class(...array_merge([$input, $output], self::$optionArg));
         $Process->commandList = $this->command;
         $method = "process";
@@ -167,7 +170,7 @@ class MediaCommand extends MediaDoctrineCommand
         self::$Console = new ConsoleOutput($output, $input);
 
         // add the application arguments and options
-        $this->mergeApplicationDefinition();
+        $this->mergeApplicationDefinition(false);
         // bind the input against the command specific arguments/options
         try {
             $input->bind($this->getDefinition());

@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
- namespace Mediatag\Commands\Clip\Helpers;
+namespace Mediatag\Commands\Clip\Commands\Merge;
 
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
@@ -24,7 +24,7 @@ trait MergeHelper
 
     public function mergeClips()
     {
-        $fileSearch = Option::getValue('merge', true);
+        $fileSearch = Option::getValue('search', true);
 
         $name      = Option::getValue('name', true);
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
@@ -36,7 +36,9 @@ trait MergeHelper
         if (null === $name) {
             $name = 'Compilation';
         }
+
         $file_array = Mediatag::$finder->Search($directory, $search);
+
         if (null == $file_array) {
             Mediatag::$output->writeln('<comment> No Files Found</>');
 

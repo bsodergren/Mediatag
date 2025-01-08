@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Clip\Helpers;
+namespace Mediatag\Commands\Clip\Commands\Show;
 
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Helper\Table;

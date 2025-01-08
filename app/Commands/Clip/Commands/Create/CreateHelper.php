@@ -1,9 +1,9 @@
 <?php
+namespace Mediatag\Commands\Clip\Commands\Create;
 /**
  * Command like Metatag writer for video files.
  */
 
- namespace Mediatag\Commands\Clip\Helpers;
 
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;

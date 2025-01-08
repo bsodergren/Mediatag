@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Clip\Helpers;
+namespace Mediatag\Commands\Clip\Commands\Add;
 
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;

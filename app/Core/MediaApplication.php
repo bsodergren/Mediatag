@@ -39,9 +39,10 @@ class MediaApplication extends Application
         ]);
     }
 
-    // public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
-    // {
-    //     // utminfo();
-    //     parent::run($input, $output);
-    // }
+    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
+    {
+
+        // utminfo();
+        parent::run($input, $output);
+    }
 }

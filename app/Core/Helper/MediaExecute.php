@@ -21,13 +21,23 @@ trait MediaExecute
     {
         $className = static::class;
 
+        // utmdump($className);
+
         if ($pos = strrpos($className, '\\')) {
             $class = substr($className, $pos + 1);
         }
+
+        $tmpClass = str_replace("Command","",$class);
+        // utmdump($tmpClass);
+
         $classPath = rtrim($className, $class);
+        $classPath = str_replace($tmpClass,"",$classPath);
+        $classPath = rtrim($classPath, 'Commands\\') . '\\';
+        // utmdump($classPath);
         $classPath .= 'Process';
 
         // UTMlog::logger('Process Class', $classPath);
+        // utmdd($classPath);
         return $classPath;
     }
 }

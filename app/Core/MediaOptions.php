@@ -39,22 +39,95 @@ class MediaOptions
         return null;
     }
 
+
+
+    public static function getProcessClass()
+    {
+        $className = static::class;
+
+        // utmdump($className);
+
+        if ($pos = strrpos($className, '\\')) {
+            $class = substr($className, $pos + 1);
+        }
+
+        $tmpClass = str_replace("Command","",$class);
+        // utmdump($tmpClass);
+
+        $classPath = rtrim($className, $class);
+        $classPath = str_replace($tmpClass,"",$classPath);
+        $classPath = rtrim($classPath, 'Commands\\') . '\\';
+        // utmdump($classPath);
+        $classPath .= 'Process';
+
+        // UTMlog::logger('Process Class', $classPath);
+        // utmdd($classPath);
+        return $classPath;
+    }
+
+    private static function getCommandOptions(){
+                $className = self::$callingClass;
+
+
+                if ($pos = strrpos($className, '\\')) {
+                    $class = substr($className, $pos + 1);
+                }
+
+                $tmpClass = str_replace("Command","",$class);
+                // 
+
+                $classPath = rtrim($className, $class);
+
+                // $classPath = str_replace($tmpClass,"",$classPath);
+                // utmdump($classPath);
+
+                $classPath = rtrim($classPath, 'Commands\\') . '\\';
+   
+    
+                $classPath .= $tmpClass.'Options';
+
+
+                if (class_exists($classPath)) {
+                    return $classPath;
+                }
+                return null;
+    }
+
+
+
     public static function getClassObject($command)
     {
+
+
         // utminfo(func_get_args());
         $command   = ucfirst(strtolower($command));
         $command   = str_replace('Db', 'DB', $command);
-        //        $command = str_replace("Ph","PH",$command);
+        // $command = str_replace("Ph","PH",$command);
 
         // $className = $command.'\\Options';
         // $className = 'Mediatag\\Commands\\'.$className;
 
-        $className = self::$callingClass;
-        $className = str_replace('\\', '/', $className);
-        $className = \dirname($className) . '/Options';
-        $className = str_replace('/', '\\', $className);
+        $className = self::getCommandOptions();
+        if( $className  === null) {
+
+            $className = self::$callingClass;         
+
+            if ($pos = strrpos($className, '\\')) {
+                $class = substr($className, $pos + 1);
+            }
+
+            $tmpClass = str_replace("Command","",$class); 
+
+            $className = rtrim($className, $class);
+            $className = str_replace($tmpClass,"",$className);
+            // utmdump($classPath);
+            $className = rtrim($className, 'Commands\\') . '\\';
+            $className .= 'Options';
+        }
+
         if (class_exists($className)) {
             self::$classObj = new $className();
+
         }
     }
 
