@@ -9,7 +9,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'Show', description: '')]
+#[AsCommand(name: 'show', description: 'list available filters')]
 final class ShowCommand extends MediaCommand
 {
     use MediaExecute;
@@ -17,6 +17,6 @@ final class ShowCommand extends MediaCommand
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'Show'    => ['filters' => null,],
+        'show'    => ['filters' => null,],
     ];
 }

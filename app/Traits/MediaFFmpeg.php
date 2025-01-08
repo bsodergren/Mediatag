@@ -5,28 +5,25 @@
 
 namespace Mediatag\Traits;
 
-
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
-use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
-use Nette\Utils\FileSystem;
-use Mediatag\Core\MediaCache;
-use Mhor\MediaInfo\MediaInfo;
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Utilities\Chooser;
 use Mediatag\Modules\Display\MediaBar;
-use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Mediatag\Traits\Callables\ProcessCallbacks;
+use Mediatag\Utilities\Chooser;
+use Mhor\MediaInfo\MediaInfo;
+use Nette\Utils\Callback;
+use Nette\Utils\FileSystem;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
 trait MediaFFmpeg
 {
-
     use ProcessCallbacks;
 
     public $progress;
@@ -36,11 +33,14 @@ trait MediaFFmpeg
 
     public $ffmpegArgs = ['-y', '-hide_banner'];
 
+    public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
 
     public function FrameCountCallback($type, $buffer)
     {
-       
         $buffer = $this->cleanBuffer($buffer);
+
+        MediaFile::file_append_file($this->ffmpeg_log, $buffer.\PHP_EOL);
+
         if (null !== $this->progress) {
             if (preg_match('/fps=\s([0-9.]+)/', $buffer, $output_array)) {
                 $this->progress->advance($output_array[1]);
@@ -59,19 +59,13 @@ trait MediaFFmpeg
 
     public function Outputdebug($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer); 
-        
-        
+        $buffer = $this->cleanBuffer($buffer);
+        MediaFile::file_append_file($this->ffmpeg_log, $buffer.\PHP_EOL);
+
         if (null !== $this->progress) {
             $this->progress->advance();
         }
-        MediaFile::file_append_file(__LOGFILE_DIR__.'/buffer/ffmpeg.log', $buffer.\PHP_EOL);
-        // Mediatag::$output->writeln($buffer);
-        //  Mediatag::$output->writeln($this->cmdline);
-
-        if (Process::ERR === $type) {
-            // echo 'ERR > '.$buffer;
-        }
+       
     }
 
     private function ffExec($exec, $cmdOptions, $callback)
@@ -82,6 +76,8 @@ trait MediaFFmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
+        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().PHP_EOL);
+
         // utmdd($process->getCommandLine());
         // $process->start($callback);
         $process->start();
@@ -98,6 +94,7 @@ trait MediaFFmpeg
 
     public function ffmpegExec($cmdOptions, $callback = null)
     {
+        filesystem::delete($this->ffmpeg_log);
         $this->ffExec(CONFIG['FFMPEG_CMD'], $cmdOptions, $callback);
     }
 
@@ -155,26 +152,21 @@ trait MediaFFmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
-
-       
-
         $ffmpeg = FFMpeg::create();
-        $video  = $ffmpeg->open($this->video_file);
+        $video  = $ffmpeg->open($video_file);
         $video->filters()->resize(new Dimension(320, 240));
         $frame = $video->frame(TimeCode::fromString($time));
-        $frame->save($img_file);
+        $frame->save($thumbnail);
 
+        // $cmdOptions = [
+        //     '-ss', $time, '-i', $video_file, '-vf',
+        //     'scale=320:240:force_original_aspect_ratio=decrease',
+        //     '-vframes', '1', $thumbnail,
+        // ];
+        // $this->cmdline = $cmdOptions;
+        // $callback      = Callback::check([$this, 'Outputdebug']);
 
-
-        $cmdOptions = [
-            '-ss', $time, '-i', $video_file, '-vf',
-            'scale=320:240:force_original_aspect_ratio=decrease',
-            '-vframes', '1', $thumbnail,
-        ];
-        $this->cmdline = $cmdOptions;
-        $callback      = Callback::check([$this, 'Outputdebug']);
-
-        $this->ffmpegExec($cmdOptions, $callback);
+        // $this->ffmpegExec($cmdOptions, $callback);
     }
 
     public function ffmpegCreateClip($file, $marker, $idx)
@@ -213,12 +205,15 @@ trait MediaFFmpeg
 
     public function createCompilation($files, $ClipName, $name)
     {
-        $cmd      = $this->generateFfmpegCommand($files, 'slideleft', 5);
+        $duration = Option::getValue('dur', true, 3);
+        $type     = Option::getValue('type');
+
+        $cmd      = $this->generateFfmpegCommand($files, $type, $duration);
         $cmdArray = array_merge($cmd, [$ClipName]);
 
         $this->cmdline = $cmdArray;
 
-        $this->progress = new MediaBar((int) $this->clipLength / 30, 'one', 120);
+        $this->progress = new MediaBar( (($this->clipLength*1000) / 30), 'one', 120);
         MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
         // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
         $this->progress->start();

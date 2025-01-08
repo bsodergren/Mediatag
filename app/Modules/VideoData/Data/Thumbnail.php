@@ -5,6 +5,7 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
+use FFMpeg\FFProbe;
 use Mediatag\Utilities\Strings;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Modules\VideoData\VideoData;

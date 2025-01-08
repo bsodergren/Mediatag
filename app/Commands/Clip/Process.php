@@ -5,14 +5,19 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Commands\Clip\Helper;
-use Mediatag\Commands\Clip\Lang;
-use Mediatag\Core\Helper\MediaProcess;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+use Mediatag\Commands\Clip\Lang;
+use Mediatag\Commands\Clip\Helper;
+use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Modules\Display\ShowDisplay;
+use Mediatag\Commands\Clip\Helpers\AddHelper;
+use Mediatag\Commands\Clip\Helpers\ShowHelper;
+use Mediatag\Commands\Clip\Helpers\MergeHelper;
+use Mediatag\Commands\Clip\Helpers\CreateHelper;
+use Mediatag\Commands\Clip\Helpers\DeleteHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
@@ -21,6 +26,12 @@ class Process extends Mediatag
     use Helper;
     use Lang;
     use MediaProcess;
+
+    use MergeHelper;
+    use CreateHelper;
+    use DeleteHelper;
+    use AddHelper;
+    use ShowHelper;
 
     public $VideoList = [];
 
