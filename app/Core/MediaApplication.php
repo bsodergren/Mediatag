@@ -27,6 +27,7 @@ class MediaApplication extends Application
 
         return new InputDefinition([
             new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD')),
+
             new InputOption('--help', '-h', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_HELP')),
             new InputOption('--quiet', '-q', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_QUIET')),
             new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_VERBOSE')),
@@ -34,6 +35,8 @@ class MediaApplication extends Application
             new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
             new InputOption('--no-interaction', '-n', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_NOASK')),
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, Translate::text('L__APP_DEFAULT_PATH')),
+            new InputOption('--options', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')),
+
         ]);
     }
 

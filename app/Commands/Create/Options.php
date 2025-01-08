@@ -5,17 +5,17 @@
 
 namespace Mediatag\Commands\Create;
 
-use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
-use Symfony\Component\Console\Input\InputOption;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Options extends MediaOptions
 {
     use Lang;
     use Translate;
     // public $options = ['Test'];
-    public $options = ['Default'];
+    public $options = [];
 
     public function Definitions()
     {
@@ -24,14 +24,12 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-           
-            ['command', 'c', InputOption::VALUE_REQUIRED, Translate::text('L__DB_MARKERS_UPDATE')],
+            ['cmd', 'c', InputOption::VALUE_REQUIRED, Translate::text('L__DB_MARKERS_UPDATE')],
             ['name', '', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
             ['desc', 'd', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
-            
-            ['break'],
+            ['method', 'm', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
 
-          
+            ['break'],
         ];
     }
 

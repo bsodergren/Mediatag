@@ -1,33 +1,22 @@
 <?php
-%%CMD_NAMESPACE%%;
+/**
+ * Command like Metatag writer for video files.
+ */
 
-const DESCRIPTION = 'Example Description';
-const NAME        = '%%COMMAND_NAME%%';
+namespace Mediatag\Commands\%%COMMAND%%;
 
-use Mediatag\Core\Mediatag;
+use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
-%%LANG_USE%%;
-use Symfony\Component\Console\Command\Command as SymCommand;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-
-
-#[AsCommand(name: NAME, description: DESCRIPTION)]
-class Command extends MediaCommand
+#[AsCommand(name: '%%COMMANDNAME%%', description: '%%COMMANDDESC%%')]
+final class %%COMMANDCLASS%% extends MediaCommand
 {
-    use Lang;
+    use MediaExecute;
+    public const USE_LIBRARY = %%USELIBRARY%%;
+    public const SKIP_SEARCH = %%SKIPSEARCH%%;
 
-    public const USE_LIBRARY     = false;
-
-    public function execute(InputInterface $input, OutputInterface $output)
-    {
-        $class     = parent::getProcessClass();
-        $ClassObj = new $class($input, $output);
-
-        $ClassObj->process();
-        return SymCommand::SUCCESS;
-    }
-
+    public $command = [
+        '%%COMMANDNAME%%'    => [%%COMMANDMETHODS%%],
+    ];
 }

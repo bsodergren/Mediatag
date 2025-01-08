@@ -3,20 +3,20 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Create;
+namespace Mediatag\Commands\Clip;
 
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'add', description: 'add a new Command')]
-final class AddCommand extends MediaCommand
+#[AsCommand(name: 'Show', description: '')]
+final class ShowCommand extends MediaCommand
 {
     use MediaExecute;
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'add'    => ['addCommand' => null],
+        'Show'    => ['filters' => null,],
     ];
 }
