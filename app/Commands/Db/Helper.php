@@ -391,4 +391,8 @@ trait Helper
             }
         }
     }
+
+    public function TestMethod(){
+        utmdd(__METHOD__);
+    }
 }

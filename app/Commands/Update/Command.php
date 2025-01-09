@@ -7,8 +7,6 @@ namespace Mediatag\Commands\Update;
 
 use Mediatag\Core\Mediatag;
 
-const DESCRIPTION = 'Updates metatags on files';
-const NAME        = 'update';
 
 use UTM\Utilities\Option;
 use Mediatag\Core\MediaCommand;
@@ -19,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Mediatag\Core\Helper\MediaExecute;
 
-#[AsCommand(name: NAME, description: DESCRIPTION)]
+#[AsCommand(name: 'update', description: 'Updates metatags on files')]
 final class Command extends MediaCommand
 {
     use Lang;

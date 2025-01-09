@@ -6,6 +6,7 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
+use Symfony\Component\Console\Input\InputArgument;
 
 trait Translate
 {
@@ -45,5 +46,12 @@ trait Translate
         }
 
         return $text;
+    }
+
+    public function Arguments($varName = null, $description = null)
+    {
+        // utminfo(func_get_args());
+
+        return [$varName, InputArgument::OPTIONAL, $description];
     }
 }

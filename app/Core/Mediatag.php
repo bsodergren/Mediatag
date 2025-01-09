@@ -22,11 +22,11 @@ use UTM\Utilities\Option;
 
 abstract class Mediatag extends Command
 {
-    use MediaCommand;
+    // use MediaCommand;
 
     public $application;
     public const PH_META_CACHE = __CACHE_DIR__.'/pornhub.hash';
-    public $commandList = null;
+    public $commandList        = [];
 
     public static $SearchArray = [];
 
@@ -52,6 +52,11 @@ abstract class Mediatag extends Command
 
     public $helper;
     public $actions;
+
+    public $default = [
+        'exec'  => null,
+        'print' => null,
+    ];
     // public static $keywordList = __DATA_LISTS__.'/keyword.txt';
 
     // public static $genreList = __DATA_LISTS__.'/genre.txt';
@@ -187,7 +192,6 @@ abstract class Mediatag extends Command
         $ClassCmds = $this->runCommand();
 
         foreach ($ClassCmds as $cmd => $option) {
-          
             if (method_exists($this, $cmd)) {
                 $this->{$cmd}($option);
             } else {
@@ -275,5 +279,61 @@ abstract class Mediatag extends Command
         $this->getVideoArray();
         $total = \count($this->videoArray['file']);
         self::$output->writeLn('<info>There are '.$total.' files found</info>');
+    }
+
+    public function runCommand()
+    {
+        // utminfo(func_get_args());
+
+        $array   = $this->commandList;
+        $default = $this->default;
+        if (isset($this->defaultCommands)) {
+            $default = $this->defaultCommands;
+        }
+
+        foreach (Option::getOptions() as $option => $value) {
+            if (\array_key_exists($option, $array)) {
+                $cmd = $option;
+
+                foreach ($array[$option] as $method => $args) {
+                    if (null !== $args) {
+                        if ('default' == $args) {
+                            $default = [$method => null];
+
+                            continue;
+                        }
+                        $commandArgs = Option::getValue($cmd);
+
+                        if (\is_array($commandArgs)) {
+                            if (\array_key_exists(0, $commandArgs)) {
+                                if ('isset' == $args) {
+                                    $Commands[$method] = $commandArgs[0];
+
+                                    continue;
+                                }
+                            }
+                        }
+                        $args = $commandArgs;
+                    }
+
+                    $Commands[$method] = $args; // => $value];
+
+                    // utmdd( [$Commands[$method],$method,$args] );
+
+                    if ('default' == $method) {
+                        unset($Commands[$method]);
+                        $Commands = array_merge($Commands, $default);
+                    }
+                }
+            }
+        }
+
+        if (!isset($Commands)) {
+            $Commands = $default;
+        }
+
+        // UTMlog::Logger('Process Commands', $Commands);
+
+        return $Commands;
     }
 }

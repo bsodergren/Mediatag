@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\%%COMMAND%%;
+namespace Mediatag\Commands\%%COMMAND%%\Commands\%%CMD_CLASS_DIR%%;
 
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;

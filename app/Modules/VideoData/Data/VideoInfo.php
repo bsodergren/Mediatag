@@ -5,9 +5,8 @@
 
 namespace Mediatag\Modules\VideoData\Data;
 
-use Mediatag\Core\Mediatag;
-use Mhor\MediaInfo\MediaInfo;
 use Mediatag\Modules\VideoData\VideoData;
+use Mhor\MediaInfo\MediaInfo;
 
 class VideoInfo extends VideoData
 {
@@ -39,20 +38,19 @@ class VideoInfo extends VideoData
         // utminfo(func_get_args());
 
         return self::getVidInfo($file);
-
-           }
+    }
 
     public static function compareDupes($file, $sfile)
     {
         $return = 'A';
 
-        $video1Info = self::getVidInfo($file);
+        $video1Info         = self::getVidInfo($file);
         $video1Info['file'] = $file;
 
-        $video2Info = self::getVidInfo($sfile);
+        $video2Info         = self::getVidInfo($sfile);
         $video2Info['file'] = $sfile;
 
-        $keys       = ['duration', 'bit_rate', 'filesize'];
+        $keys = ['duration', 'bit_rate', 'filesize'];
         foreach ($keys as $key) {
             if ($video1Info[$key] > $video2Info[$key]) {
                 $return = 'A';
@@ -74,20 +72,28 @@ class VideoInfo extends VideoData
         $mediaInfoContainer = $mediaInfo->getInfo($file);
         $videos             = $mediaInfoContainer->getVideos();
         $general            = $mediaInfoContainer->getGeneral();
-        $audios              = $mediaInfoContainer->getAudios();
+        $audios             = $mediaInfoContainer->getAudios();
 
-       // $videoInfo['file']     = $file;
+        // $videoInfo['file']     = $file;
         $videoInfo['filesize'] = filesize($file);
         foreach ($audios as $audio) {
             $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
         }
         foreach ($videos as $video) {
-            $videoInfo['format']   = (string) $general->get('format');
-            $videoInfo['bit_rate'] = (string) $video->get('bit_rate')->getAbsoluteValue();
+            $videoInfo['format'] = (string) $general->get('format');
+            $bit_rate            = $video->get('bit_rate');
+            if (null === $bit_rate) {
+                $bit_rate = $video->get('maximum_bit_rate');
+            }
+
+            $videoInfo['bit_rate'] = (string) $bit_rate->getAbsoluteValue();
             $videoInfo['width']    = (string) $video->get('width')->getAbsoluteValue();
-            $videoInfo['height']  = (string) $video->get('height')->getAbsoluteValue();
+            $videoInfo['height']   = (string) $video->get('height')->getAbsoluteValue();
             $videoInfo['duration'] = $video->get('duration')->getMilliseconds();
         }
+
+        utmdump($videoInfo);
+
         return $videoInfo;
     }
 }

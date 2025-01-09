@@ -112,7 +112,6 @@ class MediaOptions
             // utmdump($classPath);
             $className = rtrim($className, 'Commands\\') . '\\';
             $className .= 'Options';
-            utmdump($className);
         }
 
         if (class_exists($className)) {

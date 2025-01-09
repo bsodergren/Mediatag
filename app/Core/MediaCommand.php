@@ -7,51 +7,24 @@ namespace Mediatag\Core;
 
 use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerAwareTrait;
 use Mediatag\Traits\Translate;
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Traits\MediaLibrary;
-use Psr\Log\LoggerAwareInterface;
 use UTM\Utilities\Debug\UtmStopWatch;
 use Mediatag\Core\Helper\MediaExecute;
-use Symfony\Component\Console\Application;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Helper\HelperSet;
-use Symfony\Component\Console\Input\ArrayInput;
-use Mediatag\Core\Helper\MediaCommand as MCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Core\MediaInputDefinition as InputDefinition;
 use Symfony\Component\Console\Exception\ExceptionInterface;
-use Symfony\Component\Console\Command\SignalableCommandInterface;
 
-class MediaCommand extends MediaDoctrineCommand 
+class MediaCommand extends MediaDoctrineCommand
 {
     use Lang;
+    use MediaExecute;
     use MediaLibrary;
     use Translate;
-    use MCommand;
-    use MediaExecute;
 
-    // public readonly Command $command;
-    // public int $exitCode;
-    // public ?int $interruptedBySignal = null;
-    // public bool $ignoreValidation;
-    // public bool $isInteractive    = false;
-    // public string $duration       = 'n/a';
-    // public string $maxMemoryUsage = 'n/a';
-    // public InputInterface $input;
-    // public OutputInterface $output;
-    // /** @var array<string, mixed> */
-    // public array $arguments;
-    // /** @var array<string, mixed> */
-    // public array $options;
-    // /** @var array<string, mixed> */
-    // public array $interactiveInputs = [];
-    // public array $handledSignals    = [];
 
     public static $Console;
 
@@ -60,26 +33,11 @@ class MediaCommand extends MediaDoctrineCommand
 
     public $command = [];
 
-
-    //    private ?Application $application = null;
-    //    private ?string $name = null;
     private ?string $processTitle = null;
 
-    //    private array $aliases = [];
-    //    private InputDefinition $definition;
-    //    private bool $hidden = false;
-    //    private string $help = '';
-    //    private string $description = '';
-    //   private ?InputDefinition $fullDefinition = null;
     private bool $ignoreValidationErrors = false;
 
     private ?\Closure $code = null;
-    //   private array $synopsis = [];
-    //  private array $usages = [];
-    //  private ?HelperSet $helperSet = null;
-
-
-    // public const USE_LIBRARY     = false;
 
     public function __construct()
     {
@@ -100,34 +58,30 @@ class MediaCommand extends MediaDoctrineCommand
         $arguments = $input->getArguments();
 
         if (\count($arguments) > 0) {
+            $cmdArgument = $input->getArgument($this->getName());
+            // utmdump($cmdArgument);
 
-                $cmdArgument = $input->getArgument($this->getName());
-                // utmdump($cmdArgument);
-
-                if (null !== $cmdArgument)
-                {
-                    self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
-                }
-
+            if (null !== $cmdArgument) {
+                self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
+            }
         }
-      
-    //  utmdd(self::$optionArg);
 
+        //  utmdd(self::$optionArg);
 
         $class   = self::getProcessClass();
         $Process = new $class(...array_merge([$input, $output], self::$optionArg));
 
-
-        if($Process->commandList === null){
-            $Process->commandList = $this->command;
-        }
-        $method = "process";
+        // if($Process->commandList === null){
+        $Process->commandList = array_merge($Process->commandList, $this->command);
+        // }
+        $method = 'process';
 
         if (\array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
-        } 
+        }
 
         $Process->$method();
+
         return Command::SUCCESS;
     }
 
@@ -140,33 +94,18 @@ class MediaCommand extends MediaDoctrineCommand
     {
         // // utminfo(func_get_args());
 
-        $child                      = static::class;
-        // // utmdd($this->getName());
+        $child = static::class;
         MediaOptions::$callingClass = $child;
-        // //$this->setName($child::CMD_NAME)->setDescription($child::CMD_DESCRIPTION);
-
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
-
         $arguments = MediaOptions::getArguments($this->getName(), $this->getDescription());
-        if (\is_array($arguments)) {
+       
+        if (\is_array($arguments)) 
+        {
             $this->addArgument(...$arguments);
         }
     }
 
-    /**
-     * Runs the command.
-     *
-     * The code to execute is either defined directly with the
-     * setCode() method or by overriding the execute() method
-     * in a sub-class.
-     *
-     * @return int The command exit code
-     *
-     * @throws ExceptionInterface When input binding fails. Bypass this by calling {@link ignoreValidationErrors()}.
-     *
-     * @see setCode()
-     * @see execute()
-     */
+
     public function run(InputInterface $input, OutputInterface $output): int
     {
         // utminfo();
@@ -211,7 +150,6 @@ class MediaCommand extends MediaDoctrineCommand
         if ($input->hasArgument('command') && null === $input->getArgument('command')) {
             $input->setArgument('command', $this->getName());
         }
-        
 
         $input->validate();
 
@@ -231,8 +169,6 @@ class MediaCommand extends MediaDoctrineCommand
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 
-  
-
     protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         // utminfo();
@@ -244,7 +180,7 @@ class MediaCommand extends MediaDoctrineCommand
             chdir($path);
         }
         $this->getLibrary($className::USE_LIBRARY);
-        Option::set('SKIP_SEARCH',$className::SKIP_SEARCH);
+        Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
     }
@@ -258,6 +194,4 @@ class MediaCommand extends MediaDoctrineCommand
             }
         }
     }
-
-  
 }

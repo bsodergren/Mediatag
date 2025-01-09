@@ -23,9 +23,7 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-            ['empty', 'e', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_EMPTYTAG'), [], ['Studio', 'Genre', 'Title', 'Artist', 'Keyword']],
             ['changes', 'c', InputOption::VALUE_NONE, Translate::text('L__UPDATE_APPROVE_CHANGES')],
-            // ['list', 'l', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_LIST_CHANGES'), [], ['file']],
             ['update', 'U', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['rename', 'R', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],

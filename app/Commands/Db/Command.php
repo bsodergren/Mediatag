@@ -13,7 +13,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'db', description: 'Add files to Database')]
 final class Command extends MediaCommand
 {
-    use Lang;
     use MediaExecute;
     public const USE_LIBRARY = true;
 }

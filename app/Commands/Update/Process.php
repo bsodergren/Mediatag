@@ -34,10 +34,10 @@ class Process extends Mediatag
     public $VideoList;
 
     public $commandList = [
-        'empty'     => [
-            'exec'      => null,
-            'clearMeta' => null,
-        ],
+        // 'empty'     => [
+        //     'exec'      => null,
+        //     'clearMeta' => null,
+        // ],
         'download'  => [
             'exec'         => null,
             'download'     => null,

@@ -56,10 +56,10 @@ class Process extends Mediatag
         // ],
         'thumbnail'    => ['execThumb' => null],
         'markers'      => ['execMarkers' => null],
-        'videopreview' => ['execPreview' => null],
+        // 'videopreview' => ['execPreview' => null],
         'info'         => ['execInfo' => null],
         'update'       => ['execUpdate' => 'default'],
-        'empty'        => ['execEmpty' => 'default'],
+        // 'empty'        => ['execEmpty' => 'default'],
         'json'         => ['getJson' => null],
     ];
 
@@ -71,18 +71,11 @@ class Process extends Mediatag
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
-        // utminfo(func_get_args());
-
-        if (Option::istrue('thumbnail') ||  Option::istrue('info') || Option::istrue('videopreview')) {
-            parent::boot($input, $output, ['SKIP_SEARCH' => true]);
-        } else {
+        
             parent::boot($input, $output);
 
-            // if (Option::istrue('all')) {
-            //     $this->init();
-            //     $this->exec();
-            // }
-        }
+        
+
     }
 
     public function init()
