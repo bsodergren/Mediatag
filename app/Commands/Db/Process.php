@@ -46,20 +46,12 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        // 'all'          => [
-        //     'init' => null,
-        // 'exec' => null,
-        // //     'execThumb'       => null,
-        // //     'execDuration'    => null,
-        // //     'execInfo'        => null,
-        // //     'execPreview'     => null,
-        // ],
-        'thumbnail'    => ['execThumb' => null],
+       
+      
         'markers'      => ['execMarkers' => null],
-        // 'videopreview' => ['execPreview' => null],
-        'info'         => ['execInfo' => null],
+       
         'update'       => ['execUpdate' => 'default'],
-        // 'empty'        => ['execEmpty' => 'default'],
+       
         'json'         => ['getJson' => null],
     ];
 

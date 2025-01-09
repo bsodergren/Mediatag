@@ -9,7 +9,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'all', description: '')]
+#[AsCommand(name: 'all', description: 'Update all DB Info')]
 final class AllCommand extends MediaCommand
 {
     use MediaExecute;
