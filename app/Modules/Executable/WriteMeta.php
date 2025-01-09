@@ -116,9 +116,11 @@ class WriteMeta extends MediatagExec
             $this->output->write("\t Skipping ".basename($command[1]));
         }
         if (true == $results) {
-            if (str_contains($results, 'error')) {
+                        utmdump($results);
+
+            if (str_contains($results, 'signal')) {
                 // // UTMlog::logError('results Metadata', $results);
-                if (str_contains($results, 'insufficient')
+                if (str_contains($results, '11')
                 || str_contains($results, 'alignment')) {
                     // $io->error([$this->video_file, $results]);
                     // UTMlog::logError('process with FFMPEG');

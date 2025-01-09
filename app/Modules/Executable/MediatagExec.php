@@ -5,24 +5,25 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Traits\Test;
-use Mediatag\Traits\preview;
-use Mediatag\Traits\ExecArgs;
-use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Core\Helper\MediaCommand;
-use Symfony\Component\Process\Process;
-use Mediatag\Traits\Callables\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Traits\Callables\ProcessCallbacks;
+use Mediatag\Traits\ExecArgs;
+use Mediatag\Traits\preview;
+use Mediatag\Traits\Test;
+use Symfony\Component\Process\Exception\ProcessSignaledException;
+use Symfony\Component\Process\Process;
 
 class MediatagExec
 {
-    use ProcessCallbacks;
     use ExecArgs;
     // use MediaCommand;
 
     use preview {
         preview::preview as previewTrait;
     }
+    use ProcessCallbacks;
     use Test {
         Test::test as testTrait;
     }
@@ -157,13 +158,20 @@ class MediatagExec
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        // utmdd('Executing', $this->runCommand);
         // utmdump($this->execMode);
         $this->preview();
         $this->test();
 
         $process->start();
-        $process->wait($callback);
+        try {
+            // $process->mustRun($callback);
+            $process->wait($callback);
+            // echo $process->getOutput();
+        } catch (ProcessSignaledException $exception) {
+            // echo $exception->getMessage();
+            $this->errors= $exception->getMessage();    
+            
+        }
 
         return $this->errors;
     }
