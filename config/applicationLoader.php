@@ -47,7 +47,7 @@ if (file_exists($commandsDir)) {
     }
 }
 
-// utmdd($commandClasses);
+
 $SingleCommand = false;
 
 if (1 == count($commandClasses)) {
@@ -55,12 +55,16 @@ if (1 == count($commandClasses)) {
     $SingleCommand = true;
 }
 
+
 foreach ($commandClasses as $className) {
     $Command = new $className();
     $application->add($Command);
 }
 
-if (true === $default) {
+if (true === $default) 
+{
+ 
+
     $application->setDefaultCommand($cmdName, $SingleCommand);
 }
 $application->run();

@@ -6,9 +6,10 @@
 namespace Mediatag\Commands\Rename;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
+use Mediatag\Core\MediaOptions;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
 
 class Options extends MediaOptions
 {
@@ -33,5 +34,12 @@ class Options extends MediaOptions
         ];
 
         // return array_merge( parent::getMetaOptions(),$options);
+    }
+
+    public function Arguments($varName = null, $description = null)
+    {
+        // utminfo(func_get_args());
+
+        return [$varName, InputArgument::OPTIONAL, Translate::text('L__PLAYLIST_NAME')];
     }
 }

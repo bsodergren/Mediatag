@@ -20,24 +20,10 @@ trait MediaExecute
     public static function getProcessClass()
     {
         $className = static::class;
-
-        // utmdump($className);
-
-        if ($pos = strrpos($className, '\\')) {
-            $class = substr($className, $pos + 1);
-        }
-
-        $tmpClass = str_replace("Command","",$class);
-        // utmdump($tmpClass);
-
-        $classPath = rtrim($className, $class);
-        $classPath = str_replace($tmpClass,"",$classPath);
-        $classPath = rtrim($classPath, 'Commands\\') . '\\';
-        // utmdump($classPath);
-        $classPath .= 'Process';
-
-        // UTMlog::logger('Process Class', $classPath);
-        // utmdd($classPath);
-        return $classPath;
+        $pathInfo = explode("\\",$className);
+        $pathInfo = array_slice($pathInfo,0,3);
+        array_push($pathInfo,"Process");
+        $className = implode("\\",$pathInfo);
+        return $className;
     }
 }

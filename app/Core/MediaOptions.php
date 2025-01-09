@@ -46,23 +46,12 @@ class MediaOptions
         $className = static::class;
 
         // utmdump($className);
+        $pathInfo = explode("\\",$className);
+        $pathInfo = array_slice($pathInfo,0,3);
+        array_push($pathInfo,"Options");
+        $className = implode("\\",$pathInfo);
+        return $className;
 
-        if ($pos = strrpos($className, '\\')) {
-            $class = substr($className, $pos + 1);
-        }
-
-        $tmpClass = str_replace("Command","",$class);
-        // utmdump($tmpClass);
-
-        $classPath = rtrim($className, $class);
-        $classPath = str_replace($tmpClass,"",$classPath);
-        $classPath = rtrim($classPath, 'Commands\\') . '\\';
-        // utmdump($classPath);
-        $classPath .= 'Process';
-
-        // UTMlog::logger('Process Class', $classPath);
-        // utmdd($classPath);
-        return $classPath;
     }
 
     private static function getCommandOptions(){
@@ -123,6 +112,7 @@ class MediaOptions
             // utmdump($classPath);
             $className = rtrim($className, 'Commands\\') . '\\';
             $className .= 'Options';
+            utmdump($className);
         }
 
         if (class_exists($className)) {

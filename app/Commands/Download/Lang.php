@@ -7,9 +7,7 @@ namespace Mediatag\Commands\Download;
 
 trait Lang
 {
-    public const CMD_DESCRIPTION = DESCRIPTION;
-
-    public const CMD_NAME = NAME;
+  
 
     public const L__DOWNLOAD_MOVE = 'Moves downloaded files';
 

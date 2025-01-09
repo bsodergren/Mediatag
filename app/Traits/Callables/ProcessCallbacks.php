@@ -27,7 +27,7 @@ trait ProcessCallbacks
     public function Output($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-        echo $buffer;
+        // echo $buffer;
     }
     public function ReadOutput($type, $buffer)
     {
@@ -38,7 +38,7 @@ trait ProcessCallbacks
     public function ReadMetaOutput($type, $buffer)
     {
                     // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata/" . $this->video_key . ".log", $buffer . PHP_EOL);
-        $buffer = $this->cleanBuffer($buffer);
+      //  $buffer = $this->cleanBuffer($buffer);
         if (Process::ERR === $type) {
             $this->errors .= $buffer;
         } else {
@@ -51,16 +51,16 @@ trait ProcessCallbacks
     {
         $buffer = $this->cleanBuffer($buffer);
         if (Process::ERR === $type) {
-            echo 'ERR > ' . $buffer;
+            // echo 'ERR > ' . $buffer;
         } else {
-            echo 'OUT > ' . $buffer;
+            // echo 'OUT > ' . $buffer;
         }
     }
 
     public function WriteMetaOutput($type, $buffer)
     {
 
-        $buffer = $this->cleanBuffer($buffer);
+        // $buffer = $this->cleanBuffer($buffer);
         if (Process::ERR === $type) {
             $this->errors .= $buffer;
             // UTMlog::logError('Writing Metadata', $buffer);

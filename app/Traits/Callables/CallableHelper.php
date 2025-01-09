@@ -84,7 +84,7 @@ trait CallableHelper
             return $outputText.\PHP_EOL;
         }
 
-        return $outputText;
+        return $outputText.PHP_EOL;
     }
 
     public function fixVideo($buffer, $line_id)

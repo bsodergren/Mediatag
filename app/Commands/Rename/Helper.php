@@ -86,6 +86,7 @@ trait Helper
         // $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, \count($file_array));
         // $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
         // $progressBar->start();
+
         foreach ($file_array as $__ => $file) {
             $message = '';
             // $oldName                             = $file;
@@ -97,6 +98,7 @@ trait Helper
             $videoData['msg']                    = $message;
             $videoArray[$videoData['video_key']] = $videoData;
         }
+
         $SortDir = false;
         foreach ($videoArray as $k => $videoData) {
             // $progressBar->advance();
@@ -257,7 +259,7 @@ trait Helper
         foreach ($genreArray as $genre) {
             $genre = str_replace(' ', '_', $genre);
             $genre = strtolower($genre);
-            $res   = self::$genre($metadata);
+            $res   = self::get($genre,$metadata['genre']);
 
             // $results[$genre] = $res;
             $this->genrePath[$genre] = $res;
@@ -269,7 +271,6 @@ trait Helper
     public static function get($genre, $arg)
     {
         // utminfo(func_get_args());
-
         $genre = strtolower($genre);
         $genre = str_replace('_', ' ', $genre);
         $arg   = strtolower($arg);
@@ -359,7 +360,7 @@ trait Helper
         // $this->renameFile($text, $filename);
     }
 
-    public function rename($option = null)
+    public function renameVids($option = null)
     {
         // utminfo(func_get_args());
 

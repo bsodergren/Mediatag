@@ -31,6 +31,48 @@ final class Command extends MediaCommand
 
     protected $db;
 
+    
+    public $command = [
+        'missing'           => [
+            // 'exec'        => null,
+            'missing' => null,
+        ],
+        'find'              => [
+            'find' => null,
+            // 'default' => null,
+        ],
+        'cleanBrkDownloads' => [
+            'cleanBrkDownloads' => null,
+        ],
+        'compact'           => [
+            'compact' => null,
+        ],
+        'clean'             => [
+            'clean' => null,
+        ],
+        'max'               => [
+            'trimPlaylist' => null,
+            'default'      => null,
+        ],
+        'json'              => [
+            'cleanjSon' => null,
+        ],
+        'watchlater'        => [
+            'youtubeWatchPlaylist' => null,
+            'compact'              => null,
+        ],
+        'premium'           => [
+            // 'exec'        => null,
+            'premium' => null,
+            'compact' => null,
+        ],
+        'split'             => [
+            // 'exec'        => null,
+            'splitPlaylist' => null,
+        ],
+    ];
+
+
     public function handleSignal(int $signal): void
     {
         // utminfo(func_get_args());

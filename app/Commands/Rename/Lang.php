@@ -9,10 +9,7 @@ use Mediatag\Core\Mediatag;
 
 trait Lang
 {
-    public const CMD_DESCRIPTION  = DESCRIPTION;
-
-    public const CMD_NAME         = NAME;
-
+  
     public const L__RENAME_LOWER  = 'Rename files to all lower case';
 
     public const L__RENAME_RENAME = 'Rename wonky files';

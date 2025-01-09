@@ -7,7 +7,7 @@ namespace Mediatag\Commands\Download;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Traits\ffmpeg;
+use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings;
@@ -16,7 +16,7 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
-    use ffmpeg;
+    use MediaFFmpeg;
     public function convertVideos()
     {
         // utminfo(func_get_args());

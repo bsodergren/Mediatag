@@ -21,7 +21,6 @@ trait MediaCommand
         // utminfo(func_get_args());
 
         $array   = $this->commandList;
-
         $default = $this->default;
         if (isset($this->defaultCommands)) {
             $default = $this->defaultCommands;

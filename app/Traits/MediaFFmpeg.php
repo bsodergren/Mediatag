@@ -31,7 +31,7 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner'];
+    public $ffmpegArgs = ['-y', '-hide_banner', '-threads', '1' ,'-loglevel', 'debug', '-stats'];
 
     public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
 
@@ -65,7 +65,6 @@ trait MediaFFmpeg
         if (null !== $this->progress) {
             $this->progress->advance();
         }
-       
     }
 
     private function ffExec($exec, $cmdOptions, $callback)
@@ -76,7 +75,7 @@ trait MediaFFmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
-        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().PHP_EOL);
+        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
 
         // utmdd($process->getCommandLine());
         // $process->start($callback);
@@ -94,7 +93,7 @@ trait MediaFFmpeg
 
     public function ffmpegExec($cmdOptions, $callback = null)
     {
-        filesystem::delete($this->ffmpeg_log);
+        FileSystem::delete($this->ffmpeg_log);
         $this->ffExec(CONFIG['FFMPEG_CMD'], $cmdOptions, $callback);
     }
 
@@ -205,15 +204,18 @@ trait MediaFFmpeg
 
     public function createCompilation($files, $ClipName, $name)
     {
-        $duration = Option::getValue('dur', true, 3);
-        $type     = Option::getValue('type');
-
-        $cmd      = $this->generateFfmpegCommand($files, $type, $duration);
+        $duration       = Option::getValue('dur', true, 3);
+        $type           = Option::getValue('type');
+        $this->clipName = $ClipName;
+        $cmd            = $this->generateFfmpegCommand($files, $type, $duration);
+        if (true === $cmd) {
+            return true;
+        }
         $cmdArray = array_merge($cmd, [$ClipName]);
 
         $this->cmdline = $cmdArray;
 
-        $this->progress = new MediaBar( (($this->clipLength*1000) / 30), 'one', 120);
+        $this->progress = new MediaBar(($this->clipLength * 1000) / 30, 'one', 120);
         MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
         // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
         $this->progress->start();

@@ -62,8 +62,7 @@ class ReadMeta extends MediatagExec
     public function getMetaValue($text)
     {
         // utminfo(func_get_args());
-
-        return preg_replace_callback_array([
+        $return = preg_replace_callback_array([
             '/.*(alb).*contains\:\ (.*)/' => function ($matches) {
                 return $this->metatags['studio'] = $matches[2];
             },
@@ -83,5 +82,10 @@ class ReadMeta extends MediatagExec
                 return $this->metatags['network'] = $matches[2];
             },
         ], $text);
+
+
+        // utmdump([$return,$text]);
+        return $return;
     }
+
 }
