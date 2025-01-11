@@ -40,19 +40,7 @@ class Markers extends VideoData
     public $thumbExt = '.jpg';
     public $thumbDir = __INC_WEB_CHAPTER_DIR__;
 
-    public function videoDuration($duration)
-    {
-        // utminfo(func_get_args());
-
-        $seconds = (int) round($duration);
-        $secs    = $seconds % 60;
-        $hrs     = $seconds / 60;
-        $hrs     = floor($hrs);
-        $mins    = $hrs % 60;
-        $hrs /= 60;
-
-        return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
-    }
+   
 
     // public function clean()
     // {
@@ -160,7 +148,7 @@ class Markers extends VideoData
                 $img_url_path = __INC_WEB_CHAPTER_DIR__.'/'.$img_web_path.$img_name;
 
                 if (!file_exists($img_file)) {
-                    $timeStamp = $this->videoDuration($time);
+                    $timeStamp = self::videoDuration($time);
                     (new Filesystem())->mkdir($img_location);
                     $this->ffmegCreateThumb($this->video_file, $img_file, $timeStamp);
                 }

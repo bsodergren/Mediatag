@@ -7,6 +7,20 @@ namespace Mediatag\Commands\Clip\Markers;
 
 trait Markers
 {
+
+    public function videoDuration($duration)
+    {
+        // utminfo(func_get_args());
+
+        $seconds = (int) round($duration);
+        $secs    = $seconds % 60;
+        $hrs     = $seconds / 60;
+        $hrs     = floor($hrs);
+        $mins    = $hrs % 60;
+        $hrs /= 60;
+
+        return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
+    }
     public function getVideoMarks($videoInfo)
     {
         $videoKey  = 0;
@@ -30,11 +44,11 @@ trait Markers
             [$markerText,$markerKey] = explode('_', $row['markerText']);
 
             if (str_contains(strtolower($markerKey), 'start')) {
-                $start = $this->Marker->videoDuration($row['timeCode']);
+                $start = $this->videoDuration($row['timeCode']);
             }
 
             if (str_contains(strtolower($markerKey), 'end')) {
-                $end = $this->Marker->videoDuration($row['timeCode']);
+                $end = $this->videoDuration($row['timeCode']);
 
                 $markerPos[$markerIdx] = [
                     'text' => $markerText,

@@ -48,13 +48,13 @@ trait MergeHelper
         $mod          = 0;
         $index        = 0;
         foreach ($file_array as $file) {
-            preg_match('/([a-zA-Z0-9]+)_.*([0-9]+)(.mp4)/', $file, $output_array);
+            preg_match('/([a-zA-Z0-9-_]+)_([a-zA-Z0-9].*)_([0-9]+)(.mp4)/', $file, $output_array);
             if ($current_file != $output_array[1]) {
                 $current_file = $output_array[1];
                 $mod += $index;
                 $index = 0;
             }
-            $idx = $output_array[2] + $mod;
+            $idx = $output_array[3] + $mod;
 
             $fileList[$idx] = $file;
             ++$index;

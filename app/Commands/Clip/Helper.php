@@ -26,7 +26,7 @@ trait Helper
     public $Marker;
     public $markerArray;
 
-    public function timeCodetoSec($time)
+    public function timeCodetoSec($time,$mod=0)
     {
         $pcs     = explode(':', $time);
         $seconds = 0;
@@ -44,7 +44,7 @@ trait Helper
 
         $time = ($seconds + $minutes + $hours);
 
-        return $time;
+        return $time + $mod;
     }
 
     public function getClipDirectory($filename, $level = 1)
@@ -103,7 +103,6 @@ trait Helper
                 $result = Mediatag::$dbconn->query($query);
 
                 $markers = $this->getVideoMarks($result);
-                //  utmdd($markers);
 
                 if (\count($markers) > 0) {
                     ++$this->FileIdx;

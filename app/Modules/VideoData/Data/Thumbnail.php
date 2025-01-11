@@ -6,15 +6,14 @@
 namespace Mediatag\Modules\VideoData\Data;
 
 use FFMpeg\FFProbe;
-use Mediatag\Utilities\Strings;
-use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Utilities\Strings;
 
 class Thumbnail extends VideoData
 {
-
     use MediaFFmpeg;
     public $video_key;
 
@@ -69,21 +68,22 @@ class Thumbnail extends VideoData
             (new Filesystem())->mkdir($img_location);
             $ffprobe  = FFProbe::create();
             $duration = $ffprobe->format($this->video_file)->get('duration');
-    
+
             $time = '00:01:00.00';
-    
+
             if ((int) $duration < 7000) {
                 $time = '00:00:15.00';
             }
             if ((int) $duration < 1600) {
                 $time = '00:00:05.00';
             }
-    
+
             if ((int) $duration < 500) {
                 $time = '00:00:01.00';
             }
-            $this->ffmegCreateThumb($this->video_file,$img_file,$time);
-          
+            $time = self::videoDuration($duration, 10);
+            utmdump([$duration, $time]);
+            $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
             $action = $this->newText;
         }

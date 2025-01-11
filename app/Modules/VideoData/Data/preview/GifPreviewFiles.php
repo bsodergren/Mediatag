@@ -21,7 +21,7 @@ use Symfony\Component\Console\Helper\ProgressBar;
 class GifPreviewFiles extends VideoPreview
 {
     public $videoRange  = 80;
-    public $videoSlides = 10;
+    public $videoSlides = 15;
 
     public function build_video_thumbnail()
     {
@@ -91,7 +91,7 @@ class GifPreviewFiles extends VideoPreview
                 //     $constraint->upsize();
                 // });
 
-                $image = $img->read($point_file)->resize(320, 180);
+                $image = $img->read($point_file)->resize(320, 240);
                 $image->tojpeg()->save($point_file);
 
                 // $image->destroy();

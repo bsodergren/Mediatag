@@ -31,7 +31,7 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner', '-threads', '1' ,'-loglevel', 'debug', '-stats'];
+    public $ffmpegArgs = ['-y', '-hide_banner', '-threads', '1', '-loglevel', 'error', '-stats'];
 
     public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
 
@@ -151,21 +151,23 @@ trait MediaFFmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
-        $ffmpeg = FFMpeg::create();
-        $video  = $ffmpeg->open($video_file);
-        $video->filters()->resize(new Dimension(320, 240));
-        $frame = $video->frame(TimeCode::fromString($time));
-        $frame->save($thumbnail);
+        // $ffmpeg = FFMpeg::create();
+        // $video  = $ffmpeg->open($video_file);
+        // $video->filters()->resize(new Dimension(320, 240));
+        // utmdump(TimeCode::fromString($time));
+        // $frame = $video->frame(TimeCode::fromString($time));
+        // utmdump($frame->getTimeCode());
+        // $frame->save($thumbnail);
 
-        // $cmdOptions = [
-        //     '-ss', $time, '-i', $video_file, '-vf',
-        //     'scale=320:240:force_original_aspect_ratio=decrease',
-        //     '-vframes', '1', $thumbnail,
-        // ];
-        // $this->cmdline = $cmdOptions;
-        // $callback      = Callback::check([$this, 'Outputdebug']);
+        $cmdOptions = [
+            '-ss', $time, '-i', $video_file, '-vf',
+            'scale=320:240:force_original_aspect_ratio=decrease',
+            '-vframes', '1', $thumbnail,
+        ];
+        $this->cmdline = $cmdOptions;
+        $callback      = Callback::check([$this, 'Outputdebug']);
 
-        // $this->ffmpegExec($cmdOptions, $callback);
+        $this->ffmpegExec($cmdOptions, $callback);
     }
 
     public function ffmpegCreateClip($file, $marker, $idx)

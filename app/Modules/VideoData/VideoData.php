@@ -24,7 +24,7 @@ class VideoData
     public $updatedText = '<fg=green>Updated ';
     public $newText     = '<fg=red>Wrote ';
     public $resultCount;
-    public $actionText = ""; 
+    public $actionText = '';
     public $VideoInfo;
     public $fileCount;
     public $maxLen  = 40;
@@ -157,5 +157,21 @@ class VideoData
         $this->doClean();
         Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
+    }
+
+    public static function videoDuration($duration, $round = 1000)
+    {
+        if (0 == $round) {
+            $round = 1;
+        }
+        // utminfo();
+        $seconds = (int) round($duration / $round);
+        $secs    = $seconds % 60;
+        $hrs     = $seconds / 60;
+        $hrs     = floor($hrs);
+        $mins    = $hrs % 60;
+        $hrs /= 60;
+
+        return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
     }
 }

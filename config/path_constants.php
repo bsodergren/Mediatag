@@ -49,7 +49,7 @@ const __INC_WEB_THUMB_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_THUMB_URL__;
 const __INC_WEB_CHAPTER_URL__ = '/images/plex/chapterImages';
 const __INC_WEB_CHAPTER_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_CHAPTER_URL__;
 
-const __INC_WEB_PREVIEW_URL__ = '/images/plex/thumbnails';
+const __INC_WEB_PREVIEW_URL__ = '/images/plex/preivew';
 const __INC_WEB_PREVIEW_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_PREVIEW_URL__;
 
 const __DATA_LISTS__     = __CONFIG_LIB__.'/data/list';

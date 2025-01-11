@@ -92,7 +92,6 @@ class VideoInfo extends VideoData
             $videoInfo['duration'] = $video->get('duration')->getMilliseconds();
         }
 
-        utmdump($videoInfo);
 
         return $videoInfo;
     }

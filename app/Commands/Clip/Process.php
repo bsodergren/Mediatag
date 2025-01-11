@@ -60,7 +60,6 @@ class Process extends Mediatag
     //     ],
     // ];
 
-    public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {

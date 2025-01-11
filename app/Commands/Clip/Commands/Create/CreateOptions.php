@@ -16,7 +16,7 @@ class CreateOptions extends MediaOptions
     use Lang;
     use Translate;
    
-    // public $options = ['Default','Question'];
+    public $options = ['Default','Question'];
 
 
 
@@ -31,7 +31,7 @@ class CreateOptions extends MediaOptions
         return [
             // ['time','',InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             // ['name', '', InputOption::VALUE_OPTIONAL| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
-            ['type','t', InputOption::VALUE_REQUIRED| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
+            // ['type','t', InputOption::VALUE_REQUIRED| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             // ['dur','D',InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
         ];
     }

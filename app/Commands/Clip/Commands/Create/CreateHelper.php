@@ -36,7 +36,6 @@ trait CreateHelper
                     Mediatag::$output->writeln('<comment>'.$this->FileIdx--.'</> <fg=green>'.basename($filename).'</>');
                         // $frame_json   = $this->ffmprobeGetFrames($filename, $marker['start'], $marker['end']);
                         // $this->frames = $frame_json['streams'][0]['nb_read_frames'];
-
                         $this->ffmpegCreateClip($filename, $marker, $idx);
                     }
                 }

@@ -70,8 +70,9 @@ class MediaOptions
                 // $classPath = str_replace($tmpClass,"",$classPath);
                 // utmdump($classPath);
 
-                $classPath = rtrim($classPath, 'Commands\\') . '\\';
-   
+                // $classPath = rtrim($classPath, 'Commands\\') . '\\';
+                // utmdump($classPath);
+
     
                 $classPath .= $tmpClass.'Options';
 

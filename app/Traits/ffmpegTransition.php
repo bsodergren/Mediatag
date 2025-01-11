@@ -92,7 +92,6 @@ trait ffmpegTransition
             $video_length = $file_lengths[$i - 1] - $transition_duration / 2;
             $clipLength += $video_length;
             $offset     += $video_length;
-            utmdump([basename($video), $i, $offset, $video_length]);
             $next_transition_output = 'v'.($i - 1).$i;
             $video_transitions .= "[{$last_transition_output}][{$i}v]xfade=transition={$transition}:duration={$transition_duration}:offset=".($offset - $transition_duration / 2)."[{$next_transition_output}];";
             $last_transition_output = $next_transition_output;
@@ -112,11 +111,12 @@ trait ffmpegTransition
         // $video_transitions = str_replace(';', ';'.\PHP_EOL, $video_transitions);
         // $audio_transitions = str_replace(';', ';'.\PHP_EOL, $audio_transitions);
         $ffmpeg_args = array_merge($files_input,
-            ['-filter_complex', $normalizer.$video_transitions.
-            substr($audio_transitions, 0, -1), '-map', '[final]']);
+            ['-filter_complex', $normalizer.$video_transitions
+            // . substr($audio_transitions, 0, -1)
+            , '-map', '[final]']);
 
-        $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
-
+      //  $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
+utmdump($ffmpeg_args);
         return $ffmpeg_args;
     }
 }

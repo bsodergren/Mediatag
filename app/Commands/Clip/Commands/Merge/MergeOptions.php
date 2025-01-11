@@ -33,7 +33,6 @@ class MergeOptions extends MediaOptions
             ['name', '', InputOption::VALUE_OPTIONAL| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             ['type','t', InputOption::VALUE_REQUIRED| InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             ['search','s', InputOption::VALUE_REQUIRED, Translate::text('L__CLIP_MERGED_NAME')],
-
             ['dur','D',InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
         ];
     }

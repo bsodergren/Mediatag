@@ -48,7 +48,6 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing_file as $k => $file) {
-                utmdump(["file ",$file ]);
 
                 $query  = 'update '.$this->VideoDataTable.' set '.$this->getTableField().' = null WHERE id = '.$k.'';
                 $result = Mediatag::$dbconn->query($query);
