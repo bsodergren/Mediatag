@@ -48,6 +48,10 @@ class MediaCommand extends MediaDoctrineCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+
+        Mediatag::$ProcessHelper = $this->getHelper("process");
+        //utmdd( $this->getHelperSet());
+
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();
 

@@ -56,18 +56,11 @@ class GifPreviewFiles extends VideoPreview
         if (empty($duration)) {
             return null;
         }
-        // Create an FFMpeg instance and open the video.
-        // $ffmpeg = FFMpeg::create($options);
-        // $video  = $ffmpeg->open($this->video_file);
-
-        // This array holds our "points" that we are going to extract from the
-        // video. Each one represents a percentage into the video we will go in
-        // extracitng a frame. 0%, 10%, 20% ..
+      
         $videoRange  = $this->videoRange;
         $videoSlides = $this->videoSlides;
         $points      = array_map(function ($n) { return round($n, 0); }, range(1, $videoRange, $videoRange / $videoSlides));
-        // $points = range(0, $this->videoRange, $this->videoRange / $this->videoSlides);
-        // This will hold our finished frames.
+      
         $frames      = [];
         $progressBar = new ProgressBar(Mediatag::$output, \count($points));
 
@@ -80,34 +73,27 @@ class GifPreviewFiles extends VideoPreview
 
         $progressBar->start();
         foreach ($points as $point) {
-            // Point is a percent, so get the actual seconds into the video.
             $time_secs = floor($duration * ($point / 100));
             $progressBar->advance();
 
-            // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
 
 
            $this->ffmegCreateThumb($this->video_file,$point_file,$time_secs);
 
-            // utmdump($time_secs,$point_file);
            
             if (file_exists($point_file)) {
                $frames[] = $point_file;
             }
 
-            // If the resize was successful, add it to the frames array.
           
 
             
         }
-        // utmdd($frames);
         $progressBar->finish();
         Mediatag::$output->writeln('');
 
-        // If we have frames that were successfully extracted.
         if (!empty($frames)) {
-            // We show each frame for 100 ms.
             $durations = array_fill(0, \count($frames), 100);
 
             // Create a new GIF and save it.
@@ -119,14 +105,11 @@ class GifPreviewFiles extends VideoPreview
             foreach ($frames as $file) {
                 unlink($file);
             }
-        }
-       
+        }       
 
         (new Filesystem())->remove($temp);
 
         $this->progressBar = true;
-// utmdd($this->previewName);
         return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
-        //        return null;
     }
 }

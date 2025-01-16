@@ -93,9 +93,14 @@ abstract class Mediatag extends Command
         'network',
     ];
 
+    public static $ProcessHelper;
+
+
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
+       
+
         self::boot($input, $output, $args);
     }
 
