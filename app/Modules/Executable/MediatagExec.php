@@ -158,7 +158,7 @@ class MediatagExec
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        // utmdump($this->execMode);
+        // utmdump($this->runCommand);
         $this->preview();
         $this->test();
 
@@ -169,8 +169,7 @@ class MediatagExec
             // echo $process->getOutput();
         } catch (ProcessSignaledException $exception) {
             // echo $exception->getMessage();
-            $this->errors= $exception->getMessage();    
-            
+            $this->errors = $exception->getMessage();
         }
 
         return $this->errors;

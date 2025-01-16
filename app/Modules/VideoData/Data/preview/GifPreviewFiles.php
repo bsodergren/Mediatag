@@ -5,23 +5,67 @@
 
 namespace Mediatag\Modules\VideoData\Data\preview;
 
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use Intervention\Image\Drivers\Gd\Driver;
-use Intervention\Image\ImageManager;
 use Mediatag\Core\Mediatag;
-// use Intervention\Image\Image;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
+use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Utilities\GifCreator;
+use Intervention\Image\ImageManager;
+// use Intervention\Image\Image;
+use Intervention\Image\Drivers\Gd\Driver;
+use Mediatag\Modules\Display\MediaIndicator;
+use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\VideoData\Data\preview\GeneratePreview;
+use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 class GifPreviewFiles extends VideoPreview
 {
     public $videoRange  = 80;
     public $videoSlides = 15;
+
+    public object $progress;
+
+    public function oobuild_video_thumbnail()
+    {
+       
+
+        
+$options=       [
+     'width'=>'320', 'height'=> '240', 'numFrames'=> '10','gifski'=>['fps','3'],
+        'input'=> $this->video_file,
+        'output'=> $this->previewName];
+
+$video = new GeneratePreview();
+$r = $video->processVideo($options);
+utmdump($r);
+        
+
+        return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
+    }
+
+    public function build_video_thumbnail_o()
+    {
+        $ffmpeg = '/usr/bin/ffmpeg';
+
+        // the input video file
+        $video = $this->video_file;
+
+        // extract one frame at 10% of the length, one at 30% and so on
+        $frames = ['10%', '30%', '50%', '70%', '90%'];
+
+        // set the delay between frames in the output GIF
+        $joiner = new Thumbnail_Joiner(50);
+        // loop through the extracted frames and add them to the joiner object
+        foreach (new Thumbnail_Extractor($video, $frames, '320x240', $ffmpeg) as $key => $frame) {
+            $joiner->add($frame);
+        }
+        $joiner->save($this->previewName);
+
+        return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
+    }
 
     public function build_video_thumbnail()
     {
@@ -34,8 +78,8 @@ class GifPreviewFiles extends VideoPreview
         (new Filesystem())->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
-        $ffprobe  = FFProbe::create($options);
-        
+        $ffprobe = FFProbe::create($options);
+
         $duration = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
@@ -74,16 +118,23 @@ class GifPreviewFiles extends VideoPreview
 
             // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
-            // utmdump([$time_secs,TimeCode::fromSeconds($time_secs),$point_file]);
+            $jpg_file   = "$temp/x_$point.jpg";
+            utmdump([$time_secs, $duration, $point_file]);
 
             // Extract the frame.
-            $frame = $video->frame(TimeCode::fromSeconds($time_secs));
+
+            try {
+                $frame = $video->frame(TimeCode::fromSeconds($time_secs));
+            } catch (ExecutionFailureException $e) {
+                // $this->cleanupTemporaryFile($pathfile);
+            }
             $frame->save($point_file);
+
             // utmdd($point_file);
             // If the frame was successfully extracted, resize it down to
             // 320x200 keeping aspect ratio.
             if (file_exists($point_file)) {
-                // utmdump(filesize($point_file));
+                utmdump([filesize($point_file), $point_file]);
                 // if (filesize($point_file) == 0) {
                 $img = new ImageManager(new Driver());
                 // $image = $img->read($point_file)->resize(320, 180, function ($constraint) {
@@ -92,15 +143,18 @@ class GifPreviewFiles extends VideoPreview
                 // });
 
                 $image = $img->read($point_file)->resize(320, 240);
-                $image->tojpeg()->save($point_file);
+                $image->tojpeg()->save($jpg_file);
+                utmdump([filesize($jpg_file), $jpg_file]);
 
                 // $image->destroy();
             }
 
             // If the resize was successful, add it to the frames array.
-            if (file_exists($point_file)) {
-                $frames[] = $point_file;
+            if (file_exists($jpg_file)) {
+                $frames[] = $jpg_file;
             }
+
+            $point_frames[] = $point_file;
         }
         $progressBar->finish();
         Mediatag::$output->writeln('');
@@ -120,6 +174,10 @@ class GifPreviewFiles extends VideoPreview
                 unlink($file);
             }
         }
+        foreach ($point_frames as $file) {
+            unlink($file);
+        }
+
         (new Filesystem())->remove($temp);
 
         $this->progressBar = true;
