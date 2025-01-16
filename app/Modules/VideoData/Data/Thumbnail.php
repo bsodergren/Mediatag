@@ -82,7 +82,6 @@ class Thumbnail extends VideoData
                 $time = '00:00:01.00';
             }
             $time = self::videoDuration($duration, 10);
-            utmdump([$duration, $time]);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
             $action = $this->newText;

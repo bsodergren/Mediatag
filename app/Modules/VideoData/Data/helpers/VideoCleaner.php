@@ -22,10 +22,8 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
             foreach ($missing as $k => $file) {
                 $videoFile = $this->thumbToVideo($file);
-                utmdump(["VideoFile",$videoFile ]);
 
                 if (!file_exists($videoFile)) {
-                    utmdump(["file",$file  ]);
 
                     $this->renameThumb($file, false);
                     // unlink($file);
@@ -48,7 +46,6 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing_file as $k => $file) {
-
                 $query  = 'update '.$this->VideoDataTable.' set '.$this->getTableField().' = null WHERE id = '.$k.'';
                 $result = Mediatag::$dbconn->query($query);
                 $file   = $this->thumbToVideo($file);
@@ -72,7 +69,6 @@ trait VideoCleaner
                 $result = Mediatag::$dbconn->query($query);
                 $file   = $this->thumbToVideo($file);
                 Mediatag::$output->writeln($this->printNo($fileCount--).'<info>Changing '.$this->setMessage($file).' to null </info>');
-                utmdump(["file ",$file ]);
 
                 if (file_exists($file)) {
                     $fs        = new MediaFile($file);
@@ -88,11 +84,19 @@ trait VideoCleaner
         }
     }
 
-    private function doClean()
+    private function doClean($delete = false)
     {
         //   $this->doClean('thumbnail',$this->getExistingList(),$res);
 
         $fileSearch = $this->getPreviewFiles();
+
+        if (true === $delete) {
+            foreach ($fileSearch as $k => $file) {
+                unlink($file);
+                unset($fileSearch[$k]);
+            }
+        }
+
         [$dbList,
             $missing_file,
             $missing_thumb] = $this->getExistingList();
@@ -124,9 +128,7 @@ trait VideoCleaner
         $missing_mp4   = [];
         $dblist        = [];
 
-        
-
-        $query        = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  ".$this->getTableField()." is not null  AND fullpath like '".__CURRENT_DIRECTORY__."%' ";
+        $query  = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  ".$this->getTableField()." is not null  AND fullpath like '".__CURRENT_DIRECTORY__."%' ";
         $result = Mediatag::$dbconn->query($query);
         foreach ($result as $_ => $row) {
             $thumb = $this->videoToThumb($row['file_name']);

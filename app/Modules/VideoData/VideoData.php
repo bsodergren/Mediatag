@@ -105,13 +105,7 @@ class VideoData
         }
     }
 
-    public function clearDBValues($key = null)
-    {
-        // utminfo(func_get_args());
-
-        $query  = $this->clearQuery($key);
-        $result = Mediatag::$dbconn->query($query);
-    }
+   
 
     public function save()
     {
@@ -158,6 +152,14 @@ class VideoData
         Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
+    public function clearDBValues()
+    {
+        $this->doClean(true);
+        Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
+        Mediatag::$output->writeln('<comment> All Clean </comment>');
+    }
+
+    
 
     public static function videoDuration($duration, $round = 1000)
     {

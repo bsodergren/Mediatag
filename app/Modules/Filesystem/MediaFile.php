@@ -46,7 +46,6 @@ class MediaFile
     public function __construct($filename = null)
     {
         // utminfo(func_get_args());
-
         if (null !== $filename) {
             $this->video_file = $filename;
             $this->video_name = $this->filename();

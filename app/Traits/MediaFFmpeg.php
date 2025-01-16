@@ -77,7 +77,7 @@ trait MediaFFmpeg
         $process->setTimeout(null);
         MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
 
-        // utmdd($process->getCommandLine());
+        // utmdump($process->getCommandLine());
         // $process->start($callback);
         $process->start();
         $process->wait($callback);
@@ -165,7 +165,7 @@ trait MediaFFmpeg
             '-vframes', '1', $thumbnail,
         ];
         $this->cmdline = $cmdOptions;
-        $callback      = Callback::check([$this, 'Outputdebug']);
+        $callback      = Callback::check([$this, 'ProgressbarOutput']);
 
         $this->ffmpegExec($cmdOptions, $callback);
     }
@@ -226,4 +226,6 @@ trait MediaFFmpeg
 
         $this->ffmpegExec($cmdArray, $callback);
     }
+
+
 }

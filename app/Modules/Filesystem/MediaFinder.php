@@ -179,7 +179,7 @@ class MediaFinder extends SFinder
 
         $FileArray = [];
         // UTMlog::logger('Search');
-
+utmdump(Option::getOptions());
         if (Option::isTrue('filelist')) {
 
             $file_array = $this->getFilelistOption();

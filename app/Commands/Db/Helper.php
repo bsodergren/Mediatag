@@ -220,8 +220,8 @@ trait Helper
         } elseif (Option::istrue('clear')) {
             $this->obj->clear();
             exit;
-        } elseif (Option::istrue('empty')) {
-            // $this->obj->clearDBValues();
+        } elseif (Option::istrue('delete')) {
+            $this->obj->clearDBValues();
             exit;
         }
     }
