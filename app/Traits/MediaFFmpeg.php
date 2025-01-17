@@ -31,7 +31,7 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner'];//, '-threads', '1', '-loglevel', 'quiet','-xerror', '-v', 'warning'];
+    public $ffmpegArgs = ['-y', '-hide_banner','-nostdin'];//, '-threads', '1', '-loglevel', 'quiet','-xerror', '-v', 'warning'];
 
     public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
 
@@ -87,8 +87,11 @@ trait MediaFFmpeg
         //         // ... do something with the stdout
         //     }
         // });
+        utmdump(   $process->getCommandLine());
+
         $process->Run($callback);
-        // utmdd(   $process->getCommandLine(),     $process->getExitCode(),        $process->getErrorOutput());
+
+        // utmdd(   $process->getCommandLine());
 
         // $process->start();
         // $process->wait($callback);
@@ -220,7 +223,6 @@ trait MediaFFmpeg
             return true;
         }
         $cmdArray = array_merge($cmd, [$ClipName]);
-
         $this->cmdline = $cmdArray;
 
         $this->progress = new MediaBar(($this->clipLength * 1000) / 30, 'one', 120);

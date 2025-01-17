@@ -77,13 +77,20 @@ trait ffmpegTransition
         $offset                 = 0;
         $normalizer             = '';
 
+        $width = (int)$file_info[0]['width'];
+        $height = (int)$file_info[0]['height'];
+
         $clipLength = 0;
+        $scaler_default = ",scale=w={$width}:h={$height}:force_original_aspect_ratio=1,pad={$width}:{$height}:(ow-iw)/2:(oh-ih)/2";
 
         foreach ($videoFiles as $i => $video) {
             $transition = $this->getTransition($transition_type);
-            $scaler     = $i > 0 ? ',scale=w='.$file_info[$i]['width'].':h='.$file_info[$i]['height'].':force_original_aspect_ratio=1,pad='.$file_info[$i]['width'].':'.$file_info[$i]['height'].':(ow-iw)/2:(oh-ih)/2' : '';
+            // $scaler     = $i > 0 ? ',scale=w='.$file_info[$i]['width'].':h='.$file_info[$i]['height'].':force_original_aspect_ratio=1,pad='.$file_info[$i]['width'].':'.$file_info[$i]['height'].':(ow-iw)/2:(oh-ih)/2' : '';
 
+            
+            $scaler = $i > 0 ? $scaler_default : "";
             $normalizer .= "[{$i}:v]settb=AVTB,setsar=sar=1,fps=30{$scaler}[{$i}v];";
+           
 
             if (0 == $i) {
                 continue;

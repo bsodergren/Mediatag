@@ -25,21 +25,20 @@ class ScriptWriter
     public $script_filelist;
     public $script_text;
 
-
     /**
      * update.
      *
      * @var string
      */
-    public $update       = __APP_HOME__ . '/bin/mediaupdate';
+    public $update = __APP_HOME__.'/bin/mediaupdate';
 
     /**
      * db.
      *
      * @var string
      */
-    public $db           = __APP_HOME__ . '/bin/mediadb';
-    public $map          = __APP_HOME__ . '/bin/mediamap';
+    public $db  = __APP_HOME__.'/bin/mediadb';
+    public $map = __APP_HOME__.'/bin/mediamap';
 
     /**
      * script.
@@ -55,41 +54,34 @@ class ScriptWriter
      */
     public $fileListAray = [];
 
-    public $optionArgs   = [];
+    public $optionArgs = [];
 
     /**
      * __construct.
-     *
-     * @param string $script_name
-     * @param string $directory
      */
     public function __construct(string $script_name, string $directory)
     {
         // utminfo(func_get_args());
 
         $this->directory = $directory;
-        $this->script    = $directory . '/' . $script_name;
+        $this->script    = $directory.'/'.$script_name;
         $this->addHeader();
     }
 
     /**
      * updatePreview.
-     *
-     * @param array $VideoArray
      */
     public function updatePreview(array $VideoArray)
     {
         // utminfo(func_get_args());
 
-
         foreach ($VideoArray as $n => $video) {
-            $cmdOptions = ["-U","-f '" . $video['video_file'] . "'"];
+            $cmdOptions = ['-U', "-f '".$video['video_file']."'"];
             foreach ($video['updateTags'] as $meta_tag => $meta_value) {
-                $cmdOptions[] = "\t --" . $meta_tag . "='" . $meta_value . "'";
+                $cmdOptions[] = "\t --".$meta_tag."='".$meta_value."'";
             }
             $this->addCmd('update', $cmdOptions, false, false);
         }
-
     }
 
     /**
@@ -99,7 +91,7 @@ class ScriptWriter
     {
         // utminfo(func_get_args());
 
-        $directory           = '"' . __CURRENT_DIRECTORY__ . '"';
+        $directory           = '"'.__CURRENT_DIRECTORY__.'"';
         $this->script_header = <<<EOD
 #!/bin/bash
 DIR={$directory}
@@ -110,46 +102,36 @@ EOD;
 
     /**
      * addCmd.
-     *
-     * @param string $command
-     * @param array $cmdOptions
-     * @param bool $comment
-     * @param bool $singleLine
      */
     public function addCmd(string $command, array $cmdOptions = [], bool $comment = true, bool $singleLine = false)
     {
         // utminfo(func_get_args());
 
-        $eol     = " ";
+        $eol = ' ';
 
+        $cmd = $this->{$command};
 
-        $cmd     = $this->{$command};
-
-        $run_cmd = $cmd . ' ' . implode($eol, $cmdOptions);
+        $run_cmd = $cmd.' '.implode($eol, $cmdOptions);
 
         if (true == $comment) {
-            $this->script_header .= '## CMD=' . $run_cmd . \PHP_EOL;
+            $this->script_header .= '## CMD='.$run_cmd.\PHP_EOL;
         }
 
-        if ($singleLine === true) {
-            $eol = " \\";
-
+        if (true === $singleLine) {
+            $eol = ' \\';
         }
 
-        $this->script_command .= $run_cmd . $eol . \PHP_EOL;
+        $this->script_command .= $run_cmd.$eol.\PHP_EOL;
     }
 
     /**
      * addFile.
-     *
-     * @param string $file
-     * @param bool $string
      */
     public function addFile(string $file, bool $string = true)
     {
         // utminfo(func_get_args());
 
-        $file = '"' . $file . '"';
+        $file = '"'.$file.'"';
         if (true === $string) {
             $this->script_filelist .= $file;
         } else {
@@ -159,8 +141,6 @@ EOD;
 
     /**
      * addFileList.
-     *
-     * @param array $file_array
      */
     public function addFileList(array $file_array)
     {
@@ -168,7 +148,7 @@ EOD;
 
         $fileArray = MediaArray::VideoFiles($file_array, 'video_file');
         array_walk($fileArray, function (&$value, $key) {
-            $value = '"' . $value . '"';
+            $value = '"'.$value.'"';
         });
 
         $file_list = implode("\n", $fileArray);
@@ -177,8 +157,6 @@ EOD;
 
     /**
      * write.
-     *
-     * @param bool $singleLine
      */
     public function write(bool $singleLine = true)
     {
@@ -193,62 +171,56 @@ EOD;
         }
 
         if (true == $singleLine) {
-            $this->script_filelist = str_replace("\"\n", '",\\' . \PHP_EOL, $this->script_filelist);
+            $this->script_filelist = str_replace("\"\n", '",\\'.\PHP_EOL, $this->script_filelist);
         }
 
+        $this->script_filelist = str_replace(__CURRENT_DIRECTORY__.'/', '', $this->script_filelist);
 
-        $this->script_filelist = str_replace(__CURRENT_DIRECTORY__ . '/', '', $this->script_filelist);
+        $this->script_text = $this->script_header.\PHP_EOL.$this->script_command.$this->script_filelist;
 
-
-        $this->script_text     = $this->script_header . PHP_EOL . $this->script_command . $this->script_filelist;
-
-        FileSystem::write($this->script, $this->script_text, 0755);
+        Filesystem::write($this->script, $this->script_text, 0755);
     }
 
     /**
      * addPattern.
-     *
-     * @param string $class
-     * @param string $TitleStudio
-     * @param array $options
      */
     public static function addPattern(string $class, string $TitleStudio, array $options = [])
     {
         // utminfo(func_get_args());
 
-        $TitleStudio       = trim($TitleStudio, '\\');
-        $class             = trim($class, '\\');
-        $extended_class    = 'Patterns';
-        $studio            = "public \$studio = '" . $TitleStudio . "';";
-        $extended_use      = ' ';
-        $network           = ' ';
-        if ($options !== null) {
-            if (array_key_exists('ExtendClass', $options)) {
+        $TitleStudio    = trim($TitleStudio, '\\');
+        $class          = trim($class, '\\');
+        $extended_class = 'Patterns';
+        $studio         = "public \$studio = '".$TitleStudio."';";
+        $extended_use   = ' ';
+        $network        = ' ';
+        if (null !== $options) {
+            if (\array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
                 // $studio         = "public \$studio = '" . $TitleStudio . "';";
-              
-                $extended_use   = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
+
+                $extended_use = \PHP_EOL.'use Mediatag\\Patterns\\Studios\\'.$extended_class.';';
             }
-              if (array_key_exists('network', $options)) {
-                    $network = "public \$network = '" . $options['network'] . "';";
-                }
+            if (\array_key_exists('network', $options)) {
+                $network = "public \$network = '".$options['network']."';";
+            }
         }
 
-        $Pattern_file      = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . \DIRECTORY_SEPARATOR . $class . '.php';
+        $Pattern_file = __PATTERNS_LIB_DIR__.\DIRECTORY_SEPARATOR.__LIBRARY__.\DIRECTORY_SEPARATOR.$class.'.php';
 
         // if (! file_exists($Pattern_file)) {
 
-        $finder            = new Finder();
-        $filesystem        = new SymFs();
+        $finder     = new Finder();
+        $filesystem = new SymFs();
 
         $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
         foreach ($finder as $file) {
             $name    = $file->getFilenameWithoutExtension();
             ${$name} = $file->getContents();
             // $output->writeln($$name );
-            //...
+            // ...
         }
-        $command_array     = [
+        $command_array = [
             'EXTEND_USE'    => $extended_use,
             'CLASS_EXTEND'  => $extended_class,
             'CLASSNAME'     => $class,
@@ -259,15 +231,15 @@ EOD;
             'LIBRARY'       => __LIBRARY__,
         ];
         foreach ($command_array as $key => $value) {
-            $key = '%%' . strtoupper($key) . '%%';
+            $key = '%%'.strtoupper($key).'%%';
             if (null != $value) {
                 $Patterns_template = str_replace($key, $value, $Patterns_template);
             }
         }
 
-        Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
+        Mediatag::$tmpText = '<comment> New Pattern '.$class.'</comment>';
         $filesystem->dumpFile($Pattern_file, $Patterns_template);
-
+        utmdump($Pattern_file);
         require_once $Pattern_file;
     }
     // }

@@ -14,21 +14,7 @@ const HOME_REGEX_COMMON = '//i';
 class Home extends Patterns
 {
 
-    public $studio = 'Home Videos';
-    public function getFilename($file)
-    {
-        // utminfo(func_get_args());
-        $filename = basename($file);
-        $path     = str_replace('/'.$filename, '', $file);
-        $name     = strtolower($filename);
-        $name     = ucfirst($name);
-        if ($filename == $name) {
-            return $file;
-        }
-        $newFile = $path.\DIRECTORY_SEPARATOR.$name;
-            //   utmdd($newFile);
-
-        return $newFile;
-    }
+    public $studio = 'Home';
+     
 
 }

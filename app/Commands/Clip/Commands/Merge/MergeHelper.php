@@ -22,8 +22,68 @@ trait MergeHelper
 {
 
 
+    public $cmdOptionMerge = [
+        'clips' => ['cmd'=>'mergeClips', 'desc'=>'Show all transition types'],
+        'playlist' => ['cmd'=>'mergePlaylist', 'desc'=>'Show all playlist types'],
+    ];
+
+    public function mergeFiles()
+    {
+        $showCmd = Option::getValue('merge', 1);
+        if (\array_key_exists($showCmd, $this->cmdOptionMerge)) {
+            $method = $this->cmdOptionMerge[$showCmd]['cmd'];
+            $this->$method();
+
+            return 1;
+        }
+
+        $this->defaultCmd();
+
+        utmdd($showCmd);
+    }
+
+
+    public function getPlaylistVideosfromId($playlist_id)
+    {
+
+        $sql     = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
+        from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
+        ' . __MYSQL_VIDEO_FILE__ . '  as v,
+        ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p
+
+        where (p.playlist_id = ' . $playlist_id . ' and 
+        p.playlist_video_id = v.id and
+         d.id = p.playlist_id ) ORDER BY v.filename ASC';
+
+         $results = Mediatag::$dbconn->query($sql);
+    
+        return $results;
+    }
+
+    public function mergePlaylist()
+    {
+
+        $playlist      = Option::getValue('playlistid', true);
+        $name      = Option::getValue('name', true);
+        $filelistArray = $this->getPlaylistVideosfromId($playlist);
+
+        $ClipName       = $this->setClipFilename($name);
+        // $this->progress = new MediaIndicator('one');
+        foreach ($filelistArray as $file) {
+         $filelist[] = $file['file_name'];   
+        }
+
+        $this->createCompilation($filelist, $ClipName, $name);
+    }
+    
+
+
+
     public function mergeClips()
     {
+
+        $this->exec();
+
         $fileSearch = Option::getValue('search', true);
 
         $name      = Option::getValue('name', true);

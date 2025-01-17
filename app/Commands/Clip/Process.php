@@ -37,7 +37,7 @@ class Process extends Mediatag
     public $VideoList = [];
 
     public $defaultCommands = [
-        'exec' => null,
+       // 'exec' => null,
     ];
 
     // public $commandList = [

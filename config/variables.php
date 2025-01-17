@@ -43,7 +43,7 @@ define(
 define(
     '__LIBRARIES__',
     [
-        'Videos',
+        // 'Videos',
         'BiSexual',
         'Pornhub',
         'Studio',
@@ -65,6 +65,8 @@ define(
         // 'Misc',
         'Downloads',
         // 'Favorite',
+        'Clips',
+        // 'Home',
         'Premium',
         'Pornhub',
         'fav',

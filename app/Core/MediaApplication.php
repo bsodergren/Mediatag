@@ -41,10 +41,10 @@ class MediaApplication extends Application
         ]);
     }
 
-    protected function getDefaultCommands(): array
-    {
-        return [new HelpCommand(), new ListCommand(),  new DumpCompletionCommand()];
-    }
+    // protected function getDefaultCommands(): array
+    // {
+    //     return [new HelpCommand(), new ListCommand(),  new DumpCompletionCommand()];
+    // }
 
     // protected function getDefaultCommands(): array
     // {

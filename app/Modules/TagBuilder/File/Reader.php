@@ -61,7 +61,6 @@ class Reader extends TagReader
         $studioClass = $classPath.$this->video_library.$studioName;
 
         // $networkName = $this->getStudioClass($this->network);
-
         if (Option::isTrue('addNetwork')) {
             $networkName      = Option::getValue('addNetwork', 1);
             $networkClassName = $this->getStudioClass($networkName);
@@ -77,14 +76,13 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
-
-        if ((!class_exists($studioClass) || Option::isTrue('addClass')) && ('Studios' == $this->video_library || 'HomeVideos' == $this->video_library)) {
+        // utmdd($this->video_library);
+        if ((!class_exists($studioClass) || Option::isTrue('addClass'))
+        && ('Studios' == $this->video_library || 'HomeVideos' == $this->video_library)) {
             // UTMlog::Logger('File Studio className', $className);
-
+            // 
             // if (Option::isTrue('addClass')) {
-
             $this->writeStudioClass();
-
             // }
 
             $classAttm[] = $studioClass;
@@ -98,7 +96,8 @@ class Reader extends TagReader
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
             // $this->PatternObject->video_file = $this->video_file;
-            self::$PatternClass  = $studioClass;
+            self::$PatternClass = $studioClass;
+
             $this->PatternObject = new $studioClass($this);
 
             // utmdd($this->PatternObject->network);
@@ -125,8 +124,6 @@ class Reader extends TagReader
             // utmdd($artist_matches);
             $this->PatternObject->artist_match = $artist_matches;
         }
-
-        //  utmdd($this->PatternObject );
     }
 
     public function getStudioClass($studio)
