@@ -165,6 +165,10 @@ class MediaOptions
         foreach ($commandOptions as $Options) {
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
+                // utmdump($cmdOptions);
+
+
+
 
 
         return new InputDefinition($cmdOptions);

@@ -10,16 +10,17 @@ use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 
 class MediaDoctrineCommand extends DoctrineCommand
 {
-    public function configure(): void
-    {
-        // utminfo(func_get_args());
+    // public function configure(): void
+    // {
+    //     // utminfo(func_get_args());
 
+    //     utmdd("Fsdfsd");
 
-        $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
+    //     $this->setName(static::$defaultName)->setDescription(static::$defaultDescription);
 
-        $definition = MediaOptions::get($this->getName());
+    //     $definition = MediaOptions::get($this->getName());
 
-        $this->setDefinition($definition);
-    }
+    //     $this->setDefinition($definition);
+    // }
   
 }

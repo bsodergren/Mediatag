@@ -49,11 +49,11 @@ if (file_exists($commandsDir)) {
 
 
 $SingleCommand = false;
-
 if (1 == count($commandClasses)) {
     $default       = true;
     $SingleCommand = true;
 }
+// 
 
 
 foreach ($commandClasses as $className) {

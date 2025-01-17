@@ -63,14 +63,13 @@ class MediaCommand extends MediaDoctrineCommand
 
         if (\count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-            // utmdump($cmdArgument);
+            //
 
             if (null !== $cmdArgument) {
                 self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
             }
         }
 
-        //  utmdd(self::$optionArg);
 
         $class   = self::getProcessClass();
         $Process = new $class(...array_merge([$input, $output], self::$optionArg));
@@ -100,13 +99,16 @@ class MediaCommand extends MediaDoctrineCommand
 
         $child = static::class;
         MediaOptions::$callingClass = $child;
+
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
         $arguments = MediaOptions::getArguments($this->getName(), $this->getDescription());
-       
+
         if (\is_array($arguments)) 
         {
             $this->addArgument(...$arguments);
         }
+
+
     }
 
 
@@ -117,7 +119,9 @@ class MediaCommand extends MediaDoctrineCommand
         self::$Console = new ConsoleOutput($output, $input);
 
         // add the application arguments and options
-        $this->mergeApplicationDefinition();
+        $this->mergeApplicationDefinition(false);
+
+
         // bind the input against the command specific arguments/options
         try {
             $input->bind($this->getDefinition());
@@ -151,6 +155,8 @@ class MediaCommand extends MediaDoctrineCommand
         // The command name argument is often omitted when a command is executed directly with its run() method.
         // It would fail the validation if we didn't make sure the command argument is present,
         // since it's required by the application.
+
+
         if ($input->hasArgument('command') && null === $input->getArgument('command')) {
             $input->setArgument('command', $this->getName());
         }

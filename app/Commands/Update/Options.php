@@ -25,6 +25,8 @@ class Options extends MediaOptions
         return [
             ['changes', 'c', InputOption::VALUE_NONE, Translate::text('L__UPDATE_APPROVE_CHANGES')],
             ['update', 'U', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
+            ['clear', '', InputOption::VALUE_NONE, Translate::text('L__UPDATE_CLEAR')],
+
             ['rename', 'R', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
             ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],
             ['addNetwork', 'P', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],

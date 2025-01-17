@@ -43,7 +43,9 @@ class Process extends Mediatag
             'download'     => null,
             //     'writeChanges' => true,
         ],
-
+        'clear'    => [
+            'exec'      => null,
+            'clearMeta' => null,],
         'list'      => [
             'exec'        => null,
             'getChanges'  => null,

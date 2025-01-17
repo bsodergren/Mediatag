@@ -185,6 +185,7 @@ class MediaFinder extends SFinder
         } else {
             $file_array = $this->searchFiles();
         }
+
         if (\is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
                 $FileArray = $this->getFileNumberArray($file_array);
@@ -403,9 +404,12 @@ class MediaFinder extends SFinder
     private function getFilelistOption()
     {
         // utminfo(func_get_args());
+        // utmdd(Option::getOptions() );
+
 
         if (Option::isTrue('filelist')) {
-            return Option::getValue('filelist');
+            $ret = Option::getValue('filelist');
+            return $ret;
         }
 
         return null;
