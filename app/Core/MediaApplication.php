@@ -8,6 +8,9 @@ namespace Mediatag\Core;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\DumpCompletionCommand;
+use Symfony\Component\Console\Command\HelpCommand;
+use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
@@ -26,7 +29,7 @@ class MediaApplication extends Application
         Translate::$Class = __CLASS__;
 
         return new InputDefinition([
-            new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD')),
+            new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD').\PHP_EOL.\PHP_EOL.\PHP_EOL.\PHP_EOL.\PHP_EOL),
 
             new InputOption('--help', '-h', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_HELP')),
             new InputOption('--quiet', '-q', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_QUIET')),
@@ -35,14 +38,22 @@ class MediaApplication extends Application
             new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
             new InputOption('--no-interaction', '', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_NOASK')),
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, Translate::text('L__APP_DEFAULT_PATH')),
-
         ]);
     }
 
-    public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
+    protected function getDefaultCommands(): array
     {
-
-        // utminfo();
-        parent::run($input, $output);
+        return [new HelpCommand(), new ListCommand(),  new DumpCompletionCommand()];
     }
+
+    // protected function getDefaultCommands(): array
+    // {
+    //     return [new HelpCommand(), new ListCommand(), new DumpCompletionCommand()];
+    // }
+    // public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
+    // {
+
+    //     // utminfo();
+    //     parent::run($input, $output);
+    // }
 }
