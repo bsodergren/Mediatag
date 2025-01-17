@@ -148,7 +148,7 @@ trait ProcessCallbacks
     public function downloadCallback($type, $buffer)
     {
 
-        $buffer = $this->cleanBuffer($buffer);
+        // $buffer = $this->cleanBuffer($buffer);
 
 
         $outputText = '';
@@ -230,6 +230,7 @@ trait ProcessCallbacks
 
             case str_contains($buffer, '[download]'):
                 $outputText = $this->downloadVideo($buffer, $line_id);
+                
 
                 break;
 

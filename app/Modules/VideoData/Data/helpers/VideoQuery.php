@@ -35,6 +35,7 @@ trait VideoQuery
                 $query = $query.' LIMIT '.$total;
             }
         }
+
         $result = Mediatag::$dbconn->query($query);
 
         foreach ($result as $_ => $row) {
@@ -68,7 +69,7 @@ trait VideoQuery
         $where .= $searchPath;
 
         $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable." WHERE  Library = '".__LIBRARY__."' AND  ".$where;
-
+        
         return $query;
     }
 
@@ -94,7 +95,7 @@ trait VideoQuery
         $sql .= 'FROM '.$this->VideoFileTable.' f ';
         $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
         $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' ".$searchPath;
-
+    
         return $sql;
     }
 
@@ -119,6 +120,9 @@ trait VideoQuery
             $where .= ' AND  vm.markerText like "'.$search.'%" ';
             
         }
-        return 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
+
+        $sql = 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
+     
+        return $sql;
     }
 }

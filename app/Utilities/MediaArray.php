@@ -96,12 +96,10 @@ class MediaArray
 
             foreach ($array as $key => $parts) {
                 if (str_starts_with($parts['name'], $string)) {
-                    utmdump([$parts['name'], $string]);
                     if (!\array_key_exists($i + 1, $str_array)) {
                         continue;
                     }
                     if ($parts['name'] == $string.'_'.$str_array[$i + 1]) {
-                        utmdump($parts['name']);
                         // continue;
                     }
                     if ('' != $parts['replacement']) {

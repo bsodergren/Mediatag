@@ -65,26 +65,27 @@ trait CallableHelper
 
     public function downloadVideo($buffer, $line_id)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        // $buffer = $this->cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = $this->key;
         $outputText                   = '<download>'.$buffer.'</>';
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
+
         if (str_contains($buffer, 'Destination')) {
-            $outputText = str_replace('[download]', '</text>'.\PHP_EOL.$line_id.' <text>[download]', $buffer);
-            $outputText = $line_id.' <text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>';
+            $outputText = str_replace('[download]', '</text>'.$line_id.' <text>[download]', $buffer);
+            $outputText = $line_id.' <text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'. \PHP_EOL;
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
-            return $outputText.\PHP_EOL;
+            return $outputText;
         }
 
         if (str_contains($buffer, 'already been')) {
             $outputText = $line_id.'<error> Already been downloaded </error>';
 
-            return $outputText.\PHP_EOL;
+            return $outputText;
         }
 
-        return $outputText.PHP_EOL;
+        return $outputText;
     }
 
     public function fixVideo($buffer, $line_id)
