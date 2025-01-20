@@ -29,7 +29,7 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner', '-nostdin' , '-threads', '4' ]; //, '-loglevel', 'quiet','-xerror', '-v', 'warning'];
+    public $ffmpegArgs = ['-y', '-hide_banner', '-nostdin' , '-threads', '4'];// , '-loglevel', 'debug'];
 
     public $ffmpeg_log   = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
     public $currentFrame = 0;

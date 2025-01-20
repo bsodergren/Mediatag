@@ -121,7 +121,7 @@ trait ffmpegTransition
 
         $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
 
-        // utmdump($ffmpeg_args);
+        utmdump($ffmpeg_args);
         return $ffmpeg_args;
     }
 }

@@ -102,7 +102,7 @@ class VideoInfo extends VideoData
             }
             MediaCache::put($cacheKey, $videoInfo);
         }
-
+utmdump($videoInfo);
         return $videoInfo;
     }
 }
