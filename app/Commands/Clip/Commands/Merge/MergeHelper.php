@@ -73,6 +73,9 @@ trait MergeHelper
          $filelist[] = $file['file_name'];   
         }
 
+
+      
+
         $this->createCompilation($filelist, $ClipName, $name);
     }
     

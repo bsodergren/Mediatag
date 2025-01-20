@@ -5,18 +5,18 @@
 
 namespace Mediatag\Core;
 
-use UTM\Utilities\Option;
-use Mediatag\Locales\Lang;
-use Mediatag\Traits\Translate;
-use Mediatag\Traits\MediaLibrary;
-use UTM\Utilities\Debug\UtmStopWatch;
 use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Locales\Lang;
 use Mediatag\Modules\Display\ConsoleOutput;
-use Symfony\Component\Filesystem\Filesystem;
+use Mediatag\Traits\MediaLibrary;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use UTM\Utilities\Debug\UtmStopWatch;
+use UTM\Utilities\Option;
 
 class MediaCommand extends MediaDoctrineCommand
 {
@@ -24,7 +24,6 @@ class MediaCommand extends MediaDoctrineCommand
     use MediaExecute;
     use MediaLibrary;
     use Translate;
-
 
     public static $Console;
 
@@ -48,9 +47,8 @@ class MediaCommand extends MediaDoctrineCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-
-        Mediatag::$ProcessHelper = $this->getHelper("process");
-        //utmdd( $this->getHelperSet());
+        Mediatag::$ProcessHelper = $this->getHelper('process');
+        // utmdd( $this->getHelperSet());
 
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();
@@ -63,13 +61,11 @@ class MediaCommand extends MediaDoctrineCommand
 
         if (\count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-            //
 
             if (null !== $cmdArgument) {
                 self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
             }
         }
-
 
         $class   = self::getProcessClass();
         $Process = new $class(...array_merge([$input, $output], self::$optionArg));
@@ -97,20 +93,16 @@ class MediaCommand extends MediaDoctrineCommand
     {
         // // utminfo(func_get_args());
 
-        $child = static::class;
+        $child                      = static::class;
         MediaOptions::$callingClass = $child;
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
         $arguments = MediaOptions::getArguments($this->getName(), $this->getDescription());
 
-        if (\is_array($arguments)) 
-        {
+        if (\is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
-
-
     }
-
 
     public function run(InputInterface $input, OutputInterface $output): int
     {
@@ -119,8 +111,7 @@ class MediaCommand extends MediaDoctrineCommand
         self::$Console = new ConsoleOutput($output, $input);
 
         // add the application arguments and options
-        $this->mergeApplicationDefinition(false);
-
+        $this->mergeApplicationDefinition();
 
         // bind the input against the command specific arguments/options
         try {
@@ -155,7 +146,6 @@ class MediaCommand extends MediaDoctrineCommand
         // The command name argument is often omitted when a command is executed directly with its run() method.
         // It would fail the validation if we didn't make sure the command argument is present,
         // since it's required by the application.
-
 
         if ($input->hasArgument('command') && null === $input->getArgument('command')) {
             $input->setArgument('command', $this->getName());

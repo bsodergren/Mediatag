@@ -28,7 +28,7 @@ class Options extends MediaOptions
             ['name', '', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
             ['desc', 'd', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
             ['method', 'm', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
-            ['options', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
+            ['options', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
 
             ['break'],
         ];

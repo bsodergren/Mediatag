@@ -20,4 +20,5 @@ trait Lang
     public const L__UPDATE_LIST_CHANGES    = 'Create a list of metaupdates';
 
     public const L__UPDATE_ALL_TAGS        = 'Update metatag with all new Info';
+	public const L__UPDATE_NEWFILES_REPLACEMENT            = 'Something about cache files';
 }

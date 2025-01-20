@@ -5,6 +5,7 @@
 
 namespace Mediatag\Commands\Create;
 
+use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
@@ -12,10 +13,48 @@ trait Helper
 {
     private $CMD_TEMPLATE = __DATA_TEMPLATES__.'/Command/Command_template.txt';
     public $COMMAND_PATH  = __APP_HOME__.'/app/Commands/%%CMD_NAME%%/Commands';
-
+    public $LANGUAGE_FILE = __APP_HOME__.'/app/Commands/%%CMD_NAME%%/Lang.php';
+    public $GLOBAL_LANG = __APP_HOME__.'/app/Locales/Lang.php';
     public function createCommand()
     {
         utmdd([__METHOD__, Option::getOptions()]);
+    }
+
+    public function langCommand()
+    {
+        $translationKey  = Option::getValue('name', true);
+        $CommandFileName = Option::getValue('cmd', true);
+        $desc            = Option::getValue('desc', true);
+
+        $string = "\t".'public const '.$translationKey.'            = \''.$desc.'\';';
+
+        $MediaCommand        = ucfirst(strtolower(Option::getValue('cmd', true)));
+
+        if($MediaCommand == "Global") {
+            $this->LANGUAGE_FILE = $this->GLOBAL_LANG;
+        } else {
+        $this->LANGUAGE_FILE = $this->parse($this->LANGUAGE_FILE, ['CMD_NAME'=>ucfirst($MediaCommand)]);
+        }
+
+        $lines = FileSystem::readLines($this->LANGUAGE_FILE);
+        foreach ($lines as $lineNum => $line) {
+            if (str_contains($line, $translationKey)) {
+                Mediatag::$output->writeln('already tehre');
+
+                return false;
+            }
+            if ('}' == $line) {
+                $newFile[] = $string;
+                $newFile[] = '}';
+                continue;
+            }
+            $newFile[] = $line;
+        }
+        $contents = implode("\n", $newFile);
+        // utmdd($contents);
+        FileSystem::write($this->LANGUAGE_FILE, $contents);
+
+        utmdd($this->LANGUAGE_FILE);
     }
 
     public function addCommand()

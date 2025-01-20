@@ -49,4 +49,5 @@ trait Lang
     public const L__DISPLAY_ADD           = 'Add value to keyword';
     public const L__DISPLAY_DROP          = 'Drop value from keyword';
 
+	public const L__META_NETWORK            = 'The network the studio belongs to';
 }

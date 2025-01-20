@@ -49,6 +49,11 @@ class MediaCache
         if (true == Option::isTrue('nocache')) {
             return false;
         }
+        
+        if ('' == CONFIG['USE_CACHE']) {
+            return false;
+        }
+
         $value = self::$stash->get($key);
         // utmdump(['getting key '.$key.' with data', $value]);
 

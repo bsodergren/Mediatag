@@ -5,7 +5,6 @@
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -39,85 +38,75 @@ class MediaOptions
         return null;
     }
 
-
-
     public static function getProcessClass()
     {
         $className = static::class;
 
         // utmdump($className);
-        $pathInfo = explode("\\",$className);
-        $pathInfo = array_slice($pathInfo,0,3);
-        array_push($pathInfo,"Options");
-        $className = implode("\\",$pathInfo);
+        $pathInfo   = explode('\\', $className);
+        $pathInfo   = \array_slice($pathInfo, 0, 3);
+        $pathInfo[] = 'Options';
+        $className  = implode('\\', $pathInfo);
+
         return $className;
-
     }
 
-    private static function getCommandOptions(){
-                $className = self::$callingClass;
+    private static function getCommandOptions()
+    {
+        $className = self::$callingClass;
 
+        if ($pos = strrpos($className, '\\')) {
+            $class = substr($className, $pos + 1);
+        }
 
-                if ($pos = strrpos($className, '\\')) {
-                    $class = substr($className, $pos + 1);
-                }
+        $tmpClass = str_replace('Command', '', $class);
 
-                $tmpClass = str_replace("Command","",$class);
-                // 
+        $classPath = rtrim($className, $class);
 
-                $classPath = rtrim($className, $class);
+        // $classPath = str_replace($tmpClass,"",$classPath);
+        // utmdump($classPath);
 
-                // $classPath = str_replace($tmpClass,"",$classPath);
-                // utmdump($classPath);
+        // $classPath = rtrim($classPath, 'Commands\\') . '\\';
+        // utmdump($classPath);
 
-                // $classPath = rtrim($classPath, 'Commands\\') . '\\';
-                // utmdump($classPath);
+        $classPath .= $tmpClass.'Options';
 
-    
-                $classPath .= $tmpClass.'Options';
+        if (class_exists($classPath)) {
+            return $classPath;
+        }
 
-
-                if (class_exists($classPath)) {
-                    return $classPath;
-                }
-                return null;
+        return null;
     }
-
-
 
     public static function getClassObject($command)
     {
-
-
         // utminfo(func_get_args());
-        $command   = ucfirst(strtolower($command));
-        $command   = str_replace('Db', 'DB', $command);
+        $command = ucfirst(strtolower($command));
+        $command = str_replace('Db', 'DB', $command);
         // $command = str_replace("Ph","PH",$command);
 
         // $className = $command.'\\Options';
         // $className = 'Mediatag\\Commands\\'.$className;
 
         $className = self::getCommandOptions();
-        if( $className  === null) {
-
-            $className = self::$callingClass;         
+        if (null === $className) {
+            $className = self::$callingClass;
 
             if ($pos = strrpos($className, '\\')) {
                 $class = substr($className, $pos + 1);
             }
 
-            $tmpClass = str_replace("Command","",$class); 
+            $tmpClass = str_replace('Command', '', $class);
 
             $className = rtrim($className, $class);
-            $className = str_replace($tmpClass,"",$className);
+            $className = str_replace($tmpClass, '', $className);
             // utmdump($classPath);
-            $className = rtrim($className, 'Commands\\') . '\\';
+            $className = rtrim($className, 'Commands\\').'\\';
             $className .= 'Options';
         }
 
         if (class_exists($className)) {
             self::$classObj = new $className();
-
         }
     }
 
@@ -128,16 +117,14 @@ class MediaOptions
      */
     public static function getDefinition($command = null)
     {
-
         // utminfo(func_get_args());
         $testOptions    = [];
         $metaOptions    = [];
         $commandOptions = [];
-        $definitions = null;
+        $definitions    = null;
         $cmdOptions     = [];
         self::getClassObject($command);
         if (\is_object(self::$classObj)) {
-
             if (isset(self::$classObj->options)) {
                 foreach (self::$classObj->options as $option => $value) {
                     if (\is_string($option)) {
@@ -147,36 +134,29 @@ class MediaOptions
 
                         $value = $option;
                     }
-                    $cmd              = "get" . $value . "Options";
-                    if(method_exists(__CLASS__,$cmd)){
+                    $cmd = 'get'.$value.'Options';
+                    if (method_exists(__CLASS__, $cmd)) {
                         $commandOptions[] = self::$cmd();
-                    } 
+                    }
                 }
             }
 
-           
-            $definitions = self::$classObj->Definitions();        
+            $definitions = self::$classObj->Definitions();
             if (\is_array($definitions)) {
                 $cmdOptions = self::getOptions($definitions);
             }
-
         }
 
         foreach ($commandOptions as $Options) {
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
-                // utmdump($cmdOptions);
-
-
-
-
+        // utmdump($cmdOptions);
 
         return new InputDefinition($cmdOptions);
     }
 
     public static function getArguments($varName = null, $description = null)
     {
-
         // utminfo(func_get_args());
 
         //    self::getClassObject();
@@ -189,10 +169,9 @@ class MediaOptions
 
     public static function getOptions($optionArray)
     {
-
         // utminfo(func_get_args());
 
-        if (! \is_array($optionArray)) {
+        if (!\is_array($optionArray)) {
             return [];
         }
 
@@ -203,10 +182,10 @@ class MediaOptions
 
         foreach ($optionArray as $idx => $optionName) {
             ++$i;
-            $breakText        = '';
+            $breakText = '';
             if ('break' == $optionName[0]) {
-                $key                  = $idx - 1;
-                $prev[3] .= \PHP_EOL . \PHP_EOL;// .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
+                $key = $idx - 1;
+                $prev[3] .= \PHP_EOL.\PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
                 $commandOptions[$key] = new InputOption(...$prev);
 
                 continue;
@@ -224,55 +203,46 @@ class MediaOptions
 
     public static function getDefaultOptions()
     {
-
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
-        $options          = [
+        $options = [
             ['filelist', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_FILELIST')],
             ['numberofFiles', 'N', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_NUMBEROFFILES')],
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_MAX')],
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_RANGE')],
             ['filenumber', 'F', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_FILENUMBER')],
             ['new', '', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_SHOW_NEWFILES')],
-
         ];
 
         return self::getOptions($options);
     }
-
 
     public static function getQuestionOptions()
     {
-
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
-        $options          = [
+        $options = [
             ['ask', null, InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_ASK_FILE')],
             ['overwrite', 'o', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_OVERWRITE_FILE')],
             ['yes', 'y', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_QUESTION_YES')],
-
         ];
 
         return self::getOptions($options);
     }
 
-
-
-
     public static function getTestOptions()
     {
-
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
 
-        $options          = [
+        $options = [
             ['test', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_CMD')],
-            ['preview', 'p', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_PREVIEW')],
+            ['preview', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_PREVIEW')],
             ['time', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TIME')],
             ['dump', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_DUMP')],
             ['flush', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
@@ -285,7 +255,6 @@ class MediaOptions
 
     public static function getMetaOptions()
     {
-
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
@@ -295,7 +264,7 @@ class MediaOptions
             ['title', 't', InputOption::VALUE_REQUIRED, Translate::text('L__META_TITLE', ['TXT' => $cmdName])],
             ['genre', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_GENRE', ['TXT' => $cmdName])],
             ['studio', 's', InputOption::VALUE_REQUIRED, Translate::text('L__META_STUDIO', ['TXT' => $cmdName])],
-            ['network', 'S', InputOption::VALUE_REQUIRED, Translate::text('L__META_NETWORK', ['TXT' => $cmdName])],
+            ['network', 'n', InputOption::VALUE_REQUIRED, Translate::text('L__META_NETWORK', ['TXT' => $cmdName])],
 
             ['artist', 'a', InputOption::VALUE_REQUIRED, Translate::text('L__META_ARTIST', ['TXT' => $cmdName])],
             ['keyword', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_KEYWORD', ['TXT' => $cmdName])],
@@ -306,7 +275,6 @@ class MediaOptions
 
     public static function getDisplayOptions()
     {
-
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;

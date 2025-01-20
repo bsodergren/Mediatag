@@ -6,6 +6,7 @@
 namespace Mediatag\Traits;
 
 use FFMpeg\FFMpeg;
+use Mediatag\Core\Mediatag;
 use FFMpeg\Format\Video\X264;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 
@@ -39,6 +40,7 @@ trait ffmpegTransition
         if (\in_array($transition, $this->transition_types)) {
             $return = $transition;
         }
+        Mediatag::$output->writeln('<info>Using transition '.$return.' </info>');
 
         return $return;
     }
@@ -61,14 +63,14 @@ trait ffmpegTransition
 
         //     return true;
         // }
-
+        $frame_count = 0;
         foreach ($videoFiles as $index => $video) {
             $file_info[$index]    = VideoInfo::getVidInfo($video);
             $file_lengths[$index] = ($file_info[$index]['duration'] / 1000);
             $has_audio[$index]    = true;
             $files_input          = array_merge($files_input, ['-i', $video]);
+            $frame_count += $file_info[$index]['frame_count'];
         }
-
         $video_transitions      = '';
         $audio_transitions      = '';
         $last_transition_output = '0v';
@@ -77,28 +79,24 @@ trait ffmpegTransition
         $offset                 = 0;
         $normalizer             = '';
 
-        $width = (int)$file_info[0]['width'];
-        $height = (int)$file_info[0]['height'];
+        $width  = (int) $file_info[0]['width'];
+        $height = (int) $file_info[0]['height'];
 
-        $clipLength = 0;
         $scaler_default = ",scale=w={$width}:h={$height}:force_original_aspect_ratio=1,pad={$width}:{$height}:(ow-iw)/2:(oh-ih)/2";
 
         foreach ($videoFiles as $i => $video) {
             $transition = $this->getTransition($transition_type);
             // $scaler     = $i > 0 ? ',scale=w='.$file_info[$i]['width'].':h='.$file_info[$i]['height'].':force_original_aspect_ratio=1,pad='.$file_info[$i]['width'].':'.$file_info[$i]['height'].':(ow-iw)/2:(oh-ih)/2' : '';
 
-            
-            $scaler = $i > 0 ? $scaler_default : "";
+            $scaler = $i > 0 ? $scaler_default : '';
             $normalizer .= "[{$i}:v]settb=AVTB,setsar=sar=1,fps=30{$scaler}[{$i}v];";
-           
 
             if (0 == $i) {
                 continue;
             }
 
             $video_length = $file_lengths[$i - 1] - $transition_duration / 2;
-            $clipLength += $video_length;
-            $offset     += $video_length;
+            $offset += $video_length;
             $next_transition_output = 'v'.($i - 1).$i;
             $video_transitions .= "[{$last_transition_output}][{$i}v]xfade=transition={$transition}:duration={$transition_duration}:offset=".($offset - $transition_duration / 2)."[{$next_transition_output}];";
             $last_transition_output = $next_transition_output;
@@ -111,19 +109,19 @@ trait ffmpegTransition
                 $last_audio_output = "{$i}:a";
             }
         }
-        $this->clipLength = $clipLength + $file_lengths[$i];
-
+        $this->clipLength = $frame_count;
+        // utmdd($this->clipLength, $file_lengths[$i]);
         $video_transitions .= "[{$last_transition_output}]format=pix_fmts=yuv420p[final];";
         // $normalizer        = str_replace(';', ';'.\PHP_EOL, $normalizer);
         // $video_transitions = str_replace(';', ';'.\PHP_EOL, $video_transitions);
         // $audio_transitions = str_replace(';', ';'.\PHP_EOL, $audio_transitions);
         $ffmpeg_args = array_merge($files_input,
             ['-filter_complex', $normalizer.$video_transitions
-            // . substr($audio_transitions, 0, -1)
-            , '-map', '[final]']);
+            .substr($audio_transitions, 0, -1), '-map', '[final]']);
 
-      //  $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
-// utmdump($ffmpeg_args);
+        $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
+
+        // utmdump($ffmpeg_args);
         return $ffmpeg_args;
     }
 }

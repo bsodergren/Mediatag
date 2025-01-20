@@ -20,7 +20,6 @@ require_once __COMPOSER_LIB__.'/autoload.php';
 
 $config = new Config(__ROOT_DIRECTORY__.\DIRECTORY_SEPARATOR.'config.ini');
 define('CONFIG', $config['path']);
-
 EnvLoader::LoadEnv(__ROOT_DIRECTORY__)->load();
 new UTM\Utm();
 

@@ -36,7 +36,7 @@ class MediaApplication extends Application
             new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_VERBOSE')),
             new InputOption('--version', '-V', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_VERSION')),
             new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
-            new InputOption('--no-interaction', '', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_NOASK')),
+            // new InputOption('--no-interaction', '', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_NOASK')),
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, Translate::text('L__APP_DEFAULT_PATH')),
         ]);
     }
