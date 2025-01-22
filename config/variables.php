@@ -43,7 +43,7 @@ define(
 define(
     '__LIBRARIES__',
     [
-        // 'Videos',
+        'Videos',
         'BiSexual',
         'Pornhub',
         'Studio',
