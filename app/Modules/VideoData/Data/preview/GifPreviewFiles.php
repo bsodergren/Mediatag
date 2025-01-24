@@ -9,10 +9,12 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
+use Psr\Log\LoggerAwareTrait;
 use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Utilities\GifCreator;
 // use Intervention\Image\Image;
+use Psr\Log\LoggerAwareInterface;
+use Mediatag\Utilities\GifCreator;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use Mediatag\Modules\Display\MediaIndicator;
@@ -23,8 +25,11 @@ use Mediatag\Modules\VideoData\Data\preview\GeneratePreview;
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
-class GifPreviewFiles extends VideoPreview
+class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
 {
+
+
+   use LoggerAwareTrait;
     public $videoRange  = 80;
     public $videoSlides = 15;
 
@@ -46,7 +51,7 @@ class GifPreviewFiles extends VideoPreview
         (new Filesystem())->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
-        $ffprobe = FFProbe::create($options);
+        $ffprobe = FFProbe::create($options,$this->logger);
 
         $duration = floor($ffprobe
             ->format($this->video_file)

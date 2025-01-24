@@ -72,37 +72,41 @@ class VideoInfo extends VideoData
 
     public static function getVidInfo($file)
     {
-        $cacheKey  = md5($file.'_vinfo_cache');
-        $videoInfo = MediaCache::get($cacheKey);
+        // $cacheKey  = md5($file.'_vinfo_cache');
+        // $videoInfo = MediaCache::get($cacheKey);
 
-        if (false === $videoInfo) {
-            $mediaInfo          = new MediaInfo();
-            $mediaInfoContainer = $mediaInfo->getInfo($file);
-            $videos             = $mediaInfoContainer->getVideos();
-            $general            = $mediaInfoContainer->getGeneral();
-            $audios             = $mediaInfoContainer->getAudios();
-
-            // $videoInfo['file']     = $file;
-            $videoInfo['filesize'] = filesize($file);
-            foreach ($audios as $audio) {
-                $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
-            }
-            foreach ($videos as $video) {
-                $videoInfo['format'] = (string) $general->get('format');
-                $bit_rate            = $video->get('bit_rate');
-                if (null === $bit_rate) {
-                    $bit_rate = $video->get('maximum_bit_rate');
-                }
-
-                $videoInfo['frame_count'] = (string) $video->get('frame_count');
-                $videoInfo['bit_rate']    = (string) $bit_rate->getAbsoluteValue();
-                $videoInfo['width']       = (string) $video->get('width')->getAbsoluteValue();
-                $videoInfo['height']      = (string) $video->get('height')->getAbsoluteValue();
-                $videoInfo['duration']    = $video->get('duration')->getMilliseconds();
-            }
-            MediaCache::put($cacheKey, $videoInfo);
+        // if (false === $videoInfo) {
+        $mediaInfo          = new MediaInfo();
+        $mediaInfoContainer = $mediaInfo->getInfo($file);
+        $videos             = $mediaInfoContainer->getVideos();
+        $general            = $mediaInfoContainer->getGeneral();
+        $audios             = $mediaInfoContainer->getAudios();
+        // 
+        // $videoInfo['file']     = $file;
+        $videoInfo['filesize'] = filesize($file);
+        foreach ($audios as $audio) {
+            $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
         }
-utmdump($videoInfo);
+        foreach ($videos as $video) {
+
+            $videoInfo['format'] = (string) $general->get('format');
+if ($video->get('format')->getshortname() == "JPEG"){continue;}
+
+
+            $bit_rate            = $video->get('bit_rate');
+            if (null === $bit_rate) {
+                $bit_rate = $video->get('maximum_bit_rate');
+            }
+
+            $videoInfo['frame_count'] = (string) $video->get('frame_count');
+            $videoInfo['bit_rate']    = (string) $bit_rate->getAbsoluteValue();
+            $videoInfo['width']       = (string) $video->get('width')->getAbsoluteValue();
+            $videoInfo['height']      = (string) $video->get('height')->getAbsoluteValue();
+            $videoInfo['duration']    = $video->get('duration')->getMilliseconds();
+        }
+
+        // MediaCache::put($cacheKey, $videoInfo);
+        // }
         return $videoInfo;
     }
 }

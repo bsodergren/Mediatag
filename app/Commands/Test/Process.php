@@ -5,22 +5,26 @@
 
 namespace Mediatag\Commands\Test;
 
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+use Psr\Log\LoggerAwareTrait;
+use FFMpeg\Coordinate\TimeCode;
+use Psr\Log\LoggerAwareInterface;
 use Mediatag\Modules\Display\ShowDisplay;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
-class Process extends Mediatag
+class Process extends Mediatag implements LoggerAwareInterface
 {
     use Helper;
+    use LoggerAwareTrait;
+
 
     public $VideoList = [];
 
@@ -31,6 +35,10 @@ class Process extends Mediatag
     public $commandList = [
         'colors'     => [
             'colors'      => null,
+        ],
+        'cmd'     => [
+            'exec' => null,
+            'execCmd'      => null,
         ],
         
     ];
@@ -60,6 +68,9 @@ class Process extends Mediatag
     public function exec($option = null)
     {
         // utminfo(func_get_args());
+
+        // Mediatag::$logger->info('Logging like a boss at ' . __FILE__ . ':' . __LINE__);
+
         $path = getcwd();
 
         // $finder          = new MediaFinder();
@@ -67,6 +78,8 @@ class Process extends Mediatag
 
         // parent::$SearchArray = $this->VideoList;
         $this->VideoList     = parent::getVideoArray();
+
+       
         // //
         // foreach ($this->VideoList['file'] as $key => $videoInfo) {
         //     // $preview    = new VideoPreview();

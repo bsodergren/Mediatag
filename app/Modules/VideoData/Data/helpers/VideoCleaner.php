@@ -24,10 +24,9 @@ trait VideoCleaner
                 $videoFile = $this->thumbToVideo($file);
 
                 if (!file_exists($videoFile)) {
-
                     $this->renameThumb($file, false);
-                    // unlink($file);
-
+                    unlink($file);
+                    // Mediatag::$output->writeln('unlink file '.$file);
                     Mediatag::$output->writeln($this->printNo($fileCount--).'<fg=red>Deleting '.$this->setMessage($file).'</>');
                 }
             }

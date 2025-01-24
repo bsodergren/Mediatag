@@ -35,6 +35,7 @@ abstract class Mediatag extends Command
     public static $filesystem;
 
     public static $Console;
+    // public static $logger;
 
     public static $Display;
 

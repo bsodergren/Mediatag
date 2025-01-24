@@ -5,18 +5,26 @@
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\Helper\MediaExecute;
-use Mediatag\Locales\Lang;
-use Mediatag\Modules\Display\ConsoleOutput;
-use Mediatag\Traits\MediaLibrary;
-use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Exception\ExceptionInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
-use UTM\Utilities\Debug\UtmStopWatch;
+
+use Psr\Log\LogLevel;
 use UTM\Utilities\Option;
+use Mediatag\Locales\Lang;
+use Psr\Log\LoggerInterface;
+use Mediatag\Core\MediaLogger;
+use Mediatag\Traits\Translate;
+use Mediatag\Traits\MediaLibrary;
+use UTM\Utilities\Debug\UtmStopWatch;
+use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Modules\Display\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Log\Logger;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+
+
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Exception\ExceptionInterface;
 
 class MediaCommand extends MediaDoctrineCommand
 {
@@ -38,9 +46,14 @@ class MediaCommand extends MediaDoctrineCommand
 
     private ?\Closure $code = null;
 
-    public function __construct()
+    public $logger;
+
+
+    public function __construct(  )
     {
-        //     //$this->logger = $logger;
+
+        
+      
         parent::__construct();
         //     self::$logger = $logger;
     }
@@ -49,6 +62,21 @@ class MediaCommand extends MediaDoctrineCommand
     {
         Mediatag::$ProcessHelper = $this->getHelper('process');
         // utmdd( $this->getHelperSet());
+
+        $verbosityLevelMap = [
+            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
+        ];
+
+        $formatLevelMap = [
+            LogLevel::CRITICAL => ConsoleLogger::ERROR,
+            LogLevel::DEBUG    => ConsoleLogger::INFO,
+        ];
+        
+        $this->logger = new ConsoleLogger($output,$verbosityLevelMap,$formatLevelMap);
+      
+
+
 
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();

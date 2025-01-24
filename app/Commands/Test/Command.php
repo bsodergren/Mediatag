@@ -27,6 +27,6 @@ final class Command extends MediaCommand
     use Lang;
     use MediaExecute;
     public const USE_LIBRARY = true;
-
+    public const SKIP_SEARCH = false;
    
 }

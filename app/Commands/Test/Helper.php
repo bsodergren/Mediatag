@@ -5,17 +5,19 @@
 
 namespace Mediatag\Commands\Test;
 
-use Mediatag\Commands\Test\Markers\Markers as MarkerHelper;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Modules\VideoData\Duration;
 use Mediatag\Traits\ffmpeg;
+use Mediatag\Modules\VideoData\Duration;
+use Mediatag\Modules\VideoData\Data\Markers;
 use Symfony\Component\Console\Helper\ProgressIndicator;
+use Mediatag\Commands\Test\Markers\Markers as MarkerHelper;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
 
+    use HelperCmds;
 
     public function colors()
     {
@@ -169,4 +171,17 @@ trait Helper
 
         $this->mvFiles($video_array);
     }
+
+
+    public function execCmd()
+    {
+
+        $fileList = $this->VideoList['file'];
+        $key = array_key_first($fileList);
+        $this->videoFile = $fileList[$key]['video_file'];
+        $method = Option::getValue('cmd');
+        $this->$method();
+    }
+
+
 }
