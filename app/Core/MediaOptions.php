@@ -24,19 +24,19 @@ class MediaOptions
 
     public static $classObj;
 
-    public function Arguments($varName = null, $description = null)
-    {
-        // utminfo(func_get_args());
+    // public function Arguments($varName = null, $description = null)
+    // {
+    //     // utminfo(func_get_args());
 
-        return null;
-    }
+    //     return null;
+    // }
 
-    public function Definitions()
-    {
-        // utminfo(func_get_args());
+    // public function Definitions()
+    // {
+    //     // utminfo(func_get_args());
 
-        return null;
-    }
+    //     return null;
+    // }
 
     public static function getProcessClass()
     {
@@ -70,7 +70,6 @@ class MediaOptions
         // utmdump($classPath);
 
         $classPath .= $tmpClass.'Options';
-
         if (class_exists($classPath)) {
             return $classPath;
         }

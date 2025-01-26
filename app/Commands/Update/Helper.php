@@ -248,7 +248,7 @@ trait Helper
                         // Mediatag::$output->writeln($count.' '.$n);
                     }
                     $line = implode(\PHP_EOL, $line_array);
-                    Mediatag::$output->write($line);
+                    Mediatag::$output->writeln($line);
                 }
           
             ++$idx;

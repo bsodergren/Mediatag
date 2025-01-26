@@ -174,7 +174,7 @@ class TagReader
     public function getTagArray($clean = true)
     {
         // utminfo(func_get_args());
-
+Mediatag::$log->notice("Metatags {0}",[__META_TAGS__]);
         foreach (__META_TAGS__ as $tag) {
 
             $this->{$tag}();

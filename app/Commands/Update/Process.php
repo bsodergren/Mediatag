@@ -5,6 +5,7 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
@@ -19,13 +20,13 @@ class Process extends Mediatag
 {
     use Helper;
     use MediaProcess;
+    use MediaExecute;
 
     /**
      * meta.
      */
     public $formatter;
 
-    public $StorageConn;
 
     public $displayTimer = 0;
 
@@ -59,6 +60,8 @@ class Process extends Mediatag
        'writeChanges' => null,
     ];
 
+    protected $useFuncs = ['addMeta','setupMap'] ;
+
     protected $json_file;
 
     /**
@@ -72,10 +75,12 @@ class Process extends Mediatag
         // utminfo();
 
         parent::boot($input, $output);
-      
-        $this->setupFormat();
-        $this->setupDb();
-        $this->setupMap();
+        // $this->addMeta();
+
+    
+        // $this->setupFormat();
+      //  $this->setupDb();
+        // $this->setupMap();
 
         //        utmdd([__METHOD__,IGNORE_NAME_MAP]);
     }

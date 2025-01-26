@@ -44,7 +44,6 @@ class MediaCache
 
     public static function get($key)
     {
-        // utminfo(func_get_args());
 
         if (true == Option::isTrue('nocache')) {
             return false;
@@ -55,14 +54,12 @@ class MediaCache
         }
 
         $value = self::$stash->get($key);
-        // utmdump(['getting key '.$key.' with data', $value]);
 
         return $value;
     }
 
     public static function put($key, $value)
     {
-        // utmdump(['saving key '.$key.' with data', $value]);
 
         return self::$stash->put($key, $value, self::$expire);
     }

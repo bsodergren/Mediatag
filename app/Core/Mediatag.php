@@ -5,27 +5,21 @@
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\Helper\MediaCommand;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Display\Display;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
-abstract class Mediatag extends Command
+abstract class Mediatag extends MediaCommand
 {
-    // use MediaCommand;
 
-    public $application;
-    public const PH_META_CACHE = __CACHE_DIR__.'/pornhub.hash';
     public $commandList        = [];
 
     public static $SearchArray = [];
@@ -35,7 +29,7 @@ abstract class Mediatag extends Command
     public static $filesystem;
 
     public static $Console;
-    // public static $logger;
+    public static $log;
 
     public static $Display;
 
@@ -58,50 +52,21 @@ abstract class Mediatag extends Command
         'exec'  => null,
         'print' => null,
     ];
-    // public static $keywordList = __DATA_LISTS__.'/keyword.txt';
-
-    // public static $genreList = __DATA_LISTS__.'/genre.txt';
-
-    // public static $titleList = __DATA_LISTS__.'/title.txt';
-
-    // public static $artistList = __DATA_LISTS__.'/ArtistList.txt';
-
-    // public static $titlesMap = __DATA_LISTS__.'/TitlesList.txt';
-
-    // public static $ignoreList = __DATA_LISTS__.'/NamesList.txt';
-
     public static $amateurFile = __DATA_MAPS__.'/Amateur.txt';
 
     public static $channelFile = __DATA_MAPS__.'/Channels.txt';
 
-    // public static $keywordReplacement = __DATA_MAPS__.'/keyword.txt';
-
-    // public static $genreReplacement = __DATA_MAPS__.'/genre.txt';
-
-    // public static $titleMap = __DATA_MAPS__.'/title.txt';
-
-    public static $title_map;
+    public static $Storage;
     public static $IoStyle;
 
     public static $tmpText;
 
-    private $meta_tag_arrary = [
-        'studio',
-        'genre',
-        'artist',
-        'title',
-        'keyword',
-        'network',
-    ];
+  
 
     public static $ProcessHelper;
 
-
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-        // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
-       
-
         self::boot($input, $output, $args);
     }
 
@@ -120,63 +85,30 @@ abstract class Mediatag extends Command
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)
     {
-        // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
-
         if (!\defined('__CURRENT_DIRECTORY__')) {
             \define('__CURRENT_DIRECTORY__', getcwd());
         }
-
-        // if(!count($options) > 0) {
-        //    $options = null;
-        // }
+        self::$input  = $input;
+        self::$output = $output;
 
         $this->command = self::getDefaultName();
-        self::$input   = $input;
-        self::$output  = $output;
+
         MediaCache::init($input, $output);
-
         Option::init($input, $options);
-        self::$Cursor  = new Cursor($output);
-        self::$Console = new ConsoleOutput($output, $input);
-        foreach (Option::getOptions() as $option => $v) {
-            switch ($option) {
-                case 'title':
-                case 'genre':
-                case 'artist':
-                case 'keyword':
-                case 'network':
-                case 'studio':
-                    if (!\defined('__UPDATE_SET_ONLY__')) {
-                        \define('__UPDATE_SET_ONLY__', true);
-                    }
-                    $this->meta_tag_arrary = [$option];
 
-                    break;
-            }
-        }
-        if (true == Option::isTrue('only')) {
-            $this->meta_tag_arrary = Option::getValue('only');
-        }
+        self::$Cursor     = new Cursor($output);
+        self::$Console    = new ConsoleOutput($output, $input);
+        self::$Display    = new Display($output);
+        self::$dbconn     = new StorageDB();
+        self::$finder     = new Finder();
+        self::$filesystem = new Filesystem();
+        self::$Storage = new Storage();
 
-        if (true == Option::isTrue('empty')) {
-            if (null !== Option::getValue('empty', 1)) {
-                $this->meta_tag_arrary = Option::getValue('empty');
-            }
-        }
-        if (!\defined('__META_TAGS__')) {
-            \define('__META_TAGS__', $this->meta_tag_arrary);
-        }
+        
+        self::$log->notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
 
-        // UTMlog::Logger('Meta Tags', __META_TAGS__);
-
-        self::$Display = new Display($output);
-        // self::$Console            = new Display($output);
-        self::$dbconn      = new StorageDB($input, $output);
-        $this->StorageConn = new Storage();
-
-        self::$finder             = new Finder();
-        self::$filesystem         = new Filesystem();
         self::$finder->defaultCmd = $this->command;
+
         if (!Option::isTrue('SKIP_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
 
@@ -185,10 +117,15 @@ abstract class Mediatag extends Command
                 exit;
             }
         }
-
-        if (!\defined('TITLE_REPLACE_MAP')) {
-            $this->getTitleMap('TITLE_REPLACE_MAP', $this->StorageConn->getTitleMap());
+        
+        if(isset($this->useFuncs)){
+            foreach($this->useFuncs as $method){
+                if(method_exists($this,$method)){
+                    $this->$method();
+                }
+            }
         }
+        
     }
 
     public function process()
@@ -199,6 +136,8 @@ abstract class Mediatag extends Command
 
         foreach ($ClassCmds as $cmd => $option) {
             if (method_exists($this, $cmd)) {
+                self::$log->notice('Running command {0}', [$cmd]);
+
                 $this->{$cmd}($option);
             } else {
                 self::$output->writeln('<info>'.$cmd.' doesnt exist</info>');
@@ -241,35 +180,11 @@ abstract class Mediatag extends Command
             $this->videoArray[$meta_key][$videoData['video_key']] = $videoData;
         }
 
+        // Mediatag::$log->notice("Video List {0}",[count($this->videoArray['file'])]);
         return $this->videoArray;
     }
 
-    public function getTitleMap($constant, $file)
-    {
-        // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
-
-        if (\is_string($file)) {
-            if (is_file($file)) {
-                $artistList = file_get_contents($file);
-
-                $artistMap = explode("\n", $artistList);
-            }
-        } else {
-            $artistMap = $file;
-        }
-
-        foreach ($artistMap as $name) {
-            $name        = trim($name);
-            $nameArray[] = strtolower($name);
-        }
-
-        sort($nameArray);
-        array_unique($nameArray);
-        if (!\defined($constant)) {
-            \define($constant, $nameArray);
-        }
-    }
-
+  
     public function exec($option = null)
     {
     }

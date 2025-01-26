@@ -6,19 +6,19 @@
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
 
 class Display
 {
     public $BarSection1;
     public $BarBottom;
 
-    public $LineBreaks    = false;
+    public $LineBreaks = true;
 
     public $BarSection2;
 
@@ -37,16 +37,16 @@ class Display
 
     public $processOutput;
 
-    public $padbuffer     = 3;
+    public $padbuffer = 3;
 
-    public $text_style    = 'current';
+    public $text_style = 'current';
 
     public $padbufferChar = ' ';
 
     /**
      * @var int
      */
-    public $displayTimer  = 500000;
+    public $displayTimer = 100000;
 
     protected $formatter;
 
@@ -54,16 +54,16 @@ class Display
     {
         // utminfo();
 
-        $this->formatter        = new FormatterHelper();
+        $this->formatter = new FormatterHelper();
 
-        $outputStyle            = new OutputFormatterStyle('red');
-        Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
+        // $outputStyle = new OutputFormatterStyle('red');
+        // Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
 
-        $currentTagStyle        = new OutputFormatterStyle('magenta');
-        Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
+        // $currentTagStyle = new OutputFormatterStyle('magenta');
+        // Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
-        $updateTagStyle         = new OutputFormatterStyle('bright-green');
-        Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
+        // $updateTagStyle = new OutputFormatterStyle('bright-green');
+        // Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
 
         $this->BarSection1      = Mediatag::$output->section();
         $this->BarSection2      = Mediatag::$output->section();
@@ -72,15 +72,11 @@ class Display
         $this->MetaBlockSection = Mediatag::$output->section();
         $this->processOutput    = Mediatag::$output->section();
         $this->VideoInfoSection = Mediatag::$output->section();
-        $this->BarBottom = Mediatag::$output->section();
-
+        $this->BarBottom        = Mediatag::$output->section();
     }
 
     public function DisplayTable(array $filelist_array)
     {
-        // utminfo(func_get_args());
-
-        // UTMlog::logger('start Display Table');
         $count = \count($filelist_array);
         if (0 == $count) {
             Mediatag::$output->writeln('<error>No files found </error>');
@@ -88,22 +84,18 @@ class Display
             return;
         }
         $this->displayHeader(Mediatag::$output, ['count' => $count]);
-        $idx   = 1;
-        // UTMlog::logger('start File display');
-        // UTMlog::startLap();
+        $idx = 1;
         foreach ($filelist_array as $key => $value) {
-            // UTMlog::watchlap('key', $key);
             $display = $this->displayFileInfo($value, $count, $idx);
             if (true === $display) {
                 if (true == $this->LineBreaks) {
                     if ($count != $idx) {
                         $line_array = [];
-
                         for ($n = 0; $n < 7; ++$n) {
                             $line_array[] = '';
                         }
-                        $line       = implode(\PHP_EOL, $line_array);
-                      //  Mediatag::$output->write($line);
+                        $line = implode(\PHP_EOL, $line_array);
+                        Mediatag::$output->writeln($line);
                     }
                 }
             }
@@ -114,15 +106,13 @@ class Display
 
     public function displayHeader(OutputInterface $output, array $options): void
     {
-      
-
         // UTMlog::logger('start Display Header');
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeln('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
+            $this->fileCountSection->writeln('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
             $this->fileInfoSection->writeln('<info>   </info>');
-            $this->processOutput->setMaxHeight(3);
+            $this->processOutput->setMaxHeight(9);
         }
 
         // $this->processOutput->writeLn('<info>   </info>');
@@ -132,46 +122,44 @@ class Display
     {
         // utminfo(func_get_args());
 
-        $method             = 'overwrite';
-        $tagCount  = 0;
+        $method   = 'overwrite';
+        $tagCount = 0;
         if (!\array_key_exists('currentTags', $fileinfo)) {
             $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
             // utmdd([__METHOD__,$fileinfo]);
 
-            $tagCount             = \count($fileinfo['metatags']);
+            $tagCount = \count($fileinfo['metatags']);
         } else {
             $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
         }
-        
 
         // utmdd($fileinfo,$tagCount);
 
-
-        $this->MetaBlockSection->setMaxHeight($tagCount+6);
-        $this->VideoInfoSection->setMaxHeight(4);
+        $this->MetaBlockSection->setMaxHeight($tagCount + 6);
+        $this->VideoInfoSection->setMaxHeight(3);
 
         if (0 == $tagCount) {
             utmdd($tagCount);
-            $this->fileCountSection->{$method}("bl");
-            $this->fileInfoSection->{$method}("bllll");
-            $this->MetaBlockSection->{$method}("clllllllllllll");
+            $this->fileCountSection->{$method}('bl');
+            $this->fileInfoSection->{$method}('bllll');
+            $this->MetaBlockSection->{$method}('clllllllllllll');
+
             return false;
         }
         // $tagCount += 6;
-   
 
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
-        $in_directory       = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
-        $filename           = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
-        Mediatag::$tmpText  = null;
-        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
+        $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
+        $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files '.Mediatag::$tmpText);
+        Mediatag::$tmpText = null;
+        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
         $this->MetaBlockSection->{$method}($this->blockDisplay);
+        usleep($this->displayTimer);
 
-        return count($this->blockDisplay);
-        // usleep($this->displayTimer);
+        return true;
     }
 
     /**
@@ -190,7 +178,7 @@ class Display
                 $array[$matches[1]][$matches[2]] = $matches[3];
             }
         }
-        $len         = 0;
+        $len = 0;
         foreach ($array as $tag => $row) {
             $tagLen = \strlen($tag);
             if ($tagLen > $len) {
@@ -214,9 +202,8 @@ class Display
         // utminfo(func_get_args());
 
         if (null !== $value) {
-            //$change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
-            $change_value = "\t<" . $this->text_style . '>' . $value . '</>';
-
+            // $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
+            $change_value = "\t<".$this->text_style.'>'.$value.'</>';
 
             return $this->indent($this->formatter->formatSection($tag, $change_value, $style), $this->padbuffer);
         }
@@ -253,7 +240,7 @@ class Display
         return $MetatagBlock;
     }
 
-    private function TagBlockDisplay($tag, $fileinfo): string|null
+    private function TagBlockDisplay($tag, $fileinfo): ?string
     {
         // utminfo(func_get_args());
 
@@ -261,8 +248,8 @@ class Display
         $style            = 'update';
         $this->text_style = 'fg=white';
 
-        $string           = '';
-        $current[$tag]    = '';
+        $string        = '';
+        $current[$tag] = '';
         if (\array_key_exists('currentTags', $fileinfo)) {
             $current          = $fileinfo['currentTags'];
             $this->text_style = 'current';
@@ -289,7 +276,7 @@ class Display
         return $string;
     }
 
-    private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
+    private function UpdateTagBlockDisplay($tag, $fileinfo): ?string
     {
         // utminfo(func_get_args());
 

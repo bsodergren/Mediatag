@@ -5,15 +5,16 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\Helper\MediaCommand;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Metatags\Artist;
-use Mediatag\Traits\Callables\ProcessCallbacks;
-use Mediatag\Traits\ExecArgs;
-use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
-use Symfony\Component\Process\Exception\ProcessSignaledException;
+use Mediatag\Core\Mediatag;
+use Mediatag\Traits\preview;
+use Mediatag\Traits\ExecArgs;
+use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Core\Helper\MediaCommand;
 use Symfony\Component\Process\Process;
+use Mediatag\Traits\Callables\ProcessCallbacks;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Process\Exception\ProcessSignaledException;
 
 class MediatagExec
 {
@@ -158,7 +159,7 @@ class MediatagExec
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        // utmdump($this->runCommand);
+        Mediatag::$log->info("Command to Run {0}",[$this->runCommand]);
         $this->preview();
         $this->test();
 

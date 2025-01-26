@@ -299,7 +299,7 @@ class StorageDB extends Storage
         if (\is_array($videoBlockInfo)) {
             $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
             Mediatag::$Display->VideoInfoSection->writeln($videoBlockInfo);
-            //  Mediatag::$Display->VideoInfoSection->writeln("");
+            Mediatag::$Display->VideoInfoSection->writeln("");
         }
     }
 }

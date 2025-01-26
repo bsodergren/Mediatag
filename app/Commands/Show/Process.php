@@ -5,16 +5,15 @@
 
 namespace Mediatag\Commands\Show;
 
+use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Modules\Display\ShowDisplay;
-use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Process extends Mediatag
 {
     use Helper;
+    use MediaExecute;
 
     public $VideoData;
 
@@ -41,32 +40,24 @@ class Process extends Mediatag
             'createPlaylist' => null,
         ],
     ];
+    protected $useFuncs = ['addMeta'] ;
 
     public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
-    {
-        // utminfo(func_get_args());
-
+    {      
         parent::boot($input, $output);
-        // parent::$Display              = new ShowDisplay($output);
     }
 
     public function __call($m, $a)
     {
-        // utminfo(func_get_args());
-
-        // UTMlog::logger('call', $m);
 
         return null;
     }
 
     public function exec($option = null)
     {
-        // utminfo(func_get_args());
-
-        // $meta = new metaReader($this->videoData);
-        // return $meta->getTagArray();
+      
         $this->VideoList = parent::getVideoArray();
-        // UTMlog::logger('Video List', \count($this->VideoList));
+      
     }
 
     public function print()

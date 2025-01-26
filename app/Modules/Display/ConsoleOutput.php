@@ -34,6 +34,11 @@ class ConsoleOutput
         $this->output    = $output;
         $this->io        = new SymfonyStyle($input, $output);
         $this->formatter = new FormatterHelper();
+
+        $this->output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
+        $this->output->getFormatter()->setStyle('current', new OutputFormatterStyle('magenta'));
+        $this->output->getFormatter()->setStyle('update', new OutputFormatterStyle('bright-green'));
+
         $this->output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
         $this->output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
         $this->output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
@@ -42,51 +47,10 @@ class ConsoleOutput
         $this->output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
     }
 
-
-    public function __call($method,$args)
+    public function __call($method, $args)
     {
+        // Mediatag::$log->info("Called {0} in ConsoleOutput",[$method]);
+        // utmdd($args);
         $this->io->$method($args);
-    }
-    public function debug($text)
-    {
-        // utminfo(func_get_args());
-
-        $formattedLine = $this->io->getErrorStyle()->info($text);
-    }
-
-    public function info(...$args)
-    {
-        // utminfo(func_get_args());
-
-        $this->io->definitionList(...$args);
-    }
-
-    public function error($text)
-    {
-        // utminfo(func_get_args());
-
-        $this->writeln($text, 'error');
-    }
-
-    public function write($text, $style = null)
-    {
-        // utminfo(func_get_args());
-
-        if (null !== $style) {
-            $text = '<' . $style . '>' . $text . '</' . $style . '>';
-        }
-
-        $this->output->write($text);
-    }
-
-    public function writeln($text, $style = null)
-    {
-        // utminfo(func_get_args());
-
-        if (null !== $style) {
-            $text = '<' . $style . '>' . $text . '</' . $style . '>';
-        }
-
-        $this->output->writeln($text);
     }
 }

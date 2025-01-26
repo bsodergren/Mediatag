@@ -5,24 +5,28 @@
 
 namespace Mediatag\Commands\Db;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
-use Mediatag\Modules\Database\DbMap;
+use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Nette\Utils\FileSystem as nFileSystem;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Traits\Translate;
+use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
     use Helper;
     use Lang;
-    use Translate;
+    use MediaExecute;
     use MediaProcess;
+    use Translate;
+
+    protected $useFuncs = ['addMeta'];
 
     public $db_array = [];
 
@@ -46,28 +50,21 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-       
-      
         'markers'      => ['execMarkers' => null],
-       
+
         'update'       => ['execUpdate' => 'default'],
-       
+
         'json'         => ['getJson' => null],
     ];
 
     private $count;
     public object $DbMap;
     private $thumb;
-
     private $vinfo;
 
-    public function __construct(InputInterface $input, OutputInterface $output, $file = null)
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
-        
-            parent::boot($input, $output);
-
-        
-
+        parent::boot($input, $output);
     }
 
     public function init()
@@ -75,13 +72,12 @@ class Process extends Mediatag
         // utminfo(func_get_args());
 
         $file_array  = parent::$SearchArray;
-        $this->DbMap = new DbMap();
+       // $this->DbMap = new DbMap();
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
-
                 [$keep,$move] = VideoInfo::compareDupes($this->file_array[$key], $file);
 
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
@@ -107,8 +103,6 @@ class Process extends Mediatag
         // utmdd( $this->db_array  );
         return $this;
     }
-
-  
 
     public function exec($option = null)
     {

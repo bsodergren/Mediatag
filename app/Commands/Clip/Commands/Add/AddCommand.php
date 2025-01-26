@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'add', description: 'add Markers to video file')]
 final class AddCommand extends MediaCommand
 {
-    use MediaExecute;
+     
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = false;
 

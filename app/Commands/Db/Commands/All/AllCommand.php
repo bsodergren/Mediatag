@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'all', description: 'Update all DB Info')]
 final class AllCommand extends MediaCommand
 {
-    use MediaExecute;
+     
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = false;
 

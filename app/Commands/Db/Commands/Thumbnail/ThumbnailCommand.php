@@ -13,7 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'thumbnail', description: 'Add files to Database')]
 final class ThumbnailCommand extends MediaCommand
 {
-    use MediaExecute;
+     
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = true;
     public $command = [

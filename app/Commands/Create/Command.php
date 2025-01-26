@@ -21,7 +21,7 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 final class Command extends MediaCommand
 {
     use Lang;
-    use MediaExecute;
+     
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 

@@ -29,7 +29,7 @@ use Symfony\Component\Console\Exception\ExceptionInterface;
 class MediaCommand extends MediaDoctrineCommand
 {
     use Lang;
-    use MediaExecute;
+    //  
     use MediaLibrary;
     use Translate;
 
@@ -45,44 +45,22 @@ class MediaCommand extends MediaDoctrineCommand
     private bool $ignoreValidationErrors = false;
 
     private ?\Closure $code = null;
+    public static $optionArg = [];
 
-    public $logger;
-
-
-    public function __construct(  )
-    {
-
-        
-      
-        parent::__construct();
-        //     self::$logger = $logger;
-    }
+    // public function __construct()
+    // {
+    //     parent::__construct();
+    // }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Mediatag::$ProcessHelper = $this->getHelper('process');
-        // utmdd( $this->getHelperSet());
-
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-        ];
-
-        $formatLevelMap = [
-            LogLevel::CRITICAL => ConsoleLogger::ERROR,
-            LogLevel::DEBUG    => ConsoleLogger::INFO,
-        ];
-        
-        $this->logger = new ConsoleLogger($output,$verbosityLevelMap,$formatLevelMap);
-      
-
-
 
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();
-
             return Command::SUCCESS;
         }
+        Mediatag::$log->debug("Command Class {cls}",["cls" => $output]);
 
         $class     = static::class;
         $arguments = $input->getArguments();
@@ -136,10 +114,12 @@ class MediaCommand extends MediaDoctrineCommand
     {
         // utminfo();
 
-        self::$Console = new ConsoleOutput($output, $input);
+        // self::$Console = new ConsoleOutput($output, $input);
+        Mediatag::$log = new MediaLogger($output,$this->getName());
 
         // add the application arguments and options
         $this->mergeApplicationDefinition();
+
 
         // bind the input against the command specific arguments/options
         try {
@@ -185,7 +165,9 @@ class MediaCommand extends MediaDoctrineCommand
             utmdd($this->code);
             $statusCode = ($this->code)($input, $output);
         } else {
+
             $statusCode = $this->execute($input, $output);
+
 
             //  stopwatch();
 
@@ -202,15 +184,18 @@ class MediaCommand extends MediaDoctrineCommand
         // utminfo();
         $className = static::class;
         Option::init($input);
-        UtmStopWatch::init($input, $output);
         if (null !== Option::getValue('path', true)) {
             $path = Option::getValue('path', true);
             chdir($path);
         }
+
         $this->getLibrary($className::USE_LIBRARY);
+
+        Mediatag::$log->info("Init vars {library}",["library"=>__LIBRARY__]);
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
+
     }
 
     protected function loadDirs()
@@ -222,4 +207,17 @@ class MediaCommand extends MediaDoctrineCommand
             }
         }
     }
+
+   
+
+    public static function getProcessClass()
+    {
+        $className = static::class;
+        $pathInfo = explode("\\",$className);
+        $pathInfo = array_slice($pathInfo,0,3);
+        array_push($pathInfo,"Process");
+        $className = implode("\\",$pathInfo);
+        return $className;
+    }
+
 }

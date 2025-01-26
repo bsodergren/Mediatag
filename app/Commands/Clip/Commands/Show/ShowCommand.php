@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'show', description: 'list available filters')]
 final class ShowCommand extends MediaCommand
 {
-    // use MediaExecute;
+    //  
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 

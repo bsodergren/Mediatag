@@ -5,7 +5,6 @@
 
 namespace Mediatag\Commands\Show;
 
-use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -17,7 +16,6 @@ const NAME        = 'show';
 final class Command extends MediaCommand
 {
     use Lang;
-    use MediaExecute;
 
     public const USE_LIBRARY = true;
 }

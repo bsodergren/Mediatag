@@ -22,7 +22,7 @@ use Mediatag\Core\Helper\MediaExecute;
 final class Command extends MediaCommand
 {
     use Lang;
-    use MediaExecute;
+     
 
     public const CMD_NAME        = NAME;
     public const CMD_DESCRIPTION = DESCRIPTION;

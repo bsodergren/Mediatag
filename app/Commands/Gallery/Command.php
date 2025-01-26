@@ -16,6 +16,6 @@ const NAME        = 'Gallery';
 final class Command extends MediaCommand
 {
     use Lang;
-    use MediaExecute;
+     
     public const USE_LIBRARY = true;
 }

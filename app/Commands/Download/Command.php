@@ -14,7 +14,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class Command extends MediaCommand
 {
     use Lang;
-    use MediaExecute;
+     
 
     //  public const USE_LIBRARY     = false;
 }

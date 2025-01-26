@@ -20,10 +20,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
-class Process extends Mediatag implements LoggerAwareInterface
+class Process extends Mediatag 
 {
     use Helper;
-    use LoggerAwareTrait;
 
 
     public $VideoList = [];
@@ -40,46 +39,34 @@ class Process extends Mediatag implements LoggerAwareInterface
             'exec' => null,
             'execCmd'      => null,
         ],
-        
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-        // utminfo(func_get_args());
         if (Option::isTrue('colors')) {
            \define('SKIP_SEARCH', true);
         }
         parent::boot($input, $output);
 
-        //  utmdd(Command::$logger);
 
-        // parent::$Display              = new ShowDisplay($output);
     }
 
     public function __call($m, $a)
     {
-        // utminfo(func_get_args());
 
         return null;
     }
 
     public function exec($option = null)
     {
-        // utminfo(func_get_args());
+     
 
-        // Mediatag::$logger->info('Logging like a boss at ' . __FILE__ . ':' . __LINE__);
-
-        $path = getcwd();
-
-        // $finder          = new MediaFinder();
-        // $this->VideoList = $finder->Search($path, '/\.mov$/i');
-
-        // parent::$SearchArray = $this->VideoList;
         $this->VideoList     = parent::getVideoArray();
 
        
+        
         // //
         // foreach ($this->VideoList['file'] as $key => $videoInfo) {
         //     // $preview    = new VideoPreview();

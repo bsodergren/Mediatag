@@ -177,8 +177,10 @@ trait Helper
     {
 
         $fileList = $this->VideoList['file'];
-        $key = array_key_first($fileList);
-        $this->videoFile = $fileList[$key]['video_file'];
+
+        foreach($fileList as $key => $file){
+            $this->videoFile[] = $file['video_file'];
+        }
         $method = Option::getValue('cmd');
         $this->$method();
     }

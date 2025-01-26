@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'add', description: 'add a new Command')]
 final class AddCommand extends MediaCommand
 {
-    use MediaExecute;
+     
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 

@@ -108,7 +108,7 @@ trait Helper
         }
 
         // utmdd($this->Changed_Array);
-        Mediatag::$Console->info(
+        Mediatag::$Console->definitionList(
             'Database Updates',
             ['Files found'   => \count($this->file_array)],
             ['Deleted files' => \count($this->Deleted_Array)],

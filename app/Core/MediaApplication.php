@@ -5,17 +5,18 @@
 
 namespace Mediatag\Core;
 
+use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\DumpCompletionCommand;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\HelpCommand;
 use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\DumpCompletionCommand;
 
 class MediaApplication extends Application
 {
@@ -50,10 +51,16 @@ class MediaApplication extends Application
     // {
     //     return [new HelpCommand(), new ListCommand(), new DumpCompletionCommand()];
     // }
-    // public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
-    // {
+//     public function run(?InputInterface $input = null, ?OutputInterface $output = null): int
+//     {
 
-    //     // utminfo();
-    //     parent::run($input, $output);
-    // }
+//         // utminfo();
+//  utmdump(Option::getOptions());
+//         $code = parent::run($input, $output);
+
+       
+
+//         return $code;
+
+//     }
 }

@@ -135,7 +135,7 @@ class Youtube extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        $this->Console->writeln('<info> Downloading video URLs from playlist </info>');
+        Mediatag::$output->writeln('<info> Downloading video URLs from playlist </info>');
         $this->pltype = 'watchlater';
         if (str_contains($url, 'premium')) {
             $this->pltype = 'watchlaterPr';
@@ -149,7 +149,7 @@ class Youtube extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        $this->Console->writeln('<info> Downloaded new Playlist </info>');
+        Mediatag::$output->writeln('<info> Downloaded new Playlist </info>');
 
         $this->downloadFiles = $downloadFiles;
 

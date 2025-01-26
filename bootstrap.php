@@ -6,6 +6,7 @@
 use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Slim\Factory\AppFactory;
+use Mediatag\Core\MediaLogger;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Debug\UtmStopWatch;
 
@@ -32,20 +33,24 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 require_once __CONFIG_LIB__.'/path_constants.php';
 require_once __CONFIG_LIB__.'/variables.php';
 
-Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
-Debug::$AppTraceDir = __LOGFILE_DIR__;
-Debug::$PrettyLogs  = false;
-Debug::$RealTimeLog = false;
+
+MediaLogger::$USE_DEBUG = false;
+MediaLogger::$pruneLogs = false;
+
+// Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
+// Debug::$AppTraceDir = __LOGFILE_DIR__;
+// Debug::$PrettyLogs  = false;
+// Debug::$RealTimeLog = false;
 
 if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
-    // unlink(__LOGFILE_DIR__.'/phperror.log');
+    unlink(__LOGFILE_DIR__.'/phperror.log');
 }
-
 ini_set('error_log', __LOGFILE_DIR__.'/phperror.log');
-UtmStopWatch::$display  = false;
-UtmStopWatch::$writeNow = false;
-// define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
-TimerStart();
+
+// UtmStopWatch::$display  = false;
+// UtmStopWatch::$writeNow = false;
+// // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
+// TimerStart();
 // utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 // utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 

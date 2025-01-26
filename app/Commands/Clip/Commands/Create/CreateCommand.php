@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 class CreateCommand extends MediaCommand
 {
 
-    use MediaExecute;
+     
     public const USE_LIBRARY = true;
 
     public $command = [
