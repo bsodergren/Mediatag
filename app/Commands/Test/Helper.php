@@ -5,41 +5,86 @@
 
 namespace Mediatag\Commands\Test;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\ffmpeg;
-use Mediatag\Modules\VideoData\Duration;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Symfony\Component\Console\Helper\ProgressIndicator;
-use Mediatag\Commands\Test\Markers\Markers as MarkerHelper;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\Duration;
+use UTM\Utilities\Option;
 
 trait Helper
 {
-
     use HelperCmds;
+
+    public function mvOldFiles()
+    {
+        $sql = "SELECT *  FROM mediatag_video_file WHERE `video_key` IN ('64c3c368aa608',\n"
+
+        ."'64f5b13110be6',\n"
+        ."'64713464ad036',\n"
+        ."'ph5ba35f316a27a',\n"
+        ."'ph5c0fa1de97f01',\n"
+        ."'ph5c052e62d4a23',\n"
+        ."'ph5ca5f1441df6b',\n"
+        ."'ph5cde966665e7c',\n"
+        ."'ph5d44120f3ea6b',\n"
+        ."'ph5d52825f400c3',\n"
+        ."'ph5e01e8fe95407',\n"
+        ."'ph5e468b9a55f04',\n"
+        ."'ph5ec16e29d7dd5',\n"
+        ."'ph5ecf5425b6aa4',\n"
+        ."'ph5ed9db5918dc0',\n"
+        ."'ph5efdb5ac8f26c',\n"
+        ."'ph5f31eefb1525e',\n"
+        ."'ph5f51e462bebd6',\n"
+        ."'ph5fc0f2bf66e98',\n"
+        ."'ph59f82fd31e4d2',\n"
+        ."'ph59f83b0d745b1',\n"
+        ."'ph59f832451c4ca',\n"
+        ."'ph60d02a7da57d2',\n"
+        ."'ph62b04e41183d0',\n"
+        ."'ph62c6d20fbf254',\n"
+        ."'ph62dad25479d07',\n"
+        ."'ph605f88c08e961',\n"
+        ."'ph617bbb9baa501',\n"
+        ."'ph5703a540748d8',\n"
+        ."'ph5703bf1661e26',\n"
+        ."'ph6128c02330165',\n"
+        ."'ph61160ade8fd6b',\n"
+        ."'ph611609b41034e') ORDER BY `video_key` DESC;";
+
+        $result = Mediatag::$dbconn->query($sql);
+        foreach ($result as $row) {
+            $filename = $row['fullpath'].\DIRECTORY_SEPARATOR.$row['filename'];
+            if (file_exists($filename)) {
+                $new_path = str_replace('/XXX/Pornhub', '/XXX/OldPH', $row['fullpath']);
+                (new Filesystem())->mkdir($new_path);
+                $new_name = $new_path.\DIRECTORY_SEPARATOR.$row['filename'];
+
+                (new Filesystem())->rename($filename, $new_name, true);
+            }
+            // utmdd($filename,$new_name);
+        }
+    }
 
     public function colors()
     {
         $colors = [
-            'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray', 
-            'bright-red', 'bright-green', 'bright-yellow', 'bright-blue', 'bright-magenta', 'bright-cyan' , 'bright-white'
+            'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray',
+            'bright-red', 'bright-green', 'bright-yellow', 'bright-blue', 'bright-magenta', 'bright-cyan', 'bright-white',
         ];
 
-        foreach($colors as $color){
-            $text = "<fg=".$color.">".$color."</>";
-            $text .= " <fg=".$color.";options=bold> bold ".$color."</>";
-            $text .= " <fg=".$color.";options=underscore> underscore ".$color."</>";
-            $text .= " <fg=".$color.";options=blink> blink ".$color."</>";
-            $text .= " <fg=".$color.";options=reverse> Reverse ".$color."</>";
+        foreach ($colors as $color) {
+            $text = '<fg='.$color.'>'.$color.'</>';
+            $text .= ' <fg='.$color.';options=bold> bold '.$color.'</>';
+            $text .= ' <fg='.$color.';options=underscore> underscore '.$color.'</>';
+            $text .= ' <fg='.$color.';options=blink> blink '.$color.'</>';
+            $text .= ' <fg='.$color.';options=reverse> Reverse '.$color.'</>';
 
-
-            mediatag::$output->writeln($text);
+            Mediatag::$output->writeln($text);
         }
 
         return true;
     }
-    
+
     public function t1($val, $min, $max)
     {
         // utminfo(func_get_args());
@@ -172,18 +217,14 @@ trait Helper
         $this->mvFiles($video_array);
     }
 
-
     public function execCmd()
     {
-
         $fileList = $this->VideoList['file'];
 
-        foreach($fileList as $key => $file){
+        foreach ($fileList as $key => $file) {
             $this->videoFile[] = $file['video_file'];
         }
         $method = Option::getValue('cmd');
         $this->$method();
     }
-
-
 }

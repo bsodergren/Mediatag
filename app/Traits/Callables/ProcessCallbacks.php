@@ -181,19 +181,19 @@ trait ProcessCallbacks
             case str_contains($buffer, 'private.'):
 
                 $outputText = $this->error($buffer, $line_id, 'private');
-                // $this->updateIdList(PlaylistProcess::DISABLED);
+                $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
             case str_contains($buffer, 'restriction'):
                 $outputText = $this->error($buffer, $line_id, 'is restricted ');
-                // $this->updateIdList(PlaylistProcess::DISABLED);
+                $this->updateIdList(PlaylistProcess::DISABLED);
                 break;
 
             case str_contains($buffer, 'disabled'):
 
                 $outputText = $this->error($buffer, $line_id, ' has been disabled ');
-                // $this->updateIdList(PlaylistProcess::DISABLED);
+                $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 
@@ -201,9 +201,9 @@ trait ProcessCallbacks
 
                 $outputText = $this->error($buffer, $line_id, 'NOT FOUND');
 
-                $this->premiumIds[] = $this->key;
+                // $this->premiumIds[] = $this->key;
 
-                // $this->updateIdList(PlaylistProcess::DISABLED);
+                $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
 

@@ -5,14 +5,14 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 // use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use UTM\Utilities\Option;
 
 // use Symfony\Component\Filesystem\Filesystem;
 
@@ -121,19 +121,22 @@ class Process extends Mediatag
         // utminfo(func_get_args());
 
         \define('SKIP_SEARCH', true);
-        parent::boot($input, $output);
-        
-        $this->setupFormat();
-        $this->setupDb();
 
         if (null === $file) {
             $file = Option::getValue('playlist');
         }
-        $this->playlist = $file;
-        
+        $this->playlist = $file[0];
+        // utmdd($this->playlist);
+
+
+        parent::boot($input, $output,$file);
+
+        $this->setupFormat();
+        $this->setupDb();
+
+
         if (!is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
     }
-
 }

@@ -127,7 +127,6 @@ class Youtube extends MediatagExec
         }
 
         $playlist_opt = ['-a', $this->playlist];
-
         return array_merge($options, $playlist_opt);
     }
 

@@ -18,6 +18,10 @@ trait MediaLibrary
         $curent_dir = getcwd();
         // UTMlog::logger('Current Directory', $curent_dir);
         if (false === $exit) {
+            if (!\defined('__LIBRARY__')) {
+                \define('__LIBRARY__', false);
+            }
+
             return;
         }
         $in_directory = (new Filesystem())->makePathRelative($curent_dir, __PLEX_HOME__);

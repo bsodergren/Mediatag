@@ -5,15 +5,15 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-// use Nette\Utils\FileSystem as NetteFile;
-use Mediatag\Modules\Filesystem\MediaFinder as Finder;
 use Nette\Utils\Strings;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Youtube;
+// use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
@@ -110,7 +110,7 @@ trait Helper
                 foreach ($idList as $v => $key) {
                     $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
                 }
-                
+
                 Filesystem::writeFile(self::MISSING_PLAYLIST, $file_string);
             }
         }

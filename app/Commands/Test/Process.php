@@ -39,6 +39,7 @@ class Process extends Mediatag
             'exec' => null,
             'execCmd'      => null,
         ],
+        'move' => ['mvOldFiles'=>null]
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';

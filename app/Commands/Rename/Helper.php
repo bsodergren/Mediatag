@@ -213,8 +213,8 @@ trait Helper
                     $text[] = ['New Path' => $video_path];
 
                     $infoMsg = array_merge($message, $text);
-
-                    Mediatag::$Console->info(...$infoMsg);
+// utmdd($infoMsg);
+                   Mediatag::$Console->table($infoMsg);
                 }
             } else {
                 if (!Option::isTrue('test')) {

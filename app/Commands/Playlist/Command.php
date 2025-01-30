@@ -5,8 +5,6 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use Mediatag\Core\Mediatag;
-
 const DESCRIPTION = 'download PH Playlist';
 const NAME        = 'playlist';
 
@@ -15,23 +13,20 @@ use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
-use Mediatag\Core\Helper\MediaExecute;
 
 #[AsCommand(name: NAME, description: DESCRIPTION)]
 final class Command extends MediaCommand
 {
     use Lang;
-     
 
     public const CMD_NAME        = NAME;
     public const CMD_DESCRIPTION = DESCRIPTION;
-    // public const USE_LIBRARY     = false;
+    public const USE_LIBRARY     = false;
+    public const SKIP_SEARCH     = true;
     public $process;
 
     protected $db;
 
-    
     public $command = [
         'missing'           => [
             // 'exec'        => null,
@@ -72,7 +67,6 @@ final class Command extends MediaCommand
         ],
     ];
 
-
     public function handleSignal(int $signal): void
     {
         // utminfo(func_get_args());
@@ -87,7 +81,7 @@ final class Command extends MediaCommand
         }
     }
 
-    /**
+    /*
      * Method execute.
      *
      * @param InputInterface  $input  [explicite description]
@@ -97,7 +91,6 @@ final class Command extends MediaCommand
     // {
     //     // utminfo(func_get_args());
 
-    
     //     parent::execute($input, $output);
 
     //     return SymCommand::SUCCESS;

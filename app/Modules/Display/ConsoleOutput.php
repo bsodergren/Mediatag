@@ -50,7 +50,19 @@ class ConsoleOutput
     public function __call($method, $args)
     {
         // Mediatag::$log->info("Called {0} in ConsoleOutput",[$method]);
-        // utmdd($args);
-        $this->io->$method($args);
+        //  utmdd([$method,$args]);
+        $this->io->$method(...$args);
     }
+
+public function table($args)
+{
+    $header = $args[0];
+    unset($args[0]);
+    // utmdd($args);
+
+
+    $this->io->table([$header],$args);
+
+}
+
 }

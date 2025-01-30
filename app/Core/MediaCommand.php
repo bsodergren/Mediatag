@@ -5,31 +5,21 @@
 
 namespace Mediatag\Core;
 
-
-use Psr\Log\LogLevel;
-use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
-use Psr\Log\LoggerInterface;
-use Mediatag\Core\MediaLogger;
-use Mediatag\Traits\Translate;
-use Mediatag\Traits\MediaLibrary;
-use UTM\Utilities\Debug\UtmStopWatch;
-use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Modules\Display\ConsoleOutput;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\HttpKernel\Log\Logger;
+use Mediatag\Traits\MediaLibrary;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-
-
-use Symfony\Component\Console\Logger\ConsoleLogger;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use UTM\Utilities\Option;
 
 class MediaCommand extends MediaDoctrineCommand
 {
     use Lang;
-    //  
+
     use MediaLibrary;
     use Translate;
 
@@ -44,7 +34,7 @@ class MediaCommand extends MediaDoctrineCommand
 
     private bool $ignoreValidationErrors = false;
 
-    private ?\Closure $code = null;
+    private ?\Closure $code  = null;
     public static $optionArg = [];
 
     // public function __construct()
@@ -58,9 +48,10 @@ class MediaCommand extends MediaDoctrineCommand
 
         if (Option::istrue('trunc')) {
             Mediatag::$dbconn->truncate();
+
             return Command::SUCCESS;
         }
-        Mediatag::$log->debug("Command Class {cls}",["cls" => $output]);
+        Mediatag::$log->debug('Command Class {cls}', ['cls' => $output]);
 
         $class     = static::class;
         $arguments = $input->getArguments();
@@ -73,14 +64,15 @@ class MediaCommand extends MediaDoctrineCommand
             }
         }
 
-        $class   = self::getProcessClass();
-        $Process = new $class(...array_merge([$input, $output], self::$optionArg));
+        $class = self::getProcessClass();
+
+        $Process = new $class($input, $output, self::$optionArg);
+        // utmdd($class);
 
         // if($Process->commandList === null){
         $Process->commandList = array_merge($Process->commandList, $this->command);
         // }
         $method = 'process';
-
         if (\array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
@@ -115,11 +107,10 @@ class MediaCommand extends MediaDoctrineCommand
         // utminfo();
 
         // self::$Console = new ConsoleOutput($output, $input);
-        Mediatag::$log = new MediaLogger($output,$this->getName());
+        Mediatag::$log = new MediaLogger($output, $this->getName());
 
         // add the application arguments and options
         $this->mergeApplicationDefinition();
-
 
         // bind the input against the command specific arguments/options
         try {
@@ -165,9 +156,7 @@ class MediaCommand extends MediaDoctrineCommand
             utmdd($this->code);
             $statusCode = ($this->code)($input, $output);
         } else {
-
             $statusCode = $this->execute($input, $output);
-
 
             //  stopwatch();
 
@@ -191,11 +180,10 @@ class MediaCommand extends MediaDoctrineCommand
 
         $this->getLibrary($className::USE_LIBRARY);
 
-        Mediatag::$log->info("Init vars {library}",["library"=>__LIBRARY__]);
+        Mediatag::$log->info('Init vars {library}', ['library'=>__LIBRARY__]);
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
-
     }
 
     protected function loadDirs()
@@ -208,16 +196,14 @@ class MediaCommand extends MediaDoctrineCommand
         }
     }
 
-   
-
     public static function getProcessClass()
     {
-        $className = static::class;
-        $pathInfo = explode("\\",$className);
-        $pathInfo = array_slice($pathInfo,0,3);
-        array_push($pathInfo,"Process");
-        $className = implode("\\",$pathInfo);
+        $className  = static::class;
+        $pathInfo   = explode('\\', $className);
+        $pathInfo   = \array_slice($pathInfo, 0, 3);
+        $pathInfo[] = 'Process';
+        $className  = implode('\\', $pathInfo);
+
         return $className;
     }
-
 }

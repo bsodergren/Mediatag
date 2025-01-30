@@ -19,7 +19,7 @@ class Process extends Mediatag
     use Helper;
     use UpdateHelper;
     use MediaProcess;
-     
+    use MediaExecute;
 
     public $defaultCommands = [
         'exec' => null,
@@ -41,7 +41,7 @@ class Process extends Mediatag
             'prunedirs'   => null,
         ],
     ];
-
+    protected $useFuncs = ['addMeta','setupMap'] ;
     public $genrePath       = [];
 
     private $searchChars    = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
