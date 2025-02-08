@@ -32,6 +32,8 @@ class ScriptWriter
      */
     public $update = __APP_HOME__.'/bin/mediaupdate';
 
+    public $ffmpeg = CONFIG['FFMPEG_CMD'];
+
     /**
      * db.
      *
@@ -39,7 +41,7 @@ class ScriptWriter
      */
     public $db  = __APP_HOME__.'/bin/mediadb';
     public $map = __APP_HOME__.'/bin/mediamap';
-
+    public $clip = __APP_HOME__.'/bin/mediaclip';
     /**
      * script.
      */
@@ -122,6 +124,8 @@ EOD;
         }
 
         $this->script_command .= $run_cmd.$eol.\PHP_EOL;
+
+        // utmdd($this->script_command);
     }
 
     /**

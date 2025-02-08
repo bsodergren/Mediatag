@@ -11,6 +11,7 @@ use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Traits\Callables\ProcessCallbacks;
 use Mediatag\Utilities\Chooser;
+use Mediatag\Utilities\ScriptWriter;
 use Mhor\MediaInfo\MediaInfo;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem;
@@ -29,7 +30,7 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner', '-nostdin' , '-threads', '4'];// , '-loglevel', 'debug'];
+    public $ffmpegArgs = ['-y', '-hide_banner', '-nostdin', '-threads', '4']; // , '-loglevel', 'debug'];
 
     public $ffmpeg_log   = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
     public $currentFrame = 0;
@@ -89,7 +90,23 @@ trait MediaFFmpeg
         //     }
         // });
         // utmdump(   $process->getCommandLine());
-        // utmdd($process->getCommandLine());
+
+        if (Option::isTrue('output')) {
+            $cmd      = $process->getCommandLine();
+            $cmdArray = str_getcsv($cmd,' ',"'");
+            unset($cmdArray[0]);
+            // $this->MergedName
+           foreach($cmdArray as $k => $value){
+                $cmdArray[$k]  = "'".$value."'";
+           }           
+
+            $obj = new ScriptWriter(str_replace(' ', '_', $this->MergedName).'.sh', __CURRENT_DIRECTORY__);
+            $obj->addCmd('ffmpeg', $cmdArray);
+            // utmdd($obj);
+            $obj->write();
+            return true;
+        }
+
         $process->Run($callback);
 
         // $process->start();
@@ -212,9 +229,10 @@ trait MediaFFmpeg
 
     public function createCompilation($files, $ClipName, $name)
     {
-        $duration       = Option::getValue('dur', true, 3);
-        $type           = Option::getValue('type');
-        $this->clipName = $ClipName;
+        $duration         = Option::getValue('dur', true, 3);
+        $type             = Option::getValue('type');
+        $this->MergedName = $name;
+        $this->clipName   = $ClipName;
 
         $fileCount = \count($files);
         Mediatag::$output->writeln('<info>Merging '.$fileCount.' files</info>');

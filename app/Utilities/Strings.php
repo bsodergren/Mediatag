@@ -5,24 +5,27 @@
 
 namespace Mediatag\Utilities;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 
 class Strings extends \Nette\Utils\Strings
 {
     private static $dumpString = '';
-    public static function map($value, $fromLow, $fromHigh, $toLow, $toHigh) {
-        $fromRange = $fromHigh - $fromLow;
-        $toRange = $toHigh - $toLow;
+
+    public static function map($value, $fromLow, $fromHigh, $toLow, $toHigh)
+    {
+        $fromRange   = $fromHigh - $fromLow;
+        $toRange     = $toHigh     - $toLow;
         $scaleFactor = $toRange / $fromRange;
-    
+
         // Re-zero the value within the from range
         $tmpValue = $value - $fromLow;
         // Rescale the value to the to range
         $tmpValue *= $scaleFactor;
+
         // Re-zero back to the to range
         return $tmpValue + $toLow;
     }
+
     public static function videoDuration($duration)
     {
         // utminfo(func_get_args());
@@ -32,9 +35,9 @@ class Strings extends \Nette\Utils\Strings
 
         $minutes = round((float) $seconds / 60 % 60);
 
-        $sec     = round($seconds % 60);
+        $sec = round($seconds % 60);
 
-        return sprintf('%02d:%02d:%02d', $hours, $minutes, $sec);
+        return \sprintf('%02d:%02d:%02d', $hours, $minutes, $sec);
     }
 
     public static function clean($text)
@@ -62,21 +65,21 @@ class Strings extends \Nette\Utils\Strings
             return $filename;
         }
 
-        $fileInfo  = pathinfo($filename);
-        $filename  = $fileInfo['filename'];
+        $fileInfo = pathinfo($filename);
+        $filename = $fileInfo['filename'];
 
         if (str_contains($filename, $video_key)) {
-            $filename  = str_replace('-' . $video_key, '', $fileInfo['filename']);
-            $video_key = '-' . $video_key;
+            $filename  = str_replace('-'.$video_key, '', $fileInfo['filename']);
+            $video_key = '-'.$video_key;
         } else {
             $video_key = '';
         }
 
-        $fileExt   = $fileInfo['extension'];
+        $fileExt = $fileInfo['extension'];
 
-        $filename  = self::cleanSpecialChars($filename, true);
+        $filename = self::cleanSpecialChars($filename, true);
 
-        return $filename . $video_key . '.' . $fileExt;
+        return $filename.$video_key.'.'.$fileExt;
     }
 
     public static function truncateString($string, $maxlength, $ellipsis = false, $reverse = false)
@@ -86,8 +89,8 @@ class Strings extends \Nette\Utils\Strings
         if (mb_strlen($string) <= $maxlength) {
             return $string;
         }
-        $color_length    = 0;
-        $color_close     = '';
+        $color_length = 0;
+        $color_close  = '';
         if (str_contains($string, "\033[0m")) {
             $string       = str_replace("\033[0m", '', $string);
             $color_length = mb_strlen("\033[0m");
@@ -104,9 +107,9 @@ class Strings extends \Nette\Utils\Strings
 
         $ellipsis_length = mb_strlen($ellipsis);
 
-        $maxlength       = $maxlength - $ellipsis_length - $color_length;
+        $maxlength = $maxlength - $ellipsis_length - $color_length;
 
-        return trim(mb_substr($string, 0, $maxlength)) . $ellipsis . $color_close;
+        return trim(mb_substr($string, 0, $maxlength)).$ellipsis.$color_close;
     }
 
     public static function showStatus($done, $total, $size = 30, $label = '')
@@ -122,7 +125,7 @@ class Strings extends \Nette\Utils\Strings
 
         //  static $start_time;
 
-        $label      = self::truncateString($label, 45, true);
+        $label = self::truncateString($label, 45, true);
 
         // if we go over our bound, just ignore it
         if ($done > $total) {
@@ -134,16 +137,16 @@ class Strings extends \Nette\Utils\Strings
         //   if(empty($start_time)) $start_time=time();
         //   $now = time();
 
-        $perc       = (float) ($done / $total);
+        $perc = (float) ($done / $total);
 
-        $bar        = floor($perc * $size);
+        $bar = floor($perc * $size);
 
-        $status_bar = "\r[" . $label;
-        $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
+        $status_bar = "\r[".$label;
+        $status_bar .= ' '.number_format($done).'/'.number_format($total).' ';
 
-        $str_len    = \strlen($status_bar);
+        $str_len = \strlen($status_bar);
         $size -= $str_len;
-        $bar        = floor($perc * $size);
+        $bar = floor($perc * $size);
         if ($bar < 1) {
             $bar = 0;
         }
@@ -155,7 +158,7 @@ class Strings extends \Nette\Utils\Strings
             $status_bar .= '=';
         }
 
-        $disp       = number_format($perc * 100, 0);
+        $disp = number_format($perc * 100, 0);
 
         $status_bar .= "] {$disp}%";
         echo $status_bar;
@@ -192,11 +195,11 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if (! $array) {
+        if (!$array) {
             return '';
         }
 
-        return $before . implode("{$after}{$separator}{$before}", $array) . $after;
+        return $before.implode("{$after}{$separator}{$before}", $array).$after;
     }
 
     public static function translate($text, $sep = '_')
@@ -220,8 +223,7 @@ class Strings extends \Nette\Utils\Strings
             $special_chars      = array_merge($special_chars, $file_special_chars);
         }
 
-
-        $text               = str_replace('é', 'e', $text);
+        $text = str_replace('é', 'e', $text);
         foreach (str_split($text) as $char) {
             if (\ord($char) > 125) {
                 $str[] = ' ';
@@ -230,18 +232,18 @@ class Strings extends \Nette\Utils\Strings
             }
         }
 
-        $text               = implode('', $str);
+        $text = implode('', $str);
 
         if (true === $file) {
             $text = strtolower($text);
         }
 
-        $text               = str_replace($special_chars, '', $text);
-        $special_chars      = ['(', ')', '~'];
-        $text               = str_replace($special_chars, ' ', $text);
-        $text               = str_replace(['%20', '+'], '-', $text);
-        $text               = preg_replace('/[\r\n\t ]+/', '_', $text);
-        $text               = str_replace('_', ' ', $text);
+        $text          = str_replace($special_chars, '', $text);
+        $special_chars = ['(', ')', '~'];
+        $text          = str_replace($special_chars, ' ', $text);
+        $text          = str_replace(['%20', '+'], '-', $text);
+        $text          = preg_replace('/[\r\n\t ]+/', '_', $text);
+        $text          = str_replace('_', ' ', $text);
         if (true === $file) {
             $text = ucwords($text);
             $text = str_replace(' ', '_', $text);
@@ -250,7 +252,7 @@ class Strings extends \Nette\Utils\Strings
             $text = str_replace(' ', '-', $text);
         }
 
-        $text               = str_replace('___', '_', $text);
+        $text = str_replace('___', '_', $text);
 
         return trim($text, '.-_');
     }
@@ -259,18 +261,76 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
+        return str_replace(__PLEX_HOME__.\DIRECTORY_SEPARATOR.__LIBRARY__.\DIRECTORY_SEPARATOR, '', $filename);
     }
 
     public static function StudioName($name, $forward = true)
     {
-        if ($forward === true) {
+        if (true === $forward) {
             $name = str_replace('1000', 'Thousand', $name);
             $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
             $name = str_replace('TwentyFirst', '21st', $name);
             $name = str_replace('Thousand', '1000', $name);
         }
+
         return $name;
+    }
+
+    public static function str_putcsv($array, $delimiter = ',', $enclosure = '"', $terminator = "\n")
+    {
+        // First convert associative array to numeric indexed array
+
+        foreach ($array as $key => $value) {
+            $workArray[] = $value;
+        }
+
+        $returnString = '';                 // Initialize return string
+
+        $arraySize = \count($workArray);     // Get size of array
+
+        for ($i = 0; $i < $arraySize; ++$i) {
+            // Nested array, process nest item
+
+            if (\is_array($workArray[$i])) {
+                $returnString .= self::str_putcsv($workArray[$i], $delimiter, $enclosure, $terminator);
+            } else {
+                switch (\gettype($workArray[$i])) {
+                    // Manually set some strings
+
+                    case 'NULL':     $_spFormat = '';
+                        break;
+
+                    case 'boolean':  $_spFormat = (true == $workArray[$i]) ? 'true' : 'false';
+                        break;
+
+                        // Make sure sprintf has a good datatype to work with
+
+                    case 'integer':  $_spFormat = '%i';
+                        break;
+
+                    case 'double':   $_spFormat = '%0.2f';
+                        break;
+
+                    case 'string':   $_spFormat = '%s';
+                        break;
+
+                        // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
+
+                    case 'object':
+                    case 'resource':
+                    default:         $_spFormat = '';
+                        break;
+                }
+
+                $returnString .= \sprintf('%2$s'.$_spFormat.'%2$s', $workArray[$i], $enclosure);
+
+                $returnString .= ($i < ($arraySize - 1)) ? $delimiter : $terminator;
+            }
+        }
+
+        // Done the workload, return the output information
+
+        return $returnString;
     }
 }
