@@ -89,6 +89,8 @@ class Title extends TagBuilder
         }
         // UTMlog::Logger('after', $titleText);
 
+        Mediatag::$log->notice("CleanTitle '{title}'",['title'=>$titleText]);
+
         return $titleText;
     }
 }

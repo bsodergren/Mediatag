@@ -5,8 +5,8 @@
 
 use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
-use Slim\Factory\AppFactory;
 use Mediatag\Core\MediaLogger;
+use Slim\Factory\AppFactory;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Debug\UtmStopWatch;
 
@@ -32,7 +32,6 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
 require_once __CONFIG_LIB__.'/path_constants.php';
 require_once __CONFIG_LIB__.'/variables.php';
-
 
 MediaLogger::$USE_DEBUG = false;
 MediaLogger::$pruneLogs = false;

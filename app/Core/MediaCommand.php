@@ -51,10 +51,12 @@ class MediaCommand extends MediaDoctrineCommand
 
             return Command::SUCCESS;
         }
+
         Mediatag::$log->debug('Command Class {cls}', ['cls' => $output]);
 
         $class     = static::class;
         $arguments = $input->getArguments();
+
 
         if (\count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
@@ -65,14 +67,22 @@ class MediaCommand extends MediaDoctrineCommand
         }
 
         $class = self::getProcessClass();
+        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments'=>$arguments,
+        'class'=>$class]);
+
 
         $Process = new $class($input, $output, self::$optionArg);
-        // utmdd($class);
 
+        // utmdd($class);
+     Mediatag::$log->info('Command arguments {Process} for {command}', ['Process'=>$Process->commandList,
+        'command'=>$this->command]);
         // if($Process->commandList === null){
         $Process->commandList = array_merge($Process->commandList, $this->command);
+
         // }
         $method = 'process';
+       
+
         if (\array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }

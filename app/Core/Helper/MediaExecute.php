@@ -58,24 +58,32 @@ trait MediaExecute
         if (!\defined('TITLE_REPLACE_MAP')) {
             $this->getTitleMap('TITLE_REPLACE_MAP', Mediatag::$Storage->getTitleMap());
         }
+        if (!\defined('ARTIST_MAP')) {
+            $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
+        }
+
       
     }
 
     
     public function setupMap()
     {
+        Mediatag::$log->notice('setupMap');
+
         if (!\defined('ARTIST_MAP')) {
-            $this->getArtistMap('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
+            $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
 
         if (!\defined('IGNORE_NAME_MAP')) {
-            $this->getArtistMap('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
+            $this->mapArtist('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
         }
 
     }
 
     public function getTitleMap($constant, $file)
     {
+        Mediatag::$log->notice('getTitleMap');
+
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
 
         if (\is_string($file)) {
@@ -99,4 +107,37 @@ trait MediaExecute
             \define($constant, $nameArray);
         }
     }
+
+
+
+    public function mapArtist($constant, $file)
+    {
+        // utminfo(func_get_args());
+
+        $replacement = null;
+        if (\is_string($file)) {
+            if (is_file($file)) {
+                $artistList = file_get_contents($file);
+
+                $artistMap = explode("\n", $artistList);
+            }
+        } else {
+            $artistMap = $file;
+        }
+
+        foreach ($artistMap as $key => $nameArray) {
+            if (\is_array($nameArray)) {
+                $replacement = trim($nameArray[1]);
+                $replacement = str_replace(' ', '_', $replacement);
+
+                $name      = trim($nameArray[0]);
+                $name      = str_replace(' ', '_', $name);
+                $nameMap[] = ['name' => strtolower($name), 'replacement' => $replacement];
+            } else {
+                $nameMap[] = strtolower(str_replace(' ', '_', $nameArray));
+            }
+        }
+        \define($constant, $nameMap);
+    }
+
 }

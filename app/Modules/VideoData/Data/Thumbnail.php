@@ -67,7 +67,9 @@ class Thumbnail extends VideoData
         if (!file_exists($img_file)) {
             (new Filesystem())->mkdir($img_location);
             $ffprobe  = FFProbe::create();
-            $duration = $ffprobe->format($this->video_file)->get('duration');
+            $duration = $ffprobe->streams($this->video_file)->videos()->first()->get('duration');
+
+            // utmdump($this->video_file,$ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));
 
             $time = '00:01:00.00';
 
@@ -82,6 +84,8 @@ class Thumbnail extends VideoData
                 $time = '00:00:01.00';
             }
             $time = self::videoDuration($duration, 10);
+
+            //utmdd($duration,$time);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
             $action = $this->newText;

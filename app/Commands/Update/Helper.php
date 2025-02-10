@@ -61,36 +61,7 @@ trait Helper
         return $value;
     }
 
-    public function getArtistMap($constant, $file)
-    {
-        // utminfo(func_get_args());
-
-        $replacement = null;
-        if (\is_string($file)) {
-            if (is_file($file)) {
-                $artistList = file_get_contents($file);
-
-                $artistMap = explode("\n", $artistList);
-            }
-        } else {
-            $artistMap = $file;
-        }
-
-        foreach ($artistMap as $key => $nameArray) {
-            if (\is_array($nameArray)) {
-                $replacement = trim($nameArray[1]);
-                $replacement = str_replace(' ', '_', $replacement);
-
-                $name      = trim($nameArray[0]);
-                $name      = str_replace(' ', '_', $name);
-                $nameMap[] = ['name' => strtolower($name), 'replacement' => $replacement];
-            } else {
-                $nameMap[] = strtolower(str_replace(' ', '_', $nameArray));
-            }
-        }
-        \define($constant, $nameMap);
-    }
-
+   
     public function clearMeta($options = [])
     {
         // utminfo(func_get_args());

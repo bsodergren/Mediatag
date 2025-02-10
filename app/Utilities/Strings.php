@@ -5,6 +5,7 @@
 
 namespace Mediatag\Utilities;
 
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 
 class Strings extends \Nette\Utils\Strings
@@ -61,10 +62,12 @@ class Strings extends \Nette\Utils\Strings
 
         $video_key = File::File($filename, 'videokey');
 
-        if (str_starts_with($video_key, 'x')) {
-            return $filename;
-        }
+//         if (str_starts_with($video_key, 'x')) {
+//             utmdd($filename);
 
+//             return $filename;
+//         }
+// utmdd(__METHOD__);
         $fileInfo = pathinfo($filename);
         $filename = $fileInfo['filename'];
 
@@ -212,31 +215,50 @@ class Strings extends \Nette\Utils\Strings
     private static function cleanSpecialChars($text, $file = false)
     {
         // utminfo(func_get_args());
+        Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
 
         $file_special_chars = [];
         $special_chars      = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
-            "'", '"', '&', '$', '#', '*', '|', '`', '!', '{', '}',
-            '%', '’', '«', '»', '”', '“', \chr(0)];
+             '"', '&', '$', '#', '*', '|', '`', '!', '{', '}',
+            '%',  '«', '»', '”', '“', \chr(0)];
 
         if (true === $file) {
+
             $file_special_chars = ['.', ';', ','];
-            $special_chars      = array_merge($special_chars, $file_special_chars);
+            
+        } else {
+            $file_special_chars = ['’', "'"];
+
+           
+        }
+        $special_chars      = array_merge($special_chars, $file_special_chars);
+        $text = str_replace('é', 'e', $text);
+
+        if (true === $file) {
+            $text = strtolower($text);
+            $text = str_replace(["’","'"], '', $text);
+            $text = str_replace($file_special_chars, '_', $text);
+            $text = str_replace('__', '_', $text);
+
+
         }
 
-        $text = str_replace('é', 'e', $text);
         foreach (str_split($text) as $char) {
+            // Mediatag::$log->notice('Character {char}, {ord}', ['char'=>$char,'ord'=>ord($char) ]);
             if (\ord($char) > 125) {
                 $str[] = ' ';
             } else {
                 $str[] = $char;
             }
+
         }
+       
 
         $text = implode('', $str);
+        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
 
-        if (true === $file) {
-            $text = strtolower($text);
-        }
+    
+        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
 
         $text          = str_replace($special_chars, '', $text);
         $special_chars = ['(', ')', '~'];
@@ -250,9 +272,12 @@ class Strings extends \Nette\Utils\Strings
             $text = str_replace('-', ' ', $text);
             $text = ucwords($text);
             $text = str_replace(' ', '-', $text);
+            $text = str_replace('___', '_', $text);
+
         }
 
-        $text = str_replace('___', '_', $text);
+        $text = str_replace('__', '_', $text);
+        Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
 
         return trim($text, '.-_');
     }

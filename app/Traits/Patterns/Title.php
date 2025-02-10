@@ -5,9 +5,10 @@
 
 namespace Mediatag\Traits\Patterns;
 
-use Mediatag\Modules\Executable\Javascript;
-use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Executable\Javascript;
 
 trait Title
 {
@@ -100,6 +101,11 @@ trait Title
 
                 //     return $parts;
                 // }
+
+                Mediatag::$log->notice("title '{title}' ",['title'=>$title]);
+if($title == ''){
+    return null;
+}
                 return str_replace('- ', '-', $title);
             }
         }

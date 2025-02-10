@@ -5,13 +5,14 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Utilities\ScriptWriter;
+use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
-use UTM\Utilities\Option;
+use Mediatag\Utilities\ScriptWriter;
+use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 
 include_once __DATA_MAPS__.'/StudioMap.php';
 
@@ -151,6 +152,8 @@ class Reader extends TagReader
 
         $getMethod = 'get'.ucfirst($method);
 
+        Mediatag::$log->notice("__call method =>'{method}' ",['method'=>$getMethod]);
+
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {
@@ -234,6 +237,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $res = $this->getFileTag('Title');
+
         if (false === $res) {
             return null;
         }
@@ -268,7 +272,9 @@ class Reader extends TagReader
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
         if (null !== $this->PatternObject) {
+
             $result = $this->PatternObject->{$method}();
+
             $use    = 1;
             //  } else {
             //     $result =  $this->{$method}();

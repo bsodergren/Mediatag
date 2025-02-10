@@ -5,21 +5,21 @@
 
 namespace Mediatag\Commands\Rename;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Utilities\Strings;
 use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Nette\Utils\FileSystem as nFileSystem;
-use Symfony\Component\Finder\Finder as SFinder;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\TagBuilder\DB\Reader as dbReader;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Utilities\Strings;
+use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Symfony\Component\Finder\Finder as SFinder;
+use UTM\Utilities\Option;
 
 trait Helper
 {
@@ -43,6 +43,9 @@ trait Helper
     public function moveStudios()
     {
         // utminfo(func_get_args());
+
+        utmdd('fasdfsd', $this->VideoList);
+
 
         $file_array = [];
         $tagConn    = new DbMap();
@@ -213,12 +216,11 @@ trait Helper
                     $text[] = ['New Path' => $video_path];
 
                     $infoMsg = array_merge($message, $text);
-// utmdd($infoMsg);
-                   Mediatag::$Console->table($infoMsg);
+                    // utmdd($infoMsg);
+                    Mediatag::$Console->table($infoMsg);
                 }
             } else {
                 if (!Option::isTrue('test')) {
-
                     [$newFile,$video_file] = VideoInfo::compareDupes($newFile, $video_file);
 
                     $dupePath = __PLEX_HOME__.'/Dupes/'.__LIBRARY__.'/'.$video_path;
@@ -233,14 +235,14 @@ trait Helper
                         }
                     }
                     // if (!file_exists($newFile)) {
-                    
+
                     (new SfSystem())->rename($video_file, $dupeFile, true);
-                    Mediatag::$output->writeln($video_file.PHP_EOL. $dupeFile);
+                    Mediatag::$output->writeln($video_file.\PHP_EOL.$dupeFile);
                     if (!file_exists($video_file)) {
-                        Mediatag::$output->writeln($newFile.PHP_EOL. $video_file);
+                        Mediatag::$output->writeln($newFile.\PHP_EOL.$video_file);
                         (new SfSystem())->rename($newFile, $video_file, false);
                     }
-                    
+
                     // utmdd([$video_file, $newFile, $dupeFile]);
                 }
                 Mediatag::$output->writeln($video_name.' is dup');
@@ -259,7 +261,7 @@ trait Helper
         foreach ($genreArray as $genre) {
             $genre = str_replace(' ', '_', $genre);
             $genre = strtolower($genre);
-            $res   = self::get($genre,$metadata['genre']);
+            $res   = self::get($genre, $metadata['genre']);
 
             // $results[$genre] = $res;
             $this->genrePath[$genre] = $res;
@@ -363,7 +365,7 @@ trait Helper
     public function renameVids($option = null)
     {
         // utminfo(func_get_args());
-
+        // utmdd([__METHOD__, Mediatag::$SearchArray]);
         foreach (Mediatag::$SearchArray as $key => $file) {
             $oldName = $file;
 
@@ -373,14 +375,18 @@ trait Helper
             $file      = $fileObj->getFilename($file);
 
             $newName = $this->cleanFilename($file);
-
-            //  utmdd([__METHOD__, $file, $newName, $oldName]);
+//  utmdd([__METHOD__, $oldName, $newName]);
             if (!str_starts_with($oldName, __PLEX_HOME__)) {
-                return 0;
+                continue;
             }
             if (!str_starts_with($newName, __PLEX_HOME__)) {
-                return 0;
+                continue;
             }
+            if (strtolower($newName) == strtolower($oldName)) {
+                Mediatag::$output->writeln('<comment> Skipping renaming file '.basename($oldName).'</>');
+                continue;
+            }
+            // ;
 
             $this->renameFile($oldName, $newName);
         }
@@ -395,7 +401,6 @@ trait Helper
         $file_name = basename($file);
         $file_dir  = \dirname($file);
         $file_name = Strings::cleanFileName($file_name);
-
         return $file_dir.'/'.$file_name;
     }
 
@@ -417,9 +422,11 @@ trait Helper
 
                 if (!Option::isTrue('test')) {
                     $color = 'fg=red';
+                //    utmdd([__METHOD__, $oldName, $newName]);
 
                     Filesystem::renameFile($oldName, $newName);
                 }
+                //  
                 if (true == $write) {
                     $message = 'Renaming file from <'.$color.'>'.basename($oldName).'</'.$color.'> to <'.$color.'>'.basename($newName).'</'.$color.'> ';
                     Mediatag::$output->writeln('<info>'.$message.'</info>');

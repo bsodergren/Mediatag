@@ -174,21 +174,24 @@ class TagReader
     public function getTagArray($clean = true)
     {
         // utminfo(func_get_args());
-Mediatag::$log->notice("Metatags {0}",[__META_TAGS__]);
         foreach (__META_TAGS__ as $tag) {
 
             $this->{$tag}();
+
+            
+
             if (\array_key_exists($tag, $this->tag_array)) {
+                Mediatag::$log->notice("Metatags {tag} => '{value}'",['tag'=>$tag,'value'=>$this->tag_array[$tag]]);
 
                 if (null !== $this->tag_array[$tag]) {
                     if (true === $clean) {
                         $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
-
                     }
                 }
             }
         }
 
+        Mediatag::$log->notice("Metatag '{value}'",['value'=>$this->tag_array]);
 
         return $this->tag_array;
     }

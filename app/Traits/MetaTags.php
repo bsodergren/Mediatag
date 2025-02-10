@@ -66,7 +66,7 @@ trait MetaTags
     public function cleanStudio($text): string
     {
         // utminfo(func_get_args());
-
+Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
         if (\is_array($text)) {
             $array = $text;
         } else {

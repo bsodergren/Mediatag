@@ -12,6 +12,8 @@ class Reader extends TagReader
 {
     public $input;
 
+    public $videoData;
+
     public $output;
 
     public $video_file;
@@ -34,6 +36,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
+        // $this->videoData = $videoData;
         $this->expandArray($videoData);
         $this->tag_array = $this->getvideoData($videoData);
     }
@@ -60,7 +63,7 @@ class Reader extends TagReader
     private function get($tag)
     {
         // utminfo(func_get_args());
-
+        // Mediatag::$log->notice('Getting tag info for {tag}', ['tag'=>$tag]);
         if (\array_key_exists($tag, $this->tag_array)) {
             if ('studio' == $tag) {
                 if (\array_key_exists('network', $this->tag_array)) {
@@ -68,7 +71,8 @@ class Reader extends TagReader
                 }
             }
 
-            return $this->tag_array[$tag];
+            $value = $this->tag_array[$tag];
+            return $value;
         }
 
         return null;
@@ -78,7 +82,17 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
+
+
+  $query      = "SELECT COALESCE (c.title,m.title) as title ,COALESCE (c.artist,m.artist) as artist ,
+  COALESCE (c.genre,m.genre) as genre ,COALESCE (c.studio,m.studio) as studio ,
+  COALESCE (c.network,m.network) as network , COALESCE (c.keyword,m.keyword) as keyword 
+  FROM  mediatag_video_metadata m LEFT JOIN mediatag_video_custom c on m.video_key=c.video_key WHERE m.video_key = '" . $key . "'";
+
+
+
+        //$query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
+        // utmdd($query);
 
         $result     = Mediatag::$dbconn->query($query);
         $info       = null;

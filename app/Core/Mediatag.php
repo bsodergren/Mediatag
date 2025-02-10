@@ -133,7 +133,7 @@ abstract class Mediatag extends MediaCommand
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
 
         $ClassCmds = $this->runCommand();
-
+        self::$log->debug('Running command {0}', [$this]);
         foreach ($ClassCmds as $cmd => $option) {
             if (method_exists($this, $cmd)) {
                 self::$log->notice('Running command {0}', [$cmd]);
@@ -185,9 +185,10 @@ abstract class Mediatag extends MediaCommand
     }
 
   
-    public function exec($option = null)
-    {
-    }
+    // public function exec($option = null)
+    // {
+    //     utmdd($this->VideoList);
+    // }
 
     public function print()
     {

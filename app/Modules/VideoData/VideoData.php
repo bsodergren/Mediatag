@@ -174,6 +174,6 @@ class VideoData
         $mins    = $hrs % 60;
         $hrs /= 60;
 
-        return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
+        return \sprintf('%02d:%02d:%02d.00', $hrs, $mins, $secs);
     }
 }

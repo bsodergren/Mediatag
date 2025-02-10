@@ -25,11 +25,9 @@ class Options extends MediaOptions
 
         return [
             ['depth', 'D', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_TITLE')],
-            ['move', 'm', InputOption::VALUE_NONE, Translate::text('L__TEST_MOVE_FILES')],
             ['genre', 'g', InputOption::VALUE_NONE, Translate::text('L__TEST_MOVE_FILES')],
             ['studio', 's', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_TITLE')],
             ['lowercase', 'l', InputOption::VALUE_NONE, Translate::text('L__RENAME_LOWER')],
-            ['rename', 'R', InputOption::VALUE_NONE, Translate::text('L__RENAME_RENAME')],
             ['trans', 't', InputOption::VALUE_REQUIRED, Translate::text('L__RENAME_TRANS')],
         ];
 
@@ -40,6 +38,6 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        return [$varName, InputArgument::OPTIONAL, Translate::text('L__PLAYLIST_NAME')];
+        return [$varName, InputArgument::OPTIONAL, $description];
     }
 }

@@ -18,6 +18,8 @@ final class AllCommand extends MediaCommand
 
     public $command = [
         'all'    => [
+            'init' => null,
+            'exec' => null,
             'execThumb'       => null,
             'execInfo'        => null,
             'execPreview'     => null,],

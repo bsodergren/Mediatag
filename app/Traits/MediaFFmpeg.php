@@ -6,20 +6,21 @@
 namespace Mediatag\Traits;
 
 use FFMpeg\FFMpeg;
+use Nette\Utils\Callback;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Traits\Callables\ProcessCallbacks;
+use Nette\Utils\FileSystem;
+use Mhor\MediaInfo\MediaInfo;
+use UTM\Bundle\Monolog\UTMLog;
+use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
-use Mhor\MediaInfo\MediaInfo;
-use Nette\Utils\Callback;
-use Nette\Utils\FileSystem;
+use Mediatag\Modules\Display\MediaBar;
+use Symfony\Component\Process\Process;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Traits\Callables\ProcessCallbacks;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Option;
 
 trait MediaFFmpeg
 {
@@ -77,7 +78,7 @@ trait MediaFFmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
-        // MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
+        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
 
         // utmdump($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
@@ -184,6 +185,20 @@ trait MediaFFmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
+
+//         $ffmpeg = FFMpeg::create([], Mediatag::$log);
+//         $video = $ffmpeg->open($video_file);
+        
+//         $frame = $video->frame(TimeCode::fromString($time) );
+//         $frame->save($thumbnail);
+// if(file_exists($thumbnail)){
+//     return true;
+// }
+
+// utmdd($thumbnail);
+    
+        //     $video  = $ffmpeg->open($videoFiles[0]);
+
         $cmdOptions = [
             '-ss', $time, '-i', $video_file, '-vf',
             'scale=320:240:force_original_aspect_ratio=decrease',

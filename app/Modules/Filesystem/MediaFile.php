@@ -5,9 +5,10 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use Mediatag\Traits\Callables\Callables;
-use Mediatag\Utilities\Strings;
 use Nette\Utils\Arrays;
+use Mediatag\Core\Mediatag;
+use Mediatag\Utilities\Strings;
+use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\FileSystem as NetteFile;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
@@ -70,6 +71,8 @@ class MediaFile
             'video_key'     => $this->videokey(),
             'video_library' => $this->library(),
         ];
+
+        Mediatag::$log->notice('Getting Video Data {video}', ['video'=>$this->video]);
 
         return $this->video;
     }
