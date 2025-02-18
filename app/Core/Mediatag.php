@@ -19,8 +19,7 @@ use UTM\Utilities\Option;
 
 abstract class Mediatag extends MediaCommand
 {
-
-    public $commandList        = [];
+    public $commandList = [];
 
     public static $SearchArray = [];
 
@@ -61,8 +60,6 @@ abstract class Mediatag extends MediaCommand
 
     public static $tmpText;
 
-  
-
     public static $ProcessHelper;
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
@@ -102,9 +99,8 @@ abstract class Mediatag extends MediaCommand
         self::$dbconn     = new StorageDB();
         self::$finder     = new Finder();
         self::$filesystem = new Filesystem();
-        self::$Storage = new Storage();
+        self::$Storage    = new Storage();
 
-        
         self::$log->notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
 
         self::$finder->defaultCmd = $this->command;
@@ -117,15 +113,14 @@ abstract class Mediatag extends MediaCommand
                 exit;
             }
         }
-        
-        if(isset($this->useFuncs)){
-            foreach($this->useFuncs as $method){
-                if(method_exists($this,$method)){
+
+        if (isset($this->useFuncs)) {
+            foreach ($this->useFuncs as $method) {
+                if (method_exists($this, $method)) {
                     $this->$method();
                 }
             }
         }
-        
     }
 
     public function process()
@@ -184,7 +179,6 @@ abstract class Mediatag extends MediaCommand
         return $this->videoArray;
     }
 
-  
     // public function exec($option = null)
     // {
     //     utmdd($this->VideoList);

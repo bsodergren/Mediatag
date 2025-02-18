@@ -44,11 +44,10 @@ class MediaCache
 
     public static function get($key)
     {
-
         if (true == Option::isTrue('nocache')) {
             return false;
         }
-        
+
         if ('' == CONFIG['USE_CACHE']) {
             return false;
         }
@@ -60,7 +59,6 @@ class MediaCache
 
     public static function put($key, $value)
     {
-
         return self::$stash->put($key, $value, self::$expire);
     }
 

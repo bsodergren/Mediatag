@@ -5,27 +5,26 @@
 
 namespace Mediatag\Core;
 
-use Stringable;
-use Psr\Log\LogLevel;
-use UTM\Utilities\Colors;
-use UTM\Utilities\Option;
-use Psr\Log\LoggerInterface;
-use UTM\Utilities\Debug\Debug;
 use Mediatag\Core\Helper\LogFormat;
-use UTM\Utilities\Debug\PrettyArray;
 use Psr\Log\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Stringable;
+use Symfony\Component\Console\Logger\ConsoleLogger;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
-use Symfony\Component\Console\Logger\ConsoleLogger;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use UTM\Utilities\Colors;
+use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Debug\PrettyArray;
 
 class MediaLogger extends ConsoleLogger implements LoggerInterface
 {
     use LogFormat;
 
-    public const INFO = 'info';
-    public const ERROR = 'error';
+    public const INFO   = 'info';
+    public const ERROR  = 'error';
     public const NOTICE = 'playlist';
 
     private $backtrace = '';
@@ -34,22 +33,22 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     public static $USE_DEBUG = false;
     public static $pruneLogs = false;
     private bool $errored    = false;
-private $colors;
+    private $colors;
     private $output;
     private $dumper;
     private $cloner;
     private $channel = 'default';
     private $logfile;
     // private $logfile;
-      private array $verbosityLevelMap = [
+    private array $verbosityLevelMap = [
         LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::ALERT => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::ERROR => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::WARNING => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::NOTICE => OutputInterface::VERBOSITY_VERBOSE,
-        LogLevel::INFO => OutputInterface::VERBOSITY_VERY_VERBOSE,
-        LogLevel::DEBUG => OutputInterface::VERBOSITY_DEBUG,
+        LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::CRITICAL  => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::ERROR     => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::NOTICE    => OutputInterface::VERBOSITY_VERBOSE,
+        LogLevel::INFO      => OutputInterface::VERBOSITY_VERY_VERBOSE,
+        LogLevel::DEBUG     => OutputInterface::VERBOSITY_DEBUG,
     ];
     private array $logVerbosityLevelMap = [
         // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
@@ -64,18 +63,15 @@ private $colors;
         // LogLevel::DEBUG     => OutputInterface::VERBOSITY_DEBUG,
     ];
 
-
-
-	private array $ColorLevelMap = [
-        LogLevel::DEBUG     => "cyan",
-		LogLevel::INFO     => "green",
-        LogLevel::NOTICE    => "blue",
+    private array $ColorLevelMap = [
+        LogLevel::DEBUG     => 'cyan',
+        LogLevel::INFO      => 'green',
+        LogLevel::NOTICE    => 'blue',
         LogLevel::ERROR     => 'red',
         LogLevel::CRITICAL  => 'orange',
-
     ];
 
-	private array $formatLevelMap = [
+    private array $formatLevelMap = [
         LogLevel::EMERGENCY => self::ERROR,
         LogLevel::ALERT     => self::ERROR,
         LogLevel::CRITICAL  => self::ERROR,
@@ -90,15 +86,15 @@ private $colors;
     {
         $this->channel = $channel;
 
-		$this->colors = new Colors();
+        $this->colors = new Colors();
         // $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
         // $this->formatLevelMap    = $formatLevelMap    + $this->formatLevelMap;
 
         // utmdump([$this->verbosityLevelMap, $this->formatLevelMap]);
-        parent::__construct($output  , $this->verbosityLevelMap, $this->formatLevelMap  );
-//        $log = new ConsoleLogger($output);//, $this->verbosityLevelMap, $this->formatLevelMap);
+        parent::__construct($output, $this->verbosityLevelMap, $this->formatLevelMap);
+        //        $log = new ConsoleLogger($output);//, $this->verbosityLevelMap, $this->formatLevelMap);
 
-// utmdd($this->verbosityLevelMap);
+        // utmdd($this->verbosityLevelMap);
         $this->dumper = new CliDumper();
         $this->cloner = new VarCloner();
         $this->output = $output;
@@ -116,7 +112,7 @@ private $colors;
         }
 
         if (true === self::$USE_DEBUG) {
-            $this->pruneLogFiles($this->debugLogFile(),'debug');
+            $this->pruneLogFiles($this->debugLogFile(), 'debug');
         }
 
         self::$logger = $this;
@@ -129,16 +125,16 @@ private $colors;
         // }
     }
 
-    public function pruneLogFiles($logfile,$level="info")
+    public function pruneLogFiles($logfile, $level = 'info')
     {
         if (file_exists($logfile)) {
             if (true === self::$pruneLogs) {
                 unlink($logfile);
             }
         }
-		$msg = $this->interpolate(PHP_EOL.'==================================='.PHP_EOL.' Running application {0}',  [__SCRIPT_NAME__]);
+        $msg = $this->interpolate(\PHP_EOL.'==================================='.\PHP_EOL.' Running application {0}', [__SCRIPT_NAME__]);
         $this->file(
-			$level,
+            $level,
             $msg);
     }
 
@@ -188,35 +184,30 @@ private $colors;
     // }
     public function debugLog($message, array $context = []): void
     {
+        $level = 'debug';
 
-		$level = 'debug';
+        $this->logFormat($level, $message, $context);
 
-		$this->logFormat($level,$message,$context);
-		
         $this->file($level, $message);
-
     }
 
-	private function LogFormat($level,$message,$context){
+    private function LogFormat($level, $message, $context)
+    {
+        $string = Colors::colorstring($this->interpolate($message, $context), $this->ColorLevelMap[$level]);
 
+        return \sprintf('[%1$s]:%2$s', $level, $string);
+    }
 
-		$string = Colors::colorstring($this->interpolate($message, $context),$this->ColorLevelMap[$level]);
-
-		return \sprintf('[%1$s]:%2$s', $level, $string);
-
-	}
-
-	private function ConsoleFormat($level,$message,$context){
+    private function ConsoleFormat($level, $message, $context)
+    {
         $command = self::tracePath(true);
 
         return \sprintf('[%1$s]:[<file>%2$s</file>]<%3$s> %4$s</%3$s>',
-        $level,
-        $command,
-         $this->formatLevelMap[$level],        
-           $this->interpolate($message, $context));
-
-	}
-
+            $level,
+            $command,
+            $this->formatLevelMap[$level],
+            $this->interpolate($message, $context));
+    }
 
     public function log($level, $message, array $context = []): void
     {
@@ -239,12 +230,11 @@ private $colors;
         // utmdump([$level, $output->getVerbosity(), $this->verbosityLevelMap[$level]]);
 
         if ($output->getVerbosity() >= $this->verbosityLevelMap[$level]) {
-            $output->writeln($this->ConsoleFormat($level,$message,$context));
+            $output->writeln($this->ConsoleFormat($level, $message, $context));
         }
 
-        
         if ($output->getVerbosity() >= $this->logVerbosityLevelMap[$level]) {
-            $this->file($level, $this->LogFormat($level,$message,$context));
+            $this->file($level, $this->LogFormat($level, $message, $context));
         }
     }
 

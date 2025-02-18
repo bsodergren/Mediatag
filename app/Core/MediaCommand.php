@@ -5,6 +5,8 @@
 
 namespace Mediatag\Core;
 
+use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
+use Mediatag\Core\Helper\CommandHelper;
 use Mediatag\Locales\Lang;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Traits\MediaLibrary;
@@ -13,13 +15,12 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
 
-class MediaCommand extends MediaDoctrineCommand
+class MediaCommand extends DoctrineCommand
 {
+    use CommandHelper;
     use Lang;
-
     use MediaLibrary;
     use Translate;
 
@@ -37,11 +38,6 @@ class MediaCommand extends MediaDoctrineCommand
     private ?\Closure $code  = null;
     public static $optionArg = [];
 
-    // public function __construct()
-    // {
-    //     parent::__construct();
-    // }
-
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         Mediatag::$ProcessHelper = $this->getHelper('process');
@@ -57,7 +53,6 @@ class MediaCommand extends MediaDoctrineCommand
         $class     = static::class;
         $arguments = $input->getArguments();
 
-
         if (\count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
 
@@ -67,21 +62,18 @@ class MediaCommand extends MediaDoctrineCommand
         }
 
         $class = self::getProcessClass();
-        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments'=>$arguments,
-        'class'=>$class]);
-
+        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments'=> $arguments,
+            'class'                                                                   => $class]);
 
         $Process = new $class($input, $output, self::$optionArg);
 
-        // utmdd($class);
-     Mediatag::$log->info('Command arguments {Process} for {command}', ['Process'=>$Process->commandList,
-        'command'=>$this->command]);
+        Mediatag::$log->info('Command arguments {Process} for {command}', ['Process'=> $Process->commandList,
+            'command'                                                               => $this->command]);
         // if($Process->commandList === null){
         $Process->commandList = array_merge($Process->commandList, $this->command);
 
         // }
         $method = 'process';
-       
 
         if (\array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
@@ -99,8 +91,6 @@ class MediaCommand extends MediaDoctrineCommand
 
     public function configure(): void
     {
-        // // utminfo(func_get_args());
-
         $child                      = static::class;
         MediaOptions::$callingClass = $child;
 
@@ -114,8 +104,6 @@ class MediaCommand extends MediaDoctrineCommand
 
     public function run(InputInterface $input, OutputInterface $output): int
     {
-        // utminfo();
-
         // self::$Console = new ConsoleOutput($output, $input);
         Mediatag::$log = new MediaLogger($output, $this->getName());
 
@@ -194,26 +182,5 @@ class MediaCommand extends MediaDoctrineCommand
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
-    }
-
-    protected function loadDirs()
-    {
-        $filesystem = new Filesystem();
-        foreach (__CREATE_DIRS__ as $dir) {
-            if (!is_dir($dir)) {
-                $filesystem->mkdir($dir);
-            }
-        }
-    }
-
-    public static function getProcessClass()
-    {
-        $className  = static::class;
-        $pathInfo   = explode('\\', $className);
-        $pathInfo   = \array_slice($pathInfo, 0, 3);
-        $pathInfo[] = 'Process';
-        $className  = implode('\\', $pathInfo);
-
-        return $className;
     }
 }

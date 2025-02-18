@@ -5,8 +5,8 @@
 
 namespace Mediatag\Core\Helper;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+use UTM\Utilities\Option;
 
 trait MediaExecute
 {
@@ -21,8 +21,6 @@ trait MediaExecute
 
     public function addMeta()
     {
-
-
         Mediatag::$log->notice('addMeta');
 
         foreach (Option::getOptions() as $option => $v) {
@@ -61,11 +59,8 @@ trait MediaExecute
         if (!\defined('ARTIST_MAP')) {
             $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
-
-      
     }
 
-    
     public function setupMap()
     {
         Mediatag::$log->notice('setupMap');
@@ -77,7 +72,6 @@ trait MediaExecute
         if (!\defined('IGNORE_NAME_MAP')) {
             $this->mapArtist('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
         }
-
     }
 
     public function getTitleMap($constant, $file)
@@ -108,8 +102,6 @@ trait MediaExecute
         }
     }
 
-
-
     public function mapArtist($constant, $file)
     {
         // utminfo(func_get_args());
@@ -139,5 +131,4 @@ trait MediaExecute
         }
         \define($constant, $nameMap);
     }
-
 }

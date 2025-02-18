@@ -9,8 +9,6 @@ declare(strict_types=1);
 
 namespace Mediatag\Core;
 
-use Mediatag\Core\Mediatag;
-
 /**
  * @property ?array  $db
  * @property ?string $environment
