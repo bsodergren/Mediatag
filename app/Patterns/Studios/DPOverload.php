@@ -5,13 +5,10 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Patterns\Studios\TwentyFirstSextury;
-
 class DPOverload extends TwentyFirstSextury
 {
     public $studio  = 'DP Overload';
-    public $network = "21st Sextury";
+    public $network = '21st Sextury';
     // public function __construct($object){
     //     parent::boot($this);
     //     parent::__construct($object);

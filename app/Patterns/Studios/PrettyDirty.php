@@ -12,6 +12,4 @@ const PRETTYDIRTY_REGEX_COMMON = '//i';
 class PrettyDirty extends Patterns
 {
     public $studio = 'Pretty Dirty';
-
-
 }

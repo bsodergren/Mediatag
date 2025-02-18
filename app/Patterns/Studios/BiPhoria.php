@@ -12,5 +12,4 @@ const BIPHORIA_REGEX_COMMON = '//i';
 class BiPhoria extends Patterns
 {
     public $studio = 'BiPhoria';
-
 }

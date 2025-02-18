@@ -5,9 +5,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Patterns\Studios\FantasyMassage;
-
 const NURUMASSAGE_REGEX_COMMON = '//i';
 
 class NuruMassage extends FantasyMassage
@@ -15,5 +12,4 @@ class NuruMassage extends FantasyMassage
     public $studio = 'Nuru Massage';
 
     public $network = 'Fantasy Massage';
-
 }

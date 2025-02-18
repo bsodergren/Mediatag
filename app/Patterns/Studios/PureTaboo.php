@@ -5,16 +5,15 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\Patterns;
 
 const PURETABOO_REGEX_COMMON = '/([a-zA-Z0-9\-]+)\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i';
 
 class PureTaboo extends Patterns
 {
-    public $studio       = "Pure Taboo";
+    public $studio = 'Pure Taboo';
 
-    public $regex        = [
+    public $regex = [
         'puretaboo' => [
             'artist' => [
                 'pattern'             => PURETABOO_REGEX_COMMON,
@@ -37,20 +36,20 @@ class PureTaboo extends Patterns
         ],
     ];
 
-    public $names_map    = [
-        'Annade Ville' => 'Anna De Ville'
-    //     'Mc Kenzie' => 'McKenzie',
-    //     'De Mer'    => 'DeMer',
-    //     'Gi Gi'     => 'GiGi',
-    //     'De Marco'  => 'DeMarco',
-    //     'A J A'     => 'AJ A',
+    public $names_map = [
+        'Annade Ville' => 'Anna De Ville',
+        //     'Mc Kenzie' => 'McKenzie',
+        //     'De Mer'    => 'DeMer',
+        //     'Gi Gi'     => 'GiGi',
+        //     'De Marco'  => 'DeMarco',
+        //     'A J A'     => 'AJ A',
     ];
 
     public $artist_match = [
-        'Annade Ville' => 'Anna De Ville'
+        'Annade Ville' => 'Anna De Ville',
 
-    //     'athena' => 'athena faris',
-    //     'jamie'  => 'jamie michelle',
+        //     'athena' => 'athena faris',
+        //     'jamie'  => 'jamie michelle',
     ];
 
     // public function getArtistTransform($artist_string, $delim = ', ')

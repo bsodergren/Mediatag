@@ -12,6 +12,4 @@ const SPIZOO_REGEX_COMMON = '//i';
 class Spizoo extends Patterns
 {
     public $studio = 'Spizoo';
-
-
 }

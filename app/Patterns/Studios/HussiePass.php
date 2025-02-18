@@ -12,5 +12,4 @@ const HUSSIEPASS_REGEX_COMMON = '//i';
 class HussiePass extends Patterns
 {
     public $studio = 'Hussie Pass';
-
 }

@@ -5,15 +5,13 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Patterns;
 
 const PORNWORLD_REGEX_COMMON = '/(FS[0-9]+|GP[0-9]+)?_?(.*)_([HDP0-9]+.mp4)/i';
 
 class PornWorld extends Patterns
 {
-    public $studio = "Porn World";
+    public $studio = 'Porn World';
     public $regex  = [
         'pornworld' => [
             'artist' => [
@@ -34,8 +32,6 @@ class PornWorld extends Patterns
     // {
     //     // utminfo(func_get_args());
 
-
-
     //     parent::__construct($object);
     //     parent::$StudioKey = $this->studio;
     // }
@@ -44,7 +40,7 @@ class PornWorld extends Patterns
     {
         // utminfo(func_get_args());
 
-        return str_replace(['La_','De_'], ['La','De'], $text);
+        return str_replace(['La_', 'De_'], ['La', 'De'], $text);
     }
 
     public function getArtistTransform($names, $delim = ', ')
@@ -53,7 +49,7 @@ class PornWorld extends Patterns
 
         $namesArray  = [];
         $names       = str_replace($this->getArtistDelim(), $delim, $names);
-        $names       = str_replace(['La_','De_'], ['La','De'], $names);
+        $names       = str_replace(['La_', 'De_'], ['La', 'De'], $names);
         $names_array = explode($delim, $names);
         $prev_name   = '';
         $skip        = false;
@@ -63,18 +59,16 @@ class PornWorld extends Patterns
 
             $aName = implode(' ', $parts);
 
-
             if (true === $this->ignoreArtist($aName)) {
                 continue;
             }
 
-            if ($skip === true) {
+            if (true === $skip) {
                 $skip = false;
 
                 continue;
             }
             if (true === $this->getArtistFullNames()) {
-
                 $name_key = strtolower($aName);
                 if (\array_key_exists($name_key, $this->artist_match)) {
                     $aName = $this->artist_match[$name_key];
@@ -82,10 +76,8 @@ class PornWorld extends Patterns
                     if ('' != $aName) {
                         $namesArray[] = $aName;
                         $skip         = true;
-
                     }
                 }
-
             } else {
                 $namesArray[] = $aName;
             }

@@ -5,19 +5,17 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Patterns\Studios\MileHighMedia;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\TagBuilder\TagBuilder;
+use Mediatag\Modules\TagBuilder\TagReader;
 
 const REALITYJUNKIES_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
 class RealityJunkies extends MileHighMedia
 {
-    public $studio    = 'Reality Junkies';
+    public $studio = 'Reality Junkies';
 
-    public $regex     = [
+    public $regex = [
         'realityjunkies' => [
             'artist' => [
                 'pattern'             => REALITYJUNKIES_REGEX_COMMON,
@@ -41,7 +39,7 @@ class RealityJunkies extends MileHighMedia
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
             if (0 != $success) {
-                if (! \array_key_exists($this->gettitleMatch(), $output_array)) {
+                if (!\array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
 
@@ -50,10 +48,10 @@ class RealityJunkies extends MileHighMedia
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid   = 'E' . $output_array[2];
-                $epi   = 'Scene ' . $output_array[3];
+                $vid = 'E'.$output_array[2];
+                $epi = 'Scene '.$output_array[3];
 
-                return ucwords($title) . ' ' . $vid . ' ' . $epi;
+                return ucwords($title).' '.$vid.' '.$epi;
             }
         }
 
@@ -73,20 +71,20 @@ class RealityJunkies extends MileHighMedia
     {
         // utminfo(func_get_args());
 
-        $filename     = basename($file);
+        $filename = basename($file);
 
-        $fs           = new File($file);
-        $videoData    = $fs->get();
-        $tagObj       = new TagReader();
+        $fs        = new File($file);
+        $videoData = $fs->get();
+        $tagObj    = new TagReader();
         $tagObj->loadVideo($videoData);
-        $tagBuilder   = new TagBuilder($videoData['video_key'], $tagObj);
+        $tagBuilder = new TagBuilder($videoData['video_key'], $tagObj);
 
         $videoInfo    = $tagBuilder->getTags($videoData);
         $artistName   = $videoInfo['currentTags']['artist'];
         $artistString = $this->artistTransform($artistName);
 
-        if (! str_contains($filename, $artistString)) {
-            $file = str_replace('_', '_' . $artistString . '_', $file);
+        if (!str_contains($filename, $artistString)) {
+            $file = str_replace('_', '_'.$artistString.'_', $file);
         }
 
         return $file;

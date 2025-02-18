@@ -5,14 +5,13 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class RealityKings extends Patterns
 {
-    public $studio          = 'Reality Kings';
+    public $studio = 'Reality Kings';
 
-    public $regex           = [
+    public $regex = [
         'realitykings' => [
             'studio' => [
                 'pattern' => '/^([a-zA-Z]{1,5})_.*/i',

@@ -5,9 +5,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Patterns\Studios\Nubiles;
-
 const MOMWANTSTOBREED_REGEX_COMMON = '//i';
 
 class MomWantsToBreed extends Nubiles
@@ -17,7 +14,6 @@ class MomWantsToBreed extends Nubiles
 
     // public $regex        = [
     //     'MomWantsToBreed' => [
-
 
     //         'title'  => [
     //             'pattern' => '/([a-zA-Z]+)_([a-zA-Z_]{1,})\_[0-9]{0,10}/i',

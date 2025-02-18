@@ -5,15 +5,13 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Patterns\Studios\AdultTime;
-
 const MODERNDAYSINS_REGEX_COMMON = '//i';
 
 class ModernDaySins extends AdultTime
 {
-    public $studio          = 'Modern Day Sins';
-    public $network         = 'Adult Time';
-    public $regex           = [
+    public $studio  = 'Modern Day Sins';
+    public $network = 'Adult Time';
+    public $regex   = [
         'moderndaysins' => [
             'artist' => [
                 'pattern'             => ADULTTIME_REGEX_COMMON,
@@ -27,7 +25,6 @@ class ModernDaySins extends AdultTime
                 'match'   => 2,
                 'delim'   => '_',
             ],
-
         ],
     ];
 }

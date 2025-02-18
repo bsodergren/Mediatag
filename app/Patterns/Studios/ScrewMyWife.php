@@ -12,6 +12,4 @@ const SCREWMYWIFE_REGEX_COMMON = '//i';
 class ScrewMyWife extends Patterns
 {
     public $studio = 'Screw My Wife';
-
-
 }

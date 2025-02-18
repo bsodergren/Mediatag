@@ -5,12 +5,9 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Patterns\Studios\BlowPass;
-
 class MommyBlowsBest extends BlowPass
 {
-    public $studio = 'Mommy Blows Best';
+    public $studio  = 'Mommy Blows Best';
     public $network = 'Blow Pass';
     // public function __construct($object)
     // {

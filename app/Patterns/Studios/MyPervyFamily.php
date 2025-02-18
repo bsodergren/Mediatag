@@ -12,5 +12,4 @@ const MYPERVYFAMILY_REGEX_COMMON = '//i';
 class MyPervyFamily extends Patterns
 {
     public $studio = 'My Pervy Family';
-
 }

@@ -5,18 +5,15 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Patterns\Studios\MileHighMedia;
-
 const DPMYWIFE_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)_?(.*)?\_[0-9pk]{1,5}.mp4/i';
 
 class DpMyWifeWithMe extends MileHighMedia
 {
-    public $studio    = 'Dp My Wife With Me';
+    public $studio = 'Dp My Wife With Me';
 
     // public $network = 'Mile High Media';
 
-    public $regex     = [
+    public $regex = [
         'dpmywifewithme' => [
             'artist' => [
                 'pattern'             => DPMYWIFE_REGEX_COMMON,

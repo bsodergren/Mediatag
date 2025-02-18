@@ -5,15 +5,12 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Patterns\Studios\MileHighMedia;
-
 const DOGHOUSEDIGITAL_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
 class DoghouseDigital extends MileHighMedia
 {
-    public $studio    = 'Doghouse Digital';
-    public $regex     = [
+    public $studio = 'Doghouse Digital';
+    public $regex  = [
         'doghousedigital' => [
             'artist' => [
                 'pattern'             => DOGHOUSEDIGITAL_REGEX_COMMON,
@@ -38,7 +35,7 @@ class DoghouseDigital extends MileHighMedia
             $success = preg_match($regex, $this->video_name, $output_array);
 
             if (0 != $success) {
-                if (! \array_key_exists($this->gettitleMatch(), $output_array)) {
+                if (!\array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
 
@@ -47,10 +44,10 @@ class DoghouseDigital extends MileHighMedia
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid   = 'E' . $output_array[2];
-                $epi   = 'Scene ' . $output_array[3];
+                $vid = 'E'.$output_array[2];
+                $epi = 'Scene '.$output_array[3];
 
-                return ucwords($title) . ' ' . $vid . ' ' . $epi;
+                return ucwords($title).' '.$vid.' '.$epi;
             }
         }
 

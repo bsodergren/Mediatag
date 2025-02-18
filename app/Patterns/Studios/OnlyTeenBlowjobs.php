@@ -5,9 +5,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Patterns\Studios\BlowPass;
-
 class OnlyTeenBlowjobs extends BlowPass
 {
     public $studio = 'Only Teen Blowjobs';

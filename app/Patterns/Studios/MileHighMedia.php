@@ -5,7 +5,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -18,7 +17,7 @@ class MileHighMedia extends Patterns
     public $studio;
     public $network = 'Mile High Media';
 
-    public $regex   = [
+    public $regex = [
         'milehighmedia' => [
             'artist' => [
                 'pattern'             => MILEHIGHMEDIA_REGEX_COMMON,
@@ -51,10 +50,10 @@ class MileHighMedia extends Patterns
                 if ('' == $output_array[2]) {
                     $output_array[2] = '01';
                 }
-                $vid   = 'E' . $output_array[2];
-                $epi   = 'Scene ' . $output_array[3];
+                $vid = 'E'.$output_array[2];
+                $epi = 'Scene '.$output_array[3];
 
-                return ucwords($title) . ' ' . $vid . ' ' . $epi;
+                return ucwords($title).' '.$vid.' '.$epi;
             }
         }
 

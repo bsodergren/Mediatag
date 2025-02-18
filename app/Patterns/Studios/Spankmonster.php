@@ -12,5 +12,4 @@ const SPANKMONSTER_REGEX_COMMON = '//i';
 class Spankmonster extends Patterns
 {
     public $studio = 'Spankmonster';
-
 }

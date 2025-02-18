@@ -5,14 +5,13 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\Patterns;
 
 class Bang extends Patterns
 {
-    public $studio          = 'Bang';
+    public $studio = 'Bang';
 
-    public $regex           = [
+    public $regex = [
         'bang' => [
             'artist' => [
                 'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',

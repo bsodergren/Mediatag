@@ -12,6 +12,4 @@ const TABOOHEAT_REGEX_COMMON = '//i';
 class TabooHeat extends Patterns
 {
     public $studio = 'Taboo Heat';
-
-
 }
