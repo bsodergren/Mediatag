@@ -13,7 +13,7 @@ use UTM\Utilities\Option;
 trait ShowHelper
 {
     public $cmdOptions = [
-        'filter' => ['cmd'=>'showTransitionType', 'desc'=>'Show all transition types'],
+        'filter'   => ['cmd'=>'showTransitionType', 'desc'=>'Show all transition types'],
         'playlist' => ['cmd'=>'showPlaylist', 'desc'=>'Show all playlist types'],
     ];
 
@@ -63,35 +63,26 @@ trait ShowHelper
         $table->render();
     }
 
-
     public function showPlaylist()
     {
-
         $this->getPlaylistVideos(17);
         Mediatag::$output->writeLn('<info> Nshow playlist name</info>');
-
     }
-
 
     public function getPlaylistVideos($playlist_id)
     {
+        $sql = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
+        from   '.__MYSQL_PLAYLIST_DATA__.' as d,
+        '.__MYSQL_VIDEO_FILE__.'  as v,
+        '.__MYSQL_PLAYLIST_VIDEOS__.' as p
 
-        $sql     = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
-        from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
-        ' . __MYSQL_VIDEO_FILE__ . '  as v,
-        ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p
-
-        where (p.playlist_id = ' . $playlist_id . ' and 
+        where (p.playlist_id = '.$playlist_id.' and
         p.playlist_video_id = v.id and
          d.id = p.playlist_id ) ORDER BY v.filename ASC';
 
-         $results = Mediatag::$dbconn->query($sql);
-         utmdd($results);
+        $results = Mediatag::$dbconn->query($sql);
+        utmdd($results);
+
         return $results;
     }
-
-
-
-
-
 }

@@ -43,9 +43,8 @@ class Process extends Mediatag
     public $VideoList = [];
 
     public $defaultCommands = [
-         'init' => null,
+        'init' => null,
         'exec' => null,
-       
     ];
 
     public $commandList = [
@@ -65,8 +64,7 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         \define('SKIP_SEARCH', true);
         parent::boot($input, $output);
-        parent::$dbconn      = new GalleryStorageDB($input, $output);
-
+        parent::$dbconn = new GalleryStorageDB($input, $output);
     }
 
     public function exec($option = null)
@@ -77,10 +75,9 @@ class Process extends Mediatag
         $this->changeDBEntry();
 
         $this->addDBEntry();
-        
-//         $this->VideoList     = parent::getVideoArray();
-//   utmdd($this->VideoList);
 
+        //         $this->VideoList     = parent::getVideoArray();
+        //   utmdd($this->VideoList);
     }
 
     public function init()
@@ -91,10 +88,9 @@ class Process extends Mediatag
         $finder          = new MediaFinder();
         $this->VideoList = $finder->Search($path, '/\.jpg|\.png|\.gif$/i');
 
-      
         parent::$SearchArray = $this->VideoList;
-        $file_array  = parent::$SearchArray;
-        $this->DbMap = new DbMap();
+        $file_array          = parent::$SearchArray;
+        $this->DbMap         = new DbMap();
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);

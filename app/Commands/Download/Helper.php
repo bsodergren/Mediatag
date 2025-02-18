@@ -17,20 +17,20 @@ use UTM\Utilities\Option;
 trait Helper
 {
     use MediaFFmpeg;
+
     public function convertVideos()
     {
         // utminfo(func_get_args());
 
         $file_array = [];
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mkv');
-       
 
         if (null === $file_array) {
             return 0;
         }
-         if (Option::isTrue('max')) {
-            $total = (int) Option::getValue('max') ;
-            $file_array = array_slice($file_array,0,$total);
+        if (Option::isTrue('max')) {
+            $total      = (int) Option::getValue('max');
+            $file_array = \array_slice($file_array, 0, $total);
         }
 
         $count = \count($file_array);
@@ -40,7 +40,7 @@ trait Helper
             $this->textSection->writeln('<info> Found '.$count.' files to convert</info>');
             foreach ($file_array as $k => $file) {
                 $this->textSection->write('<comment> Converting <info>'.basename($file, '.mkv').'</info>... </comment>');
-                $this->convertVideo($file,str_ireplace('.mkv', '.mp4', $file));
+                $this->convertVideo($file, str_ireplace('.mkv', '.mp4', $file));
                 $this->textSection->overwrite('<comment> finished </comment>');
             }
         }

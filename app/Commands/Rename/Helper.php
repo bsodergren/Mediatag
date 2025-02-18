@@ -10,7 +10,6 @@ use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
-use Mediatag\Modules\TagBuilder\DB\Reader as dbReader;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Mediatag\Utilities\Strings;
@@ -45,7 +44,6 @@ trait Helper
         // utminfo(func_get_args());
 
         // utmdd('fasdfsd', $this->VideoList);
-
 
         $file_array = [];
         $tagConn    = new DbMap();
@@ -375,7 +373,7 @@ trait Helper
             $file      = $fileObj->getFilename($file);
 
             $newName = $this->cleanFilename($file);
-//  utmdd([__METHOD__, $oldName, $newName]);
+            //  utmdd([__METHOD__, $oldName, $newName]);
             if (!str_starts_with($oldName, __PLEX_HOME__)) {
                 continue;
             }
@@ -401,6 +399,7 @@ trait Helper
         $file_name = basename($file);
         $file_dir  = \dirname($file);
         $file_name = Strings::cleanFileName($file_name);
+
         return $file_dir.'/'.$file_name;
     }
 
@@ -422,11 +421,11 @@ trait Helper
 
                 if (!Option::isTrue('test')) {
                     $color = 'fg=red';
-                //    utmdd([__METHOD__, $oldName, $newName]);
+                    //    utmdd([__METHOD__, $oldName, $newName]);
 
                     Filesystem::renameFile($oldName, $newName);
                 }
-                //  
+
                 if (true == $write) {
                     $message = 'Renaming file from <'.$color.'>'.basename($oldName).'</'.$color.'> to <'.$color.'>'.basename($newName).'</'.$color.'> ';
                     Mediatag::$output->writeln('<info>'.$message.'</info>');

@@ -5,16 +5,14 @@
 
 namespace Mediatag\Commands\Db\Commands\EmptyDB;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Question\Question;
+use UTM\Utilities\Option;
 
 trait Helper
 {
-
-
     public function execEmpty()
     {
         // utminfo(func_get_args());

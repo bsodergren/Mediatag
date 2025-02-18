@@ -57,15 +57,12 @@ class Process extends Mediatag
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         //        $this->backupDirectory = $file;
-        $this->backupDirectory = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR . $file;
-
+        $this->backupDirectory = __DB_BACKUP_ROOT__.\DIRECTORY_SEPARATOR.$file;
     }
 
     public function __call($m, $a)
     {
         // utminfo(func_get_args());
-
-
 
         return null;
     }

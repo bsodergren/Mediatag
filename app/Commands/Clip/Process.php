@@ -5,39 +5,34 @@
 
 namespace Mediatag\Commands\Clip;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Mediatag\Commands\Clip\Lang;
-use Mediatag\Commands\Clip\Helper;
-use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Modules\Display\ShowDisplay;
-
 use Mediatag\Commands\Clip\Commands\Add\AddHelper;
-use Symfony\Component\Console\Input\InputInterface;
-use Mediatag\Commands\Clip\Commands\Show\ShowHelper;
-use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Commands\Clip\Commands\Merge\MergeHelper;
 use Mediatag\Commands\Clip\Commands\Create\CreateHelper;
 use Mediatag\Commands\Clip\Commands\Delete\DeleteHelper;
+use Mediatag\Commands\Clip\Commands\Merge\MergeHelper;
+use Mediatag\Commands\Clip\Commands\Show\ShowHelper;
+use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
 class Process extends Mediatag
 {
+    use AddHelper;
+    use CreateHelper;
+    use DeleteHelper;
+
     use Helper;
     use Lang;
     use MediaProcess;
-
     use MergeHelper;
-    use CreateHelper;
-    use DeleteHelper;
-    use AddHelper;
     use ShowHelper;
 
     public $VideoList = [];
 
     public $defaultCommands = [
-       // 'exec' => null,
+        // 'exec' => null,
     ];
 
     // public $commandList = [
@@ -60,10 +55,8 @@ class Process extends Mediatag
     //     ],
     // ];
 
-
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-       
         parent::boot($input, $output);
         $this->setupFormat();
         $this->setupDb();

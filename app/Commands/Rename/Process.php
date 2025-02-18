@@ -5,19 +5,17 @@
 
 namespace Mediatag\Commands\Rename;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Commands\Rename\Helper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Modules\Database\Storage;
+use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Process extends Mediatag
 {
+    use Helper;
     use MediaExecute;
     use MediaProcess;
-    use Helper;
 
     public $VideoList;
 
@@ -32,9 +30,8 @@ class Process extends Mediatag
         'trans'     => [
             'translate' => true,
         ],
-       
     ];
-    protected $useFuncs = ['addMeta','setupMap'] ;
+    protected $useFuncs = ['addMeta', 'setupMap'];
     public $genrePath   = [];
 
     private $searchChars = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];

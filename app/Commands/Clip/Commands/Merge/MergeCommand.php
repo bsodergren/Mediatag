@@ -1,27 +1,30 @@
 <?php
-namespace Mediatag\Commands\Clip\Commands\Merge;
 /**
  * Command like Metatag writer for video files.
  */
 
+namespace Mediatag\Commands\Clip\Commands\Merge;
+
+/*
+ * Command like Metatag writer for video files.
+ */
 
 use Mediatag\Commands\Clip\Helper;
-use Mediatag\Core\MediaCommand;
 use Mediatag\Commands\Clip\Lang;
-use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'merge', description: 'Merge Command')]
-class MergeCommand extends MediaCommand 
+class MergeCommand extends MediaCommand
 {
     // use Lang;
-    //  
+    //
     // use Helper;
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'merge'    => ['mergeFiles' => null,],
+        'merge'    => ['mergeFiles' => null],
     ];
     // public $command = [
     //     'merge'           => [
@@ -36,6 +39,4 @@ class MergeCommand extends MediaCommand
     //     $list = $this->getfileList();
     //     utmdd($list);
     // }
-
-
 }

@@ -1,8 +1,11 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Commands\Db\Commands\Thumbnail;
 
 use Mediatag\Modules\VideoData\Data\Thumbnail;
-
 
 trait Helper
 {
@@ -15,5 +18,4 @@ trait Helper
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
     }
-    
 }

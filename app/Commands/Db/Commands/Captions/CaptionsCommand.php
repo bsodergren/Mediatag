@@ -19,7 +19,7 @@ final class CaptionsCommand extends MediaCommand
     ];
 
     public $defaultCommands = [
-      //  'init' => null,
-      //  'exec' => null,
+        //  'init' => null,
+        //  'exec' => null,
     ];
 }

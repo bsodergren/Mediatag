@@ -5,17 +5,12 @@
 
 namespace Mediatag\Commands\Watch;
 
-use Assess\Configuration;
-use Assess\Event\Event;
-use Assess\Event\EventType;
-use Assess\Watcher;
 use Mediatag\Bundle\Monitor\Monitor;
 use Mediatag\Bundle\Monitor\MonitorConfigurator;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\Display;
 use Mediatag\Modules\Display\MediaIndicator;
 use React\EventLoop\Loop;
-use Revolt\EventLoop;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process as execProcess;
@@ -52,8 +47,8 @@ class Process extends Mediatag
         $display = new Display(Mediatag::$output);
         //    self::$outCmd = $display->BarBottom;
 
-        self::$progressIndicator = new MediaIndicator("Top");
-        self::$progressIndicator3 = new MediaIndicator("second");
+        self::$progressIndicator  = new MediaIndicator('Top');
+        self::$progressIndicator3 = new MediaIndicator('second');
         self::$progressIndicator->startIndicator('watching folder '.__CURRENT_DIRECTORY__);
         self::$outLn  = $display->MetaBlockSection;
         self::$outCmd = $display->VideoInfoSection;
@@ -82,9 +77,9 @@ class Process extends Mediatag
             if (!str_contains($path, '-temp-')) {
                 // self::writeOut('file closed: ', dirname($path), 'update');
                 // sleep(2);
-                self::$progressIndicator3->startIndicator('Updating file '. \dirname($path));
+                self::$progressIndicator3->startIndicator('Updating file '.\dirname($path));
 
-//                self::writeOut('file closed: ', \dirname($path), 'update');
+                //                self::writeOut('file closed: ', \dirname($path), 'update');
                 $this->update($path);
 
                 $this->dbupdate();
@@ -95,7 +90,7 @@ class Process extends Mediatag
             }
         })
           ->on(Monitor::EV_CREATE, function ($path, $monitor) {
-            //   self::writeOut('File created: ', basename($path), 'info');
+              //   self::writeOut('File created: ', basename($path), 'info');
           })
           ->on(Monitor::EV_MODIFY, function ($path, $monitor) {
               // echo "modified:  $path\n";
@@ -105,8 +100,6 @@ class Process extends Mediatag
               self::writeOut('File deleted: ', basename($path), 'error');
           })
           ->run();
-
-       
     }
 
     public static function writeOut($type, $line, $style = 'info')
@@ -139,7 +132,6 @@ class Process extends Mediatag
                 self::cmdOut($buffer);
             } else {
                 self::$progressIndicator3->advance();
-
             }
         });
     }

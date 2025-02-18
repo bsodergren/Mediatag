@@ -17,11 +17,11 @@ class Process extends Mediatag
 
     public $VideoData;
 
-    public $missing     = [];
+    public $missing = [];
 
     public $meta;
 
-    public $VideoList   = [];
+    public $VideoList = [];
 
     public $commandList = [
         'missing'    => [
@@ -40,24 +40,21 @@ class Process extends Mediatag
             'createPlaylist' => null,
         ],
     ];
-    protected $useFuncs = ['addMeta'] ;
+    protected $useFuncs = ['addMeta'];
 
-    public function __construct(InputInterface $input = null, OutputInterface $output = null, $args = null)
-    {      
+    public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
+    {
         parent::boot($input, $output);
     }
 
     public function __call($m, $a)
     {
-
         return null;
     }
 
     public function exec($option = null)
     {
-      
         $this->VideoList = parent::getVideoArray();
-      
     }
 
     public function print()

@@ -1,8 +1,11 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Commands\Db\Commands\Preview;
 
 use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
-
 
 trait Helper
 {
@@ -16,5 +19,4 @@ trait Helper
 
         $this->obj->updateVideoData();
     }
-    
 }

@@ -5,7 +5,6 @@
 
 namespace Mediatag\Commands\Map;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
@@ -14,12 +13,13 @@ class Options extends MediaOptions
 {
     use Lang;
     use Translate;
-    public $options                          = ['Default' => false,'Meta' => false,'Test' => false,'Display' => true];
+    public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display' => true];
 
     public function Definitions()
     {
         // utminfo();
         Translate::$Class = __CLASS__;
+
         return [
             ['lang', 'l',  InputOption::VALUE_REQUIRED, Translate::text('L__MAP_LANG')],
             ['file', 'f',  InputOption::VALUE_REQUIRED, Translate::text('L__MAP_FILE')],
@@ -32,8 +32,8 @@ class Options extends MediaOptions
             ['genre', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_GENRE'), []],
             ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_KEYWORD'), []],
             ['list', '', InputOption::VALUE_REQUIRED, Translate::text('L__MAP_LIST')],
-            ['word','w', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_WORD'), []],
-            ['artistMap','M', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_WORD'), []],
+            ['word', 'w', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_WORD'), []],
+            ['artistMap', 'M', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__MAP_WORD'), []],
             ['break'],
 
             ['video', '', InputOption::VALUE_OPTIONAL, Translate::text('L__MAP_VIDEO')],
@@ -43,7 +43,6 @@ class Options extends MediaOptions
             ['empty', 'e', InputOption::VALUE_NONE, Translate::text('L__MAP_EMPTY')],
 
             ['break'],
-
         ];
     }
 }

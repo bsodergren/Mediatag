@@ -5,7 +5,6 @@
 
 namespace Mediatag\Commands\Show;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 

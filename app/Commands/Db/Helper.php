@@ -12,18 +12,12 @@ use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\VideoData\Data\Duration;
 use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Traits\Translate;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
-use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
 
 trait Helper
@@ -130,10 +124,6 @@ trait Helper
         ];
     }
 
-  
-
-   
-
     public function execMarkers()
     {
         // utminfo(func_get_args());
@@ -142,9 +132,6 @@ trait Helper
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
     }
-
-
-  
 
     public function checkClean()
     {
@@ -179,7 +166,6 @@ trait Helper
             $this->OutputText[] = "\t<fg=bright-cyan>".$this->thumb->getVideoText().'</> ';
         }
 
-       
         if ($exists == parent::$dbconn->videoExists($key, null, __MYSQL_VIDEO_INFO__)) {
             $this->vinfo->get($key, $video_file);
             $this->OutputText[] = "\t<fg=cyan>".$this->vinfo->getVideoText().'</> ';
@@ -211,20 +197,19 @@ trait Helper
         $total     = \count($this->New_Array);
 
         if ($total > 0) {
-            $idx                          = $total;
-            $progressbar                  = new MediaBar($total, 'three', $barWidth);
+            $idx         = $total;
+            $progressbar = new MediaBar($total, 'three', $barWidth);
             MediaBar::addFormat('<fg=bright-magenta>%message:13s%</> %current:4s%/%max:4s% [%bar%] %percent:3s%%');
 
-
-            $progressbar->setMsgFormat()->setMessage("All Files",'message')->newbar();
+            $progressbar->setMsgFormat()->setMessage('All Files', 'message')->newbar();
             $progressbar->start();
             parent::$dbconn->progressbar1 = $progressbar;
 
             foreach ($this->New_Array as $video_key => $video_file) {
                 $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key);
-                $idx--;
+                --$idx;
             }
-            $idx = $total;
+            $idx                      = $total;
             parent::$dbconn->MultiIDX = $total;
 
             $data_array = array_chunk($videoDataArray, $chunkSize);
@@ -234,16 +219,16 @@ trait Helper
             if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
                 parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
-                $progressbar2->setMsgFormat()->setMessage( $chunks ." Chunks",'message')->newbar()->start();
+                $progressbar2->setMsgFormat()->setMessage($chunks.' Chunks', 'message')->newbar()->start();
             }
 
             foreach ($data_array as $data) {
                 if ($total > $chunkSize) {
-                    parent::$dbconn->progressbar->setMsgFormat()->setMessage("Chunk pcs",'message')->newbar()->start();
+                    parent::$dbconn->progressbar->setMsgFormat()->setMessage('Chunk pcs', 'message')->newbar()->start();
                     $progressbar2->advance();
                 }
 
-               parent::$dbconn->addDBArray($data);
+                parent::$dbconn->addDBArray($data);
             }
             $this->updateNow();
         }
@@ -328,7 +313,8 @@ trait Helper
         }
     }
 
-    public function TestMethod(){
+    public function TestMethod()
+    {
         utmdd(__METHOD__);
     }
 }

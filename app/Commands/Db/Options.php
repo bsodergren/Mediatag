@@ -5,10 +5,10 @@
 
 namespace Mediatag\Commands\Db;
 
-use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
-use Symfony\Component\Console\Input\InputOption;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class Options extends MediaOptions
 {

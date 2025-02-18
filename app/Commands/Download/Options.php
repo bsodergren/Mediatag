@@ -13,13 +13,14 @@ class Options extends MediaOptions
 {
     use Lang;
     use Translate;
-        public $options = ['Default', 'Test'];
+    public $options = ['Default', 'Test'];
 
     public function Definitions()
     {
         // utminfo(func_get_args());
 
         Translate::$Class = __CLASS__;
+
         return [
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DOWNLOAD_MOVE')],
             ['convert', '', InputOption::VALUE_NONE, Translate::text('L__DOWNLOAD_CONVERT')],

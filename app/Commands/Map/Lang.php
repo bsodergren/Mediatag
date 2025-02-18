@@ -5,8 +5,6 @@
 
 namespace Mediatag\Commands\Map;
 
-use Mediatag\Core\Mediatag;
-
 trait Lang
 {
     public const CMD_DESCRIPTION        = DESCRIPTION;

@@ -5,15 +5,13 @@
 
 namespace Mediatag\Commands\Backup;
 
-use Mediatag\Core\Mediatag;
-
 trait Lang
 {
-    public const CMD_DESCRIPTION     = DESCRIPTION;
+    public const CMD_DESCRIPTION = DESCRIPTION;
 
-    public const CMD_NAME            = NAME;
+    public const CMD_NAME = NAME;
 
     public const L__BACKUP_DIRECTORY = 'Example Description';
 
-    public const L__BACKUP_TYPE      = 'studio or ph';
+    public const L__BACKUP_TYPE = 'studio or ph';
 }

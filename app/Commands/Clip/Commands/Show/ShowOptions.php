@@ -5,23 +5,17 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Traits\Translate;
 use Mediatag\Core\MediaOptions;
-use Mediatag\Commands\Clip\Lang;
-use Symfony\Component\Console\Input\InputOption;
+use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 
 class ShowOptions extends MediaOptions
 {
     use Lang;
     use Translate;
-   
+
     public $options = [];
-
-
-
-
-
 
     // public function Definitions()
     // {

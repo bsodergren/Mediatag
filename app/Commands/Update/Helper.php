@@ -61,7 +61,6 @@ trait Helper
         return $value;
     }
 
-   
     public function clearMeta($options = [])
     {
         // utminfo(func_get_args());
@@ -188,7 +187,6 @@ trait Helper
             Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
         }
 
-       
         if (!Option::isTrue('preview')) {
             $Command->writeChanges();
             // $this->updateDbEntry($videoArray);
@@ -208,20 +206,19 @@ trait Helper
         // Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
-            $updateCount = count($videoArray['updateTags']);
+            $updateCount = \count($videoArray['updateTags']);
             $this->writeMetaToVideo($videoArray, $count, $idx);
-          
-                    
-                    if($count != $idx){
-                        $line_array = [];
-                    for ($n = 0; $n < $updateCount + 5; ++$n) {
-                        $line_array[] = ' ';
-                        // Mediatag::$output->writeln($count.' '.$n);
-                    }
-                    $line = implode(\PHP_EOL, $line_array);
-                    Mediatag::$output->writeln($line);
+
+            if ($count != $idx) {
+                $line_array = [];
+                for ($n = 0; $n < $updateCount + 5; ++$n) {
+                    $line_array[] = ' ';
+                    // Mediatag::$output->writeln($count.' '.$n);
                 }
-          
+                $line = implode(\PHP_EOL, $line_array);
+                Mediatag::$output->writeln($line);
+            }
+
             ++$idx;
 
             // Mediatag::$Cursor->clearOutput();

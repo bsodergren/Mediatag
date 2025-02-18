@@ -7,29 +7,17 @@ namespace Mediatag\Commands\Gallery;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\GalleryStorageDB;
-use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\VideoData\Data\Duration;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
-use Mediatag\Modules\VideoData\Data\Thumbnail;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
 use Mediatag\Traits\Translate;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Console\Helper\QuestionHelper;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
 
 trait Helper
 {
-
     public function updateNow()
     {
         // utminfo(func_get_args());
@@ -118,6 +106,7 @@ trait Helper
             }
         }
     }
+
     public function changeDBEntry()
     {
         // utminfo(func_get_args());
@@ -223,7 +212,7 @@ trait Helper
                 //     $video_string[] = ' '.\PHP_EOL;
                 //     //    parent::$dbconn->RowBlock->overwrite($video_string);
                 // } else {
-                 parent::$dbconn->addDBArray($data);
+                parent::$dbconn->addDBArray($data);
 
                 // }
             }

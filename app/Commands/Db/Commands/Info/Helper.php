@@ -9,9 +9,6 @@ use Mediatag\Modules\VideoData\Data\VideoInfo;
 
 trait Helper
 {
-
-
-    
     public function execInfo()
     {
         // utminfo(func_get_args());

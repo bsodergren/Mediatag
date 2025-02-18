@@ -5,25 +5,20 @@
 
 namespace Mediatag\Commands\Test;
 
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Psr\Log\LoggerAwareTrait;
-use FFMpeg\Coordinate\TimeCode;
-use Psr\Log\LoggerAwareInterface;
-use Mediatag\Modules\Display\ShowDisplay;
-use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
-class Process extends Mediatag 
+class Process extends Mediatag
 {
     use Helper;
-
 
     public $VideoList = [];
 
@@ -35,11 +30,11 @@ class Process extends Mediatag
         'colors'     => [
             'colors'      => null,
         ],
-        'cmd'     => [
-            'exec' => null,
+        'cmd'        => [
+            'exec'         => null,
             'execCmd'      => null,
         ],
-        'move' => ['mvOldFiles'=>null]
+        'move'       => ['mvOldFiles'=>null],
     ];
 
     public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
@@ -47,27 +42,20 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         if (Option::isTrue('colors')) {
-           \define('SKIP_SEARCH', true);
+            \define('SKIP_SEARCH', true);
         }
         parent::boot($input, $output);
-
-
     }
 
     public function __call($m, $a)
     {
-
         return null;
     }
 
     public function exec($option = null)
     {
-     
+        $this->VideoList = parent::getVideoArray();
 
-        $this->VideoList     = parent::getVideoArray();
-
-       
-        
         // //
         // foreach ($this->VideoList['file'] as $key => $videoInfo) {
         //     // $preview    = new VideoPreview();

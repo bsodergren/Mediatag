@@ -128,12 +128,10 @@ class Process extends Mediatag
         $this->playlist = $file[0];
         // utmdd($this->playlist);
 
-
-        parent::boot($input, $output,$file);
+        parent::boot($input, $output, $file);
 
         $this->setupFormat();
         $this->setupDb();
-
 
         if (!is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);

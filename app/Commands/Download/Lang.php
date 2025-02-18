@@ -7,8 +7,6 @@ namespace Mediatag\Commands\Download;
 
 trait Lang
 {
-  
-
     public const L__DOWNLOAD_MOVE = 'Moves downloaded files';
 
     public const L__DOWNLOAD_CONVERT = 'Convert mkv to mp4';

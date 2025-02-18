@@ -8,25 +8,19 @@ namespace Mediatag\Commands\Update;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\Storage;
-use Symfony\Component\Console\Command\Command as SymCommand;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
-use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Bundle\Monolog\UTMLog;
 
 class Process extends Mediatag
 {
     use Helper;
-    use MediaProcess;
     use MediaExecute;
+    use MediaProcess;
 
     /**
      * meta.
      */
     public $formatter;
-
 
     public $displayTimer = 0;
 
@@ -44,9 +38,9 @@ class Process extends Mediatag
             'download'     => null,
             //     'writeChanges' => true,
         ],
-        'clear'    => [
+        'clear'     => [
             'exec'      => null,
-            'clearMeta' => null,],
+            'clearMeta' => null, ],
         'list'      => [
             'exec'        => null,
             'getChanges'  => null,
@@ -57,10 +51,10 @@ class Process extends Mediatag
     public $defaultCommands = [
         'exec'         => null,
         'getChanges'   => null,
-       'writeChanges' => null,
+        'writeChanges' => null,
     ];
 
-    protected $useFuncs = ['addMeta','setupMap'] ;
+    protected $useFuncs = ['addMeta', 'setupMap'];
 
     protected $json_file;
 
@@ -77,13 +71,10 @@ class Process extends Mediatag
         parent::boot($input, $output);
         // $this->addMeta();
 
-    
         // $this->setupFormat();
-      //  $this->setupDb();
+        //  $this->setupDb();
         // $this->setupMap();
 
         //        utmdd([__METHOD__,IGNORE_NAME_MAP]);
     }
-
-   
 }

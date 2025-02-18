@@ -6,7 +6,6 @@
 
 namespace Mediatag\Commands\Gallery;
 
-use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -16,6 +15,6 @@ const NAME        = 'Gallery';
 final class Command extends MediaCommand
 {
     use Lang;
-     
+
     public const USE_LIBRARY = true;
 }

@@ -9,9 +9,9 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Process\DB\Process as DBProcess;
-use UTM\Utilities\Option;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Console\Helper\ProgressBar;
+use UTM\Utilities\Option;
 
 trait Helper
 {
@@ -33,7 +33,7 @@ trait Helper
 
         Mediatag::$output->writeln('<info>Finding missing tags</info>');
         //        ProgressBar::setFormatDefinition('custom', '<info>%current%/%max%</info> -- <comment>%message%  (%filename%)</comment>');
-        $progressBar    = new ProgressBar(Mediatag::$output, $count);
+        $progressBar = new ProgressBar(Mediatag::$output, $count);
         $progressBar->setBarWidth(400);
         //      $progressBar->setFormat('custom');
         $progressBar->start();
@@ -64,7 +64,7 @@ trait Helper
 
         if (\count($this->missing) > 0) {
             foreach ($this->missing as $tag => $missing_file) {
-                $obj = new ScriptWriter('missing_' . $tag . '.sh', __CURRENT_DIRECTORY__);
+                $obj = new ScriptWriter('missing_'.$tag.'.sh', __CURRENT_DIRECTORY__);
                 $obj->addCmd('update', ['-o', $tag, '-f']);
                 foreach ($missing_file as $k => $file) {
                     $obj->addFile($file['video_file'], false);
@@ -101,9 +101,9 @@ trait Helper
                 $video_keys[] = $matches[1];
             }
         }
-        $file_string   = '';
+        $file_string = '';
         foreach ($video_keys as $v => $key) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . \PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
         }
 
         Filesystem::writeFile($playlist_file, $file_string);

@@ -7,7 +7,6 @@ namespace Mediatag\Commands\Clip\Markers;
 
 trait Markers
 {
-
     public function videoDuration($duration)
     {
         // utminfo(func_get_args());
@@ -21,6 +20,7 @@ trait Markers
 
         return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
     }
+
     public function getVideoMarks($videoInfo)
     {
         $videoKey  = 0;

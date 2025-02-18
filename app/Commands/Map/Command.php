@@ -5,8 +5,6 @@
 
 namespace Mediatag\Commands\Map;
 
-use Mediatag\Core\Helper\MediaExecute;
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
@@ -16,7 +14,6 @@ const NAME        = 'map';
 final class Command extends MediaCommand
 {
     use Lang;
-     
 
     public const USE_LIBRARY = true;
 }

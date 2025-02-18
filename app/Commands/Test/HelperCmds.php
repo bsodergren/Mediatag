@@ -5,16 +5,16 @@
 
 namespace Mediatag\Commands\Test;
 
-use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
-use Mediatag\Core\Mediatag;
-use Nette\Utils\FileSystem;
-use FFMpeg\Format\Video\X264;
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\FrameRate;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use FFMpeg\Filters\Video\ResizeFilter;
 use FFMpeg\Filters\Video\RotateFilter;
+use FFMpeg\Format\Video\X264;
+use Mediatag\Core\Mediatag;
+use Nette\Utils\FileSystem;
 
 trait HelperCmds
 {
@@ -23,13 +23,13 @@ trait HelperCmds
     public function clip()
     {
         $videoFile = $this->videoFile[0];
-        $timeCodes = [245, 445, 845,1045,1345,1845];
+        $timeCodes = [245, 445, 845, 1045, 1345, 1845];
 
-        $path = dirname($videoFile)."/Clips/";
-        $filename = $path.basename($videoFile,".mp4");
+        $path     = \dirname($videoFile).'/Clips/';
+        $filename = $path.basename($videoFile, '.mp4');
 
         FileSystem::createDir($path);
-        //utmdd($filename);
+        // utmdd($filename);
 
         // $new_file = str_replace('.mp4', '_test.mp4', $this->videoFile);
 
@@ -50,12 +50,12 @@ trait HelperCmds
         $format->on('progress', function ($video, $format, $percentage) {
             echo "$percentage % transcoded";
         });
-        
+
         foreach ($timeCodes as $i =>$code) {
             utmdump($code);
             $clip = $video->clip(TimeCode::fromSeconds($code), TimeCode::fromSeconds(5));
             $clip->filters()->resize(new Dimension(320, 240), ResizeFilter::RESIZEMODE_INSET, true);
-            $clip->save($format, $filename."_".$i.".mp4");
+            $clip->save($format, $filename.'_'.$i.'.mp4');
         }
     }
 
@@ -83,11 +83,11 @@ trait HelperCmds
     public function combine()
     {
         $videoFile = $this->videoFile[0];
-        
-        $new_file = rtrim($videoFile,"0.mp4");
+
+        $new_file = rtrim($videoFile, '0.mp4');
         // $new_file = rtrim($new_file,"_0");
-        $new_file = $new_file."merged.mp4";
-// utmdd($new_file);
+        $new_file .= 'merged.mp4';
+        // utmdd($new_file);
         $ffmpeg = FFMpeg::create([], Mediatag::$log);
 
         $video = $ffmpeg->open($videoFile);
@@ -95,25 +95,18 @@ trait HelperCmds
             ->concat($this->videoFile)
             ->saveFromSameCodecs($new_file, true);
 
+        $ffprobe  = FFProbe::create();
+        $duration = (int) $ffprobe->format($new_file)->get('duration');
 
+        // The gif will have the same dimension. You can change that of course if needed.
+        $dimensions = $ffprobe->streams($new_file)->videos()->first()->getDimensions();
 
-            $ffprobe = FFProbe::create();
-            $duration = (int) $ffprobe->format($new_file)->get('duration');
-            
-            // The gif will have the same dimension. You can change that of course if needed.
-            $dimensions = $ffprobe->streams($new_file)->videos()->first()->getDimensions();
-            
-            $gifPath = str_replace(".mp4",".gif",$new_file);
-            
-            // Transform
-            $ffmpeg = FFMpeg::create();
-            $ffmpegVideo = $ffmpeg->open($new_file);
-            $ffmpegVideo->filters()->framerate(new FrameRate(10), 10);
-            $ffmpegVideo->gif(TimeCode::fromSeconds(0), $dimensions, $duration)->save($gifPath);
+        $gifPath = str_replace('.mp4', '.gif', $new_file);
 
-            
-
-
-
+        // Transform
+        $ffmpeg      = FFMpeg::create();
+        $ffmpegVideo = $ffmpeg->open($new_file);
+        $ffmpegVideo->filters()->framerate(new FrameRate(10), 10);
+        $ffmpegVideo->gif(TimeCode::fromSeconds(0), $dimensions, $duration)->save($gifPath);
     }
 }
