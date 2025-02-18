@@ -12,13 +12,14 @@ class MediaIndicator
 
     public $progress;
 
-    public function __construct($section)
+    public function __construct($section = null)
     {
         if (null === $section) {
             $section = Mediatag::$output;
         } else {
             $section = Mediatag::$output->section();
         }
+        // $section->setMaxHeight(9);
         $this->progress = new ProgressIndicator($section, 'normal', 50, $this->BarStyle, '🎉');
         
     }

@@ -160,6 +160,7 @@ class MediatagExec
 
         $this->runCommand = $process->getCommandLine();
         Mediatag::$log->notice("Command to Run {0}",[$this->runCommand]);
+
         $this->preview();
         $this->test();
 

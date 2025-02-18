@@ -5,39 +5,35 @@
 
 namespace Mediatag\Commands\Db;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
-use Mediatag\Commands\Db\Helper;
-
-
-
-use Mediatag\Modules\Database\DbMap;
+use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
+use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
+use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
+use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
+use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Nette\Utils\FileSystem as nFileSystem;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Traits\Translate;
+use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
-use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
-use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
-use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
-use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
+use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
-    use Helper;
     use CapHelper;
     use EmptyHelper;
+    use Helper;
     use InfoHelper;
-    use PreviewHelper;
-    use ThumbHelper;
     use Lang;
     use MediaExecute;
     use MediaProcess;
+    use PreviewHelper;
+    use ThumbHelper;
     use Translate;
 
     protected $useFuncs = ['addMeta'];
@@ -65,19 +61,19 @@ class Process extends Mediatag
 
     public $commandList = [
         'markers'      => [
-              'init' => null,
-        'exec' => null,
-        'execMarkers' => null],
+            // 'init'        => null,
+            // 'exec'        => null,
+            'execMarkers' => null],
 
         'update'       => [
-              'init' => null,
-        'exec' => null,
-        'execUpdate' => 'default'],
+            // 'init'       => null,
+            // 'exec'       => null,
+            'execUpdate' => 'default'],
 
         'json'         => [
-              'init' => null,
-        'exec' => null,
-        'getJson' => null],
+            // 'init'    => null,
+            // 'exec'    => null,
+            'getJson' => null],
     ];
 
     private $count;
@@ -94,8 +90,8 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        $file_array  = parent::$SearchArray;
-       // $this->DbMap = new DbMap();
+        $file_array = parent::$SearchArray;
+        // $this->DbMap = new DbMap();
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);

@@ -3,14 +3,11 @@
     "exclude-from-classmap": [
       "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
       "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php"
-
-  ],
+    ],
     "psr-4": {
       "Mediatag\\": "app",
       "Descriptor\\": "app/Overrides/",
       "Command\\": "app/Overrides/"
-
-
     },
     "classmap": [
       "app"
@@ -20,11 +17,10 @@
     "symfony/var-dumper": "7.0.*"
   },
   "extra": {
-      "symfony": {
-          "allow-contrib": false,
-
-         "require": "7.0.*"
-      }
+    "symfony": {
+      "allow-contrib": false,
+      "require": "7.0.*"
+    }
   },
   "require": {
     "symfony/console": "7.2.*",
@@ -48,6 +44,8 @@
     "nesbot/carbon": "^3.6",
     "bsodergren/utm": "^2.1",
     "symfony/http-client": "7.0.*",
-    "psr/log": "^3.0"
+    "psr/log": "^3.0",
+    "evenement/evenement": "^3.0",
+    "react/event-loop": "^1.5"
   }
 }
