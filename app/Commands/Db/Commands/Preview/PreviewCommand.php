@@ -16,5 +16,6 @@ final class PreviewCommand extends MediaCommand
      
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = true;
-    public $command = [ 'preview' => ['execPreview' => null]];
+    public $command = [   'init' => null,
+        'exec' => null,'preview' => ['execPreview' => null]];
 }

@@ -17,6 +17,7 @@ final class ThumbnailCommand extends MediaCommand
     public const USE_LIBRARY = true;
     public const SKIP_SEARCH = true;
     public $command = [
-        'thumbnail'    => ['execThumb' => null],
+        'thumbnail'    => [  'init' => null,
+        'exec' => null,'execThumb' => null],
     ];
 }

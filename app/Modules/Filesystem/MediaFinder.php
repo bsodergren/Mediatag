@@ -325,6 +325,7 @@ class MediaFinder extends SFinder
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null)
     {
         // utminfo(func_get_args());
+        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search'=>$search,'path'=>$path]);
 
         if (null === $path) {
             $path = getcwd();

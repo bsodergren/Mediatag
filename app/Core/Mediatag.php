@@ -255,7 +255,6 @@ abstract class Mediatag extends MediaCommand
         }
 
         // UTMlog::Logger('Process Commands', $Commands);
-
         return $Commands;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediatag\Commands\Db\Commands\Empty;
+namespace Mediatag\Commands\Db\Commands\EmptyDB;
 /**
  * Command like Metatag writer for video files.
  */

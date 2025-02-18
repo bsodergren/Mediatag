@@ -44,7 +44,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        utmdd('fasdfsd', $this->VideoList);
+        // utmdd('fasdfsd', $this->VideoList);
 
 
         $file_array = [];

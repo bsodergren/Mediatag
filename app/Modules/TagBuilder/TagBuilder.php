@@ -5,11 +5,11 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
+use UTM\Utilities\Option;
 
 class TagBuilder
 {
@@ -36,28 +36,23 @@ class TagBuilder
         $DbUpdates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
 
-      
         if (!\defined('__UPDATE_SET_ONLY__')) {
             $updates = $this->ReaderObj->getFileValues();
-            Mediatag::$log->notice("updates {updates} "
-            ,['updates'=>$updates]);
+            Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
-                $updates     = $this->mergetags($updates, $jsonupdates, $this->video_key);
+
+                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
+                $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
             }
             $DbUpdates = $this->ReaderObj->getDbValues();
-            //
         }
-
 
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
-
-
-
         }
 
         foreach (Option::getOptions() as $option => $value) {
@@ -68,19 +63,18 @@ class TagBuilder
             }
         }
 
-
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
             $updates['studio']        = $this->addNetwork($updates, $updates);
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
         } else {
-            $current                  = $this->ReaderObj->getMetaValues();
-         
+            $current = $this->ReaderObj->getMetaValues();
+
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ('studio' == $tag) {
-                   $updates[$tag] = $this->addNetwork($current, $updates);
+                    $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
             $videoInfo['updateTags'] = $this->compareTags($current, $updates);
@@ -141,18 +135,15 @@ class TagBuilder
             }
         }
 
-
-
         if (!isset($studio)) {
             utmdump([$current, $updates, $tmpStudio]);
 
             return null;
         }
-        $arr        = explode('/', $studio);
-        $arr        = array_unique($arr);
-        $studio        = implode('/', $arr);
+        $arr    = explode('/', $studio);
+        $arr    = array_unique($arr);
+        $studio = implode('/', $arr);
         // utmdd([$current, $updates, $studio]);
-
 
         $studio = trim($studio, '/');
 
@@ -215,17 +206,13 @@ class TagBuilder
     private function compareTags(array $Current, array $New)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->notice("compareTags {Current} => '{new_tag}'"
-        ,['Current'=>$Current,'new_tag'=>$New]);
+        Mediatag::$log->notice("compareTags {Current} => '{new_tag}'", ['Current'=>$Current, 'new_tag'=>$New]);
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
-
             $current_tag    = $tag.'_current';
             ${$current_tag} = '';
             $new_tag        = $tag.'_new';
             ${$new_tag}     = '';
-
-
 
             if (\array_key_exists($tag, $Current)) {
                 ${$current_tag} = $Current[$tag];
@@ -235,9 +222,7 @@ class TagBuilder
                 ${$new_tag} = $New[$tag];
             }
 
-            Mediatag::$log->notice("Metatags {tag} {current_tag} => '{new_tag}'"
-            ,['tag'=>$tag,'current_tag'=>${$current_tag},'new_tag'=>${$new_tag}]);
-
+            Mediatag::$log->notice("Metatags {tag} {current_tag} => '{new_tag}'", ['tag'=>$tag, 'current_tag'=>${$current_tag}, 'new_tag'=>${$new_tag}]);
 
             if (null === ${$current_tag}) {
                 if (null === ${$new_tag}) {

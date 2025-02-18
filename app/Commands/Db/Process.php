@@ -5,22 +5,36 @@
 
 namespace Mediatag\Commands\Db;
 
+use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Traits\Translate;
+use Mediatag\Commands\Db\Helper;
+
+
+
+use Mediatag\Modules\Database\DbMap;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use UTM\Utilities\Option;
+use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
+use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
+use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
+use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
+use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
 
 class Process extends Mediatag
 {
     use Helper;
+    use CapHelper;
+    use EmptyHelper;
+    use InfoHelper;
+    use PreviewHelper;
+    use ThumbHelper;
     use Lang;
     use MediaExecute;
     use MediaProcess;
@@ -45,16 +59,25 @@ class Process extends Mediatag
     public $Changed_Array = [];
 
     public $defaultCommands = [
-        'init' => null,
-        'exec' => null,
+        // 'init' => null,
+        // 'exec' => null,
     ];
 
     public $commandList = [
-        'markers'      => ['execMarkers' => null],
+        'markers'      => [
+              'init' => null,
+        'exec' => null,
+        'execMarkers' => null],
 
-        'update'       => ['execUpdate' => 'default'],
+        'update'       => [
+              'init' => null,
+        'exec' => null,
+        'execUpdate' => 'default'],
 
-        'json'         => ['getJson' => null],
+        'json'         => [
+              'init' => null,
+        'exec' => null,
+        'getJson' => null],
     ];
 
     private $count;
@@ -107,7 +130,6 @@ class Process extends Mediatag
     public function exec($option = null)
     {
         // utminfo(func_get_args());
-
         $this->getFileArray();
 
         $this->removeDBEntry();
