@@ -5,17 +5,18 @@
 
 namespace Mediatag\Modules\Database;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\VideoData\Data\Duration;
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
-use Mediatag\Modules\VideoData\Data\Thumbnail;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Modules\VideoData\Data\VideoTags;
 use Nette\Utils\Arrays;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-use UTM\Utilities\Debug\UtmStopWatch;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use UTM\Utilities\Debug\UtmStopWatch;
+use Mediatag\Modules\Database\Storage;
+use Mhor\MediaInfo\Attribute\Duration;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+use Mediatag\Modules\VideoInfo\Section\Thumbnail;
+use Mediatag\Modules\VideoInfo\Section\VideoTags;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
 
 class StorageDB extends Storage
 {
@@ -283,7 +284,7 @@ class StorageDB extends Storage
                 Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo())->getVideoInfo($key, $video_file);
 
                 // $this->duration = new Duration();
-                Mediatag::$Display->BlockInfo['Duration']  = (new Duration())->getVideoInfo($key, $video_file);
+                // Mediatag::$Display->BlockInfo['Duration']  = (new Duration())->getVideoInfo($key, $video_file);
 
                 // $this->preview = new GifPreviewFiles();
                 Mediatag::$Display->BlockInfo['Preview']   = (new GifPreviewFiles())->getVideoInfo($key, $video_file);

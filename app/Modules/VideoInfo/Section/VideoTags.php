@@ -3,14 +3,15 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Utilities\Strings;
 
-class VideoTags extends VideoData
+class VideoTags extends VideoInfo
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
     public $tagList;

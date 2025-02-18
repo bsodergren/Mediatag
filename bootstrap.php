@@ -32,6 +32,7 @@ define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
 require_once __CONFIG_LIB__.'/path_constants.php';
 require_once __CONFIG_LIB__.'/variables.php';
+require_once __CONFIG_LIB__.'/ConsoleEventListeners.php';
 
 MediaLogger::$USE_DEBUG = false;
 MediaLogger::$pruneLogs = false;

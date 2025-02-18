@@ -3,16 +3,17 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 use FFMpeg\FFProbe;
+use Mediatag\Utilities\Strings;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Utilities\Strings;
 
-class Thumbnail extends VideoData
+class Thumbnail extends VideoInfo
 {
     use MediaFFmpeg;
     public $video_key;
@@ -56,7 +57,7 @@ class Thumbnail extends VideoData
         $this->video_path = \dirname($this->video_file);
 
         $img_name     = basename($this->video_name, '.mp4').'.jpg';
-        $img_name     = Strings::cleanFileName($img_name);
+        $img_name     = Strings::cleanFileName($img_name,true);
         $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
         $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
         $img_file     = $img_location.$img_name;

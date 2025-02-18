@@ -5,7 +5,8 @@
 
 namespace Mediatag\Commands\Db\Commands\Thumbnail;
 
-use Mediatag\Modules\VideoData\Data\Thumbnail;
+use Mediatag\Modules\VideoInfo\Section\Thumbnail;
+
 
 trait Helper
 {

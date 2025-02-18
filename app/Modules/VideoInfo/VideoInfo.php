@@ -3,15 +3,16 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData;
+namespace Mediatag\Modules\VideoInfo;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
+use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
+use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\helpers\VideoCleaner;
-use Mediatag\Modules\VideoData\Data\helpers\VideoQuery;
-use Mediatag\Modules\VideoData\Data\helpers\VideoStrings;
 
-class VideoData
+
+class VideoInfo
 {
     use VideoCleaner;
     use VideoQuery;

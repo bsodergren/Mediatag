@@ -5,10 +5,10 @@
 
 namespace Mediatag\Commands\Clip\Commands\Add;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\VideoInfo\Section\Markers;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 
 trait AddHelper
 {
@@ -27,7 +27,7 @@ trait AddHelper
         $prev_time = 0;
         $time      = Option::getValue('time');
         $name      = Option::getValue('name', true);
-        $duration  = (VideoInfo::getVidInfo($Video['video_file'])['duration'] / 1000);
+        $duration  = (VideoFileInfo::getVidInfo($Video['video_file'])['duration'] / 1000);
 
         $video_id = (new Markers())->getvideoId($Video['video_key']);
         // utmdd($this->VideoList);

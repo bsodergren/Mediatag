@@ -8,7 +8,7 @@ namespace Mediatag\Traits;
 use FFMpeg\FFMpeg;
 use Mediatag\Core\Mediatag;
 use FFMpeg\Format\Video\X264;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 
 trait ffmpegTransition
 {
@@ -65,7 +65,7 @@ trait ffmpegTransition
         // }
         $frame_count = 0;
         foreach ($videoFiles as $index => $video) {
-            $file_info[$index]    = VideoInfo::getVidInfo($video);
+            $file_info[$index]    = VideoFileInfo::getVidInfo($video);
             $file_lengths[$index] = ($file_info[$index]['duration'] / 1000);
             $has_audio[$index]    = true;
             $files_input          = array_merge($files_input, ['-i', $video]);

@@ -14,6 +14,9 @@ final class Command extends MediaCommand
 {
     public const USE_LIBRARY = true;
     public $command          = [
-        'db'    => ['init' => null, 'exec'=>null],
+        'db'    => [
+            'init' => null,
+            'exec' => null,
+        ],
     ];
 }

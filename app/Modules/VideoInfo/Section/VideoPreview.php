@@ -3,14 +3,14 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 // use Intervention\Image\Image;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\VideoData;
 
-class VideoPreview extends VideoData
+class VideoPreview extends VideoInfo
 {
     public $video_key;
 

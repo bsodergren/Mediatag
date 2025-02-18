@@ -3,13 +3,13 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Core\MediaCache;
-use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mhor\MediaInfo\MediaInfo;
 
-class VideoInfo extends VideoData
+class VideoFileInfo extends VideoInfo
 {
     public $video_key;
 
@@ -81,19 +81,19 @@ class VideoInfo extends VideoData
         $videos             = $mediaInfoContainer->getVideos();
         $general            = $mediaInfoContainer->getGeneral();
         $audios             = $mediaInfoContainer->getAudios();
-        // 
+        //
         // $videoInfo['file']     = $file;
         $videoInfo['filesize'] = filesize($file);
         foreach ($audios as $audio) {
             $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
         }
         foreach ($videos as $video) {
-
             $videoInfo['format'] = (string) $general->get('format');
-if ($video->get('format')->getshortname() == "JPEG"){continue;}
+            if ('JPEG' == $video->get('format')->getshortname()) {
+                continue;
+            }
 
-
-            $bit_rate            = $video->get('bit_rate');
+            $bit_rate = $video->get('bit_rate');
             if (null === $bit_rate) {
                 $bit_rate = $video->get('maximum_bit_rate');
             }

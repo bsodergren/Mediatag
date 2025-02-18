@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data\helpers;
+namespace Mediatag\Modules\VideoInfo\helpers;
 
 use Mediatag\Utilities\Strings;
 

@@ -5,20 +5,19 @@
 
 namespace Mediatag\Commands\Db;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\StorageDB;
-use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\VideoData\Data\Markers;
-use Mediatag\Modules\VideoData\Data\Thumbnail;
-use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
+use Mediatag\Utilities\MediaArray;
+use Mediatag\Modules\Display\MediaBar;
+use Mediatag\Modules\Database\StorageDB;
+use Mediatag\Modules\Executable\Youtube;
+use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Modules\VideoInfo\Section\Markers;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
 
 trait Helper
 {

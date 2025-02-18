@@ -5,7 +5,8 @@
 
 namespace Mediatag\Commands\Db\Commands\Info;
 
-use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+
 
 trait Helper
 {
@@ -13,7 +14,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $this->obj = new VideoInfo();
+        $this->obj = new VideoFileInfo();
         // $this->checkClean();
         $this->obj->updateVideoData();
     }

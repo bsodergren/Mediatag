@@ -5,7 +5,8 @@
 
 namespace Mediatag\Commands\Db\Commands\Preview;
 
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
+use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
+
 
 trait Helper
 {

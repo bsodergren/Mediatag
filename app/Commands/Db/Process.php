@@ -5,23 +5,23 @@
 
 namespace Mediatag\Commands\Db;
 
-use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
-use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
-use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
-use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
-use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
+use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Traits\Translate;
+use Mediatag\Modules\Database\DbMap;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Console\Input\InputInterface;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use UTM\Utilities\Option;
+use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
+use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
+use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
+use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
+use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
 
 class Process extends Mediatag
 {
@@ -97,7 +97,7 @@ class Process extends Mediatag
             $key = File::getVideoKey($file);
 
             if (\array_key_exists($key, $this->file_array)) {
-                [$keep,$move] = VideoInfo::compareDupes($this->file_array[$key], $file);
+                [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
 
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
                 $dupePath  = \dirname($movedFile);

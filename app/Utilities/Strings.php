@@ -52,7 +52,7 @@ class Strings extends \Nette\Utils\Strings
         return self::cleanSpecialChars($text);
     }
 
-    public static function cleanFileName($filename)
+    public static function cleanFileName($filename,$case=false)
     {
         // utminfo(func_get_args());
 
@@ -80,7 +80,7 @@ class Strings extends \Nette\Utils\Strings
 
         $fileExt = $fileInfo['extension'];
 
-        $filename = self::cleanSpecialChars($filename, true);
+        $filename = self::cleanSpecialChars($filename, true,$case);
 
         return $filename.$video_key.'.'.$fileExt;
     }
@@ -212,7 +212,7 @@ class Strings extends \Nette\Utils\Strings
         return $text;
     }
 
-    private static function cleanSpecialChars($text, $file = false)
+    private static function cleanSpecialChars($text, $file = false, $caseSensitive=false)
     {
         // utminfo(func_get_args());
         // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
@@ -231,7 +231,9 @@ class Strings extends \Nette\Utils\Strings
         $text          = str_replace('é', 'e', $text);
 
         if (true === $file) {
+            if($caseSensitive === false) {
             $text = strtolower($text);
+            }
             $text = str_replace(['’', "'"], '', $text);
             $text = str_replace($file_special_chars, '_', $text);
             $text = str_replace('__', '_', $text);
@@ -258,10 +260,16 @@ class Strings extends \Nette\Utils\Strings
         $text          = preg_replace('/[\r\n\t ]+/', '_', $text);
         $text          = str_replace('_', ' ', $text);
         if (true === $file) {
+            if($caseSensitive === false) {
+
             $text = ucwords($text);
+            }
             $text = str_replace(' ', '_', $text);
             $text = str_replace('-', ' ', $text);
+            if($caseSensitive === false) {
+
             $text = ucwords($text);
+            }
             $text = str_replace(' ', '-', $text);
             $text = str_replace('___', '_', $text);
         }

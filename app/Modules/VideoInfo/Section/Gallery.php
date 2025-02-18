@@ -3,14 +3,15 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
+use Mediatag\Utilities\Strings;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Utilities\Strings;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Symfony\Component\Filesystem\Filesystem;
 
-class Gallery extends VideoData
+class Gallery extends VideoInfo
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
     public $video_name;

@@ -3,17 +3,18 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Strings;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
-class Markers extends VideoData
+class Markers extends VideoInfo
 {
     use MediaFFmpeg;
     public $video_key;

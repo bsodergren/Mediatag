@@ -3,7 +3,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoData\Data\preview;
+namespace Mediatag\Modules\VideoInfo\Section\preview;
 
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
