@@ -63,6 +63,7 @@ trait Helper
 
     public function clearMeta($options = [])
     {
+
         // utminfo(func_get_args());
         $VideoList = $this->VideoList['file'];
         $count     = \count($VideoList);

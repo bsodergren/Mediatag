@@ -33,25 +33,25 @@ class Process extends Mediatag
         //     'exec'      => null,
         //     'clearMeta' => null,
         // ],
-        'download'  => [
-            'exec'         => null,
-            'download'     => null,
+        // 'download'  => [
+        //     'exec'         => null,
+        //     'download'     => null,
             //     'writeChanges' => true,
-        ],
-        'clear'     => [
-            'exec'      => null,
-            'clearMeta' => null, ],
-        'list'      => [
-            'exec'        => null,
-            'getChanges'  => null,
-            //  'saveChanges' => 'isset',
-        ],
+        // ],
+        // 'clear'     => [
+        //     'exec'      => null,
+        //     'clearMeta' => null, ],
+        // 'list'      => [
+        //     'exec'        => null,
+        //     'getChanges'  => null,
+        //     //  'saveChanges' => 'isset',
+        // ],
     ];
 
     public $defaultCommands = [
-        'exec'         => null,
-        'getChanges'   => null,
-        'writeChanges' => null,
+        // 'exec'         => null,
+        // 'getChanges'   => null,
+        // 'writeChanges' => null,
     ];
 
     protected $useFuncs = ['addMeta', 'setupMap'];

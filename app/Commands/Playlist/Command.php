@@ -23,48 +23,55 @@ final class Command extends MediaCommand
     public const CMD_DESCRIPTION = DESCRIPTION;
     public const USE_LIBRARY     = false;
     public const SKIP_SEARCH     = true;
+    public static $SingleCommand = true;
+
     public $process;
 
     protected $db;
 
     public $command = [
-        'missing'           => [
-            // 'exec'        => null,
-            'missing' => null,
-        ],
-        'find'              => [
-            'find' => null,
-            // 'default' => null,
-        ],
-        'cleanBrkDownloads' => [
+        'playlist'           =>[
             'cleanBrkDownloads' => null,
+            'compact'           => null,
+            'download'          => null,
         ],
-        'compact'           => [
-            'compact' => null,
-        ],
-        'clean'             => [
-            'clean' => null,
-        ],
-        'max'               => [
-            'trimPlaylist' => null,
-            'default'      => null,
-        ],
-        'json'              => [
-            'cleanjSon' => null,
-        ],
-        'watchlater'        => [
-            'youtubeWatchPlaylist' => null,
-            'compact'              => null,
-        ],
-        'premium'           => [
-            // 'exec'        => null,
-            'premium' => null,
-            'compact' => null,
-        ],
-        'split'             => [
-            // 'exec'        => null,
-            'splitPlaylist' => null,
-        ],
+        // 'missing'           => [
+        //     // 'exec'        => null,
+        //     'missing' => null,
+        // ],
+        // 'find'              => [
+        //     'find' => null,
+        //     // 'default' => null,
+        // ],
+        // 'cleanBrkDownloads' => [
+        //     'cleanBrkDownloads' => null,
+        // ],
+        // 'compact'           => [
+        //     'compact' => null,
+        // ],
+        // 'clean'             => [
+        //     'clean' => null,
+        // ],
+        // 'max'               => [
+        //     'trimPlaylist' => null,
+        //     'default'      => null,
+        // ],
+        // 'json'              => [
+        //     'cleanjSon' => null,
+        // ],
+        // 'watchlater'        => [
+        //     'youtubeWatchPlaylist' => null,
+        //     'compact'              => null,
+        // ],
+        // 'premium'           => [
+        //     // 'exec'        => null,
+        //     'premium' => null,
+        //     'compact' => null,
+        // ],
+        // 'split'             => [
+        //     // 'exec'        => null,
+        //     'splitPlaylist' => null,
+        // ],
     ];
 
     public function handleSignal(int $signal): void

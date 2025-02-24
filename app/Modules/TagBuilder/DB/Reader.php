@@ -108,7 +108,6 @@ class Reader extends TagReader
                 $info[$key]['metatags'][$tag] = $result[0][$tag];
             }
         }
-
         return $info;
     }
 }

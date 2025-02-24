@@ -52,13 +52,25 @@ if (file_exists($commandsDir)) {
 $SingleCommand = false;
 if (1 == count($commandClasses)) {
     $default       = true;
-    $SingleCommand = true;
+    // $SingleCommand = true;
 }
+
 foreach ($commandClasses as $className) {
     // utmdump($className);
 
     $Command = new $className();
     $application->add($Command);
+    // 
+    if($Command::$SingleCommand === true){
+        // utmdd($Command::$SingleCommand);
+        $SingleCommand = true;
+    }
+
+
+utmdump([$SingleCommand,$default,$cmdName,$className]);
+
+
+
 }
 
 if (true === $default) {

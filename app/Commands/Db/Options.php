@@ -32,6 +32,7 @@ class Options extends MediaOptions
             ['clean', 'c', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_CLEAN')],
             ['delete', 'd', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_DELETE')],
             ['yes', 'y', InputOption::VALUE_NONE, Translate::text('L__DB_YES')],
+            ['library', 'l', InputOption::VALUE_NONE, Translate::text('L__DB_YES')],
         ];
     }
 

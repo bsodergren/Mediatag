@@ -28,6 +28,7 @@ class MediaCommand extends DoctrineCommand
 
     public const USE_LIBRARY = false;
     public const SKIP_SEARCH = false;
+    public static $SingleCommand = false;
 
     public $command = [];
 
@@ -70,14 +71,16 @@ class MediaCommand extends DoctrineCommand
         Mediatag::$log->info('Command arguments {Process} for {command}', ['Process'=> $Process->commandList,
             'command'                                                               => $this->command]);
         // if($Process->commandList === null){
+
         $Process->commandList = array_merge($Process->commandList, $this->command);
 
         // }
         $method = 'process';
-
         if (\array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
+        
+        utmdump([$arguments, $this->command]);
 
         $Process->$method();
 

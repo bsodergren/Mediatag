@@ -26,7 +26,7 @@ trait MetaTags
         // utminfo(func_get_args());
 
         $tag    = strtolower($tag);
-        $method = 'clean' . ucfirst($tag);
+        $method = 'clean'.ucfirst($tag);
 
         return trim($this->{$method}($text));
     }
@@ -56,6 +56,7 @@ trait MetaTags
         // utminfo(func_get_args());
         return Title::clean($text);
     }
+
     public function cleanNetwork($text)
     {
         // utminfo(func_get_args());
@@ -66,25 +67,25 @@ trait MetaTags
     public function cleanStudio($text): string
     {
         // utminfo(func_get_args());
-Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
+        Mediatag::$log->notice('Clean Studio {studio}', ['studio'=>$text]);
         if (\is_array($text)) {
             $array = $text;
         } else {
             $array = explode('/', $text);
         }
 
-        $array        = array_unique($array);
+        $array = array_unique($array);
         // sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
             $arr[] = trim($tagValue);
         }
 
-        if (! isset($this->videoData['video_path'])) {
+        if (!isset($this->videoData['video_path'])) {
             $this->videoData['video_path'] = $this->video_path;
         }
 
-        $studio_dir   = (new FileSystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
+        $studio_dir   = (new Filesystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__.'/'.__LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
         // if(array_key_exists(3,$studio_array)){
@@ -93,15 +94,11 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
         //     $key_studio   = $studio_array[0];
         // }
 
-
         if (isset(fileReader::$PatternClass)) {
-
             $studio_str = fileReader::$PatternClassObj->getStudio();
             // $studio_str = trim($key_studio .'/'. $studio_str,"/");
-            $arr        = explode('/', $studio_str);
-            $arr        = array_unique($arr);
-
-
+            $arr = explode('/', $studio_str);
+            $arr = array_unique($arr);
         }
 
         return implode('/', $arr);
@@ -139,11 +136,10 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
     {
         // utminfo(func_get_args());
 
+        $firstCmp  = str_replace(' ', '', strtoupper($first));
+        $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        $firstCmp  = str_replace(" ", "", strtoupper($first));
-        $secondCmp = str_replace(" ", "", strtoupper($second));
-
-        $delim     = ',';
+        $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
         }
@@ -157,40 +153,32 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
                 if ($firstCmp == $secondCmp) {
                     $return = $first;
                 } else {
-
-                    $return = $first . $delim . $second;
+                    $return = $first.$delim.$second;
                 }
-
             }
         } else {
-
             $return = $first;
         }
 
-
         if (null !== $firstCmp && $first != $second) {
-
             $data['video_key'] = Metatags::$Videokey;
 
-            if ($tag == 'studio') {
+            if ('studio' == $tag) {
                 if ($firstCmp == $secondCmp) {
-
                     $data['studio'] = MetaTags::clean($first, $tag);
                 } else {
-                    $data['studio']       = MetaTags::clean($first, $tag);
-                    $data['network']      = MetaTags::clean($second, $tag);
+                    $data['studio']  = MetaTags::clean($first, $tag);
+                    $data['network'] = MetaTags::clean($second, $tag);
                 }
             } else {
                 $data[$tag] = MetaTags::clean($return, $tag);
             }
-
 
             // Mediatag::$dbconn->insert(
             //     $data,
             //     __MYSQL_VIDEO_CUSTOM__
             // );
         }
-
 
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
@@ -208,6 +196,7 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
             $tagArray[$tag] = MetaTags::clean($value, $tag);
             $tagArray[$tag] = $value;
         }
+
         return $tagArray;
     }
 
@@ -219,16 +208,15 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
         if ('artist' == $tag && null === $text) {
             return null;
         }
-        $delim     = ',';
+        $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
         }
 
-      $tagDB = new TagDB();
-        
+        $tagDB = new TagDB();
 
         if ('title' == $tag) {
-            $arr      = explode(' ', $text);
+            $arr = explode(' ', $text);
 
             array_walk($arr, function (&$value) {
                 $value = trim(ucwords(strtolower($value)));
@@ -239,7 +227,7 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
             return $newTitle;
         }
 
-        $method    = 'get' . ucfirst($tag);
+        $method    = 'get'.ucfirst($tag);
         $newList   = [];
         $i         = 0;
         $total     = 0;
@@ -248,7 +236,7 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
 
-            if (! method_exists($tagDB, $method)) {
+            if (!method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;
@@ -262,7 +250,6 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
                 $newList[] = $tagValue;
                 // }
 
-
                 //  utmdd([__METHOD__,$value,$tagValue]);
             }
             if (false !== $value) {
@@ -270,15 +257,14 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
             }
         }
 
-        $string    = implode($delim, $newList);
-        $arr       = explode($delim, $string);
+        $string = implode($delim, $newList);
+        $arr    = explode($delim, $string);
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
-        $arr       = array_unique($arr, \SORT_STRING);
+        $arr = array_unique($arr, \SORT_STRING);
 
-        $arr       = array_values($arr);
+        $arr = array_values($arr);
         if ('genre' == $tag) {
-
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
                     foreach ($arr as $v) {
@@ -286,11 +272,10 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
                             continue;
                         }
                         if ('Double Penetration' == $v) {
-
                             continue;
                         }
                         if ('MMF' == $v) {
-                            //continue;
+                            // continue;
                         }
 
                         if ('MFF' == $v) {
@@ -306,13 +291,14 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
             if (isset(fileReader::$PatternClass)) {
                 // utmdd($this);
                 $genre = fileReader::$PatternClassObj->getGenre();
-                if (false == MediaArray::search($arr,  $genre)) {
+                if (false == MediaArray::search($arr, $genre)) {
                     $arr[] = $genre;
                 }
             }
+            sort($arr);
         }
-
-        $max       = \count($arr);
+        // ;
+        $max = \count($arr);
 
         while ($total < 255) {
             $total = \strlen($arr[$i]) + $total + 1;
@@ -325,9 +311,9 @@ Mediatag::$log->notice("Clean Studio {studio}",['studio'=>$text]);
         if ($total > 255) {
             --$i;
         }
-        $new_arr   = \array_slice($arr, 0, $i);
+        $new_arr = \array_slice($arr, 0, $i);
 
-        $string    = implode($delim, $new_arr);
+        $string = implode($delim, $new_arr);
         if ('' == $string) {
             $string = null;
         }

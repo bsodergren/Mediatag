@@ -136,8 +136,8 @@ trait Artist
         }
         $namesArray = array_unique(array_merge($namesArray, $titleNames));
     }
-    
         if (\count($namesArray) > 0) {
+            $delim = ', ';
             $names = implode($delim, $namesArray);
 
             $names = str_replace('_', ' ', $names);
@@ -188,7 +188,6 @@ trait Artist
                     return null;
                 }
                 $names = $this->getArtistTextTransform($output_array[$this->getArtistMatch()]);
-
                 return $this->getArtistTransform($names, $delim);
             }
         }

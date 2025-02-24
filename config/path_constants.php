@@ -21,10 +21,10 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 // define('__PH_PASSWORD__', CONFIG['PH_PASSWORD']);
 
 const __DATA_LIB__       = __CONFIG_LIB__.'/data';
-const __DB_BACKUP_ROOT__ = __PROJECT_ROOT__.'/db';
 
 const __PLEX_VAR_DIR__ = __APP_HOME__.'/var';
 const __LOGFILE_DIR__  = __PLEX_VAR_DIR__.'/log';
+const __DB_BACKUP_ROOT__ = __PLEX_VAR_DIR__.'/db';
 
 const __PLEX_PL_DIR__      = __PLEX_HOME__.'/Playlists';
 const __PLEX_PL_TMP_DIR__  = __PLEX_PL_DIR__.'/.tmp';

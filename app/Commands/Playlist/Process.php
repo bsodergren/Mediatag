@@ -5,14 +5,15 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use Mediatag\Core\Helper\MediaProcess;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Core\Helper\MediaExecute;
 // use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 // use Symfony\Component\Filesystem\Filesystem;
 
@@ -20,6 +21,7 @@ class Process extends Mediatag
 {
     use Callables;
     use Helper;
+    use MediaExecute;
     use MediaProcess;
 
     public const ARCHIVE = __PLEX_PL_ID_DIR__.'/archive.txt';
@@ -51,49 +53,49 @@ class Process extends Mediatag
     public const MISSING_PLAYLIST = __PLEX_PL_DIR__.'/missing_playlist.txt';
 
     public $defaultCommands = [
-        'cleanBrkDownloads' => null,
-        'compact'           => null,
-        'download'          => null,
+        // 'cleanBrkDownloads' => null,
+        // 'compact'           => null,
+        // 'download'          => null,
     ];
 
     public $commandList = [
-        'missing'           => [
-            // 'exec'        => null,
-            'missing' => null,
-        ],
-        'find'              => [
-            'find' => null,
-            // 'default' => null,
-        ],
-        'cleanBrkDownloads' => [
-            'cleanBrkDownloads' => null,
-        ],
-        'compact'           => [
-            'compact' => null,
-        ],
-        'clean'             => [
-            'clean' => null,
-        ],
-        'max'               => [
-            'trimPlaylist' => null,
-            'default'      => null,
-        ],
-        'json'              => [
-            'cleanjSon' => null,
-        ],
-        'watchlater'        => [
-            'youtubeWatchPlaylist' => null,
-            'compact'              => null,
-        ],
-        'premium'           => [
-            // 'exec'        => null,
-            'premium' => null,
-            'compact' => null,
-        ],
-        'split'             => [
-            // 'exec'        => null,
-            'splitPlaylist' => null,
-        ],
+        // 'missing'           => [
+        //     // 'exec'        => null,
+        //     'missing' => null,
+        // ],
+        // 'find'              => [
+        //     'find' => null,
+        //     // 'default' => null,
+        // ],
+        // 'cleanBrkDownloads' => [
+        //     'cleanBrkDownloads' => null,
+        // ],
+        // 'compact'           => [
+        //     'compact' => null,
+        // ],
+        // 'clean'             => [
+        //     'clean' => null,
+        // ],
+        // 'max'               => [
+        //     'trimPlaylist' => null,
+        //     'default'      => null,
+        // ],
+        // 'json'              => [
+        //     'cleanjSon' => null,
+        // ],
+        // 'watchlater'        => [
+        //     'youtubeWatchPlaylist' => null,
+        //     'compact'              => null,
+        // ],
+        // 'premium'           => [
+        //     // 'exec'        => null,
+        //     'premium' => null,
+        //     'compact' => null,
+        // ],
+        // 'split'             => [
+        //     // 'exec'        => null,
+        //     'splitPlaylist' => null,
+        // ],
     ];
 
     public static $current_key = false;

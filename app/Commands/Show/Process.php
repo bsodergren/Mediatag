@@ -5,8 +5,9 @@
 
 namespace Mediatag\Commands\Show;
 
-use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Mediatag;
+use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Core\Helper\MediaProcess;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -14,6 +15,8 @@ class Process extends Mediatag
 {
     use Helper;
     use MediaExecute;
+    use MediaProcess;
+
 
     public $VideoData;
 
@@ -23,22 +26,29 @@ class Process extends Mediatag
 
     public $VideoList = [];
 
-    public $commandList = [
-        'missing'    => [
-            'exec'        => null,
-            'findMissing' => ['missing' => true],
-        ],
-        'new'        => [
-            'newFiles' => null,
-        ],
-        'duplicates' => [
-            'duplicateFiles' => null,
-        ],
+    public $defaultCommands = [
+        'exec' => null,
+        // 'compact'           => null,
+        // 'download'          => null,
+    ];
 
-        'playlist'   => [
-            'exec'           => null,
-            'createPlaylist' => null,
-        ],
+
+    public $commandList = [
+        // 'missing'    => [
+        //     'exec'        => null,
+        //     'findMissing' => ['missing' => true],
+        // ],
+        // 'new'        => [
+        //     'newFiles' => null,
+        // ],
+        // 'duplicates' => [
+        //     'duplicateFiles' => null,
+        // ],
+
+        // 'playlist'   => [
+        //     'exec'           => null,
+        //     'createPlaylist' => null,
+        // ],
     ];
     protected $useFuncs = ['addMeta'];
 
@@ -47,15 +57,6 @@ class Process extends Mediatag
         parent::boot($input, $output);
     }
 
-    public function __call($m, $a)
-    {
-        return null;
-    }
-
-    public function exec($option = null)
-    {
-        $this->VideoList = parent::getVideoArray();
-    }
 
     public function print()
     {

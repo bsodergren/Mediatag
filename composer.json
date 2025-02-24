@@ -1,8 +1,11 @@
 {
   "autoload": {
+
+
     "exclude-from-classmap": [
       "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
-      "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php"
+      "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php",
+      "vendor\\symfony\\console\\Descriptor\\TextDescriptor.php"
     ],
     "psr-4": {
       "Mediatag\\": "app",

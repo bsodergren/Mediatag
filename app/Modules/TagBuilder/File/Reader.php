@@ -77,9 +77,10 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
+        utmdump($studioClass);
         // utmdd($this->video_library);
         if ((!class_exists($studioClass) || Option::isTrue('addClass'))
-        && ('Studios' == $this->video_library || 'HomeVideos' == $this->video_library)) {
+        && ('Studios' == $this->video_library)) {// || 'HomeVideos' == $this->video_library)) {
             // UTMlog::Logger('File Studio className', $className);
             // 
             // if (Option::isTrue('addClass')) {

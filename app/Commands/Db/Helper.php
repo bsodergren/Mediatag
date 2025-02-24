@@ -5,22 +5,41 @@
 
 namespace Mediatag\Commands\Db;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Utilities\Strings;
-use Mediatag\Utilities\MediaArray;
-use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Database\StorageDB;
+use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Executable\Youtube;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\VideoInfo\Section\Markers;
-use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
+use Mediatag\Modules\VideoInfo\Section\Thumbnail;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use Mediatag\Traits\Translate;
+use Mediatag\Utilities\MediaArray;
+use Mediatag\Utilities\Strings;
+use Nette\Utils\FileSystem;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
+use UTM\Utilities\Option;
 
 trait Helper
 {
+
+
+    
+    private $dbBackupPath       = __DB_BACKUP_ROOT__.\DIRECTORY_SEPARATOR;
+    private $video_file_csv     = 'file.csv';
+    private $video_metadata_csv = 'meta.csv';
+    private $video_info_csv     = 'info.csv';
+    private $video_custon_csv   = 'custom.csv';
+
+
+
     public function updateNow()
     {
         // utminfo(func_get_args());
@@ -258,7 +277,7 @@ trait Helper
     public function execUpdate()
     {
         // utminfo(func_get_args());
-
+        // utmdd('update');
         $date = null;
         if (!Option::istrue('yes')) {
             $date = $this->lastUpdated();
@@ -315,5 +334,193 @@ trait Helper
     public function TestMethod()
     {
         utmdd(__METHOD__);
+    }
+
+    public function execCaptions()
+    {
+        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.vtt');
+
+        foreach ($file_array as $file) {
+            $video_file = str_replace('.vtt', '.mp4', $file);
+            $videoKey   = MediaFile::file($video_file, 'videokey');
+            $exists     = parent::$dbconn->videoExists($videoKey, null, __MYSQL_VIDEO_INFO__);
+
+            utmdd($exists);
+        }
+    }
+
+    public function execEmpty()
+    {
+        // utminfo(func_get_args());
+
+        Translate::$Class             = __CLASS__;
+        Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
+        $videos                       = Mediatag::$dbconn->getVideoCount();
+
+        if (Option::istrue('yes')) {
+            $go     = true;
+            $answer = 'y';
+        } else {
+            Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
+            $ask      = new QuestionHelper();
+            $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
+
+            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+        }
+        switch ($answer) {
+            case 'y':
+                $go = true;
+
+                break;
+
+            case 'Y':
+                $go = true;
+
+                break;
+
+            default:
+                $go = false;
+
+                break;
+        }
+
+        if (true == $go) {
+            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
+            Mediatag::$dbconn->emptydatabase();
+        }
+    }
+
+
+
+    
+    public function execBackup()
+    {
+        // $this->dbBackupPath = __DB_BACKUP_ROOT__;
+        if (Option::isTrue('library')) {
+            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.\DIRECTORY_SEPARATOR;
+        }
+
+        FileSystem::createDir($this->dbBackupPath);
+
+        $this->doBackup(__MYSQL_VIDEO_FILE__, $this->video_file_csv);
+        $this->doBackup(__MYSQL_VIDEO_METADATA__, $this->video_metadata_csv);
+        $this->doBackup(__MYSQL_VIDEO_INFO__, $this->video_info_csv);
+        $this->doBackup(__MYSQL_VIDEO_CUSTOM__, $this->video_custon_csv);
+    }
+
+    private function doBackup($table, $csv_file)
+    {
+        $csv_file = $this->dbBackupPath.$csv_file;
+
+        if (file_exists($csv_file)) {
+            unlink($csv_file);
+        }
+        $fp = fopen($csv_file, 'w');
+
+        $results = $this->getResults($table);
+        foreach ($results as $i => $row) {
+            // utmdd($row);
+            unset($row['id']);
+            unset($row['added']);
+            unset($row['last_updated']);
+            unset($row['new']);
+
+            if (0 == $i) {
+                $keys = array_keys($row);
+                fputcsv($fp, $keys, ',', '"', '');
+            }
+            fputcsv($fp, $row, ',', '"', '');
+        }
+        fclose($fp);
+    }
+
+
+
+    public function execImport()
+    {
+        // $this->dbBackupPath = __DB_BACKUP_ROOT__;
+        if (Option::isTrue('library')) {
+            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.\DIRECTORY_SEPARATOR;
+        }
+
+        FileSystem::createDir($this->dbBackupPath);
+
+        $this->doBackup(__MYSQL_VIDEO_FILE__, $this->video_file_csv);
+        $this->doBackup(__MYSQL_VIDEO_METADATA__, $this->video_metadata_csv);
+        $this->doBackup(__MYSQL_VIDEO_INFO__, $this->video_info_csv);
+        $this->doBackup(__MYSQL_VIDEO_CUSTOM__, $this->video_custon_csv);
+    }
+
+    private function doImport($table, $csv_file)
+    {
+        $csv_file = $this->dbBackupPath.$csv_file;
+
+        if (file_exists($csv_file)) {
+            unlink($csv_file);
+        }
+        $fp = fopen($csv_file, 'w');
+
+        $results = $this->getResults($table);
+        foreach ($results as $i => $row) {
+            // utmdd($row);
+            unset($row['id']);
+            unset($row['added']);
+            unset($row['last_updated']);
+            unset($row['new']);
+
+            if (0 == $i) {
+                $keys = array_keys($row);
+                fputcsv($fp, $keys, ',', '"', '');
+            }
+            fputcsv($fp, $row, ',', '"', '');
+        }
+        fclose($fp);
+    }
+
+    private function getResults($table)
+    {
+        $db = parent::$Storage->dbConn;
+
+        if (Option::isTrue('library')) {
+            if (!str_contains($table, 'mediatag_video_custom')) {
+                $db->where('Library', __LIBRARY__);
+            } else {
+                $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "'.__LIBRARY__.'"';
+
+                return $db->rawQuery($query);
+            }
+        }
+
+        return $db->get($table);
+    }
+
+    public function execInfo()
+    {
+        // utminfo(func_get_args());
+
+        $this->obj = new VideoFileInfo();
+        // $this->checkClean();
+        $this->obj->updateVideoData();
+    }
+
+    public function execPreview()
+    {
+        // utminfo(func_get_args());
+
+        $this->obj = new GifPreviewFiles();
+
+        $this->checkClean();
+
+        $this->obj->updateVideoData();
+    }
+
+    public function execThumb()
+    {
+        // utminfo(func_get_args());
+
+        $this->obj = new Thumbnail();
+        $this->checkClean();
+        // $this->obj = new Thumbnail(parent::$input, parent::$output);
+        $this->obj->updateVideoData();
     }
 }
