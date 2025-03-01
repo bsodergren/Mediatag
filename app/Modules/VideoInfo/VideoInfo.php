@@ -72,7 +72,6 @@ class VideoInfo
         }
 
         $this->VideoInfo = $this->getVideoDetails();
-utmdump($this->VideoInfo);
         return $this->saveVideoDetails();
     }
 

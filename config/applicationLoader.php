@@ -67,7 +67,6 @@ foreach ($commandClasses as $className) {
     }
 }
 
-utmdump([$default, $SingleCommand,$cmdName]);
 
 if (true === $default) {
     $application->setDefaultCommand($cmdName, $SingleCommand);

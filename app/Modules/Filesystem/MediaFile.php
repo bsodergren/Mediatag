@@ -102,7 +102,7 @@ class MediaFile
 
         $filename = basename($filename);
 
-        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             $video_key = $matches[1];
         } else {
@@ -309,7 +309,7 @@ class MediaFile
             $library = $match[1];
         }
 
-        $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
+        $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
         if (1 == $success) {
             return true;
         }

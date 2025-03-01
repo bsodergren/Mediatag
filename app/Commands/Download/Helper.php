@@ -210,7 +210,7 @@ trait Helper
         if (Mediatag::$filesystem->exists($new_file)) {
             $this->filesToRemove[] = $old_file;
 
-            return "<error>Video {$new_file} exists</error>";
+            return "<error>Video ".$new_file." exists</error>";
         }
     }
 

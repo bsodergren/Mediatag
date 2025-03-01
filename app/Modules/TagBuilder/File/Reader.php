@@ -5,6 +5,7 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
+use Doctrine\Bundle\DoctrineBundle\Command\Proxy\UpdateSchemaDoctrineCommand;
 use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
@@ -78,7 +79,8 @@ class Reader extends TagReader
 
         $classAttm[] = $studioClass;
         utmdump($this->video_key);
-        // utmdd($this->video_library);
+        //utmdd($this->video_library);
+        if (str_starts_with($this->video_key, 'x')) {
         if ((!class_exists($studioClass) || Option::isTrue('addClass'))
         && ('Studios' == $this->video_library)) {// || 'HomeVideos' == $this->video_library)) {
             // UTMlog::Logger('File Studio className', $className);
@@ -94,6 +96,7 @@ class Reader extends TagReader
                 $classAttm[] = $studioClass;
             }
         }
+    }
 
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
@@ -201,12 +204,11 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         if (null === $this->studio) {
             if (false == File::isPornhubfile($this->video_file)) {
-                // utmdump('Not PH File', $this->video_file);
+                //  utmdd('Not PH File', $this->video_file,$this->video_key);
                 $this->notPhFile();
             }
 
             if (true == File::isPornhubfile($this->video_file)) {
-                // utmdump('IS PH File', $this->video_file);
                 $this->isPhFile();
             }
         }
