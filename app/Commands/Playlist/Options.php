@@ -38,18 +38,17 @@ class Options extends MediaOptions
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_MAX')],
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_JSON')],
             ['skip', 's', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_SKIP')],
-            ['compact', 'c', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_COMPACT')],
+          //  ['compact', 'c', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_COMPACT')],
             ['clean', null, InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_CLEAN')],
             ['ignore', 'i', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_IGNORE')],
             ['debug', null, InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_DEBUG')],
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_RANGE')],
         ];
     }
-
-    public function Arguments($varName = null, $description = null)
-    {
-        // utminfo(func_get_args());
-
-        return [$varName, InputArgument::OPTIONAL, Translate::text('L__PLAYLIST_NAME')];
-    }
+//     public function Arguments($varName = null, $description = null)
+//     {
+//         // utminfo(func_get_args());
+// 
+//         return [$varName, InputArgument::OPTIONAL, $description];
+//     }
 }

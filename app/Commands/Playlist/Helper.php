@@ -34,14 +34,14 @@ trait Helper
         $youtube->createWatchList($this->url);
     }
 
-    public function download()
+    public function dodownloadPlaylist()
     {
         // utminfo(func_get_args());
 
         $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
         $this->premiumIds = $youtube->premiumIds;
-        $this->compact();
+        $this->docompactPlaylist();
     }
 
     public function premium()
@@ -50,7 +50,7 @@ trait Helper
         $youtube->downloadPlaylist(false);
         $this->premiumIds      = $youtube->premiumIds;
         $this->DownloadableIds = $youtube->DownloadableIds;
-        $this->compact();
+        $this->docompactPlaylist();
     }
 
     public function missing()
@@ -285,7 +285,7 @@ trait Helper
         }
     }
 
-    public function compact()
+    public function docompactPlaylist()
     {
         // utminfo(func_get_args());
         if (!Option::istrue('skip')) {
@@ -319,7 +319,7 @@ trait Helper
             }
         }
         if (Option::istrue('download')) {
-            $this->download();
+            $this->dodownloadPlaylist();
         }
     }
 

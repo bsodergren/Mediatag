@@ -48,6 +48,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         // UTMlog::logger('Call in json', $method);
         $this->get($method);
+
         return $this->tag_array;
     }
 
@@ -135,10 +136,13 @@ class Reader extends TagReader
         }
 
         foreach ($keyList as $json_key) {
+            if ('artist' == $tag) {
+                utmdump(['artist', $this->json_array['cast']]);
+            }
             if (\array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ('studio' == $tag) {
-                 utmdump([$value,$json_key,$tag]);
+                    // utmdump([$value, $json_key, $tag]);
                 }
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];

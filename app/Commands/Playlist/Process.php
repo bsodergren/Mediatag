@@ -127,10 +127,10 @@ class Process extends Mediatag
         if (null === $file) {
             $file = Option::getValue('playlist');
         }
-        $this->playlist = $file[0];
-        // utmdd($this->playlist);
 
-        parent::boot($input, $output, $file);
+        $this->playlist = $file[0];
+
+        parent::boot($input, $output);
 
         $this->setupFormat();
         $this->setupDb();

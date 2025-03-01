@@ -72,7 +72,7 @@ class MediaFilesystem extends SFilesystem
             self::backupPlaylist($file);
         }
 
-        file_put_contents($file, $content_string . \PHP_EOL);
+        file_put_contents($file, $content_string);
     }
 
     public static function writePlaylist($file, $content)

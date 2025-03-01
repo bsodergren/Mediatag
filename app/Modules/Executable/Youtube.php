@@ -38,7 +38,21 @@ class Youtube extends MediatagExec
 
     public $downloadFiles = true;
 
-    public $commonOptions;
+    public $commonOptions =
+    [
+        CONFIG['YOUTUBEDL_CMD'],
+        '-i',
+        '-f',
+        'bestvideo[width<=?1080]+bestaudio/best',
+        // 'worstvideo[width<=?1080]+worstaudio/worst',
+        '--restrict-filenames',
+        // '-w',
+        '-c',
+        // '--no-part',
+        '--write-info-json',
+        '--no-warnings',
+        '--ignore-config',
+    ];
 
     // private $jsonoptions = [
     //     '-f',
@@ -57,7 +71,11 @@ class Youtube extends MediatagExec
 
     private $LibraryClass;
 
+    public const __YT_DL_FORMAT__ = '%(uploader)s/%(title)s-%(id)s.%(ext)s';
+
     public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
+
+    public $library ;
 
     public function __construct($playlist, $input = null, $output = null)
     {
@@ -75,36 +93,41 @@ class Youtube extends MediatagExec
         if (str_contains($class, 'nubiles')) {
             $class = 'Studio';
         }
-
+$this->library = $class;
 //        use Mediatag\Modules\Executable\Helper\Studio;
 
         $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
-        $this->LibraryClass = new $Class();
-        $this->commonOptions = [
-            CONFIG['YOUTUBEDL_CMD'],
-            '-i',
-            //     '-u',
-            //    CONFIG['USERNAME'],
-            //     '-p',
-            //     CONFIG['PASSWORD'],
-            '--no-warnings',
-            '--ignore-config',
-        ];
+        $this->LibraryClass = new $Class($this);
+        // $this->commonOptions = [
+        //     CONFIG['YOUTUBEDL_CMD'],
+        //     '-i',
+        //     '-f',
+        //     'bestvideo[width<=?1080]+bestaudio/best',
+        //     // 'worstvideo[width<=?1080]+worstaudio/worst',
+        //     '--restrict-filenames',
+        //     // '-w',
+        //     '-c',
+        //     // '--no-part',
+        //     '--write-info-json',
+        //     '--no-warnings',
+        //     '--ignore-config',
+        // ];
     }
 
     public function youtubeGetJson($video_key)
     {
         // utminfo(func_get_args());
-
+        if($this->library != 'Pornhub'){
+            return null;
+        }
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
-        $options   = array_merge($this->commonOptions, $this->options);
+        $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
         $options   = array_merge($options, ['--skip-download', '--write-info-json']);
         $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
 
         $command = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
-        // utmdump($command);
         $this->exec($command, $callback);
 
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
@@ -123,8 +146,8 @@ class Youtube extends MediatagExec
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles) {
             $options = array_merge($options, [
-                '--download-archive',
-                __PLEX_PL_DIR__.'/ids/archive.txt',
+               '--download-archive',
+               __PLEX_PL_DIR__.'/ids/archive.txt',
                 '--write-info-json',
                 '--embed-thumbnail',
             ]);
@@ -173,7 +196,7 @@ class Youtube extends MediatagExec
             Filesystem::backupPlaylist($this->model_hub);
         }
 
-        $callback = Callback::check([$this, 'downloadCallback']);
+        $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         // utmdd($command);
         $this->exec($command, $callback);
     }

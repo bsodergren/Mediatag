@@ -14,7 +14,7 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: NAME, description: DESCRIPTION)]
+#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['compact','download'])]
 final class Command extends MediaCommand
 {
     use Lang;
@@ -23,17 +23,22 @@ final class Command extends MediaCommand
     public const CMD_DESCRIPTION = DESCRIPTION;
     public const USE_LIBRARY     = false;
     public const SKIP_SEARCH     = true;
-    public static $SingleCommand = true;
+    // public static $SingleCommand = true;
 
     public $process;
 
     protected $db;
 
     public $command = [
-        'playlist'           =>[
+        'playlist'           => [
             'cleanBrkDownloads' => null,
-            'compact'           => null,
-            'download'          => null,
+            'docompactPlaylist'           => null,
+            'dodownloadPlaylist'          => null,
+        ],
+        'download'           => [
+            'cleanBrkDownloads' => null,
+            'docompactPlaylist'           => null,
+            'dodownloadPlaylist'          => null,
         ],
         // 'missing'           => [
         //     // 'exec'        => null,
@@ -46,9 +51,9 @@ final class Command extends MediaCommand
         // 'cleanBrkDownloads' => [
         //     'cleanBrkDownloads' => null,
         // ],
-        // 'compact'           => [
-        //     'compact' => null,
-        // ],
+        'compact'            => [
+            'docompactPlaylist' => null,
+        ],
         // 'clean'             => [
         //     'clean' => null,
         // ],
@@ -74,19 +79,19 @@ final class Command extends MediaCommand
         // ],
     ];
 
-    public function handleSignal(int $signal): void
-    {
-        // utminfo(func_get_args());
+    // public function handleSignal(int $signal): void
+    // {
+    //     // utminfo(func_get_args());
 
-        if (\SIGINT === $signal) {
-            echo \PHP_EOL;
-            echo 'Exiting, cleaning up';
-            echo \PHP_EOL;
-            Process::Cleanup();
+    //     if (\SIGINT === $signal) {
+    //         echo \PHP_EOL;
+    //         echo 'Exiting, cleaning up';
+    //         echo \PHP_EOL;
+    //         Process::Cleanup();
 
-            exit;
-        }
-    }
+    //         exit;
+    //     }
+    // }
 
     /*
      * Method execute.
