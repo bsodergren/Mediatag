@@ -37,28 +37,28 @@ class Reader extends TagReader
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
         }
+        unset($this->json_array['formats']);
+        unset($this->json_array['http_headers']);
+        unset($this->json_array['thumbnails']);
+        unset($this->json_array['url']);
     }
 
     public function __call($method, $arguments)
     {
         // utminfo(func_get_args());
-
         // UTMlog::logger('Call in json', $method);
-
         $this->get($method);
+        return $this->tag_array;
     }
 
-    public function artist()
+    public function titleArtist()
     {
         // utminfo(func_get_args());
 
         $this->title();
-
         if (\array_key_exists('title', $this->tag_array)) {
-            $string = $this->tag_array['title'];
-
-            $string = $this->matchArtist($string);
-            // UTMlog::logger('title in artist()', $string);
+            $string                    = $this->tag_array['title'];
+            $string                    = $this->matchArtist($string);
             $this->tag_array['artist'] = $string;
         }
 
@@ -104,20 +104,42 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $tag = strtolower($tag);
-        if (!\array_key_exists($tag, $this->tag_array)) {
-            $json_key = $tag;
-            if ('genre' == $tag) {
-                $json_key = 'categories';
-            }
-            if ('studio' == $tag) {
-                $json_key = 'uploader';
-            }
-            if ('keyword' == $tag) {
-                $json_key = 'tags';
-            }
+        if ('genre' == $tag) {
+            $this->getJsonValue($tag, ['tags', 'categories']);
+        }
+        if ('title' == $tag) {
+            $this->getJsonValue($tag, ['title']);
+        }
+        if ('studio' == $tag) {
+            $this->getJsonValue($tag, ['uploader', 'channel']);
+        }
+        if ('keyword' == $tag) {
+            $this->getJsonValue($tag, ['tags', 'categories']);
+        }
+        if ('artist' == $tag) {
+            $this->getJsonValue($tag, ['cast']);
+        }
+        if ('network' == $tag) {
+            $this->getJsonValue($tag, ['extractor'],
+                [
+                    'exclude'=> ['PornHub'],
+                    'rename' => ['NubilesPorn'=>'Nubiles'],
+                ]);
+        }
+    }
 
+    private function getJsonValue($tag, $keyList = [], $options = [])
+    {
+        if (!\is_array($keyList)) {
+            $keyList[] = $keyList;
+        }
+
+        foreach ($keyList as $json_key) {
             if (\array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
+                if ('studio' == $tag) {
+                 utmdump([$value,$json_key,$tag]);
+                }
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];
                     $value         = array_merge($value, $keyword_value);
@@ -125,16 +147,40 @@ class Reader extends TagReader
 
                 if (\is_array($value)) {
                     $value = implode(',', $value);
-                }
-
-                if ('studio' == $tag) {
+                } else {
+                    // if ('studio' == $tag) {
                     $value = ucwords($value);
                 }
-
+                // utmdump([$tag,$value]);
                 // UTMlog::Logger('json data ' . $tag, $value);
                 $this->tag_array[$tag] = $value;
+                // utmdd($this->tag_array[$tag]);
+
+                if (\array_key_exists('exclude', $options)) {
+                    foreach ($options['exclude'] as $string) {
+                        $this->tag_array[$tag] = str_replace($string, '', $this->tag_array[$tag]);
+                    }
+                }
+
+                if (\array_key_exists('rename', $options)) {
+                    foreach ($options['rename'] as $key =>$string) {
+                        $this->tag_array[$tag] = str_replace($key, $string, $this->tag_array[$tag]);
+                    }
+                }
+
+                if ('' == $this->tag_array[$tag]) {
+                    $this->tag_array[$tag] = null;
+                }
+            }
+
+            if ('artist' == $tag) {
+                if (!isset($this->tag_array['artist'])) {
+                    $this->titleArtist();
+                }
             }
         }
+
+        // utmdump([$tag,$this->tag_array[$tag]]);
     }
 
     private function getJsonFile()

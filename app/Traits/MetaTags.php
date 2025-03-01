@@ -235,7 +235,6 @@ trait MetaTags
 
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
-
             if (!method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
@@ -246,11 +245,7 @@ trait MetaTags
 
             $value = $tagDB->{$method}($tagValue);
             if ('Genre' == $tag) {
-                // if (__LIBRARY__ == "Home") {
-                $newList[] = $tagValue;
-                // }
-
-                //  utmdd([__METHOD__,$value,$tagValue]);
+                 $newList[] = $tagValue;
             }
             if (false !== $value) {
                 $newList[] = $value;
@@ -261,9 +256,10 @@ trait MetaTags
         $arr    = explode($delim, $string);
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
-        $arr = array_unique($arr, \SORT_STRING);
+        $arr = array_unique($arr);//, \SORT_STRING);
 
         $arr = array_values($arr);
+        
         if ('genre' == $tag) {
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
@@ -317,7 +313,7 @@ trait MetaTags
         if ('' == $string) {
             $string = null;
         }
-
+// utmdump([__METHOD__,$method,$string]);
         return $string;
     }
 

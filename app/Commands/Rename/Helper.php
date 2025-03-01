@@ -5,20 +5,21 @@
 
 namespace Mediatag\Commands\Rename;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Utilities\Strings;
-use Nette\Utils\FileSystem as nFileSystem;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Symfony\Component\Finder\Finder as SFinder;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Mediatag\Utilities\Strings;
+use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Nette\Utils\FileSystem as nFileSystem;
+use Mediatag\Modules\VideoData\Data\VideoInfo;
+use Symfony\Component\Finder\Finder as SFinder;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
@@ -173,6 +174,8 @@ trait Helper
             //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;
+            $newPath = str_replace(__LIBRARY__.'/'.__LIBRARY__.'/', __LIBRARY__.'/', $newPath);
+
             $newPath = nFileSystem::normalizePath($newPath);
 
             if (!is_dir($newPath)) {
@@ -193,6 +196,7 @@ trait Helper
 
             $video_name = basename($video_file);
             $newFile    = $newPath.'/'.$video_name;
+            utmdump([__METHOD__,$video_file,$newFile]);
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -203,7 +207,6 @@ trait Helper
             if (!file_exists($newFile)) {
                 $text[] = 'Moving File';
 
-                //  utmdd([__METHOD__,$video_file,$newFile]);
                 if (Option::isTrue('genre')) {
                     $text[] = ['Genre List' => $metatags['genre']];
                 }
@@ -214,12 +217,12 @@ trait Helper
                     $text[] = ['New Path' => $video_path];
 
                     $infoMsg = array_merge($message, $text);
-                    // utmdd($infoMsg);
+                    utmdump($infoMsg);
                     Mediatag::$Console->table($infoMsg);
                 }
             } else {
                 if (!Option::isTrue('test')) {
-                    [$newFile,$video_file] = VideoInfo::compareDupes($newFile, $video_file);
+                    [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
 
                     $dupePath = __PLEX_HOME__.'/Dupes/'.__LIBRARY__.'/'.$video_path;
 
@@ -227,7 +230,7 @@ trait Helper
                     $dupeFile = $dupePath.'/'.$video_name;
 
                     if (!is_dir($dupePath)) {
-                        // Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
+                        Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
                         if (!Option::isTrue('test')) {
                             nFileSystem::createDir($dupePath, 0755);
                         }

@@ -67,7 +67,7 @@ foreach ($commandClasses as $className) {
     }
 
 
-utmdump([$SingleCommand,$default,$cmdName,$className]);
+// utmdump([$SingleCommand,$default,$cmdName,$className]);
 
 
 

@@ -35,8 +35,7 @@ trait StudioReader
     private function isPhFile()
     {
         $json   = new jsonReader($this->videoData);
-        $return = $json->getTagArray();
-
+        $return = $json->studio();
         if (\count($return) > 0) {
             if (\array_key_exists('studio', $return)) {
                 $this->studio = $return['studio'];

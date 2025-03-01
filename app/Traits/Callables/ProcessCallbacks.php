@@ -166,7 +166,7 @@ trait ProcessCallbacks
         // }
         //// UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[PornHub]'):

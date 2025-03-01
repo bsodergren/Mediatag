@@ -1,17 +1,20 @@
 <?php
-namespace Mediatag\Traits\Callables;
 /**
  * Command like Metatag writer for video files.
  */
 
+namespace Mediatag\Traits\Callables;
+
+/*
+ * Command like Metatag writer for video files.
+ */
 
 use Nette\Utils\Strings;
-use Mediatag\Traits\Callables\ProcessCallbacks;
 
 trait Callables
 {
-
     use ProcessCallbacks;
+
     public function parseArchive($line)
     {
         $key = Strings::after($line, ' ');
@@ -56,9 +59,18 @@ trait Callables
         if (str_contains($ph_id, '&')) {
             $ph_id = Strings::before($ph_id, '&');
         }
-
+        if($ph_id === null){
+            $ph_id = Strings::after($line, 'watch/');
+            if($ph_id !== null){
+                $ph_id = Strings::before($ph_id, '/');
+            }
+        }
+// utmdd([$line,$ph_id]);
         if (!\in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
+                return $line;
+            }
+            if (str_contains($line, 'watch')) {
                 return $line;
             }
         }

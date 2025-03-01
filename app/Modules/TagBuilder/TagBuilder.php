@@ -34,19 +34,38 @@ class TagBuilder
     {
         // utminfo(func_get_args());
         $DbUpdates = null;
+        $updates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
-
+        $jsonupdates = null;
         if (!\defined('__UPDATE_SET_ONLY__')) {
-            $updates = $this->ReaderObj->getFileValues();
-            Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
+            // if (str_starts_with($this->video_key, 'x')) {
+                $updates = $this->ReaderObj->getFileValues();
+                Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
+            // }
+            utmdump($updates);
+
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
+                utmdump($jsonupdates);
 
-                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
-                $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
+                if (null !== $updates) {
+                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
+            } else {
+                $updates = $jsonupdates;
             }
+                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
+
+
+            }
+
             $DbUpdates = $this->ReaderObj->getDbValues();
         }
+        // if (null !== $FileUpdates) {
+        //     $updates = $FileUpdates;
+        // }
+        // if (null !== $jsonupdates) {
+        //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
+        // }
 
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
@@ -55,7 +74,6 @@ class TagBuilder
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
         }
-
         foreach (Option::getOptions() as $option => $value) {
             $method = 'set'.$option;
             if (method_exists($this->ReaderObj, $method)) {

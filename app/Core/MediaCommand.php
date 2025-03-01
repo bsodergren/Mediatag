@@ -80,7 +80,7 @@ class MediaCommand extends DoctrineCommand
             $method = $arguments['command'];
         }
         
-        utmdump([$arguments, $this->command]);
+        // utmdump([$arguments, $this->command]);
 
         $Process->$method();
 

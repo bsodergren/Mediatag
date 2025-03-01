@@ -8,6 +8,9 @@ namespace Mediatag\Modules\Executable;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
+use Mediatag\Modules\Executable\Helper\Pornhub;
+use Mediatag\Modules\Executable\Helper\Studio;
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\Callback;
@@ -37,18 +40,6 @@ class Youtube extends MediatagExec
 
     public $commonOptions;
 
-    private $options = [
-        '-f',
-        'bestvideo[width<=?1080]+bestaudio/best',
-        '-o',
-        __PLEX_DOWNLOAD__.'/%(uploader)s/%(title)s-%(id)s.%(ext)s',
-        '--restrict-filenames',
-        '-w',
-        '-c',
-        '--no-part',
-        '--write-info-json',
-    ];
-
     // private $jsonoptions = [
     //     '-f',
     //     'bestvideo[width<=?1080]+bestaudio/best',
@@ -64,6 +55,8 @@ class Youtube extends MediatagExec
     public $yt_json_string;
     public $pltype;
 
+    private $LibraryClass;
+
     public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
 
     public function __construct($playlist, $input = null, $output = null)
@@ -72,14 +65,28 @@ class Youtube extends MediatagExec
 
         $this->playlist = $playlist;
 
-        $this->Console       = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
+        $this->Console = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
+
+        $st_array = file($this->playlist);
+        $class    = $st_array[0];
+        if (str_contains($class, 'pornhub')) {
+            $class = 'Pornhub';
+        }
+        if (str_contains($class, 'nubiles')) {
+            $class = 'Studio';
+        }
+
+//        use Mediatag\Modules\Executable\Helper\Studio;
+
+        $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
+        $this->LibraryClass = new $Class();
         $this->commonOptions = [
             CONFIG['YOUTUBEDL_CMD'],
             '-i',
-        //     '-u',
-        //    CONFIG['USERNAME'],
-        //     '-p',
-        //     CONFIG['PASSWORD'],
+            //     '-u',
+            //    CONFIG['USERNAME'],
+            //     '-p',
+            //     CONFIG['PASSWORD'],
             '--no-warnings',
             '--ignore-config',
         ];
@@ -94,10 +101,10 @@ class Youtube extends MediatagExec
         $options   = array_merge($options, ['--skip-download', '--write-info-json']);
         $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
 
-        $command   = array_merge($options, [$video_url]);
+        $command = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
-// utmdump($command);
+        // utmdump($command);
         $this->exec($command, $callback);
 
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
@@ -113,7 +120,7 @@ class Youtube extends MediatagExec
 
     public function youtubeCmdOptions()
     {
-        $options = array_merge($this->commonOptions, $this->options);
+        $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles) {
             $options = array_merge($options, [
                 '--download-archive',
@@ -167,6 +174,7 @@ class Youtube extends MediatagExec
         }
 
         $callback = Callback::check([$this, 'downloadCallback']);
+        // utmdd($command);
         $this->exec($command, $callback);
     }
 
@@ -250,7 +258,6 @@ class Youtube extends MediatagExec
                     $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
                     Mediatag::$output->writeln($out);
                 } else {
-
                     Mediatag::$filesystem->rename($json_file, $newJson_file, false);
                 }
             }

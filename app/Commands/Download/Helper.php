@@ -86,24 +86,26 @@ trait Helper
                 continue;
             }
 
-            if ($this->moveJson($videoInfo)) {
+            // if (
+                $this->moveJson($videoInfo);
+                // ) {
                 $out = $this->moveVideo($videoInfo);
-            } else {
-                $json_file = basename($videoInfo['video_file']);
-                $success   = preg_match('/-(p?h?[a-z0-9]+).mp4/', basename($json_file), $matches);
-                if (1 === $success) {
-                    $json_key = $matches[1];
-                } else {
-                    continue;
-                }
+            // } else {
+            //     $json_file = basename($videoInfo['video_file']);
+            //     $success   = preg_match('/-(p?h?[a-z0-9]+).mp4/', basename($json_file), $matches);
+            //     if (1 === $success) {
+            //         $json_key = $matches[1];
+            //     } else {
+            //         continue;
+            //     }
 
-                $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
-                if (Mediatag::$filesystem->exists($newJson_file)) {
-                    $out = $this->moveVideo($videoInfo);
-                } else {
-                    $out = '<error>no json found for '.$videoInfo['video_name']." </error>\n";
-                }
-            }
+            //     $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
+            //     if (Mediatag::$filesystem->exists($newJson_file)) {
+            //         $out = $this->moveVideo($videoInfo);
+            //     } else {
+            //         $out = '<error>no json found for '.$videoInfo['video_name']." </error>\n";
+            //     }
+            // }
 
             Mediatag::$output->writeln($out);
         }
@@ -134,6 +136,8 @@ trait Helper
         $old_path  = $videoInfo['video_path'];
         $json_key  = '';
         $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
+
+
         if (Mediatag::$filesystem->exists($json_file)) {
             $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
             if (1 === $success) {
@@ -142,6 +146,7 @@ trait Helper
                 utmdd($matches);
             }
         }
+
 
         $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
 
@@ -174,13 +179,24 @@ trait Helper
 
         $video_name = Strings::cleanFileName($old_name);
 
-        $video_path = str_replace('Downloads', 'Pornhub/Premium', $videoInfo['video_path']);
+        
+        $new_path = Strings::after($old_path, __PLEX_DOWNLOAD__."/");
+           $new_path = Strings::before($new_path, '/');
+        
+
+        $video_path = str_replace('Downloads',  $new_path . '/Premium', $videoInfo['video_path']);
+        $video_path = str_replace( 'Premium/'.$new_path , 'Premium' , $video_path);
+
+
         $video_path = str_replace('_', ' ', $video_path);
         if (!Mediatag::$filesystem->exists($video_path)) {
             Mediatag::$filesystem->mkdir($video_path);
         }
         $old_file = $old_path.'/'.$old_name;
         $new_file = $video_path.'/'.$video_name;
+// utmdd([$old_file, $new_file]);
+
+
         if (!Mediatag::$filesystem->exists($new_file)) {
             if (Option::istrue('test')) {
                 return "<question>Video</question>\n\t<comment>Old:".basename($old_file)."</comment>\n\t<info>New:".basename($new_file)."</info>\n";
@@ -207,7 +223,7 @@ trait Helper
         if (true == $go) {
             foreach ($this->filesToRemove as $file) {
                 Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
-                Mediatag::$filesystem->remove($file);
+                // Mediatag::$filesystem->remove($file);
             }
         }
     }
@@ -216,17 +232,17 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $command = [
-            '/usr/bin/find',
-            __CURRENT_DIRECTORY__,
-            '-mindepth',
-            '1',
-            '-type',
-            'd',
-            '-empty',
-            '-delete',
-        ];
-        $proccess = new ExecProcess($command);
-        $proccess->run();
+        // $command = [
+        //     '/usr/bin/find',
+        //     __CURRENT_DIRECTORY__,
+        //     '-mindepth',
+        //     '1',
+        //     '-type',
+        //     'd',
+        //     '-empty',
+        //     '-delete',
+        // ];
+        // $proccess = new ExecProcess($command);
+        // $proccess->run();
     }
 }
