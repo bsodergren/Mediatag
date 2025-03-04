@@ -124,7 +124,6 @@ trait Helper
                 $studio = $metatags['studio'];
             }
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
-
             if (Option::isTrue('genre')) {
                 $genrePath = '/Sort';
                 $SortDir   = true;
@@ -157,6 +156,9 @@ trait Helper
                 $studios    = explode('/', $studio);
                 $Arraykey   = array_key_first($studios);
                 $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+
+                // utmdump([$studios,$studio_dir,$Arraykey]);
+
                 if (false == $studio_dir) {
                     $Arraykey   = array_key_last($studios);
                     $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
@@ -171,12 +173,12 @@ trait Helper
             if (true == $SortDir) {
                 $video_path = 'Sort/'.$studio_dir;
             }
-            //  utmdd([$studios,$Arraykey,$studio_dir,$video_path]);
 
             $newPath = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;
             $newPath = str_replace(__LIBRARY__.'/'.__LIBRARY__.'/', __LIBRARY__.'/', $newPath);
 
             $newPath = nFileSystem::normalizePath($newPath);
+            //   utmdd([$newPath]);
 
             if (!is_dir($newPath)) {
                 if (!Option::isTrue('test')) {
@@ -196,7 +198,7 @@ trait Helper
 
             $video_name = basename($video_file);
             $newFile    = $newPath.'/'.$video_name;
-            utmdump([__METHOD__,$video_file,$newFile]);
+            utmdump(['files',$video_file,$newFile,file_exists($newFile)]);
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -236,6 +238,7 @@ trait Helper
                         }
                     }
                     // if (!file_exists($newFile)) {
+                        utmdump(['rename',$video_file,$dupeFile]);
 
                     (new SfSystem())->rename($video_file, $dupeFile, true);
                     Mediatag::$output->writeln($video_file.\PHP_EOL.$dupeFile);

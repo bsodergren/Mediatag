@@ -13,7 +13,6 @@ trait MediaProcess
     public function exec($option = null)
     {
         $this->VideoList = parent::getVideoArray();
-
         if (0 == \count($this->VideoList['file'])) {
             return SymCommand::SUCCESS;
         }

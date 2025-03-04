@@ -10,12 +10,35 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
 use UTM\Utilities\Option;
 
+use FFMpeg\Coordinate\Dimension;
+use FFMpeg\Coordinate\FrameRate;
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
+use FFMpeg\Filters\Video\ResizeFilter;
+use FFMpeg\Filters\Video\RotateFilter;
+use FFMpeg\Format\Video\X264;
 trait Helper
 {
-    use HelperCmds;
+    // use HelperCmds;
 
+    public function doThumbnail()
+    {
+        // $videoFile = $this->videoFile[0];
+        // if (null === $this->VideoList) {
+
+        //     $this->exec();
+        // }
+        $videoFile = $this->videoFile[0];
+        $ffmpeg = FFMpeg::create([], Mediatag::$log);
+        $video  = $ffmpeg->open($videoFile);
+        $frame = $video->frame(TimeCode::fromSeconds(42));
+        $frame->save('image.jpg');
+    }
     public function mvOldFiles()
     {
+
+        utmdd(__METHOD__);
         $sql = "SELECT *  FROM mediatag_video_file WHERE `video_key` IN ('64c3c368aa608',\n"
 
         ."'64f5b13110be6',\n"
@@ -66,7 +89,7 @@ trait Helper
     }
 
     public function colors()
-    {
+    {utmdd(__METHOD__);
         $colors = [
             'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray',
             'bright-red', 'bright-green', 'bright-yellow', 'bright-blue', 'bright-magenta', 'bright-cyan', 'bright-white',
@@ -88,14 +111,14 @@ trait Helper
     public function t1($val, $min, $max)
     {
         // utminfo(func_get_args());
-
+        utmdd(__METHOD__);
         return $val >= $min && $val < $max;
     }
 
     public function sortFiles()
     {
         // utminfo(func_get_args());
-
+        utmdd(__METHOD__);
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $min     = 0;
             $hours   = 0;
@@ -146,7 +169,7 @@ trait Helper
     public function symlinkFiles($video_array)
     {
         // utminfo(func_get_args());
-
+        utmdd(__METHOD__);
         $filesystem = new Filesystem();
 
         foreach ($video_array as $dir => $fileArray) {
@@ -168,7 +191,7 @@ trait Helper
     public function mvFiles($video_array)
     {
         // utminfo(func_get_args());
-
+        utmdd(__METHOD__);
         $filesystem = new Filesystem();
         // foreach ($video_array as $dir => $fileArray)
         // {
@@ -199,7 +222,7 @@ trait Helper
     public function getPhKeys()
     {
         // utminfo(func_get_args());
-
+        utmdd(__METHOD__);
         $ph_video    = [];
         $video_array = [];
         foreach ($this->VideoList['file'] as $key => $vidArray) {
@@ -220,7 +243,7 @@ trait Helper
     public function execCmd()
     {
         $fileList = $this->VideoList['file'];
-
+        utmdd(__METHOD__);
         foreach ($fileList as $key => $file) {
             $this->videoFile[] = $file['video_file'];
         }

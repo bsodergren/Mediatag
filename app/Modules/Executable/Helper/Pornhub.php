@@ -4,7 +4,6 @@
  */
 
 namespace Mediatag\Modules\Executable\Helper;
-\Executable\Helper;
 
 use Nette\Utils\Strings;
 use UTM\Utilities\Option;

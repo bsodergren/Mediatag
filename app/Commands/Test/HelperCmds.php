@@ -24,7 +24,7 @@ trait HelperCmds
     {
         $videoFile = $this->videoFile[0];
         $timeCodes = [245, 445, 845, 1045, 1345, 1845];
-
+        utmdd(__METHOD__);
         $path     = \dirname($videoFile).'/Clips/';
         $filename = $path.basename($videoFile, '.mp4');
 
@@ -62,7 +62,7 @@ trait HelperCmds
     public function rotate()
     {
         $videoFile = $this->videoFile[0];
-
+        utmdd(__METHOD__);
         $new_file = str_replace('.mp4', '_test.mp4', $videoFile);
         // utmdd( [__METHOD__,$this->videoFile, $new_file ]);
 
@@ -82,6 +82,7 @@ trait HelperCmds
 
     public function combine()
     {
+        utmdd(__METHOD__);
         $videoFile = $this->videoFile[0];
 
         $new_file = rtrim($videoFile, '0.mp4');
@@ -109,4 +110,9 @@ trait HelperCmds
         $ffmpegVideo->filters()->framerate(new FrameRate(10), 10);
         $ffmpegVideo->gif(TimeCode::fromSeconds(0), $dimensions, $duration)->save($gifPath);
     }
+
+
+ 
+
+
 }

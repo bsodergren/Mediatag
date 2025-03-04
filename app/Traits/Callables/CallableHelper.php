@@ -54,7 +54,7 @@ trait CallableHelper
             $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.\PHP_EOL;
         }
     }
-
+    utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 
@@ -67,7 +67,7 @@ trait CallableHelper
         $outputText                   = $line_id.'  <error> '.$this->key.' '.$error.' </error>';
         // $this->Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
-
+        utmdump([__LINE__,$outputText]);
         return $outputText.\PHP_EOL;
     }
 
@@ -100,16 +100,16 @@ trait CallableHelper
             $outputText = str_replace('[download]', '</text>'.$line_id.' <text>[download]', $buffer);
             $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
-
+            utmdump([__LINE__,$outputText]);
             return $outputText;
         }
 
         if (str_contains($buffer, 'already been')) {
             $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.\PHP_EOL;
-
+            utmdump([__LINE__,$outputText]);
             return $outputText;
         }
-
+        utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 

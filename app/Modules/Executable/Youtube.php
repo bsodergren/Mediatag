@@ -77,27 +77,39 @@ class Youtube extends MediatagExec
 
     public $library ;
 
-    public function __construct($playlist, $input = null, $output = null)
+    public function __construct($class, $input = null, $output = null)
     {
         // utminfo(func_get_args());
 
-        $this->playlist = $playlist;
+       
 
         $this->Console = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
 
-        $st_array = file($this->playlist);
-        $class    = $st_array[0];
+
+        // utmdd($this->library);
+        if(is_file($class)){
+        
+            $this->playlist = $class;
+            $st_array = file($this->playlist);
+
+            $class    = $st_array[0];
+        }
+
         if (str_contains($class, 'pornhub')) {
             $class = 'Pornhub';
         }
         if (str_contains($class, 'nubiles')) {
             $class = 'Studio';
         }
-$this->library = $class;
+        
+        // utmdd($class);
+
+        $this->library = $class;
 //        use Mediatag\Modules\Executable\Helper\Studio;
 
         $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
         $this->LibraryClass = new $Class($this);
+    
         // $this->commonOptions = [
         //     CONFIG['YOUTUBEDL_CMD'],
         //     '-i',

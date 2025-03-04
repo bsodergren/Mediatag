@@ -100,10 +100,16 @@ class Process extends Mediatag
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
 
-            if (\array_key_exists($key, $this->file_array)) {
-                [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
+         
 
-                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
+            if (\array_key_exists($key, $this->file_array)) {
+
+                // utmdump([$file,$key,$this->file_array[$key]]);
+
+                [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
+                // utmdd( [$keep,$move] );
+
+                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
                 $dupePath  = \dirname($movedFile);
                 $filename  = basename($file);
 
@@ -113,13 +119,14 @@ class Process extends Mediatag
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($file.' is dup');
-                (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+                Mediatag::$output->writeln($move.' is dup');
+                (new SfSystem())->rename($move, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+                unset($this->file_array[$key] );
+                $this->file_array[$key] = $keep;
                 continue;
             }
             $this->file_array[$key] = $file;
         }
-
         parent::$dbconn->file_array = $this->file_array;
         $this->db_array             = parent::$dbconn->getDbFileList();
 

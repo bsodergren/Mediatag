@@ -18,17 +18,17 @@ class VideoTags extends VideoInfo
 
     public $actionText = '<comment>Updated Meta Tags</comment>';
 
-    public function get($key, $file)
+    public function get($video_key, $video_file)
     {
         // utminfo(func_get_args());
 
-        $parts = pathinfo($this->video_file);
+        $parts = pathinfo($video_file);
 
         $vdata = [
-            'video_file' => $this->video_file,
+            'video_file' => $video_file,
             'video_path' => $parts['dirname'],
             'video_name' => $parts['basename'],
-            'video_key'  => $this->video_key,
+            'video_key'  => $video_key,
         ];
 
         $meta = new metaReader($vdata);

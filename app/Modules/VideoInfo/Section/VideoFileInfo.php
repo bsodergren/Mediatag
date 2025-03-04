@@ -6,6 +6,8 @@
 namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Core\MediaCache;
+use Mediatag\Modules\Filesystem\MediaFile;
+use mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mhor\MediaInfo\MediaInfo;
 
@@ -46,10 +48,32 @@ class VideoFileInfo extends VideoInfo
 
     public static function compareDupes($file, $sfile)
     {
-        $return = 'A';
+        $return   = 'A';
+        $file1    = new MediaFile($file);
+        $file1Info = $file1->get();
+        $tag1     = (new VideoTags())->get($file1Info['video_key'], $file);
+        $f1       = new FileReader($file1Info);
+        $genre1Dir = $f1->getGenre();
+
+        $file2    = new MediaFile($sfile);
+        $file2Info = $file2->get();
+        $tag2     = (new VideoTags())->get($file2Info['video_key'], $sfile);
+        $f2       = new FileReader($file2Info);
+        $genre2Dir = $f2->getGenre();
+
+// utmdump([$tag1['genre'],$genre1Dir]);
+// utmdump([$tag2['genre'],$genre2Dir]);
+        if(str_contains($tag1['genre'],$genre1Dir)){
+            return [$file, $sfile];
+        }else if (str_contains($tag2['genre'],$genre2Dir)){
+            return [ $sfile,$file];
+        }
+
+        // utmdd([$file, $file1Key, $tag1, $video1Info, $genreDir]);
 
         $video1Info         = self::getVidInfo($file);
         $video1Info['file'] = $file;
+        
 
         $video2Info         = self::getVidInfo($sfile);
         $video2Info['file'] = $sfile;

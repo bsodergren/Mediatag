@@ -10,10 +10,24 @@ use Symfony\Component\Console\Attribute\AsCommand;
 
 const DESCRIPTION = 'Test Command';
 const NAME        = 'test';
-#[AsCommand(name: NAME, description: DESCRIPTION)]
+#[AsCommand(name: 'test', description: DESCRIPTION, aliases:["thumbnail"])]
 final class Command extends MediaCommand
 {
     use Lang;
     public const USE_LIBRARY = true;
-    public const SKIP_SEARCH = false;
+    // public const SKIP_SEARCH = false;
+
+    public $command          = [
+        'test'    => [
+            'exec'         => null,
+            // 'getChanges'   => null,
+            // 'writeChanges' => null,
+        ],
+        'thumbnail'    => [
+            'exec' => null,
+            'doThumbnail' => null,
+        //     // 'exec' => null,
+        ],
+    ];
+
 }

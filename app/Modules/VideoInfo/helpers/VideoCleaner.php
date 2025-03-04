@@ -94,7 +94,7 @@ trait VideoCleaner
 
         $fileSearch = $this->getPreviewFiles();
 
-        if (true === $delete) {
+if (true === $delete) {
             foreach ($fileSearch as $k => $file) {
                 unlink($file);
                 unset($fileSearch[$k]);
@@ -104,6 +104,10 @@ trait VideoCleaner
         [$dbList,
             $missing_file,
             $missing_thumb] = $this->getExistingList();
+
+            // utmdd( [$dbList,
+            // $missing_file,
+            // $missing_thumb]);
 
         $this->cleanMissing($fileSearch, $dbList);
         $this->cleanMissingFile($missing_file);
@@ -137,8 +141,13 @@ trait VideoCleaner
 
         $query  = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  ".$this->getTableField()." is not null  AND fullpath like '".__CURRENT_DIRECTORY__."%' ";
         $result = Mediatag::$dbconn->query($query);
-        foreach ($result as $_ => $row) {
+
+        foreach ($result as $_ => $row)
+        {
             $thumb = $this->videoToThumb($row['file_name']);
+
+            utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
+
             if (!file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;
 

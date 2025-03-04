@@ -135,7 +135,6 @@ class Studio
                 break;
 
             case str_contains($buffer, 'ERROR'):
-
                 $outputText = $this->obj->error($buffer, $line_id, "Uncaught Error </>  <comment>" . $buffer . '</comment><error>');
                 // $this->obj->updatePlaylist('error');
                 // $this->obj->updateIdList(PlaylistProcess::ERRORIDS);

@@ -78,7 +78,7 @@ class Reader extends TagReader
         }
 
         $classAttm[] = $studioClass;
-        utmdump($this->video_key);
+        // utmdump($this->video_key);
         //utmdd($this->video_library);
         if (str_starts_with($this->video_key, 'x')) {
         if ((!class_exists($studioClass) || Option::isTrue('addClass'))

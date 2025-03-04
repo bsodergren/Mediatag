@@ -12,10 +12,10 @@ trait StudioMap
     public function getStudioPath($text)
     {
         // utminfo(func_get_args());
-
+        utmdump($text);
         $query  = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $text . "'";
         $result = $this->dbConn->rawQueryOne($query);
-
+utmdump($result);
         if (null !== $result) {
 
             if ($result['path'] === null ||
@@ -26,7 +26,8 @@ trait StudioMap
 
             return rtrim($path, '/');
         }
-
+        $this->addStudioMap(__LIBRARY__,$text,$text,null);
+        $this->getStudioPath($text);
         return false;
     }
 

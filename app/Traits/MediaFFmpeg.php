@@ -5,22 +5,22 @@
 
 namespace Mediatag\Traits;
 
-use FFMpeg\FFMpeg;
-use Nette\Utils\Callback;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Nette\Utils\FileSystem;
-use Mhor\MediaInfo\MediaInfo;
-use UTM\Bundle\Monolog\UTMLog;
 use FFMpeg\Coordinate\TimeCode;
-use Mediatag\Utilities\Chooser;
-use Mediatag\Utilities\ScriptWriter;
+use FFMpeg\FFMpeg;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaBar;
-use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Traits\Callables\ProcessCallbacks;
+use Mediatag\Utilities\Chooser;
+use Mediatag\Utilities\ScriptWriter;
+use Mhor\MediaInfo\MediaInfo;
+use Nette\Utils\Callback;
+use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Process;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
 trait MediaFFmpeg
 {
@@ -94,17 +94,18 @@ trait MediaFFmpeg
 
         if (Option::isTrue('output')) {
             $cmd      = $process->getCommandLine();
-            $cmdArray = str_getcsv($cmd,' ',"'");
+            $cmdArray = str_getcsv($cmd, ' ', "'");
             unset($cmdArray[0]);
             // $this->MergedName
-           foreach($cmdArray as $k => $value){
-                $cmdArray[$k]  = "'".$value."'";
-           }           
+            foreach ($cmdArray as $k => $value) {
+                $cmdArray[$k] = "'".$value."'";
+            }
 
             $obj = new ScriptWriter(str_replace(' ', '_', $this->MergedName).'.sh', __CURRENT_DIRECTORY__);
             $obj->addCmd('ffmpeg', $cmdArray);
             // utmdd($obj);
             $obj->write();
+
             return true;
         }
 
@@ -185,18 +186,17 @@ trait MediaFFmpeg
 
     public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
     {
+        //         $ffmpeg = FFMpeg::create([], Mediatag::$log);
+        //         $video = $ffmpeg->open($video_file);
 
-//         $ffmpeg = FFMpeg::create([], Mediatag::$log);
-//         $video = $ffmpeg->open($video_file);
-        
-//         $frame = $video->frame(TimeCode::fromString($time) );
-//         $frame->save($thumbnail);
-// if(file_exists($thumbnail)){
-//     return true;
-// }
+        //         $frame = $video->frame(TimeCode::fromString($time) );
+        //         $frame->save($thumbnail);
+        // if(file_exists($thumbnail)){
+        //     return true;
+        // }
 
-// utmdd($thumbnail);
-    
+        // utmdd($thumbnail);
+
         //     $video  = $ffmpeg->open($videoFiles[0]);
 
         $cmdOptions = [
