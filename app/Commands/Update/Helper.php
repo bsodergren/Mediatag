@@ -97,7 +97,6 @@ trait Helper
         $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
         $progressBar2->setFormat(' ');
         foreach ($VideoList as $key => $videoInfo) {
-utmdump("----------------------------------------------------------------------");
 
             $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);

@@ -54,7 +54,7 @@ trait CallableHelper
             $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.\PHP_EOL;
         }
     }
-    utmdump([__LINE__,$outputText]);
+    // utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 
@@ -67,7 +67,7 @@ trait CallableHelper
         $outputText                   = $line_id.'  <error> '.$this->key.' '.$error.' </error>';
         // $this->Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
-        utmdump([__LINE__,$outputText]);
+        // utmdump([__LINE__,$outputText]);
         return $outputText.\PHP_EOL;
     }
 
@@ -93,23 +93,36 @@ trait CallableHelper
         // $buffer = $this->cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = $this->key;
-        $outputText                   = '<download>'.$buffer.'</>';
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
 
         if (str_contains($buffer, 'Destination')) {
+            utmdump([__LINE__,$buffer]);
+
             $outputText = str_replace('[download]', '</text>'.$line_id.' <text>[download]', $buffer);
-            $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
-            $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
             utmdump([__LINE__,$outputText]);
+
+            $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
+            utmdump([__LINE__,$outputText]);
+
+            $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
+            // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
 
         if (str_contains($buffer, 'already been')) {
             $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.\PHP_EOL;
-            utmdump([__LINE__,$outputText]);
+            // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
-        utmdump([__LINE__,$outputText]);
+        if (str_contains($buffer, 'Got error')) {
+            $outputText = \PHP_EOL.'<error>'.$buffer.'</error>';
+            return $outputText;
+
+
+        }
+                $outputText                   = '<download>'.$buffer.'</>';
+
+        // utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 

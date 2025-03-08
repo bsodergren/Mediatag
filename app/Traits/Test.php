@@ -18,7 +18,7 @@ trait Test
             Mediatag::$output->writeln($text);
 
             if (true === $exit) {
-                exit;
+                // exit;
             }
         }
     }

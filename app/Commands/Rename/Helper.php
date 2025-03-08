@@ -5,21 +5,20 @@
 
 namespace Mediatag\Commands\Rename;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use Mediatag\Utilities\Strings;
 use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Nette\Utils\FileSystem as nFileSystem;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Symfony\Component\Finder\Finder as SFinder;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use Mediatag\Utilities\Strings;
+use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use Symfony\Component\Finder\Finder as SFinder;
+use UTM\Utilities\Option;
 
 trait Helper
 {
@@ -153,27 +152,28 @@ trait Helper
             if ('' == $studio) {
                 $studio_dir = 'Misc/';
             } else {
-                $studios    = explode('/', $studio);
-                $Arraykey   = array_key_first($studios);
-                $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+                $studios  = explode('/', $studio);
+                $Arraykey = array_key_first($studios);
 
-                // utmdump([$studios,$studio_dir,$Arraykey]);
+                $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+                // utmdd($studio_dir);
 
                 if (false == $studio_dir) {
                     $Arraykey   = array_key_last($studios);
                     $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+
                     if (false == $studio_dir) {
                         // continue;
                         $studio_dir = 'New/'.$studios[$Arraykey];
                     }
                 }
             }
+            // utmdd($studio_dir);
 
             $video_path = $studio_dir.$genrePath;
             if (true == $SortDir) {
                 $video_path = 'Sort/'.$studio_dir;
             }
-
             $newPath = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;
             $newPath = str_replace(__LIBRARY__.'/'.__LIBRARY__.'/', __LIBRARY__.'/', $newPath);
 
@@ -198,7 +198,6 @@ trait Helper
 
             $video_name = basename($video_file);
             $newFile    = $newPath.'/'.$video_name;
-            utmdump(['files',$video_file,$newFile,file_exists($newFile)]);
 
             if ($newFile == $video_file) {
                 //  Mediatag::$output->writeln('Nothing to rename ');
@@ -216,12 +215,14 @@ trait Helper
                 $text[] = ['Moving' => $video_name];
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
+                      } else {
+                        Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
+                      }
                     $text[] = ['New Path' => $video_path];
 
                     $infoMsg = array_merge($message, $text);
-                    utmdump($infoMsg);
                     Mediatag::$Console->table($infoMsg);
-                }
+              
             } else {
                 if (!Option::isTrue('test')) {
                     [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
@@ -238,13 +239,21 @@ trait Helper
                         }
                     }
                     // if (!file_exists($newFile)) {
-                        utmdump(['rename',$video_file,$dupeFile]);
+                        if (!Option::isTrue('test')) {
 
                     (new SfSystem())->rename($video_file, $dupeFile, true);
+                } else {
+                    Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
+                  }
                     Mediatag::$output->writeln($video_file.\PHP_EOL.$dupeFile);
                     if (!file_exists($video_file)) {
                         Mediatag::$output->writeln($newFile.\PHP_EOL.$video_file);
+                        if (!Option::isTrue('test')) {
+
                         (new SfSystem())->rename($newFile, $video_file, false);
+                    } else {
+                        Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
+                      }
                     }
 
                     // utmdd([$video_file, $newFile, $dupeFile]);

@@ -268,7 +268,6 @@ class Storage
         // }
 
         $this->dbConn->onDuplicate($fieldArray, 'id');
-        utmdump($fieldArray, $data);
         $id = $this->dbConn->insert($table, $data);
         // } catch (\Exception $e) {
 

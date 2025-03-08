@@ -5,29 +5,31 @@
 
 namespace Mediatag\Modules\Database\Maps;
 
-use Mediatag\Core\Mediatag;
-
 trait StudioMap
 {
     public function getStudioPath($text)
     {
         // utminfo(func_get_args());
-        utmdump($text);
-        $query  = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $text . "'";
+        $query  = 'SELECT library, path,studio FROM '.__MYSQL_STUDIOS__." WHERE name LIKE '".$text."'";
         $result = $this->dbConn->rawQueryOne($query);
-utmdump($result);
-        if (null !== $result) {
 
-            if ($result['path'] === null ||
-                $result['path'] == "") {
+        if (null !== $result) {
+            if ('Pornhub' == $result['library']) {
+                $result['library'] = 'New';
+            }
+            //            unset($result['library']);
+            if (null === $result['path']
+                || '' == $result['path']) {
+                //                  return false;
                 unset($result['path']);
             }
             $path = implode('/', $result);
 
             return rtrim($path, '/');
         }
-        $this->addStudioMap(__LIBRARY__,$text,$text,null);
+        $this->addStudioMap(__LIBRARY__, $text, $text, null);
         $this->getStudioPath($text);
+
         return false;
     }
 
@@ -35,18 +37,18 @@ utmdump($result);
     {
         // utminfo(func_get_args());
 
-        $library = "'" . $library . "'";
-        $name    = "'" . $name . "'";
-        $studio  = "'" . $studio . "'";
+        $library = "'".$library."'";
+        $name    = "'".$name."'";
+        $studio  = "'".$studio."'";
 
         if (null !== $path) {
-            $path = "'" . $path . "'";
+            $path = "'".$path."'";
         } else {
             $path = 'NULL';
         }
 
-        $query   = 'INSERT IGNORE INTO ' . __MYSQL_STUDIOS__ . '  (library, name, studio, path) VALUES (' . $library . ',' . $name . ',' . $studio . ', ' . $path . ') ';
-        $query   = $query . ' ON DUPLICATE KEY UPDATE library=' . $library . ',studio=' . $studio . ',path=' . $path;
+        $query = 'INSERT IGNORE INTO '.__MYSQL_STUDIOS__.'  (library, name, studio, path) VALUES ('.$library.','.$name.','.$studio.', '.$path.') ';
+        $query = $query.' ON DUPLICATE KEY UPDATE library='.$library.',studio='.$studio.',path='.$path;
 
         $this->dbConn->rawQuery($query);
     }
@@ -55,9 +57,9 @@ utmdump($result);
     {
         // utminfo(func_get_args());
 
-        $library = "'" . $library . "'";
-        $name    = "'" . $name . "'";
-        $query   = 'DELETE FROM ' . __MYSQL_STUDIOS__ . ' WHERE Library = ' . $library . ' and name = ' . $name . '';
+        $library = "'".$library."'";
+        $name    = "'".$name."'";
+        $query   = 'DELETE FROM '.__MYSQL_STUDIOS__.' WHERE Library = '.$library.' and name = '.$name.'';
         $this->dbConn->rawQuery($query);
     }
 }
