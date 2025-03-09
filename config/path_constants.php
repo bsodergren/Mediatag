@@ -20,10 +20,10 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 // define('__PH_USERNAME__', CONFIG['PH_USERNAME']);
 // define('__PH_PASSWORD__', CONFIG['PH_PASSWORD']);
 
-const __DATA_LIB__       = __CONFIG_LIB__.'/data';
+const __DATA_LIB__ = __CONFIG_LIB__.'/data';
 
-const __PLEX_VAR_DIR__ = __APP_HOME__.'/var';
-const __LOGFILE_DIR__  = __PLEX_VAR_DIR__.'/log';
+const __PLEX_VAR_DIR__   = __APP_HOME__.'/var';
+const __LOGFILE_DIR__    = __PLEX_VAR_DIR__.'/log';
 const __DB_BACKUP_ROOT__ = __PLEX_VAR_DIR__.'/db';
 
 const __PLEX_PL_DIR__      = __PLEX_HOME__.'/Playlists';
@@ -72,6 +72,8 @@ const __FINISHED_CSV_DIR__ = __CSV_DIR__.'/done';
 define(
     '__CREATE_DIRS__',
     [__JSON_CACHE_DIR__,
+        __LOGFILE_DIR__,
+        __APP_CACHE_DIR__,
         __PLEX_PL_DIR__,
         __PLEX_DOWNLOAD__,
         __PLEX_PL_ID_DIR__,

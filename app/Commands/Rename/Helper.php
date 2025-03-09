@@ -20,6 +20,13 @@ use Symfony\Component\Filesystem\Filesystem as SfSystem;
 use Symfony\Component\Finder\Finder as SFinder;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+use function dirname;
+use function is_array;
+
+use const PHP_EOL;
+
 trait Helper
 {
     public static $selfClass;
@@ -81,7 +88,7 @@ trait Helper
             }
         }
 
-        if (0 == \count($file_array)) {
+        if (0 == count($file_array)) {
             utmdd([__METHOD__, 'no files']);
         }
         // $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, \count($file_array));
@@ -108,7 +115,7 @@ trait Helper
             $message    = $videoData['msg'];
             $metatags   = (new TagReader())->loadVideo($videoData)->getMetaValues();
 
-            if (!\is_array($message)) {
+            if (!is_array($message)) {
                 $message = [];
             //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
             } else {
@@ -119,7 +126,7 @@ trait Helper
             $genrePath = '';
             $studio    = '';
             $prefix    = '';
-            if (\array_key_exists('studio', $metatags)) {
+            if (array_key_exists('studio', $metatags)) {
                 $studio = $metatags['studio'];
             }
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
@@ -215,14 +222,13 @@ trait Helper
                 $text[] = ['Moving' => $video_name];
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
-                      } else {
-                        Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
-                      }
-                    $text[] = ['New Path' => $video_path];
+                } else {
+                    Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
+                }
+                $text[] = ['New Path' => $video_path];
 
-                    $infoMsg = array_merge($message, $text);
-                    Mediatag::$Console->table($infoMsg);
-              
+                $infoMsg = array_merge($message, $text);
+                Mediatag::$Console->table($infoMsg);
             } else {
                 if (!Option::isTrue('test')) {
                     [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
@@ -239,21 +245,19 @@ trait Helper
                         }
                     }
                     // if (!file_exists($newFile)) {
-                        if (!Option::isTrue('test')) {
-
-                    (new SfSystem())->rename($video_file, $dupeFile, true);
-                } else {
-                    Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
-                  }
-                    Mediatag::$output->writeln($video_file.\PHP_EOL.$dupeFile);
-                    if (!file_exists($video_file)) {
-                        Mediatag::$output->writeln($newFile.\PHP_EOL.$video_file);
-                        if (!Option::isTrue('test')) {
-
-                        (new SfSystem())->rename($newFile, $video_file, false);
+                    if (!Option::isTrue('test')) {
+                        (new SfSystem())->rename($video_file, $dupeFile, true);
                     } else {
-                        Mediatag::$output->writeln("Renaming " . $video_file .  " ". $newFile,);
-                      }
+                        Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
+                    }
+                    Mediatag::$output->writeln($video_file.PHP_EOL.$dupeFile);
+                    if (!file_exists($video_file)) {
+                        Mediatag::$output->writeln($newFile.PHP_EOL.$video_file);
+                        if (!Option::isTrue('test')) {
+                            (new SfSystem())->rename($newFile, $video_file, false);
+                        } else {
+                            Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
+                        }
                     }
 
                     // utmdd([$video_file, $newFile, $dupeFile]);
@@ -412,7 +416,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_name = basename($file);
-        $file_dir  = \dirname($file);
+        $file_dir  = dirname($file);
         $file_name = Strings::cleanFileName($file_name);
 
         return $file_dir.'/'.$file_name;

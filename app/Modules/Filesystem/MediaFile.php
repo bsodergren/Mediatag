@@ -14,7 +14,7 @@ use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
 class MediaFile
 {
-    use Callables;
+     
 
     public $video_file;
 

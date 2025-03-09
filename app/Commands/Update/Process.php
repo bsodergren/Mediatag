@@ -36,7 +36,7 @@ class Process extends Mediatag
         // 'download'  => [
         //     'exec'         => null,
         //     'download'     => null,
-            //     'writeChanges' => true,
+        //     'writeChanges' => true,
         // ],
         // 'clear'     => [
         //     'exec'      => null,
@@ -49,9 +49,9 @@ class Process extends Mediatag
     ];
 
     public $defaultCommands = [
-        // 'exec'         => null,
-        // 'getChanges'   => null,
-        // 'writeChanges' => null,
+        'exec'         => null,
+        'getChanges'   => null,
+        'writeChanges' => null,
     ];
 
     protected $useFuncs = ['addMeta', 'setupMap'];

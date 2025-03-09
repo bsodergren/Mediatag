@@ -20,7 +20,7 @@ use Symfony\Component\Process\Process as ExecProcess;
  */
 class MediaFilesystem extends SFilesystem
 {
-    use Callables;
+     
 
     public static $clean_up = 3;
 

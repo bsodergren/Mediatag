@@ -3,13 +3,14 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Update;
+namespace Mediatag\Commands\Update\Commands\Update;
 
 use Mediatag\Core\MediaCommand;
+use Mediatag\Commands\Update\Lang;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 #[AsCommand(name: 'update', description: 'Updates metatags on files')]
-final class Command extends MediaCommand
+final class UpdateCommand extends MediaCommand
 {
     use Lang;
 
@@ -21,5 +22,6 @@ final class Command extends MediaCommand
             'getChanges'   => null,
             'writeChanges' => null,
         ],
+       
     ];
 }

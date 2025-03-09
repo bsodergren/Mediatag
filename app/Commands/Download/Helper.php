@@ -191,10 +191,9 @@ trait Helper
         $old_file = $old_path.'/'.$old_name;
         $new_file = $video_path.'/'.$video_name;
 
-
         if (!Mediatag::$filesystem->exists($new_file)) {
             if (Option::istrue('test')) {
-                return "<question>Video</question>\n\t<comment>Old:".basename($old_file)."</comment>\n\t<info>New:".basename($new_file)."</info>\n";
+                return "<question>Video</question>\n\t<comment>Old:".basename($old_file)."</comment>\n\t<info>New:".$new_file."</info>\n";
             }
 
             Mediatag::$filesystem->rename($old_file, $new_file, false);

@@ -14,7 +14,45 @@ use Nette\Utils\Strings;
 
 class Studio extends TagBuilder
 {
-    use Callables;
+
+    
+    public function studioList($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            $studioReplacement = '';
+            $studio            = $line;
+            if (str_contains($line, ':')) {
+                $studio            = Strings::before($line, ':');
+                $studioReplacement = ':'.Strings::after($line, ':');
+            }
+
+            return $studio.$studioReplacement;
+        }
+
+        return false;
+    }
+
+    public function studioPaths($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            if (!str_contains($line, ':')) {
+                $line = $line.':'.$line;
+            }
+
+            $studio_match = Strings::before($line, ':');
+            $studio_match = strtolower(str_replace(' ', '_', $studio_match));
+
+            return [
+                $studio_match => Strings::after($line, ':'),
+            ];
+        }
+
+        return false;
+    }
 
     public function __construct($videoData)
     {

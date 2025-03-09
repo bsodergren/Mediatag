@@ -12,8 +12,8 @@ use Mediatag\Traits\ExecArgs;
 use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Core\Helper\MediaCommand;
 use Symfony\Component\Process\Process;
-use Mediatag\Traits\Callables\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 
 class MediatagExec

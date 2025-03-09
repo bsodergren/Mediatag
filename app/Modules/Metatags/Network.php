@@ -13,7 +13,7 @@ use Mediatag\Utilities\MediaArray;
 
 class Network extends TagBuilder
 {
-    use Callables;
+     
 
     public static $networkArray;
 

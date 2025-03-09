@@ -23,7 +23,7 @@ use Symfony\Component\Filesystem\Filesystem as SFilesystem;
  */
 class MediaFinder extends SFinder
 {
-    use Callables;
+     
 
     /**
      * Summary of video_file.

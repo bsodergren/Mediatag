@@ -7,14 +7,12 @@ namespace Mediatag\Commands\Download;
 
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
-    use Callables;
     use Helper;
     use MediaProcess;
     /**

@@ -19,7 +19,6 @@ use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
-    use Callables;
     use Helper;
     use MediaExecute;
     use MediaProcess;

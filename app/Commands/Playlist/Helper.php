@@ -385,4 +385,156 @@ trait Helper
 
         exit;
     }
+
+
+    public function parseArchive($line)
+    {
+        $key = Strings::after($line, ' ');
+        if (!\array_key_exists($key, $this->json_Array)) {
+            return $line;
+        }
+
+        return false;
+    }
+
+    public function filemap($line)
+    {
+        if ('' != $line) {
+            $ph_id = Strings::after($line, '=');
+            if (str_contains($ph_id, '&')) {
+                $ph_id = Strings::before($ph_id, '&');
+            }
+            $file_map[$ph_id] = [
+                'url' => Strings::after($line, '-> '),
+                'old' => Strings::before($line, ' ->'),
+            ];
+
+            return $file_map;
+        }
+
+        return false;
+    }
+
+    public function getpremiumListIds($line)
+    {
+        $ph_id = Strings::after($line, '=');
+        if (str_contains($ph_id, '&')) {
+            $ph_id = Strings::before($ph_id, '&');
+        }
+
+        return $ph_id;
+    }
+
+    public function compactPlaylist($line)
+    {
+        $ph_id = Strings::after($line, '=');
+        if (str_contains($ph_id, '&')) {
+            $ph_id = Strings::before($ph_id, '&');
+        }
+        if (null === $ph_id) {
+            $ph_id = Strings::after($line, 'watch/');
+            if (null !== $ph_id) {
+                $ph_id = Strings::before($ph_id, '/');
+            }
+        }
+        // utmdd([$line,$ph_id]);
+        if (!\in_array($ph_id, $this->ids)) {
+            if (str_contains($line, 'view_video.php')) {
+                return $line;
+            }
+            if (str_contains($line, 'watch')) {
+                return $line;
+            }
+        }
+
+        return false;
+    }
+
+    public function studioList($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            $studioReplacement = '';
+            $studio            = $line;
+            if (str_contains($line, ':')) {
+                $studio            = Strings::before($line, ':');
+                $studioReplacement = ':'.Strings::after($line, ':');
+            }
+
+            return $studio.$studioReplacement;
+        }
+
+        return false;
+    }
+
+    public function studioPaths($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            if (!str_contains($line, ':')) {
+                $line = $line.':'.$line;
+            }
+
+            $studio_match = Strings::before($line, ':');
+            $studio_match = strtolower(str_replace(' ', '_', $studio_match));
+
+            return [
+                $studio_match => Strings::after($line, ':'),
+            ];
+        }
+
+        return false;
+    }
+
+    public function toList($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            $Replacement = $line;
+            $match       = $line;
+            if (str_contains($line, ':')) {
+                $match       = Strings::before($line, ':');
+                $Replacement = Strings::after($line, ':');
+                if ('' == $Replacement) {
+                    $Replacement = null;
+                }
+            }
+            $key = strtolower($match);
+            $key = str_replace(' ', '_', $key);
+            $key = str_replace('+', '', $key);
+            $key = str_replace('(', '', $key);
+            $key = str_replace(')', '', $key);
+
+            return [$key => $Replacement];
+        }
+
+        return false;
+    }
+
+    public function toArray($line)
+    {
+        // utminfo(func_get_args());
+
+        if ('' != $line) {
+            $Replacement = null;
+            $match       = $line;
+            if (str_contains($line, ':')) {
+                $match       = Strings::before($line, ':');
+                $Replacement = Strings::after($line, ':');
+            }
+            $key = strtolower($match);
+            $key = str_replace(' ', '_', $key);
+            $key = str_replace('+', '', $key);
+            $key = str_replace('(', '', $key);
+            $key = str_replace(')', '', $key);
+
+            return [$key => $Replacement];
+        }
+
+        return false;
+    }
+
 }

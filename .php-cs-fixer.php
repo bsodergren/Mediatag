@@ -108,7 +108,7 @@ return $config
         // Replace `get_class` calls on object variables with class keyword syntax.
         'get_class_to_class_keyword'                       => true,
         // Imports or fully qualifies global classes/functions/constants.
-        'global_namespace_import'                          => ['import_classes' => false, 'import_constants' => false, 'import_functions' => false],
+        'global_namespace_import'                          => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],
         // Add, replace or remove header comment.
         'header_comment'                                   => ['header'=>$fileHeaderComment, 'comment_type' => 'PHPDoc', 'location' => 'after_open', 'separate' => 'bottom'],
         // Function `implode` must be called with 2 arguments in the documented order.

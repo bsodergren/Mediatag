@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Process extends Mediatag
 {
-    use Callables;
+     
     use Helper;
     public $video_array;
     public $backupDirectory;

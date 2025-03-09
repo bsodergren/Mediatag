@@ -13,7 +13,7 @@ use Mediatag\Utilities\MediaArray;
 
 class Keyword extends TagBuilder
 {
-    use Callables;
+     
 
     public static $keywordArray;
 

@@ -7,6 +7,7 @@ namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Callables\Callables;
 use Mediatag\Traits\MediaFFmpeg;
@@ -17,7 +18,8 @@ use UTM\Utilities\Option;
 
 class WriteMeta extends MediatagExec
 {
-    use Callables;
+
+use ProcessCallbacks;
     use MediaFFmpeg;
 
     public $execMode = 'write';

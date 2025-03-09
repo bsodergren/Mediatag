@@ -5,15 +5,14 @@
 
 namespace Mediatag\Modules\Executable;
 
+use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
-use Mediatag\Traits\Callables\Callables;
 
 class ReadMeta extends MediatagExec
 {
-    use Callables;
-
+use ProcessCallbacks;
     public $execMode;
 
     public function __construct($videoData, $input = null, $output = null)

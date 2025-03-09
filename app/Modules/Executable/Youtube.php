@@ -8,17 +8,15 @@ namespace Mediatag\Modules\Executable;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
+use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\Pornhub;
-use Mediatag\Modules\Executable\Helper\Studio;
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
 class Youtube extends MediatagExec
 {
-    use Callables;
+    use YtdlpCallBacks;
 
     public $execMode = 'write';
 
@@ -38,21 +36,20 @@ class Youtube extends MediatagExec
 
     public $downloadFiles = true;
 
-    public $commonOptions =
-    [
-        CONFIG['YOUTUBEDL_CMD'],
-        '-i',
-        '-f',
-        'bestvideo[width<=?1080]+bestaudio/best',
-        // 'worstvideo[width<=?1080]+worstaudio/worst',
-        '--restrict-filenames',
-        // '-w',
-        '-c',
-        // '--no-part',
-        '--write-info-json',
-        '--no-warnings',
-        '--ignore-config',
-    ];
+    public $commonOptions = [
+            CONFIG['YOUTUBEDL_CMD'],
+            '-i',
+            '-f',
+            'bestvideo[width<=?1080]+bestaudio/best',
+            // 'worstvideo[width<=?1080]+worstaudio/worst',
+            '--restrict-filenames',
+            // '-w',
+            '-c',
+            // '--no-part',
+            '--write-info-json',
+            '--no-warnings',
+            '--ignore-config',
+        ];
 
     // private $jsonoptions = [
     //     '-f',
@@ -75,24 +72,20 @@ class Youtube extends MediatagExec
 
     public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
 
-    public $library ;
+    public $library;
 
     public function __construct($class, $input = null, $output = null)
     {
         // utminfo(func_get_args());
 
-       
-
         $this->Console = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
 
-
         // utmdd($this->library);
-        if(is_file($class)){
-        
+        if (is_file($class)) {
             $this->playlist = $class;
-            $st_array = file($this->playlist);
+            $st_array       = file($this->playlist);
 
-            $class    = $st_array[0];
+            $class = $st_array[0];
         }
 
         if (str_contains($class, 'pornhub')) {
@@ -101,15 +94,15 @@ class Youtube extends MediatagExec
         if (str_contains($class, 'nubiles')) {
             $class = 'Studio';
         }
-        
+
         // utmdd($class);
 
         $this->library = $class;
-//        use Mediatag\Modules\Executable\Helper\Studio;
+        //        use Mediatag\Modules\Executable\Helper\Studio;
 
-        $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
+        $Class              = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
         $this->LibraryClass = new $Class($this);
-    
+
         // $this->commonOptions = [
         //     CONFIG['YOUTUBEDL_CMD'],
         //     '-i',
@@ -129,7 +122,7 @@ class Youtube extends MediatagExec
     public function youtubeGetJson($video_key)
     {
         // utminfo(func_get_args());
-        if($this->library != 'Pornhub'){
+        if ('Pornhub' != $this->library) {
             return null;
         }
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
@@ -158,8 +151,8 @@ class Youtube extends MediatagExec
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles) {
             $options = array_merge($options, [
-               '--download-archive',
-               __PLEX_PL_DIR__.'/ids/archive.txt',
+                '--download-archive',
+                __PLEX_PL_DIR__.'/ids/archive.txt',
                 '--write-info-json',
                 '--embed-thumbnail',
             ]);
@@ -169,6 +162,7 @@ class Youtube extends MediatagExec
         }
 
         $playlist_opt = ['-a', $this->playlist];
+
         return array_merge($options, $playlist_opt);
     }
 

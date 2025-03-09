@@ -13,7 +13,7 @@ use Mediatag\Utilities\MediaArray;
 
 class Genre extends TagBuilder
 {
-    use Callables;
+     
 
     public static $genreArray;
 
