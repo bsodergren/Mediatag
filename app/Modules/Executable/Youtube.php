@@ -154,7 +154,7 @@ class Youtube extends MediatagExec
                 '--download-archive',
                 __PLEX_PL_DIR__.'/ids/archive.txt',
                 '--write-info-json',
-                '--embed-thumbnail',
+                // '--embed-thumbnail',
             ]);
         }
         if (Option::istrue('skip') || false === $this->downloadFiles) {

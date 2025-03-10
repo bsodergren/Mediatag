@@ -135,27 +135,28 @@ trait YtdlpCallBacks
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
 
         if (str_contains($buffer, 'Destination')) {
-            utmdump([__LINE__, $buffer]);
+            // $buffer = $this->cleanBuffer($buffer);
+            $buffer= trim($buffer);
+           
 
-            $outputText = str_replace('[download]', '</text>'.$line_id.' <text>[download]', $buffer);
-            utmdump([__LINE__, $outputText]);
-
+            $outputText = str_replace("\n".'[download]', '</text>'.PHP_EOL.$line_id.' <text>[download]', $buffer);
             $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
-            utmdump([__LINE__, $outputText]);
 
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
-            // utmdump([__LINE__,$outputText]);
+             utmdump([__LINE__,$outputText]);
             return $outputText;
         }
 
         if (str_contains($buffer, 'already been')) {
+            $buffer = $this->cleanBuffer($buffer);
             $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.\PHP_EOL;
 
             // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
         if (str_contains($buffer, 'Got error')) {
+            $buffer = $this->cleanBuffer($buffer);
             $outputText = \PHP_EOL.'<error>'.$buffer.'</error>';
 
             return $outputText;
