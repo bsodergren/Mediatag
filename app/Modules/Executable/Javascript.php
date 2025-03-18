@@ -8,8 +8,7 @@ namespace Mediatag\Modules\Executable;
 use Nette\Utils\Callback;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
-use Mediatag\Traits\Callables\Callables;
-use Mediatag\Traits\Callables\ProcessCallbacks;;
+use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 class Javascript extends MediatagExec

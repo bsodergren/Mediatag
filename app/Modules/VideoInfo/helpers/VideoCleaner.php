@@ -5,10 +5,11 @@
 
 namespace Mediatag\Modules\VideoInfo\helpers;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait VideoCleaner
 {
@@ -94,6 +95,10 @@ trait VideoCleaner
 
         $fileSearch = $this->getPreviewFiles();
 
+        if (Option::isTrue('yes')) {
+            $delete = true;
+        }
+// utmdd($fileSearch );
 if (true === $delete) {
             foreach ($fileSearch as $k => $file) {
                 unlink($file);

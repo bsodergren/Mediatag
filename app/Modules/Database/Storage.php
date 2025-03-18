@@ -138,7 +138,7 @@ class Storage
 
         $ret = $this->dbConn->getOne($table);
 
-        // utmdd($this->dbConn->getLastQuery(),__LIBRARY__);
+        utmdump($this->dbConn->getLastQuery(),__LIBRARY__);
         return $ret;
     }
 

@@ -44,6 +44,7 @@ trait Studio
         if (false !== $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
                 $studioKey = str_replace("-", "", $matches[1]);
+                utmdump($studioKey);
                 if (\array_key_exists($studioKey, $this->replace_studios)) {
                     return $this->replace_studios[$studioKey];
 

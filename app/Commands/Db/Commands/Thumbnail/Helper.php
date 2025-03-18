@@ -13,6 +13,7 @@ trait Helper
     public function execThumb()
     {
         // utminfo(func_get_args());
+        utmdd($this->video_file);
 
         $this->obj = new Thumbnail();
         $this->checkClean();

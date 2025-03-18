@@ -23,6 +23,11 @@ class TeamSkeet extends Patterns
             'studio' => [
                 'pattern' => '/^([a-zA-Z-]+)_.*/i', ],
         ],
+        'title'  => [
+            'pattern' =>  '/^([a-zA-Z-]+)_.*/i',
+            'match'   => 1,
+            //'delim'   => '_',
+        ],
     ];
 
     public $replace_studios = [
@@ -57,10 +62,10 @@ class TeamSkeet extends Patterns
         'teensdoporn'                 => 'teens do porn',
         'thisgirlsucks'               => 'this girl sucks',
         'tittyattack'                 => 'titty attack',
-        // 'teamskeetclassics'           => 'teamskeet extras',
-        // 'teamskeetextras'             => 'teamskeet extras',
-        // 'teamskeetlabs'               => 'teamskeet extras',
-        // 'teamskeetselects'            => 'teamskeet selects',
+        'teamskeetclassics'           => 'teamskeet extras',
+        'teamskeetextras'             => 'teamskeet extras',
+        'teamskeetlabs'               => 'teamskeet extras',
+        'teamskeetselects'            => 'teamskeet selects',
         'teamskeetxadultprime'        => 'teamskeet extras',
         'teamskeetxbaeb'              => 'teamskeet extras',
         'teamskeetxfuckingawesome'    => 'teamskeet extras',
@@ -93,6 +98,7 @@ class TeamSkeet extends Patterns
         'teamskeetxharmonyfilms'      => 'teamskeet extras',
         'teamskeetfeatures'           => 'Feature Films',
         'mylfxgrandmams'              => 'mylf x grandmams',
+        'mylfxsinematica' => 'sinematica',
         // 'freeusemilf'                 => 'freeuse milf',
         // 'usepov'                      => 'Use POV',
         // 'freeusefantasy'              => 'Freeuse Fantasy',

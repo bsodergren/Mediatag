@@ -219,16 +219,17 @@ trait Helper
                     $text[] = ['Genre List' => $metatags['genre']];
                 }
 
-                $text[] = ['Moving' => $video_name];
+                $text[] = ['Moving' => File::videoPath($video_name)];
+                                    Mediatag::$output->writeln('Renaming <file>'.File::videoPath($video_file).'</>'.PHP_EOL.' <comment>'.File::videoPath($newFile).'</>');
+
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
                 } else {
-                    Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
                 }
                 $text[] = ['New Path' => $video_path];
 
                 $infoMsg = array_merge($message, $text);
-                Mediatag::$Console->table($infoMsg);
+                // Mediatag::$Console->table($infoMsg);
             } else {
                 if (!Option::isTrue('test')) {
                     [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
@@ -239,30 +240,29 @@ trait Helper
                     $dupeFile = $dupePath.'/'.$video_name;
 
                     if (!is_dir($dupePath)) {
-                        Mediatag::$output->writeln("Creating {$studio_dir}{$genrePath}");
+                        Mediatag::$output->writeln("Creating <file> ". $studio_dir.'</> '.PHP_EOL.'<comment>'.$genrePath.'</>');
                         if (!Option::isTrue('test')) {
                             nFileSystem::createDir($dupePath, 0755);
                         }
                     }
+
                     // if (!file_exists($newFile)) {
+                        Mediatag::$output->writeln('Renaming duplicate '.PHP_EOL.'<file>'.File::videoPath($video_file).'</> '.PHP_EOL.'<comment> '.File::videoPath($dupeFile).'</>');
                     if (!Option::isTrue('test')) {
-                        (new SfSystem())->rename($video_file, $dupeFile, true);
-                    } else {
-                        Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
+                                           (new SfSystem())->rename($video_file, $dupeFile, true);
+                    
                     }
-                    Mediatag::$output->writeln($video_file.PHP_EOL.$dupeFile);
-                    if (!file_exists($video_file)) {
-                        Mediatag::$output->writeln($newFile.PHP_EOL.$video_file);
-                        if (!Option::isTrue('test')) {
-                            (new SfSystem())->rename($newFile, $video_file, false);
-                        } else {
-                            Mediatag::$output->writeln('Renaming '.$video_file.' '.$newFile);
-                        }
-                    }
+
+                    // if (!file_exists($video_file)) {
+                    //     Mediatag::$output->writeln('Renaming <file>'.__LINE__.File::videoPath($newFile).' </> '.PHP_EOL.'<comment>'.File::videoPath($video_file).'</>');
+                    //     if (!Option::isTrue('test')) {
+                    //        (new SfSystem())->rename($newFile, $video_file, false);
+                    //     }
+                    // }
 
                     // utmdd([$video_file, $newFile, $dupeFile]);
                 }
-                Mediatag::$output->writeln($video_name.' is dup');
+                // Mediatag::$output->writeln($video_name.' is dup');
                 // Mediatag::$Console->error('Duplicate Video '.$video_name);
             }
             // */
@@ -389,9 +389,12 @@ trait Helper
             $fs        = new File($file);
             $videoData = $fs->get();
             $fileObj   = new fileReader($videoData);
-            $file      = $fileObj->getFilename($file);
-
+            $filename      = $fileObj->getFilename($file);
+            if($filename !== null){
+                $file = $filename;
+            }
             $newName = $this->cleanFilename($file);
+
             //  utmdd([__METHOD__, $oldName, $newName]);
             if (!str_starts_with($oldName, __PLEX_HOME__)) {
                 continue;
@@ -404,6 +407,8 @@ trait Helper
                 continue;
             }
             // ;
+            Mediatag::$output->writeln('renaming file <comment> '.basename($oldName).'</>');
+            Mediatag::$output->writeln('<comment> '.basename($newName).'</>');
 
             $this->renameFile($oldName, $newName);
         }

@@ -34,6 +34,13 @@ trait Helper
         $youtube->createWatchList($this->url);
     }
 
+
+    public function dodownloadPlaylistURL()
+    {
+        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
+        $youtube->downloadPlaylist();
+    }
+
     public function dodownloadPlaylist()
     {
         // utminfo(func_get_args());

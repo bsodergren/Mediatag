@@ -14,6 +14,12 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+
+use const FILE_APPEND;
+use const PHP_EOL;
+
 class Youtube extends MediatagExec
 {
     use YtdlpCallBacks;
@@ -37,19 +43,19 @@ class Youtube extends MediatagExec
     public $downloadFiles = true;
 
     public $commonOptions = [
-            CONFIG['YOUTUBEDL_CMD'],
-            '-i',
-            '-f',
-            'bestvideo[width<=?1080]+bestaudio/best',
-            // 'worstvideo[width<=?1080]+worstaudio/worst',
-            '--restrict-filenames',
-            // '-w',
-            '-c',
-            // '--no-part',
-            '--write-info-json',
-            '--no-warnings',
-            '--ignore-config',
-        ];
+        CONFIG['YOUTUBEDL_CMD'],
+        '-i',
+        '-f',
+        'bestvideo[width<=?1080]+bestaudio/best',
+        // 'worstvideo[width<=?1080]+worstaudio/worst',
+        '--restrict-filenames',
+        // '-w',
+        '-c',
+        // '--no-part',
+        '--write-info-json',
+        '--no-warnings',
+        '--ignore-config',
+    ];
 
     // private $jsonoptions = [
     //     '-f',
@@ -86,6 +92,8 @@ class Youtube extends MediatagExec
             $st_array       = file($this->playlist);
 
             $class = $st_array[0];
+        } else {
+            $class = 'Pornhub';
         }
 
         if (str_contains($class, 'pornhub')) {
@@ -138,7 +146,7 @@ class Youtube extends MediatagExec
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
         $json_file = '';
 
-        if (\array_key_exists(1, $output_array)) {
+        if (array_key_exists(1, $output_array)) {
             $json_file = $output_array[1];
             $this->moveJson($json_file);
         }
@@ -160,8 +168,11 @@ class Youtube extends MediatagExec
         if (Option::istrue('skip') || false === $this->downloadFiles) {
             $options = array_merge($options, ['--skip-download']);
         }
-
         $playlist_opt = ['-a', $this->playlist];
+
+        if (Option::istrue('url')) {
+            $playlist_opt = [Option::getValue('url')];
+        }
 
         return array_merge($options, $playlist_opt);
     }
@@ -171,12 +182,12 @@ class Youtube extends MediatagExec
         // utminfo(func_get_args());
 
         Mediatag::$output->writeln('<info> Downloading video URLs from playlist </info>');
-        $this->pltype = 'watchlater';
-        if (str_contains($url, 'premium')) {
-            $this->pltype = 'watchlaterPr';
-        }
+        // $this->pltype = 'watchlater';
+        // if (str_contains($url, 'premium')) {
+        //     $this->pltype = 'watchlaterPr';
+        // }
 
-        $command = array_merge($this->commonOptions, ['--get-id', $url]);
+        $command = array_merge($this->commonOptions, [$url]);
         $this->exec($command, Callback::check([$this, 'watchlistCallback']));
     }
 
@@ -187,34 +198,38 @@ class Youtube extends MediatagExec
         Mediatag::$output->writeln('<info> Downloaded new Playlist </info>');
 
         $this->downloadFiles = $downloadFiles;
+        $this->num_of_lines  = 100;
+        if (!Option::istrue('url')) {
+            $names              = file($this->playlist);
+            $this->num_of_lines = count($names) + 1;
+            if (!str_contains('premium', $this->playlist)) {
+                $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
+                Filesystem::backupPlaylist($this->premium);
+            }
 
-        $names              = file($this->playlist);
-        $this->num_of_lines = \count($names) + 1;
+            if (!str_contains('model_hub', $this->playlist)) {
+                $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
+                Filesystem::backupPlaylist($this->model_hub);
+            }
 
-        $command = $this->youtubeCmdOptions();
-        if (!str_contains('premium', $this->playlist)) {
-            $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
-            Filesystem::backupPlaylist($this->premium);
+            // } else {
+            //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
         }
-
-        if (!str_contains('model_hub', $this->playlist)) {
-            $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
-            Filesystem::backupPlaylist($this->model_hub);
-        }
-
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
+        $command  = $this->youtubeCmdOptions();
+
         // utmdd($command);
         $this->exec($command, $callback);
     }
 
-    private function updateIdList($keyfile)
+    public function updateIdList($keyfile)
     {
         // utminfo(func_get_args());
 
-        file_put_contents($keyfile, $this->key.\PHP_EOL, \FILE_APPEND);
+        file_put_contents($keyfile, $this->key.PHP_EOL, FILE_APPEND);
     }
 
-    private function updatePlaylist($type, $file = null)
+    public function updatePlaylist($type, $file = null)
     {
         // utminfo(func_get_args());
         if (null === $file) {
@@ -224,14 +239,14 @@ class Youtube extends MediatagExec
         if ('watchlaterPr' == $type) {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
             // $this->Console->writeln($url);
-            file_put_contents($file, $url.\PHP_EOL, \FILE_APPEND);
+            file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
 
             return 1;
         }
         if ('watchlater' == $type) {
             $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
             // $this->Console->writeln($url);
-            file_put_contents($file, $url.\PHP_EOL, \FILE_APPEND);
+            file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
 
             return 1;
         }
@@ -240,7 +255,7 @@ class Youtube extends MediatagExec
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
             // $this->Console->writeln($url);
             if (!str_contains('premium', $file)) {
-                file_put_contents($this->premium, $url.\PHP_EOL, \FILE_APPEND);
+                file_put_contents($this->premium, $url.PHP_EOL, FILE_APPEND);
             }
 
             return 1;
@@ -249,14 +264,14 @@ class Youtube extends MediatagExec
         if ('modelhub' == $type) {
             $url = 'https://www.modelhub.com/video/'.$this->key;
             if (!str_contains('model_hub', $file)) {
-                file_put_contents($this->model_hub, $url.\PHP_EOL, \FILE_APPEND);
+                file_put_contents($this->model_hub, $url.PHP_EOL, FILE_APPEND);
             }
 
             return 1;
         }
         if ('error' == $type) {
             $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
-            file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url.\PHP_EOL, \FILE_APPEND);
+            file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url.PHP_EOL, FILE_APPEND);
 
             return 1;
         }

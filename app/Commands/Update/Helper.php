@@ -100,9 +100,11 @@ trait Helper
 
             $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);
+
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
+
             $name       = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']).'/'.$videoInfo['video_name'];
             $message    = $name;
             if (\count($videoArray['updateTags']) > 0) {

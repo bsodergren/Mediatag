@@ -52,22 +52,23 @@ trait YtdlpCallBacks
     public function watchlistCallback($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/playlist.log", $buffer . PHP_EOL);
+        return $buffer.\PHP_EOL;
+        // if (str_contains($buffer, '[PLAYLIST]')) {
+        //     $this->Console->writeln($buffer);
+        // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
+        // //     if (\array_key_exists(2, $matches)) {
+        // //         if ('' != $matches[2]) {
+        // //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
+        // //             $this->Console->writeln($outputText);
 
-        if (str_contains($buffer, '[PLAYLIST]')) {
-            $this->Console->writeln($buffer);
-        // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
-        //     if (\array_key_exists(2, $matches)) {
-        //         if ('' != $matches[2]) {
-        //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
-        //             $this->Console->writeln($outputText);
-
-        //         }
-        //     }
+        // //         }
+        // //     }
+        // // }
+        // } else {
+        //     $this->key = $buffer;
+        //     $this->updatePlaylist($this->pltype);
         // }
-        } else {
-            $this->key = $buffer;
-            $this->updatePlaylist($this->pltype);
-        }
         // $this->Console->writeln($this->key );
     }
 
@@ -151,8 +152,8 @@ trait YtdlpCallBacks
         if (str_contains($buffer, 'already been')) {
             $buffer = $this->cleanBuffer($buffer);
             $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.\PHP_EOL;
-
-            // utmdump([__LINE__,$outputText]);
+            --$this->num_of_lines;
+            // $line_id = '<id>'.$this->num_of_lines.'</id>';            // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
         if (str_contains($buffer, 'Got error')) {

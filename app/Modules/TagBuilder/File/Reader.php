@@ -5,15 +5,17 @@
 
 namespace Mediatag\Modules\TagBuilder\File;
 
-use Doctrine\Bundle\DoctrineBundle\Command\Proxy\UpdateSchemaDoctrineCommand;
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Debug\Debug;
-use Mediatag\Utilities\ScriptWriter;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Utilities\ScriptWriter;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\Debug;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function dirname;
 
 include_once __DATA_MAPS__.'/StudioMap.php';
 
@@ -22,6 +24,7 @@ class Reader extends TagReader
     use StudioReader;
 
     public $genre;
+    public $title;
 
     public $studio;
     public $network;
@@ -79,24 +82,24 @@ class Reader extends TagReader
 
         $classAttm[] = $studioClass;
         // utmdump($this->video_key);
-        //utmdd($this->video_library);
+        // utmdd($this->video_library);
         if (str_starts_with($this->video_key, 'x')) {
-        if ((!class_exists($studioClass) || Option::isTrue('addClass'))
-        && ('Studios' == $this->video_library)) {// || 'HomeVideos' == $this->video_library)) {
-            // UTMlog::Logger('File Studio className', $className);
-            // 
-            // if (Option::isTrue('addClass')) {
-            $this->writeStudioClass();
-            // }
+            if ((!class_exists($studioClass) || Option::isTrue('addClass'))
+            && ('Studios' == $this->video_library)) {// || 'HomeVideos' == $this->video_library)) {
+                // UTMlog::Logger('File Studio className', $className);
+                //
+                // if (Option::isTrue('addClass')) {
+                $this->writeStudioClass();
+                // }
 
-            $classAttm[] = $studioClass;
-
-            if (!class_exists($studioClass)) {
-                $studioClass = 'Mediatag\\Modules\\TagBuilder\\Patterns';
                 $classAttm[] = $studioClass;
+
+                if (!class_exists($studioClass)) {
+                    $studioClass = 'Mediatag\\Modules\\TagBuilder\\Patterns';
+                    $classAttm[] = $studioClass;
+                }
             }
         }
-    }
 
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
@@ -156,8 +159,7 @@ class Reader extends TagReader
 
         $getMethod = 'get'.ucfirst($method);
 
-        Mediatag::$log->notice("__call method =>'{method}' ",['method'=>$getMethod]);
-
+        Mediatag::$log->notice("__call method =>'{method}' ", ['method'=>$getMethod]);
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {
@@ -181,7 +183,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $key = strtolower($studio);
-        if (\array_key_exists($key, STUDIO_MAP)) {
+        if (array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
         }
 
@@ -223,7 +225,7 @@ class Reader extends TagReader
         $genre = '';
         if (null === $this->genre) {
             $res      = $this->getFileTag('Genre');
-            $filename = \dirname($this->video_file);
+            $filename = dirname($this->video_file);
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             if (true == $success) {
                 $this->genre = $matches[1];
@@ -238,14 +240,15 @@ class Reader extends TagReader
     public function getTitle()
     {
         // utminfo(func_get_args());
-
-        $res = $this->getFileTag('Title');
-
-        if (false === $res) {
-            return null;
+        if (null === $this->title) {
+            $res = $this->getFileTag('Title');
+            if (false !== $res) {
+                $this->title = $res;
+                return $res;
+            }
         }
 
-        return $res;
+        return null;
     }
 
     public function getArtist()
@@ -274,11 +277,12 @@ class Reader extends TagReader
         $use    = 0;
         //  // UTMlog::Logger('Class', $className);
         // UTMlog::Logger('method', $method);
+
         if (null !== $this->PatternObject) {
 
             $result = $this->PatternObject->{$method}();
 
-            $use    = 1;
+            $use = 1;
             //  } else {
             //     $result =  $this->{$method}();
         }

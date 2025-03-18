@@ -6,12 +6,14 @@
 namespace Mediatag\Modules\VideoInfo\Section;
 
 use FFMpeg\FFProbe;
-use Mediatag\Utilities\Strings;
-use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoData\VideoData;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Utilities\Strings;
+
+use function dirname;
 
 class Thumbnail extends VideoInfo
 {
@@ -41,7 +43,8 @@ class Thumbnail extends VideoInfo
         // utminfo(func_get_args());
 
         $this->video_file = $file;
-        $this->video_key  = (string) $key;
+        utmdump($file);
+        $this->video_key = (string) $key;
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;
         $thumbnail = $this->getThumbImg();
@@ -54,10 +57,11 @@ class Thumbnail extends VideoInfo
         // utminfo(func_get_args());
 
         $this->video_name = basename($this->video_file);
-        $this->video_path = \dirname($this->video_file);
+        $this->video_path = dirname($this->video_file);
 
-        $img_name     = basename($this->video_name, '.mp4').'.jpg';
-        $img_name     = Strings::cleanFileName($img_name,true);
+        //$img_name = basename($this->video_name, '.mp4').'.jpg';
+        $img_name = basename($this->videoToThumb($this->video_file));
+        // $img_name     = Strings::cleanFileName($img_name,true);
         $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
         $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
         $img_file     = $img_location.$img_name;
@@ -86,7 +90,7 @@ class Thumbnail extends VideoInfo
             }
             $time = self::videoDuration($duration, 10);
 
-            //utmdd($duration,$time);
+            // utmdd($duration,$time);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
             $action = $this->newText;

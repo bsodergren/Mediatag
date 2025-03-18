@@ -125,9 +125,20 @@ class Process extends Mediatag
 
         if (null === $file) {
             $file = Option::getValue('playlist');
+        
         }
 
-        $this->playlist = $file[0];
+        if(count($file) > 0){
+                $this->playlist = $file[0];
+        }
+
+        if (Option::istrue('url')) {
+            $this->playlist = Option::getValue('url');
+        }
+
+// utmdd($file);
+
+//        
 
         parent::boot($input, $output);
 

@@ -45,7 +45,8 @@ class Process extends Mediatag
     public $db_array = [];
 
     public $file_array = [];
-
+    public $Search_Array = [];
+    
     public $read;
 
     public $meta;
@@ -88,16 +89,17 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
+          $this->Search_Array = parent::$SearchArray;
     }
 
     public function init()
     {
         // utminfo(func_get_args());
 
-        $file_array = parent::$SearchArray;
+      
         // $this->DbMap = new DbMap();
 
-        foreach ($file_array as $k => $file) {
+        foreach ($this->Search_Array  as $k => $file) {
             $key = File::getVideoKey($file);
 
          

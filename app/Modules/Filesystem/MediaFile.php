@@ -349,4 +349,11 @@ class MediaFile
 
         return $destination;
     }
+
+    public static function videoPath($file)
+    {
+
+        $file = str_replace( __PLEX_HOME__,'',$file);
+        return $file;
+    }
 }

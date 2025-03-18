@@ -7,7 +7,7 @@ namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Filesystem\MediaFile;
-use mediatag\Modules\TagBuilder\File\Reader as FileReader;
+use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mhor\MediaInfo\MediaInfo;
 
