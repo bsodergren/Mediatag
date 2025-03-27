@@ -43,7 +43,7 @@ class Thumbnail extends VideoInfo
         // utminfo(func_get_args());
 
         $this->video_file = $file;
-        utmdump($file);
+        // utmdump($file);
         $this->video_key = (string) $key;
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;

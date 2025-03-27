@@ -142,7 +142,6 @@ class Youtube extends MediatagExec
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
         $this->exec($command, $callback);
-
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
         $json_file = '';
 
@@ -150,6 +149,7 @@ class Youtube extends MediatagExec
             $json_file = $output_array[1];
             $this->moveJson($json_file);
         }
+        // UtmDd($json_file,$this->yt_json_string);
 
         return $json_file;
     }

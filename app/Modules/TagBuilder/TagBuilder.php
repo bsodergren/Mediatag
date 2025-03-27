@@ -37,6 +37,7 @@ class TagBuilder
         $updates = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
+
         if (!\defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
                 $updates = $this->ReaderObj->getFileValues();
@@ -45,8 +46,11 @@ class TagBuilder
             // utmdump($updates);
 
             if (!str_starts_with($this->video_key, 'x')) {
+
                 $jsonupdates = $this->ReaderObj->getJsonValues();
-                // utmdump($jsonupdates);
+                //
+                // utmdd($this->ReaderObj);
+
 
                 if (null !== $updates) {
                     $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);

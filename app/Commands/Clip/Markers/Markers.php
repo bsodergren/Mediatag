@@ -21,6 +21,87 @@ trait Markers
         return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
     }
 
+    public function getVideoChapters($videoInfo)
+    {
+
+        $videoKey  = 0;
+        $chapterRow   = [];
+        $markers=[];
+        $markerPos = [];
+        $markerIdx = 0;
+        $rowIdx = 0;
+
+        $rows = count($videoInfo);
+        foreach ($videoInfo as $k => $row) {
+
+            if (!\array_key_exists('timeCode', $row)) {
+                return null;
+            }
+
+            if ($row['video_key'] != $videoKey) {
+                $videoKey  = $row['video_key'];
+                $markerIdx = 0;
+            }
+
+            $markers[$row['video_key']] = [
+                'filename' => $row['file_name'],
+            ];
+
+            // [$markerKey,$markerText] = explode('Chapter', $row['markerText']);
+
+            // utmdd($markerKey);
+            if (str_contains(strtolower($row['markerText']), 'chapter')) {
+              
+                if($markerIdx == 0){
+                    $chapterRow[$markerIdx]['start'] = 0;    
+                    $chapterRow[$markerIdx]['end'] = $videoInfo[$rowIdx+1]['timeCode'] - 1;    
+                    $chapterRow[$markerIdx]['text'] = $row['markerText'];    
+                    $markerIdx++;
+                    $rowIdx++;
+                    continue;
+                }
+
+                $chapterRow[$markerIdx]['start'] = (int) $row['timeCode'];    
+
+                if(array_key_exists($rowIdx+1,$videoInfo)){
+                    $chapterRow[$markerIdx]['end'] = $videoInfo[$rowIdx+1]['timeCode'] - 1;    
+                } else {
+                    $chapterRow[$markerIdx]['end'] = $row['duration']/1000;    
+                }
+
+                $chapterRow[$markerIdx]['text'] = $row['markerText'];  
+
+                // } else {
+                //     $end = $videoInfo[$k-1]['timeCode'] - 1;
+                //     $start = $row['timeCode'];
+                // }
+                $markers[$row['video_key']]['markers'] = $chapterRow;
+                $markerIdx++;
+
+
+            }
+            $rowIdx++;
+
+            // if (str_contains(strtolower($markerKey), 'end')) {
+            //     $end = $row['timeCode'];
+            //         // $end = $this->videoDuration($end);                
+
+            //     $markerPos[$markerIdx] = [
+            //         'text' => $markerText,
+            //         'start'=> $start,
+            //         'end'  => $end];
+            //     ++$markerIdx;
+            // }
+
+        }
+                        // utmdd($markers);
+
+// utmdd("f");
+        return $markers;
+    }
+
+
+
     public function getVideoMarks($videoInfo)
     {
         $videoKey  = 0;
@@ -44,11 +125,15 @@ trait Markers
             [$markerText,$markerKey] = explode('_', $row['markerText']);
 
             if (str_contains(strtolower($markerKey), 'start')) {
-                $start = $this->videoDuration($row['timeCode']);
+                $start = $row['timeCode'];
+                    $start = $this->videoDuration($start);
+                
             }
 
             if (str_contains(strtolower($markerKey), 'end')) {
-                $end = $this->videoDuration($row['timeCode']);
+                $end = $row['timeCode'];
+                    $end = $this->videoDuration($end);
+                
 
                 $markerPos[$markerIdx] = [
                     'text' => $markerText,

@@ -142,7 +142,7 @@ class Reader extends TagReader
             if (\array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ('studio' == $tag) {
-                    // utmdump([$value, $json_key, $tag]);
+                    utmdump([$value, $json_key, $tag]);
                 }
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];
@@ -192,10 +192,10 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         if (!str_starts_with($this->video_key, 'x')) {
             $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
-            // utmdd($this->video_file);
             
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
+
 
                 if ('' == $this->json_string) {
                     return false;
@@ -208,8 +208,10 @@ class Reader extends TagReader
                 $exec->youtubeGetJson($this->video_key);
 
                 $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+
                 if (file_exists($this->json_file)) {
                     $this->json_string = FileSystem::read($this->json_file);
+                // utmdd($this->json_string);
 
                     return true;
                 } else {

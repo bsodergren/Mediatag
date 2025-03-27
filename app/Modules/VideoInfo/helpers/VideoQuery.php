@@ -101,7 +101,7 @@ trait VideoQuery
 
     private function MarkersVideoQuery($video_id = null, $search = null)
     {
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id ";
+        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id, i.duration ";
         $order  = '';
         if (null === $video_id) {
             $where = ' vm.markerThumbnail is null ';
@@ -114,14 +114,14 @@ trait VideoQuery
             $where = ' vm.markerThumbnail is not null ';
         }
 
-        $where .= ' AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
+        $where .= ' AND f.video_key = i.video_key AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
         if (null !== $search) {
             
             $where .= ' AND  vm.markerText like "'.$search.'%" ';
             
         }
 
-        $sql = 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f WHERE '.$where.$order;
+        $sql = 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f, '.__MYSQL_VIDEO_INFO__.' i WHERE '.$where.$order;
      
         return $sql;
     }

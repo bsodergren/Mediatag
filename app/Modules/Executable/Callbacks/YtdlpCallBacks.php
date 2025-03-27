@@ -79,7 +79,6 @@ trait YtdlpCallBacks
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
-
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (\array_key_exists(2, $matches)) {
                 if ('' != $matches[2]) {
@@ -89,6 +88,12 @@ trait YtdlpCallBacks
         }
 
         switch ($buffer) {
+            // case str_contains($buffer, 'ERROR:'):
+            //     $this->yt_json_string = null;
+            //     // return $this->error($buffer,$this->num_of_lines,$matches[3]);
+            //     return null;
+            //     break;
+
             case str_contains($buffer, '[info]'):
                 if (str_contains($buffer, 'as JSON')) {
                     $this->yt_json_string = $buffer;
@@ -107,7 +112,6 @@ trait YtdlpCallBacks
 
         // $this->Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
-        // utmdump([__LINE__,$outputText]);
         return $outputText.\PHP_EOL;
     }
 

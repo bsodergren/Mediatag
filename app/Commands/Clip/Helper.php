@@ -5,15 +5,15 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\Markers;
+use UTM\Utilities\Option;
+use Mediatag\Utilities\Chooser;
 use Mediatag\Traits\ffmpegTransition;
 use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Utilities\Chooser;
-use UTM\Utilities\Option;
+use Mediatag\Modules\VideoInfo\Section\Markers;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Core\Mediatag;
+use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 
 trait Helper
 {
@@ -84,10 +84,15 @@ trait Helper
         return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).\DIRECTORY_SEPARATOR.$name.'.txt';
     }
 
+
+
+
+    
     public function getfileList()
     {
         $markerArray   = [];
         $this->FileIdx = 0;
+
 
         $search = Option::getValue('clip', true);
         foreach ($this->VideoList['file'] as $key => $vidArray) {

@@ -80,7 +80,7 @@ trait MediaFFmpeg
         $process->setTimeout(null);
         MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
 
-        // utmdump($process->getCommandLine());
+        // utmdd($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
         //     if (Process::ERR === $type) {
         //         echo $data;
@@ -270,4 +270,35 @@ trait MediaFFmpeg
 
         $this->ffmpegExec($cmdArray, $callback);
     }
+
+
+    public function ffmpegCreateChapterVideo($file, $markerFile)
+    {
+        $outputFile = str_replace('.mp4', '_chapters.mp4', $file);
+
+        if (file_exists($outputFile)) {
+            if (!Chooser::changes(' Overwrite File', 'overwrite', __LINE__)) {
+                return;
+            }
+        }
+
+        $cmdOptions = [
+            '-y',
+            '-i', $file, 
+            '-i', $markerFile, 
+           '-map_metadata', 
+           '1', 
+           '-c',
+           'copy',
+            $outputFile,
+        ];
+        $this->cmdline = $cmdOptions;
+        $this->progress = new MediaBar(200, 'one', 120);
+        MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
+        $callback = Callback::check([$this, 'Outputdebug']);
+        $this->ffmpegExec($cmdOptions, $callback);
+    }
+
+
+
 }
