@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+
 // use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
 // use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
 // use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
@@ -40,13 +41,14 @@ class Process extends Mediatag
     // use ThumbHelper;
     use Translate;
 
+
     protected $useFuncs = ['addMeta'];
 
     public $db_array = [];
 
     public $file_array = [];
     public $Search_Array = [];
-    
+
     public $read;
 
     public $meta;
@@ -65,10 +67,10 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'markers'      => [
+        // 'markers'      => [
             // 'init'        => null,
             // 'exec'        => null,
-            'execMarkers' => null],
+            // 'execMarkers' => null],
 
         // 'update'       => [
         //     // 'init'       => null,
@@ -89,20 +91,20 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-          $this->Search_Array = parent::$SearchArray;
+        $this->Search_Array = parent::$SearchArray;
     }
 
     public function init()
     {
         // utminfo(func_get_args());
 
-      
+
         // $this->DbMap = new DbMap();
 
-        foreach ($this->Search_Array  as $k => $file) {
+        foreach ($this->Search_Array as $k => $file) {
             $key = File::getVideoKey($file);
 
-         
+
 
             if (\array_key_exists($key, $this->file_array)) {
 
@@ -123,7 +125,7 @@ class Process extends Mediatag
                 }
                 Mediatag::$output->writeln($move.' is dup');
                 (new SfSystem())->rename($move, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
-                unset($this->file_array[$key] );
+                unset($this->file_array[$key]);
                 $this->file_array[$key] = $keep;
                 continue;
             }

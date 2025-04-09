@@ -55,7 +55,7 @@ trait VideoStrings
     }
 
 
-    private function getTableField(){
+    public function getTableField(){
         $thumbType = $this->thumbType;
         if ('markers' == $this->thumbType) {
             $thumbType = 'thumbnail';

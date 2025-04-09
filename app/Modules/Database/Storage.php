@@ -348,7 +348,7 @@ class Storage
             default:
                 exit('No command added');
 
-                break;
+                // break;
         }
 
         $query .= __MYSQL_VIDEO_FILE__." WHERE Library = '".__LIBRARY__."' AND ";

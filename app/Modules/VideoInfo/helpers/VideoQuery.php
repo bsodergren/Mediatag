@@ -37,10 +37,16 @@ trait VideoQuery
         }
 
         $result = Mediatag::$dbconn->query($query);
+        
 
         foreach ($result as $_ => $row) {
+            if ('markers' == $this->thumbType) {
+                $file_array[$row['video_key']] = $row;
+                continue;
+            }
             $file_array[$row['video_key']] = $row['file_name'];
         }
+        
         $this->resultCount = \count($file_array);
 
         return $file_array;
@@ -48,6 +54,7 @@ trait VideoQuery
 
     public function videoQuery($video_id = null, $search = null)
     {
+
         if ('info' == $this->thumbType) {
             return $this->InfoVideoQuery($video_id);
         }
@@ -101,7 +108,7 @@ trait VideoQuery
 
     private function MarkersVideoQuery($video_id = null, $search = null)
     {
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key, vm.timeCode, vm.id, i.duration ";
+        $fields = " CONCAT(f.fullpath,'/',f.filename) as filename, f.video_key, vm.timeCode, vm.id, i.duration ";
         $order  = '';
         if (null === $video_id) {
             $where = ' vm.markerThumbnail is null ';
@@ -114,7 +121,7 @@ trait VideoQuery
             $where = ' vm.markerThumbnail is not null ';
         }
 
-        $where .= ' AND f.video_key = i.video_key AND f.id = vm.video_id AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
+        $where .= ' AND f.video_key = i.video_key AND f.id = vm.video_id AND f.fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
         if (null !== $search) {
             
             $where .= ' AND  vm.markerText like "'.$search.'%" ';
@@ -122,7 +129,6 @@ trait VideoQuery
         }
 
         $sql = 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f, '.__MYSQL_VIDEO_INFO__.' i WHERE '.$where.$order;
-     
         return $sql;
     }
 }

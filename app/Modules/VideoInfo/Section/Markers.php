@@ -40,8 +40,8 @@ class Markers extends VideoInfo
 
     public $thumbExt = '.jpg';
     public $thumbDir = __INC_WEB_CHAPTER_DIR__;
+public $video_markers;
 
-   
 
     // public function clean()
     // {
@@ -125,7 +125,7 @@ class Markers extends VideoInfo
         foreach ($this->VideoInfo as $data) {
             $id = $data['id'];
             unset($data['id']);
-            Mediatag::$dbconn->update($data, ['id'=>$id], $this->VideoDataTable);
+            Mediatag::$dbconn->update($data, ['id' => $id], $this->VideoDataTable);
         }
         $this->returnText = '<comment>Updated</comment> ';
 
@@ -138,9 +138,8 @@ class Markers extends VideoInfo
 
         $this->video_name = basename($this->video_file);
         $this->video_path = \dirname($this->video_file);
-
         foreach ($this->video_markers as $timeCode) {
-            foreach ($timeCode as $id=>$time) {
+            foreach ($timeCode as $id => $time) {
                 $img_name     = basename($this->video_name, '.mp4').'_'.$time.'.jpg';
                 $img_name     = Strings::cleanFileName($img_name);
                 $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
@@ -154,14 +153,14 @@ class Markers extends VideoInfo
                     $this->ffmegCreateThumb($this->video_file, $img_file, $timeStamp);
                 }
 
-                $thumbnailImages[] = ['id'=>$id, 'markerThumbnail'=>$img_file];
+                $thumbnailImages[] = ['id' => $id, 'markerThumbnail' => $img_file];
             }
         }
 
         return $thumbnailImages;
     }
 
-  
+
 
 
     public function getVideoInfo($key, $row)
@@ -169,7 +168,7 @@ class Markers extends VideoInfo
         // utminfo(func_get_args());
 
         $this->video_file    = $row['filename'];
-        $this->video_markers = $row['timeCode'];
+        $this->video_markers[] = $row['timeCode'];
         $this->video_key     = $key;
 
         $this->VideoInfo = $this->getVideoDetails();
@@ -183,6 +182,7 @@ class Markers extends VideoInfo
         // utminfo(func_get_args());
 
         $file_array = $this->getDbList();
+        utmdump($file_array);
         if (\count($file_array) > 0) {
             foreach ($file_array as $key => $row) {
                 $file = $row['filename'];

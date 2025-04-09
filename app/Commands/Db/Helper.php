@@ -29,9 +29,6 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
-
-
-    
     private $dbBackupPath       = __DB_BACKUP_ROOT__.\DIRECTORY_SEPARATOR;
     private $video_file_csv     = 'file.csv';
     private $video_metadata_csv = 'meta.csv';
@@ -142,14 +139,7 @@ trait Helper
         ];
     }
 
-    public function execMarkers()
-    {
-        // utminfo(func_get_args());
 
-        $this->obj = new Markers();
-        // $this->obj = new Thumbnail(parent::$input, parent::$output);
-        $this->obj->updateVideoData();
-    }
 
     public function checkClean()
     {
@@ -158,9 +148,9 @@ trait Helper
         if (Option::istrue('clean')) {
             $this->obj->clean();
             exit;
-        } elseif (Option::istrue('clear')) {
-            $this->obj->clear();
-            exit;
+        // } elseif (Option::istrue('clear')) {
+        //     $this->obj->clear();
+        //     exit;
         } elseif (Option::istrue('delete')) {
             $this->obj->clearDBValues();
             exit;
@@ -293,7 +283,7 @@ trait Helper
             $storagedb->MultiIDX = \count($file_array);
             foreach ($file_array as $k => $file) {
                 $key          = File::getVideoKey($file);
-                $data_array[] = $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
+                 $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
                 --$storagedb->MultiIDX;
             }
 
@@ -321,7 +311,7 @@ trait Helper
                         parent::$output->writeln('<error>adding fake json for '.basename($file).' </error>');
                         MediaFilesystem::writeFile($json_file, '{"id": "'.$json_key.'"}', false);
                     }
-                // utmdd($file,$json_key);
+                    // utmdd($file,$json_key);
                 } else {
                     parent::$output->writeln('<id>json file for '.basename($file).' exists</id>');
                 }
@@ -392,7 +382,7 @@ trait Helper
 
 
 
-    
+
     public function execBackup()
     {
         // $this->dbBackupPath = __DB_BACKUP_ROOT__;
@@ -524,4 +514,5 @@ trait Helper
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
     }
+
 }
