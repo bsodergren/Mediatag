@@ -56,13 +56,13 @@ class Pornhub
         switch ($buffer) {
 
             case str_starts_with($buffer, '[PornHubPlaylist]'):
-             $match = preg_match('/.*PornHubPlaylist.*Downloading \d+ items of (\d+)/', $buffer, $output_array);
-             if($match == true){
-                $this->obj->num_of_lines = $output_array[1];
-             }
+                $match = preg_match('/.*PornHubPlaylist.*Downloading \d+ items of (\d+)/', $buffer, $output_array);
+                if ($match == true) {
+                    $this->obj->num_of_lines = $output_array[1];
+                }
 
-            utmdump($output_array);
-break;
+                utmdump($output_array);
+                break;
 
 
             case str_starts_with($buffer, '[PornHub]'):

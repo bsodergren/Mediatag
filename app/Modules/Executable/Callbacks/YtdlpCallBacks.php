@@ -141,15 +141,15 @@ trait YtdlpCallBacks
 
         if (str_contains($buffer, 'Destination')) {
             // $buffer = $this->cleanBuffer($buffer);
-            $buffer= trim($buffer);
-           
+            $buffer = trim($buffer);
+
 
             $outputText = str_replace("\n".'[download]', '</text>'.PHP_EOL.$line_id.' <text>[download]', $buffer);
             $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
 
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
-             utmdump([__LINE__,$outputText]);
+            //  utmdump([__LINE__,$outputText]);
             return $outputText;
         }
 
@@ -161,7 +161,7 @@ trait YtdlpCallBacks
             return $outputText;
         }
         if (str_contains($buffer, 'Got error')) {
-            $buffer = $this->cleanBuffer($buffer);
+            // $buffer = $this->cleanBuffer($buffer);
             $outputText = \PHP_EOL.'<error>'.$buffer.'</error>';
 
             return $outputText;

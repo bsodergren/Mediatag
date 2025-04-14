@@ -159,7 +159,7 @@ class MediatagExec
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        Mediatag::$log->notice("Command to Run {0}",[$this->runCommand]);
+        Mediatag::$log->notice("Command to Run {0}", [$this->runCommand]);
 
         $this->preview();
         $this->test();

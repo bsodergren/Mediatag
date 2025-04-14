@@ -34,13 +34,13 @@ trait ProcessCallbacks
         $buffer = $this->cleanBuffer($buffer);
         if (Process::ERR === $type) {
             $this->errors .= $buffer;
-        // UTMlog::logError('Writing Metadata', $buffer);
-        // UTMlog::logError('Writing Metadata', $this->video_file);
+            // UTMlog::logError('Writing Metadata', $buffer);
+            // UTMlog::logError('Writing Metadata', $this->video_file);
         } else {
             if (str_contains($buffer, 'error')) {
                 $this->errors .= $buffer;
-            // UTMlog::logError('Writing Metadata', $buffer);
-            // UTMlog::logError('Writing Metadata', $this->video_file);
+                // UTMlog::logError('Writing Metadata', $buffer);
+                // UTMlog::logError('Writing Metadata', $this->video_file);
             } elseif (str_contains($buffer, 'warning')) {
                 // UTMlog::logWarning('Writing Metadata', $buffer);
                 // UTMlog::logWarning('Writing Metadata', $this->video_file);

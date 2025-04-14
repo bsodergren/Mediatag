@@ -168,6 +168,13 @@ class Youtube extends MediatagExec
         if (Option::istrue('skip') || false === $this->downloadFiles) {
             $options = array_merge($options, ['--skip-download']);
         }
+
+        if (Option::istrue('max')) {
+            $options = array_merge($options, ['--max-downloads',Option::getValue('max')]);
+
+        }
+
+        // utmdd($options, Option::getOptions());
         $playlist_opt = ['-a', $this->playlist];
 
         if (Option::istrue('url')) {
