@@ -1,24 +1,18 @@
 <?php
+
 namespace Mediatag\Modules\Database;
 
-use Mediatag\Modules\Database\StorageDB;
-
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\VideoData\Data\Duration;
-use Mediatag\Modules\VideoData\Data\Gallery;
-use Mediatag\Modules\VideoData\Data\preview\GifPreviewFiles;
-use Mediatag\Modules\VideoData\Data\Thumbnail;
-use Mediatag\Modules\VideoData\Data\VideoInfo;
-use Mediatag\Modules\VideoData\Data\VideoTags;
 use Nette\Utils\Arrays;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-use UTM\Utilities\Debug\UtmStopWatch;
 use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use UTM\Utilities\Debug\UtmStopWatch;
+use Mediatag\Modules\Database\StorageDB;
+use Mediatag\Modules\VideoInfo\Section\Gallery;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
 class GalleryStorageDB extends StorageDB
 {
-
     public function createDbEntry($video_file, $video_key)
     {
         // utminfo(func_get_args());
@@ -98,5 +92,5 @@ class GalleryStorageDB extends StorageDB
             //  Mediatag::$Display->VideoInfoSection->writeln("");
         }
     }
-    
+
 }

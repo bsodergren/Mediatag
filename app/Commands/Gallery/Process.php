@@ -5,24 +5,27 @@
 
 namespace Mediatag\Commands\Gallery;
 
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
+use Mediatag\Traits\Translate;
 use Mediatag\Modules\Database\DbMap;
+use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Core\Helper\MediaProcess;
+use Nette\Utils\FileSystem as nFileSystem;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Traits\Translate;
-use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
     use Helper;
     use Lang;
     use Translate;
-
+    use MediaExecute;
+    use MediaProcess;
     public $db_array = [];
 
     public $file_array = [];

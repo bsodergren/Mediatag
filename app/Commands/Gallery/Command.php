@@ -17,4 +17,5 @@ final class Command extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
+
 }

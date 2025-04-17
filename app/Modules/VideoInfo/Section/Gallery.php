@@ -16,7 +16,7 @@ class Gallery extends VideoInfo
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
     public $video_name;
 
-    private $actionText = '<comment>Updated Gallery Info</comment>';
+    public $actionText = '<comment>Updated Gallery Info</comment>';
 
     public function get($key, $file)
     {
