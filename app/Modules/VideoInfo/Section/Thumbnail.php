@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -71,7 +72,9 @@ class Thumbnail extends VideoInfo
 
         if (!file_exists($img_file)) {
             (new Filesystem())->mkdir($img_location);
-            $ffprobe  = FFProbe::create();
+            $ffprobe  = FFProbe::create(array(
+                'ffmpeg.binaries'  => '/home/bjorn/bin/ffmpeg',
+                'ffprobe.binaries' => '/home/bjorn/bin/ffprobe'));
             $duration = $ffprobe->streams($this->video_file)->videos()->first()->get('duration');
 
             // utmdump($this->video_file,$ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));

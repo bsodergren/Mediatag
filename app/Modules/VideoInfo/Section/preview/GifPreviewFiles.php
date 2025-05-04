@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -31,6 +32,8 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
+             'ffmpeg.binaries'  => '/home/bjorn/bin/ffmpeg',
+                'ffprobe.binaries' => '/home/bjorn/bin/ffprobe'
         ];
         (new Filesystem())->mkdir($temp);
 
