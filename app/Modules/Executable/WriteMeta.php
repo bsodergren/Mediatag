@@ -120,7 +120,8 @@ use ProcessCallbacks;
         if (true == $results) {
                         utmdump($results);
 
-            if (str_contains($results, 'signal')) {
+            if (str_contains($results, 'signal') ||
+            str_contains($results, 'error')) {
                 // // UTMlog::logError('results Metadata', $results);
                 if (str_contains($results, '11')
                 || str_contains($results, 'alignment')) {
