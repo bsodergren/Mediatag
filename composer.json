@@ -1,7 +1,5 @@
 {
   "autoload": {
-
-
     "exclude-from-classmap": [
       "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
       "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php",
@@ -16,11 +14,39 @@
       "app"
     ]
   },
- 
+  "require-dev": {
+    "symfony/var-dumper": "7.0.*"
+  },
   "extra": {
     "symfony": {
       "allow-contrib": false,
       "require": "7.0.*"
     }
+  },
+  "require": {
+    "symfony/console": "7.2.*",
+    "bhittani/download": "^0.3.0",
+    "doctrine/doctrine-bundle": "^2.10",
+    "symfony/monolog-bundle": "^3.8",
+    "symfony/config": "7.0.*",
+    "nette/utils": "^4.0",
+    "mhor/php-mediainfo": "^5.5",
+    "php-ffmpeg/php-ffmpeg": "^1.2",
+    "doctrine/orm": "^2.15",
+    "symfony/process": "7.0.*",
+    "php-di/php-di": "^7.0",
+    "slim/slim": "^4.11",
+    "slim/psr7": "^1.6",
+    "doctrine/migrations": "^3.6",
+    "camoo/config": "^1.0",
+    "vlucas/phpdotenv": "^5.5",
+    "siteorigin/string-splitter": "^1.0",
+    "intervention/image": "^3.3",
+    "nesbot/carbon": "^3.6",
+    "bsodergren/utm": "^2.1",
+    "symfony/http-client": "7.0.*",
+    "psr/log": "^3.0",
+    "evenement/evenement": "^3.0",
+    "react/event-loop": "^1.5"
   }
 }
