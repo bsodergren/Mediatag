@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -121,11 +122,14 @@ class Reader extends TagReader
             $this->getJsonValue($tag, ['cast']);
         }
         if ('network' == $tag) {
-            $this->getJsonValue($tag, ['extractor'],
+            $this->getJsonValue(
+                $tag,
+                ['extractor'],
                 [
-                    'exclude'=> ['PornHub'],
-                    'rename' => ['NubilesPorn'=>'Nubiles'],
-                ]);
+                    'exclude' => ['PornHub'],
+                    'rename' => ['NubilesPorn' => 'Nubiles'],
+                ]
+            );
         }
     }
 
@@ -142,7 +146,7 @@ class Reader extends TagReader
             if (\array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ('studio' == $tag) {
-                    utmdump([$value, $json_key, $tag]);
+                    // utmdump([$value, $json_key, $tag]);
                 }
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];
@@ -167,7 +171,7 @@ class Reader extends TagReader
                 }
 
                 if (\array_key_exists('rename', $options)) {
-                    foreach ($options['rename'] as $key =>$string) {
+                    foreach ($options['rename'] as $key => $string) {
                         $this->tag_array[$tag] = str_replace($key, $string, $this->tag_array[$tag]);
                     }
                 }
@@ -192,7 +196,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         if (!str_starts_with($this->video_key, 'x')) {
             $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
-            
+
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
 
@@ -211,7 +215,7 @@ class Reader extends TagReader
 
                 if (file_exists($this->json_file)) {
                     $this->json_string = FileSystem::read($this->json_file);
-                // utmdd($this->json_string);
+                    // utmdd($this->json_string);
 
                     return true;
                 } else {

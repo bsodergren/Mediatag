@@ -6,9 +6,14 @@
 namespace Mediatag\Core\Helper;
 
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Completion\CompletionInput;
 
 trait CommandHelper
 {
+
+    private $defaultValues = [];
+    private $completionCmd = [];
+
     protected function loadDirs()
     {
         $filesystem = new Filesystem();
@@ -28,5 +33,31 @@ trait CommandHelper
         $className  = implode('\\', $pathInfo);
 
         return $className;
+    }
+
+
+    public  static function ArgumentClosure($input,$command) {
+        utmdump(["CommandHelper",$command]);
+        // the value the user already typed, e.g. when typing "app:greet Fa" before
+        // pressing Tab, this will contain "Fa"
+        $currentValue = $input->getCompletionValue();
+        return $currentValue;
+    }
+
+    public  static function OptionClosure($input,$command) {
+        utmdump(["CommandHelper",$command]);
+        // the value the user already typed, e.g. when typing "app:greet Fa" before
+        // pressing Tab, this will contain "Fa"
+        $currentValue = $input->getCompletionValue();
+        return $currentValue;
+    }
+
+
+
+    public function setDefault($command,$default){
+        $this->defaultValues[$command] = $default;
+    }
+    public function setCompletionCmd($command,$value){
+        $this->completionCmd[$command] = $value;
     }
 }

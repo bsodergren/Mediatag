@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -23,8 +24,6 @@ use Symfony\Component\Filesystem\Filesystem as SFilesystem;
  */
 class MediaFinder extends SFinder
 {
-     
-
     /**
      * Summary of video_file.
      */
@@ -179,13 +178,14 @@ class MediaFinder extends SFinder
 
         $FileArray = [];
         // UTMlog::logger('Search');
+
         if (Option::isTrue('filelist')) {
 
             $file_array = $this->getFilelistOption();
         } else {
             $file_array = $this->searchFiles();
         }
-
+        utmdump($file_array);
         if (\is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
                 $FileArray = $this->getFileNumberArray($file_array);
@@ -236,7 +236,7 @@ class MediaFinder extends SFinder
         $ftotal          = \count($file_array);
 
         [$total,$start] = $this->getRangeIds($ftotal);
-        if($total > $ftotal){
+        if ($total > $ftotal) {
             $total = $ftotal;
         }
         for ($q = $start; $q < $total; ++$q) {
@@ -296,11 +296,11 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    public function Search($path, $search, $date = null)
+    public function Search($path, $search, $date = null, $exit = true)
     {
         // utminfo(func_get_args());
 
-        return $this->searchFiles($search, $path, $date);
+        return $this->searchFiles($search, $path, $date, $exit);
     }
 
     /**
@@ -308,11 +308,11 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    public static function find($file, $location)
+    public static function find($file, $location, $exit = true)
     {
         // utminfo(func_get_args());
 
-        return (new self())->searchFiles($file, $location);
+        return (new self())->searchFiles($file, $location, null, $exit);
     }
 
     /**
@@ -322,11 +322,11 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null)
+    protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search'=>$search,'path'=>$path]);
-
+        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search' => $search,'path' => $path]);
+        utmdump(['search' => $search,'path' => $path]);
         if (null === $path) {
             $path = getcwd();
         }
@@ -345,7 +345,7 @@ class MediaFinder extends SFinder
         if (self::$depth != null) {
             $finder->depth('== 0');
         }
-       
+
         if (null !== $this->excludeDir) {
 
             $finder->exclude($this->excludeDir);
@@ -376,7 +376,7 @@ class MediaFinder extends SFinder
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
             }
-            // 
+            //
 
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             if (is_array($file_array)) {
@@ -392,8 +392,10 @@ class MediaFinder extends SFinder
                 }
             }
         }
-
-        Mediatag::$output->writeln('<info>No files found</info>');
+        if ($exit === true) {
+            Mediatag::$output->writeln('<info>No files found</info>');
+            exit;
+        }
 
     }
 

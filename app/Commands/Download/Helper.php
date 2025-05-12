@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -23,7 +24,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_array = [];
-        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mkv');
+        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mkv', exit: false);
 
         if (null === $file_array) {
             return 0;
@@ -50,7 +51,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.json');
+        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.json', exit: false);
 
         foreach ($file_array as $key => $file) {
             $videoInfo               = File::file($file);

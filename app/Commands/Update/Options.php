@@ -20,7 +20,6 @@ class Options extends MediaOptions
         // utminfo();
 
         Translate::$Class = __CLASS__;
-
         return [
             ['changes', 'c', InputOption::VALUE_NONE, Translate::text('L__UPDATE_APPROVE_CHANGES')],
             ['update', 'U', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
@@ -35,4 +34,11 @@ class Options extends MediaOptions
             ['download', 'D', InputOption::VALUE_NONE, Translate::text('L__UPDATE_DOWNloAD')],
         ];
     }
+
+
+    // public function optionClosure($input,$option)
+    // {
+
+    //     utmdump(["Update Option",$option,__META_TAGS__]);
+    // }
 }

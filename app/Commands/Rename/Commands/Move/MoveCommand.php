@@ -19,7 +19,7 @@ final class MoveCommand extends MediaCommand
     public const SKIP_SEARCH = false;
     public $command          = [
         'move'    => ['moveStudios' => null,
-            // 'prunedirs'             => null
+             'prunedirs'             => null
         ],
     ];
 }

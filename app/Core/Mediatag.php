@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -97,24 +98,25 @@ abstract class Mediatag extends MediaCommand
         self::$Console    = new ConsoleOutput($output, $input);
         self::$Display    = new Display($output);
         self::$dbconn     = new StorageDB();
+
         self::$finder     = new Finder();
         self::$filesystem = new Filesystem();
-        self::$Storage    = new Storage();
 
         self::$log->notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
-
         self::$finder->defaultCmd = $this->command;
 
         if (!Option::isTrue('SKIP_SEARCH')) {
+            utmdump(Option::isTrue('SKIP_SEARCH'));
 
             self::$SearchArray = self::$finder->ExecuteSearch();
-
+            utmdump(self::$SearchArray);
             if (true == Option::isTrue('numberofFiles')) {
                 $this->getNumberofFiles();
                 exit;
             }
         }
 
+        self::$Storage    = new Storage();
         if (isset($this->useFuncs)) {
             foreach ($this->useFuncs as $method) {
                 if (method_exists($this, $method)) {

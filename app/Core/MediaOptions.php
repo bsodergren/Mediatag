@@ -1,14 +1,19 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Core;
 
+use Mediatag\Core\Helper\OptionCompletion;
+use Mediatag\Core\Helper\OptionsDefault;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Completion\CompletionInput;
 
 /**
  * MediaOptions.
@@ -17,10 +22,13 @@ class MediaOptions
 {
     use Lang;
     use Translate;
+    use OptionCompletion;
+    use OptionsDefault;
 
     public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display' => false];
 
     public static $callingClass;
+    public static $CmdClass;
 
     public static $classObj;
 
@@ -54,7 +62,6 @@ class MediaOptions
     private static function getCommandOptions()
     {
         $className = self::$callingClass;
-
         if ($pos = strrpos($className, '\\')) {
             $class = substr($className, $pos + 1);
         }
@@ -67,12 +74,13 @@ class MediaOptions
         // utmdump($classPath);
 
         // $classPath = rtrim($classPath, 'Commands\\') . '\\';
-        // utmdump($classPath);
 
         $classPath .= $tmpClass.'Options';
         if (class_exists($classPath)) {
             return $classPath;
         }
+
+        self::$CmdClass = $className;
 
         return null;
     }
@@ -88,12 +96,17 @@ class MediaOptions
         // $className = 'Mediatag\\Commands\\'.$className;
 
         $className = self::getCommandOptions();
+
         if (null === $className) {
             $className = self::$callingClass;
+
+            // utmdump([$className, self::$CmdClass]);
 
             if ($pos = strrpos($className, '\\')) {
                 $class = substr($className, $pos + 1);
             }
+
+
 
             $tmpClass = str_replace('Command', '', $class);
 
@@ -107,6 +120,7 @@ class MediaOptions
         if (class_exists($className)) {
             self::$classObj = new $className();
         }
+
     }
 
     /**
@@ -139,28 +153,32 @@ class MediaOptions
                     }
                 }
             }
-
+            // utmdump(self::$classObj);
             $definitions = self::$classObj->Definitions();
             if (\is_array($definitions)) {
-                $cmdOptions = self::getOptions($definitions);
+                $cmdOptions = self::getOptions(
+                    $definitions
+                );
             }
         }
 
         foreach ($commandOptions as $Options) {
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
-        // utmdump($cmdOptions);
+
 
         return new InputDefinition($cmdOptions);
     }
 
-    public static function getArguments($varName = null, $description = null)
+    public static function getArguments($varName = null, $description = null, $closure)
     {
         // utminfo(func_get_args());
 
         //    self::getClassObject();
+
         if (\is_object(self::$classObj)) {
-            return self::$classObj->Arguments($varName, $description);
+            return self::$classObj->Arguments($varName, $description, InputArgument::OPTIONAL, null, $closure);
+
         }
 
         return null;
@@ -194,97 +212,80 @@ class MediaOptions
                 $optionName[3] .= \PHP_EOL;
             }
             $prev             = $optionName;
-            $commandOptions[] = new InputOption(...$optionName);
+
+            $name = null;
+            $shortcut = null;
+            $mode = null;
+            $description = null;
+            $default = null;
+            foreach ($optionName as $id => $v) {
+                switch ($id) {
+                    case 0:
+                        $name = $optionName[$id];
+                        break;
+                    case 1:
+                        $shortcut = $optionName[$id];
+                        break;
+                    case 2:
+                        $mode = $optionName[$id];
+                        break;
+                    case 3:
+                        $description = $optionName[$id];
+                        break;
+                    case 4:
+                        $default = $optionName[$id];
+                        break;
+                }
+
+            }
+
+            // utmdump([$name, $shortcut,$mode, $description, $default]);
+
+            // utmdump([$optionName, self::$classObj->optionClosure("1",$optionName[1]) ]);
+            if ($mode != 1) {
+                $commandOptions[] = new InputOption(
+                    $name,
+                    $shortcut,
+                    $mode,
+                    $description,
+                    $default,
+                    function (CompletionInput $input) use ($name) {
+
+                        if(method_exists(self::$classObj,'optionClosure')){
+                            utmdump(["exsts",$name,method_exists(self::$classObj,'optionClosure')]);
+                        
+                            return call_user_func(array( self::$classObj, 'optionClosure'), $input, $name);
+                        } else {
+                            utmdump(["no no exsts",$name]);
+                        
+                            return $this->optionClosure($input, $name);
+                        }
+                    }
+                );
+            } else {
+                $commandOptions[] = new InputOption($name, $shortcut, $mode, $description, $default);
+            }
         }
 
         return $commandOptions;
     }
 
-    public static function getDefaultOptions()
+
+    public function optionClosure($input, $option)
     {
-        // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+    
+        $returnValue = null;
+        $cmd = 'list'.ucfirst($option);
 
-        $options = [
-            ['filelist', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_FILELIST')],
-            ['numberofFiles', 'N', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_NUMBEROFFILES')],
-            ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_MAX')],
-            ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_RANGE')],
-            ['filenumber', 'F', InputOption::VALUE_REQUIRED, Translate::text('L__DEFAULT_FILENUMBER')],
-            ['new', '', InputOption::VALUE_NONE, Translate::text('L__DEFAULT_SHOW_NEWFILES')],
-        ];
+        utmdump([$cmd,method_exists($this, $cmd)]);
+        $currentValue = $input->getCompletionValue();
+        if (method_exists($this, $cmd)) {
+            $returnValue = $this->$cmd($currentValue );
+        }
 
-        return self::getOptions($options);
+        return $returnValue;
     }
 
-    public static function getQuestionOptions()
-    {
-        // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
-
-        $options = [
-            ['ask', null, InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_ASK_FILE')],
-            ['overwrite', 'o', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_OVERWRITE_FILE')],
-            ['yes', 'y', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_QUESTION_YES')],
-        ];
-
-        return self::getOptions($options);
-    }
-
-    public static function getTestOptions()
-    {
-        // utminfo(func_get_args());
-
-        Translate::$Class = __CLASS__;
-
-        $options = [
-            ['test', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_CMD')],
-            ['preview', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_PREVIEW')],
-            ['time', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TIME')],
-            ['dump', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_DUMP')],
-            ['flush', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
-            ['nocache', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
-            // ['trunc',null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TRUNC')],
-        ];
-
-        return self::getOptions($options);
-    }
-
-    public static function getMetaOptions()
-    {
-        // utminfo(func_get_args());
-
-        Translate::$Class = __CLASS__;
-        $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
-        $options          = [
-            ['only', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_ONLY', ['TXT' => $cmdName]), [], ['Studio', 'Genre', 'Title', 'Artist', 'Keyword']],
-            ['title', 't', InputOption::VALUE_REQUIRED, Translate::text('L__META_TITLE', ['TXT' => $cmdName])],
-            ['genre', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_GENRE', ['TXT' => $cmdName])],
-            ['studio', 's', InputOption::VALUE_REQUIRED, Translate::text('L__META_STUDIO', ['TXT' => $cmdName])],
-            ['network', 'n', InputOption::VALUE_REQUIRED, Translate::text('L__META_NETWORK', ['TXT' => $cmdName])],
-
-            ['artist', 'a', InputOption::VALUE_REQUIRED, Translate::text('L__META_ARTIST', ['TXT' => $cmdName])],
-            ['keyword', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__META_KEYWORD', ['TXT' => $cmdName])],
-        ];
-
-        return self::getOptions($options);
-    }
-
-    public static function getDisplayOptions()
-    {
-        // utminfo(func_get_args());
-
-        Translate::$Class = __CLASS__;
-        $cmdName          = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
-        $options          = [
-            ['show', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_SHOW', ['TXT' => $cmdName])],
-            ['hide', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_HIDE', ['TXT' => $cmdName])],
-            ['add', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_ADD', ['TXT' => $cmdName])],
-            ['drop', '', InputOption::VALUE_NONE, Translate::text('L__DISPLAY_DROP', ['TXT' => $cmdName])],
-        ];
-
-        return self::getOptions($options);
-    }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -89,7 +90,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $files = Finder::Find('*.mp4', __PLEX_HOME__.'/Pornhub');
+        $files = Finder::Find('*.mp4', __PLEX_HOME__.'/Pornhub', exit: false);
 
         foreach ($files as $file) {
             $key = File::getVideoKey(basename($file));
@@ -157,7 +158,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $files = Finder::Find('*.ytdl', __PLEX_DOWNLOAD__);
+        $files = Finder::Find('*.ytdl', __PLEX_DOWNLOAD__, exit: false);
         if (null !== $files) {
             foreach ($files as $file) {
                 $info = pathinfo($file);
@@ -187,7 +188,7 @@ trait Helper
             }
             Filesystem::writeFile(self::ARCHIVE, $archive_array);
 
-            $files = Finder::Find('*'.$current_key.'*', __PLEX_DOWNLOAD__);
+            $files = Finder::Find('*'.$current_key.'*', __PLEX_DOWNLOAD__, exit: false);
             foreach ($files as $k => $file) {
                 Filesystem::delete($file);
             }
@@ -231,7 +232,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_string = '';
-        $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json');
+        $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json', exit: false);
         foreach ($file_array as $key => $val) {
             $ph_key                    = basename($val, '.info.json');
             $this->json_Array[$ph_key] = $val;
@@ -272,8 +273,8 @@ trait Helper
                 $id_keys  = array_search($video_key, $ids);
                 $newids[] = 'pornhub '.$video_key;
                 unset($ids[$id_keys]);
-            // $array[] = $video_key;
-            // utmdd("key " . $filename);
+                // $array[] = $video_key;
+                // utmdd("key " . $filename);
             } else {
                 if (!str_starts_with($video_key, 'x')) {
                     if (file_exists($filename)) {

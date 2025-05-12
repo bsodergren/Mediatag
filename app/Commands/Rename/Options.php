@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -33,10 +34,10 @@ class Options extends MediaOptions
         // return array_merge( parent::getMetaOptions(),$options);
     }
 
-    public function Arguments($varName = null, $description = null)
-    {
-        // utminfo(func_get_args());
+    // public function Arguments($varName = null, $description = null)
+    // {
+    //     // utminfo(func_get_args());
 
-        return [$varName, InputArgument::OPTIONAL, $description];
-    }
+    //     return [$varName, InputArgument::OPTIONAL, $description];
+    // }
 }

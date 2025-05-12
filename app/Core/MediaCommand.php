@@ -12,6 +12,8 @@ use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Traits\MediaLibrary;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\CompleteCommand;
+use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -98,7 +100,13 @@ class MediaCommand extends DoctrineCommand
         MediaOptions::$callingClass = $child;
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
-        $arguments = MediaOptions::getArguments($this->getName(), $this->getDescription());
+        $arguments = MediaOptions::getArguments(
+            $this->getName(), 
+            $this->getDescription(),
+            function (CompletionInput $input) use($child) {
+               return call_user_func(array( MediaOptions::$CmdClass , 'ArgumentClosure'),$input, $this->getName());                
+            }
+        );
 
         if (\is_array($arguments)) {
             $this->addArgument(...$arguments);
