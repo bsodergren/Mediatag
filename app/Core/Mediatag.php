@@ -109,7 +109,6 @@ abstract class Mediatag extends MediaCommand
             utmdump(Option::isTrue('SKIP_SEARCH'));
 
             self::$SearchArray = self::$finder->ExecuteSearch();
-            utmdump(self::$SearchArray);
             if (true == Option::isTrue('numberofFiles')) {
                 $this->getNumberofFiles();
                 exit;

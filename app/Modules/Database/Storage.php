@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -111,11 +112,71 @@ class Storage
         // utmdd([__METHOD__,'DB method doesnt exist', $method, $arguments]);
     }
 
+    public function delete($table, $where = [], $test = false)
+    {
+
+        if (array_key_exists(0, $where)) {
+            if (!is_array($where[0])) {
+                if (!array_key_exists('field', $where)) {
+                    $field = $where[0];
+                    $value = $where[1];
+                    unset($where);
+                    $where = ['field' => $field,'value' => $value];
+
+                }
+            }
+        }
+
+        if (array_key_exists("field", $where)) {
+            $tmp[] = $where;
+            unset($where);
+            $where = $tmp;
+            unset($tmp);
+        }
+        // 
+        if ($test === true) {
+           $this->dbConn->startTransaction();
+        }
+
+        foreach ($where as $row => $query) {
+            utmdump($query);
+            if (str_contains($query['value'], "null")) {
+
+                $condition = trim(str_replace("null", "", $query['value']));
+                utmdump([$query['field'], null, $condition]);
+                $this->dbConn->where($query['field'], null, strtoupper($condition));
+                continue;
+            }
+            if (str_contains($query['value'], "like")) {
+
+                $condition = trim(str_replace("like", "", $query['value']));
+                $this->dbConn->where($query['field'], null, $condition);
+                continue;
+            }
+
+        }
+
+// utmdd($where);
+
+
+
+        $ret = $this->dbConn->delete($table);
+        if ($test === true) {
+            $this->dbConn->rollback();
+            return $ret;
+        //     utmdd($res);
+        }
+            $this->dbConn->commit();
+            return $ret;
+    }
+
     public function query($sql)
     {
         // utminfo(func_get_args());
 
         $res = $this->dbConn->rawQuery($sql);
+
+
 
         return $res;
     }
@@ -137,8 +198,8 @@ class Storage
         }
 
         $ret = $this->dbConn->getOne($table);
-
-        // utmdump($this->dbConn->getLastQuery(),__LIBRARY__);
+        // utmdd($ret);
+        // utmdump([$this->dbConn->getLastQuery(),__LIBRARY__,$ret]);
         return $ret;
     }
 

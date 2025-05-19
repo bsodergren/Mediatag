@@ -14,6 +14,7 @@ use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Process\Process as ExecProcess;
 use UTM\Utilities\Option;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
@@ -72,46 +73,35 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        foreach (Mediatag::$SearchArray as $key => $file) {
-            $videoInfo = File::file($file);
-            $ytdl_file = $videoInfo['video_file'].'.ytdl';
-            $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);
-            if (file_exists($ytdl_file)) {
-                Mediatag::$output->writeln($ytdl_file);
+        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mp4', exit: false);
 
-                continue;
+        $this->moveJson();
+        $this->moveCaption();
+
+        if ($file_array !== null) {
+
+            foreach ($file_array as $key => $file) {
+                $videoInfo = File::file($file);
+                $ytdl_file = $videoInfo['video_file'].'.ytdl';
+                $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);
+                if (file_exists($ytdl_file)) {
+                    Mediatag::$output->writeln($ytdl_file);
+
+                    continue;
+                }
+                if (file_exists($temp_file)) {
+                    Mediatag::$output->writeln($temp_file);
+
+                    continue;
+                }
+
+
+                $out = $this->moveVideo($videoInfo);
+
+
+                Mediatag::$output->writeln($out);
             }
-            if (file_exists($temp_file)) {
-                Mediatag::$output->writeln($temp_file);
-
-                continue;
-            }
-
-            // if (
-            $this->moveJson($videoInfo);
-            // ) {
-            // utmdump($videoInfo);
-            $out = $this->moveVideo($videoInfo);
-            // } else {
-            //     $json_file = basename($videoInfo['video_file']);
-            //     $success   = preg_match('/-(p?h?[a-z0-9]+).mp4/', basename($json_file), $matches);
-            //     if (1 === $success) {
-            //         $json_key = $matches[1];
-            //     } else {
-            //         continue;
-            //     }
-
-            //     $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
-            //     if (Mediatag::$filesystem->exists($newJson_file)) {
-            //         $out = $this->moveVideo($videoInfo);
-            //     } else {
-            //         $out = '<error>no json found for '.$videoInfo['video_name']." </error>\n";
-            //     }
-            // }
-
-            Mediatag::$output->writeln($out);
         }
-
         if (\count($this->newFiles) > 0) {
             $ScriptWriter = new ScriptWriter('addedFiles.sh', __PLEX_HOME__.'/Pornhub');
             $ScriptWriter->addCmd('update', ['-f']);
@@ -119,56 +109,92 @@ trait Helper
             $ScriptWriter->write();
         }
 
+
+
         if (\count($this->filesToRemove) > 0) {
             $this->cleanDupeFiles();
         }
 
         if (!Option::istrue('test')) {
-            $this->cleanEmptyDir();
+            Filesystem::prunedirs();
         }
 
         Mediatag::$output->writeln('Done');
     }
 
-    private function moveJson($videoInfo)
+    private function moveJson()
     {
         // utminfo(func_get_args());
 
-        $old_name  = $videoInfo['video_name'];
-        $old_path  = $videoInfo['video_path'];
-        $json_key  = '';
-        $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
 
-        if (Mediatag::$filesystem->exists($json_file)) {
-            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
-            if (1 === $success) {
-                $json_key = $matches[1];
-            } else {
-                utmdd($matches);
-            }
-        }
+        $fileArray = $this->searchDownloads("json");
+        if ($fileArray !== null) {
+            foreach ($fileArray as $row) {
+                $key = $row['key'];
+                $json_file = $row['src'];
+                $newJson_file = __JSON_CACHE_DIR__.'/'.$key.'.info.json';
 
-        $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
 
-        if (Mediatag::$filesystem->exists($json_file)) {
-            if (!Mediatag::$filesystem->exists($newJson_file)) {
-                if (Option::istrue('test')) {
-                    $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
-                    Mediatag::$output->writeln($out);
+                if (!Mediatag::$filesystem->exists($newJson_file)) {
+                    if (Option::istrue('test')) {
+                        $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
+                        Mediatag::$output->writeln($out);
+                    } else {
+                        Mediatag::$filesystem->rename($json_file, $newJson_file, false);
+                    }
                 } else {
-                    Mediatag::$filesystem->rename($json_file, $newJson_file, false);
+                    $this->filesToRemove[] = $json_file;
+                    $out                   = '<question>'.basename($newJson_file).' already exists</question>';
+                    Mediatag::$output->writeln($out);
                 }
-            } else {
-                $this->filesToRemove[] = $json_file;
-                $out                   = '<question>'.basename($newJson_file).' already exists</question>';
-                Mediatag::$output->writeln($out);
-            }
 
-            return true;
+            }
         }
 
-        return false;
     }
+    private function moveCaption()
+    {
+        // utminfo(func_get_args());
+        $fileArray = $this->searchDownloads("srt");
+        if ($fileArray !== null) {
+
+            foreach ($fileArray as $row) {
+                $key = $row['key'];
+                $caption_file = $row['src'];
+                $newCaption_file = __INC_WEB_CAPTION_ROOT__.'/'.$key.'.vtt';
+
+                // if (Mediatag::$filesystem->exists($caption_file)) {
+                if (!Mediatag::$filesystem->exists($newCaption_file)) {
+                    if (Option::istrue('test')) {
+                        $out = "<question>jSon</question>\n\t<comment>Old:".basename($caption_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
+                        Mediatag::$output->writeln($out);
+                    } else {
+                        $original = file_get_contents($caption_file);
+                        $vtt = 'WEBVTT'.PHP_EOL.PHP_EOL.$original;
+                        // Replace microseconds separator: 00,000 -> 00.000
+                        $vtt = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
+
+                        // Write the .vtt file
+                        file_put_contents($newCaption_file, $vtt);
+                        unlink($caption_file);
+                        $out                   = '<info>'.basename($newCaption_file).' </info>';
+                        Mediatag::$output->writeln($out);
+                    }
+                } else {
+                    //$this->filesToRemove[] = $caption_file;
+                    unlink($caption_file);
+
+                    $out                   = '<question>'.basename($newCaption_file).' already exists</question>';
+                    Mediatag::$output->writeln($out);
+                }
+            }
+        }
+
+        // }
+
+    }
+
+
 
     private function moveVideo($videoInfo)
     {
@@ -240,4 +266,52 @@ trait Helper
         // $proccess = new ExecProcess($command);
         // $proccess->run();
     }
+
+
+    private function searchDownloads($type = "json")
+    {
+        $fileArray = [];
+        switch ($type) {
+            case 'json':
+                $search_params = "info.json";
+                $desc = "Json ";
+                break;
+            case 'srt':
+                $search_params = "en.srt";
+                $desc = "Caption ";
+                break;
+
+        }
+        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.'.$search_params, exit: false);
+
+        //  utmdd($file_array);
+        if ($file_array === null) {
+            return null;
+        }
+        foreach ($file_array as $file) {
+
+
+            $success = preg_match('/-(p?h?[a-z0-9]+).'.$search_params.'/', basename($file), $matches);
+            if (1 === $success) {
+                $key = $matches[1];
+            } else {
+                utmdd($matches);
+            }
+            // } else {
+            //     continue;
+            // }
+            // Mediatag::$output->writeln($desc." File " . basename($file). " key " . $key);
+
+            $fileArray[] = ["src" => $file,"key" => $key];
+        }
+        return $fileArray;
+    }
+
+
+
+
+
+
+
+
 }

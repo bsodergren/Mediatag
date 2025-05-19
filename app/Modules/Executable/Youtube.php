@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -55,6 +56,12 @@ class Youtube extends MediatagExec
         '--write-info-json',
         '--no-warnings',
         '--ignore-config',
+        '--write-info-json',
+        '--write-subs',
+        '--sub-format',
+        'srt',
+        '--sub-langs',
+        'en',
     ];
 
     // private $jsonoptions = [
@@ -135,7 +142,7 @@ class Youtube extends MediatagExec
         }
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
-        $options   = array_merge($options, ['--skip-download', '--write-info-json']);
+        $options   = array_merge($options, ['--skip-download']);
         $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
 
         $command = array_merge($options, [$video_url]);
@@ -157,14 +164,22 @@ class Youtube extends MediatagExec
     public function youtubeCmdOptions()
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
-        if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles) {
+        if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles
+        && !Option::istrue('archive')) {
             $options = array_merge($options, [
                 '--download-archive',
                 __PLEX_PL_DIR__.'/ids/archive.txt',
-                '--write-info-json',
-                // '--embed-thumbnail',
             ]);
         }
+
+        if (Option::istrue('archive')) {
+            $options = array_merge($options, [
+               '--download-archive',
+               __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
+               '--force-write-archive',
+            ]);
+        }
+
         if (Option::istrue('skip') || false === $this->downloadFiles) {
             $options = array_merge($options, ['--skip-download']);
         }

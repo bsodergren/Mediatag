@@ -105,7 +105,7 @@ trait Helper
         Mediatag::$output->writeln('<info> found '.\count($archive_ids).' files</info>');
         $this->ids = $existing_ids;
 
-        $archive_content = Filesystem::readLines(self::ARCHIVE);
+        $archive_content = Filesystem::readLines(self::$ARCHIVE);
         $diff            = array_diff($archive_content, $archive_ids);
         if (\is_array($diff)) {
             Mediatag::$output->writeln('<info> found '.\count($diff).' missing files</info>');
@@ -128,7 +128,7 @@ trait Helper
         // $archive_array   = array_unique($archive_content);
         $archive_array = array_unique($archive_ids);
 
-        Filesystem::writeFile(self::ARCHIVE, $archive_array);
+        Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
         return 0;
         if (isset($this->playlist)) {
@@ -180,13 +180,13 @@ trait Helper
         $playlistArray = [];
         if (false !== self::$current_key) {
             $current_key     = self::$current_key;
-            $archive_content = Filesystem::readLines(self::ARCHIVE);
+            $archive_content = Filesystem::readLines(self::$ARCHIVE);
             foreach ($archive_content as $lineNum => $line) {
                 if (!str_contains($line, $current_key)) {
                     $archive_array[] = $line;
                 }
             }
-            Filesystem::writeFile(self::ARCHIVE, $archive_array);
+            Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
             $files = Finder::Find('*'.$current_key.'*', __PLEX_DOWNLOAD__, exit: false);
             foreach ($files as $k => $file) {
@@ -246,8 +246,8 @@ trait Helper
             }
         }
 
-        //        $archive_array = Filesystem::readLines(self::ARCHIVE, [$this, 'parseArchive']);
-        //        Filesystem::writeFile(self::ARCHIVE, $archive_array);
+        //        $archive_array = Filesystem::readLines(self::$ARCHIVE, [$this, 'parseArchive']);
+        //        Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
         foreach ($this->json_Array as $key => $v) {
             $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
@@ -287,7 +287,7 @@ trait Helper
             }
         }
 
-        Filesystem::writeFile(self::ARCHIVE.'.new', $newids);
+        Filesystem::writeFile(self::$ARCHIVE.'.new', $newids);
         if (\count($playlist) > 0) {
             Filesystem::writeFile(self::PLAYLIST.'.new', $playlist);
         }
@@ -339,7 +339,7 @@ trait Helper
             return [];
         }
 
-        $archive_content = Filesystem::readLines(self::ARCHIVE);
+        $archive_content = Filesystem::readLines(self::$ARCHIVE);
         if (\is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $this->idList[] = Strings::after($line, ' ');

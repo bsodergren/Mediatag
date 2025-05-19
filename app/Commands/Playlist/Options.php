@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -32,6 +33,7 @@ class Options extends MediaOptions
             ['premium', 'P', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_PREMIUM')],
 
             ['break'],
+            ['archive', 'a', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_ARCHIVE')],
             ['split', 'S', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_SPLIT')],
 
             ['missing', 'm', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_MISSING')],
@@ -45,10 +47,10 @@ class Options extends MediaOptions
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DEFAULT_RANGE')],
         ];
     }
-//     public function Arguments($varName = null, $description = null)
-//     {
-//         // utminfo(func_get_args());
-// 
-//         return [$varName, InputArgument::OPTIONAL, $description];
-//     }
+    //     public function Arguments($varName = null, $description = null)
+    //     {
+    //         // utminfo(func_get_args());
+    //
+    //         return [$varName, InputArgument::OPTIONAL, $description];
+    //     }
 }

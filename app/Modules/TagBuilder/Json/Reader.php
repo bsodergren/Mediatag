@@ -207,20 +207,21 @@ class Reader extends TagReader
 
                 return true;
             } else {
-                $exec = new Youtube(__LIBRARY__);
+                // $exec = new Youtube(__LIBRARY__);
 
-                $exec->youtubeGetJson($this->video_key);
+                // $exec->youtubeGetJson($this->video_key);
 
                 $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
 
-                if (file_exists($this->json_file)) {
-                    $this->json_string = FileSystem::read($this->json_file);
-                    // utmdd($this->json_string);
+                // if (file_exists($this->json_file)) {
+                    utmdump($this->video_key);
+                //     $this->json_string = FileSystem::read($this->json_file);
+                //     // utmdd($this->json_string);
 
-                    return true;
-                } else {
+                //     return true;
+                // } else {
                     touch($this->json_file);
-                }
+                // }
             }
         }
 

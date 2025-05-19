@@ -43,6 +43,8 @@ const __COMMANDS_DIR__     = __APP_HOME__.'/app/Commands';
 
 const __INC_WEB_THUMB_ROOT__ = __WEB_HOME__;
 
+const __INC_WEB_CAPTION_ROOT__ = __WEB_HOME__.'/videos/captions';
+
 const __INC_WEB_THUMB_URL__ = '/images/plex/thumbnails';
 const __INC_WEB_THUMB_DIR__ = __INC_WEB_THUMB_ROOT__.__INC_WEB_THUMB_URL__;
 

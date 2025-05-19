@@ -212,7 +212,7 @@ trait Helper
             $progressbar->setMsgFormat()->setMessage('All Files', 'message')->newbar();
             $progressbar->start();
             parent::$dbconn->progressbar1 = $progressbar;
-
+        // utmdd($this->New_Array);
             foreach ($this->New_Array as $video_key => $video_file) {
                 $videoDataArray[] = (new StorageDB())->createDbEntry($video_file, $video_key);
                 --$idx;

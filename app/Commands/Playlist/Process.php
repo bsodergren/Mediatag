@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -23,7 +24,7 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
 
-    public const ARCHIVE = __PLEX_PL_ID_DIR__.'/archive.txt';
+    public static $ARCHIVE =  __PLEX_PL_ID_DIR__.'/archive.txt';
 
     public const IGNORED = __PLEX_PL_ID_DIR__.'/ignored_ids.txt';
 
@@ -125,21 +126,25 @@ class Process extends Mediatag
 
         if (null === $file) {
             $file = Option::getValue('playlist');
-        
+
         }
 
-        if(count($file) > 0){
-                $this->playlist = $file[0];
+        if (count($file) > 0) {
+            $this->playlist = $file[0];
         }
 
         if (Option::istrue('url')) {
             $this->playlist = Option::getValue('url');
         }
 
-// utmdd($file);
+        // utmdd($file);
 
-//        
+        //
+        if (Option::istrue('archive')) {
+            self::$ARCHIVE =  __PLEX_PL_ID_DIR__.'/'.Option::getValue('archive').'.txt';
 
+        }
+utmdump(self::$ARCHIVE);
         parent::boot($input, $output);
 
         $this->setupFormat();

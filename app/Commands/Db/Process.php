@@ -108,10 +108,10 @@ class Process extends Mediatag
 
             if (\array_key_exists($key, $this->file_array)) {
 
-                // utmdump([$file,$key,$this->file_array[$key]]);
+                // utmdd([$file,$key,$this->file_array[$key]]);
 
                 [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
-                // utmdd( [$keep,$move] );
+                utmdump( ["move"=>$move,$file,$this->file_array[$key]] );
 
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
                 $dupePath  = \dirname($movedFile);

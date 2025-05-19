@@ -185,7 +185,6 @@ class MediaFinder extends SFinder
         } else {
             $file_array = $this->searchFiles();
         }
-        utmdump($file_array);
         if (\is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
                 $FileArray = $this->getFileNumberArray($file_array);
@@ -326,7 +325,6 @@ class MediaFinder extends SFinder
     {
         // utminfo(func_get_args());
         Mediatag::$log->info('searchFiles vars {search}, {path}', ['search' => $search,'path' => $path]);
-        utmdump(['search' => $search,'path' => $path]);
         if (null === $path) {
             $path = getcwd();
         }

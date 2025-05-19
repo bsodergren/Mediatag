@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -81,13 +82,17 @@ class StorageDB extends Storage
     {
         // utminfo(func_get_args());
 
+
+
+        $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath','is null']);
         $fileListArray     = [];
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
-        $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name, video_key");
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+        $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
         $results           = $this->query($query);
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+
         foreach ($results as $key => $arr) {
+            if ($arr['fullpath'] === null) {
+                continue;
+            }
             $fileListArray[$arr['video_key']] = $arr['file_name'];
         }
         $this->DbFileArray = $fileListArray;
@@ -160,7 +165,7 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo = [];
         // $this->MultiIDX               = 1;
         $total                        = \count($data);
-// utmdd($this->MultiIDX );
+        // utmdd($this->MultiIDX );
         foreach ($data as $k => $row) {
             // $VideoQuery[$row['video_key']][__MYSQL_VIDEO_FILE__] = $row;
             $vdata = ['video_file' => $row['fullpath'] . '/' . $row['filename']];
@@ -169,7 +174,7 @@ class StorageDB extends Storage
             if ($this->progressbar !== null) {
                 $this->progressbar->advance();
             }
-           $this->progressbar1->advance();
+            $this->progressbar1->advance();
 
             //            $this->video_string[] = '<info>'.$this->MultiIDX.'</info> : Video <comment>'.$row['filename'].'</comment> added to db ';
             $this->MultiIDX--;
@@ -212,7 +217,7 @@ class StorageDB extends Storage
         ];
 
         $data['added'] = $this->dbConn->now();
-
+// utmdump($data);
         return $data;
     }
 
