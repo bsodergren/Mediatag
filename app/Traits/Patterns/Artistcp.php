@@ -7,7 +7,7 @@ namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Utilities\MediaArray;
 
-trait Artist
+trait Artistcp
 {
     /**
      * getArtistRegex.
