@@ -51,7 +51,7 @@ trait OptionsDefault
         Translate::$Class = __CLASS__;
 
         $options = [
-            ['ask', null, InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_ASK_FILE')],
+            ['ask', '', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_ASK_FILE')],
             ['overwrite', 'o', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_OVERWRITE_FILE')],
             ['yes', 'y', InputOption::VALUE_NEGATABLE, Translate::text('L__DEFAULT_QUESTION_YES')],
         ];

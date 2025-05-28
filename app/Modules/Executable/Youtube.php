@@ -6,20 +6,20 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Display\ConsoleOutput;
-use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
-use Mediatag\Modules\Executable\Helper\Pornhub;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Nette\Utils\Callback;
-use UTM\Utilities\Option;
-
-use function array_key_exists;
 use function count;
-
-use const FILE_APPEND;
+use function array_key_exists;
 use const PHP_EOL;
+use const FILE_APPEND;
+use UTM\Utilities\Option;
+use Nette\Utils\Callback;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Executable\Helper\Pornhub;
+
+use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
+use Mediatag\Modules\Display\ConsoleOutput;
+
+use Mediatag\Core\Mediatag;
+use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 class Youtube extends MediatagExec
 {
@@ -49,7 +49,7 @@ class Youtube extends MediatagExec
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
-        '--restrict-filenames',
+        //'--restrict-filenames',
         // '-w',
         '-c',
         // '--no-part',
@@ -168,13 +168,15 @@ class Youtube extends MediatagExec
         && !Option::istrue('archive')) {
             $options = array_merge($options, [
                 '--download-archive',
-                __PLEX_PL_DIR__.'/ids/archive.txt',
+                PlaylistProcess::$ARCHIVE,
             ]);
         }
 
         if (Option::istrue('archive')) {
+            utmdump(["archive",                PlaylistProcess::$ARCHIVE]);
             $options = array_merge($options, [
                '--download-archive',
+
                __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
                '--force-write-archive',
             ]);

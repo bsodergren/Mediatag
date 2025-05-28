@@ -135,7 +135,6 @@ trait MetaTags
     public static function mergeTag($tag, $first, $second)
     {
         // utminfo(func_get_args());
-
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
@@ -254,13 +253,26 @@ trait MetaTags
 
         $string = implode($delim, $newList);
         $arr    = explode($delim, $string);
+
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
         $arr = array_unique($arr);//, \SORT_STRING);
 
         $arr = array_values($arr);
-        
-        if ('genre' == $tag) {
+
+        if ('genre' == $tag || 'keyword' == $tag) {
+                           
+
+           if (true == MediaArray::search($arr, 'Double')) {
+                    foreach ($arr as $v) {
+                         if ('Double' == $v) {
+                            continue;
+                        }
+                        $narr[] = $v;
+                    }
+                    $arr = $narr;
+                    unset($narr);
+           }
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
                     foreach ($arr as $v) {
@@ -287,6 +299,7 @@ trait MetaTags
             if (isset(fileReader::$PatternClass)) {
                 // utmdd($this);
                 $genre = fileReader::$PatternClassObj->getGenre();
+               
                 if (false == MediaArray::search($arr, $genre)) {
                     $arr[] = $genre;
                 }

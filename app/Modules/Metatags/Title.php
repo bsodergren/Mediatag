@@ -30,7 +30,7 @@ class Title extends TagBuilder
 
     public function getTagValue() {}
 
-    public static function clean($text, $file = null)
+    public static function clean($clean_text, $file = null)
     {
         // utminfo(func_get_args());
 
@@ -45,7 +45,9 @@ class Title extends TagBuilder
         */
         // $text      = strtolower($text);
         // UTMlog::Logger('before', $text);
-        $text      = Strings::clean($text);
+        
+        $text      = Strings::clean($clean_text);
+
         $text      = str_replace("\\'", "'", $text);
         $text      = str_replace('/', ' ', $text);
         $text      = str_replace('(', ' ', $text);

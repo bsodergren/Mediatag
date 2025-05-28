@@ -144,7 +144,7 @@ class Process extends Mediatag
             self::$ARCHIVE =  __PLEX_PL_ID_DIR__.'/'.Option::getValue('archive').'.txt';
 
         }
-utmdump(self::$ARCHIVE);
+
         parent::boot($input, $output);
 
         $this->setupFormat();

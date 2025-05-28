@@ -200,7 +200,6 @@ class Reader extends TagReader
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
 
-
                 if ('' == $this->json_string) {
                     return false;
                 }

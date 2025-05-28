@@ -239,9 +239,8 @@ class MediaOptions
 
             }
 
-            // utmdump([$name, $shortcut,$mode, $description, $default]);
 
-            // utmdump([$optionName, self::$classObj->optionClosure("1",$optionName[1]) ]);
+            // 
             if ($mode != 1) {
                 $commandOptions[] = new InputOption(
                     $name,
@@ -263,6 +262,7 @@ class MediaOptions
                     }
                 );
             } else {
+
                 $commandOptions[] = new InputOption($name, $shortcut, $mode, $description, $default);
             }
         }

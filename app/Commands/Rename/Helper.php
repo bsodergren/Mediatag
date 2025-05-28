@@ -410,7 +410,7 @@ trait Helper
             Mediatag::$output->writeln('renaming file <comment> '.basename($oldName).'</>');
             Mediatag::$output->writeln('<comment> '.basename($newName).'</>');
 
-            $this->renameFile($oldName, $newName);
+            //$this->renameFile($oldName, $newName);
         }
 
         return 0;
@@ -445,9 +445,9 @@ trait Helper
 
                 if (!Option::isTrue('test')) {
                     $color = 'fg=red';
-                    //    utmdd([__METHOD__, $oldName, $newName]);
+                    utmdd([__METHOD__, $oldName, $newName]);
 
-                    Filesystem::renameFile($oldName, $newName);
+                    // Filesystem::renameFile($oldName, $newName);
                 }
 
                 if (true == $write) {

@@ -129,7 +129,6 @@ class Reader extends TagReader
                 $rep                  = ucwords(str_replace('_', ' ', $rep));
                 $artist_matches[$key] = $rep;
             }
-            // utmdd($artist_matches);
             $this->PatternObject->artist_match = $artist_matches;
         }
     }
@@ -281,7 +280,6 @@ class Reader extends TagReader
         if (null !== $this->PatternObject) {
 
             $result = $this->PatternObject->{$method}();
-
             $use = 1;
             //  } else {
             //     $result =  $this->{$method}();
