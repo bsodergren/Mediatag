@@ -239,13 +239,18 @@ class Strings extends \Nette\Utils\Strings
 
     public static function translate($inputText, $sep = '_')
     {
+
+         if ("" == CONFIG['USE_TRANSLATE']) {
+            return $inputText;
+        }
+
         // utminfo(func_get_args());
         $from_lan = 'RU';
         $to_lan   = 'EN';
         $cacheKey = md5($inputText);
  
         $text = MediaCache::get($cacheKey);
-
+utmdump($text);
         if (false === $text) {
 
             $source           = 'ru'; // English
