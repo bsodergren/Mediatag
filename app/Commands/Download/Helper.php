@@ -244,7 +244,7 @@ trait Helper
         if (true == $go) {
             foreach ($this->filesToRemove as $file) {
                 Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
-                // Mediatag::$filesystem->remove($file);
+                Mediatag::$filesystem->remove($file);
             }
         }
     }

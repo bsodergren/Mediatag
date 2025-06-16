@@ -12,7 +12,6 @@ trait StudioMap
         // utminfo(func_get_args());
         $query  = 'SELECT library, path,studio FROM '.__MYSQL_STUDIOS__." WHERE name LIKE '".$text."'";
         $result = $this->dbConn->rawQueryOne($query);
-
         if (null !== $result) {
             if ('Pornhub' == $result['library']) {
                 $result['library'] = 'New';
@@ -22,10 +21,13 @@ trait StudioMap
                 || '' == $result['path']) {
                 //                  return false;
                 unset($result['path']);
+            } else {
+                unset($result['studio']);
             }
             $path = implode('/', $result);
-
             return rtrim($path, '/');
+
+            // return rtrim($result['path'], '/');
         }
         $this->addStudioMap(__LIBRARY__, $text, $text, null);
         $this->getStudioPath($text);
