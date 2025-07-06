@@ -25,7 +25,7 @@ use Symfony\Component\Filesystem\Filesystem as SfSystem;
 // use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
 // use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
 // use Mediatag\Commands\Db\Commands\Backup\Helper as BackHelper;
-
+use  Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
 
 class Process extends Mediatag
 {
@@ -38,8 +38,10 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
     // use PreviewHelper;
-    // use ThumbHelper;
+    use  SubHelper;
+
     use Translate;
+    
 
 
     protected $useFuncs = ['addMeta'];

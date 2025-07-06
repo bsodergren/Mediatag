@@ -152,13 +152,19 @@ trait MetaTags
                 if ($firstCmp == $secondCmp) {
                     $return = $first;
                 } else {
-                    $return = $first.$delim.$second;
+                    if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
+                        $return = $first;
+                    } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
+                        $return = $second;
+                    } else {
+                        $return = $second;
+                    }
+                    
                 }
             }
         } else {
             $return = $first;
         }
-
         if (null !== $firstCmp && $first != $second) {
             $data['video_key'] = Metatags::$Videokey;
 
@@ -178,7 +184,6 @@ trait MetaTags
             //     __MYSQL_VIDEO_CUSTOM__
             // );
         }
-
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
 
@@ -262,7 +267,7 @@ trait MetaTags
 
         if ('genre' == $tag || 'keyword' == $tag) {
                            
-
+ 
            if (true == MediaArray::search($arr, 'Double')) {
                     foreach ($arr as $v) {
                          if ('Double' == $v) {

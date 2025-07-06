@@ -173,7 +173,6 @@ trait Artist
         $regex = $this->getArtistRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
-            utmdump($output_array);
             if (0 != $success) {
                 if (true === $this->getArtistFullNames()) {
                     if ('MFF' == $this->getGenre()) {

@@ -139,11 +139,9 @@ class Storage
         }
 
         foreach ($where as $row => $query) {
-            utmdump($query);
             if (str_contains($query['value'], "null")) {
 
                 $condition = trim(str_replace("null", "", $query['value']));
-                utmdump([$query['field'], null, $condition]);
                 $this->dbConn->where($query['field'], null, strtoupper($condition));
                 continue;
             }

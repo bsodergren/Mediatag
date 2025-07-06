@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,9 @@ use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function defined;
 
 class TagBuilder
 {
@@ -34,35 +38,32 @@ class TagBuilder
     {
         // utminfo(func_get_args());
         $DbUpdates = null;
-        $updates = null;
+        $updates   = null;
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
 
-        if (!\defined('__UPDATE_SET_ONLY__')) {
+        if (!defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
-                $updates = $this->ReaderObj->getFileValues();
-                Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
+            $updates = $this->ReaderObj->getFileValues();
+            Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
             // }
-            // utmdump($updates);
+           
 
             if (!str_starts_with($this->video_key, 'x')) {
-
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 //
                 // utmdd($this->ReaderObj);
 
-
                 if (null !== $updates) {
                     $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
-            } else {
-                $updates = $jsonupdates;
-            }
+                } else {
+                    $updates = $jsonupdates;
+                }
                 Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
-
-
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
+            
         }
         // if (null !== $FileUpdates) {
         //     $updates = $FileUpdates;
@@ -71,13 +72,14 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
 
+
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
-
         if (isset($updates)) {
             // UTMlog::Logger('Reader', $updates);
         }
+
         foreach (Option::getOptions() as $option => $value) {
             $method = 'set'.$option;
             if (method_exists($this->ReaderObj, $method)) {
@@ -102,7 +104,8 @@ class TagBuilder
             }
             $videoInfo['updateTags'] = $this->compareTags($current, $updates);
         }
-        //  utmdump($videoInfo);
+        //  utmdd($videoInfo);
+
 
         return $videoInfo;
     }
@@ -125,15 +128,15 @@ class TagBuilder
             }
         }
 
-        if (\array_key_exists('studio', $current)) {
+        if (array_key_exists('studio', $current)) {
             $studio = $current['studio'];
         }
 
-        if (\array_key_exists('studio', $updates)) {
+        if (array_key_exists('studio', $updates)) {
             $tmpStudio = $updates['studio'];
         }
 
-        if (\array_key_exists('network', $updates)) {
+        if (array_key_exists('network', $updates)) {
             $tmpNetwork = $updates['network'];
 
             if (null !== $tmpNetwork) {
@@ -145,7 +148,7 @@ class TagBuilder
                 }
             }
         } else {
-            if (\array_key_exists('network', $current)) {
+            if (array_key_exists('network', $current)) {
                 $tmpNetwork = $current['network'];
                 if (null !== $tmpNetwork) {
                     if ($tmpStudio != $tmpNetwork) {
@@ -238,11 +241,11 @@ class TagBuilder
             $new_tag        = $tag.'_new';
             ${$new_tag}     = '';
 
-            if (\array_key_exists($tag, $Current)) {
+            if (array_key_exists($tag, $Current)) {
                 ${$current_tag} = $Current[$tag];
             }
 
-            if (\array_key_exists($tag, $New)) {
+            if (array_key_exists($tag, $New)) {
                 ${$new_tag} = $New[$tag];
             }
 

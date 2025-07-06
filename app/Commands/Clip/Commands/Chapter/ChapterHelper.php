@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -37,18 +38,21 @@ trait ChapterHelper
             $this->Marker = new Markers();
 
             $this->Marker->getvideoId($key);
-
+            // utmdump($this->Marker->video_id);
             if (null !== $this->Marker->video_id) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Mediatag::$dbconn->query($query);
-
+                // utmdump($result);
+ if (count($result) > 0) {
                 $markers = $this->getVideoChapters($result);
+                if (null !== $markers) {
+                    if (count($markers) > 0) {
+                        ++$this->FileIdx;
 
-                if (count($markers) > 0) {
-                    ++$this->FileIdx;
-
-                    $markerArray[] = $markers;
+                        $markerArray[] = $markers;
+                    }
                 }
+            }
             }
         }
         $this->markerArray = $markerArray;
@@ -63,11 +67,11 @@ trait ChapterHelper
         foreach ($this->markerArray as $i =>$fileRow) {
             foreach ($fileRow as $K =>$FILE) {
                 $filename = $FILE['filename'];
-utmdump($FILE);
+                // utmdump($FILE);
                 if (!array_key_exists('markers', $FILE)) {
                     continue;
                 }
-                
+
                 if (count($FILE['markers']) > 0) {
                     $mediaInfo          = new MediaInfo();
                     $mediaInfoContainer = $mediaInfo->getInfo($filename);
@@ -142,8 +146,8 @@ utmdump($FILE);
         $text .= 'TIMEBASE=1/1'.PHP_EOL;
         $text .= 'START='.$marker['start'].PHP_EOL;
         $text .= 'END='.$marker['end'].PHP_EOL;
-        $text .= 'title='.str_replace('_', ' ', $marker['text']);
-
+        $text .= 'title='.trim(str_replace('Chapter', '', str_replace('_', ' ', $marker['text'])));
+utmdump($text);
         return $text;
     }
 

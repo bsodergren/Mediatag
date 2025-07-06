@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -193,7 +194,7 @@ trait Helper
                 }
             }
             if (true == $SortDir) {
-                foreach (['Group', 'MMF', 'MFF', 'Single', 'Compilation'] as $geneDir) {
+                foreach (__GENRE_LIST__ as $geneDir) {
                     $gebrePath = $newPath.'/'.$geneDir;
                     if (!is_dir($gebrePath)) {
                         if (!Option::isTrue('test')) {
@@ -220,7 +221,7 @@ trait Helper
                 }
 
                 $text[] = ['Moving' => File::videoPath($video_name)];
-                                    Mediatag::$output->writeln('Renaming <file>'.File::videoPath($video_file).'</>'.PHP_EOL.' <comment>'.File::videoPath($newFile).'</>');
+                Mediatag::$output->writeln('Renaming <file>'.File::videoPath($video_file).'</>'.PHP_EOL.' <comment>'.File::videoPath($newFile).'</>');
 
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
@@ -229,7 +230,7 @@ trait Helper
                 $text[] = ['New Path' => $video_path];
 
                 $infoMsg = array_merge($message, $text);
-                // Mediatag::$Console->table($infoMsg);
+            // Mediatag::$Console->table($infoMsg);
             } else {
                 if (!Option::isTrue('test')) {
                     [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
@@ -240,17 +241,16 @@ trait Helper
                     $dupeFile = $dupePath.'/'.$video_name;
 
                     if (!is_dir($dupePath)) {
-                        Mediatag::$output->writeln("Creating <file> ". $studio_dir.'</> '.PHP_EOL.'<comment>'.$genrePath.'</>');
+                        Mediatag::$output->writeln('Creating <file> '.$studio_dir.'</> '.PHP_EOL.'<comment>'.$genrePath.'</>');
                         if (!Option::isTrue('test')) {
                             nFileSystem::createDir($dupePath, 0755);
                         }
                     }
 
                     // if (!file_exists($newFile)) {
-                        Mediatag::$output->writeln('Renaming duplicate '.PHP_EOL.'<file>'.File::videoPath($video_file).'</> '.PHP_EOL.'<comment> '.File::videoPath($dupeFile).'</>');
+                    Mediatag::$output->writeln('Renaming duplicate '.PHP_EOL.'<file>'.File::videoPath($video_file).'</> '.PHP_EOL.'<comment> '.File::videoPath($dupeFile).'</>');
                     if (!Option::isTrue('test')) {
-                                           (new SfSystem())->rename($video_file, $dupeFile, true);
-                    
+                        (new SfSystem())->rename($video_file, $dupeFile, true);
                     }
 
                     // if (!file_exists($video_file)) {
@@ -389,8 +389,8 @@ trait Helper
             $fs        = new File($file);
             $videoData = $fs->get();
             $fileObj   = new fileReader($videoData);
-            $filename      = $fileObj->getFilename($file);
-            if($filename !== null){
+            $filename  = $fileObj->getFilename($file);
+            if (null !== $filename) {
                 $file = $filename;
             }
             $newName = $this->cleanFilename($file);
@@ -410,7 +410,7 @@ trait Helper
             Mediatag::$output->writeln('renaming file <comment> '.basename($oldName).'</>');
             Mediatag::$output->writeln('<comment> '.basename($newName).'</>');
 
-            //$this->renameFile($oldName, $newName);
+            // $this->renameFile($oldName, $newName);
         }
 
         return 0;
