@@ -68,8 +68,9 @@ class MediaFile
             'video_file'    => $this->fullname(),
             'video_path'    => $this->filepath(),
             'video_name'    => $this->filename(),
+             'video_library' => $this->library(),
             'video_key'     => $this->videokey(),
-            'video_library' => $this->library(),
+           
         ];
 
         Mediatag::$log->notice('Getting Video Data {video}', ['video'=>$this->video]);
@@ -97,19 +98,24 @@ class MediaFile
     public static function getVideoKey($filename)
     {
         // utminfo(func_get_args());
-
-        // $filename = realpath($filename);
-
+        $video_key = null;
         $filename = basename($filename);
 
-        $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
-        if (1 == $success) {
-            $video_key = $matches[1];
-        } else {
+        $isPhFile = self::isPornhubfile($filename);
+
+        if($isPhFile === true){
+        // $filename = realpath($filename);
+            $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
+            if (1 == $success) {
+                $video_key = $matches[1];
+            } 
+        }
+        if($video_key === null){        
             $video_key = self::get64BitNumber($filename);
             // $video_key = 'x'.$video_key;
         }
 
+        // utmdump([$filename,$video_key]);
         return $video_key;
     }
 
@@ -310,8 +316,12 @@ class MediaFile
         }
 
         $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
+       
         if (1 == $success) {
-            return true;
+               if ('Studios' == $library) {
+                   return false;
+                }
+                return true;
         }
         if (str_contains($filename, '000K')) {
             return true;
