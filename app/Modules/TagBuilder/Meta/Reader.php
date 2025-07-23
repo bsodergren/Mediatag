@@ -50,17 +50,16 @@ class Reader extends TagReader
     public function getvideoData(array $file_array)
     {
         // utminfo(func_get_args());
-        // $key        = $file_array['video_key'];
-        // $video_info = MediaCache::get($key);
-
-        // if (false === $video_info) {
+        $key        = $file_array['video_key'];
+        $video_info = MediaCache::get($key);
+        if (false === $video_info) {
             $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
             $video_info = $read->read();
-            
-        //     if(count($video_info[$this->video_key]['metatags']) > 0){
-        //         MediaCache::put($key, $video_info);
-        //     }
-        // }
+            // utmdump($video_info);
+            if(count($video_info[$this->video_key]['metatags']) > 0){
+                MediaCache::put($key, $video_info);
+            }
+        }
         return $video_info[$this->video_key]['metatags'];
     }
 

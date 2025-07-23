@@ -231,7 +231,7 @@ trait MediaFFmpeg
             $outputFile,
         ];
         $this->cmdline = $cmdOptions;
-
+utmdump($cmdOptions);
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
         $this->progress->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
 

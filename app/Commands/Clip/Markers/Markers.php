@@ -32,7 +32,6 @@ trait Markers
         $rowIdx = 0;
 
         $rows = count($videoInfo);
-        utmdump($videoInfo);
         foreach ($videoInfo as $k => $row) {
 
             // if( !isset($row['file_name']) ){
@@ -111,7 +110,6 @@ trait Markers
         $videoKey  = 0;
         $markers   = [];
         $markerPos = [];
-        // utmdd($videoInfo);
         foreach ($videoInfo as $k => $row) {
             if (!\array_key_exists('timeCode', $row)) {
                 return null;
@@ -123,7 +121,7 @@ trait Markers
             }
 
             $markers[$row['video_key']] = [
-                'filename' => $row['file_name'],
+                'filename' => $row['filename'],
             ];
 
             [$markerText,$markerKey] = explode('_', $row['markerText']);

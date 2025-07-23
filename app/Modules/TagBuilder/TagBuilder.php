@@ -53,12 +53,12 @@ class TagBuilder
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 //
                 // utmdd($this->ReaderObj);
-
                 if (null !== $updates) {
                     $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
                 } else {
                     $updates = $jsonupdates;
                 }
+
                 Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
             }
 

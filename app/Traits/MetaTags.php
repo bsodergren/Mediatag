@@ -157,7 +157,9 @@ trait MetaTags
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
                     } else {
-                        $return = $second;
+                                            $return = $first.$delim.$second;
+
+//                        $return = $second;
                     }
                     
                 }

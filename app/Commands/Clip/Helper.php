@@ -95,6 +95,7 @@ trait Helper
 
 
         $search = Option::getValue('clip', true);
+
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers();
 
@@ -102,9 +103,10 @@ trait Helper
 
             if (null !== $this->Marker->video_id) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
-                $result = Mediatag::$dbconn->query($query);
 
+                $result = Mediatag::$dbconn->query($query);
                 $markers = $this->getVideoMarks($result);
+
 
                 if (\count($markers) > 0) {
                     ++$this->FileIdx;
