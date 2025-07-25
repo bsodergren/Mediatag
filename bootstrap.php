@@ -3,12 +3,13 @@
  * Command like Metatag writer for video files.
  */
 
-use Camoo\Config\Config;
-use Mediatag\Core\EnvLoader;
-use Mediatag\Core\MediaLogger;
-use Slim\Factory\AppFactory;
-use UTM\Utilities\Debug\Debug;
+use UTM\Utm;
 use UTM\Utilities\Debug\UtmStopWatch;
+use UTM\Utilities\Debug\Debug;
+use Slim\Factory\AppFactory;
+use Mediatag\Core\MediaLogger;
+use Mediatag\Core\EnvLoader;
+use Camoo\Config\Config;
 
 // die(get_include_path());
 
@@ -19,10 +20,12 @@ set_include_path(get_include_path().\PATH_SEPARATOR.__COMPOSER_LIB__);
 
 require_once __COMPOSER_LIB__.'/autoload.php';
 
-$config = new Config(__ROOT_DIRECTORY__.\DIRECTORY_SEPARATOR.'config.ini');
-define('CONFIG', $config['path']);
-EnvLoader::LoadEnv(__ROOT_DIRECTORY__)->load();
-new UTM\Utm();
+Utm::loadConifg(__ROOT_DIRECTORY__ . \DIRECTORY_SEPARATOR . 'config.ini');
+Utm::LoadEnv(__ROOT_DIRECTORY__)->load();
+
+define('CONFIG', Utm::$UTM_CONFIG['path']);
+
+new Utm();
 
 $container = require __CONFIG_LIB__.'/container.php';
 

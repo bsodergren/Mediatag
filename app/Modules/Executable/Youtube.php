@@ -49,7 +49,7 @@ class Youtube extends MediatagExec
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
-        //'--restrict-filenames',
+        '--restrict-filenames',
         // '-w',
         '-c',
         // '--no-part',
