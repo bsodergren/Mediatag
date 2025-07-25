@@ -46,7 +46,7 @@ trait Helper
 
     public function getClipDirectory($filename, $level = 1)
     {
-        $outputFile = str_replace('/XXX', '/Clips', $filename);
+        $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
         if (0 == $level) {
             return $outputFile;
         }

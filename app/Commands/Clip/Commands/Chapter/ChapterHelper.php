@@ -147,7 +147,6 @@ trait ChapterHelper
         $text .= 'START='.$marker['start'].PHP_EOL;
         $text .= 'END='.$marker['end'].PHP_EOL;
         $text .= 'title='.trim(str_replace('Chapter', '', str_replace('_', ' ', $marker['text'])));
-utmdump($text);
         return $text;
     }
 
