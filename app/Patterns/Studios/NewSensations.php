@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -11,5 +12,6 @@ const NEWSENSATIONS_REGEX_COMMON = '//i';
 
 class NewSensations extends Patterns
 {
-    public $studio = 'New Sensations';
+    public $studio  = 'New Sensations';
+    public $network = 'New Sensations';
 }

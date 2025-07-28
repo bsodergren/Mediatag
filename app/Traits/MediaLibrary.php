@@ -5,6 +5,7 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Core\Mediatag;
 use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
@@ -29,7 +30,7 @@ trait MediaLibrary
         $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
         if (0 == \count($match)) {
-            self::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
+            Mediatag::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
 
             // UTMlog::logger('Wrong spot?', $curent_dir);
             if (true === $exit) {
