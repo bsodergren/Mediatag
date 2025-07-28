@@ -86,7 +86,7 @@ class Javascript extends MediatagExec
             $string,
             $this->wordList,
         ];
-utmdump($command);
+// utmdump($command);
         $callback = Callback::check([$this, 'ReadOutput']);
         $this->execMode = 'write';
 
@@ -103,7 +103,7 @@ utmdump($command);
 
             $cacheFile = md5($string);
             $title = MediaCache::get($cacheFile);
-utmdump($title);
+// utmdump($title);
         if ($title === false) {
             $title = $this->getTitle($string);
         } else {

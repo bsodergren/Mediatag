@@ -114,7 +114,8 @@ class Process extends Mediatag
 
                 [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
                 utmdump( ["move"=>$move,$file,$this->file_array[$key]] );
-
+  Mediatag::$Console->writeln('Keeping file '.$keep."");
+  Mediatag::$Console->writeln('Moving file '.$move."");
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
                 $dupePath  = \dirname($movedFile);
                 $filename  = basename($file);
@@ -125,8 +126,8 @@ class Process extends Mediatag
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($move.' is dup');
-                (new SfSystem())->rename($move, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+  Mediatag::$Console->writeln('to '.$dupePath.\DIRECTORY_SEPARATOR.$filename."");
+                // (new SfSystem())->rename($move, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
                 unset($this->file_array[$key]);
                 $this->file_array[$key] = $keep;
                 continue;
@@ -134,6 +135,7 @@ class Process extends Mediatag
             $this->file_array[$key] = $file;
         }
         parent::$dbconn->file_array = $this->file_array;
+        // utmdd("fds");
         $this->db_array             = parent::$dbconn->getDbFileList();
 
         // utmdd( $this->db_array  );
