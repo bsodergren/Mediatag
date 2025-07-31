@@ -27,7 +27,6 @@ use ProcessCallbacks;
         // utminfo(func_get_args());
 
         $array = MediaCache::get($this->video_key);
-        // utmdump([$this->video_key, $array]);
         // $array = false;
         if (false === $array) {
             $command = [

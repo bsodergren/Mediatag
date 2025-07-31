@@ -55,7 +55,6 @@ class Reader extends TagReader
         if (false === $video_info) {
             $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
             $video_info = $read->read();
-            // utmdump($video_info);
             if(count($video_info[$this->video_key]['metatags']) > 0){
                 MediaCache::put($key, $video_info);
             }

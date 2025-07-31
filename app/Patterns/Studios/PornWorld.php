@@ -11,7 +11,7 @@ use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Utilities\MediaArray;
-use Symfony\Component\HttpClient\HttpClient;
+use Mediatag\Utilities\MediaScraper;
 
 use function array_key_exists;
 use function count;
@@ -61,10 +61,10 @@ class PornWorld extends Patterns
 
         $namesArray = [];
         $names      = str_replace('_1080p', '', $names);
-//        ;
-        $names      = str_replace($this->getArtistDelim(), $delim, $names);
-        //$names          = str_replace('_', ' ', $names);
-        //utmdd($names);
+        //        ;
+        $names = str_replace($this->getArtistDelim(), $delim, $names);
+        // $names          = str_replace('_', ' ', $names);
+        // utmdd($names);
 
         $names_array    = explode($delim, $names);
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
@@ -199,30 +199,51 @@ class PornWorld extends Patterns
 
         if (false === $name) {
             // utmdd(preg_match('/(GP[0-9]+)_.*/', $this->video_name, $output_array));
-            if (preg_match('/(GP[0-9]+)_.*/', $this->video_name, $output_array)) {
-                $search = $output_array[1];
-                $client = HttpClient::create(
-                );
-                $response = $client->request(
-                    'GET',
-                    'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=1'
-                );
+            if (preg_match('/(GP[0-9]+)?(.*)_([0-9HDP]+.mp4)/', $this->video_name, $output_array)) {
+                
+                if($output_array[1] != ''){
+                    $search = $output_array[1];
 
-                $statusCode = $response->getStatusCode();
-                // $statusCode = 200
-                $contentType = $response->getHeaders()['content-type'][0];
+                } else {
+                     $search =   $output_array[2];
+                      $search = str_replace( 'DP_ed','DPed', $search);
 
-                // $contentType = 'application/json'
-                $content = $response->getContent();
-                // $content = '{"id":521583, "name":"symfony-docs", ...}'
-                $content = $response->toArray();
-              //  utmdd( $content['content']['strict_contents'][0]);
-                //https://pornbox.com/contents/63004/subtitles/en
+                      $search = str_replace('-_', '', $search);
+                    $search = str_replace('_', ' ', $search);
+                // utmdump($search);
+
+                     $pcs = explode(" ",$search);
+                     $words = array_slice($pcs,0,4);
+                    
+                     $search = implode(" ",$words);
+
+                    $search = rawurlencode($search);
+                }
+
+                $content = MediaScraper::getUrl('https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=1');
+                //  utmdump(array_keys($content['content']));
+                if(array_key_exists("strict_contents",$content['content'])){
                 $name    = $content['content']['strict_contents'][0]['name'];
-                 $id    = $content['content']['strict_contents'][0]['id'];
-                   MediaCache::put($key."_id", $id);
+                $id      = $content['content']['strict_contents'][0]['id'];
+
+                MediaScraper::getUrl('https://pornbox.com/contents/'.$id.'/subtitles/en');
+                }
             } else {
-                $regex = $this->getTitleRegex();
+                $name = $this->oldTitle();
+            }
+            if (null !== $name) {
+                if (false !== $name) {
+                    MediaCache::put($key, $name);
+                }
+            }
+        }
+
+        return $name;
+    }
+
+
+    public function oldTitle(){
+$regex = $this->getTitleRegex();
 
                 if ($regex) {
                     $success = preg_match($regex, $this->video_name, $output_array);
@@ -246,14 +267,6 @@ class PornWorld extends Patterns
                         $name = str_replace('- ', '-', $title);
                     }
                 }
-            }
-            if (null !== $name) {
-                if (false !== $name) {
-                    MediaCache::put($key, $name);
-                }
-            }
-        }
-
-        return $name;
+                return $name;
     }
 }
