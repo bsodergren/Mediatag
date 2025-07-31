@@ -15,6 +15,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\HttpClient\HttpClient;
 use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
@@ -44,7 +45,7 @@ class Process extends Mediatag
     ];
 
     public $words = ['my', 'sexy', 'hotwife',
-        'while',  'he',  'a','watches',
+        'while',  'he',  'a', 'watches',
         'from', 'both', 'ends',
         'when', 'the', 'husband', 'likes', 'to', 'watch',
         'office', 'xxx', 'parody',
@@ -101,24 +102,26 @@ class Process extends Mediatag
 
     public function execWord()
     {
-        $sentance = 'WhileHeWatches';
-        $original = $sentance;
-        // while ()
+        $search = 'Triple_Putter_-_Multidick_Sucking_Leads_To_Double_Penetration';
+        $search = urlencode(str_replace("_"," ",$search));
+        $client = HttpClient::create(
+        );
+        $response = $client->request(
+            'GET',
+            'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=1'
+        );
 
-        // $newSentance = [];
-        // $sentance    = strtolower($sentance);
-        // do {
-        //     $result        = $this->wordMap($sentance);
-        //     $newSentance[] = ucfirst($result);
-        //     $sentance      = str_replace($result, '', $sentance);
-        // } while ('' != $sentance);
+        $statusCode = $response->getStatusCode();
+        // $statusCode = 200
+        $contentType = $response->getHeaders()['content-type'][0];
 
-        foreach ($this->words as $word) {
-            $sentance = str_ireplace(strtolower($word), ucfirst($word), $sentance);
-        }
+        // $contentType = 'application/json'
+        $content = $response->getContent();
+        // $content = '{"id":521583, "name":"symfony-docs", ...}'
+        $content = $response->toArray();
+        $name    = $content['content']['strict_contents'][0]['name'];
 
-        $sentance = preg_replace("([A-Z])", " $0", $sentance);
-        Mediatag::$Console->writeln('Did you mean: '.$sentance." ?\n");
+        Mediatag::$Console->writeln($name);
 
         return true;
     }

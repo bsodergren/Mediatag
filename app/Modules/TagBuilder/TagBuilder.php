@@ -276,7 +276,6 @@ class TagBuilder
                 unset($updates[$tag]);
             }
         }
-
         return $updates;
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,9 +7,11 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Executable\Javascript;
+use Mediatag\Modules\Filesystem\MediaFile;
+use UTM\Bundle\Monolog\UTMLog;
+
+use function array_key_exists;
 
 trait Title
 {
@@ -55,7 +58,7 @@ trait Title
             $success = preg_match($regex, $this->video_name, $output_array);
 
             if (0 != $success) {
-                if (!\array_key_exists($this->gettitleMatch(), $output_array)) {
+                if (!array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
@@ -102,14 +105,16 @@ trait Title
                 //     return $parts;
                 // }
 
-                Mediatag::$log->notice("title '{title}' ",['title'=>$title]);
-if($title == ''){
-    return null;
-}
+                Mediatag::$log->notice("title '{title}' ", ['title'=>$title]);
+                if ('' == $title) {
+                    return null;
+                }
+
                 return str_replace('- ', '-', $title);
             }
         }
 
         return false;
     }
+    
 }

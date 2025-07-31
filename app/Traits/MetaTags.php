@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -14,6 +15,12 @@ use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Utilities\MediaArray;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
+
+use function array_key_exists;
+use function array_slice;
+use function count;
+use function is_array;
+use function strlen;
 
 trait MetaTags
 {
@@ -47,7 +54,6 @@ trait MetaTags
     public function cleanKeyword($text)
     {
         // utminfo(func_get_args());
-
         return Keyword::clean($text);
     }
 
@@ -68,7 +74,7 @@ trait MetaTags
     {
         // utminfo(func_get_args());
         Mediatag::$log->notice('Clean Studio {studio}', ['studio'=>$text]);
-        if (\is_array($text)) {
+        if (is_array($text)) {
             $array = $text;
         } else {
             $array = explode('/', $text);
@@ -108,7 +114,7 @@ trait MetaTags
     {
         // utminfo(func_get_args());
 
-        if (\is_array($genre)) {
+        if (is_array($genre)) {
             $array = $genre;
         } else {
             $array = explode(',', $genre);
@@ -143,6 +149,8 @@ trait MetaTags
             $delim = '/';
         }
         if ('title' == $tag) {
+            //utmdump($firstCmp, $secondCmp);
+            $secondCmp = '';
             $delim = '';
         }
         if ('' != $secondCmp) {
@@ -157,11 +165,10 @@ trait MetaTags
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
                     } else {
-                                            $return = $first.$delim.$second;
+                        $return = $first.$delim.$second;
 
-//                        $return = $second;
+                        //                        $return = $second;
                     }
-                    
                 }
             }
         } else {
@@ -186,6 +193,7 @@ trait MetaTags
             //     __MYSQL_VIDEO_CUSTOM__
             // );
         }
+
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
 
@@ -195,7 +203,7 @@ trait MetaTags
 
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
-            if (\array_key_exists($tag, $tag_array2)) {
+            if (array_key_exists($tag, $tag_array2)) {
                 $value = Metatags::mergeTag($tag, $value, $tag_array2[$tag]);
             }
 
@@ -251,7 +259,7 @@ trait MetaTags
 
             $value = $tagDB->{$method}($tagValue);
             if ('Genre' == $tag) {
-                 $newList[] = $tagValue;
+                $newList[] = $tagValue;
             }
             if (false !== $value) {
                 $newList[] = $value;
@@ -263,23 +271,21 @@ trait MetaTags
 
         array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
 
-        $arr = array_unique($arr);//, \SORT_STRING);
+        $arr = array_unique($arr); // , \SORT_STRING);
 
         $arr = array_values($arr);
 
         if ('genre' == $tag || 'keyword' == $tag) {
-                           
- 
-           if (true == MediaArray::search($arr, 'Double')) {
-                    foreach ($arr as $v) {
-                         if ('Double' == $v) {
-                            continue;
-                        }
-                        $narr[] = $v;
+            if (true == MediaArray::search($arr, 'Double')) {
+                foreach ($arr as $v) {
+                    if ('Double' == $v) {
+                        continue;
                     }
-                    $arr = $narr;
-                    unset($narr);
-           }
+                    $narr[] = $v;
+                }
+                $arr = $narr;
+                unset($narr);
+            }
             if (true == MediaArray::search($arr, 'MMF')) {
                 if (true == MediaArray::search($arr, 'MFF')) {
                     foreach ($arr as $v) {
@@ -306,7 +312,7 @@ trait MetaTags
             if (isset(fileReader::$PatternClass)) {
                 // utmdd($this);
                 $genre = fileReader::$PatternClassObj->getGenre();
-               
+
                 if (false == MediaArray::search($arr, $genre)) {
                     $arr[] = $genre;
                 }
@@ -314,10 +320,10 @@ trait MetaTags
             sort($arr);
         }
         // ;
-        $max = \count($arr);
+        $max = count($arr);
 
         while ($total < 255) {
-            $total = \strlen($arr[$i]) + $total + 1;
+            $total = strlen($arr[$i]) + $total + 1;
             ++$i;
             if ($i == $max) {
                 break;
@@ -327,13 +333,14 @@ trait MetaTags
         if ($total > 255) {
             --$i;
         }
-        $new_arr = \array_slice($arr, 0, $i);
+        $new_arr = array_slice($arr, 0, $i);
 
         $string = implode($delim, $new_arr);
         if ('' == $string) {
             $string = null;
         }
-// utmdump([__METHOD__,$method,$string]);
+
+        // utmdump([__METHOD__,$method,$string]);
         return $string;
     }
 

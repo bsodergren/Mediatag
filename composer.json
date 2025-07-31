@@ -44,7 +44,7 @@
     "intervention/image": "^3.3",
     "nesbot/carbon": "^3.6",
     "bsodergren/utm": "^2.1",
-    "symfony/http-client": "7.0.*",
+    "symfony/http-client": "^7.3",
     "psr/log": "^3.0",
     "evenement/evenement": "^3.0",
     "react/event-loop": "^1.5"
