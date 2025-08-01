@@ -39,7 +39,7 @@ class NewSensations extends Patterns
         'ILoveMyHotWife'             => 'I Love My HotWife',
         'mygirlwithotherguys'        => 'my girl with other guys',
         'NaughtyLittleSister'        => 'Naughty Little Sister',
-        'marriedwithboyfriends'      => 'married with boy friends',
+        'marriedwithboyfriends'      => 'married with boyfriends',
         'mysexystepmom'              => 'my sexy stepmom',
         'myyounghotwife'             => 'my young hotwife',
         'MySexyHotwife'              => 'My Sexy Hotwife',
