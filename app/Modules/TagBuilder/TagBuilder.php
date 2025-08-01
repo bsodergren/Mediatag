@@ -72,7 +72,7 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
 
-
+utmdump($DbUpdates);
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }

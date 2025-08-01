@@ -51,7 +51,6 @@ trait Studio
 
                 return null;
             }, $this->video_name);
-
             if ($return == $this->video_name) {
                 return null;
             }

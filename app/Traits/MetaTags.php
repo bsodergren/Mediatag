@@ -149,8 +149,7 @@ trait MetaTags
             $delim = '/';
         }
         if ('title' == $tag) {
-            //utmdump($firstCmp, $secondCmp);
-            $secondCmp = '';
+           // $secondCmp = '';
             $delim = '';
         }
         if ('' != $secondCmp) {

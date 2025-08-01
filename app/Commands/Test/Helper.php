@@ -250,4 +250,5 @@ trait Helper
         $method = Option::getValue('cmd');
         $this->$method();
     }
+
 }

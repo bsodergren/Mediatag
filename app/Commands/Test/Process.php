@@ -15,7 +15,6 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\HttpClient\HttpClient;
 use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
@@ -102,28 +101,6 @@ class Process extends Mediatag
 
     public function execWord()
     {
-        $search = 'Triple_Putter_-_Multidick_Sucking_Leads_To_Double_Penetration';
-        $search = urlencode(str_replace("_"," ",$search));
-        $client = HttpClient::create(
-        );
-        $response = $client->request(
-            'GET',
-            'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=1'
-        );
-
-        $statusCode = $response->getStatusCode();
-        // $statusCode = 200
-        $contentType = $response->getHeaders()['content-type'][0];
-
-        // $contentType = 'application/json'
-        $content = $response->getContent();
-        // $content = '{"id":521583, "name":"symfony-docs", ...}'
-        $content = $response->toArray();
-        $name    = $content['content']['strict_contents'][0]['name'];
-
-        Mediatag::$Console->writeln($name);
-
-        return true;
     }
 
     public function exec($option = null)
