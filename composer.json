@@ -47,6 +47,7 @@
     "symfony/http-client": "^7.3",
     "psr/log": "^3.0",
     "evenement/evenement": "^3.0",
-    "react/event-loop": "^1.5"
+    "react/event-loop": "^1.5",
+    "paramako/pornhub-api-client": "^1.0"
   }
 }

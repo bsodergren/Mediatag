@@ -41,7 +41,7 @@ class TagReader
 
         [$_,$tag] = explode('::', $tag);
         $tag      = str_replace('set', '', strtolower($tag));
-        $r        = $this->dbConn->insert(['video_key' => $key, $tag => $value], __MYSQL_VIDEO_CUSTOM__);
+        $r        = $this->dbConn->insert(['video_key' => $key, $tag => $value], __MYSQL_VIDEO_METADATA__);
     }
 
     public function setGenre($value, $key)

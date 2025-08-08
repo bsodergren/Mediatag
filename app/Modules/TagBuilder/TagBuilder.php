@@ -46,6 +46,8 @@ class TagBuilder
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
+            // utmdump($updates);
+
             // }
            
 
@@ -72,7 +74,6 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
 
-utmdump($DbUpdates);
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
@@ -95,7 +96,6 @@ utmdump($DbUpdates);
             $videoInfo['currentTags'] = [];
         } else {
             $current = $this->ReaderObj->getMetaValues();
-
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ('studio' == $tag) {
@@ -105,6 +105,7 @@ utmdump($DbUpdates);
             $videoInfo['updateTags'] = $this->compareTags($current, $updates);
         }
         //  utmdd($videoInfo);
+
 
 
         return $videoInfo;

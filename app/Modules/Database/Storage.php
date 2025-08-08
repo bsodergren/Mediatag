@@ -284,8 +284,8 @@ class Storage
     {
         // utminfo(func_get_args());
 
-        foreach ($where_clause as $where) {
-            $this->dbConn->where($where);
+        foreach ($where_clause as $field=> $where) {
+            $this->dbConn->where($field,$where[0],$where[1]);
         }
 
         return $this->dbConn->getValue($table, $column);

@@ -13,7 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class SubtitleCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
-    public const SKIP_SEARCH = true;
+    public const SKIP_SEARCH = false;
     public $command          = [
         'subtitle'    => [
             // 'init' => null,

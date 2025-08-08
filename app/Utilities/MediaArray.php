@@ -41,6 +41,7 @@ class MediaArray
         // utminfo(func_get_args());
 
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
+
             if (\is_array($value)) {
                 if (str_contains($string, $value['name'])) {
                     if ('' != $value['replacement']) {
@@ -68,6 +69,7 @@ class MediaArray
 
                     return 0;
                 }
+
                 if (str_contains($value, $string)) {
                     return $value;
                 }

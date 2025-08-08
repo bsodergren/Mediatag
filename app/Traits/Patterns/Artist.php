@@ -172,6 +172,7 @@ trait Artist
 
         $regex = $this->getArtistRegex();
         if ($regex) {
+            // utmdump($regex, $this->video_name);
             $success = preg_match($regex, $this->video_name, $output_array);
             if (0 != $success) {
                 if (true === $this->getArtistFullNames()) {

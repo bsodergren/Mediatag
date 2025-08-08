@@ -47,6 +47,7 @@ class Patterns extends TagBuilder
      * video_file.
      */
     public $video_file;
+    public $video_key;
 
     /**
      * genre.
@@ -114,6 +115,7 @@ class Patterns extends TagBuilder
             self::boot($this);
             $this->className  = $object->className;
             $this->video_name = $object->video_name;
+            $this->video_key = $object->video_key;
 
             $studio           = strtolower($object->getStudio());
             $this->studio_key = str_replace(' ', '', $studio);

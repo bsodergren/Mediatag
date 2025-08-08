@@ -35,6 +35,7 @@ const __PLEX_DOWNLOAD__  = __PLEX_HOME__.'/Downloads';
 const __CACHE_DIR__      = __PLEX_HOME__.'/.cache';
 const __JSON_CACHE_DIR__ = __CACHE_DIR__.'/json';
 const __PH_CACHE_DIR__   = __CACHE_DIR__.'/Pornhub';
+const __STUDIO_CACHE_DIR__   = __CACHE_DIR__.'/Studio';
 
 const __APP_CACHE_DIR__ = __PLEX_VAR_DIR__.'/cache';
 

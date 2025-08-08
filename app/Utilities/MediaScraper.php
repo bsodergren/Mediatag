@@ -18,16 +18,17 @@ class MediaScraper
     {
         $key     = md5($url);
         $content = MediaCache::get($key);
-        utmdump([$url,$content]);
+        // utmdump([$url,$content]);
         if (false == $content) {
             $client   = HttpClient::create();
             $response = $client->request(
                 'GET',
                 $url
             );
+            // utmdump($response);
 
             $statusCode = $response->getStatusCode();
-            // utmdump([$url,$statusCode]);
+            // utmdump([$url, $statusCode]);
             if ('200' == $statusCode) {
                 // $statusCode = 200
                 $contentType = $response->getHeaders()['content-type'][0];
@@ -57,18 +58,23 @@ class MediaScraper
                         // Write the .vtt file
                         file_put_contents($subtitleVTTFilename, $vtt);
                         MediaCache::put($key, $vtt);
-
                     }
 
                     return null;
                 }
+                if ('text/html; charset=utf-8' == $contentType) {
+                    $content = $response->getContent();
+                    // utmdump($content);
+
+                    return $content;
+                }
+
                 $content = $response->toArray();
-                // utmdump($content);
-               
-            }else {
+            // utmdump($content);
+            } else {
                 $content = '';
             }
-             MediaCache::put($key, $content);
+            MediaCache::put($key, $content);
         }
 
         return $content;

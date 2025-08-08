@@ -84,10 +84,13 @@ class Reader extends TagReader
 
 
 
-  $query      = "SELECT COALESCE (c.title,m.title) as title ,COALESCE (c.artist,m.artist) as artist ,
-  COALESCE (c.genre,m.genre) as genre ,COALESCE (c.studio,m.studio) as studio ,
-  COALESCE (c.network,m.network) as network , COALESCE (c.keyword,m.keyword) as keyword 
-  FROM  mediatag_video_metadata m LEFT JOIN mediatag_video_custom c on m.video_key=c.video_key WHERE m.video_key = '" . $key . "'";
+  $query      = "SELECT m.title as title ,
+  m.artist as artist ,
+  m.genre as genre ,
+  m.studio as studio ,
+  m.network as network ,
+  m.keyword as keyword 
+  FROM  mediatag_video_metadata m WHERE m.video_key = '" . $key . "'";
 
 
 

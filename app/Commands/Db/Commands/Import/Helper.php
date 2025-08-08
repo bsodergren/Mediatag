@@ -32,7 +32,7 @@ trait Helper
       $this->runImport(__MYSQL_VIDEO_FILE__,$this->video_file_csv);
     $this->runImport(__MYSQL_VIDEO_METADATA__,$this->video_metadata_csv);
     $this->runImport(__MYSQL_VIDEO_INFO__,$this->video_info_csv);
-    $this->runImport(__MYSQL_VIDEO_CUSTOM__,$this->video_custon_csv);
+    // $this->runImport(__MYSQL_VIDEO_CUSTOM__,$this->video_custon_csv);
 
   }
 
