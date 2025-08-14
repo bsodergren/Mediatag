@@ -1,13 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Database;
 
-use Mediatag\Core\Mediatag;
 use UTM\Bundle\mysql\MysqliDb;
-use Mediatag\Modules\Database\DbMap;
 
 class TagDB extends Storage
 {
@@ -37,5 +36,4 @@ class TagDB extends Storage
 
         return (new DbMap())->getTag($tag, $arguments);
     }
-
 }

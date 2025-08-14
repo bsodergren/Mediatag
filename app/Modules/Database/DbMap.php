@@ -1,16 +1,19 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Database;
 
-use Mediatag\Core\Mediatag;
-use UTM\Bundle\mysql\MysqliDb;
 use Mediatag\Modules\Database\Maps\ArtistMap;
 use Mediatag\Modules\Database\Maps\StudioMap;
 use Mediatag\Modules\Database\Maps\TitleMap;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
+use UTM\Bundle\mysql\MysqliDb;
+
+use function count;
+use function is_array;
 
 class DbMap extends Storage
 {
@@ -51,8 +54,8 @@ class DbMap extends Storage
 
         $table  = $this->getTagTable($tag);
         $result = $this->dbConn->get($table, null, $tag);
-        if (\is_array($result)) {
-            if (\count($result) > 1) {
+        if (is_array($result)) {
+            if (count($result) > 1) {
                 foreach ($result as $k => $v) {
                     $array[] = $v[$tag];
                 }
@@ -70,7 +73,7 @@ class DbMap extends Storage
 
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
+        $query = 'INSERT IGNORE INTO '.$table.'  ('.$tag.", replacement) VALUES ('".$key."','".$text."')";
 
         $this->dbConn->rawQuery($query);
     }
@@ -79,19 +82,19 @@ class DbMap extends Storage
     {
         // utminfo(func_get_args());
 
-        $text   = $string;
-        $table  = $this->getTagTable($tag);
-        $where  = $this->getTagWhere($tag, $string);
+        $text  = $string;
+        $table = $this->getTagTable($tag);
+        $where = $this->getTagWhere($tag, $string);
 
-        $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
+        $query  = 'SELECT * FROM '.$table.' WHERE '.$where;
         $result = $this->dbConn->rawQuery($query);
 
-        if (\is_array($result)) {
-            if (0 == \count($result)) {
+        if (is_array($result)) {
+            if (0 == count($result)) {
                 return false;
             }
 
-            if (\count($result) > 1) {
+            if (count($result) > 1) {
                 return $result;
             }
 
@@ -114,7 +117,7 @@ class DbMap extends Storage
 
         $existing = $this->getTag($tag, $text, true);
 
-        if (\is_array($existing)) {
+        if (is_array($existing)) {
             foreach ($existing as $i => $row) {
                 $this->getReplacementString($tag, $row[$tag], $addition, $show);
             }
@@ -129,7 +132,7 @@ class DbMap extends Storage
 
         $existing = $this->getTag($tag, $text, true);
 
-        $string   = $this->sortTagList($existing, $addition);
+        $string = $this->sortTagList($existing, $addition);
 
         $this->updateTag($tag, $text, $string, $show);
     }
@@ -142,24 +145,24 @@ class DbMap extends Storage
         $where    = $this->getTagWhere($tag, $text);
         $existing = $this->getTag($tag, $text, true);
 
-        $updates  = [];
+        $updates = [];
 
         if (null !== $replacement) {
             $replacement = $this->sortTagList($replacement);
 
-            $updates[]   = " replacement = '" . $replacement . "' ";
+            $updates[] = " replacement = '".$replacement."' ";
         }
         if (null !== $show) {
-            $updates[] = ' keep = ' . $show . ' ';
+            $updates[] = ' keep = '.$show.' ';
         }
 
-        $replace  = implode(',', $updates);
+        $replace = implode(',', $updates);
         if (false === $existing) {
             $this->addTag($tag, $text);
         }
 
-        $query    = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
-        $result   = $this->dbConn->rawQueryOne($query);
+        $query  = 'UPDATE '.$table.' SET '.$replace.' WHERE  '.$where;
+        $result = $this->dbConn->rawQueryOne($query);
     }
 
     private function getTagWhere($tag, $text)
@@ -167,9 +170,9 @@ class DbMap extends Storage
         // utminfo(func_get_args());
 
         $key   = $this->makeKey($text);
-        $where = $tag . " = '" . $key . "';";
+        $where = $tag." = '".$key."';";
         if (str_contains($text, '%')) {
-            $where = $tag . " like '%" . $key . "%';";
+            $where = $tag." like '%".$key."%';";
         }
 
         return $where;

@@ -11,6 +11,11 @@ use Mediatag\Utilities\Strings;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+use function get_class;
+use function is_array;
+
 class Storage
 {
     public $DbFileArray = [];
@@ -104,7 +109,7 @@ class Storage
             return $this->{$method}($tag, ...$arguments);
         }
         if (isset($this->mapClass)) {
-            if (method_exists(\get_class($this->mapClass), $method)) {
+            if (method_exists(get_class($this->mapClass), $method)) {
                 return $this->mapClass->{$method}();
             }
         }
@@ -114,58 +119,53 @@ class Storage
 
     public function delete($table, $where = [], $test = false)
     {
-
         if (array_key_exists(0, $where)) {
             if (!is_array($where[0])) {
                 if (!array_key_exists('field', $where)) {
                     $field = $where[0];
                     $value = $where[1];
                     unset($where);
-                    $where = ['field' => $field,'value' => $value];
-
+                    $where = ['field' => $field, 'value' => $value];
                 }
             }
         }
 
-        if (array_key_exists("field", $where)) {
+        if (array_key_exists('field', $where)) {
             $tmp[] = $where;
             unset($where);
             $where = $tmp;
             unset($tmp);
         }
-        // 
-        if ($test === true) {
-           $this->dbConn->startTransaction();
+
+        if (true === $test) {
+            $this->dbConn->startTransaction();
         }
 
         foreach ($where as $row => $query) {
-            if (str_contains($query['value'], "null")) {
-
-                $condition = trim(str_replace("null", "", $query['value']));
+            if (str_contains($query['value'], 'null')) {
+                $condition = trim(str_replace('null', '', $query['value']));
                 $this->dbConn->where($query['field'], null, strtoupper($condition));
                 continue;
             }
-            if (str_contains($query['value'], "like")) {
-
-                $condition = trim(str_replace("like", "", $query['value']));
+            if (str_contains($query['value'], 'like')) {
+                $condition = trim(str_replace('like', '', $query['value']));
                 $this->dbConn->where($query['field'], null, $condition);
                 continue;
             }
-
         }
 
-// utmdd($where);
-
-
+        // utmdd($where);
 
         $ret = $this->dbConn->delete($table);
-        if ($test === true) {
+        if (true === $test) {
             $this->dbConn->rollback();
+
             return $ret;
-        //     utmdd($res);
+            //     utmdd($res);
         }
-            $this->dbConn->commit();
-            return $ret;
+        $this->dbConn->commit();
+
+        return $ret;
     }
 
     public function query($sql)
@@ -173,8 +173,6 @@ class Storage
         // utminfo(func_get_args());
 
         $res = $this->dbConn->rawQuery($sql);
-
-
 
         return $res;
     }
@@ -196,6 +194,7 @@ class Storage
         }
 
         $ret = $this->dbConn->getOne($table);
+
         // utmdd($ret);
         // utmdump([$this->dbConn->getLastQuery(),__LIBRARY__,$ret]);
         return $ret;
@@ -285,7 +284,7 @@ class Storage
         // utminfo(func_get_args());
 
         foreach ($where_clause as $field=> $where) {
-            $this->dbConn->where($field,$where[0],$where[1]);
+            $this->dbConn->where($field, $where[0], $where[1]);
         }
 
         return $this->dbConn->getValue($table, $column);
@@ -306,7 +305,7 @@ class Storage
 
         // try {
         $fieldArray = $data;
-        if (\array_key_exists('fullpath', $fieldArray)) {
+        if (array_key_exists('fullpath', $fieldArray)) {
             $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
 
             if (null !== $has) {
@@ -386,7 +385,7 @@ class Storage
 
             case 'delete':
                 $query = 'delete from ';
-                if (\is_array($search)) {
+                if (is_array($search)) {
                     $search = ' '.$search[0]." = '".$search[1]."'";
                 }
                 $sel_cols = $search;
@@ -416,7 +415,7 @@ class Storage
             foreach ($this->file_array as $key => $file) {
                 $where_clause[] = " video_key = '".$key."'";
             }
-            if (\count($where_clause) > 1) {
+            if (count($where_clause) > 1) {
                 $where  = '( ';
                 $string = implode(' OR ', $where_clause);
                 $where  = $where.$string.') ';

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -25,6 +26,7 @@ trait StudioMap
                 unset($result['studio']);
             }
             $path = implode('/', $result);
+
             return rtrim($path, '/');
 
             // return rtrim($result['path'], '/');
