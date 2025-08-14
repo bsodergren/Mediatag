@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -11,6 +12,8 @@ use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
 
 class Pornhub
 {
@@ -39,7 +42,7 @@ class Pornhub
         $outputText = '';
         $line_id    = '<id>'.$this->obj->num_of_lines.'</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
-            if (\array_key_exists(2, $matches)) {
+            if (array_key_exists(2, $matches)) {
                 if ('' != $matches[2]) {
                     $this->obj->key = $matches[2];
                 }
@@ -54,16 +57,14 @@ class Pornhub
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer . PHP_EOL);
 
         switch ($buffer) {
-
             case str_starts_with($buffer, '[PornHubPlaylist]'):
                 $match = preg_match('/.*PornHubPlaylist.*Downloading \d+ items of (\d+)/', $buffer, $output_array);
-                if ($match == true) {
+                if (true == $match) {
                     $this->obj->num_of_lines = $output_array[1];
                 }
 
                 utmdump($output_array);
                 break;
-
 
             case str_starts_with($buffer, '[PornHub]'):
                 $outputText = $this->obj->Pornhub($buffer, $line_id);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,14 +9,13 @@ namespace Mediatag\Modules\Metatags;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Traits\Callables\Callables;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
 
+use const SORT_STRING;
+
 class Studio extends TagBuilder
 {
-
-    
     public function studioList($line)
     {
         // utminfo(func_get_args());
@@ -61,7 +61,9 @@ class Studio extends TagBuilder
         // // UTMlog::Logger('data', $this->videoData);
     }
 
-    public function getTagValue() {}
+    public function getTagValue()
+    {
+    }
 
     public static function getStudioFile($type, $getpaths = true)
     {
@@ -86,7 +88,7 @@ class Studio extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        $type     = strtoupper($type);
+        $type = strtoupper($type);
 
         if ('A' == $type) {
             $fileName = Mediatag::$amateurFile;
@@ -109,11 +111,11 @@ class Studio extends TagBuilder
         }
 
         if (false !== $newPath) {
-            $studio = $studio . ':' . $newPath;
+            $studio = $studio.':'.$newPath;
         }
 
         $fileDB[] = $studio;
-        sort($fileDB, \SORT_STRING);
+        sort($fileDB, SORT_STRING);
 
         Filesystem::writeFile($fileName, $fileDB, false);
 

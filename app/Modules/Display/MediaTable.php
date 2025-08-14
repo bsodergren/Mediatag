@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Display;
 
-use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableCellStyle;
@@ -34,7 +34,7 @@ class MediaTable
         $this->table->setStyle('box');
         $this->table->setRow(1, ['Video', $videoInfo['video_name']]);
         $this->table->addrow(new TableSeparator());
-        $idx         = 2;
+        $idx = 2;
         foreach ($videoInfo['metatags'] as $tag => $value) {
             $this->table->setRow($idx, [$tag, $value]);
             ++$idx;

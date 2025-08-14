@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,19 +9,21 @@ namespace Mediatag\Modules\Executable;
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Traits\Callables\Callables;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+
+use const PHP_EOL;
+
 class WriteMeta extends MediatagExec
 {
-
-use ProcessCallbacks;
     use MediaFFmpeg;
+    use ProcessCallbacks;
 
     public $execMode = 'write';
 
@@ -57,9 +60,9 @@ use ProcessCallbacks;
         // utminfo(func_get_args());
 
         $update = false;
-        if (\count($this->updateTags) > 0) {
+        if (count($this->updateTags) > 0) {
             foreach (__META_TAGS__ as $tag) {
-                if (\array_key_exists($tag, $this->updateTags)) {
+                if (array_key_exists($tag, $this->updateTags)) {
                     $update = true;
                     $this->createOptionArg($tag, $this->updateTags[$tag]);
                 }
@@ -118,10 +121,10 @@ use ProcessCallbacks;
             $this->output->write("\t Skipping ".basename($command[1]));
         }
         if (true == $results) {
-                        utmdump($results);
+            utmdump($results);
 
-            if (str_contains($results, 'signal') ||
-            str_contains($results, 'error')) {
+            if (str_contains($results, 'signal')
+            || str_contains($results, 'error')) {
                 // // UTMlog::logError('results Metadata', $results);
                 if (str_contains($results, '11')
                 || str_contains($results, 'alignment')) {
@@ -132,7 +135,7 @@ use ProcessCallbacks;
 
                     $this->repairVideo();
                 } else {
-                    $this->output->write("\t ".$results.\PHP_EOL);
+                    $this->output->write("\t ".$results.PHP_EOL);
                     $this->output->write("\t -- Running ".$this->runCommand);
 
                     exit;

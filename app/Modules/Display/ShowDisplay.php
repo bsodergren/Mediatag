@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,19 +7,24 @@
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use UTM\Bundle\Monolog\UTMLog;
+
+use function array_key_exists;
+use function count;
+
+use const PHP_EOL;
 
 class ShowDisplay
 {
     public $BarSection1;
 
-    public $LineBreaks    = false;
+    public $LineBreaks = false;
 
     public $BarSection2;
 
@@ -38,14 +44,14 @@ class ShowDisplay
 
     public $processOutput;
 
-    public $padbuffer     = 2;
+    public $padbuffer = 2;
 
     public $padbufferChar = ' ';
 
     /**
      * @var int
      */
-    public $displayTimer  = 500000;
+    public $displayTimer = 500000;
 
     protected $formatter;
 
@@ -53,10 +59,10 @@ class ShowDisplay
     {
         // utminfo(func_get_args());
 
-        $this->formatter        = new FormatterHelper();
-        $outputStyle            = new OutputFormatterStyle('red');
+        $this->formatter = new FormatterHelper();
+        $outputStyle     = new OutputFormatterStyle('red');
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
-        $currentTagStyle        = new OutputFormatterStyle('gray');
+        $currentTagStyle = new OutputFormatterStyle('gray');
         Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
         $this->BarSection1      = Mediatag::$output->section();
@@ -72,14 +78,14 @@ class ShowDisplay
         // utminfo(func_get_args());
 
         // UTMlog::logger('start Display Table');
-        $count = \count($filelist_array);
+        $count = count($filelist_array);
         if (0 == $count) {
             Mediatag::$output->writeln('<error>No files found </error>');
 
             return;
         }
         $this->displayHeader(Mediatag::$output, ['count' => $count]);
-        $idx   = 1;
+        $idx = 1;
         // UTMlog::logger('start File display');
         // UTMlog::startLap();
         foreach ($filelist_array as $key => $value) {
@@ -93,7 +99,7 @@ class ShowDisplay
                         for ($n = 0; $n < 7; ++$n) {
                             $line_array[] = '';
                         }
-                        $line       = implode(\PHP_EOL, $line_array);
+                        $line = implode(PHP_EOL, $line_array);
                         Mediatag::$output->write($line);
                     }
                 }
@@ -111,7 +117,7 @@ class ShowDisplay
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeLn('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
+            $this->fileCountSection->writeLn('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
             $this->fileInfoSection->writeLn('<info>   </info>');
             $this->table->setHeaders(['ID', 'Meta Value']);
             $this->table->render();
@@ -124,13 +130,13 @@ class ShowDisplay
     {
         // utminfo(func_get_args());
 
-        $method       = 'overwrite';
+        $method = 'overwrite';
 
-        if (!\array_key_exists('currentTags', $fileinfo)) {
+        if (!array_key_exists('currentTags', $fileinfo)) {
             $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
-            $tagCount             = \count($fileinfo['metatags']);
+            $tagCount             = count($fileinfo['metatags']);
         } else {
-            $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
+            $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
         }
         if (0 == $tagCount) {
             return false;
@@ -146,14 +152,14 @@ class ShowDisplay
         $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files');
-        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files');
+        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
 
         return true;
         // usleep($this->displayTimer);
     }
 
-    private function TagBlockDisplay($tag, $fileinfo): string|null
+    private function TagBlockDisplay($tag, $fileinfo): ?string
     {
         // utminfo(func_get_args());
 
@@ -161,20 +167,20 @@ class ShowDisplay
         $style         = 'comment';
         $string        = '';
         $current[$tag] = '';
-        if (\array_key_exists('currentTags', $fileinfo)) {
+        if (array_key_exists('currentTags', $fileinfo)) {
             $current = $fileinfo['currentTags'];
             $style   = 'current';
         }
-        if (\array_key_exists('metatags', $fileinfo)) {
+        if (array_key_exists('metatags', $fileinfo)) {
             $current = $fileinfo['metatags'];
             $style   = 'info';
         }
-        if (\array_key_exists('updateTags', $fileinfo)) {
-            if (!\array_key_exists($tag, $fileinfo['updateTags'])) {
+        if (array_key_exists('updateTags', $fileinfo)) {
+            if (!array_key_exists($tag, $fileinfo['updateTags'])) {
                 return $string;
             }
         }
-        if (\array_key_exists($tag, $current)) {
+        if (array_key_exists($tag, $current)) {
             $current_value = $current[$tag];
             if ('' != $current_value) {
                 $string .= $current_value;
@@ -184,7 +190,7 @@ class ShowDisplay
         return $string;
     }
 
-    private function UpdateTagBlockDisplay($tag, $fileinfo): string|null
+    private function UpdateTagBlockDisplay($tag, $fileinfo): ?string
     {
         // utminfo(func_get_args());
 
@@ -192,7 +198,7 @@ class ShowDisplay
         $string  = '';
         $changes = [];
         $changes = $fileinfo['updateTags'];
-        if (\array_key_exists($tag, $changes)) {
+        if (array_key_exists($tag, $changes)) {
             $change_value = $changes[$tag];
             $string .= $change_value;
         }

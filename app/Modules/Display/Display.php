@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -12,6 +13,14 @@ use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
+
+use function array_key_exists;
+use function count;
+use function is_string;
+use function strlen;
+
+use const PHP_EOL;
+use const STR_PAD_LEFT;
 
 class Display
 {
@@ -77,7 +86,7 @@ class Display
 
     public function DisplayTable(array $filelist_array)
     {
-        $count = \count($filelist_array);
+        $count = count($filelist_array);
         if (0 == $count) {
             Mediatag::$output->writeln('<error>No files found </error>');
 
@@ -94,7 +103,7 @@ class Display
                         for ($n = 0; $n < 7; ++$n) {
                             $line_array[] = '';
                         }
-                        $line = implode(\PHP_EOL, $line_array);
+                        $line = implode(PHP_EOL, $line_array);
                         Mediatag::$output->writeln($line);
                     }
                 }
@@ -124,13 +133,13 @@ class Display
 
         $method   = 'overwrite';
         $tagCount = 0;
-        if (!\array_key_exists('currentTags', $fileinfo)) {
+        if (!array_key_exists('currentTags', $fileinfo)) {
             $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
             // utmdd([__METHOD__,$fileinfo]);
 
-            $tagCount = \count($fileinfo['metatags']);
+            $tagCount = count($fileinfo['metatags']);
         } else {
-            $tagCount = \count($fileinfo['currentTags']) + \count($fileinfo['updateTags']);
+            $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
         }
 
         // utmdd($fileinfo,$tagCount);
@@ -180,7 +189,7 @@ class Display
         }
         $len = 0;
         foreach ($array as $tag => $row) {
-            $tagLen = \strlen($tag);
+            $tagLen = strlen($tag);
             if ($tagLen > $len) {
                 $len = $tagLen;
             }
@@ -188,7 +197,7 @@ class Display
 
         foreach ($array as $tag => $row) {
             foreach ($row as $style => $value) {
-                $spaces        = ($len + $this->padbuffer) - (\strlen($tag) + 2);
+                $spaces        = ($len + $this->padbuffer) - (strlen($tag) + 2);
                 $value         = $this->indent($value, $spaces);
                 $returnArray[] = str_replace("\t", '', $this->formatTagLine($tag, $value, $style));
             }
@@ -215,8 +224,8 @@ class Display
     {
         // utminfo(func_get_args());
 
-        if (\is_string($string)) {
-            return str_pad($string, \strlen($string) + $spaces, $this->padbufferChar, \STR_PAD_LEFT);
+        if (is_string($string)) {
+            return str_pad($string, strlen($string) + $spaces, $this->padbufferChar, STR_PAD_LEFT);
         }
 
         return $string;
@@ -229,7 +238,7 @@ class Display
         foreach (__META_TAGS__ as $tag) {
             $MetatagBlock[] = $this->TagBlockDisplay($tag, $fileinfo);
         }
-        if (\array_key_exists('updateTags', $fileinfo)) {
+        if (array_key_exists('updateTags', $fileinfo)) {
             foreach (__META_TAGS__ as $tag) {
                 $MetaUpdateBlock[] = $this->UpdateTagBlockDisplay($tag, $fileinfo);
             }
@@ -250,23 +259,23 @@ class Display
 
         $string        = '';
         $current[$tag] = '';
-        if (\array_key_exists('currentTags', $fileinfo)) {
+        if (array_key_exists('currentTags', $fileinfo)) {
             $current          = $fileinfo['currentTags'];
             $this->text_style = 'current';
             $style            = 'current';
         }
-        if (\array_key_exists('metatags', $fileinfo)) {
+        if (array_key_exists('metatags', $fileinfo)) {
             $current          = $fileinfo['metatags'];
             $this->text_style = 'fg=white';
             $style            = 'update';
         }
-        if (\array_key_exists('updateTags', $fileinfo)) {
-            if (!\array_key_exists($tag, $fileinfo['updateTags'])) {
+        if (array_key_exists('updateTags', $fileinfo)) {
+            if (!array_key_exists($tag, $fileinfo['updateTags'])) {
                 return $string;
             }
         }
 
-        if (\array_key_exists($tag, $current)) {
+        if (array_key_exists($tag, $current)) {
             $current_value = $current[$tag];
             if ('' != $current_value) {
                 $string .= $this->formatTagLine($tag, $current_value, $style);
@@ -284,7 +293,7 @@ class Display
         $string  = '';
         $changes = [];
         $changes = $fileinfo['updateTags'];
-        if (\array_key_exists($tag, $changes)) {
+        if (array_key_exists($tag, $changes)) {
             $change_value     = $changes[$tag];
             $this->text_style = 'update';
 

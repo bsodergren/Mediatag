@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -54,15 +55,12 @@ class ConsoleOutput
         $this->io->$method(...$args);
     }
 
-public function table($args)
-{
-    $header = $args[0];
-    unset($args[0]);
-    // utmdd($args);
+    public function table($args)
+    {
+        $header = $args[0];
+        unset($args[0]);
+        // utmdd($args);
 
-
-    $this->io->table([$header],$args);
-
-}
-
+        $this->io->table([$header], $args);
+    }
 }

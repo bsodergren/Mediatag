@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -23,7 +24,7 @@ class MediaBar
     public $bar;
     public $sectionName;
 
-    public $format         = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
+    public $format = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
 
     public function __construct($count, $section = null, $width = 50)
     {
@@ -41,33 +42,31 @@ class MediaBar
         $this->bar   = new ProgressBar($section, $count);
     }
 
-
-    public static function addFormat($format = '<comment>%message:10s%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%', $name='custom')
+    public static function addFormat($format = '<comment>%message:10s%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%', $name = 'custom')
     {
         ProgressBar::setFormatDefinition($name, $format);
-
     }
-    public function setMsgFormat($name='custom')
+
+    public function setMsgFormat($name = 'custom')
     {
         // utminfo(func_get_args());
 
-
         // ProgressBar::setFormatDefinition($name, $format);
-        $this->format=$name;
+        $this->format = $name;
         $this->bar->setFormat($this->format);
 
         return $this;
-
     }
 
-    public function setMessage($message,$name)
+    public function setMessage($message, $name)
     {
         // utminfo(func_get_args());
 
         // if ($this->format != 'custom') {
         //     $this->setMsgFormat();
         // }
-        $this->bar->setMessage($message,$name);
+        $this->bar->setMessage($message, $name);
+
         return $this;
     }
 

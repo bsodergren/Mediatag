@@ -1,20 +1,17 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Metatags;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Traits\Callables\Callables;
 use Mediatag\Utilities\MediaArray;
 
 class Keyword extends TagBuilder
 {
-     
-
     public static $keywordArray;
 
     public function __construct($videoData)
@@ -24,7 +21,9 @@ class Keyword extends TagBuilder
         // // UTMlog::Logger(__CLASS__, $this->videoData);
     }
 
-    public function getTagValue() {}
+    public function getTagValue()
+    {
+    }
 
     public static function writeTagList($text, $file = false)
     {

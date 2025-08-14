@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -11,6 +12,8 @@ use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
 
 class Studio
 {
@@ -38,7 +41,7 @@ class Studio
         $outputText = '';
         $line_id    = '<id>'.$this->obj->num_of_lines.'</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
-            if (\array_key_exists(2, $matches)) {
+            if (array_key_exists(2, $matches)) {
                 if ('' != $matches[2]) {
                     $this->obj->key = $matches[2];
                 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,9 +7,9 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
-use UTM\Bundle\Monolog\UTMLog;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\Strings;
+use UTM\Bundle\Monolog\UTMLog;
 
 class Title extends TagBuilder
 {
@@ -28,7 +29,9 @@ class Title extends TagBuilder
         return parent::writeTagList($text, $file);
     }
 
-    public function getTagValue() {}
+    public function getTagValue()
+    {
+    }
 
     public static function clean($clean_text, $file = null)
     {
@@ -45,8 +48,8 @@ class Title extends TagBuilder
         */
         // $text      = strtolower($text);
         // UTMlog::Logger('before', $text);
-        
-        $text      = Strings::clean($clean_text);
+
+        $text = Strings::clean($clean_text);
 
         $text      = str_replace("\\'", "'", $text);
         $text      = str_replace('/', ' ', $text);
@@ -56,7 +59,7 @@ class Title extends TagBuilder
         $text      = str_replace(',,', '', $text);
         $titleText = trim($text);
 
-        $r         = false;
+        $r = false;
         foreach (TITLE_REPLACE_MAP as $filter) {
             $filter = strtolower($filter);
             if (str_contains(strtolower($text), $filter)) {
@@ -91,7 +94,7 @@ class Title extends TagBuilder
         }
         // UTMlog::Logger('after', $titleText);
 
-        Mediatag::$log->notice("CleanTitle '{title}'",['title'=>$titleText]);
+        Mediatag::$log->notice("CleanTitle '{title}'", ['title'=>$titleText]);
 
         return $titleText;
     }

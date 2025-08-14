@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Display;
 
-use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Helper\Table;
@@ -40,7 +40,7 @@ class MapDisplay
         $this->formatter = new FormatterHelper();
         $outputStyle     = new OutputFormatterStyle('red');
         $output->getFormatter()->setStyle('indent', $outputStyle);
-        $this->output    = $output;
+        $this->output = $output;
     }
 
     public function drawTable($data)

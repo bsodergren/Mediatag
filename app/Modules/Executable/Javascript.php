@@ -1,43 +1,43 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Executable;
 
-use Nette\Utils\Callback;
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Nette\Utils\Callback;
+
+use function is_array;
 
 class Javascript extends MediatagExec
 {
-     use ProcessCallbacks;
+    use ProcessCallbacks;
 
-    public $wordList     = "";
+    public $wordList     = '';
     private $cacheUpdate = false;
-    public $video_key    = null;
+    public $video_key;
 
-    public $wordMap      = __CONFIG_LIB__ . '/data/map/Words.txt';
-    private $wordCache   = "JsDictWordMap";
+    public $wordMap    = __CONFIG_LIB__.'/data/map/Words.txt';
+    private $wordCache = 'JsDictWordMap';
 
     public function __construct($video_key = null, $input = null, $output = null)
     {
         // utminfo(func_get_args());
 
-
         $this->getWordMap();
-        $this->video_key = "jsCache_" . $video_key;
+        $this->video_key = 'jsCache_'.$video_key;
 
         foreach (ARTIST_MAP as $k => $v) {
-            $artists[] = str_replace("_", ",", $v['name']);
+            $artists[] = str_replace('_', ',', $v['name']);
         }
 
-        $artistArray     = explode(",", implode(",", $artists));
-        $array           = array_unique($artistArray);
-        $this->wordList  = $this->wordList . "," . implode(",", $array);
-
+        $artistArray    = explode(',', implode(',', $artists));
+        $array          = array_unique($artistArray);
+        $this->wordList = $this->wordList.','.implode(',', $array);
     }
 
     private function identical_values($arrayA, $arrayB)
@@ -54,15 +54,14 @@ class Javascript extends MediatagExec
     {
         // utminfo(func_get_args());
 
+        $archive_content = Filesystem::readLines($this->wordMap, function ($line) {return trim($line); });
 
-        $archive_content = Filesystem::readLines($this->wordMap, function ($line) {return trim($line);});
+        $array = MediaCache::get($this->wordCache);
 
-        $array           = MediaCache::get($this->wordCache);
-
-        if ($array === false) {
+        if (false === $array) {
             $array = $archive_content;
         } else {
-            if ($this->identical_values($archive_content, $array) == false) {
+            if (false == $this->identical_values($archive_content, $array)) {
                 $array = $archive_content;
             }
         }
@@ -70,7 +69,7 @@ class Javascript extends MediatagExec
         MediaCache::put($this->wordCache, $array);
 
         if (is_array($array)) {
-            $this->wordList = implode(",", $array);
+            $this->wordList = implode(',', $array);
         }
     }
 
@@ -80,14 +79,14 @@ class Javascript extends MediatagExec
 
         // return $string;
 
-        $command  = [
+        $command = [
             'node',
             '/home/bjorn/scripts/Mediatag/bin/wordSplit.js',
             $string,
             $this->wordList,
         ];
-// utmdump($command);
-        $callback = Callback::check([$this, 'ReadOutput']);
+        // utmdump($command);
+        $callback       = Callback::check([$this, 'ReadOutput']);
         $this->execMode = 'write';
 
         $this->exec($command, $callback);
@@ -99,24 +98,22 @@ class Javascript extends MediatagExec
     {
         // utminfo(func_get_args());
 
-    //    return $string;
+        //    return $string;
 
-            $cacheFile = md5($string);
-            $title = MediaCache::get($cacheFile);
-// utmdump($title);
-        if ($title === false) {
+        $cacheFile = md5($string);
+        $title     = MediaCache::get($cacheFile);
+        // utmdump($title);
+        if (false === $title) {
             $title = $this->getTitle($string);
         } else {
-
-            if ($this->identical_values([$title], [$string]) == false) {
+            if (false == $this->identical_values([$title], [$string])) {
                 $title = $this->getTitle($string);
             }
         }
 
         $r = MediaCache::put($cacheFile, $title);
-              //  $title = MediaCache::get($cacheFile);
+        //  $title = MediaCache::get($cacheFile);
 
         return $title;
-
     }
 }

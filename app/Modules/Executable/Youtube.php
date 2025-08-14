@@ -6,20 +6,20 @@
 
 namespace Mediatag\Modules\Executable;
 
-use function count;
-use function array_key_exists;
-use const PHP_EOL;
-use const FILE_APPEND;
-use UTM\Utilities\Option;
-use Nette\Utils\Callback;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\Executable\Helper\Pornhub;
-
-use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
-use Mediatag\Modules\Display\ConsoleOutput;
-
-use Mediatag\Core\Mediatag;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Display\ConsoleOutput;
+use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
+use Mediatag\Modules\Executable\Helper\Pornhub;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Nette\Utils\Callback;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+
+use const FILE_APPEND;
+use const PHP_EOL;
 
 class Youtube extends MediatagExec
 {
@@ -165,7 +165,7 @@ class Youtube extends MediatagExec
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles
-        && !Option::istrue('archive')) {
+                                      && !Option::istrue('archive')) {
             $options = array_merge($options, [
                 '--download-archive',
                 PlaylistProcess::$ARCHIVE,
@@ -173,12 +173,12 @@ class Youtube extends MediatagExec
         }
 
         if (Option::istrue('archive')) {
-            utmdump(["archive",                PlaylistProcess::$ARCHIVE]);
+            utmdump(['archive',                PlaylistProcess::$ARCHIVE]);
             $options = array_merge($options, [
-               '--download-archive',
+                '--download-archive',
 
-               __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
-               '--force-write-archive',
+                __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
+                '--force-write-archive',
             ]);
         }
 
@@ -187,8 +187,7 @@ class Youtube extends MediatagExec
         }
 
         if (Option::istrue('max')) {
-            $options = array_merge($options, ['--max-downloads',Option::getValue('max')]);
-
+            $options = array_merge($options, ['--max-downloads', Option::getValue('max')]);
         }
 
         // utmdd($options, Option::getOptions());

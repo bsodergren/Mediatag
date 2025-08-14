@@ -1,21 +1,27 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Filesystem;
 
-use Nette\Utils\Arrays;
 use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Strings;
-use Mediatag\Traits\Callables\Callables;
+use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem as NetteFile;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 
+use function dirname;
+use function sprintf;
+
+use const DIRECTORY_SEPARATOR;
+use const PATHINFO_DIRNAME;
+use const PATHINFO_EXTENSION;
+use const PATHINFO_FILENAME;
+
 class MediaFile
 {
-     
-
     public $video_file;
 
     public $video_key;
@@ -68,9 +74,8 @@ class MediaFile
             'video_file'    => $this->fullname(),
             'video_path'    => $this->filepath(),
             'video_name'    => $this->filename(),
-             'video_library' => $this->library(),
+            'video_library' => $this->library(),
             'video_key'     => $this->videokey(),
-           
         ];
 
         Mediatag::$log->notice('Getting Video Data {video}', ['video'=>$this->video]);
@@ -99,18 +104,18 @@ class MediaFile
     {
         // utminfo(func_get_args());
         $video_key = null;
-        $filename = basename($filename);
+        $filename  = basename($filename);
 
         $isPhFile = self::isPornhubfile($filename);
 
-        if($isPhFile === true){
-        // $filename = realpath($filename);
+        if (true === $isPhFile) {
+            // $filename = realpath($filename);
             $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
             if (1 == $success) {
                 $video_key = $matches[1];
-            } 
+            }
         }
-        if($video_key === null){        
+        if (null === $video_key) {
             $video_key = self::get64BitNumber($filename);
             // $video_key = 'x'.$video_key;
         }
@@ -234,7 +239,7 @@ class MediaFile
             $buffer .= @fgets($handle, 4096);
             ++$i;
 
-            $file_name = \sprintf('%s%02d%s', $filename, $j, $ext);
+            $file_name = sprintf('%s%02d%s', $filename, $j, $ext);
             $fname     = $targetpath.$file_name;
 
             Strings::showstatus($i, $lines, 80, $file_name);
@@ -275,7 +280,7 @@ class MediaFile
         // utminfo(func_get_args());
         $dir = realpath($file);
         if (false === $dir) {
-            $dirname = \dirname($file);
+            $dirname = dirname($file);
 
             NetteFile::createDir($dirname);
         }
@@ -316,12 +321,13 @@ class MediaFile
         }
 
         $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
-       
+
         if (1 == $success) {
-               if ('Studios' == $library) {
-                   return false;
-                }
-                return true;
+            if ('Studios' == $library) {
+                return false;
+            }
+
+            return true;
         }
         if (str_contains($filename, '000K')) {
             return true;
@@ -341,29 +347,29 @@ class MediaFile
 
     public static function getFilename($fileName)
     {
-        $fileDirectory = pathinfo($fileName, \PATHINFO_DIRNAME);
-        $fileExtension = pathinfo($fileName, \PATHINFO_EXTENSION);
-        $fileBaseName  = pathinfo($fileName, \PATHINFO_FILENAME);
+        $fileDirectory = pathinfo($fileName, PATHINFO_DIRNAME);
+        $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $fileBaseName  = pathinfo($fileName, PATHINFO_FILENAME);
 
         $newFileName = $fileBaseName;
         $counter     = 1;
 
         // Check if file exists and generate a new name if it does
-        while (file_exists($fileDirectory.\DIRECTORY_SEPARATOR.$newFileName.'.'.$fileExtension)) {
+        while (file_exists($fileDirectory.DIRECTORY_SEPARATOR.$newFileName.'.'.$fileExtension)) {
             $newFileName = $fileBaseName.'_'.$counter;
             ++$counter;
         }
 
         $finalFileName = $newFileName.'.'.$fileExtension;
-        $destination   = $fileDirectory.\DIRECTORY_SEPARATOR.$finalFileName;
+        $destination   = $fileDirectory.DIRECTORY_SEPARATOR.$finalFileName;
 
         return $destination;
     }
 
     public static function videoPath($file)
     {
+        $file = str_replace(__PLEX_HOME__, '', $file);
 
-        $file = str_replace( __PLEX_HOME__,'',$file);
         return $file;
     }
 }

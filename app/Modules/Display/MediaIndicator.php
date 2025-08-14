@@ -1,9 +1,12 @@
-<?php 
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Modules\Display;
 
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Helper\ProgressIndicator;
-
 
 class MediaIndicator
 {
@@ -21,8 +24,8 @@ class MediaIndicator
         }
         // $section->setMaxHeight(9);
         $this->progress = new ProgressIndicator($section, 'normal', 50, $this->BarStyle, '🎉');
-        
     }
+
     public function advance()
     {
         $this->progress->advance();
@@ -37,7 +40,4 @@ class MediaIndicator
     {
         $this->progress->finish('<fg=green>'.$message.'</>');
     }
-
-
-
 }

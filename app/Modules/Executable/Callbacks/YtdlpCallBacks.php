@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -7,6 +8,10 @@ namespace Mediatag\Modules\Executable\Callbacks;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Modules\Filesystem\MediaFile;
+
+use function array_key_exists;
+
+use const PHP_EOL;
 
 trait YtdlpCallBacks
 {
@@ -22,7 +27,7 @@ trait YtdlpCallBacks
             --$this->num_of_lines;
             $line_id = '<id>'.$this->num_of_lines.'</id>';
 
-            $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.\PHP_EOL;
+            $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.PHP_EOL;
         }
 
         return $outputText;
@@ -41,7 +46,7 @@ trait YtdlpCallBacks
                 --$this->num_of_lines;
                 $line_id = '<id>'.$this->num_of_lines.'</id>';
 
-                $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.\PHP_EOL;
+                $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>'.PHP_EOL;
             }
         }
 
@@ -52,8 +57,9 @@ trait YtdlpCallBacks
     public function watchlistCallback($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/playlist.log", $buffer . PHP_EOL);
-        return $buffer.\PHP_EOL;
+        MediaFile::file_append_file(__LOGFILE_DIR__.'/buffer/playlist.log', $buffer.PHP_EOL);
+
+        return $buffer.PHP_EOL;
         // if (str_contains($buffer, '[PLAYLIST]')) {
         //     $this->Console->writeln($buffer);
         // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
@@ -80,7 +86,7 @@ trait YtdlpCallBacks
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
-            if (\array_key_exists(2, $matches)) {
+            if (array_key_exists(2, $matches)) {
                 if ('' != $matches[2]) {
                     $this->key = $matches[2];
                 }
@@ -112,7 +118,7 @@ trait YtdlpCallBacks
 
         // $this->Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
-        return $outputText.\PHP_EOL;
+        return $outputText.PHP_EOL;
     }
 
     public function downloadableIds($buffer)
@@ -129,7 +135,7 @@ trait YtdlpCallBacks
             }
         }
 
-        return $outputText.\PHP_EOL;
+        return $outputText.PHP_EOL;
     }
 
     public function downloadVideo($buffer, $line_id)
@@ -143,9 +149,8 @@ trait YtdlpCallBacks
             // $buffer = $this->cleanBuffer($buffer);
             $buffer = trim($buffer);
 
-
             $outputText = str_replace("\n".'[download]', '</text>'.PHP_EOL.$line_id.' <text>[download]', $buffer);
-            $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.\PHP_EOL;
+            $outputText = '<text>'.str_replace(__PLEX_DOWNLOAD__, '', $outputText).'</file>'.PHP_EOL;
 
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
@@ -154,15 +159,16 @@ trait YtdlpCallBacks
         }
 
         if (str_contains($buffer, 'already been')) {
-            $buffer = $this->cleanBuffer($buffer);
-            $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.\PHP_EOL;
+            $buffer     = $this->cleanBuffer($buffer);
+            $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.PHP_EOL;
             --$this->num_of_lines;
+
             // $line_id = '<id>'.$this->num_of_lines.'</id>';            // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
         if (str_contains($buffer, 'Got error')) {
             // $buffer = $this->cleanBuffer($buffer);
-            $outputText = \PHP_EOL.'<error>'.$buffer.'</error>';
+            $outputText = PHP_EOL.'<error>'.$buffer.'</error>';
 
             return $outputText;
         }
@@ -176,7 +182,7 @@ trait YtdlpCallBacks
     {
         $buffer = $this->cleanBuffer($buffer);
 
-        $outputText = \PHP_EOL.str_replace('['.$key.']', $line_id.' <text>['.$key.']', $buffer);
+        $outputText = PHP_EOL.str_replace('['.$key.']', $line_id.' <text>['.$key.']', $buffer);
 
         $outputText = str_replace(__PLEX_DOWNLOAD__, '', $outputText);
 
@@ -190,6 +196,6 @@ trait YtdlpCallBacks
         $outputText .= '</file>';
         // utmdump($outputText);
 
-        return $outputText.\PHP_EOL;
+        return $outputText.PHP_EOL;
     }
 }

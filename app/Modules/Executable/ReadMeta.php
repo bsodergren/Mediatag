@@ -1,18 +1,19 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\Executable;
 
+use Mediatag\Core\MediaCache;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
 use Nette\Utils\Callback;
-use Mediatag\Core\Mediatag;
-use Mediatag\Core\MediaCache;
 
 class ReadMeta extends MediatagExec
 {
-use ProcessCallbacks;
+    use ProcessCallbacks;
     public $execMode;
 
     public function __construct($videoData, $input = null, $output = null)
@@ -81,9 +82,7 @@ use ProcessCallbacks;
             },
         ], $text);
 
-
         // utmdump([$return,$text]);
         return $return;
     }
-
 }

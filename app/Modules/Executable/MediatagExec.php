@@ -6,16 +6,19 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Traits\Test;
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\preview;
-use Mediatag\Traits\ExecArgs;
-use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Core\Helper\MediaCommand;
-use Symfony\Component\Process\Process;
-use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Traits\ExecArgs;
+use Mediatag\Traits\preview;
+use Mediatag\Traits\Test;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
+use Symfony\Component\Process\Process;
+
+use function is_array;
+use function is_string;
 
 class MediatagExec
 {
@@ -65,14 +68,14 @@ class MediatagExec
         //        $this->getTags();
         // $this->video_key = File::file($this->video_file, 'videokey');
 
-        if (\is_string($videoData)) {
+        if (is_string($videoData)) {
             if (file_exists($videoData)) {
                 $videoData = (new File($videoData))->get();
             }
         }
 
         foreach ($videoData as $key => $value) {
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 foreach ($value as $key_a => $val_a) {
                     $this->{$key}[$key_a] = $val_a;
                 }
@@ -160,7 +163,7 @@ class MediatagExec
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
-        Mediatag::$log->notice("Command to Run {0}", [$this->runCommand]);
+        Mediatag::$log->notice('Command to Run {0}', [$this->runCommand]);
 
         $this->preview();
         $this->test();
