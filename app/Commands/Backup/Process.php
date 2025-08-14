@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,13 +7,13 @@
 namespace Mediatag\Commands\Backup;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+use const DIRECTORY_SEPARATOR;
+
 class Process extends Mediatag
 {
-     
     use Helper;
     public $video_array;
     public $backupDirectory;
@@ -57,7 +58,7 @@ class Process extends Mediatag
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         //        $this->backupDirectory = $file;
-        $this->backupDirectory = __DB_BACKUP_ROOT__.\DIRECTORY_SEPARATOR.$file;
+        $this->backupDirectory = __DB_BACKUP_ROOT__.DIRECTORY_SEPARATOR.$file;
     }
 
     public function __call($m, $a)

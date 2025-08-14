@@ -10,8 +10,8 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Utilities\MediaArray;
-use UTM\Utilities\Option;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function dirname;
@@ -42,7 +42,7 @@ trait Helper
                 $this->storagedb->init($videoFile);
                 $data = [
                     'subtitle' => 1,
-                    'studio' =>'Porn World'
+                    'studio'   => 'Porn World',
                 ];
                 $where = ['video_key' => $this->storagedb->video_key];
                 Mediatag::$dbconn->update($data, $where, __MYSQL_VIDEO_INFO__);
@@ -115,17 +115,16 @@ trait Helper
                             }
                         }
                         if (!file_exists($SubtitleFileName)) {
-                                                    Mediatag::$output->writeln($SubtitleFileName);
-                    (new SfSystem())->rename($capFile,$SubtitleFileName, true);
+                            Mediatag::$output->writeln($SubtitleFileName);
+                            (new SfSystem())->rename($capFile, $SubtitleFileName, true);
                             // utmdd($SubtitleFileName);
-                        
 
-                        // $captionFile = basename($capFile);
-                        // $captionDir  = dirname($capFile);
+                            // $captionFile = basename($capFile);
+                            // $captionDir  = dirname($capFile);
 
-                        // Mediatag::$output->writeln($fileinfo->filepath().'/'.$fileinfo->filename());
-                        Mediatag::$output->writeln($SubtitleFileName);
-                    }
+                            // Mediatag::$output->writeln($fileinfo->filepath().'/'.$fileinfo->filename());
+                            Mediatag::$output->writeln($SubtitleFileName);
+                        }
                     }
                 }
             }

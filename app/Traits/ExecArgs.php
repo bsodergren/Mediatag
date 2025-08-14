@@ -1,11 +1,11 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Traits;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Metatags\Artist;
 
 trait ExecArgs
@@ -41,13 +41,13 @@ trait ExecArgs
                 $this->addOptionArg('domain=');
             }
 
-            $this->addOptionArg('--albumArtist=' . $meta_value);
+            $this->addOptionArg('--albumArtist='.$meta_value);
         } elseif ('studio' == $meta_tag) {
-            $this->addOptionArg('--album=' . $meta_value);
+            $this->addOptionArg('--album='.$meta_value);
         } elseif ('network' == $meta_tag) {
-            $this->addOptionArg('--TVNetwork=' . $meta_value);
+            $this->addOptionArg('--TVNetwork='.$meta_value);
         } else {
-            $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
+            $this->addOptionArg('--'.$meta_tag.'='.$meta_value);
         }
     }
 }

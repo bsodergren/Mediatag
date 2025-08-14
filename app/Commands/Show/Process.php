@@ -1,13 +1,14 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Commands\Show;
 
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -16,7 +17,6 @@ class Process extends Mediatag
     use Helper;
     use MediaExecute;
     use MediaProcess;
-
 
     public $VideoData;
 
@@ -31,7 +31,6 @@ class Process extends Mediatag
         // 'compact'           => null,
         // 'download'          => null,
     ];
-
 
     public $commandList = [
         // 'missing'    => [
@@ -56,7 +55,6 @@ class Process extends Mediatag
     {
         parent::boot($input, $output);
     }
-
 
     public function print()
     {

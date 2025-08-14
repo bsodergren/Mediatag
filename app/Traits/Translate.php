@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,8 +7,10 @@
 namespace Mediatag\Traits;
 
 use Closure;
-use Mediatag\Core\Mediatag;
+use ReflectionClass;
 use Symfony\Component\Console\Input\InputArgument;
+
+use function is_array;
 
 trait Translate
 {
@@ -17,11 +20,11 @@ trait Translate
     {
         return Translate::$Class;
     }
+
     public static function text($constant, $vars = [])
     {
-
         $class     = self::getClass();
-        $thisClass = new \ReflectionClass($class);
+        $thisClass = new ReflectionClass($class);
         $text      = $thisClass->getConstant($constant);
 
         if (false == $text) {
@@ -32,12 +35,12 @@ trait Translate
                 $class = str_replace('Options', 'Lang.php', $class);
             }
 
-            return '<error>' . $constant . ' not yet set in ' . $class . '</error> ';
+            return '<error>'.$constant.' not yet set in '.$class.'</error> ';
         }
 
-        if (\is_array($vars)) {
+        if (is_array($vars)) {
             foreach ($vars as $key => $value) {
-                $key  = '%%' . strtoupper($key) . '%%';
+                $key  = '%%'.strtoupper($key).'%%';
                 $text = str_replace($key, $value, $text);
             }
 
@@ -49,12 +52,12 @@ trait Translate
         return $text;
     }
 
-    public function Arguments(string $name, string $description = '', ?int $mode = InputArgument::OPTIONAL, mixed $default = null, array|\Closure $suggestedValues = [])
+    public function Arguments(string $name, string $description = '', ?int $mode = InputArgument::OPTIONAL, mixed $default = null, array|Closure $suggestedValues = [])
 
     // public function Arguments($varName = null, $description = null, $inputArgs =InputArgument::OPTIONAL, $defaultValue = null, $CompletionInput = Closure)
     {
         // utminfo(func_get_args());
 
-        return [$name, $mode, $description,$default,$suggestedValues ];
+        return [$name, $mode, $description, $default, $suggestedValues];
     }
 }

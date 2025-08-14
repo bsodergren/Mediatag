@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,12 @@ use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
 
+use function count;
+use function define;
+use function defined;
+
+use const DIRECTORY_SEPARATOR;
+
 trait MediaLibrary
 {
     public function getLibrary($exit = true): void
@@ -19,8 +26,8 @@ trait MediaLibrary
         $curent_dir = getcwd();
         // UTMlog::logger('Current Directory', $curent_dir);
         if (false === $exit) {
-            if (!\defined('__LIBRARY__')) {
-                \define('__LIBRARY__', false);
+            if (!defined('__LIBRARY__')) {
+                define('__LIBRARY__', false);
             }
 
             return;
@@ -29,7 +36,7 @@ trait MediaLibrary
 
         $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
-        if (0 == \count($match)) {
+        if (0 == count($match)) {
             Mediatag::$Console->writeLn('your in a wrong spot '.$curent_dir, 'error');
 
             // UTMlog::logger('Wrong spot?', $curent_dir);
@@ -37,8 +44,8 @@ trait MediaLibrary
                 exit;
             }
 
-            if (!\defined('__LIBRARY__')) {
-                \define('__LIBRARY__', 'temp');
+            if (!defined('__LIBRARY__')) {
+                define('__LIBRARY__', 'temp');
             }
         } else {
             if (!Arrays::contains(__LIBRARIES__, $match[1])) {
@@ -49,15 +56,15 @@ trait MediaLibrary
                     exit;
                 }
             } else {
-                if (!\defined('__LIBRARY__')) {
-                    \define('__LIBRARY__', $match[1]);
+                if (!defined('__LIBRARY__')) {
+                    define('__LIBRARY__', $match[1]);
                 }
 
                 // UTMlog::logger('In Directory', __LIBRARY__);
             }
         }
-        if (!\defined('__LIBRARY_HOME__')) {
-            \define('__LIBRARY_HOME__', __PLEX_HOME__.\DIRECTORY_SEPARATOR.__LIBRARY__);
+        if (!defined('__LIBRARY_HOME__')) {
+            define('__LIBRARY_HOME__', __PLEX_HOME__.DIRECTORY_SEPARATOR.__LIBRARY__);
         }
     }
 }

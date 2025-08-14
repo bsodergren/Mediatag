@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -14,7 +15,6 @@ trait Test
     {
         // utminfo(func_get_args());
         if (Option::isTrue('test')) {
-
             Mediatag::$output->writeln($text);
 
             if (true === $exit) {

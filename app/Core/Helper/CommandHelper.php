@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,11 +7,11 @@
 namespace Mediatag\Core\Helper;
 
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Completion\CompletionInput;
+
+use function array_slice;
 
 trait CommandHelper
 {
-
     private $defaultValues = [];
     private $completionCmd = [];
 
@@ -28,36 +29,40 @@ trait CommandHelper
     {
         $className  = static::class;
         $pathInfo   = explode('\\', $className);
-        $pathInfo   = \array_slice($pathInfo, 0, 3);
+        $pathInfo   = array_slice($pathInfo, 0, 3);
         $pathInfo[] = 'Process';
         $className  = implode('\\', $pathInfo);
 
         return $className;
     }
 
-
-    public  static function ArgumentClosure($input,$command) {
-        utmdump(["CommandHelper",$command]);
+    public static function ArgumentClosure($input, $command)
+    {
+        utmdump(['CommandHelper', $command]);
         // the value the user already typed, e.g. when typing "app:greet Fa" before
         // pressing Tab, this will contain "Fa"
         $currentValue = $input->getCompletionValue();
+
         return $currentValue;
     }
 
-    public  static function OptionClosure($input,$command) {
-        utmdump(["CommandHelper",$command]);
+    public static function OptionClosure($input, $command)
+    {
+        utmdump(['CommandHelper', $command]);
         // the value the user already typed, e.g. when typing "app:greet Fa" before
         // pressing Tab, this will contain "Fa"
         $currentValue = $input->getCompletionValue();
+
         return $currentValue;
     }
 
-
-
-    public function setDefault($command,$default){
+    public function setDefault($command, $default)
+    {
         $this->defaultValues[$command] = $default;
     }
-    public function setCompletionCmd($command,$value){
+
+    public function setCompletionCmd($command, $value)
+    {
         $this->completionCmd[$command] = $value;
     }
 }

@@ -1,26 +1,30 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Traits;
 
-use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
+
+use function is_array;
+
+use const PHP_EOL;
 
 trait CmdCreater
 {
-    private $BIN_TEMPLATE  = __DATA_TEMPLATES__ . '/App_template.txt';
+    private $BIN_TEMPLATE = __DATA_TEMPLATES__.'/App_template.txt';
 
-    private $CMD_TEMPLATE  = __DATA_TEMPLATES__ . '/Command/Command_template.txt';
+    private $CMD_TEMPLATE = __DATA_TEMPLATES__.'/Command/Command_template.txt';
 
-    private $LANG_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Lang_template.txt';
+    private $LANG_TEMPLATE = __DATA_TEMPLATES__.'/Command/Lang_template.txt';
 
-    private $OPT_TEMPLATE  = __DATA_TEMPLATES__ . '/Command/Options_template.txt';
+    private $OPT_TEMPLATE = __DATA_TEMPLATES__.'/Command/Options_template.txt';
 
-    private $PROC_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Process_template.txt';
+    private $PROC_TEMPLATE = __DATA_TEMPLATES__.'/Command/Process_template.txt';
 
-    public $APP_COMMAND    = __APP_HOME__ . '/config/commands.php';
+    public $APP_COMMAND = __APP_HOME__.'/config/commands.php';
 
     public function template($template, $params = [])
     {
@@ -82,9 +86,9 @@ trait CmdCreater
     {
         // utminfo(func_get_args());
 
-        if (\is_array($params)) {
+        if (is_array($params)) {
             foreach ($params as $key => $value) {
-                $key  = '%%' . strtoupper($key) . '%%';
+                $key  = '%%'.strtoupper($key).'%%';
                 $text = str_replace($key, $value, $text);
             }
 
@@ -98,22 +102,22 @@ trait CmdCreater
     {
         // utminfo(func_get_args());
 
-        $cmd_template  = file_get_contents($this->APP_COMMAND);
+        $cmd_template = file_get_contents($this->APP_COMMAND);
 
         $command_name  = $params['COMMAND_CLASS'];
         $command_use   = $params['COMMAND_USE'];
-        $command_class = $command_name . 'Command';
+        $command_class = $command_name.'Command';
 
         if (false == str_contains($cmd_template, $command_class)) {
             $cmds_array = [
-                'NEW_CMD' => "    '" . strtolower($command_name) . "' => function () { return new " . $command_class . '(); },',
-                'NEW_USE' => $command_use . ' as ' . $command_class . ';',
+                'NEW_CMD' => "    '".strtolower($command_name)."' => function () { return new ".$command_class.'(); },',
+                'NEW_USE' => $command_use.' as '.$command_class.';',
             ];
 
             foreach ($cmds_array as $key => $value) {
-                $find = '//%%' . strtoupper($key) . '%%';
+                $find = '//%%'.strtoupper($key).'%%';
                 if (null != $value) {
-                    $value        = $value . \PHP_EOL . '//%%' . $key . '%%';
+                    $value        = $value.PHP_EOL.'//%%'.$key.'%%';
                     $cmd_template = str_replace($find, $value, $cmd_template);
                 }
             }

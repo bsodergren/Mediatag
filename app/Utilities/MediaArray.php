@@ -1,9 +1,15 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Utilities;
+
+use function array_key_exists;
+use function count;
+use function is_array;
+use function strlen;
 
 /**
  * Summary of MediaArray.
@@ -22,7 +28,7 @@ class MediaArray
         $return_array = [];
         if ('key' == $diff) {
             foreach ($array as $key => $value) {
-                if (!\array_key_exists($key, $compare)) {
+                if (!array_key_exists($key, $compare)) {
                     $return_array[$key] = $value;
                 }
             }
@@ -41,8 +47,7 @@ class MediaArray
         // utminfo(func_get_args());
 
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
-
-            if (\is_array($value)) {
+            if (is_array($value)) {
                 if (str_contains($string, $value['name'])) {
                     if ('' != $value['replacement']) {
                         return $value['replacement'];
@@ -76,7 +81,7 @@ class MediaArray
             }
         });
 
-        if (0 == \count($ret)) {
+        if (0 == count($ret)) {
             return null;
         }
         $key = array_keys($ret);
@@ -92,13 +97,13 @@ class MediaArray
         $namesArray = [];
         foreach ($str_array as $i => $string) {
             $string = strtolower($string);
-            if (\strlen($string) < 3) {
+            if (strlen($string) < 3) {
                 continue;
             }
 
             foreach ($array as $key => $parts) {
                 if (str_starts_with($parts['name'], $string)) {
-                    if (!\array_key_exists($i + 1, $str_array)) {
+                    if (!array_key_exists($i + 1, $str_array)) {
                         continue;
                     }
                     if ($parts['name'] == $string.'_'.$str_array[$i + 1]) {
@@ -123,7 +128,7 @@ class MediaArray
                 // }
             }
         }
-        if (0 == \count($namesArray)) {
+        if (0 == count($namesArray)) {
             return null;
         }
 
@@ -140,12 +145,12 @@ class MediaArray
         $videoArray = [];
 
         foreach ($array as $k => $file) {
-            if (\is_array($file)) {
-                if (\array_key_exists($field, $file)) {
+            if (is_array($file)) {
+                if (array_key_exists($field, $file)) {
                     $row        = $file[$field];
                     $row_exists = $file;
                     if ('video_file' != $field && $exists) {
-                        if (\array_key_exists('video_file', $file)) {
+                        if (array_key_exists('video_file', $file)) {
                             $row_exists = $file['video_file'];
                         }
                     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,8 @@ use Mediatag\Traits\Translate;
 use Mediatag\Utilities\Chooser;
 use Symfony\Component\Console\Question\Question;
 
+use function count;
+
 trait DeleteHelper
 {
     public function deleteClips()
@@ -19,7 +22,7 @@ trait DeleteHelper
         $directory  = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
         $file_array = Mediatag::$finder->Search($directory, '*.mp4');
 
-        $videos = \count($file_array);
+        $videos = count($file_array);
         // $question = new Question(Translate::text('L__CLIP_ASK_CONTINUE'));
         // Mediatag::$output->writeln();
 

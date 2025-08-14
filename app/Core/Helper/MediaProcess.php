@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,19 +9,22 @@ namespace Mediatag\Core\Helper;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Command\Command as SymCommand;
 
+use function array_key_exists;
+use function count;
+
 trait MediaProcess
 {
     public function exec($option = null)
     {
         $this->VideoList = parent::getVideoArray();
-        if (0 == \count($this->VideoList['file'])) {
+        if (0 == count($this->VideoList['file'])) {
             return SymCommand::SUCCESS;
         }
     }
 
     public function __call($method, $args)
     {
-        if (\array_key_exists($method, $this->commandList)) {
+        if (array_key_exists($method, $this->commandList)) {
             foreach ($this->commandList[$method] as $cmd => $option) {
                 if (method_exists($this, $cmd)) {
                     $this->{$cmd}($option);

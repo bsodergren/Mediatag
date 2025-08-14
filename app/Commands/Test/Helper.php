@@ -1,23 +1,21 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Commands\Test;
 
+use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
 use UTM\Utilities\Option;
 
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Coordinate\FrameRate;
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
-use FFMpeg\Filters\Video\ResizeFilter;
-use FFMpeg\Filters\Video\RotateFilter;
-use FFMpeg\Format\Video\X264;
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 trait Helper
 {
     // use HelperCmds;
@@ -30,14 +28,14 @@ trait Helper
         //     $this->exec();
         // }
         $videoFile = $this->videoFile[0];
-        $ffmpeg = FFMpeg::create([], Mediatag::$log);
-        $video  = $ffmpeg->open($videoFile);
-        $frame = $video->frame(TimeCode::fromSeconds(42));
+        $ffmpeg    = FFMpeg::create([], Mediatag::$log);
+        $video     = $ffmpeg->open($videoFile);
+        $frame     = $video->frame(TimeCode::fromSeconds(42));
         $frame->save('image.jpg');
     }
+
     public function mvOldFiles()
     {
-
         utmdd(__METHOD__);
         $sql = "SELECT *  FROM mediatag_video_file WHERE `video_key` IN ('64c3c368aa608',\n"
 
@@ -76,11 +74,11 @@ trait Helper
 
         $result = Mediatag::$dbconn->query($sql);
         foreach ($result as $row) {
-            $filename = $row['fullpath'].\DIRECTORY_SEPARATOR.$row['filename'];
+            $filename = $row['fullpath'].DIRECTORY_SEPARATOR.$row['filename'];
             if (file_exists($filename)) {
                 $new_path = str_replace('/XXX/Pornhub', '/XXX/OldPH', $row['fullpath']);
                 (new Filesystem())->mkdir($new_path);
-                $new_name = $new_path.\DIRECTORY_SEPARATOR.$row['filename'];
+                $new_name = $new_path.DIRECTORY_SEPARATOR.$row['filename'];
 
                 (new Filesystem())->rename($filename, $new_name, true);
             }
@@ -89,7 +87,8 @@ trait Helper
     }
 
     public function colors()
-    {utmdd(__METHOD__);
+    {
+        utmdd(__METHOD__);
         $colors = [
             'black', 'red', 'green', 'yellow', 'blue', 'magenta', 'cyan', 'white', 'gray',
             'bright-red', 'bright-green', 'bright-yellow', 'bright-blue', 'bright-magenta', 'bright-cyan', 'bright-white',
@@ -112,6 +111,7 @@ trait Helper
     {
         // utminfo(func_get_args());
         utmdd(__METHOD__);
+
         return $val >= $min && $val < $max;
     }
 
@@ -229,9 +229,9 @@ trait Helper
             $filename = basename($vidArray['video_file']);
             //            if(str_contains($filename,$dir)){
             if (!str_starts_with($key, 'x')) {
-                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
                 echo 'adding '.basename($vidArray['video_file'])."\n";
-                $video_array[] = $vidArray['video_file'].\PHP_EOL;
+                $video_array[] = $vidArray['video_file'].PHP_EOL;
             }
         }
         file_put_contents(__LIBRARY__.'_playlist.txt', $ph_video);
@@ -250,5 +250,4 @@ trait Helper
         $method = Option::getValue('cmd');
         $this->$method();
     }
-
 }

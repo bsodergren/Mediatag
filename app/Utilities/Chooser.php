@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -9,6 +10,8 @@ use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
 
 /**
  * Chooser.
@@ -32,8 +35,7 @@ class Chooser
             }
         }
 
-
-        if (\array_key_exists($bypass_id, self::$bypass)) {
+        if (array_key_exists($bypass_id, self::$bypass)) {
             return self::$bypass[$bypass_id];
         }
 

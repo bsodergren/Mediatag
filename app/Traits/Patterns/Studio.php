@@ -1,12 +1,14 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Traits\Patterns;
 
-use Mediatag\Core\Mediatag;
 use UTM\Bundle\Monolog\UTMLog;
+
+use function array_key_exists;
 
 trait Studio
 {
@@ -17,9 +19,10 @@ trait Studio
     {
         // utminfo(func_get_args());
         $key = strtolower($studio);
-        if (\array_key_exists($key, STUDIO_MAP)) {
+        if (array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
         }
+
         return $studio;
     }
 
@@ -43,10 +46,9 @@ trait Studio
         // UTMlog::Logger('Studio Key', $this->video_name);
         if (false !== $this->getStudioRegex()) {
             $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
-                $studioKey = str_replace("-", "", $matches[1]);
-                if (\array_key_exists($studioKey, $this->replace_studios)) {
+                $studioKey = str_replace('-', '', $matches[1]);
+                if (array_key_exists($studioKey, $this->replace_studios)) {
                     return $this->replace_studios[$studioKey];
-
                 }
 
                 return null;
@@ -69,7 +71,7 @@ trait Studio
             self::$StudioKey = $key_studio;
         }
 
-        if (\array_key_exists(1, $arr)) {
+        if (array_key_exists(1, $arr)) {
             if (self::$StudioKey != $arr[0]) {
                 if ($key_studio == $arr[1]) {
                     $tmp    = $arr[0];
@@ -78,6 +80,7 @@ trait Studio
                 }
             }
         }
+
         return $arr;
     }
 }

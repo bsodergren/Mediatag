@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,8 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableStyle;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+
 trait ShowHelper
 {
     public $cmdOptions = [
@@ -20,7 +23,7 @@ trait ShowHelper
     public function filters()
     {
         $showCmd = Option::getValue('show', 1);
-        if (\array_key_exists($showCmd, $this->cmdOptions)) {
+        if (array_key_exists($showCmd, $this->cmdOptions)) {
             $method = $this->cmdOptions[$showCmd]['cmd'];
             $this->$method();
 

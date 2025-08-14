@@ -1,11 +1,10 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Traits\Patterns;
-
-use Mediatag\Core\Mediatag;
 
 trait Genre
 {

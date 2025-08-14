@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -9,6 +10,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Bundle\Stash\Cache;
 use UTM\Utilities\Option;
+
+use function define;
+use function defined;
 
 class MediaCache
 {
@@ -25,8 +29,8 @@ class MediaCache
         // utminfo();
 
         Option::init($input);
-        if (!\defined('__LIBRARY__')) {
-            \define('__LIBRARY__', 'tmp');
+        if (!defined('__LIBRARY__')) {
+            define('__LIBRARY__', 'tmp');
         }
         if (!is_dir(__APP_CACHE_DIR__.'/'.__LIBRARY__)) {
             mkdir(__APP_CACHE_DIR__.'/'.__LIBRARY__, 0777, true);

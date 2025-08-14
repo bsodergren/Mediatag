@@ -6,23 +6,23 @@
 
 namespace Mediatag\Utilities;
 
-use function strlen;
-use function sprintf;
-
-use function ord;
-use function is_array;
-use function gettype;
-use function count;
-use function chr;
-use const PHP_EOL;
-use const DIRECTORY_SEPARATOR;
-
-use const CURLOPT_SSL_VERIFYPEER;
-use const CURLOPT_SSL_VERIFYHOST;
-use const CURLOPT_RETURNTRANSFER;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\MediaCache;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+
+use function chr;
+use function count;
+use function gettype;
+use function is_array;
+use function ord;
+use function sprintf;
+use function strlen;
+
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_SSL_VERIFYHOST;
+use const CURLOPT_SSL_VERIFYPEER;
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 class Strings extends \Nette\Utils\Strings
 {
@@ -64,15 +64,14 @@ class Strings extends \Nette\Utils\Strings
         if ('' == $text) {
             return $text;
         }
- $translate = self::translate($text);
-        $new_text = trim(self::cleanSpecialChars($translate)); 
+        $translate = self::translate($text);
+        $new_text  = trim(self::cleanSpecialChars($translate));
         // if($new_text == "") {
-        
-           
-        // // utmdump([$text,$new_text,$translate]);    
+
+        // // utmdump([$text,$new_text,$translate]);
         // $new_text = $translate;
         // }
-        //$video_filename = self::translate($filename);
+        // $video_filename = self::translate($filename);
         return $new_text;
     }
 
@@ -102,17 +101,15 @@ class Strings extends \Nette\Utils\Strings
             $video_key = '';
         }
 
-        $fileExt  = $fileInfo['extension'];
+        $fileExt = $fileInfo['extension'];
 
-        $video_filename = self::cleanSpecialChars($filename, true,$case);
+        $video_filename = self::cleanSpecialChars($filename, true, $case);
 
-        if(str_replace($video_key,'',$video_filename) == "" ) {
+        if ('' == str_replace($video_key, '', $video_filename)) {
             $video_filename = self::translate($filename);
-             $video_filename = self::cleanSpecialChars($video_filename, true,$case);
+            $video_filename = self::cleanSpecialChars($video_filename, true, $case);
         }
         // utmdd( $video_filename);
-
-        
 
         return $video_filename.$video_key.'.'.$fileExt;
     }
@@ -239,8 +236,7 @@ class Strings extends \Nette\Utils\Strings
 
     public static function translate($inputText, $sep = '_')
     {
-
-         if ("" == CONFIG['USE_TRANSLATE']) {
+        if ('' == CONFIG['USE_TRANSLATE']) {
             return $inputText;
         }
 
@@ -248,11 +244,10 @@ class Strings extends \Nette\Utils\Strings
         $from_lan = 'RU';
         $to_lan   = 'EN';
         $cacheKey = md5($inputText);
- 
-        $text = MediaCache::get($cacheKey);
-utmdump($text);
-        if (false === $text) {
 
+        $text = MediaCache::get($cacheKey);
+        utmdump($text);
+        if (false === $text) {
             $source           = 'ru'; // English
             $target           = 'en'; // Spanish
             $encodedInputText = rawurlencode($inputText);
@@ -271,7 +266,7 @@ utmdump($text);
 
             $text = $responseDecoded['data']['translations'][0]['translatedText'];
             MediaCache::put($cacheKey, $text);
-            utmdump(['Getting translation for' , $inputText, $text]);
+            utmdump(['Getting translation for', $inputText, $text]);
         }
         // utmdump([$inputText,$text]);
 

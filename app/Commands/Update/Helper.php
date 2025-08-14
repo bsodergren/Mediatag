@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -16,6 +17,11 @@ use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\Process\Process;
 use UTM\Utilities\Option;
+
+use function count;
+use function is_array;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -63,10 +69,9 @@ trait Helper
 
     public function clearMeta($options = [])
     {
-
         // utminfo(func_get_args());
         $VideoList = $this->VideoList['file'];
-        $count     = \count($VideoList);
+        $count     = count($VideoList);
 
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
@@ -87,7 +92,7 @@ trait Helper
         }
 
         $VideoList   = $this->VideoList['file'];
-        $count       = \count($VideoList);
+        $count       = count($VideoList);
         $idx         = 1;
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
@@ -97,7 +102,6 @@ trait Helper
         $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
         $progressBar2->setFormat(' ');
         foreach ($VideoList as $key => $videoInfo) {
-
             $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);
 
@@ -105,9 +109,9 @@ trait Helper
 
             $videoArray = $tagBuilder->getTags($videoInfo);
 
-            $name       = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']).'/'.$videoInfo['video_name'];
-            $message    = $name;
-            if (\count($videoArray['updateTags']) > 0) {
+            $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']).'/'.$videoInfo['video_name'];
+            $message = $name;
+            if (count($videoArray['updateTags']) > 0) {
                 $progressBar2->setFormat('custom');
                 $this->ChangesArray[] = $videoArray;
 
@@ -186,7 +190,7 @@ trait Helper
         }
         // utmdump($videoBlockInfo);
 
-        if (\is_array($videoBlockInfo)) {
+        if (is_array($videoBlockInfo)) {
             $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
             Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
         }
@@ -202,7 +206,7 @@ trait Helper
         //     // utminfo(func_get_args());
 
         $videoList = $this->ChangesArray;
-        $count     = \count($videoList);
+        $count     = count($videoList);
         // utmdd([$videoList, $count]);
         $idx = 1;
 
@@ -210,7 +214,7 @@ trait Helper
         // Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
-            $updateCount = \count($videoArray['updateTags']);
+            $updateCount = count($videoArray['updateTags']);
             $this->writeMetaToVideo($videoArray, $count, $idx);
 
             if ($count != $idx) {
@@ -219,7 +223,7 @@ trait Helper
                     $line_array[] = ' ';
                     // Mediatag::$output->writeln($count.' '.$n);
                 }
-                $line = implode(\PHP_EOL, $line_array);
+                $line = implode(PHP_EOL, $line_array);
                 Mediatag::$output->writeln($line);
             }
 

@@ -1,14 +1,15 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Core\Helper;
 
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
 
-
 trait OptionsDefault
 {
-
-    
     public static function getDisplayOptions()
     {
         // utminfo(func_get_args());
@@ -25,7 +26,6 @@ trait OptionsDefault
         return self::getOptions($options);
     }
 
-    
     public static function getDefaultOptions()
     {
         // utminfo(func_get_args());
@@ -97,5 +97,4 @@ trait OptionsDefault
 
         return self::getOptions($options);
     }
-
 }

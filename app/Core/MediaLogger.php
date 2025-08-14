@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Core;
 
+use DateTimeInterface;
 use Mediatag\Core\Helper\LogFormat;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
@@ -18,6 +20,13 @@ use Symfony\Component\VarDumper\Dumper\CliDumper;
 use UTM\Utilities\Colors;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Debug\PrettyArray;
+
+use function is_object;
+use function is_scalar;
+use function sprintf;
+
+use const FILE_APPEND;
+use const PHP_EOL;
 
 class MediaLogger extends ConsoleLogger implements LoggerInterface
 {
@@ -132,7 +141,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
                 unlink($logfile);
             }
         }
-        $msg = $this->interpolate(\PHP_EOL.'==================================='.\PHP_EOL.' Running application {0}', [__SCRIPT_NAME__]);
+        $msg = $this->interpolate(PHP_EOL.'==================================='.PHP_EOL.' Running application {0}', [__SCRIPT_NAME__]);
         $this->file(
             $level,
             $msg);
@@ -151,7 +160,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     // 	$this->log("error",$message,$context);
     // }
 
-    public function debug(string|\Stringable $message, array $context = []): void
+    public function debug(string|Stringable $message, array $context = []): void
     {
         if (true == self::$USE_DEBUG) {
             $this->debugLog($message, $context);
@@ -195,14 +204,14 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     {
         $string = Colors::colorstring($this->interpolate($message, $context), $this->ColorLevelMap[$level]);
 
-        return \sprintf('[%1$s]:%2$s', $level, $string);
+        return sprintf('[%1$s]:%2$s', $level, $string);
     }
 
     private function ConsoleFormat($level, $message, $context)
     {
         $command = self::tracePath(true);
 
-        return \sprintf('[%1$s]:[<file>%2$s</file>]<%3$s> %4$s</%3$s>',
+        return sprintf('[%1$s]:[<file>%2$s</file>]<%3$s> %4$s</%3$s>',
             $level,
             $command,
             $this->formatLevelMap[$level],
@@ -212,7 +221,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     public function log($level, $message, array $context = []): void
     {
         if (!isset($this->verbosityLevelMap[$level])) {
-            throw new InvalidArgumentException(\sprintf('The log level "%s" does not exist.', $level));
+            throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
         }
 
         $output = $this->output;
@@ -248,11 +257,11 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         }
         $replacements = [];
         foreach ($context as $key => $val) {
-            if (null === $val || \is_scalar($val) || $val instanceof \Stringable) {
+            if (null === $val || is_scalar($val) || $val instanceof Stringable) {
                 $value = $val;
-            } elseif ($val instanceof \DateTimeInterface) {
-                $value = $val->format(\DateTimeInterface::RFC3339);
-            } elseif (\is_object($val)) {
+            } elseif ($val instanceof DateTimeInterface) {
+                $value = $val->format(DateTimeInterface::RFC3339);
+            } elseif (is_object($val)) {
                 $value = trim($this->dumper->dump($this->cloner->cloneVar(get_class_vars($val::class)), true));
                 $value = ' [object '.$value.']';
             } else {
@@ -286,7 +295,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             $logfile = $this->debugLogFile();
         }
 
-        file_put_contents($logfile, $text.\PHP_EOL, \FILE_APPEND);
+        file_put_contents($logfile, $text.PHP_EOL, FILE_APPEND);
     }
 
     // public function __call($method, $args)

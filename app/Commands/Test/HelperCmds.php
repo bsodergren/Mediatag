@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -16,6 +17,8 @@ use FFMpeg\Format\Video\X264;
 use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 
+use function dirname;
+
 trait HelperCmds
 {
     public $videoFile;
@@ -25,7 +28,7 @@ trait HelperCmds
         $videoFile = $this->videoFile[0];
         $timeCodes = [245, 445, 845, 1045, 1345, 1845];
         utmdd(__METHOD__);
-        $path     = \dirname($videoFile).'/Clips/';
+        $path     = dirname($videoFile).'/Clips/';
         $filename = $path.basename($videoFile, '.mp4');
 
         FileSystem::createDir($path);
@@ -110,9 +113,4 @@ trait HelperCmds
         $ffmpegVideo->filters()->framerate(new FrameRate(10), 10);
         $ffmpegVideo->gif(TimeCode::fromSeconds(0), $dimensions, $duration)->save($gifPath);
     }
-
-
- 
-
-
 }

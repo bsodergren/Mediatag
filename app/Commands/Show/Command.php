@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -18,7 +19,7 @@ final class Command extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public  $command = [
+    public $command = [
         'show'    => [
             'exec'        => null,
             'print'       => null,

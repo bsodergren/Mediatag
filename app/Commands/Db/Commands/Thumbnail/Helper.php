@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,7 +7,6 @@
 namespace Mediatag\Commands\Db\Commands\Thumbnail;
 
 use Mediatag\Modules\VideoInfo\Section\Thumbnail;
-
 
 trait Helper
 {

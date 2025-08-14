@@ -1,31 +1,38 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Commands\Gallery;
 
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
-use Mediatag\Modules\Database\DbMap;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Nette\Utils\FileSystem as nFileSystem;
-use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Traits\Translate;
+use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function define;
+use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 class Process extends Mediatag
 {
     use Helper;
     use Lang;
-    use Translate;
     use MediaExecute;
     use MediaProcess;
+    use Translate;
     public $db_array = [];
 
     public $file_array = [];
@@ -65,7 +72,7 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
         // utminfo(func_get_args());
-        \define('SKIP_SEARCH', true);
+        define('SKIP_SEARCH', true);
         parent::boot($input, $output);
         parent::$dbconn = new GalleryStorageDB($input, $output);
     }
@@ -98,9 +105,9 @@ class Process extends Mediatag
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
 
-            if (\array_key_exists($key, $this->file_array)) {
+            if (array_key_exists($key, $this->file_array)) {
                 $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
-                $dupePath  = \dirname($movedFile);
+                $dupePath  = dirname($movedFile);
                 $filename  = basename($file);
 
                 $dupePath = nFileSystem::normalizePath($dupePath);
@@ -110,7 +117,7 @@ class Process extends Mediatag
                     //     }
                 }
                 Mediatag::$output->writeln($file.' is dup');
-                (new SfSystem())->rename($file, $dupePath.\DIRECTORY_SEPARATOR.$filename, true);
+                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
                 continue;
             }
             $this->file_array[$key] = $file;

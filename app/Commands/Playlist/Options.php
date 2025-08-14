@@ -40,7 +40,7 @@ class Options extends MediaOptions
             ['max', 'M', InputOption::VALUE_REQUIRED, Translate::text('L__PLAYLIST_MAX')],
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_JSON')],
             ['skip', 's', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_SKIP')],
-          //  ['compact', 'c', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_COMPACT')],
+            //  ['compact', 'c', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_COMPACT')],
             ['clean', null, InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_CLEAN')],
             ['ignore', 'i', InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_IGNORE')],
             ['debug', null, InputOption::VALUE_NONE, Translate::text('L__PLAYLIST_DEBUG')],

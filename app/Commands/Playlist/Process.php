@@ -11,10 +11,12 @@ use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 // use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Traits\Callables\Callables;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
+
+use function count;
+use function define;
 
 // use Symfony\Component\Filesystem\Filesystem;
 
@@ -24,7 +26,7 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
 
-    public static $ARCHIVE =  __PLEX_PL_ID_DIR__.'/archive.txt';
+    public static $ARCHIVE = __PLEX_PL_ID_DIR__.'/archive.txt';
 
     public const IGNORED = __PLEX_PL_ID_DIR__.'/ignored_ids.txt';
 
@@ -122,11 +124,10 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        \define('SKIP_SEARCH', true);
+        define('SKIP_SEARCH', true);
 
         if (null === $file) {
             $file = Option::getValue('playlist');
-
         }
 
         if (count($file) > 0) {
@@ -139,10 +140,8 @@ class Process extends Mediatag
 
         // utmdd($file);
 
-        //
         if (Option::istrue('archive')) {
-            self::$ARCHIVE =  __PLEX_PL_ID_DIR__.'/'.Option::getValue('archive').'.txt';
-
+            self::$ARCHIVE = __PLEX_PL_ID_DIR__.'/'.Option::getValue('archive').'.txt';
         }
 
         parent::boot($input, $output);

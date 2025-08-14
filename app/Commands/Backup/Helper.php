@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,12 @@ use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
 use Symfony\Component\Process\Process as ExecProcess;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait Helper
 {
@@ -50,7 +57,7 @@ trait Helper
             NetteFile::createdir($this->backupDirectory);
         }
 
-        $backupDbFile = $this->backupDirectory.\DIRECTORY_SEPARATOR.__MYSQL_DATABASE__.'.sql';
+        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.__MYSQL_DATABASE__.'.sql';
 
         $this->mysqlDump(['-d', __MYSQL_DATABASE__], $backupDbFile);
         $this->backupFuncDb();
@@ -70,7 +77,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $backupDbFile = $this->backupDirectory.\DIRECTORY_SEPARATOR.$tableName.'.sql';
+        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.$tableName.'.sql';
 
         $this->mysqlDump(['--skip-extended-insert', __MYSQL_DATABASE__, $tableName], $backupDbFile);
     }
@@ -79,7 +86,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $backupDbFile = $this->backupDirectory.\DIRECTORY_SEPARATOR.'function.sql';
+        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.'function.sql';
         $this->mysqlDump(['--skip-triggers', '--routines', '--no-create-info', '--no-data', '--no-create-db', '--skip-opt', __MYSQL_DATABASE__], $backupDbFile);
     }
 
@@ -94,7 +101,7 @@ trait Helper
             $key = Option::getValue('backup');
         }
 
-        if (\array_key_exists($key, $this->video_array)) {
+        if (array_key_exists($key, $this->video_array)) {
             $arr = array_unique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 if (str_contains($video_path, $options)) {
@@ -102,7 +109,7 @@ trait Helper
                 }
             }
             $this->video_array[$key] = $dir_array;
-            $files                   = \count($this->video_array[$key]);
+            $files                   = count($this->video_array[$key]);
         }
 
         if (0 == $files) {
@@ -121,10 +128,10 @@ trait Helper
 
         $home = '/home/bjorn/plex/XXX';
         $path = '/media/backup/home/plex/XXX';
-        if (\array_key_exists($key, $this->video_array)) {
-            $files = \count($this->video_array[$key]);
+        if (array_key_exists($key, $this->video_array)) {
+            $files = count($this->video_array[$key]);
 
-            echo "Rsyncing {$files}".\PHP_EOL;
+            echo "Rsyncing {$files}".PHP_EOL;
 
             $arr = array_unique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
@@ -135,7 +142,7 @@ trait Helper
                     Filesystem::createdir($newPath);
                 }
 
-                echo $video_path.' '.$newPath.\PHP_EOL;
+                echo $video_path.' '.$newPath.PHP_EOL;
                 $this->rsync($video_path.'/', $newPath.'/');
             }
         }

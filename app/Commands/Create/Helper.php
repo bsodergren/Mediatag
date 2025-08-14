@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,6 +9,11 @@ namespace Mediatag\Commands\Create;
 use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
+
+use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait Helper
 {
@@ -93,7 +99,7 @@ trait Helper
         $this->COMMAND_PATH = $this->parse($this->COMMAND_PATH, ['CMD_NAME'=>ucfirst($MediaCommand)]);
         $CommandDir         = $this->COMMAND_PATH.'/'.ucfirst($CommandName);
         FileSystem::createDir($CommandDir);
-        $CommandFileName = $CommandDir.\DIRECTORY_SEPARATOR.$CommandFileName.'.php';
+        $CommandFileName = $CommandDir.DIRECTORY_SEPARATOR.$CommandFileName.'.php';
 
         if (file_exists($CommandFileName)) {
             FileSystem::delete($CommandFileName);
@@ -109,7 +115,7 @@ trait Helper
             $text[] = "'".$cmd."' => null,";
         }
 
-        return implode(\PHP_EOL, $text);
+        return implode(PHP_EOL, $text);
     }
 
     public function template($template, $params = [])
@@ -145,7 +151,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (\is_array($params)) {
+        if (is_array($params)) {
             foreach ($params as $key => $value) {
                 $key = '%%'.strtoupper($key).'%%';
                 // utmdump([$text,$value,$key]);

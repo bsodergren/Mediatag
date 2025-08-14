@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,8 @@ use Mediatag\Modules\Display\MediaIndicator;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+
 trait MergeHelper
 {
     public $cmdOptionMerge = [
@@ -20,7 +23,7 @@ trait MergeHelper
     public function mergeFiles()
     {
         $showCmd = Option::getValue('merge', 1);
-        if (\array_key_exists($showCmd, $this->cmdOptionMerge)) {
+        if (array_key_exists($showCmd, $this->cmdOptionMerge)) {
             $method = $this->cmdOptionMerge[$showCmd]['cmd'];
             $this->$method();
 

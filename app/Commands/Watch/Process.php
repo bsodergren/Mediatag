@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -14,6 +15,8 @@ use React\EventLoop\Loop;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process as execProcess;
+
+use function dirname;
 
 class Process extends Mediatag
 {
@@ -77,7 +80,7 @@ class Process extends Mediatag
             if (!str_contains($path, '-temp-')) {
                 // self::writeOut('file closed: ', dirname($path), 'update');
                 // sleep(2);
-                self::$progressIndicator3->startIndicator('Updating file '.\dirname($path));
+                self::$progressIndicator3->startIndicator('Updating file '.dirname($path));
 
                 //                self::writeOut('file closed: ', \dirname($path), 'update');
                 $this->update($path);

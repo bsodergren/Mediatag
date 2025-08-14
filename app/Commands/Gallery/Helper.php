@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,13 +9,17 @@ namespace Mediatag\Commands\Gallery;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Traits\Translate;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -42,15 +47,15 @@ trait Helper
         // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
         // ,count($this->Deleted_Array), count($this->New_Array)]);
         foreach ($this->file_array as $key => $file) {
-            if (\array_key_exists($key, $this->New_Array)) {
+            if (array_key_exists($key, $this->New_Array)) {
                 continue;
             }
 
-            if (\array_key_exists($key, $this->Deleted_Array)) {
+            if (array_key_exists($key, $this->Deleted_Array)) {
                 continue;
             }
 
-            if (\array_key_exists($key, $this->db_array)) {
+            if (array_key_exists($key, $this->db_array)) {
                 if ($this->file_array[$key] != $this->db_array[$key]) {
                     $this->Changed_Array[$key] = $this->file_array[$key];
                 }
@@ -64,7 +69,7 @@ trait Helper
         }
 
         $changed_string = 0;
-        if (\count($this->Changed_Array) > 0) {
+        if (count($this->Changed_Array) > 0) {
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
             }
@@ -74,10 +79,10 @@ trait Helper
         // utmdd($this->Changed_Array);
         Mediatag::$Console->info(
             'Database Updates',
-            ['Files found'   => \count($this->file_array)],
-            ['Deleted files' => \count($this->Deleted_Array)],
-            ['Changed files' => \count($this->Changed_Array)],
-            ['New files'     => \count($this->New_Array)],
+            ['Files found'   => count($this->file_array)],
+            ['Deleted files' => count($this->Deleted_Array)],
+            ['Changed files' => count($this->Changed_Array)],
+            ['New files'     => count($this->New_Array)],
         );
 
         // utmdd([__METHOD__,
@@ -119,7 +124,7 @@ trait Helper
 
                 parent::$dbconn->UpdateFilePath();
             } else {
-                parent::$dbconn->RowBlock->overwrite('Updateing file '.$video_name.\PHP_EOL);
+                parent::$dbconn->RowBlock->overwrite('Updateing file '.$video_name.PHP_EOL);
             }
         }
     }
@@ -171,7 +176,7 @@ trait Helper
 
         $chunkSize = 10;
         $barWidth  = 50;
-        $total     = \count($this->New_Array);
+        $total     = count($this->New_Array);
         if ($total > 0) {
             $idx                          = 1;
             $progressbar                  = new MediaBar($total, 'three', $barWidth);
@@ -188,7 +193,7 @@ trait Helper
             $idx = 1;
 
             $data_array = array_chunk($videoDataArray, $chunkSize);
-            $chunks     = \count($data_array);
+            $chunks     = count($data_array);
             // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {

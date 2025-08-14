@@ -6,17 +6,17 @@
 
 namespace Mediatag\Commands\Test;
 
-use UTM\Utilities\Option;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Paramako\Pornhub\Factory;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
-use Mediatag\Core\Mediatag;
-use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Core\Helper\MediaExecute;
-use FFMpeg\FFProbe;
-use FFMpeg\FFMpeg;
 use FFMpeg\Coordinate\TimeCode;
+use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
+use Mediatag\Core\Helper\MediaExecute;
+use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\VideoData\Data\VideoPreview;
+use Paramako\Pornhub\Factory;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__.'/WordMap.php';
 
@@ -102,30 +102,28 @@ class Process extends Mediatag
 
     public function execWord()
     {
-$client = Factory::create();
-$videoId='46103552';
+        $client  = Factory::create();
+        $videoId = '46103552';
 
-$category = 'threesome';
-$page = 1;
-$search = 'hotwife';
+        $category = 'threesome';
+        $page     = 1;
+        $search   = 'hotwife';
 
-$response =$client->videos()->get($category, $page, $search);
-// $response =$client->videos()->getById($videoId);
-$result = $response->toArray();
-//  utmdd(array_keys($result));
-// $response = $client->tags()->get();
-// $categories = $response->toArray()['video'];
-// 
-foreach ($result['videos'] as $category) {
-//     // do some logic here
-    unset($category['thumbs']);
-  utmdump($category);
-            Mediatag::$Console->writeln("". $category['title'] );
-
-}
-utmdd();
-
-}
+        $response = $client->videos()->get($category, $page, $search);
+        // $response =$client->videos()->getById($videoId);
+        $result = $response->toArray();
+        //  utmdd(array_keys($result));
+        // $response = $client->tags()->get();
+        // $categories = $response->toArray()['video'];
+        //
+        foreach ($result['videos'] as $category) {
+            //     // do some logic here
+            unset($category['thumbs']);
+            utmdump($category);
+            Mediatag::$Console->writeln(''.$category['title']);
+        }
+        utmdd();
+    }
 
     public function exec($option = null)
     {

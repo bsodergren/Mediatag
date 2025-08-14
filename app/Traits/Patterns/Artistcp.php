@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,6 +7,13 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Utilities\MediaArray;
+
+use function array_key_exists;
+use function count;
+
+use const ARRAY_FILTER_USE_KEY;
+use const CASE_LOWER;
+use const PREG_SPLIT_NO_EMPTY;
 
 trait Artistcp
 {
@@ -74,18 +82,18 @@ trait Artistcp
     {
         // utminfo(func_get_args());
 
-        $namesArray     = [];
-        $names          = str_replace('_1080p', '', $names);
+        $namesArray = [];
+        $names      = str_replace('_1080p', '', $names);
         if (str_contains($names, '_and_')) {
             $matched_delim = $this->getArtistDelim();
         } else {
-            $matched_delim = "_";
+            $matched_delim = '_';
         }
-        $names          = str_replace($matched_delim, $delim, $names);
-        $names_array    = explode($delim, $names);
+        $names       = str_replace($matched_delim, $delim, $names);
+        $names_array = explode($delim, $names);
 
-        $artist_matches = array_change_key_case($this->artist_match, \CASE_LOWER);
-        $prev_name = '';
+        $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
+        $prev_name      = '';
         /*$total_names = count($names_array);
         $new_array = [];
         $key = 0;
@@ -98,7 +106,7 @@ trait Artistcp
         */
         utmdump($names_array);
         foreach ($names_array as $aName) {
-            $parts = preg_split('/(?=[A-Z])/', $aName, -1, \PREG_SPLIT_NO_EMPTY);
+            $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
             $aName = implode(' ', $parts);
 
@@ -109,25 +117,25 @@ trait Artistcp
             if (true === $this->getArtistFullNames()) {
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
-                $matched = array_filter($artist_matches,function ($value) use ($name_key) {
+                $matched  = array_filter($artist_matches, function ($value) use ($name_key) {
                     // utmdd($name_key);
-                    if(str_starts_with($value,$name_key)){
+                    if (str_starts_with($value, $name_key)) {
                         // utmdd($value);
                         // $key = array_key_first($value);
                         return $value;
-
                     }
+
                     return false;
-                },ARRAY_FILTER_USE_KEY);
+                }, ARRAY_FILTER_USE_KEY);
                 $key = array_key_first($matched);
-              
-                if ($matched !== false) {   
-                    // utmdd([$matched[$key] ,$name_key,$aName]);    
-                    if(!array_key_exists($key,$artist_matches))    {
+
+                if (false !== $matched) {
+                    // utmdd([$matched[$key] ,$name_key,$aName]);
+                    if (!array_key_exists($key, $artist_matches)) {
                         continue;
                     }
                     $aName = $artist_matches[$key];
-                    utmdump($name_key,$aName);
+                    utmdump($name_key, $aName);
                     if (true == str_contains($prev_name, $aName)) {
                         continue;
                     }
@@ -146,23 +154,20 @@ trait Artistcp
         }
         $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
 
-        if ($titleNames !== null) {
-            $video      = strtolower($this->video_name);
+        if (null !== $titleNames) {
+            $video = strtolower($this->video_name);
             foreach ($titleNames as $k => $name) {
-
                 $tname = strtolower(str_replace('_', '', $name));
 
                 if (!str_contains($video, $tname)) {
                     unset($titleNames[$k]);
                     continue;
                 }
-                $titleNames[$k]  = $name = ucwords(str_replace('_', ' ', $name));
-                ;
-
+                $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
             }
             $namesArray = array_unique(array_merge($namesArray, $titleNames));
         }
-        if (\count($namesArray) > 0) {
+        if (count($namesArray) > 0) {
             $delim = ', ';
             $names = implode($delim, $namesArray);
 
@@ -170,6 +175,7 @@ trait Artistcp
             $names = str_replace('  ', ' ', $names);
             $names = ucwords($names);
             utmdump($names);
+
             return str_replace(', ', ',', $names);
         }
 
@@ -207,13 +213,14 @@ trait Artistcp
                 } else {
                     $delim = ', ';
                 }
-                if (!\array_key_exists($this->getArtistMatch(), $output_array)) {
+                if (!array_key_exists($this->getArtistMatch(), $output_array)) {
                     return null;
                 }
                 if ('' == $output_array[$this->getArtistMatch()]) {
                     return null;
                 }
                 $names = $this->getArtistTextTransform($output_array[$this->getArtistMatch()]);
+
                 return $this->getArtistTransform($names, $delim);
             }
         }

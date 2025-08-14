@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -22,6 +23,11 @@ use Symfony\Component\Process\Process;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
+use function count;
+use function dirname;
+
+use const PHP_EOL;
+
 trait MediaFFmpeg
 {
     use ProcessCallbacks;
@@ -40,7 +46,7 @@ trait MediaFFmpeg
     {
         $buffer = $this->cleanBuffer($buffer);
 
-        MediaFile::file_append_file($this->ffmpeg_log, $buffer.\PHP_EOL);
+        MediaFile::file_append_file($this->ffmpeg_log, $buffer.PHP_EOL);
         if (null !== $this->progress) {
             if (preg_match('/frame=\s([0-9.]+)/', $buffer, $output_array)) {
                 $frame              = $output_array[1];
@@ -63,7 +69,7 @@ trait MediaFFmpeg
     public function Outputdebug($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-        MediaFile::file_append_file($this->ffmpeg_log, $buffer.\PHP_EOL);
+        MediaFile::file_append_file($this->ffmpeg_log, $buffer.PHP_EOL);
 
         if (null !== $this->progress) {
             $this->progress->advance();
@@ -78,7 +84,7 @@ trait MediaFFmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
-        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().\PHP_EOL);
+        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().PHP_EOL);
 
         // utmdd($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
@@ -158,7 +164,7 @@ trait MediaFFmpeg
         $this->progress->clear();
         // Mediatag::$output->writeln('<comment>Transcoding Video '.$file.'</comment>');
 
-        $dmg_dir = str_replace('/XXX', '/XXX/mkv', \dirname($file));
+        $dmg_dir = str_replace('/XXX', '/XXX/mkv', dirname($file));
         FileSystem::createDir($dmg_dir);
         FileSystem::rename($file, $dmg_dir.'/'.basename($file));
     }
@@ -214,7 +220,7 @@ trait MediaFFmpeg
     {
         $outputFile = $this->getClipFilename($file);
         $outputFile = str_replace('.mp4', '_'.$marker['text'].'_'.$idx.'.mp4', $outputFile);
-        FileSystem::createDir(\dirname($outputFile));
+        FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
             if (!Chooser::changes(' Overwrite File', 'overwrite', __LINE__)) {
@@ -231,7 +237,7 @@ trait MediaFFmpeg
             $outputFile,
         ];
         $this->cmdline = $cmdOptions;
-utmdump($cmdOptions);
+        utmdump($cmdOptions);
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
         $this->progress->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
 
@@ -249,7 +255,7 @@ utmdump($cmdOptions);
         $this->MergedName = $name;
         $this->clipName   = $ClipName;
 
-        $fileCount = \count($files);
+        $fileCount = count($files);
         Mediatag::$output->writeln('<info>Merging '.$fileCount.' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  '.$name.' </info>');
 
@@ -271,7 +277,6 @@ utmdump($cmdOptions);
         $this->ffmpegExec($cmdArray, $callback);
     }
 
-
     public function ffmpegCreateChapterVideo($file, $markerFile)
     {
         $outputFile = str_replace('.mp4', '_chapters.mp4', $file);
@@ -284,21 +289,18 @@ utmdump($cmdOptions);
 
         $cmdOptions = [
             '-y',
-            '-i', $file, 
-            '-i', $markerFile, 
-           '-map_metadata', 
-           '1', 
-           '-c',
-           'copy',
+            '-i', $file,
+            '-i', $markerFile,
+            '-map_metadata',
+            '1',
+            '-c',
+            'copy',
             $outputFile,
         ];
-        $this->cmdline = $cmdOptions;
+        $this->cmdline  = $cmdOptions;
         $this->progress = new MediaBar(200, 'one', 120);
         MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
         $callback = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
     }
-
-
-
 }

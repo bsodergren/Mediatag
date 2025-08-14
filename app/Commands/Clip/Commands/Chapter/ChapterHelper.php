@@ -43,16 +43,16 @@ trait ChapterHelper
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Mediatag::$dbconn->query($query);
                 // utmdump($result);
- if (count($result) > 0) {
-                $markers = $this->getVideoChapters($result);
-                if (null !== $markers) {
-                    if (count($markers) > 0) {
-                        ++$this->FileIdx;
+                if (count($result) > 0) {
+                    $markers = $this->getVideoChapters($result);
+                    if (null !== $markers) {
+                        if (count($markers) > 0) {
+                            ++$this->FileIdx;
 
-                        $markerArray[] = $markers;
+                            $markerArray[] = $markers;
+                        }
                     }
                 }
-            }
             }
         }
         $this->markerArray = $markerArray;
@@ -147,6 +147,7 @@ trait ChapterHelper
         $text .= 'START='.$marker['start'].PHP_EOL;
         $text .= 'END='.$marker['end'].PHP_EOL;
         $text .= 'title='.trim(str_replace('Chapter', '', str_replace('_', ' ', $marker['text'])));
+
         return $text;
     }
 

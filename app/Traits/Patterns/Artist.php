@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,6 +7,12 @@
 namespace Mediatag\Traits\Patterns;
 
 use Mediatag\Utilities\MediaArray;
+
+use function array_key_exists;
+use function count;
+
+use const CASE_LOWER;
+use const PREG_SPLIT_NO_EMPTY;
 
 trait Artist
 {
@@ -74,12 +81,12 @@ trait Artist
     {
         // utminfo(func_get_args());
 
-        $namesArray     = [];
-        $names          = str_replace('_1080p', '', $names);
-        $names          = str_replace($this->getArtistDelim(), $delim, $names);
+        $namesArray = [];
+        $names      = str_replace('_1080p', '', $names);
+        $names      = str_replace($this->getArtistDelim(), $delim, $names);
         // $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
-        $artist_matches = array_change_key_case($this->artist_match, \CASE_LOWER);
+        $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
 
         $prev_name = '';
         /*$total_names = count($names_array);
@@ -94,10 +101,10 @@ trait Artist
         */
         foreach ($names_array as $aName) {
             //  $aName = ucwords($aName);
-            $parts = preg_split('/(?=[A-Z])/', $aName, -1, \PREG_SPLIT_NO_EMPTY);
+            $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
             $aName = implode(' ', $parts);
-                // utmdump($aName);
+            // utmdump($aName);
 
             if (true === $this->ignoreArtist($aName)) {
                 continue;
@@ -107,7 +114,7 @@ trait Artist
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
                 // utmdump([$artist_matches[0] ,$name_key]);
-                if (\array_key_exists($name_key, $artist_matches)) {
+                if (array_key_exists($name_key, $artist_matches)) {
                     $aName = $artist_matches[$name_key];
                     if ('' != $aName) {
                         $prev_name    = $aName;
@@ -124,22 +131,20 @@ trait Artist
         }
         $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
 
-        if($titleNames !== null){
-        $video      = strtolower($this->video_name);
-        foreach ($titleNames as $k => $name) {
-            
-            $tname = strtolower(str_replace('_', '', $name));
+        if (null !== $titleNames) {
+            $video = strtolower($this->video_name);
+            foreach ($titleNames as $k => $name) {
+                $tname = strtolower(str_replace('_', '', $name));
 
-            if (!str_contains($video, $tname)) {
-                unset($titleNames[$k]);
-                continue;
+                if (!str_contains($video, $tname)) {
+                    unset($titleNames[$k]);
+                    continue;
+                }
+                $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
             }
-            $titleNames[$k]  = $name = ucwords(str_replace('_', ' ', $name));;
-
+            $namesArray = array_unique(array_merge($namesArray, $titleNames));
         }
-        $namesArray = array_unique(array_merge($namesArray, $titleNames));
-    }
-        if (\count($namesArray) > 0) {
+        if (count($namesArray) > 0) {
             $delim = ', ';
             $names = implode($delim, $namesArray);
 
@@ -185,13 +190,14 @@ trait Artist
                 } else {
                     $delim = ', ';
                 }
-                if (!\array_key_exists($this->getArtistMatch(), $output_array)) {
+                if (!array_key_exists($this->getArtistMatch(), $output_array)) {
                     return null;
                 }
                 if ('' == $output_array[$this->getArtistMatch()]) {
                     return null;
                 }
                 $names = $this->getArtistTextTransform($output_array[$this->getArtistMatch()]);
+
                 return $this->getArtistTransform($names, $delim);
             }
         }

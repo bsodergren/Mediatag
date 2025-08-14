@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Core;
 
+use Closure;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 use Mediatag\Core\Helper\CommandHelper;
 use Mediatag\Locales\Lang;
@@ -12,12 +14,22 @@ use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Traits\MediaLibrary;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Command\CompleteCommand;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Exception\ExceptionInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use TypeError;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function call_user_func;
+use function count;
+use function function_exists;
+use function is_array;
+use function is_int;
+use function sprintf;
+
+use const PHP_OS;
 
 class MediaCommand extends DoctrineCommand
 {
@@ -28,8 +40,8 @@ class MediaCommand extends DoctrineCommand
 
     public static $Console;
 
-    public const USE_LIBRARY = false;
-    public const SKIP_SEARCH = false;
+    public const USE_LIBRARY     = false;
+    public const SKIP_SEARCH     = false;
     public static $SingleCommand = false;
 
     public $command = [];
@@ -38,7 +50,7 @@ class MediaCommand extends DoctrineCommand
 
     private bool $ignoreValidationErrors = false;
 
-    private ?\Closure $code  = null;
+    private ?Closure $code   = null;
     public static $optionArg = [];
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -56,7 +68,7 @@ class MediaCommand extends DoctrineCommand
         $class     = static::class;
         $arguments = $input->getArguments();
 
-        if (\count($arguments) > 0) {
+        if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
 
             if (null !== $cmdArgument) {
@@ -78,10 +90,10 @@ class MediaCommand extends DoctrineCommand
 
         // }
         $method = 'process';
-        if (\array_key_exists('command', $arguments)) {
+        if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
-        
+
         // utmdump([$arguments, $this->command]);
 
         $Process->$method();
@@ -101,14 +113,14 @@ class MediaCommand extends DoctrineCommand
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
         $arguments = MediaOptions::getArguments(
-            $this->getName(), 
+            $this->getName(),
             $this->getDescription(),
-            function (CompletionInput $input) use($child) {
-               return call_user_func(array( MediaOptions::$CmdClass , 'ArgumentClosure'),$input, $this->getName());                
+            function (CompletionInput $input) {
+                return call_user_func([MediaOptions::$CmdClass, 'ArgumentClosure'], $input, $this->getName());
             }
         );
 
-        if (\is_array($arguments)) {
+        if (is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
     }
@@ -132,15 +144,15 @@ class MediaCommand extends DoctrineCommand
         $this->initialize($input, $output);
 
         if (null !== $this->processTitle) {
-            if (\function_exists('cli_set_process_title')) {
+            if (function_exists('cli_set_process_title')) {
                 if (!@cli_set_process_title($this->processTitle)) {
-                    if ('Darwin' === \PHP_OS) {
+                    if ('Darwin' === PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
                         cli_set_process_title($this->processTitle);
                     }
                 }
-            } elseif (\function_exists('setproctitle')) {
+            } elseif (function_exists('setproctitle')) {
                 setproctitle($this->processTitle);
             } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity()) {
                 $output->writeln('<comment>Install the proctitle PECL to be able to change the process title.</comment>');
@@ -169,8 +181,8 @@ class MediaCommand extends DoctrineCommand
 
             //  stopwatch();
 
-            if (!\is_int($statusCode)) {
-                throw new \TypeError(\sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
+            if (!is_int($statusCode)) {
+                throw new TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
             }
         }
 

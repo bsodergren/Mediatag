@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,9 +7,12 @@
 namespace Mediatag\Traits;
 
 use FFMpeg\FFMpeg;
-use Mediatag\Core\Mediatag;
 use FFMpeg\Format\Video\X264;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+
+use function in_array;
+use function is_array;
 
 trait ffmpegTransition
 {
@@ -27,7 +31,7 @@ trait ffmpegTransition
     {
         $return = $this->default_transition;
 
-        if (\is_array($transition_type)) {
+        if (is_array($transition_type)) {
             $key        = array_rand($transition_type);
             $transition = $transition_type[$key];
 
@@ -37,7 +41,7 @@ trait ffmpegTransition
             }
         }
 
-        if (\in_array($transition, $this->transition_types)) {
+        if (in_array($transition, $this->transition_types)) {
             $return = $transition;
         }
         Mediatag::$output->writeln('<info>Using transition '.$return.' </info>');

@@ -18,6 +18,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+use function define;
+use function defined;
+use function is_array;
+
 abstract class Mediatag extends MediaCommand
 {
     public $commandList = [];
@@ -83,8 +89,8 @@ abstract class Mediatag extends MediaCommand
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)
     {
-        if (!\defined('__CURRENT_DIRECTORY__')) {
-            \define('__CURRENT_DIRECTORY__', getcwd());
+        if (!defined('__CURRENT_DIRECTORY__')) {
+            define('__CURRENT_DIRECTORY__', getcwd());
         }
         self::$input  = $input;
         self::$output = $output;
@@ -94,10 +100,10 @@ abstract class Mediatag extends MediaCommand
         MediaCache::init($input, $output);
         Option::init($input, $options);
 
-        self::$Cursor     = new Cursor($output);
-        self::$Console    = new ConsoleOutput($output, $input);
-        self::$Display    = new Display($output);
-        self::$dbconn     = new StorageDB();
+        self::$Cursor  = new Cursor($output);
+        self::$Console = new ConsoleOutput($output, $input);
+        self::$Display = new Display($output);
+        self::$dbconn  = new StorageDB();
 
         self::$finder     = new Finder();
         self::$filesystem = new Filesystem();
@@ -106,7 +112,6 @@ abstract class Mediatag extends MediaCommand
         self::$finder->defaultCmd = $this->command;
 
         if (!Option::isTrue('SKIP_SEARCH')) {
-
             self::$SearchArray = self::$finder->ExecuteSearch();
             if (true == Option::isTrue('numberofFiles')) {
                 $this->getNumberofFiles();
@@ -114,7 +119,7 @@ abstract class Mediatag extends MediaCommand
             }
         }
 
-        self::$Storage    = new Storage();
+        self::$Storage = new Storage();
         if (isset($this->useFuncs)) {
             foreach ($this->useFuncs as $method) {
                 if (method_exists($this, $method)) {
@@ -161,14 +166,14 @@ abstract class Mediatag extends MediaCommand
         $file_array               = self::$SearchArray;
         $this->videoArray['file'] = [];
         $this->videoArray['dupe'] = [];
-        $count                    = \count($file_array);
+        $count                    = count($file_array);
 
         self::$output->writeln('<info>Getting Video array</info>');
         foreach ($file_array as $__ => $file) {
             $fs        = new File($file);
             $videoData = $fs->get();
 
-            if (!\array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
+            if (!array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
             } else {
                 $meta_key = 'dupe';
@@ -194,7 +199,7 @@ abstract class Mediatag extends MediaCommand
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
 
         $this->getVideoArray();
-        $total = \count($this->videoArray['file']);
+        $total = count($this->videoArray['file']);
         self::$output->writeLn('<info>There are '.$total.' files found</info>');
     }
 
@@ -209,7 +214,7 @@ abstract class Mediatag extends MediaCommand
         }
 
         foreach (Option::getOptions() as $option => $value) {
-            if (\array_key_exists($option, $array)) {
+            if (array_key_exists($option, $array)) {
                 $cmd = $option;
 
                 foreach ($array[$option] as $method => $args) {
@@ -221,8 +226,8 @@ abstract class Mediatag extends MediaCommand
                         }
                         $commandArgs = Option::getValue($cmd);
 
-                        if (\is_array($commandArgs)) {
-                            if (\array_key_exists(0, $commandArgs)) {
+                        if (is_array($commandArgs)) {
+                            if (array_key_exists(0, $commandArgs)) {
                                 if ('isset' == $args) {
                                     $Commands[$method] = $commandArgs[0];
 

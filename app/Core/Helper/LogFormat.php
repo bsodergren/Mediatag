@@ -1,9 +1,16 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Core\Helper;
+
+use function array_key_exists;
+use function count;
+use function is_array;
+
+use const PHP_EOL;
 
 trait LogFormat
 {
@@ -22,7 +29,7 @@ trait LogFormat
                 continue;
             }
 
-            if (\array_key_exists('class', $row)) {
+            if (array_key_exists('class', $row)) {
                 foreach (self::$ClassIgnore as $class) {
                     if (str_contains($row['class'], $class)) {
                         if (str_contains($row['function'], 'debug')) {
@@ -51,7 +58,7 @@ trait LogFormat
             return $string;
         }
 
-        if (\count($classArray) > 0) {
+        if (count($classArray) > 0) {
             $classArray = array_reverse($classArray);
             foreach ($classArray as $k => $classPath) {
                 [$class, $method] = explode(':', $classPath);
@@ -61,7 +68,7 @@ trait LogFormat
 
             foreach ($path as $classPath => $methods) {
                 $classPath = str_replace('_', '\\', $classPath);
-                if (\is_array($methods)) {
+                if (is_array($methods)) {
                     $level      = 4;
                     $spaces     = str_repeat(' ', $level * 4);
                     $methodPath = implode("\n".$spaces.'->', $methods);
@@ -71,7 +78,7 @@ trait LogFormat
             $level  = 1;
             $spaces = str_repeat(' ', $level * 4);
 
-            $string = implode(\PHP_EOL.$spaces.'->', $fullPath);
+            $string = implode(PHP_EOL.$spaces.'->', $fullPath);
 
             return $string;
         }

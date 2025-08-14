@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,25 +11,24 @@ use Symfony\Component\Console\Attribute\AsCommand;
 
 const DESCRIPTION = 'Test Command';
 const NAME        = 'test';
-#[AsCommand(name: 'test', description: DESCRIPTION, aliases:["thumbnail"])]
+#[AsCommand(name: 'test', description: DESCRIPTION, aliases: ['thumbnail'])]
 final class Command extends MediaCommand
 {
     use Lang;
     public const USE_LIBRARY = false;
-    public const SKIP_SEARCH =true;
+    public const SKIP_SEARCH = true;
 
-    public $command          = [
-        'test'    => [
-            'execWord' => null
+    public $command = [
+        'test'         => [
+            'execWord' => null,
             // 'exec'         => null,
             // 'getChanges'   => null,
             // 'writeChanges' => null,
         ],
         'thumbnail'    => [
-            'exec' => null,
+            'exec'        => null,
             'doThumbnail' => null,
-        //     // 'exec' => null,
+            //     // 'exec' => null,
         ],
     ];
-
 }

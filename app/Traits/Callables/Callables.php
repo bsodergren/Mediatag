@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -75,7 +76,6 @@ trait Callables
 
     //     return false;
     // }
-
 
     // public function toList($line)
     // {

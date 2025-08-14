@@ -1,19 +1,26 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Commands\Clip;
 
-use UTM\Utilities\Option;
-use Mediatag\Utilities\Chooser;
+use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Traits\ffmpegTransition;
 use Mediatag\Traits\MediaFFmpeg;
-use Mediatag\Modules\VideoInfo\Section\Markers;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Core\Mediatag;
-use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
+use Mediatag\Utilities\Chooser;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 trait Helper
 {
@@ -32,10 +39,10 @@ trait Helper
 
         rsort($pcs);
         $seconds = $pcs[0];
-        if (\array_key_exists(1, $pcs)) {
+        if (array_key_exists(1, $pcs)) {
             $minutes = $pcs[1] * 60;
         }
-        if (\array_key_exists(2, $pcs)) {
+        if (array_key_exists(2, $pcs)) {
             $hours = $pcs[2] * 60 * 60;
         }
 
@@ -51,20 +58,20 @@ trait Helper
             return $outputFile;
         }
 
-        return \dirname($outputFile, $level);
+        return dirname($outputFile, $level);
     }
 
     public function getClipFilename($filename)
     {
-        return $this->getClipDirectory($filename).\DIRECTORY_SEPARATOR.basename($filename);
+        return $this->getClipDirectory($filename).DIRECTORY_SEPARATOR.basename($filename);
     }
 
     public function setClipFilename($name)
     {
         $name = str_replace(' ', '_', $name);
 
-        $filename = __LIBRARY_HOME__.\DIRECTORY_SEPARATOR.'Home Videos'.\DIRECTORY_SEPARATOR.'Compilation'.\DIRECTORY_SEPARATOR.$name.'.mp4';
-        Filesystem::createDir(\dirname($filename));
+        $filename = __LIBRARY_HOME__.DIRECTORY_SEPARATOR.'Home Videos'.DIRECTORY_SEPARATOR.'Compilation'.DIRECTORY_SEPARATOR.$name.'.mp4';
+        Filesystem::createDir(dirname($filename));
 
         if (file_exists($filename)) {
             if (Chooser::changes(' Overwrite File ', 'overwrite', __LINE__)) {
@@ -81,18 +88,13 @@ trait Helper
 
     public function setffmpegFilename($name)
     {
-        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).\DIRECTORY_SEPARATOR.$name.'.txt';
+        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).DIRECTORY_SEPARATOR.$name.'.txt';
     }
 
-
-
-
-    
     public function getfileList()
     {
         $markerArray   = [];
         $this->FileIdx = 0;
-
 
         $search = Option::getValue('clip', true);
 
@@ -102,13 +104,12 @@ trait Helper
             $this->Marker->getvideoId($key);
 
             if (null !== $this->Marker->video_id) {
-                $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
+                $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
 
-                $result = Mediatag::$dbconn->query($query);
+                $result  = Mediatag::$dbconn->query($query);
                 $markers = $this->getVideoMarks($result);
 
-
-                if (\count($markers) > 0) {
+                if (count($markers) > 0) {
                     ++$this->FileIdx;
 
                     $markerArray[] = $markers;

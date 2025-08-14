@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -16,8 +17,8 @@ final class ChapterCommand extends MediaCommand
 
     public $command = [
         'Chapter'    => [
-            'exec'         => null,
-            'getMarkerList'   => null, 
+            'exec'                 => null,
+            'getMarkerList'        => null,
             'createChapterFile'    => null, ],
     ];
 }

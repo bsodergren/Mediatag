@@ -10,10 +10,19 @@ use Mediatag\Core\Helper\OptionCompletion;
 use Mediatag\Core\Helper\OptionsDefault;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Completion\CompletionInput;
+use Symfony\Component\Console\Input\InputOption;
+
+use function array_slice;
+use function call_user_func;
+use function count;
+use function is_array;
+use function is_object;
+use function is_string;
+
+use const PHP_EOL;
 
 /**
  * MediaOptions.
@@ -21,9 +30,9 @@ use Symfony\Component\Console\Completion\CompletionInput;
 class MediaOptions
 {
     use Lang;
-    use Translate;
     use OptionCompletion;
     use OptionsDefault;
+    use Translate;
 
     public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display' => false];
 
@@ -52,7 +61,7 @@ class MediaOptions
 
         // utmdump($className);
         $pathInfo   = explode('\\', $className);
-        $pathInfo   = \array_slice($pathInfo, 0, 3);
+        $pathInfo   = array_slice($pathInfo, 0, 3);
         $pathInfo[] = 'Options';
         $className  = implode('\\', $pathInfo);
 
@@ -106,8 +115,6 @@ class MediaOptions
                 $class = substr($className, $pos + 1);
             }
 
-
-
             $tmpClass = str_replace('Command', '', $class);
 
             $className = rtrim($className, $class);
@@ -120,7 +127,6 @@ class MediaOptions
         if (class_exists($className)) {
             self::$classObj = new $className();
         }
-
     }
 
     /**
@@ -137,10 +143,10 @@ class MediaOptions
         $definitions    = null;
         $cmdOptions     = [];
         self::getClassObject($command);
-        if (\is_object(self::$classObj)) {
+        if (is_object(self::$classObj)) {
             if (isset(self::$classObj->options)) {
                 foreach (self::$classObj->options as $option => $value) {
-                    if (\is_string($option)) {
+                    if (is_string($option)) {
                         if (false == $value) {
                             continue;
                         }
@@ -155,7 +161,7 @@ class MediaOptions
             }
             // utmdump(self::$classObj);
             $definitions = self::$classObj->Definitions();
-            if (\is_array($definitions)) {
+            if (is_array($definitions)) {
                 $cmdOptions = self::getOptions(
                     $definitions
                 );
@@ -166,19 +172,17 @@ class MediaOptions
             $cmdOptions = array_merge($cmdOptions, $Options);
         }
 
-
         return new InputDefinition($cmdOptions);
     }
 
-    public static function getArguments($varName = null, $description = null, $closure)
+    public static function getArguments($varName, $description, $closure)
     {
         // utminfo(func_get_args());
 
         //    self::getClassObject();
 
-        if (\is_object(self::$classObj)) {
+        if (is_object(self::$classObj)) {
             return self::$classObj->Arguments($varName, $description, InputArgument::OPTIONAL, null, $closure);
-
         }
 
         return null;
@@ -188,11 +192,11 @@ class MediaOptions
     {
         // utminfo(func_get_args());
 
-        if (!\is_array($optionArray)) {
+        if (!is_array($optionArray)) {
             return [];
         }
 
-        $cnt            = \count($optionArray);
+        $cnt            = count($optionArray);
         $commandOptions = [];
         $i              = 0;
         $prev           = '';
@@ -202,22 +206,22 @@ class MediaOptions
             $breakText = '';
             if ('break' == $optionName[0]) {
                 $key = $idx - 1;
-                $prev[3] .= \PHP_EOL.\PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
+                $prev[3] .= PHP_EOL.PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
                 $commandOptions[$key] = new InputOption(...$prev);
 
                 continue;
             }
 
             if ($i == $cnt) {
-                $optionName[3] .= \PHP_EOL;
+                $optionName[3] .= PHP_EOL;
             }
-            $prev             = $optionName;
+            $prev = $optionName;
 
-            $name = null;
-            $shortcut = null;
-            $mode = null;
+            $name        = null;
+            $shortcut    = null;
+            $mode        = null;
             $description = null;
-            $default = null;
+            $default     = null;
             foreach ($optionName as $id => $v) {
                 switch ($id) {
                     case 0:
@@ -236,12 +240,9 @@ class MediaOptions
                         $default = $optionName[$id];
                         break;
                 }
-
             }
 
-
-            // 
-            if ($mode != 1) {
+            if (1 != $mode) {
                 $commandOptions[] = new InputOption(
                     $name,
                     $shortcut,
@@ -249,20 +250,18 @@ class MediaOptions
                     $description,
                     $default,
                     function (CompletionInput $input) use ($name) {
+                        if (method_exists(self::$classObj, 'optionClosure')) {
+                            utmdump(['exsts', $name, method_exists(self::$classObj, 'optionClosure')]);
 
-                        if(method_exists(self::$classObj,'optionClosure')){
-                            utmdump(["exsts",$name,method_exists(self::$classObj,'optionClosure')]);
-                        
-                            return call_user_func(array( self::$classObj, 'optionClosure'), $input, $name);
+                            return call_user_func([self::$classObj, 'optionClosure'], $input, $name);
                         } else {
-                            utmdump(["no no exsts",$name]);
-                        
+                            utmdump(['no no exsts', $name]);
+
                             return $this->optionClosure($input, $name);
                         }
                     }
                 );
             } else {
-
                 $commandOptions[] = new InputOption($name, $shortcut, $mode, $description, $default);
             }
         }
@@ -270,22 +269,17 @@ class MediaOptions
         return $commandOptions;
     }
 
-
     public function optionClosure($input, $option)
     {
-
-    
         $returnValue = null;
-        $cmd = 'list'.ucfirst($option);
+        $cmd         = 'list'.ucfirst($option);
 
-        utmdump([$cmd,method_exists($this, $cmd)]);
+        utmdump([$cmd, method_exists($this, $cmd)]);
         $currentValue = $input->getCompletionValue();
         if (method_exists($this, $cmd)) {
-            $returnValue = $this->$cmd($currentValue );
+            $returnValue = $this->$cmd($currentValue);
         }
 
         return $returnValue;
     }
-
-
 }

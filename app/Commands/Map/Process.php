@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,8 @@ use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\TagDB;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use function define;
 
 /**
  * Summary of MediamapProcess.
@@ -47,7 +50,7 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        \define('SKIP_SEARCH', true);
+        define('SKIP_SEARCH', true);
 
         parent::__construct($input, $output);
 

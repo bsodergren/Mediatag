@@ -1,14 +1,15 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Commands\Clip\Commands\Add;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use UTM\Utilities\Option;
 
 trait AddHelper
 {

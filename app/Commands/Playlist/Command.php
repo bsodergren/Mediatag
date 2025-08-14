@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -14,7 +15,7 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['compact','download'])]
+#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['compact', 'download'])]
 final class Command extends MediaCommand
 {
     use Lang;
@@ -31,12 +32,12 @@ final class Command extends MediaCommand
 
     public $command = [
         'playlist'           => [
-            'cleanBrkDownloads' => null,
+            'cleanBrkDownloads'           => null,
             'docompactPlaylist'           => null,
             'dodownloadPlaylist'          => null,
         ],
         'download'           => [
-            'cleanBrkDownloads' => null,
+            'cleanBrkDownloads'              => null,
             // 'docompactPlaylist'           => null,
             'dodownloadPlaylistURL'          => null,
         ],

@@ -1,43 +1,41 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Core\Helper;
 
-use Mediatag\Core\MediaOptions;
-use Nette\Utils\FileInfo;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder as SFinder;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Utilities\Strings as UtilitiesStrings;
-use Symfony\Component\Filesystem\Filesystem;
+
+use const DIRECTORY_SEPARATOR;
 
 trait OptionCompletion
 {
     public function listGenre($value)
     {
         utmdump(__GENRE_LIST__);
+
         return __GENRE_LIST__;
     }
 
     public function lristFilelist($path = null)
     {
-
-        $Filesystem     = new Filesystem();
+        $Filesystem  = new Filesystem();
         $CurrentPath = getcwd();
-        $VideoPath = $CurrentPath ;
-        $SearchPath = $VideoPath;
+        $VideoPath   = $CurrentPath;
+        $SearchPath  = $VideoPath;
 
-        if ("" != $path) {
-            $SearchPath = $VideoPath . DIRECTORY_SEPARATOR . $path;
+        if ('' != $path) {
+            $SearchPath = $VideoPath.DIRECTORY_SEPARATOR.$path;
             $SearchPath = Path::normalize($SearchPath);
-        //$SearchPath = "'".str_replace('\\','',$SearchPath)."'";
+            // $SearchPath = "'".str_replace('\\','',$SearchPath)."'";
             if (!is_dir($SearchPath)) {
-                $SearchPath =  $SearchPath . "*";
+                $SearchPath .= '*';
             }
         }
         utmdump($SearchPath);
-
-
-        //
 
         // utmdump($path);
 
@@ -52,9 +50,8 @@ trait OptionCompletion
 
         if ($finder->hasResults()) {
             foreach ($finder as $file) {
-
-                $video_file   = $file->getRealPath();
-                $video_file = str_replace($VideoPath, "", $video_file);
+                $video_file = $file->getRealPath();
+                $video_file = str_replace($VideoPath, '', $video_file);
                 utmdump($video_file);
 
                 // $video_file = SFilesystem::makePathRelative($path,$video_file);
@@ -68,12 +65,7 @@ trait OptionCompletion
         }
 
         utmdump($file_array);
+
         return $file_array;
-
-
-
-
-
     }
-
 }

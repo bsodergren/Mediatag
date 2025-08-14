@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -12,6 +13,11 @@ use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings;
 use UTM\Utilities\Option;
+
+use function count;
+
+use const PHP_EOL;
+use const SORT_REGULAR;
 
 trait Helper
 {
@@ -38,7 +44,7 @@ trait Helper
         $lines[] = $artist.':'.$replacement;
 
         $lines = array_unique($lines);
-        sort($lines, \SORT_REGULAR);
+        sort($lines, SORT_REGULAR);
         $contents = implode("\n", $lines);
 
         file_put_contents($this->phArtist, $contents);
@@ -65,7 +71,7 @@ trait Helper
             }
         }
 
-        MediaFile::file_append_file($this->wordMap, \PHP_EOL.$word);
+        MediaFile::file_append_file($this->wordMap, PHP_EOL.$word);
         Mediatag::$Console->info('Word Dictionary', ['Added' => $word]);
     }
 
@@ -134,7 +140,7 @@ trait Helper
         $search = $this->SearchDB($value);
 
         $results = $this->tagConn->query($search);
-        if (\count($results) > 0) {
+        if (count($results) > 0) {
             $table = new MapDisplay(Mediatag::$output);
 
             $table->drawTable($results);
