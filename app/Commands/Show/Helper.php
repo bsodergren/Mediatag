@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -12,6 +13,11 @@ use Mediatag\Process\DB\Process as DBProcess;
 use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Console\Helper\ProgressBar;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -29,7 +35,7 @@ trait Helper
         }
 
         $filelist_array = $this->VideoList['file'];
-        $count          = \count($filelist_array);
+        $count          = count($filelist_array);
 
         Mediatag::$output->writeln('<info>Finding missing tags</info>');
         //        ProgressBar::setFormatDefinition('custom', '<info>%current%/%max%</info> -- <comment>%message%  (%filename%)</comment>');
@@ -50,7 +56,7 @@ trait Helper
             $progressBar->advance();
 
             foreach ($missing_tags as $missing_tag) {
-                if (!\array_key_exists($missing_tag, $tagList)) {
+                if (!array_key_exists($missing_tag, $tagList)) {
                     $this->missing[$missing_tag][$key] = $filelist_array[$key];
                 } else {
                     if ('' == $tagList[$missing_tag]) {
@@ -62,7 +68,7 @@ trait Helper
         $progressBar->finish();
         Mediatag::$output->writeln('');
 
-        if (\count($this->missing) > 0) {
+        if (count($this->missing) > 0) {
             foreach ($this->missing as $tag => $missing_file) {
                 $obj = new ScriptWriter('missing_'.$tag.'.sh', __CURRENT_DIRECTORY__);
                 $obj->addCmd('update', ['-o', $tag, '-f']);
@@ -83,6 +89,7 @@ trait Helper
         $ScriptWriter = new ScriptWriter('newFiles.sh', __CURRENT_DIRECTORY__);
         $ScriptWriter->addCmd('update', ['-U', '-f']);
         $ScriptWriter->addFileList($DBProcess['New']);
+        $ScriptWriter->addFiles();
         //     $ScriptWriter->addCmd('db', ['-f']);
         //     $ScriptWriter->addFileList($DBProcess['New']);
         $ScriptWriter->write();
@@ -103,7 +110,7 @@ trait Helper
         }
         $file_string = '';
         foreach ($video_keys as $v => $key) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.\PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
         }
 
         Filesystem::writeFile($playlist_file, $file_string);

@@ -8,13 +8,18 @@ namespace Mediatag\Commands\Download;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Process\Process as ExecProcess;
 use UTM\Utilities\Option;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+
+use function array_slice;
+use function count;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -32,10 +37,10 @@ trait Helper
         }
         if (Option::isTrue('max')) {
             $total      = (int) Option::getValue('max');
-            $file_array = \array_slice($file_array, 0, $total);
+            $file_array = array_slice($file_array, 0, $total);
         }
 
-        $count = \count($file_array);
+        $count = count($file_array);
         if ($count > 0) {
             $this->textSection = Mediatag::$output->section();
             $this->barSection  = Mediatag::$output->section();
@@ -64,7 +69,7 @@ trait Helper
             // utmdd($videoInfo);
         }
 
-        if (\count($this->filesToRemove) > 0) {
+        if (count($this->filesToRemove) > 0) {
             $this->cleanDupeFiles();
         }
     }
@@ -78,8 +83,7 @@ trait Helper
         $this->moveJson();
         $this->moveCaption();
 
-        if ($file_array !== null) {
-
+        if (null !== $file_array) {
             foreach ($file_array as $key => $file) {
                 $videoInfo = File::file($file);
                 $ytdl_file = $videoInfo['video_file'].'.ytdl';
@@ -95,23 +99,21 @@ trait Helper
                     continue;
                 }
 
-
                 $out = $this->moveVideo($videoInfo);
-
 
                 Mediatag::$output->writeln($out);
             }
         }
-        if (\count($this->newFiles) > 0) {
+        if (count($this->newFiles) > 0) {
             $ScriptWriter = new ScriptWriter('addedFiles.sh', __PLEX_HOME__.'/Pornhub');
             $ScriptWriter->addCmd('update', ['-f']);
             $ScriptWriter->addFileList($this->newFiles);
+            $ScriptWriter->addFiles();
+
             $ScriptWriter->write();
         }
 
-
-
-        if (\count($this->filesToRemove) > 0) {
+        if (count($this->filesToRemove) > 0) {
             $this->cleanDupeFiles();
         }
 
@@ -126,14 +128,12 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-
-        $fileArray = $this->searchDownloads("json");
-        if ($fileArray !== null) {
+        $fileArray = $this->searchDownloads('json');
+        if (null !== $fileArray) {
             foreach ($fileArray as $row) {
-                $key = $row['key'];
-                $json_file = $row['src'];
+                $key          = $row['key'];
+                $json_file    = $row['src'];
                 $newJson_file = __JSON_CACHE_DIR__.'/'.$key.'.info.json';
-
 
                 if (!Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
@@ -147,20 +147,18 @@ trait Helper
                     $out                   = '<question>'.basename($newJson_file).' already exists</question>';
                     Mediatag::$output->writeln($out);
                 }
-
             }
         }
-
     }
+
     private function moveCaption()
     {
         // utminfo(func_get_args());
-        $fileArray = $this->searchDownloads("srt");
-        if ($fileArray !== null) {
-
+        $fileArray = $this->searchDownloads('srt');
+        if (null !== $fileArray) {
             foreach ($fileArray as $row) {
-                $key = $row['key'];
-                $caption_file = $row['src'];
+                $key             = $row['key'];
+                $caption_file    = $row['src'];
                 $newCaption_file = __INC_WEB_CAPTION_ROOT__.'/'.$key.'.vtt';
 
                 // if (Mediatag::$filesystem->exists($caption_file)) {
@@ -170,31 +168,28 @@ trait Helper
                         Mediatag::$output->writeln($out);
                     } else {
                         $original = file_get_contents($caption_file);
-                        $vtt = 'WEBVTT'.PHP_EOL.PHP_EOL.$original;
+                        $vtt      = 'WEBVTT'.PHP_EOL.PHP_EOL.$original;
                         // Replace microseconds separator: 00,000 -> 00.000
                         $vtt = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
 
                         // Write the .vtt file
                         file_put_contents($newCaption_file, $vtt);
                         unlink($caption_file);
-                        $out                   = '<info>'.basename($newCaption_file).' </info>';
+                        $out = '<info>'.basename($newCaption_file).' </info>';
                         Mediatag::$output->writeln($out);
                     }
                 } else {
-                    //$this->filesToRemove[] = $caption_file;
+                    // $this->filesToRemove[] = $caption_file;
                     unlink($caption_file);
 
-                    $out                   = '<question>'.basename($newCaption_file).' already exists</question>';
+                    $out = '<question>'.basename($newCaption_file).' already exists</question>';
                     Mediatag::$output->writeln($out);
                 }
             }
         }
 
         // }
-
     }
-
-
 
     private function moveVideo($videoInfo)
     {
@@ -267,30 +262,26 @@ trait Helper
         // $proccess->run();
     }
 
-
-    private function searchDownloads($type = "json")
+    private function searchDownloads($type = 'json')
     {
         $fileArray = [];
         switch ($type) {
             case 'json':
-                $search_params = "info.json";
-                $desc = "Json ";
+                $search_params = 'info.json';
+                $desc          = 'Json ';
                 break;
             case 'srt':
-                $search_params = "en.srt";
-                $desc = "Caption ";
+                $search_params = 'en.srt';
+                $desc          = 'Caption ';
                 break;
-
         }
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.'.$search_params, exit: false);
 
         //  utmdd($file_array);
-        if ($file_array === null) {
+        if (null === $file_array) {
             return null;
         }
         foreach ($file_array as $file) {
-
-
             $success = preg_match('/-(p?h?[a-z0-9]+).'.$search_params.'/', basename($file), $matches);
             if (1 === $success) {
                 $key = $matches[1];
@@ -302,16 +293,9 @@ trait Helper
             // }
             // Mediatag::$output->writeln($desc." File " . basename($file). " key " . $key);
 
-            $fileArray[] = ["src" => $file,"key" => $key];
+            $fileArray[] = ['src' => $file, 'key' => $key];
         }
+
         return $fileArray;
     }
-
-
-
-
-
-
-
-
 }

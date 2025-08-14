@@ -7,17 +7,19 @@
 namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
-use UTM\Utilities\Option;
-use Mediatag\Core\MediaCache;
-use Mediatag\Traits\Callables\Callables;
-use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
-use UTM\Utilities\Debug\UtmStopWatch;
-use Symfony\Component\Finder\Finder as SFinder;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use Symfony\Component\Finder\Finder as SFinder;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Debug\UtmStopWatch;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+use function count;
+use function is_array;
 
 /**
  * Summary of Finder.
@@ -46,7 +48,7 @@ class MediaFinder extends SFinder
      *
      * @var array
      */
-    public $video          = [];
+    public $video = [];
 
     /**
      * Summary of output.
@@ -92,7 +94,7 @@ class MediaFinder extends SFinder
 
     public $defaultCmd;
 
-    public static $depth   = null;
+    public static $depth;
 
     /**
      * renameCommaFiles.
@@ -112,11 +114,11 @@ class MediaFinder extends SFinder
                 $rename_file = true;
             } else {
                 if (str_contains($fileRow, '.mp4')) {
-                    $oldName    = $fileRow;
-                    $newName    = $first_part . $fileRow;
+                    $oldName = $fileRow;
+                    $newName = $first_part.$fileRow;
 
                     if (true === $rename_file) {
-                        $oldName = $first_part . ',' . $fileRow;
+                        $oldName = $first_part.','.$fileRow;
                     }
                     $first_part = '';
                 } else {
@@ -131,12 +133,12 @@ class MediaFinder extends SFinder
                 $pathInfo = pathinfo($newName);
                 $newName  = $pathInfo['basename'];
 
-                $newName  = UtilitiesStrings::cleanFileName($newName);
-                $newName  = str_replace('__', '_', $newName);
-                $newName  = str_replace('_.', '.', $newName);
+                $newName = UtilitiesStrings::cleanFileName($newName);
+                $newName = str_replace('__', '_', $newName);
+                $newName = str_replace('_.', '.', $newName);
 
                 if ('.' != $pathInfo['dirname']) {
-                    $newName = $pathInfo['dirname'] . '/' . $newName;
+                    $newName = $pathInfo['dirname'].'/'.$newName;
                 }
 
                 if ($oldName != $newName) {
@@ -151,19 +153,19 @@ class MediaFinder extends SFinder
                     }
                 }
 
-                $message  = 'Renaming file from <comment>' . basename($oldName) . '</comment> to';
-                $message2 = '                -> <comment>' . basename($newName) . '</comment> ';
+                $message  = 'Renaming file from <comment>'.basename($oldName).'</comment> to';
+                $message2 = '                -> <comment>'.basename($newName).'</comment> ';
                 // UTMlog::Logger('Renaming file from ', $oldName);
                 // UTMlog::Logger('Renaming file to ', $newName);
-                $this->output->writeln('<info>' . $message . '</info>');
-                $this->output->writeln('<info>' . $message2 . '</info>');
+                $this->output->writeln('<info>'.$message.'</info>');
+                $this->output->writeln('<info>'.$message2.'</info>');
                 //  Filesystem::renameFile($oldName, $newName);
             }
 
             $newFileArray[] = $newName;
 
-            $first_part     = '';
-            $rename_file    = false;
+            $first_part  = '';
+            $rename_file = false;
         }
 
         return $newFileArray;
@@ -180,12 +182,11 @@ class MediaFinder extends SFinder
         // UTMlog::logger('Search');
 
         if (Option::isTrue('filelist')) {
-
             $file_array = $this->getFilelistOption();
         } else {
             $file_array = $this->searchFiles();
         }
-        if (\is_array($file_array)) {
+        if (is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
                 $FileArray = $this->getFileNumberArray($file_array);
             } elseif (Option::isTrue('range') || Option::isTrue('max')) {
@@ -214,7 +215,7 @@ class MediaFinder extends SFinder
             }
             $start = $range[0] - $offset;
 
-            if (\array_key_exists('1', $range)) {
+            if (array_key_exists('1', $range)) {
                 if ($range[1] < $total) {
                     $total = (int) $range[1];
                 }
@@ -231,15 +232,15 @@ class MediaFinder extends SFinder
     {
         // utminfo(func_get_args());
 
-        $start          = 0;
-        $ftotal          = \count($file_array);
+        $start  = 0;
+        $ftotal = count($file_array);
 
         [$total,$start] = $this->getRangeIds($ftotal);
         if ($total > $ftotal) {
             $total = $ftotal;
         }
         for ($q = $start; $q < $total; ++$q) {
-            $file_name             = $file_array[$q];
+            $file_name = $file_array[$q];
 
             $video_key             = File::file($file_name, 'videokey');
             $video_file            = File::file($file_name, 'fullname');
@@ -254,7 +255,7 @@ class MediaFinder extends SFinder
         // utminfo(func_get_args());
 
         $start      = 0;
-        $total      = \count($file_array);
+        $total      = count($file_array);
         $FileArray  = [];
         $filenumber = Option::getValue('filenumber');
         if (str_contains($filenumber, ',')) {
@@ -264,7 +265,7 @@ class MediaFinder extends SFinder
                     continue;
                 }
                 $file_name             = $file_array[$q - 1];
-                $video_key             = MediaFile::file($file_name, 'videokey');
+                $video_key             = File::file($file_name, 'videokey');
                 $FileArray[$video_key] = $file_name;
             }
         } else {
@@ -282,7 +283,7 @@ class MediaFinder extends SFinder
                     continue;
                 }
                 $file_name             = $file_array[$q];
-                $video_key             = MediaFile::file($file_name, 'videokey');
+                $video_key             = File::file($file_name, 'videokey');
                 $FileArray[$video_key] = $file_name;
             }
         }
@@ -324,13 +325,12 @@ class MediaFinder extends SFinder
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search' => $search,'path' => $path]);
+        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
         if (null === $path) {
             $path = getcwd();
         }
         if (Option::isTrue('new')) {
             // $this->db_array             = Mediatag::$dbconn->getDbFileList();
-
         }
 
         // UTMlog::logger('Search Directory', $path);
@@ -338,14 +338,13 @@ class MediaFinder extends SFinder
         $finder     = new SFinder();
         $filesystem = new SFilesystem();
 
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+        UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
         $finder->files()->in($path);
-        if (self::$depth != null) {
+        if (null != self::$depth) {
             $finder->depth('== 0');
         }
 
         if (null !== $this->excludeDir) {
-
             $finder->exclude($this->excludeDir);
         }
         // else {
@@ -353,12 +352,12 @@ class MediaFinder extends SFinder
         // }
 
         $finder->name($search)->sortByCaseInsensitiveName();
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+        UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
         if ($finder->hasResults()) {
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+            UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
 
             foreach ($finder as $file) {
-                $video_file   = $file->getRealPath();
+                $video_file = $file->getRealPath();
                 if (str_contains($video_file, '-temp-')) {
                     $filesystem->remove($video_file);
 
@@ -367,34 +366,33 @@ class MediaFinder extends SFinder
                 $file_array[] = $video_file;
             }
 
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+            UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
 
             if (Option::isTrue('new')) {
-
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
             }
-            //
 
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+            UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
             if (is_array($file_array)) {
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);
-                    Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
+                    Mediatag::$output->writeln('<info>'.$noFiles.' files found</info>');
 
                     if (Option::isTrue('dump')) {
                         $this->scriptNewFiles($file_array);
+
                         return null;
                     }
+
                     return $file_array;
                 }
             }
         }
-        if ($exit === true) {
+        if (true === $exit) {
             Mediatag::$output->writeln('<info>No files found</info>');
             exit;
         }
-
     }
 
     /**
@@ -407,41 +405,37 @@ class MediaFinder extends SFinder
         // utminfo(func_get_args());
         // utmdd(Option::getOptions() );
 
-
         if (Option::isTrue('filelist')) {
             $ret = Option::getValue('filelist');
+
             return $ret;
         }
 
         return null;
     }
 
-
     public function onlyNew($path, $fileArray)
     {
         // utminfo(func_get_args());
 
-        $db_array             = null;
-        $New_Array            = [];
+        $db_array  = null;
+        $New_Array = [];
 
         if (__SCRIPT_NAME__ == 'mediadb') {
             return $fileArray;
         }
 
-        $db_array             = Mediatag::$dbconn->getDbFileList();
+        $db_array = Mediatag::$dbconn->getDbFileList();
 
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
             foreach ($fileArray as $key => $file) {
-
                 if (MediaArray::Search($Deleted_Array, basename($file))) {
                     $Changed_Array[] = $file;
                     unset($New_Array[$key]);
                     unset($Deleted_Array[$key]);
-
                 }
-
             }
         }
 
@@ -450,21 +444,23 @@ class MediaFinder extends SFinder
         } else {
             return null;
         }
-
     }
-
 
     public function scriptNewFiles($file_array)
     {
         // utminfo(func_get_args());
 
-        if (\count($file_array) > 0) {
+        if (count($file_array) > 0) {
             $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);
-            $obj->addCmd('update', ['-U', '-f'], true, true);
+            $obj->addCmd('update', ['update', '-f'], true, true);
 
             foreach ($file_array as $i => $missing_file) {
                 $obj->addFile($missing_file, false);
             }
+            $obj->addFiles();
+            $obj->addCmd('db', [], false, false);
+            $obj->addCmd('db', ['all'], false, false);
+
             $obj->write();
             Mediatag::$output->writeln('Wrote new script');
         }

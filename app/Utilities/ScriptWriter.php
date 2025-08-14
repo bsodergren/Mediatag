@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,6 +11,12 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\ExecArgs;
 use Symfony\Component\Filesystem\Filesystem as SymFs;
 use Symfony\Component\Finder\Finder;
+
+use function array_key_exists;
+use function count;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 /**
  * ScriptWriter.
@@ -39,8 +46,8 @@ class ScriptWriter
      *
      * @var string
      */
-    public $db  = __APP_HOME__.'/bin/mediadb';
-    public $map = __APP_HOME__.'/bin/mediamap';
+    public $db   = __APP_HOME__.'/bin/mediadb';
+    public $map  = __APP_HOME__.'/bin/mediamap';
     public $clip = __APP_HOME__.'/bin/mediaclip';
     /**
      * script.
@@ -93,8 +100,8 @@ class ScriptWriter
     {
         // utminfo(func_get_args());
 
-        $directory           = '"'.__CURRENT_DIRECTORY__.'"';
-        $this->script_header = <<<EOD
+        $directory         = '"'.__CURRENT_DIRECTORY__.'"';
+        $this->script_text = <<<EOD
 #!/bin/bash
 DIR={$directory}
 
@@ -116,14 +123,14 @@ EOD;
         $run_cmd = $cmd.' '.implode($eol, $cmdOptions);
 
         if (true == $comment) {
-            $this->script_header .= '## CMD='.$run_cmd.\PHP_EOL;
+            $this->script_header .= '## CMD='.$run_cmd.PHP_EOL;
         }
 
         if (true === $singleLine) {
             $eol = ' \\';
         }
 
-        $this->script_command .= $run_cmd.$eol.\PHP_EOL;
+        $this->script_text .= $run_cmd.$eol.PHP_EOL;
 
         // utmdd($this->script_command);
     }
@@ -143,6 +150,18 @@ EOD;
         }
     }
 
+    public function addFiles()
+    {
+        if (count($this->fileListAray) > 0) {
+            $file_list = implode("\n", $this->fileListAray);
+            $this->script_filelist .= $file_list;
+        }
+
+        $this->script_filelist = str_replace("\"\n", '",\\'.PHP_EOL, $this->script_filelist);
+
+        $this->script_text .= str_replace(__CURRENT_DIRECTORY__.'/', '', $this->script_filelist).PHP_EOL;
+    }
+
     /**
      * addFileList.
      */
@@ -155,8 +174,7 @@ EOD;
             $value = '"'.$value.'"';
         });
 
-        $file_list = implode("\n", $fileArray);
-        $this->script_filelist .= $file_list;
+        $this->fileListAray = $fileArray;
     }
 
     /**
@@ -169,18 +187,8 @@ EOD;
         if (file_exists($this->script)) {
             Filesystem::delete($this->script);
         }
-        if (\count($this->fileListAray) > 0) {
-            $file_list = implode("\n", $this->fileListAray);
-            $this->script_filelist .= $file_list;
-        }
 
-        if (true == $singleLine) {
-            $this->script_filelist = str_replace("\"\n", '",\\'.\PHP_EOL, $this->script_filelist);
-        }
-
-        $this->script_filelist = str_replace(__CURRENT_DIRECTORY__.'/', '', $this->script_filelist);
-
-        $this->script_text = $this->script_header.\PHP_EOL.$this->script_command.$this->script_filelist;
+        // $this->script_text = $this->script_header.\PHP_EOL.$this->script_command.$this->script_filelist;
 
         Filesystem::write($this->script, $this->script_text, 0755);
     }
@@ -199,18 +207,18 @@ EOD;
         $extended_use   = ' ';
         $network        = ' ';
         if (null !== $options) {
-            if (\array_key_exists('ExtendClass', $options)) {
+            if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
                 // $studio         = "public \$studio = '" . $TitleStudio . "';";
 
-                $extended_use = \PHP_EOL.'use Mediatag\\Patterns\\Studios\\'.$extended_class.';';
+                $extended_use = PHP_EOL.'use Mediatag\\Patterns\\Studios\\'.$extended_class.';';
             }
-            if (\array_key_exists('network', $options)) {
+            if (array_key_exists('network', $options)) {
                 $network = "public \$network = '".$options['network']."';";
             }
         }
 
-        $Pattern_file = __PATTERNS_LIB_DIR__.\DIRECTORY_SEPARATOR.__LIBRARY__.\DIRECTORY_SEPARATOR.$class.'.php';
+        $Pattern_file = __PATTERNS_LIB_DIR__.DIRECTORY_SEPARATOR.__LIBRARY__.DIRECTORY_SEPARATOR.$class.'.php';
 
         // if (! file_exists($Pattern_file)) {
 
