@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,6 +9,8 @@ namespace Mediatag\Modules\VideoInfo\helpers;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Utilities\Option;
+
+use function count;
 
 trait VideoQuery
 {
@@ -22,7 +25,7 @@ trait VideoQuery
                 $key              = MediaFile::getVideoKey($filename);
                 $file_array[$key] = $filename;
             }
-            $this->resultCount = \count($file_array);
+            $this->resultCount = count($file_array);
 
             return $file_array;
             //            utmdd( $file_array);
@@ -37,7 +40,6 @@ trait VideoQuery
         }
 
         $result = Mediatag::$dbconn->query($query);
-        
 
         foreach ($result as $_ => $row) {
             if ('markers' == $this->thumbType) {
@@ -46,20 +48,19 @@ trait VideoQuery
             }
             $file_array[$row['video_key']] = $row['file_name'];
         }
-        
-        $this->resultCount = \count($file_array);
+
+        $this->resultCount = count($file_array);
 
         return $file_array;
     }
 
     public function videoQuery($video_id = null, $search = null)
     {
-
         if ('info' == $this->thumbType) {
             return $this->InfoVideoQuery($video_id);
         }
         if ('markers' == $this->thumbType) {
-            return $this->MarkersVideoQuery($video_id,$search);
+            return $this->MarkersVideoQuery($video_id, $search);
         }
         $searchPath = ' AND fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
 
@@ -76,7 +77,7 @@ trait VideoQuery
         $where .= $searchPath;
 
         $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM ".$this->VideoDataTable." WHERE  Library = '".__LIBRARY__."' AND  ".$where;
-        
+
         return $query;
     }
 
@@ -102,7 +103,7 @@ trait VideoQuery
         $sql .= 'FROM '.$this->VideoFileTable.' f ';
         $sql .= 'LEFT OUTER JOIN '.$this->VideoDataTable.' i on f.video_key=i.video_key ';
         $sql .= " WHERE i.width  is null and f.library = '".__LIBRARY__."' ".$searchPath;
-    
+
         return $sql;
     }
 
@@ -123,12 +124,11 @@ trait VideoQuery
 
         $where .= ' AND f.video_key = i.video_key AND f.id = vm.video_id AND f.fullpath like \''.__CURRENT_DIRECTORY__.'%\' ';
         if (null !== $search) {
-            
             $where .= ' AND  vm.markerText like "'.$search.'%" ';
-            
         }
 
         $sql = 'SELECT '.$fields.' FROM '.$this->VideoDataTable.' vm, '.__MYSQL_VIDEO_FILE__.' f, '.__MYSQL_VIDEO_INFO__.' i WHERE '.$where.$order;
+
         return $sql;
     }
 }

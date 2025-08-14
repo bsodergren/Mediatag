@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -12,6 +13,12 @@ use Mediatag\Traits\Patterns\Network;
 use Mediatag\Traits\Patterns\Studio;
 use Mediatag\Traits\Patterns\Title;
 use Mediatag\Utilities\Strings;
+
+use function array_key_exists;
+use function count;
+use function is_array;
+
+use const PREG_SPLIT_NO_EMPTY;
 
 // include_once __DATA_LISTS__.'/NamesList.php';
 
@@ -115,7 +122,7 @@ class Patterns extends TagBuilder
             self::boot($this);
             $this->className  = $object->className;
             $this->video_name = $object->video_name;
-            $this->video_key = $object->video_key;
+            $this->video_key  = $object->video_key;
 
             $studio           = strtolower($object->getStudio());
             $this->studio_key = str_replace(' ', '', $studio);
@@ -172,11 +179,11 @@ class Patterns extends TagBuilder
     private static function classStudio($class)
     {
         $classparts = explode('\\', $class);
-        $classPath  = $classparts[\count($classparts) - 2];
+        $classPath  = $classparts[count($classparts) - 2];
 
         $className = end($classparts);
         $className = Strings::StudioName($className, false);
-        $parts     = preg_split('/(?=[A-Z])/', $className, -1, \PREG_SPLIT_NO_EMPTY);
+        $parts     = preg_split('/(?=[A-Z])/', $className, -1, PREG_SPLIT_NO_EMPTY);
         $className = implode(' ', $parts);
 
         return [$classPath, $className];
@@ -200,9 +207,9 @@ class Patterns extends TagBuilder
         $network = strtolower($network);
 
         // $this->getKeyName($studio);
-        if (\array_key_exists($studio, $regex)) {
+        if (array_key_exists($studio, $regex)) {
             // $studio = $studio;
-        } elseif (\array_key_exists($network, $regex)) {
+        } elseif (array_key_exists($network, $regex)) {
             $studio = $network;
         } else {
             $studio = 'default';
@@ -210,13 +217,13 @@ class Patterns extends TagBuilder
 
         $array = $regex[$studio];
 
-        if (!\array_key_exists($tag, $array)) {
+        if (!array_key_exists($tag, $array)) {
             $array = $regex['default'];
 
             return false;
         }
         $array = $array[$tag];
-        if (!\array_key_exists($key, $array)) {
+        if (!array_key_exists($key, $array)) {
             $array = $regex['default'];
             $array = $array[$tag];
         }
@@ -245,7 +252,7 @@ class Patterns extends TagBuilder
     public function getFilename($file)
     {
         // utminfo(func_get_args());
-    
+
         return $file;
     }
 
@@ -280,7 +287,7 @@ class Patterns extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        if (\is_array($arr)) {
+        if (is_array($arr)) {
             $studioArray[] = $key_studio;
             foreach ($arr as $studio) {
                 if ($key_studio == $studio) {

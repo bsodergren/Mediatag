@@ -17,6 +17,8 @@ use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerAwareTrait;
 use Symfony\Component\Console\Helper\ProgressBar;
 
+use function count;
+
 class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
@@ -32,8 +34,8 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
-             'ffmpeg.binaries'  => '/home/bjorn/bin/ffmpeg',
-                'ffprobe.binaries' => '/home/bjorn/bin/ffprobe'
+            'ffmpeg.binaries'     => '/home/bjorn/bin/ffmpeg',
+            'ffprobe.binaries'    => '/home/bjorn/bin/ffprobe',
         ];
         (new Filesystem())->mkdir($temp);
 
@@ -54,7 +56,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $points      = array_map(function ($n) { return round($n, 0); }, range(1, $videoRange, $videoRange / $videoSlides));
 
         $frames      = [];
-        $progressBar = new ProgressBar(Mediatag::$output, \count($points));
+        $progressBar = new ProgressBar(Mediatag::$output, count($points));
 
         $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing Preview</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
         $progressBar->setMessage($this->fileCount--, 'no');
@@ -80,7 +82,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         Mediatag::$output->writeln('');
 
         if (!empty($frames)) {
-            $durations = array_fill(0, \count($frames), 100);
+            $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.
             $gc = new GifCreator();

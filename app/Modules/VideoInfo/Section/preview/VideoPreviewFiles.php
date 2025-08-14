@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -12,10 +13,11 @@ use GifCreator\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 // use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
+
+use function count;
 
 class VideoPreviewFiles extends VideoPreview
 {
@@ -108,7 +110,7 @@ class VideoPreviewFiles extends VideoPreview
         // If we have frames that were successfully extracted.
         if (!empty($frames)) {
             // We show each frame for 100 ms.
-            $durations = array_fill(0, \count($frames), 100);
+            $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.
             $gc = new GifCreator();

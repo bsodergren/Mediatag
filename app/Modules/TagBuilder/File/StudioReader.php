@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -10,13 +11,16 @@ use Mediatag\Utilities\ScriptWriter;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
 
+use function array_key_exists;
+use function count;
+
 trait StudioReader
 {
     private function studioParse()
     {
-        $studio_dir = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__.'/'.__LIBRARY__);
-        $studio_dir = str_replace('/'.$this->getGenre().'/', '', $studio_dir);
-        $arr = explode('/', $studio_dir);
+        $studio_dir   = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__.'/'.__LIBRARY__);
+        $studio_dir   = str_replace('/'.$this->getGenre().'/', '', $studio_dir);
+        $arr          = explode('/', $studio_dir);
         $studio_array = [];
         foreach ($arr as $idx => $studio_string) {
             foreach (__SKIP_STUDIOS__ as $k) {
@@ -36,8 +40,8 @@ trait StudioReader
     {
         $json   = new jsonReader($this->videoData);
         $return = $json->studio();
-        if (\count($return) > 0) {
-            if (\array_key_exists('studio', $return)) {
+        if (count($return) > 0) {
+            if (array_key_exists('studio', $return)) {
                 $this->studio = $return['studio'];
             }
         }
@@ -49,7 +53,7 @@ trait StudioReader
 
             if (null !== $studio_array[0]) {
                 $this->studio = $studio_array[0];
-                if (\array_key_exists('1', $studio_array)) {
+                if (array_key_exists('1', $studio_array)) {
                     $this->studio = $studio_array[1];
                 }
                 // $this->network = "Pornhub";
@@ -72,7 +76,7 @@ trait StudioReader
 
         // UTMlog::Logger('File Studio Dir', $matches);
         if (true == $success) {
-            if (\array_key_exists(2, $matches)) {
+            if (array_key_exists(2, $matches)) {
                 $network = $matches[1];
                 $studio  = $matches[2];
                 foreach (__SKIP_STUDIOS__ as $k) {
@@ -112,7 +116,7 @@ trait StudioReader
         $classOption = [];
         if (null !== $options) {
             $opt = explode('=', $options);
-            if (\count($opt) > 1) {
+            if (count($opt) > 1) {
                 $classOption = [
                     'Studio'      => $opt[1],
                     'ExtendClass' => $this->getStudioClass($opt[1]),

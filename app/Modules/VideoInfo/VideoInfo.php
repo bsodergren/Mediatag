@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,11 +7,14 @@
 namespace Mediatag\Modules\VideoInfo;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
-use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
-use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
+use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
+use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
 
+use function array_key_exists;
+use function count;
+use function sprintf;
 
 class VideoInfo
 {
@@ -72,6 +76,7 @@ class VideoInfo
         }
 
         $this->VideoInfo = $this->getVideoDetails();
+
         return $this->saveVideoDetails();
     }
 
@@ -81,8 +86,8 @@ class VideoInfo
 
         $file_array = $this->getDbList();
         $this->getMessageLen($file_array);
-        if (\count($file_array) > 0) {
-            $this->fileCount = \count($file_array);
+        if (count($file_array) > 0) {
+            $this->fileCount = count($file_array);
             Mediatag::$output->writeln('<info>Found '.$this->fileCount.' files</info>');
 
             // $this->maxLen = 0;
@@ -105,8 +110,6 @@ class VideoInfo
         }
     }
 
-   
-
     public function save()
     {
         // utminfo(func_get_args());
@@ -114,12 +117,12 @@ class VideoInfo
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
 
-        if (\array_key_exists('duration', $this->VideoInfo)) {
+        if (array_key_exists('duration', $this->VideoInfo)) {
             if (null === $this->VideoInfo['duration']) {
                 return false;
             }
         }
-        if (\array_key_exists('format', $this->VideoInfo)) {
+        if (array_key_exists('format', $this->VideoInfo)) {
             if (null === $this->VideoInfo['format']) {
                 return false;
             }
@@ -152,14 +155,13 @@ class VideoInfo
         Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
+
     public function clearDBValues()
     {
         $this->doClean(true);
         Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
-
-    
 
     public static function videoDuration($duration, $round = 1000)
     {
@@ -174,6 +176,6 @@ class VideoInfo
         $mins    = $hrs % 60;
         $hrs /= 60;
 
-        return \sprintf('%02d:%02d:%02d.00', $hrs, $mins, $secs);
+        return sprintf('%02d:%02d:%02d.00', $hrs, $mins, $secs);
     }
 }

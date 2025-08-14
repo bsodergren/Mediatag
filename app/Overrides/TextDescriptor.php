@@ -1,12 +1,6 @@
 <?php
-
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Command like Metatag writer for video files.
  */
 
 namespace Symfony\Component\Console\Descriptor;
@@ -19,6 +13,16 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 
+use function count;
+use function is_array;
+use function is_string;
+use function sprintf;
+use function strlen;
+
+use const INF;
+use const JSON_UNESCAPED_SLASHES;
+use const JSON_UNESCAPED_UNICODE;
+
 /**
  * Text descriptor.
  *
@@ -30,16 +34,16 @@ class TextDescriptor extends Descriptor
 {
     protected function describeInputArgument(InputArgument $argument, array $options = []): void
     {
-        if (null !== $argument->getDefault() && (!\is_array($argument->getDefault()) || \count($argument->getDefault()))) {
-            $default = \sprintf('<comment> [default: %s]</comment>', $this->formatDefaultValue($argument->getDefault()));
+        if (null !== $argument->getDefault() && (!is_array($argument->getDefault()) || count($argument->getDefault()))) {
+            $default = sprintf('<comment> [default: %s]</comment>', $this->formatDefaultValue($argument->getDefault()));
         } else {
             $default = '';
         }
 
-        $totalWidth = $options['total_width'] ?? Helper::width($argument->getName());
-        $spacingWidth = $totalWidth - \strlen($argument->getName());
+        $totalWidth   = $options['total_width'] ?? Helper::width($argument->getName());
+        $spacingWidth = $totalWidth - strlen($argument->getName());
 
-        $this->writeText(\sprintf('  <info>%s</info>  %s%s%s',
+        $this->writeText(sprintf('  <info>%s</info>  %s%s%s',
             $argument->getName(),
             str_repeat(' ', $spacingWidth),
             // + 4 = 2 spaces before <info>, 2 spaces after </info>
@@ -50,8 +54,8 @@ class TextDescriptor extends Descriptor
 
     protected function describeInputOption(InputOption $option, array $options = []): void
     {
-        if ($option->acceptValue() && null !== $option->getDefault() && (!\is_array($option->getDefault()) || \count($option->getDefault()))) {
-            $default = \sprintf('<comment> [default: %s]</comment>', $this->formatDefaultValue($option->getDefault()));
+        if ($option->acceptValue() && null !== $option->getDefault() && (!is_array($option->getDefault()) || count($option->getDefault()))) {
+            $default = sprintf('<comment> [default: %s]</comment>', $this->formatDefaultValue($option->getDefault()));
         } else {
             $default = '';
         }
@@ -66,14 +70,14 @@ class TextDescriptor extends Descriptor
         }
 
         $totalWidth = $options['total_width'] ?? $this->calculateTotalWidthForOptions([$option]);
-        $synopsis = \sprintf('%s%s',
-            $option->getShortcut() ? \sprintf('-%s, ', $option->getShortcut()) : '    ',
-            \sprintf($option->isNegatable() ? '--%1$s|--no-%1$s' : '--%1$s%2$s', $option->getName(), $value)
+        $synopsis   = sprintf('%s%s',
+            $option->getShortcut() ? sprintf('-%s, ', $option->getShortcut()) : '    ',
+            sprintf($option->isNegatable() ? '--%1$s|--no-%1$s' : '--%1$s%2$s', $option->getName(), $value)
         );
 
         $spacingWidth = $totalWidth - Helper::width($synopsis);
 
-        $this->writeText(\sprintf('  <info>%s</info>  %s%s%s%s',
+        $this->writeText(sprintf('  <info>%s</info>  %s%s%s%s',
             $synopsis,
             str_repeat(' ', $spacingWidth),
             // + 4 = 2 spaces before <info>, 2 spaces after </info>
@@ -108,7 +112,7 @@ class TextDescriptor extends Descriptor
 
             $this->writeText('<comment>Options:</comment>', $options);
             foreach ($definition->getOptions() as $option) {
-                if (\strlen($option->getShortcut() ?? '') > 1) {
+                if (strlen($option->getShortcut() ?? '') > 1) {
                     $laterOptions[] = $option;
                     continue;
                 }
@@ -160,13 +164,13 @@ class TextDescriptor extends Descriptor
     protected function describeApplication(Application $application, array $options = []): void
     {
         $describedNamespace = $options['namespace'] ?? null;
-        $description = new ApplicationDescription($application, $describedNamespace);
+        $description        = new ApplicationDescription($application, $describedNamespace);
 
         if (isset($options['raw_text']) && $options['raw_text']) {
             $width = $this->getColumnWidth($description->getCommands());
 
             foreach ($description->getCommands() as $command) {
-                $this->writeText(\sprintf("%-{$width}s %s", $command->getName(), $command->getDescription()), $options);
+                $this->writeText(sprintf("%-{$width}s %s", $command->getName(), $command->getDescription()), $options);
                 $this->writeText("\n");
             }
         } else {
@@ -182,7 +186,7 @@ class TextDescriptor extends Descriptor
             $this->writeText("\n");
             $this->writeText("\n");
 
-            $commands = $description->getCommands();
+            $commands   = $description->getCommands();
             $namespaces = $description->getNamespaces();
             if ($describedNamespace && $namespaces) {
                 // make sure all alias commands are included when describing a specific namespace
@@ -196,7 +200,7 @@ class TextDescriptor extends Descriptor
             $width = $this->getColumnWidth(array_merge(...array_values(array_map(fn ($namespace) => array_intersect($namespace['commands'], array_keys($commands)), array_values($namespaces)))));
 
             if ($describedNamespace) {
-                $this->writeText(\sprintf('<comment>Available commands for the "%s" namespace:</comment>', $describedNamespace), $options);
+                $this->writeText(sprintf('<comment>Available commands for the "%s" namespace:</comment>', $describedNamespace), $options);
             } else {
                 $this->writeText('<comment>Available commands:</comment>', $options);
             }
@@ -215,10 +219,10 @@ class TextDescriptor extends Descriptor
 
                 foreach ($namespace['commands'] as $name) {
                     $this->writeText("\n");
-                    $spacingWidth = $width - Helper::width($name);
-                    $command = $commands[$name];
+                    $spacingWidth   = $width - Helper::width($name);
+                    $command        = $commands[$name];
                     $commandAliases = $name === $command->getName() ? $this->getCommandAliasesText($command) : '';
-                    $this->writeText(\sprintf('  <info>%s</info>%s%s', $name, str_repeat(' ', $spacingWidth), $commandAliases.$command->getDescription()), $options);
+                    $this->writeText(sprintf('  <info>%s</info>%s%s', $name, str_repeat(' ', $spacingWidth), $commandAliases.$command->getDescription()), $options);
                 }
             }
 
@@ -239,7 +243,7 @@ class TextDescriptor extends Descriptor
      */
     private function getCommandAliasesText(Command $command): string
     {
-        $text = '';
+        $text    = '';
         $aliases = $command->getAliases();
 
         if ($aliases) {
@@ -254,21 +258,21 @@ class TextDescriptor extends Descriptor
      */
     private function formatDefaultValue(mixed $default): string
     {
-        if (\INF === $default) {
+        if (INF === $default) {
             return 'INF';
         }
 
-        if (\is_string($default)) {
+        if (is_string($default)) {
             $default = OutputFormatter::escape($default);
-        } elseif (\is_array($default)) {
+        } elseif (is_array($default)) {
             foreach ($default as $key => $value) {
-                if (\is_string($value)) {
+                if (is_string($value)) {
                     $default[$key] = OutputFormatter::escape($value);
                 }
             }
         }
 
-        return str_replace('\\\\', '\\', json_encode($default, \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE));
+        return str_replace('\\\\', '\\', json_encode($default, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
     }
 
     /**

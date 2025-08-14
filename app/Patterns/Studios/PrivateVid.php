@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -8,6 +9,11 @@ namespace Mediatag\Patterns\Studios;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
+
+use function array_key_exists;
+use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 class PrivateVid extends Patterns
 {
@@ -36,17 +42,17 @@ class PrivateVid extends Patterns
     {
         // utminfo(func_get_args());
         $videoData = new MediaFile($file);
-        $path      = \dirname($file);
+        $path      = dirname($file);
         $filename  = basename($file);
 
         $dbData = new TagReader();
         $tags   = $dbData->loadVideo($videoData->get())->getDbValues();
         // utmdd(__LINE__,$tags ,$videoData->get());
         if (null !== $tags) {
-            if (\array_key_exists('title', $tags)) {
+            if (array_key_exists('title', $tags)) {
                 $artist = '';
                 $title  = $tags['title'];
-                if (\array_key_exists('artist', $tags)) {
+                if (array_key_exists('artist', $tags)) {
                     $artist = $tags['artist'];
                     $artist = str_replace(' ', '_', $artist);
 
@@ -65,7 +71,7 @@ class PrivateVid extends Patterns
 
                 $filename = $title.'-'.$artist.$output_array[3];
 
-                $file = $path.\DIRECTORY_SEPARATOR.$filename;
+                $file = $path.DIRECTORY_SEPARATOR.$filename;
             }
         }
 

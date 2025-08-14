@@ -7,7 +7,6 @@
 namespace Mediatag\Modules\VideoInfo\Section;
 
 use FFMpeg\FFProbe;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\VideoInfo;
@@ -60,7 +59,7 @@ class Thumbnail extends VideoInfo
         $this->video_name = basename($this->video_file);
         $this->video_path = dirname($this->video_file);
 
-        //$img_name = basename($this->video_name, '.mp4').'.jpg';
+        // $img_name = basename($this->video_name, '.mp4').'.jpg';
         $img_name = basename($this->videoToThumb($this->video_file));
         // $img_name     = Strings::cleanFileName($img_name,true);
         $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
@@ -72,9 +71,9 @@ class Thumbnail extends VideoInfo
 
         if (!file_exists($img_file)) {
             (new Filesystem())->mkdir($img_location);
-            $ffprobe  = FFProbe::create(array(
+            $ffprobe = FFProbe::create([
                 'ffmpeg.binaries'  => '/home/bjorn/bin/ffmpeg',
-                'ffprobe.binaries' => '/home/bjorn/bin/ffprobe'));
+                'ffprobe.binaries' => '/home/bjorn/bin/ffprobe']);
             $duration = $ffprobe->streams($this->video_file)->videos()->first()->get('duration');
 
             // utmdump($this->video_file,$ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));

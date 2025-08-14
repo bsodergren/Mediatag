@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,9 +7,10 @@
 namespace Mediatag\Modules\VideoInfo\Section;
 
 // use Intervention\Image\Image;
-use Mediatag\Modules\VideoInfo\VideoInfo;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+
+use function dirname;
 
 class VideoPreview extends VideoInfo
 {
@@ -65,7 +67,7 @@ class VideoPreview extends VideoInfo
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         }
 
-        $this->preview_path = \dirname($this->previewName);
+        $this->preview_path = dirname($this->previewName);
         (new Filesystem())->mkdir($this->preview_path);
 
         return $this->build_video_thumbnail();

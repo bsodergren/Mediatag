@@ -1,9 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Patterns\Studios;
+
+use function array_key_exists;
 
 const DOGHOUSEDIGITAL_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
@@ -35,7 +38,7 @@ class DoghouseDigital extends MileHighMedia
             $success = preg_match($regex, $this->video_name, $output_array);
 
             if (0 != $success) {
-                if (!\array_key_exists($this->gettitleMatch(), $output_array)) {
+                if (!array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
 

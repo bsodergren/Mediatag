@@ -49,7 +49,6 @@ class TagBuilder
             // utmdump($updates);
 
             // }
-           
 
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
@@ -65,7 +64,6 @@ class TagBuilder
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
-            
         }
         // if (null !== $FileUpdates) {
         //     $updates = $FileUpdates;
@@ -95,7 +93,7 @@ class TagBuilder
             $videoInfo['updateTags']  = $updates;
             $videoInfo['currentTags'] = [];
         } else {
-            $current = $this->ReaderObj->getMetaValues();
+            $current                  = $this->ReaderObj->getMetaValues();
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ('studio' == $tag) {
@@ -105,8 +103,6 @@ class TagBuilder
             $videoInfo['updateTags'] = $this->compareTags($current, $updates);
         }
         //  utmdd($videoInfo);
-
-
 
         return $videoInfo;
     }
@@ -277,6 +273,7 @@ class TagBuilder
                 unset($updates[$tag]);
             }
         }
+
         return $updates;
     }
 }

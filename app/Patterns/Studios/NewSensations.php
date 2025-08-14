@@ -48,10 +48,9 @@ class NewSensations extends Patterns
         'frombothends'               => 'from both ends',
         '2headsrbetterthan1'         => '2 heads r better than 1',
         'MyWifesFirstBlowBang'       => 'My Wifes First BlowBang',
-        'hotwiferubdown' => 'hotwife rub down',
-        'intheroomshesmyhotwife'=>'in the room shes my hotwife',
-        'my-hotwifes-gangbang' => 'my hotwifes gangbang',
-
+        'hotwiferubdown'             => 'hotwife rub down',
+        'intheroomshesmyhotwife'     => 'in the room shes my hotwife',
+        'my-hotwifes-gangbang'       => 'my hotwifes gangbang',
     ];
 
     public function metaStudio()

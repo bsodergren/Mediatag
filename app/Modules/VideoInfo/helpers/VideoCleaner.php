@@ -1,15 +1,19 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\VideoInfo\helpers;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use UTM\Utilities\Option;
+
+use function count;
+use function dirname;
 
 trait VideoCleaner
 {
@@ -19,9 +23,9 @@ trait VideoCleaner
 
         $missing = array_diff($fileSearch, $dbList);
 
-        if (\count($missing) > 0) {
+        if (count($missing) > 0) {
             $this->getMessageLen($missing);
-            $fileCount = \count($missing);
+            $fileCount = count($missing);
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
             foreach ($missing as $k => $file) {
                 $videoFile = $this->thumbToVideo($file);
@@ -42,9 +46,9 @@ trait VideoCleaner
     {
         Mediatag::$log->notice('Method {0}', [__METHOD__]);
 
-        if (\count($missing_file) > 0) {
+        if (count($missing_file) > 0) {
             $this->getMessageLen($missing_file);
-            $fileCount = \count($missing_file);
+            $fileCount = count($missing_file);
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing_file as $k => $file) {
@@ -62,9 +66,9 @@ trait VideoCleaner
     {
         Mediatag::$log->notice('Method {0}', [__METHOD__]);
 
-        if (\count($missing) > 0) {
+        if (count($missing) > 0) {
             $this->getMessageLen($missing);
-            $fileCount = \count($missing);
+            $fileCount = count($missing);
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing as $k => $file) {
@@ -98,8 +102,8 @@ trait VideoCleaner
         if (Option::isTrue('yes')) {
             $delete = true;
         }
-// utmdd($fileSearch );
-if (true === $delete) {
+        // utmdd($fileSearch );
+        if (true === $delete) {
             foreach ($fileSearch as $k => $file) {
                 unlink($file);
                 unset($fileSearch[$k]);
@@ -110,9 +114,9 @@ if (true === $delete) {
             $missing_file,
             $missing_thumb] = $this->getExistingList();
 
-            // utmdd( [$dbList,
-            // $missing_file,
-            // $missing_thumb]);
+        // utmdd( [$dbList,
+        // $missing_file,
+        // $missing_thumb]);
 
         $this->cleanMissing($fileSearch, $dbList);
         $this->cleanMissingFile($missing_file);
@@ -147,8 +151,7 @@ if (true === $delete) {
         $query  = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM ".$this->VideoDataTable." WHERE Library = '".__LIBRARY__."' AND  ".$this->getTableField()." is not null  AND fullpath like '".__CURRENT_DIRECTORY__."%' ";
         $result = Mediatag::$dbconn->query($query);
 
-        foreach ($result as $_ => $row)
-        {
+        foreach ($result as $_ => $row) {
             $thumb = $this->videoToThumb($row['file_name']);
 
             // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
@@ -204,7 +207,7 @@ if (true === $delete) {
             return 0;
         }
         $newFile = str_replace('thumbnails', 'backup', $file);
-        $path    = \dirname($newFile);
+        $path    = dirname($newFile);
 
         if (!is_dir($path)) {
             (new SFilesystem())->mkdir($path);

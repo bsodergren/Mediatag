@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -243,6 +244,7 @@ class Reader extends TagReader
             $res = $this->getFileTag('Title');
             if (false !== $res) {
                 $this->title = $res;
+
                 return $res;
             }
         }
@@ -278,9 +280,8 @@ class Reader extends TagReader
         // UTMlog::Logger('method', $method);
 
         if (null !== $this->PatternObject) {
-
             $result = $this->PatternObject->{$method}();
-            $use = 1;
+            $use    = 1;
             //  } else {
             //     $result =  $this->{$method}();
         }

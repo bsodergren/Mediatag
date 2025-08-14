@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -7,6 +8,9 @@ namespace Mediatag\Modules\TagBuilder\DB;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\TagReader;
+
+use function array_key_exists;
+use function count;
 
 class Reader extends TagReader
 {
@@ -64,14 +68,15 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // Mediatag::$log->notice('Getting tag info for {tag}', ['tag'=>$tag]);
-        if (\array_key_exists($tag, $this->tag_array)) {
+        if (array_key_exists($tag, $this->tag_array)) {
             if ('studio' == $tag) {
-                if (\array_key_exists('network', $this->tag_array)) {
-                    $this->tag_array[$tag] .= '/' . $this->tag_array['network'];
+                if (array_key_exists('network', $this->tag_array)) {
+                    $this->tag_array[$tag] .= '/'.$this->tag_array['network'];
                 }
             }
 
             $value = $this->tag_array[$tag];
+
             return $value;
         }
 
@@ -82,24 +87,20 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-
-
-  $query      = "SELECT m.title as title ,
+        $query = "SELECT m.title as title ,
   m.artist as artist ,
   m.genre as genre ,
   m.studio as studio ,
   m.network as network ,
-  m.keyword as keyword 
-  FROM  mediatag_video_metadata m WHERE m.video_key = '" . $key . "'";
+  m.keyword as keyword
+  FROM  mediatag_video_metadata m WHERE m.video_key = '".$key."'";
 
-
-
-        //$query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
+        // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
         // utmdd($query);
 
-        $result     = Mediatag::$dbconn->query($query);
-        $info       = null;
-        if (1 != \count($result)) {
+        $result = Mediatag::$dbconn->query($query);
+        $info   = null;
+        if (1 != count($result)) {
             return null;
         }
 
@@ -111,6 +112,7 @@ class Reader extends TagReader
                 $info[$key]['metatags'][$tag] = $result[0][$tag];
             }
         }
+
         return $info;
     }
 }

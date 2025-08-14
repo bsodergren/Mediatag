@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -13,6 +14,8 @@ use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Traits\MetaTags;
 use UTM\Utilities\Option;
+
+use function array_key_exists;
 
 class TagReader
 {
@@ -50,14 +53,13 @@ class TagReader
 
         $meta = $this->getMetaValues();
         if (Option::isTrue('add') || Option::isTrue('drop')) {
-
             if (null !== $meta['genre']) {
                 $meta_array = explode(',', $meta['genre']);
             }
 
             if (Option::isTrue('add')) {
                 foreach ($value as $i => $v) {
-                    if (str_contains($v, ",")) {
+                    if (str_contains($v, ',')) {
                         $parts = explode(',', $v);
                         foreach ($parts as $ii => $vv) {
                             $meta_array[] = $vv;
@@ -146,6 +148,7 @@ class TagReader
     {
         // utminfo(func_get_args());
         $file = new fileReader($this->videoData);
+
         return $file->getTagArray();
     }
 
@@ -162,7 +165,6 @@ class TagReader
     {
         // utminfo(func_get_args());
 
-
         $db = new DbReader($this->videoData);
         if (null === $db->tag_array) {
             return null;
@@ -175,13 +177,10 @@ class TagReader
     {
         // utminfo(func_get_args());
         foreach (__META_TAGS__ as $tag) {
-
             $this->{$tag}();
 
-            
-
-            if (\array_key_exists($tag, $this->tag_array)) {
-                Mediatag::$log->notice("Metatags {tag} => '{value}'",['tag'=>$tag,'value'=>$this->tag_array[$tag]]);
+            if (array_key_exists($tag, $this->tag_array)) {
+                Mediatag::$log->notice("Metatags {tag} => '{value}'", ['tag'=>$tag, 'value'=>$this->tag_array[$tag]]);
 
                 if (null !== $this->tag_array[$tag]) {
                     if (true === $clean) {
@@ -191,7 +190,7 @@ class TagReader
             }
         }
 
-        Mediatag::$log->notice("Metatag '{value}'",['value'=>$this->tag_array]);
+        Mediatag::$log->notice("Metatag '{value}'", ['value'=>$this->tag_array]);
 
         return $this->tag_array;
     }

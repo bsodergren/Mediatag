@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -7,9 +8,10 @@ namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
-use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Utilities\Strings;
+
+use function array_key_exists;
 
 class VideoTags extends VideoInfo
 {
@@ -36,11 +38,11 @@ class VideoTags extends VideoInfo
 
         $tagList = $meta->getTagArray();
 
-        if (\array_key_exists('title', $tagList)) {
+        if (array_key_exists('title', $tagList)) {
             $tagList['title'] = Strings::clean($tagList['title']);
         }
 
-        if (\array_key_exists('studio', $tagList)) {
+        if (array_key_exists('studio', $tagList)) {
             if (str_contains($tagList['studio'], '/')) {
                 $studioArr         = explode('/', $tagList['studio']);
                 $tagList['studio'] = $studioArr[0];

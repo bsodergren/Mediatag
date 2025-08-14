@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,13 +7,15 @@
 namespace Mediatag\Modules\VideoInfo\Section;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Utilities\Strings;
-use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\VideoInfo;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Traits\MediaFFmpeg;
+use Mediatag\Utilities\Strings;
+
+use function count;
+use function dirname;
 
 class Markers extends VideoInfo
 {
@@ -40,8 +43,7 @@ class Markers extends VideoInfo
 
     public $thumbExt = '.jpg';
     public $thumbDir = __INC_WEB_CHAPTER_DIR__;
-public $video_markers;
-
+    public $video_markers;
 
     // public function clean()
     // {
@@ -137,7 +139,7 @@ public $video_markers;
         // utminfo(func_get_args());
 
         $this->video_name = basename($this->video_file);
-        $this->video_path = \dirname($this->video_file);
+        $this->video_path = dirname($this->video_file);
         foreach ($this->video_markers as $timeCode) {
             foreach ($timeCode as $id => $time) {
                 $img_name     = basename($this->video_name, '.mp4').'_'.$time.'.jpg';
@@ -160,16 +162,13 @@ public $video_markers;
         return $thumbnailImages;
     }
 
-
-
-
     public function getVideoInfo($key, $row)
     {
         // utminfo(func_get_args());
 
-        $this->video_file    = $row['filename'];
+        $this->video_file      = $row['filename'];
         $this->video_markers[] = $row['timeCode'];
-        $this->video_key     = $key;
+        $this->video_key       = $key;
 
         $this->VideoInfo = $this->getVideoDetails();
 
@@ -183,7 +182,7 @@ public $video_markers;
 
         $file_array = $this->getDbList();
         utmdump($file_array);
-        if (\count($file_array) > 0) {
+        if (count($file_array) > 0) {
             foreach ($file_array as $key => $row) {
                 $file = $row['filename'];
                 if (file_exists($file)) {

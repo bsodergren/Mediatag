@@ -1,15 +1,17 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Modules\VideoInfo\Section;
 
-use Mediatag\Utilities\Strings;
 use Mediatag\Modules\Database\StorageDB;
-use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\VideoInfo;
+use Mediatag\Utilities\Strings;
 use Symfony\Component\Filesystem\Filesystem;
+
+use function array_key_exists;
 
 class Gallery extends VideoInfo
 {
@@ -34,13 +36,13 @@ class Gallery extends VideoInfo
         $studio_dir = (new Filesystem())->makePathRelative($vdata['video_path'], __PLEX_HOME__.'/'.__LIBRARY__);
         $studio_dir = trim($studio_dir, '/');
         $arr        = explode('/', $studio_dir);
-        if (\array_key_exists(0, $arr)) {
+        if (array_key_exists(0, $arr)) {
             $tagList['network'] = Strings::clean($arr[0]);
         }
-        if (\array_key_exists(1, $arr)) {
+        if (array_key_exists(1, $arr)) {
             $tagList['studio'] = Strings::clean($arr[1]);
         }
-        if (\array_key_exists(2, $arr)) {
+        if (array_key_exists(2, $arr)) {
             $tagList['genre'] = Strings::clean($arr[2]);
         }
 
@@ -48,7 +50,7 @@ class Gallery extends VideoInfo
         //     $tagList['title'] = Strings::clean($tagList['title']);
         // }
 
-        if (!\array_key_exists('studio', $tagList)) {
+        if (!array_key_exists('studio', $tagList)) {
             $tagList['studio'] = $tagList['network'];
             unset($tagList['network']);
         }

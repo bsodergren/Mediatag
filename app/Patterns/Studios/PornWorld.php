@@ -6,7 +6,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Camoo\Config\Parser\Json;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -19,6 +18,8 @@ use function array_slice;
 use function count;
 
 use const CASE_LOWER;
+use const DIRECTORY_SEPARATOR;
+use const JSON_PRETTY_PRINT;
 use const PREG_SPLIT_NO_EMPTY;
 
 const PORNWORLD_REGEX_COMMON = '/(FS[0-9]+|GP[0-9]+)_(.*)_([HDP0-9]+.mp4)/i';
@@ -198,10 +199,10 @@ class PornWorld extends Patterns
 
     public function getTitle()
     {
-        $key  = $this->video_name."_".__FUNCTION__;
-        
-        $name = MediaCache::get($key);
- $cache_file = __STUDIO_CACHE_DIR__.DIRECTORY_SEPARATOR.$this->video_key.".js";
+        $key = $this->video_name.'_'.__FUNCTION__;
+
+        $name       = MediaCache::get($key);
+        $cache_file = __STUDIO_CACHE_DIR__.DIRECTORY_SEPARATOR.$this->video_key.'.js';
         if (false === $name) {
             // utmdd(preg_match('/(GP[0-9]+)_.*/', $this->video_name, $output_array));
             if (preg_match('/(GP[0-9]+)?(.*)_([0-9HDP]+.mp4)/', $this->video_name, $output_array)) {
@@ -214,27 +215,24 @@ class PornWorld extends Patterns
                     $search = str_replace('-_', '', $search);
                     $search = str_replace('_', ' ', $search);
                     // utmdump($search);
-                    
 
-                    $pcs   = explode(' ', $search);
+                    $pcs = explode(' ', $search);
 
-                    $words = array_slice($pcs, 0, 3);
-                     $matchwords = array_slice($pcs, 0, 5);
+                    $words      = array_slice($pcs, 0, 3);
+                    $matchwords = array_slice($pcs, 0, 5);
 
                     $search = strtolower(implode('+', $words));
 
                     // $search = ($search);
                 }
-// $url = 'https://pornbox.com/application/videos/search/'.$search.'/p1';
-$url = 'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=-1';
-https://pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
+                // $url = 'https://pornbox.com/application/videos/search/'.$search.'/p1';
+                $url = 'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=-1';
+                https:// pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
 
-                $content = MediaScraper::getUrl($url);
-
-              
+                                $content = MediaScraper::getUrl($url);
 
                 //   utmdump($url);
-// utmdd(array_keys($content['content']));
+                // utmdd(array_keys($content['content']));
                 if (array_key_exists('strict_contents', $content['content'])) {
                     $name = $content['content']['strict_contents'][0]['name'];
                     $id   = $content['content']['strict_contents'][0]['id'];
@@ -244,39 +242,29 @@ https://pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased
                     $videocontent = MediaScraper::getUrl('https://pornbox.com/contents/'.$id);
                     unset($videocontent['gallery']);
                     unset($videocontent['screenshots']);
-                    
-                      file_put_contents( $cache_file ,
- json_encode($videocontent,JSON_PRETTY_PRINT));
 
-
-
+                    file_put_contents($cache_file,
+                        json_encode($videocontent, JSON_PRETTY_PRINT));
                 } else {
-
- 
                     $fileTitle = strtolower(implode(' ', $matchwords));
 
-                    foreach($content['content']['contents'] as $id=>$video)
-                    {
-                        $search = str_replace([' -',':'], '', $video['scene_name']);
+                    foreach ($content['content']['contents'] as $id=>$video) {
+                        $search = str_replace([' -', ':'], '', $video['scene_name']);
                         // utmdump([strtolower($search),$fileTitle,str_contains(strtolower($search),$fileTitle)]);
 
-                        if(str_contains(strtolower($search),$fileTitle)) {
+                        if (str_contains(strtolower($search), $fileTitle)) {
+                            // mkdir(__STUDIO_CACHE_DIR__, 0777, true);
 
-                           
-                                        // mkdir(__STUDIO_CACHE_DIR__, 0777, true);
-
-                            file_put_contents( $cache_file, json_encode($video,JSON_PRETTY_PRINT));
+                            file_put_contents($cache_file, json_encode($video, JSON_PRETTY_PRINT));
 
                             $name = $video['scene_name'];
                             break;
                         }
-                        
                     }
-//                    utmdd($video);
+                    //                    utmdd($video);
                 }
                 if (false === $name) {
                     $name = $this->oldTitle();
-                   
                 }
             } else {
                 $name = $this->oldTitle();
@@ -287,14 +275,15 @@ https://pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased
                 }
             }
         }
-//  utmdump($name);
+
+        //  utmdump($name);
         return $name;
     }
 
     public function oldTitle()
     {
         $regex = $this->getTitleRegex();
-$name = null;
+        $name  = null;
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
 
@@ -309,7 +298,7 @@ $name = null;
                 $title    = str_replace('_s_', 's_', $title);
                 $title    = str_replace($this->getTitleDelim(), ' ', $title);
                 $pretitle = $title;
-                //$title    = (new Javascript($video_key))->read($title);
+                // $title    = (new Javascript($video_key))->read($title);
                 if ('' == $title) {
                     $name = null;
                 }

@@ -1,9 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Patterns\Studios;
+
+use const DIRECTORY_SEPARATOR;
 
 const MHBHM_REGEX_COMMON = '/MHBHM[_se0-9]+?([a-zA-Z0-9]{4,})?-([_a-zA-Z]{1,})\_[0-9pkm\.]{1,}/i';
 
@@ -129,7 +132,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
             $name = str_replace('_-', '-', $name);
             if ($name != $filename) {
-                return $path.\DIRECTORY_SEPARATOR.$name;
+                return $path.DIRECTORY_SEPARATOR.$name;
             }
         }
 

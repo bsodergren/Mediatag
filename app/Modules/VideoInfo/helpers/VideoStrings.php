@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -6,6 +7,10 @@
 namespace Mediatag\Modules\VideoInfo\helpers;
 
 use Mediatag\Utilities\Strings;
+
+use function strlen;
+
+use const STR_PAD_LEFT;
 
 trait VideoStrings
 {
@@ -21,7 +26,7 @@ trait VideoStrings
     public function getMessageLen($file_array)
     {
         foreach ($file_array as $file) {
-            $fileLen = \strlen(basename($file, '.mp4'));
+            $fileLen = strlen(basename($file, '.mp4'));
             if ($this->fileLen < $fileLen) {
                 $this->fileLen = $fileLen;
             }
@@ -42,7 +47,7 @@ trait VideoStrings
 
     public function printNo($int, $space = null)
     {
-        $int = str_pad($int, 4, ' ', \STR_PAD_LEFT);
+        $int = str_pad($int, 4, ' ', STR_PAD_LEFT);
 
         return '<comment>'.$int.'</comment> '.$space;
     }
@@ -54,12 +59,13 @@ trait VideoStrings
         return $this->getText().' for '.$this->setMessage($this->video_file);
     }
 
-
-    public function getTableField(){
+    public function getTableField()
+    {
         $thumbType = $this->thumbType;
         if ('markers' == $this->thumbType) {
             $thumbType = 'thumbnail';
-        }      
+        }
+
         return $thumbType;
     }
 }

@@ -16,6 +16,9 @@ use Nette\Utils\FileSystem;
 use Symfony\Component\Panther\Client;
 use UTM\Bundle\Monolog\UTMLog;
 
+use function array_key_exists;
+use function is_array;
+
 class Reader extends TagReader
 {
     public $tag_array = [];
@@ -58,7 +61,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $this->title();
-        if (\array_key_exists('title', $this->tag_array)) {
+        if (array_key_exists('title', $this->tag_array)) {
             $string                    = $this->tag_array['title'];
             $string                    = $this->matchArtist($string);
             $this->tag_array['artist'] = $string;
@@ -127,7 +130,7 @@ class Reader extends TagReader
                 ['extractor'],
                 [
                     'exclude' => ['PornHub'],
-                    'rename' => ['NubilesPorn' => 'Nubiles'],
+                    'rename'  => ['NubilesPorn' => 'Nubiles'],
                 ]
             );
         }
@@ -135,7 +138,7 @@ class Reader extends TagReader
 
     private function getJsonValue($tag, $keyList = [], $options = [])
     {
-        if (!\is_array($keyList)) {
+        if (!is_array($keyList)) {
             $keyList[] = $keyList;
         }
 
@@ -143,7 +146,7 @@ class Reader extends TagReader
             if ('artist' == $tag) {
                 // utmdump(['artist', $this->json_array['cast']]);
             }
-            if (\array_key_exists($json_key, $this->json_array)) {
+            if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ('studio' == $tag) {
                     // utmdump([$value, $json_key, $tag]);
@@ -153,7 +156,7 @@ class Reader extends TagReader
                     $value         = array_merge($value, $keyword_value);
                 }
 
-                if (\is_array($value)) {
+                if (is_array($value)) {
                     $value = implode(',', $value);
                 } else {
                     // if ('studio' == $tag) {
@@ -164,13 +167,13 @@ class Reader extends TagReader
                 $this->tag_array[$tag] = $value;
                 // utmdd($this->tag_array[$tag]);
 
-                if (\array_key_exists('exclude', $options)) {
+                if (array_key_exists('exclude', $options)) {
                     foreach ($options['exclude'] as $string) {
                         $this->tag_array[$tag] = str_replace($string, '', $this->tag_array[$tag]);
                     }
                 }
 
-                if (\array_key_exists('rename', $options)) {
+                if (array_key_exists('rename', $options)) {
                     foreach ($options['rename'] as $key => $string) {
                         $this->tag_array[$tag] = str_replace($key, $string, $this->tag_array[$tag]);
                     }
@@ -213,13 +216,13 @@ class Reader extends TagReader
                 $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
 
                 // if (file_exists($this->json_file)) {
-                    utmdump($this->video_key);
+                utmdump($this->video_key);
                 //     $this->json_string = FileSystem::read($this->json_file);
                 //     // utmdd($this->json_string);
 
                 //     return true;
                 // } else {
-                    touch($this->json_file);
+                touch($this->json_file);
                 // }
             }
         }

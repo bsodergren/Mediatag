@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Symfony\Component\Console\Command;
 
+use DirectoryIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,12 +15,16 @@ use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\Process;
 
+use function sprintf;
+
+use const PHP_EOL;
+
 /**
  * Dumps the completion script for the current shell.
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-#[AsCommand(name: 'completion', description: 'Dump the shell completion script'.\PHP_EOL)]
+#[AsCommand(name: 'completion', description: 'Dump the shell completion script'.PHP_EOL)]
 final class DumpCompletionCommand extends Command
 {
     private array $supportedShells;
@@ -92,9 +98,9 @@ EOH
                 $output = $output->getErrorOutput();
             }
             if ($shell) {
-                $output->writeln(\sprintf('<error>Detected shell "%s", which is not supported by Symfony shell completion (supported shells: "%s").</>', $shell, implode('", "', $supportedShells)));
+                $output->writeln(sprintf('<error>Detected shell "%s", which is not supported by Symfony shell completion (supported shells: "%s").</>', $shell, implode('", "', $supportedShells)));
             } else {
-                $output->writeln(\sprintf('<error>Shell not detected, Symfony shell completion only supports "%s").</>', implode('", "', $supportedShells)));
+                $output->writeln(sprintf('<error>Shell not detected, Symfony shell completion only supports "%s").</>', implode('", "', $supportedShells)));
             }
 
             return 2;
@@ -133,7 +139,7 @@ EOH
 
         $shells = [];
 
-        foreach (new \DirectoryIterator(__DIR__.'/Resources/') as $file) {
+        foreach (new DirectoryIterator(__DIR__.'/Resources/') as $file) {
             if (str_starts_with($file->getBasename(), 'completion.') && $file->isFile()) {
                 $shells[] = $file->getExtension();
             }
