@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -7,106 +8,97 @@
 
 // UTM\Utilities\Loader::loadDatabase($dbConfig, '__MYSQL_', '__', '__');
 
-
-
-/**
+/*
  * @global string Db_PLEXWEB_PREFIX
  */
-define("Db_MEDIATAG_PREFIX", "mediatag_");
+define('Db_MEDIATAG_PREFIX', 'mediatag_');
 
-/**
+/*
  * @global string Db_PLEXWEB_PREFIX
  */
-define("Db_PLEXWEB_PREFIX", "plexweb_");
+define('Db_PLEXWEB_PREFIX', 'plexweb_');
 
-
-/**
+/*
  * @global string __MYSQL_VIDEO_FILE
  */
-define("__MYSQL_VIDEO_FILE__", Db_MEDIATAG_PREFIX."video_file");
-/**
+define('__MYSQL_VIDEO_FILE__', Db_MEDIATAG_PREFIX.'video_file');
+/*
  * @global string __MYSQL_VIDEO_INFO
  */
-define("__MYSQL_VIDEO_INFO__", Db_MEDIATAG_PREFIX."video_info");
-/**
+define('__MYSQL_VIDEO_INFO__', Db_MEDIATAG_PREFIX.'video_info');
+/*
  * @global string __MYSQL_VIDEO_CUSTOM
  */
-define("__MYSQL_VIDEO_CUSTOM__", Db_MEDIATAG_PREFIX."video_custom");
-/**
+define('__MYSQL_VIDEO_CUSTOM__', Db_MEDIATAG_PREFIX.'video_custom');
+/*
  * @global string __MYSQL_VIDEO_METADATA
  */
-define("__MYSQL_VIDEO_METADATA__", Db_MEDIATAG_PREFIX."video_metadata");
-/**
+define('__MYSQL_VIDEO_METADATA__', Db_MEDIATAG_PREFIX.'video_metadata');
+/*
  * @global string __MYSQL_STUDIOS
  */
-define("__MYSQL_STUDIOS__", Db_MEDIATAG_PREFIX."studios");
-/**
+define('__MYSQL_STUDIOS__', Db_MEDIATAG_PREFIX.'studios');
+/*
  * @global string __MYSQL_GENRE
  */
-define("__MYSQL_GENRE__", Db_MEDIATAG_PREFIX."genre");
-/**
+define('__MYSQL_GENRE__', Db_MEDIATAG_PREFIX.'genre');
+/*
  * @global string __MYSQL_ARTISTS
  */
-define("__MYSQL_ARTISTS__", Db_MEDIATAG_PREFIX."artists");
-/**
+define('__MYSQL_ARTISTS__', Db_MEDIATAG_PREFIX.'artists');
+/*
  * @global string __MYSQL_TAGS
  */
-define("__MYSQL_TAGS__", Db_MEDIATAG_PREFIX."tags");
-/**
+define('__MYSQL_TAGS__', Db_MEDIATAG_PREFIX.'tags');
+/*
  * @global string __MYSQL_KEYWORD
  */
-define("__MYSQL_KEYWORD__", Db_MEDIATAG_PREFIX."keyword");
-/**
+define('__MYSQL_KEYWORD__', Db_MEDIATAG_PREFIX.'keyword');
+/*
  * @global string __MYSQL_TITLE
  */
-define("__MYSQL_TITLE__", Db_MEDIATAG_PREFIX."title");
-/**
+define('__MYSQL_TITLE__', Db_MEDIATAG_PREFIX.'title');
+/*
  * @global string __MYSQL_GALLERY
  */
-define("__MYSQL_GALLERY__", Db_MEDIATAG_PREFIX."gallery");
+define('__MYSQL_GALLERY__', Db_MEDIATAG_PREFIX.'gallery');
 
-
-
-/**
+/*
  * @global string __MYSQL_VIDEO_CHAPTER
  */
-define("__MYSQL_VIDEO_CHAPTER__", Db_PLEXWEB_PREFIX."video_chapter");
-/**
+define('__MYSQL_VIDEO_CHAPTER__', Db_PLEXWEB_PREFIX.'video_chapter');
+/*
  * @global string __MYSQL_SETTINGS
  */
-define("__MYSQL_SETTINGS__", Db_PLEXWEB_PREFIX."settings");
-/**
+define('__MYSQL_SETTINGS__', Db_PLEXWEB_PREFIX.'settings');
+/*
  * @global string __MYSQL_SEARCH_DATA
  */
-define("__MYSQL_SEARCH_DATA__", Db_PLEXWEB_PREFIX."search_data");
-/**
+define('__MYSQL_SEARCH_DATA__', Db_PLEXWEB_PREFIX.'search_data');
+/*
  * @global string __MYSQL_VIDEO_SEQUENCE
  */
-define("__MYSQL_VIDEO_SEQUENCE__", Db_PLEXWEB_PREFIX."video_sequence");
-/**
+define('__MYSQL_VIDEO_SEQUENCE__', Db_PLEXWEB_PREFIX.'video_sequence');
+/*
  * @global string __MYSQL_PLAYLIST_VIDEOS
  */
-define("__MYSQL_PLAYLIST_VIDEOS__", Db_PLEXWEB_PREFIX."playlist_videos");
-/**
+define('__MYSQL_PLAYLIST_VIDEOS__', Db_PLEXWEB_PREFIX.'playlist_videos');
+/*
  * @global string __MYSQL_PLAYLIST_DATA
  */
-define("__MYSQL_PLAYLIST_DATA__", Db_PLEXWEB_PREFIX."playlist_data");
-/**
+define('__MYSQL_PLAYLIST_DATA__', Db_PLEXWEB_PREFIX.'playlist_data');
+/*
  * @global string __MYSQL_FAVORITE_VIDEOS
  */
-define("__MYSQL_FAVORITE_VIDEOS__", Db_PLEXWEB_PREFIX."favorite_videos");
-/**
+define('__MYSQL_FAVORITE_VIDEOS__', Db_PLEXWEB_PREFIX.'favorite_videos');
+/*
  * @global string __MYSQL_SMARTLIST_DATA
  */
-define("__MYSQL_SMARTLIST_DATA__", Db_PLEXWEB_PREFIX."smartlist_data");
-/**
+define('__MYSQL_SMARTLIST_DATA__', Db_PLEXWEB_PREFIX.'smartlist_data');
+/*
  * @global string __MYSQL_WORDMAP
  */
-define("__MYSQL_WORDMAP__", Db_PLEXWEB_PREFIX."wordMap");
-
-
-
-
+define('__MYSQL_WORDMAP__', Db_PLEXWEB_PREFIX.'wordMap');
 
 define(
     '__MYSQL_TRUNC_TABLES__',
@@ -196,13 +188,12 @@ define(
 define(
     '__GENRE_LIST__',
     [
-        
         'Group',
         'MMF',
         'MFF',
         'Single',
         'Only Girls',
-        
+
         'Trans',
         'Blowjob',
         'Only Blowjobs',

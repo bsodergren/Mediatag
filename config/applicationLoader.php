@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -51,7 +52,7 @@ if (file_exists($commandsDir)) {
 
 $SingleCommand = false;
 if (1 == count($commandClasses)) {
-    $default       = true;
+    $default = true;
     // $SingleCommand = true;
 }
 
@@ -60,13 +61,12 @@ foreach ($commandClasses as $className) {
 
     $Command = new $className();
     $application->add($Command);
-    // 
-    if($Command::$SingleCommand === true){
+
+    if (true === $Command::$SingleCommand) {
         // utmdd($Command::$SingleCommand);
         $SingleCommand = true;
     }
 }
-
 
 if (true === $default) {
     $application->setDefaultCommand($cmdName, $SingleCommand);

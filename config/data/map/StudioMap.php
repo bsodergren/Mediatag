@@ -1,10 +1,10 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 const STUDIO_MAP = [
-
     // 'myhusbandbroughthomehismistress' => 'MyHusband',
     // 'harmonyfilms'                       => 'Harmony Films',
     // 'prettydirty'                     => 'AdultTime',
@@ -15,12 +15,9 @@ const STUDIO_MAP = [
     // 'spizoo'                          => 'AdultTime',
     // 'spankmonster'                    => 'AdultTime',
 
-
     // 'pegasproductions'                => 'AdultTime',
 
     // 'throated'            => 'AdultTime',
-
-
 
     // 'dareweshare'                     => 'Adult Time',
 
@@ -31,7 +28,7 @@ const STUDIO_MAP = [
     '21stsextury'         => 'TwentyFirstSextury',
     '1000facials'         => 'ThousandFacials',
     'private'             => 'PrivateVid',
-    'self' => 'SelfVids',
+    'self'                => 'SelfVids',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',
@@ -57,5 +54,4 @@ const STUDIO_MAP = [
     // 'newsensations'       => 'AdultTime',
     // 'roccosiffredi'       => 'AdultTime',
     // 'Home' =>'Home Videos',
-
 ];

@@ -1,10 +1,12 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Config;
 
+use Mediatag\Commands\Clip\Command as ClipCommand;
 use Mediatag\Commands\Create\Command as CreateCommand;
 use Mediatag\Commands\Db\Command as DBCommand;
 use Mediatag\Commands\Download\Command as DlCommand;
@@ -14,8 +16,6 @@ use Mediatag\Commands\Playlist\Command as PlaylistCommand;
 use Mediatag\Commands\Rename\Command as RenameCommand;
 use Mediatag\Commands\Show\Command as ShowCommand;
 use Mediatag\Commands\Test\Command as TestCommand;
-use Mediatag\Commands\Clip\Command as ClipCommand;
-
 use Mediatag\Commands\Update\Command as UpdateCommand;
 // %%NEW_USE%%
 
@@ -34,7 +34,7 @@ return new FactoryCommandLoader([
     'db'        => function () {return new DBCommand(); },
     'gallery'   => function () {return new GalleryCommand(); },
     'rename'    => function () {return new RenameCommand(); },
-    'clip'    => function () {return new ClipCommand(); },
-    
+    'clip'      => function () {return new ClipCommand(); },
+
     // %%NEW_CMD%%
 ]);

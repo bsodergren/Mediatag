@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -31,11 +32,11 @@ const __PLEX_PL_TMP_DIR__  = __PLEX_PL_DIR__.'/.tmp';
 const __PLEX_PL_ID_DIR__   = __PLEX_PL_DIR__.'/ids';
 const __PLEX_PL_LIST_DIR__ = __PLEX_PL_DIR__.'/lists';
 
-const __PLEX_DOWNLOAD__  = __PLEX_HOME__.'/Downloads';
-const __CACHE_DIR__      = __PLEX_HOME__.'/.cache';
-const __JSON_CACHE_DIR__ = __CACHE_DIR__.'/json';
-const __PH_CACHE_DIR__   = __CACHE_DIR__.'/Pornhub';
-const __STUDIO_CACHE_DIR__   = __CACHE_DIR__.'/Studio';
+const __PLEX_DOWNLOAD__    = __PLEX_HOME__.'/Downloads';
+const __CACHE_DIR__        = __PLEX_HOME__.'/.cache';
+const __JSON_CACHE_DIR__   = __CACHE_DIR__.'/json';
+const __PH_CACHE_DIR__     = __CACHE_DIR__.'/Pornhub';
+const __STUDIO_CACHE_DIR__ = __CACHE_DIR__.'/Studio';
 
 const __APP_CACHE_DIR__ = __PLEX_VAR_DIR__.'/cache';
 

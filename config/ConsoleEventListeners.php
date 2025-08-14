@@ -1,33 +1,32 @@
-<?php 
+<?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 use Symfony\Component\Console\ConsoleEvents;
-use Symfony\Component\EventDispatcher\EventDispatcher;
-use Symfony\Component\Console\Event\ConsoleSignalEvent;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
+use Symfony\Component\Console\Event\ConsoleSignalEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 
 $dispatcher = new EventDispatcher();
-    
-$dispatcher->addListener(ConsoleEvents::SIGNAL, function (ConsoleSignalEvent $event): void {
 
+$dispatcher->addListener(ConsoleEvents::SIGNAL, function (ConsoleSignalEvent $event): void {
     // gets the signal number
-    $signal = $event->getHandlingSignal();
+    $signal  = $event->getHandlingSignal();
     $command = $event->getCommand();
 
     // sets the exit code
     $event->setExitCode(0);
-   
- $command->cleanOnEvent();
-    if (\SIGINT === $signal) {
 
-        echo "bye bye!";
+    $command->cleanOnEvent();
+    if (\SIGINT === $signal) {
+        echo 'bye bye!';
     }
 
-    utmdd(get_class( $command));
+    utmdd($command::class);
 
     exit;
-
-
 });
 
 $dispatcher->addListener(ConsoleEvents::TERMINATE, function (ConsoleTerminateEvent $event): void {
@@ -40,7 +39,6 @@ $dispatcher->addListener(ConsoleEvents::TERMINATE, function (ConsoleTerminateEve
     // displays the given content
     $command->cleanOnTerminate();
     $output->writeln(sprintf('<info>%s</info> Completed', $command->getName()));
-
 
     // changes the exit code
     $event->setExitCode(128);
@@ -60,8 +58,7 @@ $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $
     $output->writeln(sprintf('Executing command <info>%s</info>', $command->getName()));
 
     // gets the application
-   // $application = $command->getApplication();
+    // $application = $command->getApplication();
 });
-
 
 return $dispatcher;
