@@ -48,6 +48,7 @@
     "psr/log": "^3.0",
     "evenement/evenement": "^3.0",
     "react/event-loop": "^1.5",
-    "paramako/pornhub-api-client": "^1.0"
+    "paramako/pornhub-api-client": "^1.0",
+    "tracy/tracy": "^2.10"
   }
 }
