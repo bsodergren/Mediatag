@@ -23,8 +23,8 @@ class PurgatoryX extends Patterns
                 'artistFirstNameOnly' => true,
             ],
             'title'  => [
-                'pattern' => '/(([a-zA-Z0-9]+))\-[a-zA-Z0-9]+\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i',
-                'match'   => 2,
+                'pattern' => '/(([a-zA-Z0-9]+)\-?[a-zA-Z0-9]+\_s[0-9]{2,3})\_(.*)\_[0-9pk]{1,6}(_h264)?.mp4/i',
+                'match'   => 1,
                 'delim'   => '_',
             ],
             //            'studio' => [
