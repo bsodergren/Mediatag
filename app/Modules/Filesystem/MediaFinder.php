@@ -393,6 +393,7 @@ class MediaFinder extends SFinder
             Mediatag::$output->writeln('<info>No files found</info>');
             exit;
         }
+        return [];
     }
 
     /**

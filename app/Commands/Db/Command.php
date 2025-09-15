@@ -13,6 +13,8 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class Command extends MediaCommand
 {
     public const USE_LIBRARY = true;
+    public const SKIP_SEARCH = true;
+
     public $command          = [
         'db'        => [
             'init' => null,

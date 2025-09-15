@@ -366,7 +366,7 @@ class Storage
         }
     }
 
-    protected function queryBuilder($query_cmd, $search = null, $limit = false)
+    protected function queryBuilder($query_cmd, $search = null, $limit = false, $allfiles = false)
     {
         // utminfo(func_get_args());
 
@@ -409,7 +409,7 @@ class Storage
                 // break;
         }
 
-        $query .= __MYSQL_VIDEO_FILE__." WHERE Library = '".__LIBRARY__."' AND ";
+        $query .= __MYSQL_VIDEO_FILE__." WHERE Library = '".__LIBRARY__."'  ";
 
         if (Option::isTrue('filelist')) {
             foreach ($this->file_array as $key => $file) {
@@ -423,13 +423,18 @@ class Storage
                 $where = $where_clause[0];
             }
         } else {
+            if ($allfiles === false ){
             $where = " fullpath like '".__CURRENT_DIRECTORY__."%'";
+            }
         }
         if (null !== $sel_cols) {
             $where = $sel_cols;
         }
         if (true == $limit) {
             $limit = ' LIMIT '.$limit;
+        }
+        if ($where !== null){
+            $where = " AND ". $where;
         }
         $sql = $query.$where.$limit;
 
@@ -439,7 +444,7 @@ class Storage
                 exit;
             }
         }
-
+utmdump($sql);
         return $sql;
     }
 }

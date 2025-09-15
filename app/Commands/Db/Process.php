@@ -95,7 +95,9 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-        $this->Search_Array = parent::$SearchArray;
+
+        $this->Search_Array = parent::$finder->Search(null,'/\.mp4$/i', null, false);
+ //parent::$SearchArray;
     }
 
     public function init()
@@ -103,40 +105,49 @@ class Process extends Mediatag
         // utminfo(func_get_args());
 
         // $this->DbMap = new DbMap();
+        $this->allDbFiles = parent::$dbconn->getAllDbFiles();
+        if(count($this->Search_Array) > 0 ) {
+            foreach ($this->Search_Array as $k => $file) {
+                $key = File::getVideoKey($file);
 
-        foreach ($this->Search_Array as $k => $file) {
-            $key = File::getVideoKey($file);
+                if (array_key_exists($key, $this->allDbFiles)) {
+                    $existing_file = $this->allDbFiles[$key];
 
-            if (array_key_exists($key, $this->file_array)) {
-                // utmdd([$file,$key,$this->file_array[$key]]);
+                    //    utmdd([$file,$key,$this->allDbFiles[$key]]);
+                    if ($existing_file != $file) {
+                        utmdump([$existing_file, $file]);
 
-                [$keep,$move] = VideoFileInfo::compareDupes($this->file_array[$key], $file);
-                // utmdump(['move'=>$move, $file, $this->file_array[$key]]);
-                Mediatag::$Console->writeln('Keeping file '.$keep.'');
-                Mediatag::$Console->writeln('Moving file '.$move.'');
-                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
-                $dupePath  = dirname($movedFile);
-                $filename  = basename($file);
+                        [$keep,$move] = VideoFileInfo::compareDupes($existing_file, $file);
 
-                $dupePath = nFileSystem::normalizePath($dupePath);
-                if (!is_dir($dupePath)) {
-                    //     if (!Option::isTrue('test')) {
-                    nFileSystem::createDir($dupePath, 0755);
-                    //     }
+                        // utmdd(['move'=>$move, $file, $this->file_array[$key]]);
+                        Mediatag::$Console->writeln('existi file '.$existing_file.'');
+                        Mediatag::$Console->writeln('Keepin file '.$keep.'');
+                        if (file_exists($move)) {
+                            Mediatag::$Console->writeln('Moving file '.$move.'');
+                            $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
+                            $dupePath  = dirname($movedFile);
+                            $filename  = basename($file);
+
+                            $dupePath = nFileSystem::normalizePath($dupePath);
+                            if (!is_dir($dupePath)) {
+                                //     if (!Option::isTrue('test')) {
+                                nFileSystem::createDir($dupePath, 0755);
+                                //     }
+                            }
+                            Mediatag::$Console->writeln('to '.$dupePath.DIRECTORY_SEPARATOR.$filename.'');
+                            (new SfSystem())->rename($move, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+                        }
+                        unset($this->file_array[$key]);
+                        $this->file_array[$key] = $keep;
+                        continue;
+                    }
                 }
-                Mediatag::$Console->writeln('to '.$dupePath.DIRECTORY_SEPARATOR.$filename.'');
-                (new SfSystem())->rename($move, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
-                unset($this->file_array[$key]);
-                $this->file_array[$key] = $keep;
-                continue;
+                $this->file_array[$key] = $file;
             }
-            $this->file_array[$key] = $file;
         }
         parent::$dbconn->file_array = $this->file_array;
-        // utmdd("fds");
-        $this->db_array = parent::$dbconn->getDbFileList();
 
-        // utmdd( $this->db_array  );
+        $this->db_array = parent::$dbconn->getDbFileList();
         return $this;
     }
 

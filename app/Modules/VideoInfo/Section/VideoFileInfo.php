@@ -49,6 +49,16 @@ class VideoFileInfo extends VideoInfo
 
     public static function compareDupes($file, $sfile)
     {
+
+// [$keep,$move]
+        if(!file_exists($file)){
+            return [$sfile, $file];
+        }
+
+        if(!file_exists($sfile)){
+            return [$file, $sfile];
+        }
+
         $return    = 'A';
         $file1     = new MediaFile($file);
         $file1Info = $file1->get();

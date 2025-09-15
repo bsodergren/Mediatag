@@ -81,6 +81,22 @@ class StorageDB extends Storage
         return $this;
     }
 
+    public function getAllDbFiles()
+    {
+        $query         = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key", false, true);
+        $results       = $this->query($query);
+        $fileListArray = [];
+
+        foreach ($results as $key => $arr) {
+            if (null === $arr['fullpath']) {
+                continue;
+            }
+            $fileListArray[$arr['video_key']] = $arr['file_name'];
+        }
+
+        return $fileListArray;
+    }
+
     // end init()
     public function getDbFileList()
     {
@@ -88,9 +104,9 @@ class StorageDB extends Storage
 
         $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
         $fileListArray = [];
-        $query         = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
-        $results       = $this->query($query);
 
+        $query   = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
+        $results = $this->query($query);
         foreach ($results as $key => $arr) {
             if (null === $arr['fullpath']) {
                 continue;

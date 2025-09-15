@@ -17,7 +17,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class ImportCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
-    public const SKIP_SEARCH = false;
+    public const SKIP_SEARCH = true;
 
     public $command = [
         'import'    => ['execImport' => null],
