@@ -1,13 +1,12 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 define('__ROOT_DIRECTORY__', dirname(realpath($_SERVER['SCRIPT_FILENAME']), 2));
 use Symfony\Component\Process\Process;
-use Mediatag\Core\Mediatag;
-use Mediatag\Core\MediaApplication;
 
 define('__CONFIG_LIB__', __ROOT_DIRECTORY__.'/config');
 
@@ -25,7 +24,7 @@ $composerDir = [
 ];
 
 foreach ($composerDir as $directory) {
-    echo PHP_EOL."Updating composer in " . $directory . PHP_EOL;
+    echo \PHP_EOL.'Updating composer in '.$directory.\PHP_EOL;
     $process = new Process(['composer', 'update']);
     $process->setTty(true);
 

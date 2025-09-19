@@ -31,7 +31,7 @@ final class Command extends MediaCommand
     protected $db;
 
     public $command = [
-        'playlist'           => [
+        'pl'           => [
             'cleanBrkDownloads'           => null,
             'docompactPlaylist'           => null,
             'dodownloadPlaylist'          => null,
