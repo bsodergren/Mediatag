@@ -45,10 +45,10 @@ final class Command extends MediaCommand
         //     // 'exec'        => null,
         //     'missing' => null,
         // ],
-        // 'find'              => [
-        //     'find' => null,
-        //     // 'default' => null,
-        // ],
+        'find'              => [
+            'find' => null,
+            // 'default' => null,
+        ],
         // 'cleanBrkDownloads' => [
         //     'cleanBrkDownloads' => null,
         // ],

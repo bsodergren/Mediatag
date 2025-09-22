@@ -138,12 +138,12 @@ trait MetaTags
         return implode(',', $arr);
     }
 
-    public static function mergeTag($tag, $first, $second)
+ private static function priority($first, $second, $tag)
     {
-        // utminfo(func_get_args());
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
+        utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
@@ -161,10 +161,13 @@ trait MetaTags
                 } else {
                     if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
                         $return = $first;
+                        utmdump(['return first', $return]);
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
+                        utmdump(['return second', $return]);
                     } else {
-                        $return = $first.$delim.$second;
+                        $return = $second;
+                        utmdump(['return second', $return]);
 
                         //                        $return = $second;
                     }
@@ -172,38 +175,95 @@ trait MetaTags
             }
         } else {
             $return = $first;
+            utmdump(['return first', $return]);
         }
-        if (null !== $firstCmp && $first != $second) {
-            $data['video_key'] = Metatags::$Videokey;
+        return $return;
+    }
 
-            if ('studio' == $tag) {
-                if ($firstCmp == $secondCmp) {
-                    $data['studio'] = MetaTags::clean($first, $tag);
-                } else {
-                    $data['studio']  = MetaTags::clean($first, $tag);
-                    $data['network'] = MetaTags::clean($second, $tag);
-                }
+    private static function priorityCombine($first, $second, $tag)
+    {
+        $firstCmp  = str_replace(' ', '', strtoupper($first));
+        $secondCmp = str_replace(' ', '', strtoupper($second));
+
+        utmdump([$tag, $firstCmp, $secondCmp]);
+        $delim = ',';
+        if ('studio' == $tag) {
+            $delim = '/';
+        }
+        if ('title' == $tag) {
+            // $secondCmp = '';
+            $delim = '';
+        }
+        if ('' != $secondCmp) {
+            if ('' == $firstCmp) {
+                $return = $second;
             } else {
-                $data[$tag] = MetaTags::clean($return, $tag);
-            }
+                if ($firstCmp == $secondCmp) {
+                    $return = $first;
+                } else {
+                    if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
+                        $return = $first;
+                        utmdump(['return first', $return]);
+                    } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
+                        $return = $second;
+                        utmdump(['return second', $return]);
+                    } else {
+                        $return = $first.$delim.$second;
+                        utmdump(['return second', $return]);
 
-            // Mediatag::$dbconn->insert(
-            //     $data,
-            //     __MYSQL_VIDEO_CUSTOM__
-            // );
+                        //                        $return = $second;
+                    }
+                }
+            }
+        } else {
+            $return = $first;
+            utmdump(['return first', $return]);
         }
+        return $return;
+    }
+
+    public static function mergeTag($tag, $first, $second, $priority = null)
+    {
+        // utminfo(func_get_args());
+
+
+        $method = "priority".$priority;
+
+        $return = self::$method($first,$second,$tag);
+
+
+        // if (null !== $firstCmp && $first != $second) {
+        //     $data['video_key'] = Metatags::$Videokey;
+
+        //     if ('studio' == $tag) {
+        //         if ($firstCmp == $secondCmp) {
+        //             $data['studio'] = MetaTags::clean($first, $tag);
+        //         } else {
+        //             $data['studio']  = MetaTags::clean($first, $tag);
+        //             $data['network'] = MetaTags::clean($second, $tag);
+        //         }
+        //     } else {
+        //         $data[$tag] = MetaTags::clean($return, $tag);
+        //     }
+
+        //     // Mediatag::$dbconn->insert(
+        //     //     $data,
+        //     //     __MYSQL_VIDEO_CUSTOM__
+        //     // );
+        // }
+        utmdump(['return '.$tag, $return]);
 
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
 
-    public function mergetags($tag_array, $tag_array2, $obj)
+    public function mergetags($tag_array, $tag_array2, $obj, $priority = null)
     {
         // utminfo(func_get_args());
 
         Metatags::$Videokey = $obj;
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
-                $value = Metatags::mergeTag($tag, $value, $tag_array2[$tag]);
+                $value = Metatags::mergeTag($tag, $value, $tag_array2[$tag], $priority);
             }
 
             $tagArray[$tag] = MetaTags::clean($value, $tag);

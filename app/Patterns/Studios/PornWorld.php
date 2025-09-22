@@ -197,7 +197,7 @@ class PornWorld extends Patterns
     //         return false;
     //     }
 
-    public function getTitle()
+    public function get_Title()
     {
         $key = $this->video_name.'_'.__FUNCTION__;
 

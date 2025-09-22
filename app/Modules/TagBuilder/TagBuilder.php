@@ -46,16 +46,15 @@ class TagBuilder
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
-            // utmdump($updates);
 
             // }
 
             if (!str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 //
-                // utmdd($this->ReaderObj);
+                // 
                 if (null !== $updates) {
-                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
+                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key,'combine');
                 } else {
                     $updates = $jsonupdates;
                 }
@@ -71,11 +70,11 @@ class TagBuilder
         // if (null !== $jsonupdates) {
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
-
         if (null !== $DbUpdates) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
         if (isset($updates)) {
+            utmdump($updates);
             // UTMlog::Logger('Reader', $updates);
         }
 

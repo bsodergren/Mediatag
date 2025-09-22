@@ -164,7 +164,9 @@ class Youtube extends MediatagExec
     public function youtubeCmdOptions()
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
-        if (!Option::istrue('ignore') && !Option::istrue('skip') && true === $this->downloadFiles
+        if (!Option::istrue('ignore') && 
+        !Option::istrue('skip') && 
+        true === $this->downloadFiles
                                       && !Option::istrue('archive')) {
             $options = array_merge($options, [
                 '--download-archive',
