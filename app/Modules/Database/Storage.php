@@ -444,7 +444,7 @@ class Storage
                 exit;
             }
         }
-utmdump($sql);
+// utmdump($sql);
         return $sql;
     }
 }

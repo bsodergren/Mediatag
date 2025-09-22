@@ -51,7 +51,7 @@ class Process extends Mediatag
     public $db_array = [];
 
     public $file_array   = [];
-    public $Search_Array = [];
+    public $Search_Array = null;
 
     public $read;
 
@@ -96,14 +96,16 @@ class Process extends Mediatag
     {
         parent::boot($input, $output);
 
-        $this->Search_Array = parent::$finder->Search(null,'/\.mp4$/i', null, false);
+       // 
  //parent::$SearchArray;
     }
 
     public function init()
     {
         // utminfo(func_get_args());
-
+        if($this->Search_Array ===  null){
+            $this->Search_Array = parent::$finder->Search(null,'/\.mp4$/i', null, false);
+        }
         // $this->DbMap = new DbMap();
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
         if(count($this->Search_Array) > 0 ) {

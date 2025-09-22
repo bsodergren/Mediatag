@@ -63,8 +63,8 @@ trait Helper
         $db->where('name', __LIBRARY__.'_last_updated');
 
         $res = $db->getValue(__MYSQL_SETTINGS__, 'value');
-        $q   = $db->getLastQuery();
-
+        // $q   = $db->getLastQuery();
+// utmdd($res);
         return $res;
         //        utmdd([__METHOD__,$res]);
     }
@@ -168,6 +168,7 @@ trait Helper
     public function updateEntry($key, $video_file, $exists = null)
     {
         // utminfo(func_get_args());
+utmdd("fdsa");
 
         $this->OutputText   = [];
         $this->OutputText[] = '<info>'.$this->count.'</info>:<comment>'.basename($video_file).'</comment> ';
@@ -270,12 +271,11 @@ trait Helper
     public function execUpdate()
     {
         // utminfo(func_get_args());
-        // utmdd('update');
         $date = null;
         if (!Option::istrue('yes')) {
             $date = $this->lastUpdated();
         }
-
+        utmdump($date);
         $file_array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date);
         if (!is_array($file_array)) {
             return 0;
@@ -485,7 +485,6 @@ trait Helper
     public function execInfo()
     {
         // utminfo(func_get_args());
-
         $this->obj = new VideoFileInfo();
         // $this->checkClean();
         $this->obj->updateVideoData();

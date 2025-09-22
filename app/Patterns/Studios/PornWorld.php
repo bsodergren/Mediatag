@@ -197,7 +197,7 @@ class PornWorld extends Patterns
     //         return false;
     //     }
 
-    public function get_Title()
+    public function getTitle()
     {
         $key = $this->video_name.'_'.__FUNCTION__;
 
@@ -237,8 +237,8 @@ class PornWorld extends Patterns
                     $name = $content['content']['strict_contents'][0]['name'];
                     $id   = $content['content']['strict_contents'][0]['id'];
 
-                    MediaScraper::getUrl('https://pornbox.com/contents/'.$id.'/subtitles/en');
-
+                    $subtitle = MediaScraper::getUrl('https://pornbox.com/contents/'.$id.'/subtitles/en');
+// utmdump($subtitle);
                     $videocontent = MediaScraper::getUrl('https://pornbox.com/contents/'.$id);
                     unset($videocontent['gallery']);
                     unset($videocontent['screenshots']);

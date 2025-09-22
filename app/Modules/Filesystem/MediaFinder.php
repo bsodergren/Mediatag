@@ -352,6 +352,9 @@ class MediaFinder extends SFinder
         // }
 
         $finder->name($search)->sortByCaseInsensitiveName();
+        if($date !== null){
+            $finder->date('> '.$date);
+        }
         UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
         if ($finder->hasResults()) {
             UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
@@ -365,7 +368,6 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
-
             UtmStopWatch::lap(__METHOD__.' '.__LINE__, '');
 
             if (Option::isTrue('new')) {
