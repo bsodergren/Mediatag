@@ -55,7 +55,7 @@ trait HelperCmds
         });
 
         foreach ($timeCodes as $i =>$code) {
-            utmdump($code);
+            // utmdump($code);
             $clip = $video->clip(TimeCode::fromSeconds($code), TimeCode::fromSeconds(5));
             $clip->filters()->resize(new Dimension(320, 240), ResizeFilter::RESIZEMODE_INSET, true);
             $clip->save($format, $filename.'_'.$i.'.mp4');

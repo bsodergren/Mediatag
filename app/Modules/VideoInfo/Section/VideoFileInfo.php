@@ -72,8 +72,8 @@ class VideoFileInfo extends VideoInfo
         $f2        = new FileReader($file2Info);
         $genre2Dir = $f2->getGenre();
 
-        // utmdump([$tag1['genre'],$genre1Dir]);
-        // utmdump([$tag2['genre'],$genre2Dir]);
+        // // utmdump([$tag1['genre'],$genre1Dir]);
+        // // utmdump([$tag2['genre'],$genre2Dir]);
         if (str_contains($tag1['genre'], $genre1Dir)) {
             return [$file, $sfile];
         } elseif (str_contains($tag2['genre'], $genre2Dir)) {

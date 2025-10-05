@@ -57,7 +57,7 @@ if (1 == count($commandClasses)) {
 }
 
 foreach ($commandClasses as $className) {
-    // utmdump($className);
+    // // utmdump($className);
 
     $Command = new $className();
     $application->add($Command);

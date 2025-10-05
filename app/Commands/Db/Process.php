@@ -117,7 +117,7 @@ class Process extends Mediatag
 
                     //    utmdd([$file,$key,$this->allDbFiles[$key]]);
                     if ($existing_file != $file) {
-                        utmdump([$existing_file, $file]);
+                        // utmdump([$existing_file, $file]);
 
                         [$keep,$move] = VideoFileInfo::compareDupes($existing_file, $file);
 

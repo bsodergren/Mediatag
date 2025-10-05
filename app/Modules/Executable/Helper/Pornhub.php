@@ -63,7 +63,7 @@ class Pornhub
                     $this->obj->num_of_lines = $output_array[1];
                 }
 
-                utmdump($output_array);
+                // utmdump($output_array);
                 break;
 
             case str_starts_with($buffer, '[PornHub]'):

@@ -284,12 +284,12 @@ class Monitor extends EventEmitter
         }
 
         $this->inotify->$method(IN_MOVED_FROM, function ($path) {
-            utmdump(['IN_MOVED_FROM',$path]);
+            // utmdump(['IN_MOVED_FROM',$path]);
             $this->remove($path);
         });
 
         $this->inotify->$method(IN_MOVED_TO, function ($path) {
-            utmdump(['IN_MOVED_TO',$path]);
+            // utmdump(['IN_MOVED_TO',$path]);
             $this->add($path);
         });
 

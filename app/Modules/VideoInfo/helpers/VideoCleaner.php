@@ -154,7 +154,7 @@ trait VideoCleaner
         foreach ($result as $_ => $row) {
             $thumb = $this->videoToThumb($row['file_name']);
 
-            // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
+            // // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
 
             if (!file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;

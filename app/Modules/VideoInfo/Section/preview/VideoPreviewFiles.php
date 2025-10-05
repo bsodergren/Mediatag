@@ -83,7 +83,7 @@ class VideoPreviewFiles extends VideoPreview
 
             // Created a var to hold the point filename.
             $point_file = "$temp/$point.jpg";
-            utmdump($time_secs);
+            // utmdump($time_secs);
             // Extract the frame.
             $frame = $video->frame(TimeCode::fromSeconds($time_secs));
             $frame->save($point_file);

@@ -175,7 +175,7 @@ class Youtube extends MediatagExec
         }
 
         if (Option::istrue('archive')) {
-            utmdump(['archive',                PlaylistProcess::$ARCHIVE]);
+            // utmdump(['archive',                PlaylistProcess::$ARCHIVE]);
             $options = array_merge($options, [
                 '--download-archive',
 

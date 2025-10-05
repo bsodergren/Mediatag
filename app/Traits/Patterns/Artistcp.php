@@ -104,7 +104,7 @@ trait Artistcp
         unset($names_array);
         $names_array = $new_array;
         */
-        utmdump($names_array);
+        // utmdump($names_array);
         foreach ($names_array as $aName) {
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
@@ -135,7 +135,7 @@ trait Artistcp
                         continue;
                     }
                     $aName = $artist_matches[$key];
-                    utmdump($name_key, $aName);
+                    // utmdump($name_key, $aName);
                     if (true == str_contains($prev_name, $aName)) {
                         continue;
                     }
@@ -174,7 +174,7 @@ trait Artistcp
             $names = str_replace('_', ' ', $names);
             $names = str_replace('  ', ' ', $names);
             $names = ucwords($names);
-            utmdump($names);
+            // utmdump($names);
 
             return str_replace(', ', ',', $names);
         }

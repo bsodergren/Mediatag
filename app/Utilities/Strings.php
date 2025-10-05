@@ -68,7 +68,7 @@ class Strings extends \Nette\Utils\Strings
         $new_text  = trim(self::cleanSpecialChars($translate));
         // if($new_text == "") {
 
-        // // utmdump([$text,$new_text,$translate]);
+        // // // utmdump([$text,$new_text,$translate]);
         // $new_text = $translate;
         // }
         // $video_filename = self::translate($filename);
@@ -246,7 +246,7 @@ class Strings extends \Nette\Utils\Strings
         $cacheKey = md5($inputText);
 
         $text = MediaCache::get($cacheKey);
-        utmdump($text);
+        // utmdump($text);
         if (false === $text) {
             $source           = 'ru'; // English
             $target           = 'en'; // Spanish
@@ -266,9 +266,9 @@ class Strings extends \Nette\Utils\Strings
 
             $text = $responseDecoded['data']['translations'][0]['translatedText'];
             MediaCache::put($cacheKey, $text);
-            utmdump(['Getting translation for', $inputText, $text]);
+            // utmdump(['Getting translation for', $inputText, $text]);
         }
-        // utmdump([$inputText,$text]);
+        // // utmdump([$inputText,$text]);
 
         return $text;
 

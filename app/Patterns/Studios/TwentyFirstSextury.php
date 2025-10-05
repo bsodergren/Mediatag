@@ -34,11 +34,11 @@ class TwentyFirstSextury extends Patterns
     // public function getNetwork()
     // {
 
-    //     utmdump($this->network);
+    //     // utmdump($this->network);
     //     $network = $this->mapStudio($this->network);
     //    // $network = $this->metaNetwork();
     //     $this->network =  $network ;
-    //     utmdump($this->network);
+    //     // utmdump($this->network);
     //     return  $this->network;
     // }
 }

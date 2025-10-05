@@ -76,7 +76,7 @@ class Storage
 
     public function trace()
     {
-        utmdump($this->dbConn->trace);
+        // utmdump($this->dbConn->trace);
     }
 
     public function truncate()
@@ -196,7 +196,7 @@ class Storage
         $ret = $this->dbConn->getOne($table);
 
         // utmdd($ret);
-        // utmdump([$this->dbConn->getLastQuery(),__LIBRARY__,$ret]);
+        // // utmdump([$this->dbConn->getLastQuery(),__LIBRARY__,$ret]);
         return $ret;
     }
 
@@ -316,7 +316,7 @@ class Storage
                 $old_file = $fieldArray['fullpath'].'/'.$fieldArray['filename'];
                 $new_file = $backup_path.'/'.$fieldArray['filename'];
 
-                // utmdump($old_file, $new_file);
+                // // utmdump($old_file, $new_file);
                 Mediatag::$filesystem->rename($old_file, $new_file);
 
                 return null;
@@ -444,7 +444,7 @@ class Storage
                 exit;
             }
         }
-// utmdump($sql);
+// // utmdump($sql);
         return $sql;
     }
 }

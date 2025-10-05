@@ -251,7 +251,7 @@ EOD;
 
         Mediatag::$tmpText = '<comment> New Pattern '.$class.'</comment>';
         $filesystem->dumpFile($Pattern_file, $Patterns_template);
-        utmdump($Pattern_file);
+        // utmdump($Pattern_file);
         require_once $Pattern_file;
     }
     // }

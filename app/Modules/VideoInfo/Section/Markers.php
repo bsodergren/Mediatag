@@ -181,7 +181,7 @@ class Markers extends VideoInfo
         // utminfo(func_get_args());
 
         $file_array = $this->getDbList();
-        utmdump($file_array);
+        // utmdump($file_array);
         if (count($file_array) > 0) {
             foreach ($file_array as $key => $row) {
                 $file = $row['filename'];

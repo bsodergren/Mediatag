@@ -123,7 +123,7 @@ class Process extends Mediatag
         $process = new execProcess($command);
         $process->setTimeout(60000);
         $this->runCommand = $process->getCommandLine();
-        utmdump($this->runCommand);
+        // utmdump($this->runCommand);
         $process->run(function ($type, $buffer): void {
             // if (execProcess::ERR === $type) {
             //     echo 'ERR > '.$buffer;

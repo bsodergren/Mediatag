@@ -86,7 +86,7 @@ trait MediaFFmpeg
         $process->setTimeout(null);
         MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine().PHP_EOL);
 
-        // utmdd($process->getCommandLine());
+        // // utmdump($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
         //     if (Process::ERR === $type) {
         //         echo $data;
@@ -96,7 +96,7 @@ trait MediaFFmpeg
         //         // ... do something with the stdout
         //     }
         // });
-        // utmdump(   $process->getCommandLine());
+        // // utmdump(   $process->getCommandLine());
 
         if (Option::isTrue('output')) {
             $cmd      = $process->getCommandLine();
@@ -150,7 +150,7 @@ trait MediaFFmpeg
         // $new_file       = str_ireplace('.mov', '.mp4', $file);
         $this->progress = new ProgressBar(Mediatag::$Display->BarSection1, $this->frame_count);
         // $this->progress->setFormat('%bar%');
-        $this->progress->setFormat(' %current%/%max% [%bar%] %percent:3s%%');
+        $this->progress->setFormat(' %current%/%max% ,, [%bar%] ,, %percent:3s%%');
         $this->progress->setBarWidth(100);
 
         $this->progress->start();
@@ -237,7 +237,7 @@ trait MediaFFmpeg
             $outputFile,
         ];
         $this->cmdline = $cmdOptions;
-        utmdump($cmdOptions);
+        // utmdump($cmdOptions);
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
         $this->progress->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
 
@@ -268,7 +268,7 @@ trait MediaFFmpeg
         $this->cmdline = $cmdArray;
 
         $this->progress = new MediaBar($this->clipLength, 'one', 120);
-        MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
+        MediaBar::addFormat('%current:4s%/%max:4s% -- [%bar%] -- %percent:3s%%');
         // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
         $this->progress->start();
         // $this->progress->startIndicator('Creating Compilation '.$name);
@@ -299,7 +299,8 @@ trait MediaFFmpeg
         ];
         $this->cmdline  = $cmdOptions;
         $this->progress = new MediaBar(200, 'one', 120);
-        MediaBar::addFormat('%current:4s%/%max:4s% [%bar%] %percent:3s%%');
+        MediaBar::addFormat('%current:4s%,%max:4s%,[%bar%],%percent:3s%%',"ChapterVideos");
+        $this->progress->setMsgFormat("ChapterVideos");
         $callback = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
     }

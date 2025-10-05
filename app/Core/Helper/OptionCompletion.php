@@ -15,7 +15,7 @@ trait OptionCompletion
 {
     public function listGenre($value)
     {
-        utmdump(__GENRE_LIST__);
+        // utmdump(__GENRE_LIST__);
 
         return __GENRE_LIST__;
     }
@@ -35,24 +35,24 @@ trait OptionCompletion
                 $SearchPath .= '*';
             }
         }
-        utmdump($SearchPath);
+        // utmdump($SearchPath);
 
-        // utmdump($path);
+        // // utmdump($path);
 
-        utmdump($SearchPath);
+        // utmdump($SearchPath);
         // UTMlog::logger('Search Directory', $path);
 
         $finder     = new SFinder();
         $file_array = [];
         $finder->in($SearchPath);
         $finder->depth('== 0');
-        // utmdump($path ,$finder);
+        // // utmdump($path ,$finder);
 
         if ($finder->hasResults()) {
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
                 $video_file = str_replace($VideoPath, '', $video_file);
-                utmdump($video_file);
+                // utmdump($video_file);
 
                 // $video_file = SFilesystem::makePathRelative($path,$video_file);
                 // if (str_contains($video_file, '-temp-')) {
@@ -64,7 +64,7 @@ trait OptionCompletion
             }
         }
 
-        utmdump($file_array);
+        // utmdump($file_array);
 
         return $file_array;
     }

@@ -87,7 +87,7 @@ class PornWorld extends Patterns
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
             $aName = implode(' ', $parts);
-            // utmdump($aName);
+            // // utmdump($aName);
 
             if (true === $this->ignoreArtist($aName)) {
                 continue;
@@ -96,7 +96,7 @@ class PornWorld extends Patterns
             if (true === $this->getArtistFullNames()) {
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
-                // utmdump([$artist_matches[0] ,$name_key]);
+                // // utmdump([$artist_matches[0] ,$name_key]);
                 if (array_key_exists($name_key, $artist_matches)) {
                     $aName = $artist_matches[$name_key];
                     if ('' != $aName) {
@@ -134,7 +134,7 @@ class PornWorld extends Patterns
             $names = str_replace('_', ' ', $names);
             $names = str_replace('  ', ' ', $names);
             $names = ucwords($names);
-            // utmdump($names, $this->getTitle());
+            // // utmdump($names, $this->getTitle());
 
             $names = str_replace($this->getTitle(), '', $names);
 
@@ -170,7 +170,7 @@ class PornWorld extends Patterns
 
     //             if (true === $this->getArtistFullNames()) {
     //                 $name_key = strtolower($aName);
-    //                   utmdump( $name_key,array_key_exists($name_key, $this->artist_match));
+    //                   // utmdump( $name_key,array_key_exists($name_key, $this->artist_match));
     //                 if (\array_key_exists($name_key, $this->artist_match)) {
     //                     $aName = $this->artist_match[$name_key];
 
@@ -190,7 +190,7 @@ class PornWorld extends Patterns
     //             $names = str_replace('_', ' ', $names);
     //             $names = str_replace('  ', ' ', $names);
     //             $names = ucwords($names);
-    // utmdump($names);
+    // // utmdump($names);
     //             return str_replace(', ', ',', $names);
     //         }
 
@@ -214,7 +214,7 @@ class PornWorld extends Patterns
 
                     $search = str_replace('-_', '', $search);
                     $search = str_replace('_', ' ', $search);
-                    // utmdump($search);
+                    // // utmdump($search);
 
                     $pcs = explode(' ', $search);
 
@@ -231,14 +231,14 @@ class PornWorld extends Patterns
 
                                 $content = MediaScraper::getUrl($url);
 
-                //   utmdump($url);
+                //   // utmdump($url);
                 // utmdd(array_keys($content['content']));
                 if (array_key_exists('strict_contents', $content['content'])) {
                     $name = $content['content']['strict_contents'][0]['name'];
                     $id   = $content['content']['strict_contents'][0]['id'];
 
                     $subtitle = MediaScraper::getUrl('https://pornbox.com/contents/'.$id.'/subtitles/en');
-// utmdump($subtitle);
+// // utmdump($subtitle);
                     $videocontent = MediaScraper::getUrl('https://pornbox.com/contents/'.$id);
                     unset($videocontent['gallery']);
                     unset($videocontent['screenshots']);
@@ -250,7 +250,7 @@ class PornWorld extends Patterns
 
                     foreach ($content['content']['contents'] as $id=>$video) {
                         $search = str_replace([' -', ':'], '', $video['scene_name']);
-                        // utmdump([strtolower($search),$fileTitle,str_contains(strtolower($search),$fileTitle)]);
+                        // // utmdump([strtolower($search),$fileTitle,str_contains(strtolower($search),$fileTitle)]);
 
                         if (str_contains(strtolower($search), $fileTitle)) {
                             // mkdir(__STUDIO_CACHE_DIR__, 0777, true);
@@ -276,7 +276,7 @@ class PornWorld extends Patterns
             }
         }
 
-        //  utmdump($name);
+        //  // utmdump($name);
         return $name;
     }
 

@@ -16,7 +16,7 @@ class Options extends MediaOptions
     use Lang;
     use Translate;
 
-    // public $options = ['Default','Question'];
+    public $options = ['Default'];
 
     public function Definitions()
     {

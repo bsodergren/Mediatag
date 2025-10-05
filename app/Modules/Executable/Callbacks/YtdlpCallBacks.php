@@ -40,7 +40,7 @@ trait YtdlpCallBacks
 
         PlaylistProcess::$current_key = false;
         if (null !== $this->key) {
-            // utmdump($buffer,$this->key);
+            // // utmdump($buffer,$this->key);
 
             if (str_contains($buffer, $this->key.': Downloading')) {
                 --$this->num_of_lines;
@@ -50,7 +50,7 @@ trait YtdlpCallBacks
             }
         }
 
-        // utmdump([__LINE__,$outputText]);
+        // // utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 
@@ -154,7 +154,7 @@ trait YtdlpCallBacks
 
             $outputText = str_replace('Destination:', 'Destination:</text> <file>', $outputText);
 
-            //  utmdump([__LINE__,$outputText]);
+            //  // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
 
@@ -163,7 +163,7 @@ trait YtdlpCallBacks
             $outputText = $line_id.'<error>'.$this->key.' Already been downloaded </error>'.PHP_EOL;
             --$this->num_of_lines;
 
-            // $line_id = '<id>'.$this->num_of_lines.'</id>';            // utmdump([__LINE__,$outputText]);
+            // $line_id = '<id>'.$this->num_of_lines.'</id>';            // // utmdump([__LINE__,$outputText]);
             return $outputText;
         }
         if (str_contains($buffer, 'Got error')) {
@@ -174,7 +174,7 @@ trait YtdlpCallBacks
         }
         $outputText = '<download>'.$buffer.'</>';
 
-        // utmdump([__LINE__,$outputText]);
+        // // utmdump([__LINE__,$outputText]);
         return $outputText;
     }
 
@@ -194,7 +194,7 @@ trait YtdlpCallBacks
             $outputText = str_replace('Adding thumbnail to', 'Adding thumbnail to</text> <file>', $outputText);
         }
         $outputText .= '</file>';
-        // utmdump($outputText);
+        // // utmdump($outputText);
 
         return $outputText.PHP_EOL;
     }

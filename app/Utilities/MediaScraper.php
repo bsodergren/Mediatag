@@ -18,22 +18,22 @@ class MediaScraper
     {
         $key     = md5($url);
         $content = MediaCache::get($key);
-        // utmdump([$url,$content]);
+        // // utmdump([$url,$content]);
         if (false == $content) {
             $client   = HttpClient::create();
             $response = $client->request(
                 'GET',
                 $url
             );
-            // utmdump($response);
+            // // utmdump($response);
 
             $statusCode = $response->getStatusCode();
-            // utmdump([$url, $statusCode]);
+            // // utmdump([$url, $statusCode]);
             if ('200' == $statusCode) {
                 // $statusCode = 200
                 $contentType = $response->getHeaders()['content-type'][0];
                 // $contentType = 'application/json'
-                // utmdump([$url,$contentType]);
+                // // utmdump([$url,$contentType]);
 
                 $content = $response->getContent();
 
@@ -49,7 +49,7 @@ class MediaScraper
                     $subtitleVTTFilename = __PLEX_HOME__.'/Subtitles/'.$output_array[1];
 
                     $subtitleVTTFilename = str_replace('srt', 'vtt', $subtitleVTTFilename);
-                    // utmdump($subtitleVTTFilename);
+                    // // utmdump($subtitleVTTFilename);
                     if (!file_exists($subtitleVTTFilename)) {
                         $vtt = 'WEBVTT'.PHP_EOL.PHP_EOL.$content;
                         // Replace microseconds separator: 00,000 -> 00.000
@@ -64,13 +64,13 @@ class MediaScraper
                 }
                 if ('text/html; charset=utf-8' == $contentType) {
                     $content = $response->getContent();
-                    // utmdump($content);
+                    // // utmdump($content);
 
                     return $content;
                 }
 
                 $content = $response->toArray();
-            // utmdump($content);
+            // // utmdump($content);
             } else {
                 $content = '';
             }

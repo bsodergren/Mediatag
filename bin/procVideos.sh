@@ -19,8 +19,8 @@ Usage: $(basename "$0") [OPTIONS]
 
 Options:
    -p,  --playlist   Run Playlist Command
-   -s,  --sort       Run Mediaupdate in sort folder
    -m,  --move       Move downloaded files, update and sort
+   -s,  --sort       Run Mediaupdate in sort folder
    -u,  --update     Run Media DB
    -f, --file
    "
@@ -65,10 +65,17 @@ shift $((OPTIND - 1))
 shopt -s nocasematch
 
 function DoPlaylist() {
-    echo "The name of this function is: ${FUNCNAME[0]}"
+   echo "The name of this function is: ${FUNCNAME[0]}"
    cd "${PLAYLIST_DIR}"
    playlist pl -M${__MAX} ${__FILE}
 
+}
+
+function DoUpdate() {
+   echo "The name of this function is: ${FUNCNAME[0]}"
+   pwd
+   mediaupdate
+   mediarename move -g
 }
 
 if [[ -n "${__PLAYLIST}" ]]; then
@@ -80,8 +87,8 @@ if [[ -n "${__MOVE}" ]]; then
    cd "${DOWNLOAD_DIR}"
    mediadownload
    cd "${PREMIUM_DIR}"
-   mediaupdate
-   mediarename move -g
+   DoUpdate
+
 fi
 
 if [[ -n "${__PLAYLIST}" ]] || [[ -n "${__MOVE}" ]]; then
@@ -91,9 +98,16 @@ fi
 if [[ -n "${__SORT}" ]]; then
    echo "Running Sort CMD"
    cd "${SORT_DIR}"
-   pwd
-   mediaupdate
-   mediarename move -g
+   var=$(mediasort)
+      echo -e " \n ${var}"
+   test="${var: -1}"
+
+   if [ "${test}" == "1" ]; then
+      DoUpdate
+      echo -e " \n $test"
+   fi
+#
+#
 fi
 
 if [[ -n "${__MEDIADB}" ]]; then

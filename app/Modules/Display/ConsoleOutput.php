@@ -9,6 +9,7 @@ namespace Mediatag\Modules\Display;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 class ConsoleOutput
@@ -33,7 +34,7 @@ class ConsoleOutput
         */
 
         $this->output    = $output;
-        $this->io        = new SymfonyStyle($input, $output);
+        $this->io        = new SymfonyStyle($input, $this->output);
         $this->formatter = new FormatterHelper();
 
         $this->output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
@@ -44,8 +45,21 @@ class ConsoleOutput
         $this->output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
         $this->output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
         $this->output->getFormatter()->setStyle('playlist', new OutputFormatterStyle('bright-magenta'));
-        $this->output->getFormatter()->setStyle('download', new OutputFormatterStyle('bright-blue'));
+        $this->output->getFormatter()->setStyle('download', new OutputFormatterStyle('blue'));
         $this->output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
+        // Mediatag::$output = $this->output;
+
+        $styleArray = $this->output->getFormatter()->getStyles();
+
+        if ($this->output instanceof ConsoleOutputInterface) {
+            $this->output = $output->getErrorOutput();
+            foreach ($styleArray as $name => $obj) {
+                $this->output->getFormatter()->setStyle($name, $obj);
+            }
+        }
+
+        //    utmdd("something else");
+        //
     }
 
     public function __call($method, $args)

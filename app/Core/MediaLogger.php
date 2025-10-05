@@ -99,7 +99,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         // $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
         // $this->formatLevelMap    = $formatLevelMap    + $this->formatLevelMap;
 
-        // utmdump([$this->verbosityLevelMap, $this->formatLevelMap]);
+        // // utmdump([$this->verbosityLevelMap, $this->formatLevelMap]);
         parent::__construct($output, $this->verbosityLevelMap, $this->formatLevelMap);
         //        $log = new ConsoleLogger($output);//, $this->verbosityLevelMap, $this->formatLevelMap);
 
@@ -236,7 +236,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         // the if condition check isn't necessary -- it's the same one that $output will do internally anyway.
         // We only do it for efficiency here as the message formatting is relatively expensive.
 
-        // utmdump([$level, $output->getVerbosity(), $this->verbosityLevelMap[$level]]);
+        // // utmdump([$level, $output->getVerbosity(), $this->verbosityLevelMap[$level]]);
 
         if ($output->getVerbosity() >= $this->verbosityLevelMap[$level]) {
             $output->writeln($this->ConsoleFormat($level, $message, $context));

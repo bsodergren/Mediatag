@@ -78,7 +78,7 @@ class MediaCache
     public static function forget($key)
     {
         // utminfo(func_get_args());
-        // utmdump("forgetting " . $key);
+        // // utmdump("forgetting " . $key);
         self::$stash->forget($key);
     }
 }

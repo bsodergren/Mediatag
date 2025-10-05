@@ -143,7 +143,7 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        utmdump([$tag, $firstCmp, $secondCmp]);
+        // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
@@ -161,13 +161,13 @@ trait MetaTags
                 } else {
                     if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
                         $return = $first;
-                        utmdump(['return first', $return]);
+                        // utmdump(['return first', $return]);
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
-                        utmdump(['return second', $return]);
+                        // utmdump(['return second', $return]);
                     } else {
                         $return = $second;
-                        utmdump(['return second', $return]);
+                        // utmdump(['return second', $return]);
 
                         //                        $return = $second;
                     }
@@ -175,7 +175,7 @@ trait MetaTags
             }
         } else {
             $return = $first;
-            utmdump(['return first', $return]);
+            // utmdump(['return first', $return]);
         }
         return $return;
     }
@@ -185,7 +185,7 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        utmdump([$tag, $firstCmp, $secondCmp]);
+        // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ('studio' == $tag) {
             $delim = '/';
@@ -203,13 +203,13 @@ trait MetaTags
                 } else {
                     if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
                         $return = $first;
-                        utmdump(['return first', $return]);
+                        // utmdump(['return first', $return]);
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
-                        utmdump(['return second', $return]);
+                        // utmdump(['return second', $return]);
                     } else {
                         $return = $first.$delim.$second;
-                        utmdump(['return second', $return]);
+                        // utmdump(['return second', $return]);
 
                         //                        $return = $second;
                     }
@@ -217,7 +217,7 @@ trait MetaTags
             }
         } else {
             $return = $first;
-            utmdump(['return first', $return]);
+            // utmdump(['return first', $return]);
         }
         return $return;
     }
@@ -251,7 +251,7 @@ trait MetaTags
         //     //     __MYSQL_VIDEO_CUSTOM__
         //     // );
         // }
-        utmdump(['return '.$tag, $return]);
+        // utmdump(['return '.$tag, $return]);
 
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
@@ -399,7 +399,7 @@ trait MetaTags
             $string = null;
         }
 
-        // utmdump([__METHOD__,$method,$string]);
+        // // utmdump([__METHOD__,$method,$string]);
         return $string;
     }
 

@@ -154,7 +154,7 @@ trait Helper
         if (is_array($params)) {
             foreach ($params as $key => $value) {
                 $key = '%%'.strtoupper($key).'%%';
-                // utmdump([$text,$value,$key]);
+                // // utmdump([$text,$value,$key]);
                 $text = str_replace($key, $value, $text);
             }
 

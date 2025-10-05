@@ -275,7 +275,7 @@ utmdd("fdsa");
         if (!Option::istrue('yes')) {
             $date = $this->lastUpdated();
         }
-        utmdump($date);
+        // utmdump($date);
         $file_array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date);
         if (!is_array($file_array)) {
             return 0;

@@ -104,7 +104,7 @@ trait Artist
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
             $aName = implode(' ', $parts);
-            // utmdump($aName);
+            // // utmdump($aName);
 
             if (true === $this->ignoreArtist($aName)) {
                 continue;
@@ -113,7 +113,7 @@ trait Artist
             if (true === $this->getArtistFullNames()) {
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
-                // utmdump([$artist_matches[0] ,$name_key]);
+                // // utmdump([$artist_matches[0] ,$name_key]);
                 if (array_key_exists($name_key, $artist_matches)) {
                     $aName = $artist_matches[$name_key];
                     if ('' != $aName) {
@@ -177,7 +177,7 @@ trait Artist
 
         $regex = $this->getArtistRegex();
         if ($regex) {
-            // utmdump($regex, $this->video_name);
+            // // utmdump($regex, $this->video_name);
             $success = preg_match($regex, $this->video_name, $output_array);
             if (0 != $success) {
                 if (true === $this->getArtistFullNames()) {

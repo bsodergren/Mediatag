@@ -24,7 +24,7 @@ class MediaBar
     public $bar;
     public $sectionName;
 
-    public $format = '%current:4s%/%max:4s% [%bar%] %percent:3s%%';
+    public $format = '%current:4s%/%max:4s% ,[%bar%], %percent:3s%%';
 
     public function __construct($count, $section = null, $width = 50)
     {
@@ -44,6 +44,7 @@ class MediaBar
 
     public static function addFormat($format = '<comment>%message:10s%</comment> %current:4s%/%max:4s% [%bar%] %percent:3s%%', $name = 'custom')
     {
+        // utmdump($format);
         ProgressBar::setFormatDefinition($name, $format);
     }
 

@@ -97,12 +97,12 @@ abstract class Mediatag extends MediaCommand
 
         $this->command = self::getDefaultName();
 
-        MediaCache::init($input, $output);
-        Option::init($input, $options);
+        MediaCache::init(self::$input, self::$output);
+        Option::init(self::$input, $options);
 
-        self::$Cursor  = new Cursor($output);
-        self::$Console = new ConsoleOutput($output, $input);
-        self::$Display = new Display($output);
+        self::$Cursor  = new Cursor(self::$output);
+        self::$Console = new ConsoleOutput( self::$output, self::$input);
+        self::$Display = new Display(self::$output);
         self::$dbconn  = new StorageDB();
 
         self::$finder     = new Finder();

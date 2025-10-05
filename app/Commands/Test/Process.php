@@ -119,7 +119,7 @@ class Process extends Mediatag
         foreach ($result['videos'] as $category) {
             //     // do some logic here
             unset($category['thumbs']);
-            utmdump($category);
+            // utmdump($category);
             Mediatag::$Console->writeln(''.$category['title']);
         }
         utmdd();
@@ -162,7 +162,7 @@ class Process extends Mediatag
     //     // $format->setPasses(1);
     //     // $video->save($format, $tmpFile);
     //     // //  $r = $video->getFFMpegDriver()->getProcessRunner();
-    //     // // utmdump($r);
+    //     // // // utmdump($r);
     //     // unset($ffmpeg);
     //     // unset($video);
 
@@ -190,7 +190,7 @@ class Process extends Mediatag
     //     // // utmdd($outputFile);
     //     // $video->concat([$file[0],$tmpFile])->saveFromSameCodecs($outputFile, true);
     //     // // $r = $video->getFFMpegDriver()->getProcessRunner();
-    //     // // utmdump($r);
+    //     // // // utmdump($r);
     //     // unlink($tmpFile);
     //     // // unlink($outputFile);
     //     // //echo $exec->stdout;

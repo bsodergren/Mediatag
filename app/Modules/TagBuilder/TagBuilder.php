@@ -74,7 +74,7 @@ class TagBuilder
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
         if (isset($updates)) {
-            utmdump($updates);
+            // // utmdump($updates);
             // UTMlog::Logger('Reader', $updates);
         }
 
@@ -136,7 +136,7 @@ class TagBuilder
             $tmpNetwork = $updates['network'];
 
             if (null !== $tmpNetwork) {
-                // UtmDump([$tmpNetwork,$tmpStudio]);
+                // // utmdump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
                     $studio = $tmpStudio.'/'.$tmpNetwork;
                 } else {
@@ -159,7 +159,7 @@ class TagBuilder
         }
 
         if (!isset($studio)) {
-            // utmdump([$current, $updates, $tmpStudio]);
+            // // utmdump([$current, $updates, $tmpStudio]);
 
             return null;
         }

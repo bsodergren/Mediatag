@@ -121,7 +121,7 @@ class WriteMeta extends MediatagExec
             $this->output->write("\t Skipping ".basename($command[1]));
         }
         if (true == $results) {
-            utmdump($results);
+            // utmdump($results);
 
             if (str_contains($results, 'signal')
             || str_contains($results, 'error')) {

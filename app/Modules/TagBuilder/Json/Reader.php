@@ -144,12 +144,12 @@ class Reader extends TagReader
 
         foreach ($keyList as $json_key) {
             if ('artist' == $tag) {
-                // utmdump(['artist', $this->json_array['cast']]);
+                // // utmdump(['artist', $this->json_array['cast']]);
             }
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ('studio' == $tag) {
-                    // utmdump([$value, $json_key, $tag]);
+                    // // utmdump([$value, $json_key, $tag]);
                 }
                 if ('categories' == $json_key) {
                     $keyword_value = $this->json_array['tags'];
@@ -162,7 +162,7 @@ class Reader extends TagReader
                     // if ('studio' == $tag) {
                     $value = ucwords($value);
                 }
-                // utmdump([$tag,$value]);
+                // // utmdump([$tag,$value]);
                 // UTMlog::Logger('json data ' . $tag, $value);
                 $this->tag_array[$tag] = $value;
                 // utmdd($this->tag_array[$tag]);
@@ -191,7 +191,7 @@ class Reader extends TagReader
             }
         }
 
-        // utmdump([$tag,$this->tag_array[$tag]]);
+        // // utmdump([$tag,$this->tag_array[$tag]]);
     }
 
     private function getJsonFile()
@@ -216,7 +216,7 @@ class Reader extends TagReader
                 $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
 
                 // if (file_exists($this->json_file)) {
-                utmdump($this->video_key);
+                // utmdump($this->video_key);
                 //     $this->json_string = FileSystem::read($this->json_file);
                 //     // utmdd($this->json_string);
 
@@ -243,7 +243,7 @@ class Reader extends TagReader
 
         $res = MediaArray::matchArtist(ARTIST_MAP, $string);
         if (null === $res) {
-            // utmdump($string);
+            // // utmdump($string);
         }
         if (null !== $res) {
             // if (is_array($artists_array))

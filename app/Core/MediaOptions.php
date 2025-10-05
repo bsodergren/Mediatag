@@ -59,7 +59,7 @@ class MediaOptions
     {
         $className = static::class;
 
-        // utmdump($className);
+        // // utmdump($className);
         $pathInfo   = explode('\\', $className);
         $pathInfo   = array_slice($pathInfo, 0, 3);
         $pathInfo[] = 'Options';
@@ -80,7 +80,7 @@ class MediaOptions
         $classPath = rtrim($className, $class);
 
         // $classPath = str_replace($tmpClass,"",$classPath);
-        // utmdump($classPath);
+        // // utmdump($classPath);
 
         // $classPath = rtrim($classPath, 'Commands\\') . '\\';
 
@@ -109,7 +109,7 @@ class MediaOptions
         if (null === $className) {
             $className = self::$callingClass;
 
-            // utmdump([$className, self::$CmdClass]);
+            // // utmdump([$className, self::$CmdClass]);
 
             if ($pos = strrpos($className, '\\')) {
                 $class = substr($className, $pos + 1);
@@ -119,7 +119,7 @@ class MediaOptions
 
             $className = rtrim($className, $class);
             $className = str_replace($tmpClass, '', $className);
-            // utmdump($classPath);
+            // // utmdump($classPath);
             $className = rtrim($className, 'Commands\\').'\\';
             $className .= 'Options';
         }
@@ -159,7 +159,7 @@ class MediaOptions
                     }
                 }
             }
-            // utmdump(self::$classObj);
+            // // utmdump(self::$classObj);
             $definitions = self::$classObj->Definitions();
             if (is_array($definitions)) {
                 $cmdOptions = self::getOptions(
@@ -251,11 +251,11 @@ class MediaOptions
                     $default,
                     function (CompletionInput $input) use ($name) {
                         if (method_exists(self::$classObj, 'optionClosure')) {
-                            utmdump(['exsts', $name, method_exists(self::$classObj, 'optionClosure')]);
+                            // utmdump(['exsts', $name, method_exists(self::$classObj, 'optionClosure')]);
 
                             return call_user_func([self::$classObj, 'optionClosure'], $input, $name);
                         } else {
-                            utmdump(['no no exsts', $name]);
+                            // utmdump(['no no exsts', $name]);
 
                             return $this->optionClosure($input, $name);
                         }
@@ -274,7 +274,7 @@ class MediaOptions
         $returnValue = null;
         $cmd         = 'list'.ucfirst($option);
 
-        utmdump([$cmd, method_exists($this, $cmd)]);
+        // utmdump([$cmd, method_exists($this, $cmd)]);
         $currentValue = $input->getCompletionValue();
         if (method_exists($this, $cmd)) {
             $returnValue = $this->$cmd($currentValue);

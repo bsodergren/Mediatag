@@ -94,7 +94,7 @@ class MediaCommand extends DoctrineCommand
             $method = $arguments['command'];
         }
 
-        // utmdump([$arguments, $this->command]);
+        // // utmdump([$arguments, $this->command]);
 
         $Process->$method();
 
@@ -185,7 +185,6 @@ class MediaCommand extends DoctrineCommand
                 throw new TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
             }
         }
-
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 

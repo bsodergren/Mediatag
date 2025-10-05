@@ -33,7 +33,7 @@ trait DeleteHelper
             foreach ($file_array as $file) {
                 Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
                 // Mediatag::$filesystem->remove($file);
-                utmdump($file);
+                // utmdump($file);
             }
         }
     }

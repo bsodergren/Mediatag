@@ -34,6 +34,8 @@ trait ChapterHelper
         $this->FileIdx = 0;
 
         $search = Option::getValue('clip', true);
+
+
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers();
 
@@ -42,7 +44,7 @@ trait ChapterHelper
             if (null !== $this->Marker->video_id) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Mediatag::$dbconn->query($query);
-                // utmdump($result);
+                // // utmdump($result);
                 if (count($result) > 0) {
                     $markers = $this->getVideoChapters($result);
                     if (null !== $markers) {
@@ -67,7 +69,7 @@ trait ChapterHelper
         foreach ($this->markerArray as $i =>$fileRow) {
             foreach ($fileRow as $K =>$FILE) {
                 $filename = $FILE['filename'];
-                // utmdump($FILE);
+                // // utmdump($FILE);
                 if (!array_key_exists('markers', $FILE)) {
                     continue;
                 }
