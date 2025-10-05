@@ -41,20 +41,20 @@ class RealityJunkies extends MileHighMedia
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
-            if (0 != $success) {
-                if (!array_key_exists($this->gettitleMatch(), $output_array)) {
+            if ($success != 0) {
+                if (! array_key_exists($this->gettitleMatch(), $output_array)) {
                     return null;
                 }
 
                 $title = str_replace($this->getTitleDelim(), ' ', $output_array[$this->gettitleMatch()]);
                 $title = trim($title);
-                if ('' == $output_array[2]) {
+                if ($output_array[2] == '') {
                     $output_array[2] = '01';
                 }
-                $vid = 'E'.$output_array[2];
-                $epi = 'Scene '.$output_array[3];
+                $vid = 'E' . $output_array[2];
+                $epi = 'Scene ' . $output_array[3];
 
-                return ucwords($title).' '.$vid.' '.$epi;
+                return ucwords($title) . ' ' . $vid . ' ' . $epi;
             }
         }
 
@@ -78,7 +78,7 @@ class RealityJunkies extends MileHighMedia
 
         $fs        = new File($file);
         $videoData = $fs->get();
-        $tagObj    = new TagReader();
+        $tagObj    = new TagReader;
         $tagObj->loadVideo($videoData);
         $tagBuilder = new TagBuilder($videoData['video_key'], $tagObj);
 
@@ -86,8 +86,8 @@ class RealityJunkies extends MileHighMedia
         $artistName   = $videoInfo['currentTags']['artist'];
         $artistString = $this->artistTransform($artistName);
 
-        if (!str_contains($filename, $artistString)) {
-            $file = str_replace('_', '_'.$artistString.'_', $file);
+        if (! str_contains($filename, $artistString)) {
+            $file = str_replace('_', '_' . $artistString . '_', $file);
         }
 
         return $file;

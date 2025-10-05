@@ -12,7 +12,7 @@ trait TitleMap
     {
         // utminfo(func_get_args());
 
-        $query = 'INSERT IGNORE INTO '.__MYSQL_TITLE__.' (title) VALUES ("'.$title.'")';
+        $query = 'INSERT IGNORE INTO ' . __MYSQL_TITLE__ . ' (title) VALUES ("' . $title . '")';
         $this->dbConn->rawQuery($query);
     }
 
@@ -20,7 +20,7 @@ trait TitleMap
     {
         // utminfo(func_get_args());
 
-        $query = 'DELETE FROM '.__MYSQL_TITLE__.' WHERE title = "'.$title.'"';
+        $query = 'DELETE FROM ' . __MYSQL_TITLE__ . ' WHERE title = "' . $title . '"';
         $this->dbConn->rawQuery($query);
     }
 
@@ -28,7 +28,7 @@ trait TitleMap
     {
         // utminfo(func_get_args());
 
-        $query = 'SELECT title FROM '.__MYSQL_TITLE__;
+        $query = 'SELECT title FROM ' . __MYSQL_TITLE__;
         $res   = $this->dbConn->rawQuery($query);
         foreach ($res as $k => $val) {
             $namesArray[] = $val['title'];

@@ -6,16 +6,18 @@
 
 namespace Mediatag\Commands\Backup;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-use const DIRECTORY_SEPARATOR;
-
 class Process extends Mediatag
 {
     use Helper;
+
     public $video_array;
+
     public $backupDirectory;
 
     public $commandList = [
@@ -58,7 +60,7 @@ class Process extends Mediatag
 
         parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         //        $this->backupDirectory = $file;
-        $this->backupDirectory = __DB_BACKUP_ROOT__.DIRECTORY_SEPARATOR.$file;
+        $this->backupDirectory = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR . $file;
     }
 
     public function __call($m, $a)

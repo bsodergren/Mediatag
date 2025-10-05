@@ -29,18 +29,21 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        'colors'     => [
-            'colors'      => null,
+        'colors' => [
+            'colors' => null,
         ],
     ];
 
     public static $progressIndicator;
+
     public static $progressIndicator3;
 
     public static $outLn;
 
     public static $outCmd;
+
     public static $out_e;
+
     public static $out_x;
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
@@ -52,7 +55,7 @@ class Process extends Mediatag
 
         self::$progressIndicator  = new MediaIndicator('Top');
         self::$progressIndicator3 = new MediaIndicator('second');
-        self::$progressIndicator->startIndicator('watching folder '.__CURRENT_DIRECTORY__);
+        self::$progressIndicator->startIndicator('watching folder ' . __CURRENT_DIRECTORY__);
         self::$outLn  = $display->MetaBlockSection;
         self::$outCmd = $display->VideoInfoSection;
     }
@@ -64,11 +67,11 @@ class Process extends Mediatag
         //     // Mediatag::$output->writeln('Updating timestamp...  ' . time());
 
         $monitor = new Monitor(MonitorConfigurator::factory()
-        ->setBaseDirectory(__CURRENT_DIRECTORY__)
-        ->setLevel(4)
-        ->setFilesToMonitor([
-            '*.mp4',
-        ]));
+            ->setBaseDirectory(__CURRENT_DIRECTORY__)
+            ->setLevel(4)
+            ->setFilesToMonitor([
+                '*.mp4',
+            ]));
 
         $loop = Loop::get();
         $loop->addPeriodicTimer(0.5, function () {
@@ -76,45 +79,45 @@ class Process extends Mediatag
         });
 
         $monitor
-        ->on(Monitor::EV_CLOSE, function ($path, $monitor) {
-            if (!str_contains($path, '-temp-')) {
-                // self::writeOut('file closed: ', dirname($path), 'update');
-                // sleep(2);
-                self::$progressIndicator3->startIndicator('Updating file '.dirname($path));
+            ->on(Monitor::EV_CLOSE, function ($path, $monitor) {
+                if (! str_contains($path, '-temp-')) {
+                    // self::writeOut('file closed: ', dirname($path), 'update');
+                    // sleep(2);
+                    self::$progressIndicator3->startIndicator('Updating file ' . dirname($path));
 
-                //                self::writeOut('file closed: ', \dirname($path), 'update');
-                $this->update($path);
+                    //                self::writeOut('file closed: ', \dirname($path), 'update');
+                    $this->update($path);
 
-                $this->dbupdate();
-                $this->dbupdateAll();
-                //         }
-                // self::writeOut('file closed: ', basename($path), 'update');
-                // echo "file closed:   $path\n";
-            }
-        })
-          ->on(Monitor::EV_CREATE, function ($path, $monitor) {
-              //   self::writeOut('File created: ', basename($path), 'info');
-          })
-          ->on(Monitor::EV_MODIFY, function ($path, $monitor) {
-              // echo "modified:  $path\n";
-          })
-          ->on(Monitor::EV_DELETE, function ($path, $monitor) {
-              // $this->dbupdate();
-              self::writeOut('File deleted: ', basename($path), 'error');
-          })
-          ->run();
+                    $this->dbupdate();
+                    $this->dbupdateAll();
+                    //         }
+                    // self::writeOut('file closed: ', basename($path), 'update');
+                    // echo "file closed:   $path\n";
+                }
+            })
+            ->on(Monitor::EV_CREATE, function ($path, $monitor) {
+                //   self::writeOut('File created: ', basename($path), 'info');
+            })
+            ->on(Monitor::EV_MODIFY, function ($path, $monitor) {
+                // echo "modified:  $path\n";
+            })
+            ->on(Monitor::EV_DELETE, function ($path, $monitor) {
+                // $this->dbupdate();
+                self::writeOut('File deleted: ', basename($path), 'error');
+            })
+            ->run();
     }
 
     public static function writeOut($type, $line, $style = 'info')
     {
         self::$outLn->writeln('');
-        self::$outLn->writeln('<'.$style.'>'.$type.'</> <comment>'.trim($line).'</comment>');
+        self::$outLn->writeln('<' . $style . '>' . $type . '</> <comment>' . trim($line) . '</comment>');
     }
 
     public static function cmdOut($line, $style = 'info')
     {
         // $this->out->writeln('');
-        self::$outCmd->writeln('<'.$style.'>'.$line.'</>');
+        self::$outCmd->writeln('<' . $style . '>' . $line . '</>');
     }
 
     private function update($file)
@@ -131,7 +134,7 @@ class Process extends Mediatag
             //     echo 'OUT > '.$buffer;
             // }
 
-            if (!str_contains($buffer, 'Progress')) {
+            if (! str_contains($buffer, 'Progress')) {
                 self::cmdOut($buffer);
             } else {
                 self::$progressIndicator3->advance();

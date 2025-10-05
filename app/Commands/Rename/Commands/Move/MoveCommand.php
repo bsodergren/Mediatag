@@ -17,10 +17,12 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class MoveCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
-    public $command          = [
-        'move'    => ['moveStudios' => null,
-            'prunedirs'             => null,
+
+    public $command = [
+        'move' => ['moveStudios' => null,
+            'prunedirs'          => null,
         ],
     ];
 }

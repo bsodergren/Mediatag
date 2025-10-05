@@ -13,11 +13,12 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class AddCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
 
     public $command = [
-        'add'    => [
-            'exec'         => null,
-            'addMarker'    => null, ],
+        'add' => [
+            'exec'      => null,
+            'addMarker' => null, ],
     ];
 }

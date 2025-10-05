@@ -14,7 +14,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $this->obj = new GifPreviewFiles();
+        $this->obj = new GifPreviewFiles;
 
         $this->checkClean();
 

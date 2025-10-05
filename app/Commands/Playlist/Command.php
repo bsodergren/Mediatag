@@ -20,10 +20,13 @@ final class Command extends MediaCommand
 {
     use Lang;
 
-    public const CMD_NAME        = NAME;
+    public const CMD_NAME = NAME;
+
     public const CMD_DESCRIPTION = DESCRIPTION;
-    public const USE_LIBRARY     = false;
-    public const SKIP_SEARCH     = true;
+
+    public const USE_LIBRARY = false;
+
+    public const SKIP_SEARCH = true;
     // public static $SingleCommand = true;
 
     public $process;
@@ -31,28 +34,28 @@ final class Command extends MediaCommand
     protected $db;
 
     public $command = [
-        'pl'           => [
-            'cleanBrkDownloads'           => null,
-            'docompactPlaylist'           => null,
-            'dodownloadPlaylist'          => null,
+        'pl'       => [
+            'cleanBrkDownloads'  => null,
+            'docompactPlaylist'  => null,
+            'dodownloadPlaylist' => null,
         ],
-        'download'           => [
-            'cleanBrkDownloads'              => null,
+        'download' => [
+            'cleanBrkDownloads'     => null,
             // 'docompactPlaylist'           => null,
-            'dodownloadPlaylistURL'          => null,
+            'dodownloadPlaylistURL' => null,
         ],
         // 'missing'           => [
         //     // 'exec'        => null,
         //     'missing' => null,
         // ],
-        'find'              => [
+        'find'     => [
             'find' => null,
             // 'default' => null,
         ],
         // 'cleanBrkDownloads' => [
         //     'cleanBrkDownloads' => null,
         // ],
-        'compact'            => [
+        'compact'  => [
             'docompactPlaylist' => null,
         ],
         // 'clean'             => [

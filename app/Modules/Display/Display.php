@@ -6,6 +6,9 @@
 
 namespace Mediatag\Modules\Display;
 
+use const PHP_EOL;
+use const STR_PAD_LEFT;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -19,12 +22,10 @@ use function count;
 use function is_string;
 use function strlen;
 
-use const PHP_EOL;
-use const STR_PAD_LEFT;
-
 class Display
 {
     public $BarSection1;
+
     public $BarBottom;
 
     public $LineBreaks = true;
@@ -63,7 +64,7 @@ class Display
     {
         // utminfo();
 
-        $this->formatter = new FormatterHelper();
+        $this->formatter = new FormatterHelper;
 
         // $outputStyle = new OutputFormatterStyle('red');
         // Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
@@ -87,7 +88,7 @@ class Display
     public function DisplayTable(array $filelist_array)
     {
         $count = count($filelist_array);
-        if (0 == $count) {
+        if ($count == 0) {
             Mediatag::$output->writeln('<error>No files found </error>');
 
             return;
@@ -96,11 +97,11 @@ class Display
         $idx = 1;
         foreach ($filelist_array as $key => $value) {
             $display = $this->displayFileInfo($value, $count, $idx);
-            if (true === $display) {
-                if (true == $this->LineBreaks) {
+            if ($display === true) {
+                if ($this->LineBreaks == true) {
                     if ($count != $idx) {
                         $line_array = [];
-                        for ($n = 0; $n < 7; ++$n) {
+                        for ($n = 0; $n < 7; $n++) {
                             $line_array[] = '';
                         }
                         $line = implode(PHP_EOL, $line_array);
@@ -108,7 +109,7 @@ class Display
                     }
                 }
             }
-            ++$idx;
+            $idx++;
         }
         // UTMlog::logger('end File display');
     }
@@ -119,7 +120,7 @@ class Display
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeln('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
+            $this->fileCountSection->writeln('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
             $this->fileInfoSection->writeln('<info>   </info>');
             $this->processOutput->setMaxHeight(9);
         }
@@ -133,8 +134,8 @@ class Display
 
         $method   = 'overwrite';
         $tagCount = 0;
-        if (!array_key_exists('currentTags', $fileinfo)) {
-            $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
+        if (! array_key_exists('currentTags', $fileinfo)) {
+            $fileinfo['metatags'] = (new TagReader)->loadVideo($fileinfo)->getMetaValues();
             // utmdd([__METHOD__,$fileinfo]);
 
             $tagCount = count($fileinfo['metatags']);
@@ -147,7 +148,7 @@ class Display
         $this->MetaBlockSection->setMaxHeight($tagCount + 6);
         $this->VideoInfoSection->setMaxHeight(3);
 
-        if (0 == $tagCount) {
+        if ($tagCount == 0) {
             utmdd($tagCount);
             $this->fileCountSection->{$method}('bl');
             $this->fileInfoSection->{$method}('bllll');
@@ -160,11 +161,11 @@ class Display
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
-        $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
+        $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files '.Mediatag::$tmpText);
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
         Mediatag::$tmpText = null;
-        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
+        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
         $this->MetaBlockSection->{$method}($this->blockDisplay);
         usleep($this->displayTimer);
 
@@ -210,9 +211,9 @@ class Display
     {
         // utminfo(func_get_args());
 
-        if (null !== $value) {
+        if ($value !== null) {
             // $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
-            $change_value = "\t<".$this->text_style.'>'.$value.'</>';
+            $change_value = "\t<" . $this->text_style . '>' . $value . '</>';
 
             return $this->indent($this->formatter->formatSection($tag, $change_value, $style), $this->padbuffer);
         }
@@ -270,14 +271,14 @@ class Display
             $style            = 'update';
         }
         if (array_key_exists('updateTags', $fileinfo)) {
-            if (!array_key_exists($tag, $fileinfo['updateTags'])) {
+            if (! array_key_exists($tag, $fileinfo['updateTags'])) {
                 return $string;
             }
         }
 
         if (array_key_exists($tag, $current)) {
             $current_value = $current[$tag];
-            if ('' != $current_value) {
+            if ($current_value != '') {
                 $string .= $this->formatTagLine($tag, $current_value, $style);
             }
         }

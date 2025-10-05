@@ -6,6 +6,4 @@
 
 namespace Mediatag\Commands\Watch;
 
-trait Helper
-{
-}
+trait Helper {}

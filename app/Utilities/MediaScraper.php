@@ -6,11 +6,11 @@
 
 namespace Mediatag\Utilities;
 
+use const PHP_EOL;
+
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\HttpClient\HttpClient;
-
-use const PHP_EOL;
 
 class MediaScraper
 {
@@ -19,7 +19,7 @@ class MediaScraper
         $key     = md5($url);
         $content = MediaCache::get($key);
         // // utmdump([$url,$content]);
-        if (false == $content) {
+        if ($content == false) {
             $client   = HttpClient::create();
             $response = $client->request(
                 'GET',
@@ -29,7 +29,7 @@ class MediaScraper
 
             $statusCode = $response->getStatusCode();
             // // utmdump([$url, $statusCode]);
-            if ('200' == $statusCode) {
+            if ($statusCode == '200') {
                 // $statusCode = 200
                 $contentType = $response->getHeaders()['content-type'][0];
                 // $contentType = 'application/json'
@@ -42,16 +42,16 @@ class MediaScraper
 
                 // }
                 // $content = '{"id":521583, "name":"symfony-docs", ...}'
-                if ('text/plain;charset=UTF-8' == $contentType) {
+                if ($contentType == 'text/plain;charset=UTF-8') {
                     // $streamInfo = $response->toStream();
                     $filename = $response->getHeaders()['content-disposition'][0];
                     preg_match('/filename="(.*)"/', $filename, $output_array);
-                    $subtitleVTTFilename = __PLEX_HOME__.'/Subtitles/'.$output_array[1];
+                    $subtitleVTTFilename = __PLEX_HOME__ . '/Subtitles/' . $output_array[1];
 
                     $subtitleVTTFilename = str_replace('srt', 'vtt', $subtitleVTTFilename);
                     // // utmdump($subtitleVTTFilename);
-                    if (!file_exists($subtitleVTTFilename)) {
-                        $vtt = 'WEBVTT'.PHP_EOL.PHP_EOL.$content;
+                    if (! file_exists($subtitleVTTFilename)) {
+                        $vtt = 'WEBVTT' . PHP_EOL . PHP_EOL . $content;
                         // Replace microseconds separator: 00,000 -> 00.000
                         $vtt = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
 
@@ -62,7 +62,7 @@ class MediaScraper
 
                     return null;
                 }
-                if ('text/html; charset=utf-8' == $contentType) {
+                if ($contentType == 'text/html; charset=utf-8') {
                     $content = $response->getContent();
                     // // utmdump($content);
 
@@ -70,7 +70,7 @@ class MediaScraper
                 }
 
                 $content = $response->toArray();
-            // // utmdump($content);
+                // // utmdump($content);
             } else {
                 $content = '';
             }

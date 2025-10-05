@@ -13,9 +13,11 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class ThumbnailCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
-    public $command          = [
-        'thumbnail'    => [
+
+    public $command = [
+        'thumbnail' => [
             // 'init' => null,
             // 'exec' => null,
             'execThumb' => null],

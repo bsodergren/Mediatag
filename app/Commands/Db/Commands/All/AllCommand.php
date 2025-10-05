@@ -13,14 +13,15 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class AllCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'all'    => [
-            'init'            => null,
-            'exec'            => null,
-            'execThumb'       => null,
-            'execInfo'        => null,
-            'execPreview'     => null, ],
+        'all' => [
+            'init'        => null,
+            'exec'        => null,
+            'execThumb'   => null,
+            'execInfo'    => null,
+            'execPreview' => null, ],
     ];
 }

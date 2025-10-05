@@ -24,6 +24,7 @@ class Process extends Mediatag
         // 'init' => null,
         'exec' => null,
     ];
+
     public $commandList = [
         'lowercase' => [
             'lowercase' => null,
@@ -32,8 +33,10 @@ class Process extends Mediatag
             'translate' => true,
         ],
     ];
+
     protected $useFuncs = ['addMeta', 'setupMap'];
-    public $genrePath   = [];
+
+    public $genrePath = [];
 
     private $searchChars = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
 

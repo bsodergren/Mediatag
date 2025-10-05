@@ -17,7 +17,7 @@ trait MediaProcess
     public function exec($option = null)
     {
         $this->VideoList = parent::getVideoArray();
-        if (0 == count($this->VideoList['file'])) {
+        if (count($this->VideoList['file']) == 0) {
             return SymCommand::SUCCESS;
         }
     }
@@ -29,7 +29,7 @@ trait MediaProcess
                 if (method_exists($this, $cmd)) {
                     $this->{$cmd}($option);
                 } else {
-                    Mediatag::$output->writeln('<info>'.__LINE__.':'.$cmd.' doesnt exist</info>');
+                    Mediatag::$output->writeln('<info>' . __LINE__ . ':' . $cmd . ' doesnt exist</info>');
 
                     return 0;
                 }

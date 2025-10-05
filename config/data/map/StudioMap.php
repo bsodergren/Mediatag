@@ -3,7 +3,6 @@
 /**
  * Command like Metatag writer for video files.
  */
-
 const STUDIO_MAP = [
     // 'myhusbandbroughthomehismistress' => 'MyHusband',
     // 'harmonyfilms'                       => 'Harmony Films',
@@ -25,10 +24,10 @@ const STUDIO_MAP = [
 
     // 'thagson'                         => 'AdultTime',
 
-    '21stsextury'         => 'TwentyFirstSextury',
-    '1000facials'         => 'ThousandFacials',
-    'private'             => 'PrivateVid',
-    'self'                => 'SelfVids',
+    '21stsextury' => 'TwentyFirstSextury',
+    '1000facials' => 'ThousandFacials',
+    'private'     => 'PrivateVid',
+    'self'        => 'SelfVids',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',

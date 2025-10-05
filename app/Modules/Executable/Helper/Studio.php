@@ -21,12 +21,13 @@ class Studio
 
     public $options = [
         '-o',
-        __PLEX_DOWNLOAD__.'/Studios/'.Youtube::__YT_DL_FORMAT__,
+        __PLEX_DOWNLOAD__ . '/Studios/' . Youtube::__YT_DL_FORMAT__,
         '-u',
         CONFIG['NUB_USERNAME'],
         '-p',
         CONFIG['NUB_PASSWORD'],
     ];
+
     public $obj;
 
     public function __construct($obj)
@@ -39,10 +40,10 @@ class Studio
         // $buffer = $this->obj->cleanBuffer($buffer);
 
         $outputText = '';
-        $line_id    = '<id>'.$this->obj->num_of_lines.'</id>';
+        $line_id    = '<id>' . $this->obj->num_of_lines . '</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
-                if ('' != $matches[2]) {
+                if ($matches[2] != '') {
                     $this->obj->key = $matches[2];
                 }
             }
@@ -122,7 +123,7 @@ class Studio
                 break;
 
             case str_contains($buffer, 'ERROR'):
-                $outputText = $this->obj->error($buffer, $line_id, 'Uncaught Error </>  <comment>'.$buffer.'</comment><error>');
+                $outputText = $this->obj->error($buffer, $line_id, 'Uncaught Error </>  <comment>' . $buffer . '</comment><error>');
                 // $this->obj->updatePlaylist('error');
                 // $this->obj->updateIdList(PlaylistProcess::ERRORIDS);
 
@@ -138,7 +139,7 @@ class Studio
         //     }
         //     $outputText = __LINE__ . '<comment>' . $this->obj->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' ;
         // }
-        if ('' != $outputText) {
+        if ($outputText != '') {
             $this->obj->Console->write($outputText);
         }
     }

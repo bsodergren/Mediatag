@@ -16,9 +16,11 @@ final class UpdateCommand extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
-    public $command          = [
-        'update'    => [
+
+    public $command = [
+        'update' => [
             'exec'         => null,
             'getChanges'   => null,
             'writeChanges' => null,

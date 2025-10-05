@@ -17,11 +17,13 @@ class VideoFileInfo extends VideoInfo
     public $video_key;
 
     public $video_file;
+
     public $video_name;
 
     public $resultCount;
 
     public $VideoInfo;
+
     public $thumbType = 'info';
 
     public $maxLen = 75;
@@ -49,26 +51,25 @@ class VideoFileInfo extends VideoInfo
 
     public static function compareDupes($file, $sfile)
     {
-
-// [$keep,$move]
-        if(!file_exists($file)){
+        // [$keep,$move]
+        if (! file_exists($file)) {
             return [$sfile, $file];
         }
 
-        if(!file_exists($sfile)){
+        if (! file_exists($sfile)) {
             return [$file, $sfile];
         }
 
         $return    = 'A';
         $file1     = new MediaFile($file);
         $file1Info = $file1->get();
-        $tag1      = (new VideoTags())->get($file1Info['video_key'], $file);
+        $tag1      = (new VideoTags)->get($file1Info['video_key'], $file);
         $f1        = new FileReader($file1Info);
         $genre1Dir = $f1->getGenre();
 
         $file2     = new MediaFile($sfile);
         $file2Info = $file2->get();
-        $tag2      = (new VideoTags())->get($file2Info['video_key'], $sfile);
+        $tag2      = (new VideoTags)->get($file2Info['video_key'], $sfile);
         $f2        = new FileReader($file2Info);
         $genre2Dir = $f2->getGenre();
 
@@ -97,7 +98,7 @@ class VideoFileInfo extends VideoInfo
             }
         }
 
-        if ('B' == $return) {
+        if ($return == 'B') {
             return [$video2Info['file'], $video1Info['file']];
         } else {
             return [$video1Info['file'], $video2Info['file']];
@@ -110,7 +111,7 @@ class VideoFileInfo extends VideoInfo
         // $videoInfo = MediaCache::get($cacheKey);
 
         // if (false === $videoInfo) {
-        $mediaInfo          = new MediaInfo();
+        $mediaInfo          = new MediaInfo;
         $mediaInfoContainer = $mediaInfo->getInfo($file);
         $videos             = $mediaInfoContainer->getVideos();
         $general            = $mediaInfoContainer->getGeneral();
@@ -123,12 +124,12 @@ class VideoFileInfo extends VideoInfo
         }
         foreach ($videos as $video) {
             $videoInfo['format'] = (string) $general->get('format');
-            if ('JPEG' == $video->get('format')->getshortname()) {
+            if ($video->get('format')->getshortname() == 'JPEG') {
                 continue;
             }
 
             $bit_rate = $video->get('bit_rate');
-            if (null === $bit_rate) {
+            if ($bit_rate === null) {
                 $bit_rate = $video->get('maximum_bit_rate');
             }
 

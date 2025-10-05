@@ -13,5 +13,5 @@ use function DI\create;
 
 return [
     Config::class        => create(Config::class)->constructor($_ENV),
-    EntityManager::class => fn (MediaConfig $config) => EntityManager::create($config->db, ORMSetup::createAttributeMetadataConfiguration([__PROJECT_ROOT__.'/app/Entity'])),
+    EntityManager::class => fn (MediaConfig $config) => EntityManager::create($config->db, ORMSetup::createAttributeMetadataConfiguration([__PROJECT_ROOT__ . '/app/Entity'])),
 ];

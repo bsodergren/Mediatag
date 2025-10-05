@@ -29,9 +29,7 @@ class Title extends TagBuilder
         return parent::writeTagList($text, $file);
     }
 
-    public function getTagValue()
-    {
-    }
+    public function getTagValue() {}
 
     public static function clean($clean_text, $file = null)
     {
@@ -86,15 +84,15 @@ class Title extends TagBuilder
             }
         }
 
-        if (!isset($titleText)) {
+        if (! isset($titleText)) {
         }
 
-        if (false === $r) {
+        if ($r === false) {
             //  self::writeTagList($titleText);
         }
         // UTMlog::Logger('after', $titleText);
 
-        Mediatag::$log->notice("CleanTitle '{title}'", ['title'=>$titleText]);
+        Mediatag::$log->notice("CleanTitle '{title}'", ['title' => $titleText]);
 
         return $titleText;
     }

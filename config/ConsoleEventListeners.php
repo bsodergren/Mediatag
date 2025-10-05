@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -9,7 +10,7 @@ use Symfony\Component\Console\Event\ConsoleSignalEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-$dispatcher = new EventDispatcher();
+$dispatcher = new EventDispatcher;
 
 $dispatcher->addListener(ConsoleEvents::SIGNAL, function (ConsoleSignalEvent $event): void {
     // gets the signal number
@@ -20,7 +21,7 @@ $dispatcher->addListener(ConsoleEvents::SIGNAL, function (ConsoleSignalEvent $ev
     $event->setExitCode(0);
 
     $command->cleanOnEvent();
-    if (\SIGINT === $signal) {
+    if ($signal === \SIGINT) {
         echo 'bye bye!';
     }
 

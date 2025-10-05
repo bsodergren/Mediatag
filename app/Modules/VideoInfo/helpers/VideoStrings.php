@@ -6,11 +6,11 @@
 
 namespace Mediatag\Modules\VideoInfo\helpers;
 
+use const STR_PAD_LEFT;
+
 use Mediatag\Utilities\Strings;
 
 use function strlen;
-
-use const STR_PAD_LEFT;
 
 trait VideoStrings
 {
@@ -49,20 +49,20 @@ trait VideoStrings
     {
         $int = str_pad($int, 4, ' ', STR_PAD_LEFT);
 
-        return '<comment>'.$int.'</comment> '.$space;
+        return '<comment>' . $int . '</comment> ' . $space;
     }
 
     public function getVideoText()
     {
         // utminfo(func_get_args());
 
-        return $this->getText().' for '.$this->setMessage($this->video_file);
+        return $this->getText() . ' for ' . $this->setMessage($this->video_file);
     }
 
     public function getTableField()
     {
         $thumbType = $this->thumbType;
-        if ('markers' == $this->thumbType) {
+        if ($this->thumbType == 'markers') {
             $thumbType = 'thumbnail';
         }
 

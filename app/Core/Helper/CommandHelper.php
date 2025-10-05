@@ -13,13 +13,14 @@ use function array_slice;
 trait CommandHelper
 {
     private $defaultValues = [];
+
     private $completionCmd = [];
 
     protected function loadDirs()
     {
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem;
         foreach (__CREATE_DIRS__ as $dir) {
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }
         }

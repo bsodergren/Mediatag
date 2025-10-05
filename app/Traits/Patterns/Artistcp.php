@@ -6,14 +6,14 @@
 
 namespace Mediatag\Traits\Patterns;
 
+use const ARRAY_FILTER_USE_KEY;
+use const CASE_LOWER;
+use const PREG_SPLIT_NO_EMPTY;
+
 use Mediatag\Utilities\MediaArray;
 
 use function array_key_exists;
 use function count;
-
-use const ARRAY_FILTER_USE_KEY;
-use const CASE_LOWER;
-use const PREG_SPLIT_NO_EMPTY;
 
 trait Artistcp
 {
@@ -110,11 +110,11 @@ trait Artistcp
 
             $aName = implode(' ', $parts);
 
-            if (true === $this->ignoreArtist($aName)) {
+            if ($this->ignoreArtist($aName) === true) {
                 // continue;
             }
 
-            if (true === $this->getArtistFullNames()) {
+            if ($this->getArtistFullNames() === true) {
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
                 $matched  = array_filter($artist_matches, function ($value) use ($name_key) {
@@ -129,22 +129,22 @@ trait Artistcp
                 }, ARRAY_FILTER_USE_KEY);
                 $key = array_key_first($matched);
 
-                if (false !== $matched) {
+                if ($matched !== false) {
                     // utmdd([$matched[$key] ,$name_key,$aName]);
-                    if (!array_key_exists($key, $artist_matches)) {
+                    if (! array_key_exists($key, $artist_matches)) {
                         continue;
                     }
                     $aName = $artist_matches[$key];
                     // utmdump($name_key, $aName);
-                    if (true == str_contains($prev_name, $aName)) {
+                    if (str_contains($prev_name, $aName) == true) {
                         continue;
                     }
-                    if ('' != $aName) {
+                    if ($aName != '') {
                         $prev_name    = $aName;
                         $namesArray[] = $aName;
                     }
                 } else {
-                    if (false == str_contains($prev_name, $aName)) {
+                    if (str_contains($prev_name, $aName) == false) {
                         $namesArray[] = $aName;
                     }
                 }
@@ -154,13 +154,14 @@ trait Artistcp
         }
         $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
 
-        if (null !== $titleNames) {
+        if ($titleNames !== null) {
             $video = strtolower($this->video_name);
             foreach ($titleNames as $k => $name) {
                 $tname = strtolower(str_replace('_', '', $name));
 
-                if (!str_contains($video, $tname)) {
+                if (! str_contains($video, $tname)) {
                     unset($titleNames[$k]);
+
                     continue;
                 }
                 $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
@@ -202,9 +203,9 @@ trait Artistcp
         $regex = $this->getArtistRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
-            if (0 != $success) {
-                if (true === $this->getArtistFullNames()) {
-                    if ('MFF' == $this->getGenre()) {
+            if ($success != 0) {
+                if ($this->getArtistFullNames() === true) {
+                    if ($this->getGenre() == 'MFF') {
                         $delim = ', ';
                     } else {
                         $delim = ', ';
@@ -213,10 +214,10 @@ trait Artistcp
                 } else {
                     $delim = ', ';
                 }
-                if (!array_key_exists($this->getArtistMatch(), $output_array)) {
+                if (! array_key_exists($this->getArtistMatch(), $output_array)) {
                     return null;
                 }
-                if ('' == $output_array[$this->getArtistMatch()]) {
+                if ($output_array[$this->getArtistMatch()] == '') {
                     return null;
                 }
                 $names = $this->getArtistTextTransform($output_array[$this->getArtistMatch()]);

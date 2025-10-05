@@ -18,6 +18,7 @@ use function defined;
 class TagBuilder
 {
     use MetaTags;
+
     public static $dbConn;
 
     public $videoInfo;
@@ -42,24 +43,24 @@ class TagBuilder
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
 
-        if (!defined('__UPDATE_SET_ONLY__')) {
+        if (! defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
-            Mediatag::$log->notice('updates {updates} ', ['updates'=>$updates]);
+            Mediatag::$log->notice('updates {updates} ', ['updates' => $updates]);
 
             // }
 
-            if (!str_starts_with($this->video_key, 'x')) {
+            if (! str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 //
-                // 
-                if (null !== $updates) {
-                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key,'combine');
+                //
+                if ($updates !== null) {
+                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key, 'combine');
                 } else {
                     $updates = $jsonupdates;
                 }
 
-                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates'=>$jsonupdates]);
+                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
@@ -70,7 +71,7 @@ class TagBuilder
         // if (null !== $jsonupdates) {
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
-        if (null !== $DbUpdates) {
+        if ($DbUpdates !== null) {
             $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);
         }
         if (isset($updates)) {
@@ -79,7 +80,7 @@ class TagBuilder
         }
 
         foreach (Option::getOptions() as $option => $value) {
-            $method = 'set'.$option;
+            $method = 'set' . $option;
             if (method_exists($this->ReaderObj, $method)) {
                 // UTMlog::Logger('Option ' . $option, $method, $value);
                 $updates[$option] = $this->ReaderObj->{$method}($value, $videoInfo['video_key']);
@@ -95,7 +96,7 @@ class TagBuilder
             $current                  = $this->ReaderObj->getMetaValues();
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
-                if ('studio' == $tag) {
+                if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
@@ -114,12 +115,12 @@ class TagBuilder
         $tmpNetwork = null;
 
         foreach ($current as $tag => $value) {
-            if (null === $value) {
+            if ($value === null) {
                 unset($current[$tag]);
             }
         }
         foreach ($updates as $tag => $value) {
-            if (null === $value) {
+            if ($value === null) {
                 unset($updates[$tag]);
             }
         }
@@ -135,10 +136,10 @@ class TagBuilder
         if (array_key_exists('network', $updates)) {
             $tmpNetwork = $updates['network'];
 
-            if (null !== $tmpNetwork) {
+            if ($tmpNetwork !== null) {
                 // // utmdump([$tmpNetwork,$tmpStudio]);
                 if ($tmpStudio != $tmpNetwork) {
-                    $studio = $tmpStudio.'/'.$tmpNetwork;
+                    $studio = $tmpStudio . '/' . $tmpNetwork;
                 } else {
                     $studio = $tmpStudio;
                 }
@@ -146,9 +147,9 @@ class TagBuilder
         } else {
             if (array_key_exists('network', $current)) {
                 $tmpNetwork = $current['network'];
-                if (null !== $tmpNetwork) {
+                if ($tmpNetwork !== null) {
                     if ($tmpStudio != $tmpNetwork) {
-                        $studio = $tmpStudio.'/'.$tmpNetwork;
+                        $studio = $tmpStudio . '/' . $tmpNetwork;
                     }
                 } else {
                     $studio = $tmpStudio;
@@ -158,7 +159,7 @@ class TagBuilder
             }
         }
 
-        if (!isset($studio)) {
+        if (! isset($studio)) {
             // // utmdump([$current, $updates, $tmpStudio]);
 
             return null;
@@ -229,12 +230,12 @@ class TagBuilder
     private function compareTags(array $Current, array $New)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->notice("compareTags {Current} => '{new_tag}'", ['Current'=>$Current, 'new_tag'=>$New]);
+        Mediatag::$log->notice("compareTags {Current} => '{new_tag}'", ['Current' => $Current, 'new_tag' => $New]);
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
-            $current_tag    = $tag.'_current';
+            $current_tag    = $tag . '_current';
             ${$current_tag} = '';
-            $new_tag        = $tag.'_new';
+            $new_tag        = $tag . '_new';
             ${$new_tag}     = '';
 
             if (array_key_exists($tag, $Current)) {
@@ -245,17 +246,18 @@ class TagBuilder
                 ${$new_tag} = $New[$tag];
             }
 
-            Mediatag::$log->notice("Metatags {tag} {current_tag} => '{new_tag}'", ['tag'=>$tag, 'current_tag'=>${$current_tag}, 'new_tag'=>${$new_tag}]);
+            Mediatag::$log->notice("Metatags {tag} {current_tag} => '{new_tag}'", ['tag' => $tag, 'current_tag' => ${$current_tag}, 'new_tag' => ${$new_tag}]);
 
-            if (null === ${$current_tag}) {
-                if (null === ${$new_tag}) {
+            if (${$current_tag} === null) {
+                if (${$new_tag} === null) {
                     unset($updates[$tag]);
                 } else {
                     $updates[$tag] = ${$new_tag};
                 }
+
                 continue;
             }
-            if ('' != ${$new_tag}) {
+            if (${$new_tag} != '') {
                 $lev           = levenshtein(${$current_tag}, ${$new_tag});
                 $sim           = similar_text(${$current_tag}, ${$new_tag});
                 $updates[$tag] = ${$new_tag};
@@ -265,7 +267,7 @@ class TagBuilder
                 // // UTMlog::logNotice('Lev', $lev);
                 // // UTMlog::logNotice('sim', $sim);
                 // // UTMlog::logNotice('Lev------------------------');
-                if (0 == $lev) {
+                if ($lev == 0) {
                     unset($updates[$tag]);
                 }
             } else {

@@ -6,21 +6,24 @@
 
 namespace Mediatag\Commands\Create;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
 use function is_array;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 trait Helper
 {
-    private $CMD_TEMPLATE = __DATA_TEMPLATES__.'/Command/Command_template.txt';
-    public $COMMAND_PATH  = __APP_HOME__.'/app/Commands/%%CMD_NAME%%/Commands';
-    public $LANGUAGE_FILE = __APP_HOME__.'/app/Commands/%%CMD_NAME%%/Lang.php';
-    public $GLOBAL_LANG   = __APP_HOME__.'/app/Locales/Lang.php';
+    private $CMD_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Command_template.txt';
+
+    public $COMMAND_PATH = __APP_HOME__ . '/app/Commands/%%CMD_NAME%%/Commands';
+
+    public $LANGUAGE_FILE = __APP_HOME__ . '/app/Commands/%%CMD_NAME%%/Lang.php';
+
+    public $GLOBAL_LANG = __APP_HOME__ . '/app/Locales/Lang.php';
 
     public function createCommand()
     {
@@ -33,14 +36,14 @@ trait Helper
         $CommandFileName = Option::getValue('cmd', true);
         $desc            = Option::getValue('desc', true);
 
-        $string = "\t".'public const '.$translationKey.'            = \''.$desc.'\';';
+        $string = "\t" . 'public const ' . $translationKey . '            = \'' . $desc . '\';';
 
         $MediaCommand = ucfirst(strtolower(Option::getValue('cmd', true)));
 
-        if ('Global' == $MediaCommand) {
+        if ($MediaCommand == 'Global') {
             $this->LANGUAGE_FILE = $this->GLOBAL_LANG;
         } else {
-            $this->LANGUAGE_FILE = $this->parse($this->LANGUAGE_FILE, ['CMD_NAME'=>ucfirst($MediaCommand)]);
+            $this->LANGUAGE_FILE = $this->parse($this->LANGUAGE_FILE, ['CMD_NAME' => ucfirst($MediaCommand)]);
         }
 
         $lines = FileSystem::readLines($this->LANGUAGE_FILE);
@@ -50,9 +53,10 @@ trait Helper
 
                 return false;
             }
-            if ('}' == $line) {
+            if ($line == '}') {
                 $newFile[] = $string;
                 $newFile[] = '}';
+
                 continue;
             }
             $newFile[] = $line;
@@ -69,19 +73,19 @@ trait Helper
         // utmdd(Option::getOptions());
         $params          = [];
         $CommandName     = Option::getValue('name', true);
-        $CommandFileName = ucfirst($CommandName.'Command');
+        $CommandFileName = ucfirst($CommandName . 'Command');
         $desc            = Option::getValue('desc', true);
-        if (null === $desc) {
-            $desc = $CommandName.' command';
+        if ($desc === null) {
+            $desc = $CommandName . ' command';
         }
 
         $params['USELIBRARY'] = 'true';
         $params['SKIPSEARCH'] = 'false';
 
-        if (false === Option::isTrue('Library')) {
+        if (Option::isTrue('Library') === false) {
             $params['USELIBRARY'] = 'false';
         }
-        if (false === Option::isTrue('Search')) {
+        if (Option::isTrue('Search') === false) {
             $params['SKIPSEARCH'] = 'true';
         }
 
@@ -96,10 +100,10 @@ trait Helper
 
         $template = $this->template($this->CMD_TEMPLATE, $params);
 
-        $this->COMMAND_PATH = $this->parse($this->COMMAND_PATH, ['CMD_NAME'=>ucfirst($MediaCommand)]);
-        $CommandDir         = $this->COMMAND_PATH.'/'.ucfirst($CommandName);
+        $this->COMMAND_PATH = $this->parse($this->COMMAND_PATH, ['CMD_NAME' => ucfirst($MediaCommand)]);
+        $CommandDir         = $this->COMMAND_PATH . '/' . ucfirst($CommandName);
         FileSystem::createDir($CommandDir);
-        $CommandFileName = $CommandDir.DIRECTORY_SEPARATOR.$CommandFileName.'.php';
+        $CommandFileName = $CommandDir . DIRECTORY_SEPARATOR . $CommandFileName . '.php';
 
         if (file_exists($CommandFileName)) {
             FileSystem::delete($CommandFileName);
@@ -112,7 +116,7 @@ trait Helper
     {
         $text = [];
         foreach ($methodArray as $cmd) {
-            $text[] = "'".$cmd."' => null,";
+            $text[] = "'" . $cmd . "' => null,";
         }
 
         return implode(PHP_EOL, $text);
@@ -138,7 +142,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (null !== $template) {
+        if ($template !== null) {
             $template_file = $template;
 
             return file_get_contents($template_file);
@@ -153,7 +157,7 @@ trait Helper
 
         if (is_array($params)) {
             foreach ($params as $key => $value) {
-                $key = '%%'.strtoupper($key).'%%';
+                $key = '%%' . strtoupper($key) . '%%';
                 // // utmdump([$text,$value,$key]);
                 $text = str_replace($key, $value, $text);
             }

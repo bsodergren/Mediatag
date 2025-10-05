@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Dimsh\React\Filesystem\Monitor;
  *
@@ -8,31 +9,33 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Mediatag\Bundle\Monitor;
 
 use Evenement\EventEmitter;
-use React\EventLoop\LoopInterface;
 use Mediatag\Bundle\Monitor\Inotify;
 use Mediatag\Bundle\Monitor\MonitorTrait;
+use React\EventLoop\LoopInterface;
 
 class Monitor extends EventEmitter
 {
     use MonitorTrait;
 
     public const EV_CREATE = 'EV_CREATE';
+
     public const EV_MODIFY = 'EV_MODIFY';
+
     public const EV_DELETE = 'EV_DELETE';
+
     public const EV_CLOSE = 'EV_CLOSE';
 
     // IN_CLOSE
 
     protected const MASK_FILE = 0
-    | IN_MODIFY;
+        | IN_MODIFY;
 
     protected const MASK_FILE_WITH_ATTRIB = 0
-    | IN_MODIFY
-    | IN_ATTRIB;
+        | IN_MODIFY
+        | IN_ATTRIB;
 
     /**
      * the flag
@@ -43,31 +46,30 @@ class Monitor extends EventEmitter
      * included in the IN_ATTRIB flag.
      */
     protected const MASK_DIRECTORY = 0
-    //    | IN_MODIFY
-    | IN_MOVED_TO
-    | IN_MOVED_FROM
-    | IN_CREATE
-    | IN_CLOSE
-    | IN_DELETE
-    | IN_DELETE_SELF
-    | IN_ISDIR;
+        //    | IN_MODIFY
+        | IN_MOVED_TO
+        | IN_MOVED_FROM
+        | IN_CREATE
+        | IN_CLOSE
+        | IN_DELETE
+        | IN_DELETE_SELF
+        | IN_ISDIR;
 
     protected const MASK_DIRECTORY_WITH_MODIFY = 0
-    //    | IN_MODIFY
-    | IN_ATTRIB
-    | IN_MOVED_TO
-    | IN_MOVED_FROM
-    | IN_CREATE
-    | IN_CLOSE
-    | IN_DELETE
-    | IN_DELETE_SELF
-    | IN_ISDIR;
+        //    | IN_MODIFY
+        | IN_ATTRIB
+        | IN_MOVED_TO
+        | IN_MOVED_FROM
+        | IN_CREATE
+        | IN_CLOSE
+        | IN_DELETE
+        | IN_DELETE_SELF
+        | IN_ISDIR;
 
     protected const MASK_DIRECTORY_CREATED_ONLY = 0
-    | IN_MOVED_FROM
-    | IN_CREATE
-    | IN_ISDIR;
-
+        | IN_MOVED_FROM
+        | IN_CREATE
+        | IN_ISDIR;
 
     /**
      * @var \MKraemer\ReactInotify\Inotify
@@ -96,6 +98,7 @@ class Monitor extends EventEmitter
 
     /**
      * @internal
+     *
      * @var \Dimsh\React\Filesystem\Monitor\Monitor|null
      */
     protected $base_dir_monitor = null;
@@ -104,20 +107,20 @@ class Monitor extends EventEmitter
      * Tell if $this->setupListeners() is called.
      *
      * @internal
+     *
      * @var bool
      */
     protected $is_inotify_event_listener_attached = false;
 
-
     /**
      * MonitorMultiManual constructor.
      *
-     * @param \Dimsh\React\Filesystem\Monitor\MonitorConfigurator $configurator
-     * @param \React\EventLoop\LoopInterface|null                 $event_loop if passed then this event loop will be
-     *                                                                        used to construct the Inotify object and
-     *                                                                        should be "run" externally. When it is
-     *                                                                        null an internal loop is created and
-     *                                                                        method $this->run() must be called.
+     * @param  \Dimsh\React\Filesystem\Monitor\MonitorConfigurator  $configurator
+     * @param  \React\EventLoop\LoopInterface|null  $event_loop  if passed then this event loop will be
+     *                                                           used to construct the Inotify object and
+     *                                                           should be "run" externally. When it is
+     *                                                           null an internal loop is created and
+     *                                                           method $this->run() must be called.
      */
     public function __construct(MonitorConfigurator $configurator, ?LoopInterface $event_loop = null)
     {
@@ -128,15 +131,12 @@ class Monitor extends EventEmitter
             $this->external_event_loop = $event_loop;
         }
 
-
-     
-        
         // $this->internal_loop->addTimer(1.0, function () use ($this, $timer) {
         //     $this->internal_loop->cancelTimer($timer);
         //     echo 'Done' . PHP_EOL;
         // });
-        
-//        utmdd($this->internal_loop);
+
+        //        utmdd($this->internal_loop);
         /**
          * Two conditions I could use below:
          * - && PHP_OS == "Linux"
@@ -145,7 +145,7 @@ class Monitor extends EventEmitter
          * And I have chosen the second, since as the time of this writing, there is no check
          * for platform in the whole code.
          */
-        if (!file_exists($configurator->getBaseDirectory()) &&
+        if (! file_exists($configurator->getBaseDirectory()) &&
           file_exists('/') &&
           $configurator->getBaseDirectory() != '/' &&
           $configurator->isAutoCreateNotFoundMonitor()) {
@@ -154,11 +154,11 @@ class Monitor extends EventEmitter
             $level              = substr_count($base_directory, '/') - 1;
             $pattern            = $base_directory;
             $second_confiurator = MonitorConfigurator::factory()
-              ->setMonitorCreatedOnly(true)
-              ->setLevel($level)
-              ->setFilesToMonitor([
-                $pattern,
-              ]);
+                ->setMonitorCreatedOnly(true)
+                ->setLevel($level)
+                ->setFilesToMonitor([
+                    $pattern,
+                ]);
             try {
                 $second_confiurator->setBaseDirectory('/');
                 $this->base_dir_monitor = new Monitor(
@@ -194,8 +194,6 @@ class Monitor extends EventEmitter
      *
      * It is either the internal loop created in the constructor if no external one is
      * passed to it, or the external.
-     *
-     * @return \React\EventLoop\LoopInterface
      */
     public function getEventLoop(): LoopInterface
     {
@@ -209,7 +207,7 @@ class Monitor extends EventEmitter
      * This will only be fired for files/dirs that matches the patterns defined
      * in the configurator.
      *
-     * @param string $path
+     * @param  string  $path
      */
     protected function fireCreated($path): void
     {
@@ -220,6 +218,7 @@ class Monitor extends EventEmitter
     {
         $this->emit(self::EV_CLOSE, [$path, $this]);
     }
+
     /**
      * Fire the modified event.
      *
@@ -227,7 +226,7 @@ class Monitor extends EventEmitter
      * This will only be fired for files/dirs that matches the patterns defined
      * in the configurator.
      *
-     * @param string $path
+     * @param  string  $path
      */
     protected function fireModified($path): void
     {
@@ -241,7 +240,7 @@ class Monitor extends EventEmitter
      * This will only be fired for files/dirs that matches the patterns defined
      * in the configurator.
      *
-     * @param string $path
+     * @param  string  $path
      */
     protected function fireDeleted($path): void
     {
@@ -251,9 +250,7 @@ class Monitor extends EventEmitter
     /**
      * Setup event listeners on the inotify.
      *
-     * @param bool $detach set to true to detach event listeners
-     *
-     * @return void
+     * @param  bool  $detach  set to true to detach event listeners
      */
     protected function setupListeners($detach = false): void
     {
@@ -330,7 +327,7 @@ class Monitor extends EventEmitter
             $this->remove($path);
         });
 
-        $this->is_inotify_event_listener_attached = !$detach;
+        $this->is_inotify_event_listener_attached = ! $detach;
     }
 
     /**
@@ -338,9 +335,7 @@ class Monitor extends EventEmitter
      *
      * if $path has a trailing slash then it is a directory, else a file.
      *
-     * @param string $path
-     *
-     * @return void
+     * @param  string  $path
      */
     protected function add($path): void
     {
@@ -350,7 +345,7 @@ class Monitor extends EventEmitter
             if ($this->configurator->isMonitorCreatedOnly()) {
                 $mask = self::MASK_DIRECTORY_CREATED_ONLY;
             }
-            if (!$this->configurator->mayDirectoryContainMonitoredItems($path)) {
+            if (! $this->configurator->mayDirectoryContainMonitoredItems($path)) {
                 // if this directory will not contain items we want to watch, then
                 // conditionally watch it if it itself matches a pattern.
                 $this->conditionallyAddAndFire($path, $mask);
@@ -384,10 +379,8 @@ class Monitor extends EventEmitter
      * If the path matches a pattern we want to monitor, then add the path to
      * the watched list and fire the created event.
      *
-     * @param string $path
-     * @param int    $mask
-     *
-     * @return void
+     * @param  string  $path
+     * @param  int  $mask
      */
     protected function conditionallyAddAndFire($path, $mask): void
     {
@@ -405,10 +398,8 @@ class Monitor extends EventEmitter
      * add the passed path to watched list and if the path match a pattern
      * configured then fire the created event
      *
-     * @param string $path
-     * @param int    $mask
-     *
-     * @return void
+     * @param  string  $path
+     * @param  int  $mask
      */
     protected function addAndConditionallyFire($path, $mask): void
     {
@@ -428,10 +419,8 @@ class Monitor extends EventEmitter
      * if $path has a trailing slash then it is a directory, else a file.
      * When removing a directory, all items below it are removed from the list.
      *
-     * @param string $path
-     * @param bool   $skip_fire set to true to not fire the deleted event
-     *
-     * @return void
+     * @param  string  $path
+     * @param  bool  $skip_fire  set to true to not fire the deleted event
      */
     protected function remove($path, $skip_fire = false): void
     {
@@ -459,7 +448,7 @@ class Monitor extends EventEmitter
             @$this->inotify->remove($this->descriptors[$path]);
             unset($this->descriptors[$path]);
 
-            if (!$skip_fire && $this->configurator->isPathMatchMonitor($path)) {
+            if (! $skip_fire && $this->configurator->isPathMatchMonitor($path)) {
                 $this->fireDeleted($path);
             }
         }
@@ -478,13 +467,12 @@ class Monitor extends EventEmitter
                 E_USER_WARNING
             );
         }
+
         return $this->getEventLoop()->run();
     }
 
     /**
      * Stop the monitor using the traditional way of removing the listeners.
-     *
-     * @return void
      */
     public function stop(): void
     {
@@ -500,8 +488,6 @@ class Monitor extends EventEmitter
 
     /**
      * Stop the monitor using the traditional way and call the stop on the event loop.
-     *
-     * @return void
      */
     public function stopAll(): void
     {
@@ -519,8 +505,6 @@ class Monitor extends EventEmitter
      * PHP Warning:  inotify_add_watch(): The user limit on the total number of inotify
      * watches was reached or the kernel failed to allocate a needed resource in
      * vendor/mkraemer/react-inotify/src/MKraemer/ReactInotify/Inotify.php on line 77
-     *
-     * @return void
      */
     public function stopQuick(): void
     {
@@ -533,7 +517,6 @@ class Monitor extends EventEmitter
 
     /**
      * Perform a quick stop and stop the event loop also.
-     *
      */
     public function stopQuickAll(): void
     {

@@ -10,6 +10,7 @@ const THEVERYBESTOF_REGEX_COMMON = '//i';
 
 class TheVeryBestOf extends TwentyFirstSextury
 {
-    public $studio  = 'The Very Best Of';
+    public $studio = 'The Very Best Of';
+
     public $network = '21st Sextury';
 }

@@ -27,7 +27,7 @@ trait Helper
             $answer = 'y';
         } else {
             Mediatag::$output->writeln(Translate::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper();
+            $ask      = new QuestionHelper;
             $question = new Question(Translate::text('L__DB_ASK_CONTINUE'));
 
             $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
@@ -49,8 +49,8 @@ trait Helper
                 break;
         }
 
-        if (true == $go) {
-            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
+        if ($go == true) {
+            Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
             Mediatag::$dbconn->emptydatabase();
         }
     }

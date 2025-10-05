@@ -6,6 +6,8 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
+use const PREG_SPLIT_NO_EMPTY;
+
 use Mediatag\Modules\TagBuilder\File\Reader;
 use Mediatag\Traits\Patterns\Artist;
 use Mediatag\Traits\Patterns\Genre;
@@ -18,13 +20,11 @@ use function array_key_exists;
 use function count;
 use function is_array;
 
-use const PREG_SPLIT_NO_EMPTY;
-
 // include_once __DATA_LISTS__.'/NamesList.php';
 
-include_once __DATA_MAPS__.'/StudioMap.php';
+include_once __DATA_MAPS__ . '/StudioMap.php';
 
-include_once __DATA_MAPS__.'/WordMap.php';
+include_once __DATA_MAPS__ . '/WordMap.php';
 class Patterns extends TagBuilder
 {
     use Artist;
@@ -34,7 +34,9 @@ class Patterns extends TagBuilder
     use Title;
 
     public $studio;
+
     public $network;
+
     /**
      * studio_key.
      */
@@ -54,6 +56,7 @@ class Patterns extends TagBuilder
      * video_file.
      */
     public $video_file;
+
     public $video_key;
 
     /**
@@ -118,7 +121,7 @@ class Patterns extends TagBuilder
     public function __construct($object = null)
     {
         // utminfo($object);
-        if (null !== $object) {
+        if ($object !== null) {
             self::boot($this);
             $this->className  = $object->className;
             $this->video_name = $object->video_name;
@@ -128,20 +131,20 @@ class Patterns extends TagBuilder
             $this->studio_key = str_replace(' ', '', $studio);
             $this->studio_key = $this->mapStudio($this->studio_key);
             // /   $this->network =  $object->getNetwork();
-            if (null === $this->network) {
+            if ($this->network === null) {
                 $this->network = $this->metaNetwork();
             }
 
-            if ('' == $this->studio_key) {
+            if ($this->studio_key == '') {
                 $this->studio_key = 'default';
             }
 
-            if (null === $this->regex) {
+            if ($this->regex === null) {
                 $this->regex = [];
             }
             $this->regex = array_merge($this->default_regex, $this->regex);
-            if (null !== $this->network) {
-                if (null !== $this->studio) {
+            if ($this->network !== null) {
+                if ($this->studio !== null) {
                     self::$StudioKey = $this->studio;
                 }
             }
@@ -161,8 +164,8 @@ class Patterns extends TagBuilder
 
         [$classPath, $className] = self::classStudio($class);
 
-        if ('Studios' != $classPath) {
-            if (null !== Reader::$PatternClass) {
+        if ($classPath != 'Studios') {
+            if (Reader::$PatternClass !== null) {
                 // utmdd([ $classPath, $className ]);
 
                 [$classPath, $className] = self::classStudio(Reader::$PatternClass);
@@ -217,13 +220,13 @@ class Patterns extends TagBuilder
 
         $array = $regex[$studio];
 
-        if (!array_key_exists($tag, $array)) {
+        if (! array_key_exists($tag, $array)) {
             $array = $regex['default'];
 
             return false;
         }
         $array = $array[$tag];
-        if (!array_key_exists($key, $array)) {
+        if (! array_key_exists($key, $array)) {
             $array = $regex['default'];
             $array = $array[$tag];
         }
@@ -242,9 +245,7 @@ class Patterns extends TagBuilder
     /**
      * getKeyword.
      */
-    public function getKeyword()
-    {
-    }
+    public function getKeyword() {}
 
     /**
      * getFilename.
@@ -261,7 +262,7 @@ class Patterns extends TagBuilder
         // utminfo(func_get_args());
         $studio = $this->metaStudio();
 
-        if (null !== $studio && '' != $studio) {
+        if ($studio !== null && $studio != '') {
             $this->studio = $studio;
         }
 

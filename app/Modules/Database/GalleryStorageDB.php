@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -19,11 +20,11 @@ class GalleryStorageDB extends StorageDB
         $this->init($video_file);
 
         $data = [
-            'video_key'  => $video_key,
-            'filename'   => $this->video_name,
-            'fullpath'   => $this->video_path,
-            'Library'    => __LIBRARY__,
-            'filesize'   => filesize($video_file),
+            'video_key' => $video_key,
+            'filename'  => $this->video_name,
+            'fullpath'  => $this->video_path,
+            'Library'   => __LIBRARY__,
+            'filesize'  => filesize($video_file),
         ];
 
         $data['added'] = $this->dbConn->now();
@@ -38,16 +39,16 @@ class GalleryStorageDB extends StorageDB
         $video_file                   = $videoData['video_file'];
         $video_id                     = true;
         $exists                       = $this->videoExists($key);
-        Mediatag::$Display->BlockInfo = ['No' => '<info>'.$this->MultiIDX.'</info>'];
+        Mediatag::$Display->BlockInfo = ['No' => '<info>' . $this->MultiIDX . '</info>'];
         $videoBlockInfo               = null;
         $action                       = '<comment>Updated</comment> ';
 
-        if (null === $exists) {
+        if ($exists === null) {
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);
-            if (null !== $video_id) {
-                $query = 'insert into '.__MYSQL_VIDEO_SEQUENCE__.' (seq_id,video_id,video_key,Library) values ';
-                $query .= " (nextseq('".__LIBRARY__."'),".$video_id.",'".$key."','".__LIBRARY__."')";
+            if ($video_id !== null) {
+                $query = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
+                $query .= " (nextseq('" . __LIBRARY__ . "')," . $video_id . ",'" . $key . "','" . __LIBRARY__ . "')";
                 $this->query($query);
 
                 $action = '<comment>Added</comment> ';
@@ -56,10 +57,10 @@ class GalleryStorageDB extends StorageDB
             }
         }
 
-        Mediatag::$Display->BlockInfo['Video'] = $action.basename($video_file).' ';
-        if (null !== $video_id) {
+        Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
+        if ($video_id !== null) {
             // $this->vtags = new VideoTags();
-            Mediatag::$Display->BlockInfo['MetaTags'] = (new Gallery())->getVideoInfo($key, $video_file);
+            Mediatag::$Display->BlockInfo['MetaTags'] = (new Gallery)->getVideoInfo($key, $video_file);
             // $this->vinfo = new VideoInfo();
             //
             // if (true === $all) {

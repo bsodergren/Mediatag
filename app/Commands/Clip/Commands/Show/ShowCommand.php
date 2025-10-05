@@ -17,9 +17,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class ShowCommand extends MediaCommand
 {
     public const USE_LIBRARY = false;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'show'    => ['filters' => null],
+        'show' => ['filters' => null],
     ];
 }

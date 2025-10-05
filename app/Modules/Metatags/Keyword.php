@@ -21,16 +21,14 @@ class Keyword extends TagBuilder
         // // UTMlog::Logger(__CLASS__, $this->videoData);
     }
 
-    public function getTagValue()
-    {
-    }
+    public function getTagValue() {}
 
     public static function writeTagList($text, $file = false)
     {
         // utminfo(func_get_args());
 
-        if (null === parent::$dbConn) {
-            parent::$dbConn = new TagDB();
+        if (parent::$dbConn === null) {
+            parent::$dbConn = new TagDB;
         }
 
         self::$keywordArray = parent::$dbConn->listKeyword();
@@ -38,7 +36,7 @@ class Keyword extends TagBuilder
         foreach ($textArray as $keyword) {
             $keyword = parent::$dbConn->makeKey($keyword);
 
-            if (null === MediaArray::search(self::$keywordArray, $keyword)) {
+            if (MediaArray::search(self::$keywordArray, $keyword) === null) {
                 parent::$dbConn->addKeyword($keyword);
             }
         }

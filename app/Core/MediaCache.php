@@ -29,18 +29,18 @@ class MediaCache
         // utminfo();
 
         Option::init($input);
-        if (!defined('__LIBRARY__')) {
+        if (! defined('__LIBRARY__')) {
             define('__LIBRARY__', 'tmp');
         }
-        if (!is_dir(__APP_CACHE_DIR__.'/'.__LIBRARY__)) {
-            mkdir(__APP_CACHE_DIR__.'/'.__LIBRARY__, 0777, true);
+        if (! is_dir(__APP_CACHE_DIR__ . '/' . __LIBRARY__)) {
+            mkdir(__APP_CACHE_DIR__ . '/' . __LIBRARY__, 0777, true);
         }
 
         self::$stash = Cache::file(function (): void {
-            $this->setCacheDir(__APP_CACHE_DIR__.'/'.__LIBRARY__);
+            $this->setCacheDir(__APP_CACHE_DIR__ . '/' . __LIBRARY__);
         });
 
-        if (true == Option::isTrue('flush')) {
+        if (Option::isTrue('flush') == true) {
             self::$stash->flush();
             exit('cache flushed');
         }
@@ -48,11 +48,11 @@ class MediaCache
 
     public static function get($key)
     {
-        if (true == Option::isTrue('nocache')) {
+        if (Option::isTrue('nocache') == true) {
             return false;
         }
 
-        if ('' == CONFIG['USE_CACHE']) {
+        if (CONFIG['USE_CACHE'] == '') {
             return false;
         }
 

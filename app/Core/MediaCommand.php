@@ -6,6 +6,8 @@
 
 namespace Mediatag\Core;
 
+use const PHP_OS;
+
 use Closure;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 use Mediatag\Core\Helper\CommandHelper;
@@ -29,8 +31,6 @@ use function is_array;
 use function is_int;
 use function sprintf;
 
-use const PHP_OS;
-
 class MediaCommand extends DoctrineCommand
 {
     use CommandHelper;
@@ -40,8 +40,10 @@ class MediaCommand extends DoctrineCommand
 
     public static $Console;
 
-    public const USE_LIBRARY     = false;
-    public const SKIP_SEARCH     = false;
+    public const USE_LIBRARY = false;
+
+    public const SKIP_SEARCH = false;
+
     public static $SingleCommand = false;
 
     public $command = [];
@@ -50,7 +52,8 @@ class MediaCommand extends DoctrineCommand
 
     private bool $ignoreValidationErrors = false;
 
-    private ?Closure $code   = null;
+    private ?Closure $code = null;
+
     public static $optionArg = [];
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -71,19 +74,19 @@ class MediaCommand extends DoctrineCommand
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
 
-            if (null !== $cmdArgument) {
+            if ($cmdArgument !== null) {
                 self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
             }
         }
 
         $class = self::getProcessClass();
-        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments'=> $arguments,
-            'class'                                                                   => $class]);
+        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments' => $arguments,
+            'class'                                                                    => $class]);
 
         $Process = new $class($input, $output, self::$optionArg);
 
-        Mediatag::$log->info('Command arguments {Process} for {command}', ['Process'=> $Process->commandList,
-            'command'                                                               => $this->command]);
+        Mediatag::$log->info('Command arguments {Process} for {command}', ['Process' => $Process->commandList,
+            'command'                                                                => $this->command]);
         // if($Process->commandList === null){
 
         $Process->commandList = array_merge($Process->commandList, $this->command);
@@ -137,15 +140,15 @@ class MediaCommand extends DoctrineCommand
         try {
             $input->bind($this->getDefinition());
         } catch (ExceptionInterface $e) {
-            if (!$this->ignoreValidationErrors) {
+            if (! $this->ignoreValidationErrors) {
                 throw $e;
             }
         }
         $this->initialize($input, $output);
 
-        if (null !== $this->processTitle) {
+        if ($this->processTitle !== null) {
             if (function_exists('cli_set_process_title')) {
-                if (!@cli_set_process_title($this->processTitle)) {
+                if (! @cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
@@ -154,7 +157,7 @@ class MediaCommand extends DoctrineCommand
                 }
             } elseif (function_exists('setproctitle')) {
                 setproctitle($this->processTitle);
-            } elseif (OutputInterface::VERBOSITY_VERY_VERBOSE === $output->getVerbosity()) {
+            } elseif ($output->getVerbosity() === OutputInterface::VERBOSITY_VERY_VERBOSE) {
                 $output->writeln('<comment>Install the proctitle PECL to be able to change the process title.</comment>');
             }
         }
@@ -167,7 +170,7 @@ class MediaCommand extends DoctrineCommand
         // It would fail the validation if we didn't make sure the command argument is present,
         // since it's required by the application.
 
-        if ($input->hasArgument('command') && null === $input->getArgument('command')) {
+        if ($input->hasArgument('command') && $input->getArgument('command') === null) {
             $input->setArgument('command', $this->getName());
         }
 
@@ -181,10 +184,11 @@ class MediaCommand extends DoctrineCommand
 
             //  stopwatch();
 
-            if (!is_int($statusCode)) {
+            if (! is_int($statusCode)) {
                 throw new TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
             }
         }
+
         return is_numeric($statusCode) ? (int) $statusCode : 0;
     }
 
@@ -193,14 +197,14 @@ class MediaCommand extends DoctrineCommand
         // utminfo();
         $className = static::class;
         Option::init($input);
-        if (null !== Option::getValue('path', true)) {
+        if (Option::getValue('path', true) !== null) {
             $path = Option::getValue('path', true);
             chdir($path);
         }
 
         $this->getLibrary($className::USE_LIBRARY);
 
-        Mediatag::$log->info('Init vars {library}', ['library'=>__LIBRARY__]);
+        Mediatag::$log->info('Init vars {library}', ['library' => __LIBRARY__]);
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();

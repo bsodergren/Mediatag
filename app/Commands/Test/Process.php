@@ -18,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
 
-include_once __DATA_MAPS__.'/WordMap.php';
+include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
@@ -73,7 +73,7 @@ class Process extends Mediatag
             $lev = levenshtein($input, $word);
 
             // check for an exact match
-            if (0 == $lev) {
+            if ($lev == 0) {
                 // closest word is this one (exact match)
                 $closest  = $word;
                 $shortest = 0;
@@ -120,7 +120,7 @@ class Process extends Mediatag
             //     // do some logic here
             unset($category['thumbs']);
             // utmdump($category);
-            Mediatag::$Console->writeln(''.$category['title']);
+            Mediatag::$Console->writeln('' . $category['title']);
         }
         utmdd();
     }

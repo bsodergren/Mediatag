@@ -22,10 +22,11 @@ class MergeCommand extends MediaCommand
     //
     // use Helper;
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'merge'    => ['mergeFiles' => null],
+        'merge' => ['mergeFiles' => null],
     ];
     // public $command = [
     //     'merge'           => [

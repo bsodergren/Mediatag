@@ -10,6 +10,7 @@ const OOPSIE_REGEX_COMMON = '//i';
 
 class Oopsie extends AdultTime
 {
-    public $studio  = 'Oopsie';
+    public $studio = 'Oopsie';
+
     public $network = 'Adult Time';
 }

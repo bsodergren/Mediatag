@@ -6,14 +6,14 @@
 
 namespace Mediatag\Core;
 
+use const PHP_EOL;
+
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
-
-use const PHP_EOL;
 
 class MediaApplication extends Application
 {
@@ -25,7 +25,7 @@ class MediaApplication extends Application
         Translate::$Class = __CLASS__;
 
         return new InputDefinition([
-            new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD').PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL.PHP_EOL),
+            new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD') . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL),
 
             new InputOption('--help', '-h', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_HELP')),
             new InputOption('--quiet', '-q', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_QUIET')),

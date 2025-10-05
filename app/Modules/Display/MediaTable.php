@@ -33,11 +33,11 @@ class MediaTable
         $this->table = new Table($this->section1);
         $this->table->setStyle('box');
         $this->table->setRow(1, ['Video', $videoInfo['video_name']]);
-        $this->table->addrow(new TableSeparator());
+        $this->table->addrow(new TableSeparator);
         $idx = 2;
         foreach ($videoInfo['metatags'] as $tag => $value) {
             $this->table->setRow($idx, [$tag, $value]);
-            ++$idx;
+            $idx++;
         } $this->table->setColumnWidth(0, 12);
         $this->table->setColumnWidth(1, 100);
         $this->table->render();

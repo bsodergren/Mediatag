@@ -66,7 +66,7 @@ class Storage
         $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->dbConn->setTrace(true);
 
-        $this->mapClass    = new DbMap();
+        $this->mapClass    = new DbMap;
         $this->output      = Mediatag::$output;
         $this->input       = Mediatag::$input;
         $this->FileNumber  = $this->output->section();
@@ -84,7 +84,7 @@ class Storage
         // utminfo(func_get_args());
 
         foreach (__MYSQL_TRUNC_TABLES__ as $table) {
-            $res[] = $this->dbConn->rawQuery('TRUNCATE '.$table);
+            $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
         }
 
         // utmdd([__METHOD__,$res]);
@@ -120,8 +120,8 @@ class Storage
     public function delete($table, $where = [], $test = false)
     {
         if (array_key_exists(0, $where)) {
-            if (!is_array($where[0])) {
-                if (!array_key_exists('field', $where)) {
+            if (! is_array($where[0])) {
+                if (! array_key_exists('field', $where)) {
                     $field = $where[0];
                     $value = $where[1];
                     unset($where);
@@ -137,7 +137,7 @@ class Storage
             unset($tmp);
         }
 
-        if (true === $test) {
+        if ($test === true) {
             $this->dbConn->startTransaction();
         }
 
@@ -145,11 +145,13 @@ class Storage
             if (str_contains($query['value'], 'null')) {
                 $condition = trim(str_replace('null', '', $query['value']));
                 $this->dbConn->where($query['field'], null, strtoupper($condition));
+
                 continue;
             }
             if (str_contains($query['value'], 'like')) {
                 $condition = trim(str_replace('like', '', $query['value']));
                 $this->dbConn->where($query['field'], null, $condition);
+
                 continue;
             }
         }
@@ -157,7 +159,7 @@ class Storage
         // utmdd($where);
 
         $ret = $this->dbConn->delete($table);
-        if (true === $test) {
+        if ($test === true) {
             $this->dbConn->rollback();
 
             return $ret;
@@ -189,7 +191,7 @@ class Storage
         // utminfo(func_get_args());
         $this->dbConn->where('video_key', $video_key);
         $this->dbConn->where('library', __LIBRARY__);
-        if (null !== $where) {
+        if ($where !== null) {
             $this->dbConn->where($where, null, 'IS');
         }
 
@@ -208,16 +210,16 @@ class Storage
             $this->dbConn->startTransaction();
             $commit = true;
             foreach ($rowData as $tableName => $data) {
-                if (true === $commit) {
-                    if (!$this->dbConn->insert($tableName, $data)) {
-                        $this->video_string[] = ['insert failed: '.$this->dbConn->getLastError()];
+                if ($commit === true) {
+                    if (! $this->dbConn->insert($tableName, $data)) {
+                        $this->video_string[] = ['insert failed: ' . $this->dbConn->getLastError()];
                         // Error while saving, cancel new record
                         $this->dbConn->rollback();
                         $commit = false;
                     }
                 }
             }
-            if (true === $commit) {
+            if ($commit === true) {
                 $this->dbConn->commit();
             }
         }
@@ -229,16 +231,16 @@ class Storage
         // utminfo(func_get_args());
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
 
         $ids = $this->dbConn->insertMulti($table, $data);
-        if (!$ids) {
-            $this->video_string = ['insert failed: '.$this->dbConn->getLastError()];
+        if (! $ids) {
+            $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];
         }
-        if (false === $quiet) {
+        if ($quiet === false) {
             $this->RowBlock->overwrite($this->video_string);
         }
     }
@@ -249,9 +251,9 @@ class Storage
 
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
             $array_string = var_export($where, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
@@ -269,8 +271,8 @@ class Storage
         // $this->dbConn->onDuplicate($data, 'id');
         // $id = $this->dbConn->insert($table, $data);
         $id = $this->dbConn->update($table, $data);
-        if (!$id) {
-            $this->video_string = ['insert failed: '.$this->dbConn->getLastQuery()];
+        if (! $id) {
+            $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
 
             // return $r;
         }
@@ -283,7 +285,7 @@ class Storage
     {
         // utminfo(func_get_args());
 
-        foreach ($where_clause as $field=> $where) {
+        foreach ($where_clause as $field => $where) {
             $this->dbConn->where($field, $where[0], $where[1]);
         }
 
@@ -298,7 +300,7 @@ class Storage
         $id = null;
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
-            $this->output->writeln(__METHOD__.' -> '.$array_string);
+            $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
 
             return false;
         }
@@ -308,13 +310,13 @@ class Storage
         if (array_key_exists('fullpath', $fieldArray)) {
             $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
 
-            if (null !== $has) {
+            if ($has !== null) {
                 $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
-                if (!Mediatag::$filesystem->exists($backup_path)) {
+                if (! Mediatag::$filesystem->exists($backup_path)) {
                     Mediatag::$filesystem->mkdir($backup_path);
                 }
-                $old_file = $fieldArray['fullpath'].'/'.$fieldArray['filename'];
-                $new_file = $backup_path.'/'.$fieldArray['filename'];
+                $old_file = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
+                $new_file = $backup_path . '/' . $fieldArray['filename'];
 
                 // // utmdump($old_file, $new_file);
                 Mediatag::$filesystem->rename($old_file, $new_file);
@@ -376,17 +378,17 @@ class Storage
 
         switch ($query_cmd) {
             case 'select':
-                if (null === $search) {
+                if ($search === null) {
                     $search = '*';
                 }
-                $query = 'SELECT '.$search.' FROM ';
+                $query = 'SELECT ' . $search . ' FROM ';
 
                 break;
 
             case 'delete':
                 $query = 'delete from ';
                 if (is_array($search)) {
-                    $search = ' '.$search[0]." = '".$search[1]."'";
+                    $search = ' ' . $search[0] . " = '" . $search[1] . "'";
                 }
                 $sel_cols = $search;
                 $die      = true;
@@ -394,11 +396,11 @@ class Storage
                 break;
 
             case 'cleandb':
-                $cleanQuery = 'DELETE f FROM '.__MYSQL_VIDEO_FILE__.' as f  ';
+                $cleanQuery = 'DELETE f FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
                 // $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
                 // $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
-                $cleanQuery .= " WHERE f.Library = '".__LIBRARY__."' AND ";
-                $cleanQuery .= " f.fullpath like '".__CURRENT_DIRECTORY__."%'";
+                $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
+                $cleanQuery .= " f.fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
                 // $cleanQuery .= " and m.video_key = f.video_key ";
 
                 return $cleanQuery;
@@ -409,42 +411,43 @@ class Storage
                 // break;
         }
 
-        $query .= __MYSQL_VIDEO_FILE__." WHERE Library = '".__LIBRARY__."'  ";
+        $query .= __MYSQL_VIDEO_FILE__ . " WHERE Library = '" . __LIBRARY__ . "'  ";
 
         if (Option::isTrue('filelist')) {
             foreach ($this->file_array as $key => $file) {
-                $where_clause[] = " video_key = '".$key."'";
+                $where_clause[] = " video_key = '" . $key . "'";
             }
             if (count($where_clause) > 1) {
                 $where  = '( ';
                 $string = implode(' OR ', $where_clause);
-                $where  = $where.$string.') ';
+                $where  = $where . $string . ') ';
             } else {
                 $where = $where_clause[0];
             }
         } else {
-            if ($allfiles === false ){
-            $where = " fullpath like '".__CURRENT_DIRECTORY__."%'";
+            if ($allfiles === false) {
+                $where = " fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
             }
         }
-        if (null !== $sel_cols) {
+        if ($sel_cols !== null) {
             $where = $sel_cols;
         }
-        if (true == $limit) {
-            $limit = ' LIMIT '.$limit;
+        if ($limit == true) {
+            $limit = ' LIMIT ' . $limit;
         }
-        if ($where !== null){
-            $where = " AND ". $where;
+        if ($where !== null) {
+            $where = ' AND ' . $where;
         }
-        $sql = $query.$where.$limit;
+        $sql = $query . $where . $limit;
 
         if (Option::Istrue('test')) {
             Mediatag::$output->writeln($sql);
-            if (true == $die) {
+            if ($die == true) {
                 exit;
             }
         }
-// // utmdump($sql);
+
+        // // utmdump($sql);
         return $sql;
     }
 }

@@ -6,11 +6,11 @@
 
 namespace Mediatag\Core\Helper;
 
+use const PHP_EOL;
+
 use function array_key_exists;
 use function count;
 use function is_array;
-
-use const PHP_EOL;
 
 trait LogFormat
 {
@@ -35,6 +35,7 @@ trait LogFormat
                         if (str_contains($row['function'], 'debug')) {
                             $calledFile = self::returnTrace('file', $trace[$i]);
                         }
+
                         continue 2;
                     }
                 }
@@ -48,11 +49,11 @@ trait LogFormat
 
                 $arguments         = $calledLine;
                 $calledLineArray[] = [$row['class'], $row['function'], $calledLine];
-                $classArray[]      = self::getClassPath($row['class'], 2).':'.$row['function'].'('.$arguments.')';
+                $classArray[]      = self::getClassPath($row['class'], 2) . ':' . $row['function'] . '(' . $arguments . ')';
             }
         }
 
-        if (true === $only_caller) {
+        if ($only_caller === true) {
             $string = implode(':', $calledLineArray[0]);
 
             return $string;
@@ -71,14 +72,14 @@ trait LogFormat
                 if (is_array($methods)) {
                     $level      = 4;
                     $spaces     = str_repeat(' ', $level * 4);
-                    $methodPath = implode("\n".$spaces.'->', $methods);
+                    $methodPath = implode("\n" . $spaces . '->', $methods);
                 }
-                $fullPath[] = $classPath.':'.$methodPath;
+                $fullPath[] = $classPath . ':' . $methodPath;
             }
             $level  = 1;
             $spaces = str_repeat(' ', $level * 4);
 
-            $string = implode(PHP_EOL.$spaces.'->', $fullPath);
+            $string = implode(PHP_EOL . $spaces . '->', $fullPath);
 
             return $string;
         }
@@ -89,8 +90,8 @@ trait LogFormat
     private static function getClassPath($class, $level = 1)
     {
         preg_match('/.*\\\\([A-Za-z]+)\\\\([A-Za-z]+)/', $class, $out);
-        if (2 == $level) {
-            return $out[1].'\\'.$out[2];
+        if ($level == 2) {
+            return $out[1] . '\\' . $out[2];
         }
 
         return $out[2];
@@ -101,11 +102,11 @@ trait LogFormat
         if ($row[$type]) {
             $text = $row[$type];
 
-            if ('class' == $type) {
+            if ($type == 'class') {
                 $text = self::getClassPath($text, 2);
             }
 
-            if ('file' == $type) {
+            if ($type == 'file') {
                 $text = basename($text);
             }
 

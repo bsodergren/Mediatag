@@ -22,6 +22,7 @@ class MediaBar
     public $count;
 
     public $bar;
+
     public $sectionName;
 
     public $format = '%current:4s%/%max:4s% ,[%bar%], %percent:3s%%';
@@ -32,7 +33,7 @@ class MediaBar
 
         $this->width = $width;
 
-        if (null === $section) {
+        if ($section === null) {
             $section = Mediatag::$output;
         } else {
             $section = Mediatag::$output->section();

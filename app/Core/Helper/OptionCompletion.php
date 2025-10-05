@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 namespace Mediatag\Core\Helper;
 
+use const DIRECTORY_SEPARATOR;
+
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder as SFinder;
-
-use const DIRECTORY_SEPARATOR;
 
 trait OptionCompletion
 {
@@ -22,16 +23,16 @@ trait OptionCompletion
 
     public function lristFilelist($path = null)
     {
-        $Filesystem  = new Filesystem();
+        $Filesystem  = new Filesystem;
         $CurrentPath = getcwd();
         $VideoPath   = $CurrentPath;
         $SearchPath  = $VideoPath;
 
-        if ('' != $path) {
-            $SearchPath = $VideoPath.DIRECTORY_SEPARATOR.$path;
+        if ($path != '') {
+            $SearchPath = $VideoPath . DIRECTORY_SEPARATOR . $path;
             $SearchPath = Path::normalize($SearchPath);
             // $SearchPath = "'".str_replace('\\','',$SearchPath)."'";
-            if (!is_dir($SearchPath)) {
+            if (! is_dir($SearchPath)) {
                 $SearchPath .= '*';
             }
         }
@@ -42,7 +43,7 @@ trait OptionCompletion
         // utmdump($SearchPath);
         // UTMlog::logger('Search Directory', $path);
 
-        $finder     = new SFinder();
+        $finder     = new SFinder;
         $file_array = [];
         $finder->in($SearchPath);
         $finder->depth('== 0');

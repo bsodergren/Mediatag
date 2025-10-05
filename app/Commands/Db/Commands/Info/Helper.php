@@ -14,7 +14,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $this->obj = new VideoFileInfo();
+        $this->obj = new VideoFileInfo;
         // $this->checkClean();
         $this->obj->updateVideoData();
     }

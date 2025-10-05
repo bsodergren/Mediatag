@@ -6,6 +6,8 @@
 
 namespace Symfony\Component\Console\Command;
 
+use const PHP_EOL;
+
 use DirectoryIterator;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -17,14 +19,12 @@ use Symfony\Component\Process\Process;
 
 use function sprintf;
 
-use const PHP_EOL;
-
 /**
  * Dumps the completion script for the current shell.
  *
  * @author Wouter de Jong <wouter@wouterj.nl>
  */
-#[AsCommand(name: 'completion', description: 'Dump the shell completion script'.PHP_EOL)]
+#[AsCommand(name: 'completion', description: 'Dump the shell completion script' . PHP_EOL)]
 final class DumpCompletionCommand extends Command
 {
     private array $supportedShells;
@@ -38,7 +38,7 @@ final class DumpCompletionCommand extends Command
         $shell                     = self::guessShell();
         [$rcFile, $completionFile] = match ($shell) {
             'fish'  => ['~/.config/fish/config.fish', "/etc/fish/completions/$commandName.fish"],
-            'zsh'   => ['~/.zshrc', '$fpath[1]/_'.$commandName],
+            'zsh'   => ['~/.zshrc', '$fpath[1]/_' . $commandName],
             default => ['~/.bashrc', "/etc/bash_completion.d/$commandName"],
         };
 
@@ -75,8 +75,7 @@ Add this to the end of your shell configuration file (e.g. <info>"{$rcFile}"</>)
 EOH
             )
             ->addArgument('shell', InputArgument::OPTIONAL, 'The shell type (e.g. "bash"), the value of the "$SHELL" env var will be used if this is not given', null, $this->getSupportedShells(...))
-            ->addOption('debug', null, InputOption::VALUE_NONE, 'Tail the completion debug log')
-        ;
+            ->addOption('debug', null, InputOption::VALUE_NONE, 'Tail the completion debug log');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -90,8 +89,8 @@ EOH
         }
 
         $shell          = $input->getArgument('shell') ?? self::guessShell();
-        $completionFile = __DIR__.'/Resources/completion.'.$shell;
-        if (!file_exists($completionFile)) {
+        $completionFile = __DIR__ . '/Resources/completion.' . $shell;
+        if (! file_exists($completionFile)) {
             $supportedShells = $this->getSupportedShells();
 
             if ($output instanceof ConsoleOutputInterface) {
@@ -118,8 +117,8 @@ EOH
 
     private function tailDebugLog(string $commandName, OutputInterface $output): void
     {
-        $debugFile = sys_get_temp_dir().'/sf_'.$commandName.'.log';
-        if (!file_exists($debugFile)) {
+        $debugFile = sys_get_temp_dir() . '/sf_' . $commandName . '.log';
+        if (! file_exists($debugFile)) {
             touch($debugFile);
         }
         $process = new Process(['tail', '-f', $debugFile], null, null, null, 0);
@@ -139,7 +138,7 @@ EOH
 
         $shells = [];
 
-        foreach (new DirectoryIterator(__DIR__.'/Resources/') as $file) {
+        foreach (new DirectoryIterator(__DIR__ . '/Resources/') as $file) {
             if (str_starts_with($file->getBasename(), 'completion.') && $file->isFile()) {
                 $shells[] = $file->getExtension();
             }

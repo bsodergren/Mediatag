@@ -16,6 +16,7 @@ use function array_key_exists;
 class Gallery extends VideoInfo
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
+
     public $video_name;
 
     public $actionText = '<comment>Updated Gallery Info</comment>';
@@ -33,7 +34,7 @@ class Gallery extends VideoInfo
             'video_key'  => $this->video_key,
         ];
 
-        $studio_dir = (new Filesystem())->makePathRelative($vdata['video_path'], __PLEX_HOME__.'/'.__LIBRARY__);
+        $studio_dir = (new Filesystem)->makePathRelative($vdata['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_dir = trim($studio_dir, '/');
         $arr        = explode('/', $studio_dir);
         if (array_key_exists(0, $arr)) {
@@ -50,7 +51,7 @@ class Gallery extends VideoInfo
         //     $tagList['title'] = Strings::clean($tagList['title']);
         // }
 
-        if (!array_key_exists('studio', $tagList)) {
+        if (! array_key_exists('studio', $tagList)) {
             $tagList['studio'] = $tagList['network'];
             unset($tagList['network']);
         }

@@ -28,8 +28,8 @@ trait HelperCmds
         $videoFile = $this->videoFile[0];
         $timeCodes = [245, 445, 845, 1045, 1345, 1845];
         utmdd(__METHOD__);
-        $path     = dirname($videoFile).'/Clips/';
-        $filename = $path.basename($videoFile, '.mp4');
+        $path     = dirname($videoFile) . '/Clips/';
+        $filename = $path . basename($videoFile, '.mp4');
 
         FileSystem::createDir($path);
         // utmdd($filename);
@@ -49,16 +49,16 @@ trait HelperCmds
         //     ->gif(TimeCode::fromSeconds(35), new Dimension(640, 480), 15)
         //     ->save($new_file);
 
-        $format = new X264();
+        $format = new X264;
         $format->on('progress', function ($video, $format, $percentage) {
             echo "$percentage % transcoded";
         });
 
-        foreach ($timeCodes as $i =>$code) {
+        foreach ($timeCodes as $i => $code) {
             // utmdump($code);
             $clip = $video->clip(TimeCode::fromSeconds($code), TimeCode::fromSeconds(5));
             $clip->filters()->resize(new Dimension(320, 240), ResizeFilter::RESIZEMODE_INSET, true);
-            $clip->save($format, $filename.'_'.$i.'.mp4');
+            $clip->save($format, $filename . '_' . $i . '.mp4');
         }
     }
 
@@ -73,7 +73,7 @@ trait HelperCmds
         $video  = $ffmpeg->open($videoFile);
         $video->filters()->rotate(RotateFilter::ROTATE_270)->synchronize();
 
-        $video->save(new X264(), $new_file);
+        $video->save(new X264, $new_file);
         // $video
         //     ->frame(FFMpeg\Coordinate\TimeCode::fromSeconds(10))
         //     ->save('frame.jpg');

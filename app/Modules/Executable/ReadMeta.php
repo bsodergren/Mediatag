@@ -14,6 +14,7 @@ use Nette\Utils\Callback;
 class ReadMeta extends MediatagExec
 {
     use ProcessCallbacks;
+
     public $execMode;
 
     public function __construct($videoData, $input = null, $output = null)
@@ -29,7 +30,7 @@ class ReadMeta extends MediatagExec
 
         $array = MediaCache::get($this->video_key);
         // $array = false;
-        if (false === $array) {
+        if ($array === false) {
             $command = [
                 Mediatag::App(),
                 $this->video_file,

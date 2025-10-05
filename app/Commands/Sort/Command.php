@@ -18,12 +18,13 @@ final class Command extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'sort'    => [
-            'exec'        => null,
-            'print'       => null,
+        'sort' => [
+            'exec'  => null,
+            'print' => null,
         ],
     ];
 }

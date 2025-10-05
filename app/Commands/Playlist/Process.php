@@ -26,33 +26,33 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
 
-    public static $ARCHIVE = __PLEX_PL_ID_DIR__.'/archive.txt';
+    public static $ARCHIVE = __PLEX_PL_ID_DIR__ . '/archive.txt';
 
-    public const IGNORED = __PLEX_PL_ID_DIR__.'/ignored_ids.txt';
+    public const IGNORED = __PLEX_PL_ID_DIR__ . '/ignored_ids.txt';
 
-    public const DISABLED = __PLEX_PL_ID_DIR__.'/disabled.txt';
+    public const DISABLED = __PLEX_PL_ID_DIR__ . '/disabled.txt';
 
-    public const MODELHUB = __PLEX_PL_ID_DIR__.'/modelhub.txt';
+    public const MODELHUB = __PLEX_PL_ID_DIR__ . '/modelhub.txt';
 
-    public const ERRORIDS = __PLEX_PL_ID_DIR__.'/error.txt';
+    public const ERRORIDS = __PLEX_PL_ID_DIR__ . '/error.txt';
 
-    public const NOTFOUND = __PLEX_PL_ID_DIR__.'/notfound.txt';
+    public const NOTFOUND = __PLEX_PL_ID_DIR__ . '/notfound.txt';
 
-    public const FILELIST = __PLEX_PL_LIST_DIR__.'/filelist.txt';
+    public const FILELIST = __PLEX_PL_LIST_DIR__ . '/filelist.txt';
 
-    public const DOWNLOADED = __PLEX_PL_LIST_DIR__.'/downloaded.txt';
+    public const DOWNLOADED = __PLEX_PL_LIST_DIR__ . '/downloaded.txt';
 
-    public const TRIMMED = __PLEX_PL_LIST_DIR__.'/trimmed_list.txt';
+    public const TRIMMED = __PLEX_PL_LIST_DIR__ . '/trimmed_list.txt';
 
-    public const FILEMAP = __PLEX_PL_LIST_DIR__.'/all_files_list.txt';
+    public const FILEMAP = __PLEX_PL_LIST_DIR__ . '/all_files_list.txt';
 
-    public const PLAYLIST = __PLEX_PL_DIR__.'/all_playlist.txt';
+    public const PLAYLIST = __PLEX_PL_DIR__ . '/all_playlist.txt';
 
-    public const JSONPLAYLIST = __PLEX_PL_DIR__.'/json_playlist.txt';
+    public const JSONPLAYLIST = __PLEX_PL_DIR__ . '/json_playlist.txt';
 
-    public const ERRORPLAYLIST = __PLEX_PL_DIR__.'/error_playlist.txt';
+    public const ERRORPLAYLIST = __PLEX_PL_DIR__ . '/error_playlist.txt';
 
-    public const MISSING_PLAYLIST = __PLEX_PL_DIR__.'/missing_playlist.txt';
+    public const MISSING_PLAYLIST = __PLEX_PL_DIR__ . '/missing_playlist.txt';
 
     public $defaultCommands = [
         // 'cleanBrkDownloads' => null,
@@ -126,7 +126,7 @@ class Process extends Mediatag
 
         define('SKIP_SEARCH', true);
 
-        if (null === $file) {
+        if ($file === null) {
             $file = Option::getValue('playlist');
         }
 
@@ -141,7 +141,7 @@ class Process extends Mediatag
         // utmdd($file);
 
         if (Option::istrue('archive')) {
-            self::$ARCHIVE = __PLEX_PL_ID_DIR__.'/'.Option::getValue('archive').'.txt';
+            self::$ARCHIVE = __PLEX_PL_ID_DIR__ . '/' . Option::getValue('archive') . '.txt';
         }
 
         parent::boot($input, $output);
@@ -149,7 +149,7 @@ class Process extends Mediatag
         $this->setupFormat();
         $this->setupDb();
 
-        if (!is_dir(__PLEX_PL_TMP_DIR__)) {
+        if (! is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
     }

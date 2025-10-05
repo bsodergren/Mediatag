@@ -23,14 +23,14 @@ class Genre extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        if (null === parent::$dbConn) {
-            parent::$dbConn = new TagDB();
+        if (parent::$dbConn === null) {
+            parent::$dbConn = new TagDB;
         }
         self::$genreArray = parent::$dbConn->listGenre();
         $textArray        = explode(',', $text);
         foreach ($textArray as $genre) {
             $key = parent::$dbConn->makeKey($genre);
-            if (null === MediaArray::search(self::$genreArray, $key)) {
+            if (MediaArray::search(self::$genreArray, $key) === null) {
                 parent::$dbConn->addGenre($genre);
             }
         }

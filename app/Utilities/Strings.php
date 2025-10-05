@@ -6,6 +6,12 @@
 
 namespace Mediatag\Utilities;
 
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_SSL_VERIFYHOST;
+use const CURLOPT_SSL_VERIFYPEER;
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
@@ -18,12 +24,6 @@ use function ord;
 use function sprintf;
 use function strlen;
 
-use const CURLOPT_RETURNTRANSFER;
-use const CURLOPT_SSL_VERIFYHOST;
-use const CURLOPT_SSL_VERIFYPEER;
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 class Strings extends \Nette\Utils\Strings
 {
     private static $dumpString = '';
@@ -31,7 +31,7 @@ class Strings extends \Nette\Utils\Strings
     public static function map($value, $fromLow, $fromHigh, $toLow, $toHigh)
     {
         $fromRange   = $fromHigh - $fromLow;
-        $toRange     = $toHigh   - $toLow;
+        $toRange     = $toHigh - $toLow;
         $scaleFactor = $toRange / $fromRange;
 
         // Re-zero the value within the from range
@@ -61,7 +61,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if ('' == $text) {
+        if ($text == '') {
             return $text;
         }
         $translate = self::translate($text);
@@ -79,7 +79,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if ('' == $filename) {
+        if ($filename == '') {
             return $filename;
         }
 
@@ -95,8 +95,8 @@ class Strings extends \Nette\Utils\Strings
         $filename = $fileInfo['filename'];
 
         if (str_contains($filename, $video_key)) {
-            $filename  = str_replace('-'.$video_key, '', $fileInfo['filename']);
-            $video_key = '-'.$video_key;
+            $filename  = str_replace('-' . $video_key, '', $fileInfo['filename']);
+            $video_key = '-' . $video_key;
         } else {
             $video_key = '';
         }
@@ -105,13 +105,13 @@ class Strings extends \Nette\Utils\Strings
 
         $video_filename = self::cleanSpecialChars($filename, true, $case);
 
-        if ('' == str_replace($video_key, '', $video_filename)) {
+        if (str_replace($video_key, '', $video_filename) == '') {
             $video_filename = self::translate($filename);
             $video_filename = self::cleanSpecialChars($video_filename, true, $case);
         }
         // utmdd( $video_filename);
 
-        return $video_filename.$video_key.'.'.$fileExt;
+        return $video_filename . $video_key . '.' . $fileExt;
     }
 
     public static function truncateString($string, $maxlength, $ellipsis = false, $reverse = false)
@@ -133,7 +133,7 @@ class Strings extends \Nette\Utils\Strings
             $ellipsis = '';
         }
 
-        if (true === $ellipsis) {
+        if ($ellipsis === true) {
             $ellipsis = '…';
         }
 
@@ -141,7 +141,7 @@ class Strings extends \Nette\Utils\Strings
 
         $maxlength = $maxlength - $ellipsis_length - $color_length;
 
-        return trim(mb_substr($string, 0, $maxlength)).$ellipsis.$color_close;
+        return trim(mb_substr($string, 0, $maxlength)) . $ellipsis . $color_close;
     }
 
     public static function showStatus($done, $total, $size = 30, $label = '')
@@ -173,8 +173,8 @@ class Strings extends \Nette\Utils\Strings
 
         $bar = floor($perc * $size);
 
-        $status_bar = "\r[".$label;
-        $status_bar .= ' '.number_format($done).'/'.number_format($total).' ';
+        $status_bar = "\r[" . $label;
+        $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
 
         $str_len = strlen($status_bar);
         $size -= $str_len;
@@ -198,7 +198,7 @@ class Strings extends \Nette\Utils\Strings
         // flush();
 
         // when done, send a newline
-        if ($done == $total || 0 == $done) {
+        if ($done == $total || $done == 0) {
             echo PHP_EOL;
 
             return 0;
@@ -227,16 +227,16 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if (!$array) {
+        if (! $array) {
             return '';
         }
 
-        return $before.implode("{$after}{$separator}{$before}", $array).$after;
+        return $before . implode("{$after}{$separator}{$before}", $array) . $after;
     }
 
     public static function translate($inputText, $sep = '_')
     {
-        if ('' == CONFIG['USE_TRANSLATE']) {
+        if (CONFIG['USE_TRANSLATE'] == '') {
             return $inputText;
         }
 
@@ -247,7 +247,7 @@ class Strings extends \Nette\Utils\Strings
 
         $text = MediaCache::get($cacheKey);
         // utmdump($text);
-        if (false === $text) {
+        if ($text === false) {
             $source           = 'ru'; // English
             $target           = 'en'; // Spanish
             $encodedInputText = rawurlencode($inputText);
@@ -285,7 +285,7 @@ class Strings extends \Nette\Utils\Strings
             '"', '&', '$', '#', '*', '|', '`', '!', '{', '}',
             '%',  '«', '»', '”', '“', chr(0)];
 
-        if (true === $file) {
+        if ($file === true) {
             $file_special_chars = ['.', ';', ','];
         } else {
             $file_special_chars = ['’', "'"];
@@ -293,8 +293,8 @@ class Strings extends \Nette\Utils\Strings
         $special_chars = array_merge($special_chars, $file_special_chars);
         $text          = str_replace('é', 'e', $text);
 
-        if (true === $file) {
-            if (false === $caseSensitive) {
+        if ($file === true) {
+            if ($caseSensitive === false) {
                 $text = strtolower($text);
             }
             $text = str_replace(['’', "'"], '', $text);
@@ -322,13 +322,13 @@ class Strings extends \Nette\Utils\Strings
         $text          = str_replace(['%20', '+'], '-', $text);
         $text          = preg_replace('/[\r\n\t ]+/', '_', $text);
         $text          = str_replace('_', ' ', $text);
-        if (true === $file) {
-            if (false === $caseSensitive) {
+        if ($file === true) {
+            if ($caseSensitive === false) {
                 $text = ucwords($text);
             }
             $text = str_replace(' ', '_', $text);
             $text = str_replace('-', ' ', $text);
-            if (false === $caseSensitive) {
+            if ($caseSensitive === false) {
                 $text = ucwords($text);
             }
             $text = str_replace(' ', '-', $text);
@@ -345,12 +345,12 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        return str_replace(__PLEX_HOME__.DIRECTORY_SEPARATOR.__LIBRARY__.DIRECTORY_SEPARATOR, '', $filename);
+        return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
     }
 
     public static function StudioName($name, $forward = true)
     {
-        if (true === $forward) {
+        if ($forward === true) {
             $name = str_replace('1000', 'Thousand', $name);
             $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
@@ -373,7 +373,7 @@ class Strings extends \Nette\Utils\Strings
 
         $arraySize = count($workArray);     // Get size of array
 
-        for ($i = 0; $i < $arraySize; ++$i) {
+        for ($i = 0; $i < $arraySize; $i++) {
             // Nested array, process nest item
 
             if (is_array($workArray[$i])) {
@@ -385,7 +385,7 @@ class Strings extends \Nette\Utils\Strings
                     case 'NULL':     $_spFormat = '';
                         break;
 
-                    case 'boolean':  $_spFormat = (true == $workArray[$i]) ? 'true' : 'false';
+                    case 'boolean':  $_spFormat = ($workArray[$i] == true) ? 'true' : 'false';
                         break;
 
                         // Make sure sprintf has a good datatype to work with
@@ -407,7 +407,7 @@ class Strings extends \Nette\Utils\Strings
                         break;
                 }
 
-                $returnString .= sprintf('%2$s'.$_spFormat.'%2$s', $workArray[$i], $enclosure);
+                $returnString .= sprintf('%2$s' . $_spFormat . '%2$s', $workArray[$i], $enclosure);
 
                 $returnString .= ($i < ($arraySize - 1)) ? $delimiter : $terminator;
             }

@@ -14,6 +14,7 @@ class Options extends MediaOptions
 {
     use Lang;
     use Translate;
+
     // public $options                          = ['Default'=>false];
     // public $options = ['Default'=>true, 'Test'=>true];
     public $options = ['Default',  'Test'];

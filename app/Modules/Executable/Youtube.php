@@ -6,6 +6,9 @@
 
 namespace Mediatag\Modules\Executable;
 
+use const FILE_APPEND;
+use const PHP_EOL;
+
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
@@ -17,9 +20,6 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
-
-use const FILE_APPEND;
-use const PHP_EOL;
 
 class Youtube extends MediatagExec
 {
@@ -76,14 +76,16 @@ class Youtube extends MediatagExec
     //     // '--write-info-json',
     // ];
     public $Console;
+
     public $yt_json_string;
+
     public $pltype;
 
     private $LibraryClass;
 
     public const __YT_DL_FORMAT__ = '%(uploader)s/%(title)s-%(id)s.%(ext)s';
 
-    public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
+    public $buffer_file = __APP_HOME__ . '/var/log/buffer.txt';
 
     public $library;
 
@@ -115,7 +117,7 @@ class Youtube extends MediatagExec
         $this->library = $class;
         //        use Mediatag\Modules\Executable\Helper\Studio;
 
-        $Class              = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
+        $Class              = 'Mediatag\\Modules\\Executable\\Helper\\' . $class;
         $this->LibraryClass = new $Class($this);
 
         // $this->commonOptions = [
@@ -137,13 +139,13 @@ class Youtube extends MediatagExec
     public function youtubeGetJson($video_key)
     {
         // utminfo(func_get_args());
-        if ('Pornhub' != $this->library) {
+        if ($this->library != 'Pornhub') {
             return null;
         }
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
         $options   = array_merge($options, ['--skip-download']);
-        $video_url = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
+        $video_url = 'https://www.pornhub.com/view_video.php?viewkey=' . $video_key;
 
         $command = array_merge($options, [$video_url]);
 
@@ -164,10 +166,10 @@ class Youtube extends MediatagExec
     public function youtubeCmdOptions()
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
-        if (!Option::istrue('ignore') && 
-        !Option::istrue('skip') && 
-        true === $this->downloadFiles
-                                      && !Option::istrue('archive')) {
+        if (! Option::istrue('ignore')
+                                      && ! Option::istrue('skip')
+                                      && $this->downloadFiles === true
+                                      && ! Option::istrue('archive')) {
             $options = array_merge($options, [
                 '--download-archive',
                 PlaylistProcess::$ARCHIVE,
@@ -179,12 +181,12 @@ class Youtube extends MediatagExec
             $options = array_merge($options, [
                 '--download-archive',
 
-                __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
+                __PLEX_PL_DIR__ . '/ids/' . Option::getValue('archive') . '.txt',
                 '--force-write-archive',
             ]);
         }
 
-        if (Option::istrue('skip') || false === $this->downloadFiles) {
+        if (Option::istrue('skip') || $this->downloadFiles === false) {
             $options = array_merge($options, ['--skip-download']);
         }
 
@@ -224,15 +226,15 @@ class Youtube extends MediatagExec
 
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
-        if (!Option::istrue('url')) {
+        if (! Option::istrue('url')) {
             $names              = file($this->playlist);
             $this->num_of_lines = count($names) + 1;
-            if (!str_contains('premium', $this->playlist)) {
+            if (! str_contains('premium', $this->playlist)) {
                 $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->premium);
             }
 
-            if (!str_contains('model_hub', $this->playlist)) {
+            if (! str_contains('model_hub', $this->playlist)) {
                 $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->model_hub);
             }
@@ -251,52 +253,52 @@ class Youtube extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        file_put_contents($keyfile, $this->key.PHP_EOL, FILE_APPEND);
+        file_put_contents($keyfile, $this->key . PHP_EOL, FILE_APPEND);
     }
 
     public function updatePlaylist($type, $file = null)
     {
         // utminfo(func_get_args());
-        if (null === $file) {
+        if ($file === null) {
             $file = $this->playlist;
         }
 
-        if ('watchlaterPr' == $type) {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
+        if ($type == 'watchlaterPr') {
+            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
             // $this->Console->writeln($url);
-            file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
+            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
 
             return 1;
         }
-        if ('watchlater' == $type) {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
+        if ($type == 'watchlater') {
+            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
             // $this->Console->writeln($url);
-            file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
+            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
 
             return 1;
         }
 
-        if ('premium' == $type) {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
+        if ($type == 'premium') {
+            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
             // $this->Console->writeln($url);
-            if (!str_contains('premium', $file)) {
-                file_put_contents($this->premium, $url.PHP_EOL, FILE_APPEND);
+            if (! str_contains('premium', $file)) {
+                file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
             }
 
             return 1;
         }
 
-        if ('modelhub' == $type) {
-            $url = 'https://www.modelhub.com/video/'.$this->key;
-            if (!str_contains('model_hub', $file)) {
-                file_put_contents($this->model_hub, $url.PHP_EOL, FILE_APPEND);
+        if ($type == 'modelhub') {
+            $url = 'https://www.modelhub.com/video/' . $this->key;
+            if (! str_contains('model_hub', $file)) {
+                file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
             }
 
             return 1;
         }
-        if ('error' == $type) {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
-            file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url.PHP_EOL, FILE_APPEND);
+        if ($type == 'error') {
+            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+            file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url . PHP_EOL, FILE_APPEND);
 
             return 1;
         }
@@ -312,19 +314,19 @@ class Youtube extends MediatagExec
         // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
         if (Mediatag::$filesystem->exists($json_file)) {
             $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
-            if (1 === $success) {
+            if ($success === 1) {
                 $json_key = $matches[1];
             } else {
                 // utmdd($matches);
             }
         }
 
-        $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
+        $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
 
         if (Mediatag::$filesystem->exists($json_file)) {
-            if (!Mediatag::$filesystem->exists($newJson_file)) {
+            if (! Mediatag::$filesystem->exists($newJson_file)) {
                 if (Option::istrue('test')) {
-                    $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
+                    $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                     Mediatag::$output->writeln($out);
                 } else {
                     Mediatag::$filesystem->rename($json_file, $newJson_file, false);

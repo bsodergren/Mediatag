@@ -13,9 +13,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class Command extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
 
     public $command = [
-        'rename'    => ['renameVids' => null],
+        'rename' => ['renameVids' => null],
     ];
 }

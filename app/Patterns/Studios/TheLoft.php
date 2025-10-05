@@ -10,7 +10,8 @@ const THELOFT_REGEX_COMMON = '//i';
 
 class TheLoft extends TeamSkeet
 {
-    public $studio  = 'The Loft';
+    public $studio = 'The Loft';
+
     public $network = 'Team Skeet';
 
     public $regex = [

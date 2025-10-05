@@ -13,6 +13,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class Command extends MediaCommand
 {
     use Lang;
+
     public const SKIP_SEARCH = true;
 
     //  public const USE_LIBRARY     = false;

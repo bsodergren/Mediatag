@@ -10,9 +10,11 @@ const MODERNDAYSINS_REGEX_COMMON = '//i';
 
 class ModernDaySins extends AdultTime
 {
-    public $studio  = 'Modern Day Sins';
+    public $studio = 'Modern Day Sins';
+
     public $network = 'Adult Time';
-    public $regex   = [
+
+    public $regex = [
         'moderndaysins' => [
             'artist' => [
                 'pattern'             => ADULTTIME_REGEX_COMMON,

@@ -31,6 +31,7 @@ class VideoPreview extends VideoInfo
     public $thumbType = 'preview';
 
     public $thumbExt = '.gif';
+
     public $thumbDir = __INC_WEB_PREVIEW_DIR__;
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
@@ -58,17 +59,17 @@ class VideoPreview extends VideoInfo
         $this->video_name  = basename($this->video_file);
         // $type             = $this->actionText;
         $action           = $this->updatedText;
-        $this->returnText = $this->updatedText.$this->actionText;
+        $this->returnText = $this->updatedText . $this->actionText;
 
         if (file_exists($this->previewName)) {
             // --$this->fileCount;
-            $this->actionText = $action.$this->thumbType;
+            $this->actionText = $action . $this->thumbType;
 
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         }
 
         $this->preview_path = dirname($this->previewName);
-        (new Filesystem())->mkdir($this->preview_path);
+        (new Filesystem)->mkdir($this->preview_path);
 
         return $this->build_video_thumbnail();
     }

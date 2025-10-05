@@ -6,6 +6,4 @@
 
 namespace Mediatag\Modules\Executable\Callbacks;
 
-trait JsCallbacks
-{
-}
+trait JsCallbacks {}

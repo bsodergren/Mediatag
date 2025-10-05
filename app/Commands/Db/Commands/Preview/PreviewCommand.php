@@ -13,8 +13,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class PreviewCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
-    public $command          = [
+
+    public $command = [
         'preview' => [
             // 'init'    => null,
             // 'exec'    => null,

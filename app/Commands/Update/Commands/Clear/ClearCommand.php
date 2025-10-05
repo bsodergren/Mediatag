@@ -16,9 +16,11 @@ final class ClearCommand extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
-    public $command          = [
-        'clear'     => [
+
+    public $command = [
+        'clear' => [
             'exec'      => null,
             'clearMeta' => null,
             // 'exec' => null,

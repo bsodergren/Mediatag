@@ -17,8 +17,8 @@ use Symfony\Component\Finder\Finder;
 // use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 // use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
-$input  = new ArgvInput();
-$output = new ConsoleOutput();
+$input  = new ArgvInput;
+$output = new ConsoleOutput;
 
 $cmdName = str_replace('media', '', __SCRIPT_NAME__);
 
@@ -30,7 +30,7 @@ $commandsDir    = implode(\DIRECTORY_SEPARATOR, [__APP_HOME__, 'app', 'Commands'
 $default = false;
 
 if (file_exists($commandsDir)) {
-    $finder = new Finder();
+    $finder = new Finder;
     $finder->files()->in($commandsDir)->name('*Command.php');
     foreach ($finder as $file) {
         $commandFile = $file->getPathname();
@@ -41,17 +41,17 @@ if (file_exists($commandsDir)) {
         $CommandClassName = basename($commandFile, '.php');
         $commandFile      = str_replace('/', '\\', $commandFile);
         $commandFile      = str_replace($commandFileName, '', $commandFile);
-        $commandClass     = 'Mediatag\\Commands'.ucfirst($commandFile).''.$CommandClassName;
+        $commandClass     = 'Mediatag\\Commands' . ucfirst($commandFile) . '' . $CommandClassName;
 
         $commandClasses[] = $commandClass;
-        if ('Command' == $CommandClassName) {
+        if ($CommandClassName == 'Command') {
             $default = true;
         }
     }
 }
 
 $SingleCommand = false;
-if (1 == count($commandClasses)) {
+if (count($commandClasses) == 1) {
     $default = true;
     // $SingleCommand = true;
 }
@@ -59,16 +59,16 @@ if (1 == count($commandClasses)) {
 foreach ($commandClasses as $className) {
     // // utmdump($className);
 
-    $Command = new $className();
+    $Command = new $className;
     $application->add($Command);
 
-    if (true === $Command::$SingleCommand) {
+    if ($Command::$SingleCommand === true) {
         // utmdd($Command::$SingleCommand);
         $SingleCommand = true;
     }
 }
 
-if (true === $default) {
+if ($default === true) {
     $application->setDefaultCommand($cmdName, $SingleCommand);
 }
 

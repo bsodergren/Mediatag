@@ -10,6 +10,7 @@ const USEPOV_REGEX_COMMON = '//i';
 
 class UsePOV extends TeamSkeet
 {
-    public $studio  = 'Use POV';
+    public $studio = 'Use POV';
+
     public $network = 'Team Skeet';
 }

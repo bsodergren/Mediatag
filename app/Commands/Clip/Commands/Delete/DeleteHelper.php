@@ -28,10 +28,10 @@ trait DeleteHelper
 
         $go = Chooser::changes(Translate::text('L__CLIP_VIDEO_COUNT', ['VID' => $videos]), 'yes', __LINE__);
 
-        if (true === $go) {
-            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
+        if ($go === true) {
+            Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
             foreach ($file_array as $file) {
-                Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
+                Mediatag::$output->writeLn('<info> removing file ' . basename($file) . '</info>');
                 // Mediatag::$filesystem->remove($file);
                 // utmdump($file);
             }

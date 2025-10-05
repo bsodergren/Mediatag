@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Clip;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -20,14 +22,14 @@ use function array_key_exists;
 use function count;
 use function dirname;
 
-use const DIRECTORY_SEPARATOR;
-
 trait Helper
 {
     use ffmpegTransition;
     use MarkerHelper;
     use MediaFFmpeg;
+
     public $Marker;
+
     public $markerArray;
 
     public function timeCodetoSec($time, $mod = 0)
@@ -54,7 +56,7 @@ trait Helper
     public function getClipDirectory($filename, $level = 1)
     {
         $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
-        if (0 == $level) {
+        if ($level == 0) {
             return $outputFile;
         }
 
@@ -63,14 +65,14 @@ trait Helper
 
     public function getClipFilename($filename)
     {
-        return $this->getClipDirectory($filename).DIRECTORY_SEPARATOR.basename($filename);
+        return $this->getClipDirectory($filename) . DIRECTORY_SEPARATOR . basename($filename);
     }
 
     public function setClipFilename($name)
     {
         $name = str_replace(' ', '_', $name);
 
-        $filename = __LIBRARY_HOME__.DIRECTORY_SEPARATOR.'Home Videos'.DIRECTORY_SEPARATOR.'Compilation'.DIRECTORY_SEPARATOR.$name.'.mp4';
+        $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
         Filesystem::createDir(dirname($filename));
 
         if (file_exists($filename)) {
@@ -88,7 +90,7 @@ trait Helper
 
     public function setffmpegFilename($name)
     {
-        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).DIRECTORY_SEPARATOR.$name.'.txt';
+        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0) . DIRECTORY_SEPARATOR . $name . '.txt';
     }
 
     public function getfileList()
@@ -99,18 +101,18 @@ trait Helper
         $search = Option::getValue('clip', true);
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-            $this->Marker = new Markers();
+            $this->Marker = new Markers;
 
             $this->Marker->getvideoId($key);
 
-            if (null !== $this->Marker->video_id) {
+            if ($this->Marker->video_id !== null) {
                 $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
 
                 $result  = Mediatag::$dbconn->query($query);
                 $markers = $this->getVideoMarks($result);
 
                 if (count($markers) > 0) {
-                    ++$this->FileIdx;
+                    $this->FileIdx++;
 
                     $markerArray[] = $markers;
                 }

@@ -73,7 +73,7 @@ class DbMap extends Storage
 
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-        $query = 'INSERT IGNORE INTO '.$table.'  ('.$tag.", replacement) VALUES ('".$key."','".$text."')";
+        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
 
         $this->dbConn->rawQuery($query);
     }
@@ -86,11 +86,11 @@ class DbMap extends Storage
         $table = $this->getTagTable($tag);
         $where = $this->getTagWhere($tag, $string);
 
-        $query  = 'SELECT * FROM '.$table.' WHERE '.$where;
+        $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
         $result = $this->dbConn->rawQuery($query);
 
         if (is_array($result)) {
-            if (0 == count($result)) {
+            if (count($result) == 0) {
                 return false;
             }
 
@@ -98,10 +98,10 @@ class DbMap extends Storage
                 return $result;
             }
 
-            if (0 == $result[0]['keep'] && false === $bypass) {
+            if ($result[0]['keep'] == 0 && $bypass === false) {
                 return false;
             }
-            if ('' != $result[0]['replacement']) {
+            if ($result[0]['replacement'] != '') {
                 $text = $result[0]['replacement'];
             } else {
                 $text = $result[0]['genre'];
@@ -147,21 +147,21 @@ class DbMap extends Storage
 
         $updates = [];
 
-        if (null !== $replacement) {
+        if ($replacement !== null) {
             $replacement = $this->sortTagList($replacement);
 
-            $updates[] = " replacement = '".$replacement."' ";
+            $updates[] = " replacement = '" . $replacement . "' ";
         }
-        if (null !== $show) {
-            $updates[] = ' keep = '.$show.' ';
+        if ($show !== null) {
+            $updates[] = ' keep = ' . $show . ' ';
         }
 
         $replace = implode(',', $updates);
-        if (false === $existing) {
+        if ($existing === false) {
             $this->addTag($tag, $text);
         }
 
-        $query  = 'UPDATE '.$table.' SET '.$replace.' WHERE  '.$where;
+        $query  = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
         $result = $this->dbConn->rawQueryOne($query);
     }
 
@@ -170,9 +170,9 @@ class DbMap extends Storage
         // utminfo(func_get_args());
 
         $key   = $this->makeKey($text);
-        $where = $tag." = '".$key."';";
+        $where = $tag . " = '" . $key . "';";
         if (str_contains($text, '%')) {
-            $where = $tag." like '%".$key."%';";
+            $where = $tag . " like '%" . $key . "%';";
         }
 
         return $where;

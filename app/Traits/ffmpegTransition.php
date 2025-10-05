@@ -25,6 +25,7 @@ trait ffmpegTransition
         'vdslice', 'vdwind', 'vertclose', 'vertopen', 'vuslice', 'vuwind', 'wipebl', 'wipebr', 'wipedown',
         'wipeleft', 'wiperight', 'wipetl', 'wipetr', 'wipeup', 'zoomin',
     ];
+
     private $default_transition = 'radial';
 
     private function getTransition($transition_type)
@@ -35,7 +36,7 @@ trait ffmpegTransition
             $key        = array_rand($transition_type);
             $transition = $transition_type[$key];
 
-            if ('random' == $transition) {
+            if ($transition == 'random') {
                 $key        = array_rand($this->transition_types);
                 $transition = $this->transition_types[$key];
             }
@@ -44,7 +45,7 @@ trait ffmpegTransition
         if (in_array($transition, $this->transition_types)) {
             $return = $transition;
         }
-        Mediatag::$output->writeln('<info>Using transition '.$return.' </info>');
+        Mediatag::$output->writeln('<info>Using transition ' . $return . ' </info>');
 
         return $return;
     }
@@ -95,18 +96,18 @@ trait ffmpegTransition
             $scaler = $i > 0 ? $scaler_default : '';
             $normalizer .= "[{$i}:v]settb=AVTB,setsar=sar=1,fps=30{$scaler}[{$i}v];";
 
-            if (0 == $i) {
+            if ($i == 0) {
                 continue;
             }
 
             $video_length = $file_lengths[$i - 1] - $transition_duration / 2;
             $offset += $video_length;
-            $next_transition_output = 'v'.($i - 1).$i;
-            $video_transitions .= "[{$last_transition_output}][{$i}v]xfade=transition={$transition}:duration={$transition_duration}:offset=".($offset - $transition_duration / 2)."[{$next_transition_output}];";
+            $next_transition_output = 'v' . ($i - 1) . $i;
+            $video_transitions .= "[{$last_transition_output}][{$i}v]xfade=transition={$transition}:duration={$transition_duration}:offset=" . ($offset - $transition_duration / 2) . "[{$next_transition_output}];";
             $last_transition_output = $next_transition_output;
 
             if ($has_audio[$i - 1] && $has_audio[$i]) {
-                $next_audio_output = 'a'.($i - 1).$i;
+                $next_audio_output = 'a' . ($i - 1) . $i;
                 $audio_transitions .= "[{$last_audio_output}][{$i}:a]acrossfade=d={$transition_duration}[{$next_audio_output}];";
                 $last_audio_output = $next_audio_output;
             } elseif ($has_audio[$i]) {
@@ -120,8 +121,8 @@ trait ffmpegTransition
         // $video_transitions = str_replace(';', ';'.\PHP_EOL, $video_transitions);
         // $audio_transitions = str_replace(';', ';'.\PHP_EOL, $audio_transitions);
         $ffmpeg_args = array_merge($files_input,
-            ['-filter_complex', $normalizer.$video_transitions
-            .substr($audio_transitions, 0, -1), '-map', '[final]']);
+            ['-filter_complex', $normalizer . $video_transitions
+            . substr($audio_transitions, 0, -1), '-map', '[final]']);
 
         $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
 

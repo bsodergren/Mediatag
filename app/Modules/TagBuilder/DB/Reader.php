@@ -57,7 +57,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $video_info = $this->getVideoInfo($file_array['video_key']);
-        if (null === $video_info) {
+        if ($video_info === null) {
             return null;
         }
 
@@ -69,9 +69,9 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         // Mediatag::$log->notice('Getting tag info for {tag}', ['tag'=>$tag]);
         if (array_key_exists($tag, $this->tag_array)) {
-            if ('studio' == $tag) {
+            if ($tag == 'studio') {
                 if (array_key_exists('network', $this->tag_array)) {
-                    $this->tag_array[$tag] .= '/'.$this->tag_array['network'];
+                    $this->tag_array[$tag] .= '/' . $this->tag_array['network'];
                 }
             }
 
@@ -93,14 +93,14 @@ class Reader extends TagReader
   m.studio as studio ,
   m.network as network ,
   m.keyword as keyword
-  FROM  mediatag_video_metadata m WHERE m.video_key = '".$key."'";
+  FROM  mediatag_video_metadata m WHERE m.video_key = '" . $key . "'";
 
         // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
         // utmdd($query);
 
         $result = Mediatag::$dbconn->query($query);
         $info   = null;
-        if (1 != count($result)) {
+        if (count($result) != 1) {
             return null;
         }
 
@@ -108,7 +108,7 @@ class Reader extends TagReader
         $tagArray[] = 'network';
 
         foreach ($tagArray as $tag) {
-            if (null !== $result[0][$tag]) {
+            if ($result[0][$tag] !== null) {
                 $info[$key]['metatags'][$tag] = $result[0][$tag];
             }
         }

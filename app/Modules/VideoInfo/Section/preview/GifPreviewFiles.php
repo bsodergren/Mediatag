@@ -22,22 +22,23 @@ use function count;
 class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
-
     use MediaFFmpeg;
-    public $videoRange  = 80;
+
+    public $videoRange = 80;
+
     public $videoSlides = 15;
 
     public function build_video_thumbnail()
     {
         // Create a temp directory for building.
-        $temp    = __PLEX_VAR_DIR__.'/build/'.md5($this->video_file);
+        $temp    = __PLEX_VAR_DIR__ . '/build/' . md5($this->video_file);
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
             'ffmpeg.binaries'     => '/home/bjorn/bin/ffmpeg',
             'ffprobe.binaries'    => '/home/bjorn/bin/ffprobe',
         ];
-        (new Filesystem())->mkdir($temp);
+        (new Filesystem)->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
         $ffprobe = FFProbe::create($options, $this->logger);
@@ -53,7 +54,9 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
 
         $videoRange  = $this->videoRange;
         $videoSlides = $this->videoSlides;
-        $points      = array_map(function ($n) { return round($n, 0); }, range(1, $videoRange, $videoRange / $videoSlides));
+        $points      = array_map(function ($n) {
+            return round($n, 0);
+        }, range(1, $videoRange, $videoRange / $videoSlides));
 
         $frames      = [];
         $progressBar = new ProgressBar(Mediatag::$output, count($points));
@@ -81,11 +84,11 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $progressBar->finish();
         Mediatag::$output->writeln('');
 
-        if (!empty($frames)) {
+        if (! empty($frames)) {
             $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.
-            $gc = new GifCreator();
+            $gc = new GifCreator;
             $gc->create($frames, $durations, 0);
             file_put_contents($this->previewName, $gc->getGif());
 
@@ -95,7 +98,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
             }
         }
 
-        (new Filesystem())->remove($temp);
+        (new Filesystem)->remove($temp);
 
         $this->progressBar = true;
 

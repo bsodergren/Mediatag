@@ -20,7 +20,8 @@ use function is_array;
  */
 class Chooser
 {
-    public static $bypass         = [];
+    public static $bypass = [];
+
     public static $QuestionFormat = '<fg=bright-yellow;options=reverse>%text%</>';
 
     public static function FormatQuestion($format)
@@ -37,7 +38,7 @@ class Chooser
             }
 
             foreach ($Question as $key => $var) {
-                $msgText = str_replace('%'.$key.'%', $var, $msgText);
+                $msgText = str_replace('%' . $key . '%', $var, $msgText);
             }
         } else {
             $msgText = $Question;
@@ -53,9 +54,9 @@ class Chooser
         string $questionText = 'Continue with this action?',
         $optionName = 'yes', $bypass_id = 25): bool
     {
-        $bypass_id = $optionName.'_'.$bypass_id;
+        $bypass_id = $optionName . '_' . $bypass_id;
 
-        if ('yes' != $optionName) {
+        if ($optionName != 'yes') {
             if (Option::isFalse('overwrite')) {
                 if (Option::isFalse('ask')) {
                     return true;
@@ -71,8 +72,8 @@ class Chooser
             return true;
         }
 
-        $ask      = new QuestionHelper();
-        $question = new Question(self::getQuestion($questionText).' yY|nN|A|N: ');
+        $ask      = new QuestionHelper;
+        $question = new Question(self::getQuestion($questionText) . ' yY|nN|A|N: ');
         $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
 
         switch ($answer) {
@@ -105,15 +106,15 @@ class Chooser
         $questionFormatedText = self::getQuestion($questionText);
         // $text = Mediatag::$output->writeln($questionFormatedText );
 
-       // utmdd( $text,"ex");
-        $ask                  = new QuestionHelper();
-        $question             = new ChoiceQuestion($questionFormatedText, $Answers, $default);
+        // utmdd( $text,"ex");
+        $ask      = new QuestionHelper;
+        $question = new ChoiceQuestion($questionFormatedText, $Answers, $default);
         $question->setAutocompleterValues($Answers);
         $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
 
         // utmdd(get_class_methods(get_class(Mediatag::$output)));
 
-        if ('Exit' == $answer) {
+        if ($answer == 'Exit') {
             return false;
         }
 

@@ -6,6 +6,9 @@
 
 namespace Mediatag\Commands\Backup;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
@@ -14,9 +17,6 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
-
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
 
 trait Helper
 {
@@ -30,7 +30,7 @@ trait Helper
             'localhost',
             '-u',
             __SQL_USER__,
-            '-p'.__SQL_PASSWD__,
+            '-p' . __SQL_PASSWD__,
             '--compact',
         ];
 
@@ -53,11 +53,11 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (!is_dir($this->backupDirectory)) {
+        if (! is_dir($this->backupDirectory)) {
             NetteFile::createdir($this->backupDirectory);
         }
 
-        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.__MYSQL_DATABASE__.'.sql';
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . __MYSQL_DATABASE__ . '.sql';
 
         $this->mysqlDump(['-d', __MYSQL_DATABASE__], $backupDbFile);
         $this->backupFuncDb();
@@ -77,7 +77,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.$tableName.'.sql';
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . $tableName . '.sql';
 
         $this->mysqlDump(['--skip-extended-insert', __MYSQL_DATABASE__, $tableName], $backupDbFile);
     }
@@ -86,7 +86,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $backupDbFile = $this->backupDirectory.DIRECTORY_SEPARATOR.'function.sql';
+        $backupDbFile = $this->backupDirectory . DIRECTORY_SEPARATOR . 'function.sql';
         $this->mysqlDump(['--skip-triggers', '--routines', '--no-create-info', '--no-data', '--no-create-db', '--skip-opt', __MYSQL_DATABASE__], $backupDbFile);
     }
 
@@ -112,7 +112,7 @@ trait Helper
             $files                   = count($this->video_array[$key]);
         }
 
-        if (0 == $files) {
+        if ($files == 0) {
             utmdd([__METHOD__, 'No directory', $files]);
         }
     }
@@ -131,19 +131,19 @@ trait Helper
         if (array_key_exists($key, $this->video_array)) {
             $files = count($this->video_array[$key]);
 
-            echo "Rsyncing {$files}".PHP_EOL;
+            echo "Rsyncing {$files}" . PHP_EOL;
 
             $arr = array_unique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 $newPath = str_replace($home, $path, $video_path);
                 // $newFile = $newPath.DIRECTORY_SEPARATORvideo_pathvideo['video_name'];
 
-                if (!is_dir($newPath)) {
+                if (! is_dir($newPath)) {
                     Filesystem::createdir($newPath);
                 }
 
-                echo $video_path.' '.$newPath.PHP_EOL;
-                $this->rsync($video_path.'/', $newPath.'/');
+                echo $video_path . ' ' . $newPath . PHP_EOL;
+                $this->rsync($video_path . '/', $newPath . '/');
             }
         }
     }

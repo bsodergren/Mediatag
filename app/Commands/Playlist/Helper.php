@@ -6,11 +6,17 @@
 
 namespace Mediatag\Commands\Playlist;
 
+use const DIRECTORY_SEPARATOR;
+use const FILE_IGNORE_NEW_LINES;
+use const FILE_SKIP_EMPTY_LINES;
+use const PHP_EOL;
+// use Nette\Utils\FileSystem as NetteFile;
+use const SORT_STRING;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-// use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
 use Nette\Utils\Strings;
@@ -22,16 +28,12 @@ use function count;
 use function in_array;
 use function is_array;
 
-use const DIRECTORY_SEPARATOR;
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_SKIP_EMPTY_LINES;
-use const PHP_EOL;
-use const SORT_STRING;
-
 trait Helper
 {
-    public $url             = 'https://www.pornhub.com/playlist/watchlater';
-    public $idList          = [];
+    public $url = 'https://www.pornhub.com/playlist/watchlater';
+
+    public $idList = [];
+
     public $DownloadableIds = [];
 
     public function youtubeWatchPlaylist()
@@ -78,20 +80,20 @@ trait Helper
 
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
-            if (1 == $success) {
+            if ($success == 1) {
                 $video_keys[$matches[1]] = true;
             }
         }
         $playlist_file = 'missing_playlist.txt';
         $ids           = $this->getDownloadedIds();
         foreach ($ids as $id) {
-            if (!array_key_exists($id, $video_keys)) {
+            if (! array_key_exists($id, $video_keys)) {
                 $missing[] = $id;
             }
         }
         $file_string = '';
         foreach ($missing as $v => $key) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
         }
 
         Filesystem::writeFile($playlist_file, $file_string);
@@ -101,7 +103,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $files = Finder::Find('*.mp4', __PLEX_HOME__.'/Pornhub', exit: false);
+        $files = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub', exit: false);
 
         foreach ($files as $file) {
             $key = File::getVideoKey(basename($file));
@@ -110,16 +112,16 @@ trait Helper
             }
 
             $existing_ids[] = $key;
-            $archive_ids[]  = 'pornhub '.$key;
+            $archive_ids[]  = 'pornhub ' . $key;
         }
 
-        Mediatag::$output->writeln('<info> found '.count($archive_ids).' files</info>');
+        Mediatag::$output->writeln('<info> found ' . count($archive_ids) . ' files</info>');
         $this->ids = $existing_ids;
 
         $archive_content = Filesystem::readLines(self::$ARCHIVE);
         $diff            = array_diff($archive_content, $archive_ids);
         if (is_array($diff)) {
-            Mediatag::$output->writeln('<info> found '.count($diff).' missing files</info>');
+            Mediatag::$output->writeln('<info> found ' . count($diff) . ' missing files</info>');
             if (count($diff) > 0) {
                 foreach ($diff as $lineNum => $line) {
                     $idList[] = Strings::after($line, ' ');
@@ -127,7 +129,7 @@ trait Helper
 
                 $file_string = '';
                 foreach ($idList as $v => $key) {
-                    $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
+                    $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
                 }
 
                 Filesystem::writeFile(self::MISSING_PLAYLIST, $file_string);
@@ -150,12 +152,12 @@ trait Helper
                 $array = array_unique($array);
                 $after = count($array);
 
-                Mediatag::$output->writeln('before, <info>'.$before.'</info> and now after, <info>'.$after.' </info>');
+                Mediatag::$output->writeln('before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
                 $trimmedLines = $before - $after;
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text = 'trimmed '.$trimmedLines.' from the playlist';
-                Mediatag::$output->writeln('<info>'.$text.'</info>');
-                if (0 == $after) {
+                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
+                Mediatag::$output->writeln('<info>' . $text . '</info>');
+                if ($after == 0) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
                     Filesystem::delete($this->playlist);
 
@@ -170,12 +172,12 @@ trait Helper
         // utminfo(func_get_args());
 
         $files = Finder::Find('*.ytdl', __PLEX_DOWNLOAD__, exit: false);
-        if (null !== $files) {
+        if ($files !== null) {
             foreach ($files as $file) {
                 $info = pathinfo($file);
                 $ytdl = $file;
-                $mp4  = $info['dirname'].DIRECTORY_SEPARATOR.$info['filename'];
-                $json = $info['dirname'].DIRECTORY_SEPARATOR.basename($info['filename'], '.mp4').'.info.json';
+                $mp4  = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'];
+                $json = $info['dirname'] . DIRECTORY_SEPARATOR . basename($info['filename'], '.mp4') . '.info.json';
                 Filesystem::delete($ytdl);
                 Filesystem::delete($mp4);
                 Filesystem::delete($json);
@@ -189,24 +191,24 @@ trait Helper
 
         $archive_array = [];
         $playlistArray = [];
-        if (false !== self::$current_key) {
+        if (self::$current_key !== false) {
             $current_key     = self::$current_key;
             $archive_content = Filesystem::readLines(self::$ARCHIVE);
             foreach ($archive_content as $lineNum => $line) {
-                if (!str_contains($line, $current_key)) {
+                if (! str_contains($line, $current_key)) {
                     $archive_array[] = $line;
                 }
             }
             Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
-            $files = Finder::Find('*'.$current_key.'*', __PLEX_DOWNLOAD__, exit: false);
+            $files = Finder::Find('*' . $current_key . '*', __PLEX_DOWNLOAD__, exit: false);
             foreach ($files as $k => $file) {
                 Filesystem::delete($file);
             }
         }
 
-        if (false !== self::$trimmedPlaylist) {
-            if (false !== self::$originalPlaylist) {
+        if (self::$trimmedPlaylist !== false) {
+            if (self::$originalPlaylist !== false) {
                 $trimmedArray = Filesystem::readLines(self::$trimmedPlaylist);
                 $orginalArray = Filesystem::readLines(self::$originalPlaylist);
 
@@ -261,7 +263,7 @@ trait Helper
         //        Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
         foreach ($this->json_Array as $key => $v) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
         }
 
         Filesystem::writeFile(self::JSONPLAYLIST, $file_string);
@@ -282,34 +284,34 @@ trait Helper
 
             if (in_array($video_key, $ids)) {
                 $id_keys  = array_search($video_key, $ids);
-                $newids[] = 'pornhub '.$video_key;
+                $newids[] = 'pornhub ' . $video_key;
                 unset($ids[$id_keys]);
-            // $array[] = $video_key;
-            // utmdd("key " . $filename);
+                // $array[] = $video_key;
+                // utmdd("key " . $filename);
             } else {
-                if (!str_starts_with($video_key, 'x')) {
+                if (! str_starts_with($video_key, 'x')) {
                     if (file_exists($filename)) {
-                        $newids[] = 'pornhub '.$video_key;
+                        $newids[] = 'pornhub ' . $video_key;
 
                         continue;
                     }
-                    $playlist[] = 'https://www.pornhub.com/view_video.php?viewkey='.$video_key;
+                    $playlist[] = 'https://www.pornhub.com/view_video.php?viewkey=' . $video_key;
                 }
             }
         }
 
-        Filesystem::writeFile(self::$ARCHIVE.'.new', $newids);
+        Filesystem::writeFile(self::$ARCHIVE . '.new', $newids);
         if (count($playlist) > 0) {
-            Filesystem::writeFile(self::PLAYLIST.'.new', $playlist);
+            Filesystem::writeFile(self::PLAYLIST . '.new', $playlist);
         }
     }
 
     public function docompactPlaylist()
     {
         // utminfo(func_get_args());
-        if (!Option::istrue('skip')) {
+        if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
-            if (!file_exists($this->playlist)) {
+            if (! file_exists($this->playlist)) {
                 Mediatag::$output->writeln('<info>File doesnt exist</info>');
                 exit;
             }
@@ -324,12 +326,12 @@ trait Helper
                 $array = array_unique($array);
                 $after = count($array);
 
-                Mediatag::$output->writeln('before, <info>'.$before.'</info> and now after, <info>'.$after.' </info>');
+                Mediatag::$output->writeln('before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
                 $trimmedLines = $before - $after;
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text = 'trimmed '.$trimmedLines.' from the playlist';
-                Mediatag::$output->writeln('<info>'.$text.'</info>');
-                if (0 == $after) {
+                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
+                Mediatag::$output->writeln('<info>' . $text . '</info>');
+                if ($after == 0) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
                     Filesystem::delete($this->playlist);
 
@@ -369,7 +371,7 @@ trait Helper
 
         foreach ($fileidArray as $i => $fileId) {
             $file = $fileId[0];
-            if (0 == $fileId[1]) {
+            if ($fileId[1] == 0) {
                 $idArray = Filesystem::readLines($file);
 
                 if (is_array($idArray)) {
@@ -388,7 +390,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (!str_contains('premium', $this->playlist)) {
+        if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
             if (file_exists($this->premium)) {
                 $this->premiumIds = Filesystem::readLines($this->premium, [$this, 'getpremiumListIds']);
@@ -400,7 +402,7 @@ trait Helper
     {
         (int) $split = Option::getValue('split');
         $splitName   = basename($this->playlist, '.txt');
-        MediaFile::splitFile($this->playlist, './batch/', $split, $splitName.'_', '.txt');
+        MediaFile::splitFile($this->playlist, './batch/', $split, $splitName . '_', '.txt');
 
         exit;
     }
@@ -408,7 +410,7 @@ trait Helper
     public function parseArchive($line)
     {
         $key = Strings::after($line, ' ');
-        if (!array_key_exists($key, $this->json_Array)) {
+        if (! array_key_exists($key, $this->json_Array)) {
             return $line;
         }
 
@@ -417,7 +419,7 @@ trait Helper
 
     public function filemap($line)
     {
-        if ('' != $line) {
+        if ($line != '') {
             $ph_id = Strings::after($line, '=');
             if (str_contains($ph_id, '&')) {
                 $ph_id = Strings::before($ph_id, '&');
@@ -449,14 +451,14 @@ trait Helper
         if (str_contains($ph_id, '&')) {
             $ph_id = Strings::before($ph_id, '&');
         }
-        if (null === $ph_id) {
+        if ($ph_id === null) {
             $ph_id = Strings::after($line, 'watch/');
-            if (null !== $ph_id) {
+            if ($ph_id !== null) {
                 $ph_id = Strings::before($ph_id, '/');
             }
         }
         // utmdd([$line,$ph_id]);
-        if (!in_array($ph_id, $this->ids)) {
+        if (! in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
                 return $line;
             }
@@ -472,15 +474,15 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
+        if ($line != '') {
             $studioReplacement = '';
             $studio            = $line;
             if (str_contains($line, ':')) {
                 $studio            = Strings::before($line, ':');
-                $studioReplacement = ':'.Strings::after($line, ':');
+                $studioReplacement = ':' . Strings::after($line, ':');
             }
 
-            return $studio.$studioReplacement;
+            return $studio . $studioReplacement;
         }
 
         return false;
@@ -490,9 +492,9 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
-            if (!str_contains($line, ':')) {
-                $line = $line.':'.$line;
+        if ($line != '') {
+            if (! str_contains($line, ':')) {
+                $line = $line . ':' . $line;
             }
 
             $studio_match = Strings::before($line, ':');
@@ -510,13 +512,13 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
+        if ($line != '') {
             $Replacement = $line;
             $match       = $line;
             if (str_contains($line, ':')) {
                 $match       = Strings::before($line, ':');
                 $Replacement = Strings::after($line, ':');
-                if ('' == $Replacement) {
+                if ($Replacement == '') {
                     $Replacement = null;
                 }
             }
@@ -536,7 +538,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
+        if ($line != '') {
             $Replacement = null;
             $match       = $line;
             if (str_contains($line, ':')) {

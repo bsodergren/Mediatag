@@ -40,10 +40,12 @@ class Process extends Mediatag
         'artistMap' => ['artistMap' => null],
     ];
 
-    private $global_lang = __APP_HOME__.'/app/Locales/Lang.php';
+    private $global_lang = __APP_HOME__ . '/app/Locales/Lang.php';
 
-    private $command_lang = __APP_HOME__.'/app/Commands/%KEY%/Lang.php';
+    private $command_lang = __APP_HOME__ . '/app/Commands/%KEY%/Lang.php';
+
     public $tagConn;
+
     public $StorageConn;
 
     public function __construct(InputInterface $input, OutputInterface $output)
@@ -56,15 +58,11 @@ class Process extends Mediatag
 
         // $this->output = $output;
         // $this->input  = $input;
-        $this->tagConn     = new TagDB();
-        $this->StorageConn = new DbMap();
+        $this->tagConn     = new TagDB;
+        $this->StorageConn = new DbMap;
     }
 
-    public function exec($option = null)
-    {
-    }
+    public function exec($option = null) {}
 
-    public function print()
-    {
-    }
+    public function print() {}
 }

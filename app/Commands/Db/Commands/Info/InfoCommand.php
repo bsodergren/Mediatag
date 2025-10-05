@@ -13,9 +13,11 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class InfoCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
-    public $command          = [
-        'info'    => [
+
+    public $command = [
+        'info' => [
             // 'init' => null,
             // 'exec' => null,
             'execInfo' => null],

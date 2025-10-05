@@ -18,6 +18,7 @@ use function dirname;
 class Thumbnail extends VideoInfo
 {
     use MediaFFmpeg;
+
     public $video_key;
 
     public $video_file;
@@ -33,9 +34,11 @@ class Thumbnail extends VideoInfo
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
     public $thumbType = 'thumbnail';
-    public $maxLen    = 75;
+
+    public $maxLen = 75;
 
     public $thumbExt = '.jpg';
+
     public $thumbDir = __INC_WEB_THUMB_DIR__;
 
     public function get($key, $file)
@@ -62,15 +65,15 @@ class Thumbnail extends VideoInfo
         // $img_name = basename($this->video_name, '.mp4').'.jpg';
         $img_name = basename($this->videoToThumb($this->video_file));
         // $img_name     = Strings::cleanFileName($img_name,true);
-        $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
-        $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
-        $img_file     = $img_location.$img_name;
-        $img_url_path = __INC_WEB_THUMB_URL__.'/'.$img_web_path.$img_name;
+        $img_web_path = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__);
+        $img_location = __INC_WEB_THUMB_DIR__ . '/' . $img_web_path;
+        $img_file     = $img_location . $img_name;
+        $img_url_path = __INC_WEB_THUMB_URL__ . '/' . $img_web_path . $img_name;
         $action       = $this->updatedText;
         // $type         = $this->actionText;
 
-        if (!file_exists($img_file)) {
-            (new Filesystem())->mkdir($img_location);
+        if (! file_exists($img_file)) {
+            (new Filesystem)->mkdir($img_location);
             $ffprobe = FFProbe::create([
                 'ffmpeg.binaries'  => '/home/bjorn/bin/ffmpeg',
                 'ffprobe.binaries' => '/home/bjorn/bin/ffprobe']);
@@ -98,7 +101,7 @@ class Thumbnail extends VideoInfo
             $action = $this->newText;
         }
 
-        $this->actionText = $action.$this->thumbType;
+        $this->actionText = $action . $this->thumbType;
 
         return $img_url_path;
     }

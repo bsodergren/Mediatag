@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace Mediatag\Core;
 
 /**
- * @property ?array  $db
+ * @property ?array $db
  * @property ?string $environment
  */
 class MediaConfig

@@ -6,6 +6,8 @@
 
 namespace Mediatag\Modules\Executable;
 
+use const PHP_EOL;
+
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
@@ -17,8 +19,6 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
-
-use const PHP_EOL;
 
 class WriteMeta extends MediatagExec
 {
@@ -42,7 +42,7 @@ class WriteMeta extends MediatagExec
     public function clearMeta($options = null)
     {
         // utminfo(func_get_args());
-        if (null === Option::getValue('empty', 1)) {
+        if (Option::getValue('empty', 1) === null) {
             $this->addOptionArg('--metaEnema');
         } else {
             foreach (__META_TAGS__ as $tag) {
@@ -67,7 +67,7 @@ class WriteMeta extends MediatagExec
                     $this->createOptionArg($tag, $this->updateTags[$tag]);
                 }
             }
-            if (true === $update) {
+            if ($update === true) {
                 // $videoData[$this->video_key] = $this->videoData;
                 // $videoData[$this->video_key]['metatags'] = array_merge($this->videoData['currentTags'],$this->videoData['updateTags']);
 
@@ -101,26 +101,26 @@ class WriteMeta extends MediatagExec
         // utmdd([__METHOD__,$command]);
         // // UTMlog::Logger('Writing Metadata', $run_cmd);
 
-        if (1 == Option::isTrue('changes')) {
-            if (null === Chooser::$bypass) {
+        if (Option::isTrue('changes') == 1) {
+            if (Chooser::$bypass === null) {
                 $go = Chooser::changes();
             }
         } else {
             $go = true;
         }
 
-        if (true === Chooser::$bypass || true === $go) {
+        if (Chooser::$bypass === true || $go === true) {
             $callback = Callback::check([$this, 'WriteMetaOutput']);
 
             $this->exec($command, $callback);
             MediaCache::forget($this->video_key);
 
-            $results = ('' != $this->errors) ? $this->errors : $this->stdout;
+            $results = ($this->errors != '') ? $this->errors : $this->stdout;
         } else {
             $results = false;
-            $this->output->write("\t Skipping ".basename($command[1]));
+            $this->output->write("\t Skipping " . basename($command[1]));
         }
-        if (true == $results) {
+        if ($results == true) {
             // utmdump($results);
 
             if (str_contains($results, 'signal')
@@ -135,8 +135,8 @@ class WriteMeta extends MediatagExec
 
                     $this->repairVideo();
                 } else {
-                    $this->output->write("\t ".$results.PHP_EOL);
-                    $this->output->write("\t -- Running ".$this->runCommand);
+                    $this->output->write("\t " . $results . PHP_EOL);
+                    $this->output->write("\t -- Running " . $this->runCommand);
 
                     exit;
                 }

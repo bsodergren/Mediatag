@@ -54,7 +54,9 @@ class MediatagExec
     public $output;
 
     public $runCommand;
+
     public $videoData;
+
     public $updateTags = [];
 
     public $execMode = 'write';
@@ -84,10 +86,10 @@ class MediatagExec
             }
         }
 
-        if (null !== $input) {
+        if ($input !== null) {
             $this->input = $input;
         }
-        if (null !== $output) {
+        if ($output !== null) {
             $this->output = $output;
         }
     }
@@ -96,8 +98,8 @@ class MediatagExec
     {
         // utminfo(func_get_args());
 
-        if (null !== $this->execMode) {
-            $this->previewTrait('Running '.$this->runCommand, false);
+        if ($this->execMode !== null) {
+            $this->previewTrait('Running ' . $this->runCommand, false);
         }
     }
 
@@ -105,8 +107,8 @@ class MediatagExec
     {
         // utminfo(func_get_args());
         // utmdd("fadsf");
-        if (null !== $this->execMode) {
-            $this->testTrait("\t Running ".$this->runCommand, true);
+        if ($this->execMode !== null) {
+            $this->testTrait("\t Running " . $this->runCommand, true);
         }
     }
 

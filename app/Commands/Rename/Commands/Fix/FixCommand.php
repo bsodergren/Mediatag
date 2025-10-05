@@ -17,11 +17,12 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class FixCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
 
     public $command = [
-        'fix'    => [
-            'renameVids'       => null,
+        'fix' => [
+            'renameVids' => null,
             // 'execInfo'        => null,
             // 'execPreview'     => null,
         ],

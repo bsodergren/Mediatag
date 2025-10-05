@@ -11,7 +11,8 @@ use Mediatag\Modules\TagBuilder\Patterns;
 class DevilsFilm extends Patterns
 {
     public $network = 'Devils Film';
-    public $studio  = 'Devils Film';
+
+    public $studio = 'Devils Film';
 
     public $regex = [
         'devilsfilm' => [

@@ -46,7 +46,7 @@ class Artist extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        self::$xml = new XMLWriter();
+        self::$xml = new XMLWriter;
         self::$xml->openMemory();
         self::$xml->startDocument('1.0', 'UTF-8');
         self::$xml->writeDtd('plist', '-//Apple Computer//DTD PLIST 1.0//EN', 'http://www.apple.com/DTDs/PropertyList-1.0.dtd');

@@ -27,20 +27,20 @@ trait Translate
         $thisClass = new ReflectionClass($class);
         $text      = $thisClass->getConstant($constant);
 
-        if (false == $text) {
-            if (!str_contains($class, 'Commands')) {
+        if ($text == false) {
+            if (! str_contains($class, 'Commands')) {
                 $class = 'Locales\\Lang.php';
             }
             if (str_contains($class, 'Commands')) {
                 $class = str_replace('Options', 'Lang.php', $class);
             }
 
-            return '<error>'.$constant.' not yet set in '.$class.'</error> ';
+            return '<error>' . $constant . ' not yet set in ' . $class . '</error> ';
         }
 
         if (is_array($vars)) {
             foreach ($vars as $key => $value) {
-                $key  = '%%'.strtoupper($key).'%%';
+                $key  = '%%' . strtoupper($key) . '%%';
                 $text = str_replace($key, $value, $text);
             }
 

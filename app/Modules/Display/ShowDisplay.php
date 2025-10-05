@@ -6,6 +6,8 @@
 
 namespace Mediatag\Modules\Display;
 
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -17,8 +19,6 @@ use UTM\Bundle\Monolog\UTMLog;
 
 use function array_key_exists;
 use function count;
-
-use const PHP_EOL;
 
 class ShowDisplay
 {
@@ -59,7 +59,7 @@ class ShowDisplay
     {
         // utminfo(func_get_args());
 
-        $this->formatter = new FormatterHelper();
+        $this->formatter = new FormatterHelper;
         $outputStyle     = new OutputFormatterStyle('red');
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
         $currentTagStyle = new OutputFormatterStyle('gray');
@@ -79,7 +79,7 @@ class ShowDisplay
 
         // UTMlog::logger('start Display Table');
         $count = count($filelist_array);
-        if (0 == $count) {
+        if ($count == 0) {
             Mediatag::$output->writeln('<error>No files found </error>');
 
             return;
@@ -91,12 +91,12 @@ class ShowDisplay
         foreach ($filelist_array as $key => $value) {
             // UTMlog::watchlap('key', $key);
             $display = $this->displayFileInfo($value, $count, $idx);
-            if (true === $display) {
-                if (true == $this->LineBreaks) {
+            if ($display === true) {
+                if ($this->LineBreaks == true) {
                     if ($count != $idx) {
                         $line_array = [];
 
-                        for ($n = 0; $n < 7; ++$n) {
+                        for ($n = 0; $n < 7; $n++) {
                             $line_array[] = '';
                         }
                         $line = implode(PHP_EOL, $line_array);
@@ -104,7 +104,7 @@ class ShowDisplay
                     }
                 }
             }
-            ++$idx;
+            $idx++;
         }
         // UTMlog::logger('end File display');
     }
@@ -117,7 +117,7 @@ class ShowDisplay
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeLn('<comment>Found</comment> <info>'.$count.'</info> <comment> files</comment>');
+            $this->fileCountSection->writeLn('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
             $this->fileInfoSection->writeLn('<info>   </info>');
             $this->table->setHeaders(['ID', 'Meta Value']);
             $this->table->render();
@@ -132,13 +132,13 @@ class ShowDisplay
 
         $method = 'overwrite';
 
-        if (!array_key_exists('currentTags', $fileinfo)) {
-            $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
+        if (! array_key_exists('currentTags', $fileinfo)) {
+            $fileinfo['metatags'] = (new TagReader)->loadVideo($fileinfo)->getMetaValues();
             $tagCount             = count($fileinfo['metatags']);
         } else {
             $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
         }
-        if (0 == $tagCount) {
+        if ($tagCount == 0) {
             return false;
         }
 
@@ -149,11 +149,11 @@ class ShowDisplay
         foreach ($MetatagBlock as $tag => $row) {
             $this->table->appendRow([$tag, $row]);
         }
-        $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
+        $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>'.$idx.'</info> of <info>'.$count.'</info> files');
-        $this->fileInfoSection->{$method}('<info>'.$in_directory.$filename.'</info>');
+        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files');
+        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
 
         return true;
         // usleep($this->displayTimer);
@@ -176,13 +176,13 @@ class ShowDisplay
             $style   = 'info';
         }
         if (array_key_exists('updateTags', $fileinfo)) {
-            if (!array_key_exists($tag, $fileinfo['updateTags'])) {
+            if (! array_key_exists($tag, $fileinfo['updateTags'])) {
                 return $string;
             }
         }
         if (array_key_exists($tag, $current)) {
             $current_value = $current[$tag];
-            if ('' != $current_value) {
+            if ($current_value != '') {
                 $string .= $current_value;
             }
         }

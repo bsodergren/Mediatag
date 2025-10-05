@@ -26,6 +26,7 @@ trait MetaTags
 {
     //  public $className;
     public static $tagDB;
+
     public static $Videokey = '';
 
     public function CleanMetaValue(string $tag, string $text): string
@@ -33,7 +34,7 @@ trait MetaTags
         // utminfo(func_get_args());
 
         $tag    = strtolower($tag);
-        $method = 'clean'.ucfirst($tag);
+        $method = 'clean' . ucfirst($tag);
 
         return trim($this->{$method}($text));
     }
@@ -73,7 +74,7 @@ trait MetaTags
     public function cleanStudio($text): string
     {
         // utminfo(func_get_args());
-        Mediatag::$log->notice('Clean Studio {studio}', ['studio'=>$text]);
+        Mediatag::$log->notice('Clean Studio {studio}', ['studio' => $text]);
         if (is_array($text)) {
             $array = $text;
         } else {
@@ -87,11 +88,11 @@ trait MetaTags
             $arr[] = trim($tagValue);
         }
 
-        if (!isset($this->videoData['video_path'])) {
+        if (! isset($this->videoData['video_path'])) {
             $this->videoData['video_path'] = $this->video_path;
         }
 
-        $studio_dir   = (new Filesystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__.'/'.__LIBRARY__);
+        $studio_dir   = (new Filesystem)->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
         // if(array_key_exists(3,$studio_array)){
@@ -120,7 +121,7 @@ trait MetaTags
             $array = explode(',', $genre);
         }
 
-        if (null !== $new) {
+        if ($new !== null) {
             if (str_contains($new, ',')) {
                 $add_array = explode(',', $new);
                 $array     = array_merge($array, $add_array);
@@ -138,22 +139,22 @@ trait MetaTags
         return implode(',', $arr);
     }
 
- private static function priority($first, $second, $tag)
+    private static function priority($first, $second, $tag)
     {
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
         // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
-        if ('studio' == $tag) {
+        if ($tag == 'studio') {
             $delim = '/';
         }
-        if ('title' == $tag) {
+        if ($tag == 'title') {
             // $secondCmp = '';
             $delim = '';
         }
-        if ('' != $secondCmp) {
-            if ('' == $firstCmp) {
+        if ($secondCmp != '') {
+            if ($firstCmp == '') {
                 $return = $second;
             } else {
                 if ($firstCmp == $secondCmp) {
@@ -177,6 +178,7 @@ trait MetaTags
             $return = $first;
             // utmdump(['return first', $return]);
         }
+
         return $return;
     }
 
@@ -187,15 +189,15 @@ trait MetaTags
 
         // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
-        if ('studio' == $tag) {
+        if ($tag == 'studio') {
             $delim = '/';
         }
-        if ('title' == $tag) {
+        if ($tag == 'title') {
             // $secondCmp = '';
             $delim = '';
         }
-        if ('' != $secondCmp) {
-            if ('' == $firstCmp) {
+        if ($secondCmp != '') {
+            if ($firstCmp == '') {
                 $return = $second;
             } else {
                 if ($firstCmp == $secondCmp) {
@@ -208,7 +210,7 @@ trait MetaTags
                         $return = $second;
                         // utmdump(['return second', $return]);
                     } else {
-                        $return = $first.$delim.$second;
+                        $return = $first . $delim . $second;
                         // utmdump(['return second', $return]);
 
                         //                        $return = $second;
@@ -219,6 +221,7 @@ trait MetaTags
             $return = $first;
             // utmdump(['return first', $return]);
         }
+
         return $return;
     }
 
@@ -226,11 +229,9 @@ trait MetaTags
     {
         // utminfo(func_get_args());
 
+        $method = 'priority' . $priority;
 
-        $method = "priority".$priority;
-
-        $return = self::$method($first,$second,$tag);
-
+        $return = self::$method($first, $second, $tag);
 
         // if (null !== $firstCmp && $first != $second) {
         //     $data['video_key'] = Metatags::$Videokey;
@@ -278,17 +279,17 @@ trait MetaTags
         // utminfo(func_get_args());
 
         // UTMlog::Logger('Clean', [$tag, $text]);
-        if ('artist' == $tag && null === $text) {
+        if ($tag == 'artist' && $text === null) {
             return null;
         }
         $delim = ',';
-        if ('studio' == $tag) {
+        if ($tag == 'studio') {
             $delim = '/';
         }
 
-        $tagDB = new TagDB();
+        $tagDB = new TagDB;
 
-        if ('title' == $tag) {
+        if ($tag == 'title') {
             $arr = explode(' ', $text);
 
             array_walk($arr, function (&$value) {
@@ -300,7 +301,7 @@ trait MetaTags
             return $newTitle;
         }
 
-        $method    = 'get'.ucfirst($tag);
+        $method    = 'get' . ucfirst($tag);
         $newList   = [];
         $i         = 0;
         $total     = 0;
@@ -308,7 +309,7 @@ trait MetaTags
 
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
-            if (!method_exists($tagDB, $method)) {
+            if (! method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;
@@ -317,10 +318,10 @@ trait MetaTags
             }
 
             $value = $tagDB->{$method}($tagValue);
-            if ('Genre' == $tag) {
+            if ($tag == 'Genre') {
                 $newList[] = $tagValue;
             }
-            if (false !== $value) {
+            if ($value !== false) {
                 $newList[] = $value;
             }
         }
@@ -328,16 +329,18 @@ trait MetaTags
         $string = implode($delim, $newList);
         $arr    = explode($delim, $string);
 
-        array_walk($arr, function (&$value) { $value = trim(ucwords($value)); });
+        array_walk($arr, function (&$value) {
+            $value = trim(ucwords($value));
+        });
 
         $arr = array_unique($arr); // , \SORT_STRING);
 
         $arr = array_values($arr);
 
-        if ('genre' == $tag || 'keyword' == $tag) {
-            if (true == MediaArray::search($arr, 'Double')) {
+        if ($tag == 'genre' || $tag == 'keyword') {
+            if (MediaArray::search($arr, 'Double') == true) {
                 foreach ($arr as $v) {
-                    if ('Double' == $v) {
+                    if ($v == 'Double') {
                         continue;
                     }
                     $narr[] = $v;
@@ -345,20 +348,20 @@ trait MetaTags
                 $arr = $narr;
                 unset($narr);
             }
-            if (true == MediaArray::search($arr, 'MMF')) {
-                if (true == MediaArray::search($arr, 'MFF')) {
+            if (MediaArray::search($arr, 'MMF') == true) {
+                if (MediaArray::search($arr, 'MFF') == true) {
                     foreach ($arr as $v) {
-                        if ('Group' == $v) {
+                        if ($v == 'Group') {
                             continue;
                         }
-                        if ('Double Penetration' == $v) {
+                        if ($v == 'Double Penetration') {
                             continue;
                         }
-                        if ('MMF' == $v) {
+                        if ($v == 'MMF') {
                             // continue;
                         }
 
-                        if ('MFF' == $v) {
+                        if ($v == 'MFF') {
                             // continue;
                         }
                         $narr[] = $v;
@@ -372,7 +375,7 @@ trait MetaTags
                 // utmdd($this);
                 $genre = fileReader::$PatternClassObj->getGenre();
 
-                if (false == MediaArray::search($arr, $genre)) {
+                if (MediaArray::search($arr, $genre) == false) {
                     $arr[] = $genre;
                 }
             }
@@ -383,19 +386,19 @@ trait MetaTags
 
         while ($total < 255) {
             $total = strlen($arr[$i]) + $total + 1;
-            ++$i;
+            $i++;
             if ($i == $max) {
                 break;
             }
         }
 
         if ($total > 255) {
-            --$i;
+            $i--;
         }
         $new_arr = array_slice($arr, 0, $i);
 
         $string = implode($delim, $new_arr);
-        if ('' == $string) {
+        if ($string == '') {
             $string = null;
         }
 

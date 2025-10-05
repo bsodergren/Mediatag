@@ -37,7 +37,7 @@ class MapDisplay
     {
         // utminfo(func_get_args());
 
-        $this->formatter = new FormatterHelper();
+        $this->formatter = new FormatterHelper;
         $outputStyle     = new OutputFormatterStyle('red');
         $output->getFormatter()->setStyle('indent', $outputStyle);
         $this->output = $output;
@@ -52,7 +52,7 @@ class MapDisplay
         $this->table = new Table($section);
         $this->table->setStyle('box');
         $this->table->setHeaders(array_keys($data[0]));
-        $this->table->addrow(new TableSeparator());
+        $this->table->addrow(new TableSeparator);
         $this->table->render();
     }
 
@@ -64,7 +64,7 @@ class MapDisplay
         foreach ($data as $k => $row) {
             $row['id'] = $idx;
             $this->table->appendRow($row);
-            ++$idx;
+            $idx++;
         }
     }
 }

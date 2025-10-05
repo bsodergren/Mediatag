@@ -6,6 +6,9 @@
 
 namespace Mediatag\Commands\Map;
 
+use const PHP_EOL;
+use const SORT_REGULAR;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MapDisplay;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -16,13 +19,12 @@ use UTM\Utilities\Option;
 
 use function count;
 
-use const PHP_EOL;
-use const SORT_REGULAR;
-
 trait Helper
 {
-    public $wordMap  = '/home/bjorn/scripts/Mediatag/config/data/map/Words.txt';
+    public $wordMap = '/home/bjorn/scripts/Mediatag/config/data/map/Words.txt';
+
     public $phArtist = '/home/bjorn/scripts/Mediatag/config/data/map/Studio/PornWorld.txt';
+
     public $wordDict = '/home/bjorn/scripts/Mediatag/node_modules/wordsninja/words-en.txt';
 
     public function artistMap()
@@ -31,24 +33,24 @@ trait Helper
 
         $artistMap = Option::getValue('artistMap', 1);
 
-        list($artist, $replacement) = explode(':', $artistMap);
-        $artist                     = strtolower($artist);
-        $contents                   = file_get_contents($this->phArtist);
-        $lines                      = explode("\n", $contents);
+        [$artist, $replacement] = explode(':', $artistMap);
+        $artist                 = strtolower($artist);
+        $contents               = file_get_contents($this->phArtist);
+        $lines                  = explode("\n", $contents);
         foreach ($lines as $idx => $line) {
             $parts = explode(':', $line);
             if ($artist == strtolower($parts[0])) {
                 return null;
             }
         }
-        $lines[] = $artist.':'.$replacement;
+        $lines[] = $artist . ':' . $replacement;
 
         $lines = array_unique($lines);
         sort($lines, SORT_REGULAR);
         $contents = implode("\n", $lines);
 
         file_put_contents($this->phArtist, $contents);
-        Mediatag::$Console->info('Artist Dictionary', ['Added' => $artist.':'.$replacement]);
+        Mediatag::$Console->info('Artist Dictionary', ['Added' => $artist . ':' . $replacement]);
     }
 
     public function addText()
@@ -71,7 +73,7 @@ trait Helper
             }
         }
 
-        MediaFile::file_append_file($this->wordMap, PHP_EOL.$word);
+        MediaFile::file_append_file($this->wordMap, PHP_EOL . $word);
         Mediatag::$Console->info('Word Dictionary', ['Added' => $word]);
     }
 
@@ -83,10 +85,10 @@ trait Helper
 
         if (Option::isTrue('max')) {
             if (Option::isTrue('filenumber')) {
-                $offset = Option::getValue('filenumber').',';
+                $offset = Option::getValue('filenumber') . ',';
             }
 
-            return ' LIMIT '.$offset.Option::getValue('max');
+            return ' LIMIT ' . $offset . Option::getValue('max');
         }
     }
 
@@ -106,23 +108,23 @@ trait Helper
         $query = 'SELECT * FROM ';
 
         if (Option::isTrue('genre')) {
-            $query .= __MYSQL_GENRE__." WHERE  genre  LIKE '%".$keyword."%'".$where;
+            $query .= __MYSQL_GENRE__ . " WHERE  genre  LIKE '%" . $keyword . "%'" . $where;
 
-            return $query.$this->limit();
+            return $query . $this->limit();
         }
 
         if (Option::isTrue('keyword')) {
-            $query .= __MYSQL_KEYWORD__." WHERE  keyword  LIKE '%".$keyword."%'".$where;
+            $query .= __MYSQL_KEYWORD__ . " WHERE  keyword  LIKE '%" . $keyword . "%'" . $where;
 
-            return $query.$this->limit();
+            return $query . $this->limit();
         }
 
         if (Option::isTrue('channel')) {
             $channel = Option::getValue('channel');
 
-            $query .= __MYSQL_STUDIOS__." WHERE  name  LIKE '%".$keyword."%' AND Library = '".$channel."'";
+            $query .= __MYSQL_STUDIOS__ . " WHERE  name  LIKE '%" . $keyword . "%' AND Library = '" . $channel . "'";
 
-            return $query.$this->limit();
+            return $query . $this->limit();
         }
 
         // if (Option::isTrue('amateur'))
@@ -197,7 +199,7 @@ trait Helper
                 break;
         }
 
-        if (!isset($text)) {
+        if (! isset($text)) {
             echo "text vale for {$tag} not set";
 
             return 0;
@@ -265,7 +267,7 @@ trait Helper
         }
 
         $path = Option::getValue('dir');
-        if (null !== $path) {
+        if ($path !== null) {
             $t = $path;
             // $path = $studio;
             // $studio = $t;
@@ -284,12 +286,12 @@ trait Helper
         $studio  = Option::getValue('studio');
         $drop    = false;
 
-        if (!isset($studio)) {
+        if (! isset($studio)) {
             echo 'No channels to set ';
 
             return 0;
         }
-        if (!isset($studio[0])) {
+        if (! isset($studio[0])) {
             echo 'No Studio to map';
 
             return 0;
@@ -300,7 +302,7 @@ trait Helper
 
         foreach ($studio as $studio_str) {
             $studio_str = trim($studio_str, '=');
-            if (true === $drop) {
+            if ($drop === true) {
                 $this->StorageConn->dropStudio($library, $studio_str);
             } else {
                 $this->addStudioEntry($library, $studio_str);
@@ -343,7 +345,7 @@ trait Helper
             $artist = str_replace('_', ' ', $artist);
             $artist = trim($artist);
 
-            if (true === $drop) {
+            if ($drop === true) {
                 $this->StorageConn->dropArtist($artist);
             } else {
                 if (Option::isTrue('hide')) {
@@ -370,7 +372,7 @@ trait Helper
         foreach ($name as $title) {
             $title = trim($title);
             Mediatag::$Console->info('Title Map', ['Title' => $title]);
-            if (true === $drop) {
+            if ($drop === true) {
                 $this->StorageConn->dropTitle($title);
             } else {
                 $this->StorageConn->addTitle($title);
@@ -417,8 +419,8 @@ trait Helper
         }
         foreach ($res as $name) {
             $name = ucwords(strtolower($name));
-            if (!MediaArray::search($namesArr, $name)) {
-                if (!MediaArray::search($resIgnore, $name)) {
+            if (! MediaArray::search($namesArr, $name)) {
+                if (! MediaArray::search($resIgnore, $name)) {
                     $namesArr[] = $name;
                 } else {
                     $resIgnore[] = $name;
@@ -429,7 +431,7 @@ trait Helper
         sort($namesArr);
         foreach ($resIgnore as $name) {
             $name = ucwords(strtolower($name));
-            if (!MediaArray::search($namesIgnore, $name)) {
+            if (! MediaArray::search($namesIgnore, $name)) {
                 $namesIgnore[] = $name;
             }
         }
@@ -440,7 +442,7 @@ trait Helper
         foreach ($namesArr as $name) {
             $name         = trim($name);
             $OptionName[] = '-a';
-            $OptionName[] = '"'.$name.'"';
+            $OptionName[] = '"' . $name . '"';
         }
         $script->addCmd('map', $OptionName, false);
 
@@ -450,7 +452,7 @@ trait Helper
         foreach ($namesIgnore as $name) {
             $name         = trim($name);
             $OptionName[] = '-a';
-            $OptionName[] = '"'.$name.'"';
+            $OptionName[] = '"' . $name . '"';
         }
         $OptionName[] = '--hide';
         $script->addCmd('map', $OptionName, false);
@@ -466,14 +468,14 @@ trait Helper
         $replacement = Option::getValue('replacement');
 
         $file = Option::getValue('file');
-        if (null === $file) {
+        if ($file === null) {
             preg_match('/L__([A-Z]+)_.*/', $lang, $output_array);
             $file = strtolower($output_array[1]);
         }
 
         $file = str_replace('%KEY%', ucfirst($file), $this->command_lang);
 
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             $file = $this->global_lang;
         }
 
@@ -498,12 +500,12 @@ trait Helper
             }
         }
         $lines    = array_reverse($lines);
-        $lines[0] = 'public const '.$const." = '".$value."';";
+        $lines[0] = 'public const ' . $const . " = '" . $value . "';";
         $lines    = array_reverse($lines);
         $lines[]  = '}';
         foreach ($lines as $idx => $line) {
             if (str_contains($line, 'const')) {
-                $lines[$idx] = '    '.$line;
+                $lines[$idx] = '    ' . $line;
             }
         }
         $contents = implode("\n", $lines);

@@ -10,6 +10,7 @@ const TRANSFIXED_REGEX_COMMON = '//i';
 
 class Transfixed extends AdultTime
 {
-    public $studio  = 'Transfixed';
+    public $studio = 'Transfixed';
+
     public $network = 'Adult Time';
 }

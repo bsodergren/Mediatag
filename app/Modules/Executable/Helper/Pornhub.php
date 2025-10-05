@@ -21,11 +21,11 @@ class Pornhub
 
     public $options = [
         '-o',
-        __PLEX_DOWNLOAD__.'/Pornhub/'.Youtube::__YT_DL_FORMAT__,
-      //  '-u',
-      //  CONFIG['PH_USERNAME'],
-      //  '-p',
-      //  CONFIG['PH_PASSWORD'],
+        __PLEX_DOWNLOAD__ . '/Pornhub/' . Youtube::__YT_DL_FORMAT__,
+        //  '-u',
+        //  CONFIG['PH_USERNAME'],
+        //  '-p',
+        //  CONFIG['PH_PASSWORD'],
     ];
 
     public $obj;
@@ -40,10 +40,10 @@ class Pornhub
         // $buffer = $this->obj->cleanBuffer($buffer);
 
         $outputText = '';
-        $line_id    = '<id>'.$this->obj->num_of_lines.'</id>';
+        $line_id    = '<id>' . $this->obj->num_of_lines . '</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
-                if ('' != $matches[2]) {
+                if ($matches[2] != '') {
                     $this->obj->key = $matches[2];
                 }
             }
@@ -59,7 +59,7 @@ class Pornhub
         switch ($buffer) {
             case str_starts_with($buffer, '[PornHubPlaylist]'):
                 $match = preg_match('/.*PornHubPlaylist.*Downloading \d+ items of (\d+)/', $buffer, $output_array);
-                if (true == $match) {
+                if ($match == true) {
                     $this->obj->num_of_lines = $output_array[1];
                 }
 
@@ -116,7 +116,7 @@ class Pornhub
                 break;
 
             case str_starts_with($buffer, '[info]'):
-                if (false === $this->obj->downloadFiles) {
+                if ($this->obj->downloadFiles === false) {
                     $outputText = $this->obj->downloadableIds($buffer);
                 }
                 break;
@@ -132,7 +132,7 @@ class Pornhub
                 break;
 
             case str_contains($buffer, 'ERROR'):
-                $outputText = $this->obj->error($buffer, $line_id, 'Uncaught Error </>  <comment>'.$buffer.'</comment><error>');
+                $outputText = $this->obj->error($buffer, $line_id, 'Uncaught Error </>  <comment>' . $buffer . '</comment><error>');
                 // $this->obj->updatePlaylist('error');
                 // $this->obj->updateIdList(PlaylistProcess::ERRORIDS);
 
@@ -148,7 +148,7 @@ class Pornhub
         //     }
         //     $outputText = __LINE__ . '<comment>' . $this->obj->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' ;
         // }
-        if ('' != $outputText) {
+        if ($outputText != '') {
             $this->obj->Console->write($outputText);
         }
     }

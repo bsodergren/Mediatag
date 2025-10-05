@@ -18,7 +18,7 @@ use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-include_once __DATA_MAPS__.'/WordMap.php';
+include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
@@ -26,16 +26,15 @@ class Process extends Mediatag
     use ChapterHelper;
     use CreateHelper;
     use DeleteHelper;
-
     use Helper;
     use Lang;
     use MediaExecute;
     use MediaProcess;
     use MergeHelper;
-
     use ShowHelper;
 
-    public $VideoList   = [];
+    public $VideoList = [];
+
     protected $useFuncs = ['addMeta', 'setupMap'];
 
     public $defaultCommands = [

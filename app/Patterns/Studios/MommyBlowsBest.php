@@ -8,7 +8,8 @@ namespace Mediatag\Patterns\Studios;
 
 class MommyBlowsBest extends BlowPass
 {
-    public $studio  = 'Mommy Blows Best';
+    public $studio = 'Mommy Blows Best';
+
     public $network = 'Blow Pass';
     // public function __construct($object)
     // {

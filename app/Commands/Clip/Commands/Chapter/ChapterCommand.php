@@ -13,12 +13,13 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class ChapterCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
 
     public $command = [
-        'Chapter'    => [
-            'exec'                 => null,
-            'getMarkerList'        => null,
-            'createChapterFile'    => null, ],
+        'Chapter' => [
+            'exec'              => null,
+            'getMarkerList'     => null,
+            'createChapterFile' => null, ],
     ];
 }

@@ -17,11 +17,14 @@ class Javascript extends MediatagExec
 {
     use ProcessCallbacks;
 
-    public $wordList     = '';
+    public $wordList = '';
+
     private $cacheUpdate = false;
+
     public $video_key;
 
-    public $wordMap    = __CONFIG_LIB__.'/data/map/Words.txt';
+    public $wordMap = __CONFIG_LIB__ . '/data/map/Words.txt';
+
     private $wordCache = 'JsDictWordMap';
 
     public function __construct($video_key = null, $input = null, $output = null)
@@ -29,7 +32,7 @@ class Javascript extends MediatagExec
         // utminfo(func_get_args());
 
         $this->getWordMap();
-        $this->video_key = 'jsCache_'.$video_key;
+        $this->video_key = 'jsCache_' . $video_key;
 
         foreach (ARTIST_MAP as $k => $v) {
             $artists[] = str_replace('_', ',', $v['name']);
@@ -37,7 +40,7 @@ class Javascript extends MediatagExec
 
         $artistArray    = explode(',', implode(',', $artists));
         $array          = array_unique($artistArray);
-        $this->wordList = $this->wordList.','.implode(',', $array);
+        $this->wordList = $this->wordList . ',' . implode(',', $array);
     }
 
     private function identical_values($arrayA, $arrayB)
@@ -54,14 +57,16 @@ class Javascript extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        $archive_content = Filesystem::readLines($this->wordMap, function ($line) {return trim($line); });
+        $archive_content = Filesystem::readLines($this->wordMap, function ($line) {
+            return trim($line);
+        });
 
         $array = MediaCache::get($this->wordCache);
 
-        if (false === $array) {
+        if ($array === false) {
             $array = $archive_content;
         } else {
-            if (false == $this->identical_values($archive_content, $array)) {
+            if ($this->identical_values($archive_content, $array) == false) {
                 $array = $archive_content;
             }
         }
@@ -103,10 +108,10 @@ class Javascript extends MediatagExec
         $cacheFile = md5($string);
         $title     = MediaCache::get($cacheFile);
         // // utmdump($title);
-        if (false === $title) {
+        if ($title === false) {
             $title = $this->getTitle($string);
         } else {
-            if (false == $this->identical_values([$title], [$string])) {
+            if ($this->identical_values([$title], [$string]) == false) {
                 $title = $this->getTitle($string);
             }
         }

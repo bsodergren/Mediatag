@@ -10,9 +10,11 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class Nubiles extends Patterns
 {
-    public $studio  = 'Nubiles';
+    public $studio = 'Nubiles';
+
     public $network = 'Nubiles';
-    public $regex   = [
+
+    public $regex = [
         'nubiles' => [
             'artist' => [
                 'pattern'             => '/([a-zA-Z]{1,})[_-]([sSeE_0-9]{1,})_([a-zA-Z_]{1,})_([0-9p]{0,5}_?.*)/i',

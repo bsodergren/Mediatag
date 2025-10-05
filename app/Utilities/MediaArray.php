@@ -26,9 +26,9 @@ class MediaArray
         // utminfo(func_get_args());
 
         $return_array = [];
-        if ('key' == $diff) {
+        if ($diff == 'key') {
             foreach ($array as $key => $value) {
-                if (!array_key_exists($key, $compare)) {
+                if (! array_key_exists($key, $compare)) {
                     $return_array[$key] = $value;
                 }
             }
@@ -49,7 +49,7 @@ class MediaArray
         $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
             if (is_array($value)) {
                 if (str_contains($string, $value['name'])) {
-                    if ('' != $value['replacement']) {
+                    if ($value['replacement'] != '') {
                         return $value['replacement'];
                     }
 
@@ -57,13 +57,13 @@ class MediaArray
                     // utmdd([__METHOD__,__LINE__,$name]);
                 }
 
-            // return 0;
+                // return 0;
             } else {
-                if (true === $exact) {
+                if ($exact === true) {
                     $value = strtolower($value);
                     $value = str_replace(' ', '_', $value);
 
-                    if (true === $nodelim) {
+                    if ($nodelim === true) {
                         $value  = str_replace('_', '', $value);
                         $string = str_replace('_', '', $string);
                     }
@@ -81,7 +81,7 @@ class MediaArray
             }
         });
 
-        if (0 == count($ret)) {
+        if (count($ret) == 0) {
             return null;
         }
         $key = array_keys($ret);
@@ -103,13 +103,13 @@ class MediaArray
 
             foreach ($array as $key => $parts) {
                 if (str_starts_with($parts['name'], $string)) {
-                    if (!array_key_exists($i + 1, $str_array)) {
+                    if (! array_key_exists($i + 1, $str_array)) {
                         continue;
                     }
-                    if ($parts['name'] == $string.'_'.$str_array[$i + 1]) {
+                    if ($parts['name'] == $string . '_' . $str_array[$i + 1]) {
                         // continue;
                     }
-                    if ('' != $parts['replacement']) {
+                    if ($parts['replacement'] != '') {
                         $namesArray[] = $parts['replacement'];
                     } else {
                         $namesArray[] = $parts['name'];
@@ -128,7 +128,7 @@ class MediaArray
                 // }
             }
         }
-        if (0 == count($namesArray)) {
+        if (count($namesArray) == 0) {
             return null;
         }
 
@@ -149,7 +149,7 @@ class MediaArray
                 if (array_key_exists($field, $file)) {
                     $row        = $file[$field];
                     $row_exists = $file;
-                    if ('video_file' != $field && $exists) {
+                    if ($field != 'video_file' && $exists) {
                         if (array_key_exists('video_file', $file)) {
                             $row_exists = $file['video_file'];
                         }
@@ -160,7 +160,7 @@ class MediaArray
                 $row_exists = $file;
             }
 
-            if (false == $exists) {
+            if ($exists == false) {
                 $videoArray[] = $row;
             } else {
                 if (file_exists($row_exists)) {

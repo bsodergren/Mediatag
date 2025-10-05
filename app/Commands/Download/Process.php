@@ -16,6 +16,7 @@ class Process extends Mediatag
 {
     use Helper;
     use MediaProcess;
+
     /**
      * file_array.
      *

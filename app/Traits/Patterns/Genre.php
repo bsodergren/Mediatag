@@ -15,10 +15,10 @@ trait Genre
     {
         // utminfo(func_get_args());
 
-        if ('' == $this->genre) {
+        if ($this->genre == '') {
             $filename = $this->video_file;
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
-            if (true == $success) {
+            if ($success == true) {
                 $this->genre = $matches[1];
             }
         }

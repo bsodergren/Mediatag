@@ -15,9 +15,10 @@ final class Command extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = false;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'create'    => ['createCommand' => null],
+        'create' => ['createCommand' => null],
     ];
 }

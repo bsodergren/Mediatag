@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Gallery;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
@@ -24,8 +26,6 @@ use function array_key_exists;
 use function define;
 use function dirname;
 
-use const DIRECTORY_SEPARATOR;
-
 class Process extends Mediatag
 {
     use Helper;
@@ -33,6 +33,7 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
     use Translate;
+
     public $db_array = [];
 
     public $file_array = [];
@@ -50,6 +51,7 @@ class Process extends Mediatag
     public $Changed_Array = [];
 
     public $duration;
+
     public $VideoList = [];
 
     public $defaultCommands = [
@@ -60,11 +62,13 @@ class Process extends Mediatag
     public $commandList = [
         // 'info'         => ['execInfo' => null, 'checkClean' => null],
         // 'update'       => ['execUpdate' => 'default'],
-        'empty'        => ['execEmpty' => 'default'],
+        'empty' => ['execEmpty' => 'default'],
     ];
 
     private $count;
+
     public object $DbMap;
+
     private $thumb;
 
     private $vinfo;
@@ -95,29 +99,30 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         $path = getcwd();
 
-        $finder          = new MediaFinder();
+        $finder          = new MediaFinder;
         $this->VideoList = $finder->Search($path, '/\.jpg|\.png|\.gif$/i');
 
         parent::$SearchArray = $this->VideoList;
         $file_array          = parent::$SearchArray;
-        $this->DbMap         = new DbMap();
+        $this->DbMap         = new DbMap;
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
 
             if (array_key_exists($key, $this->file_array)) {
-                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
+                $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $file);
                 $dupePath  = dirname($movedFile);
                 $filename  = basename($file);
 
                 $dupePath = nFileSystem::normalizePath($dupePath);
-                if (!is_dir($dupePath)) {
+                if (! is_dir($dupePath)) {
                     //     if (!Option::isTrue('test')) {
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($file.' is dup');
-                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+                Mediatag::$output->writeln($file . ' is dup');
+                (new SfSystem)->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
+
                 continue;
             }
             $this->file_array[$key] = $file;

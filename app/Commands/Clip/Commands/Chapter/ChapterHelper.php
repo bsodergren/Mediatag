@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Clip\Commands\Chapter;
 
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaIndicator;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -20,12 +22,12 @@ use function array_key_exists;
 use function count;
 use function dirname;
 
-use const PHP_EOL;
-
 trait ChapterHelper
 {
     use MediaFFmpeg;
+
     public $Marker;
+
     public $markerArray;
 
     public function getMarkerList()
@@ -35,21 +37,20 @@ trait ChapterHelper
 
         $search = Option::getValue('clip', true);
 
-
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-            $this->Marker = new Markers();
+            $this->Marker = new Markers;
 
             $this->Marker->getvideoId($key);
             // utmdump($this->Marker->video_id);
-            if (null !== $this->Marker->video_id) {
+            if ($this->Marker->video_id !== null) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Mediatag::$dbconn->query($query);
                 // // utmdump($result);
                 if (count($result) > 0) {
                     $markers = $this->getVideoChapters($result);
-                    if (null !== $markers) {
+                    if ($markers !== null) {
                         if (count($markers) > 0) {
-                            ++$this->FileIdx;
+                            $this->FileIdx++;
 
                             $markerArray[] = $markers;
                         }
@@ -66,16 +67,16 @@ trait ChapterHelper
     {
         $this->progress = new MediaIndicator('one');
 
-        foreach ($this->markerArray as $i =>$fileRow) {
-            foreach ($fileRow as $K =>$FILE) {
+        foreach ($this->markerArray as $i => $fileRow) {
+            foreach ($fileRow as $K => $FILE) {
                 $filename = $FILE['filename'];
                 // // utmdump($FILE);
-                if (!array_key_exists('markers', $FILE)) {
+                if (! array_key_exists('markers', $FILE)) {
                     continue;
                 }
 
                 if (count($FILE['markers']) > 0) {
-                    $mediaInfo          = new MediaInfo();
+                    $mediaInfo          = new MediaInfo;
                     $mediaInfoContainer = $mediaInfo->getInfo($filename);
                     $chapters           = $mediaInfoContainer->getMenus();
 
@@ -84,7 +85,7 @@ trait ChapterHelper
                     if (array_key_exists(0, $chapters)) {
                         foreach ($chapters[0]->list() as $menu) {
                             if (preg_match('/(\d+_\d+_\d+)/', $menu, $output_array)) {
-                                ++$VideoChapters;
+                                $VideoChapters++;
                             }
                         }
                         if (count($FILE['markers']) == $VideoChapters) {
@@ -92,17 +93,17 @@ trait ChapterHelper
                         }
                     }
 
-                    $tags        = (new VideoTags())->get($K, $filename);
+                    $tags        = (new VideoTags)->get($K, $filename);
                     $chapterFile = str_replace('.mp4', '_chp.txt', $filename);
                     if (file_exists($chapterFile)) {
                         unlink($chapterFile);
                     }
                     $contents = [$this->tagFileSection($tags)];
-                    foreach ($FILE['markers'] as $idx =>$marker) {
+                    foreach ($FILE['markers'] as $idx => $marker) {
                         $contents[] = $this->chapterFileSection($marker);
                     }
                     $fileContents = implode(PHP_EOL, $contents);
-                    MediaFile::file_append_file($chapterFile, $fileContents.PHP_EOL);
+                    MediaFile::file_append_file($chapterFile, $fileContents . PHP_EOL);
 
                     $this->ffmpegCreateChapterVideo($filename, $chapterFile);
 
@@ -112,10 +113,10 @@ trait ChapterHelper
                     $file_path       = dirname($filename);
                     $backup_filepath = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
 
-                    if (!Mediatag::$filesystem->exists($backup_filepath)) {
+                    if (! Mediatag::$filesystem->exists($backup_filepath)) {
                         Mediatag::$filesystem->mkdir($backup_filepath);
                     }
-                    $backup_filename = $backup_filepath.'/'.basename($filename);
+                    $backup_filename = $backup_filepath . '/' . basename($filename);
                     $outputFile      = str_replace('.mp4', '_chapters.mp4', $filename);
 
                     Filesystem::renameFile($filename, $backup_filename);
@@ -128,14 +129,14 @@ trait ChapterHelper
 
     private function tagFileSection($tag)
     {
-        $text = ';FFMETADATA1'.PHP_EOL;
+        $text = ';FFMETADATA1' . PHP_EOL;
 
-        foreach ($tag as $key=>$value) {
-            if (null !== $value) {
-                if ('studio' == $key) {
+        foreach ($tag as $key => $value) {
+            if ($value !== null) {
+                if ($key == 'studio') {
                     $key = 'album';
                 }
-                $text .= $key.'='.$value.PHP_EOL;
+                $text .= $key . '=' . $value . PHP_EOL;
             }
         }
 
@@ -144,11 +145,11 @@ trait ChapterHelper
 
     private function chapterFileSection($marker)
     {
-        $text = '[CHAPTER]'.PHP_EOL;
-        $text .= 'TIMEBASE=1/1'.PHP_EOL;
-        $text .= 'START='.$marker['start'].PHP_EOL;
-        $text .= 'END='.$marker['end'].PHP_EOL;
-        $text .= 'title='.trim(str_replace('Chapter', '', str_replace('_', ' ', $marker['text'])));
+        $text = '[CHAPTER]' . PHP_EOL;
+        $text .= 'TIMEBASE=1/1' . PHP_EOL;
+        $text .= 'START=' . $marker['start'] . PHP_EOL;
+        $text .= 'END=' . $marker['end'] . PHP_EOL;
+        $text .= 'title=' . trim(str_replace('Chapter', '', str_replace('_', ' ', $marker['text'])));
 
         return $text;
     }

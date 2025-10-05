@@ -13,7 +13,8 @@ const MARISKAX_REGEX_COMMON = '/(([a-zA-Z0-9\-]+))\_s[0-9]{2,3}\_(.*)\_[0-9pk]{1
 class MariskaX extends Patterns
 {
     public $studio = 'Mariska X';
-    public $regex  = [
+
+    public $regex = [
         'mariskax' => [
             'artist' => [
                 'pattern'             => MARISKAX_REGEX_COMMON,

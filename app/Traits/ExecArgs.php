@@ -28,9 +28,9 @@ trait ExecArgs
     {
         // utminfo(func_get_args());
 
-        if ('artist' == $meta_tag) {
+        if ($meta_tag == 'artist') {
             $this->addOptionArg('--rDNSatom');
-            if ('' != $meta_value) {
+            if ($meta_value != '') {
                 $xml_value = Artist::ArtistXML($meta_value);
                 $this->addOptionArg($xml_value);
                 $this->addOptionArg('name=iTunMOVI');
@@ -41,13 +41,13 @@ trait ExecArgs
                 $this->addOptionArg('domain=');
             }
 
-            $this->addOptionArg('--albumArtist='.$meta_value);
-        } elseif ('studio' == $meta_tag) {
-            $this->addOptionArg('--album='.$meta_value);
-        } elseif ('network' == $meta_tag) {
-            $this->addOptionArg('--TVNetwork='.$meta_value);
+            $this->addOptionArg('--albumArtist=' . $meta_value);
+        } elseif ($meta_tag == 'studio') {
+            $this->addOptionArg('--album=' . $meta_value);
+        } elseif ($meta_tag == 'network') {
+            $this->addOptionArg('--TVNetwork=' . $meta_value);
         } else {
-            $this->addOptionArg('--'.$meta_tag.'='.$meta_value);
+            $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
         }
     }
 }

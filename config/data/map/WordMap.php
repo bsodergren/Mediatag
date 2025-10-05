@@ -3,7 +3,6 @@
 /**
  * Command like Metatag writer for video files.
  */
-
 const BASIC__WORD_MAP = [
     'MVPDP'                       => 'MvpDp',
     'aand'                        => 'aAnd',

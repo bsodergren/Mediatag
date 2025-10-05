@@ -16,8 +16,8 @@ use function array_key_exists;
 trait MergeHelper
 {
     public $cmdOptionMerge = [
-        'clips'    => ['cmd'=>'mergeClips', 'desc'=>'Show all transition types'],
-        'playlist' => ['cmd'=>'mergePlaylist', 'desc'=>'Show all playlist types'],
+        'clips'    => ['cmd' => 'mergeClips', 'desc' => 'Show all transition types'],
+        'playlist' => ['cmd' => 'mergePlaylist', 'desc' => 'Show all playlist types'],
     ];
 
     public function mergeFiles()
@@ -38,11 +38,11 @@ trait MergeHelper
     public function getPlaylistVideosfromId($playlist_id)
     {
         $sql = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
-        from   '.__MYSQL_PLAYLIST_DATA__.' as d,
-        '.__MYSQL_VIDEO_FILE__.'  as v,
-        '.__MYSQL_PLAYLIST_VIDEOS__.' as p
+        from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
+        ' . __MYSQL_VIDEO_FILE__ . '  as v,
+        ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p
 
-        where (p.playlist_id = '.$playlist_id.' and
+        where (p.playlist_id = ' . $playlist_id . ' and
         p.playlist_video_id = v.id and
          d.id = p.playlist_id ) ORDER BY v.filename ASC';
 
@@ -74,18 +74,18 @@ trait MergeHelper
 
         $name      = Option::getValue('name', true);
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
-        if (null !== $fileSearch) {
-            $search = '/.*_('.$name.')_\d+\.mp4/i';
+        if ($fileSearch !== null) {
+            $search = '/.*_(' . $name . ')_\d+\.mp4/i';
         } else {
             $search = '*.mp4';
         }
-        if (null === $name) {
+        if ($name === null) {
             $name = 'Compilation';
         }
 
         $file_array = Mediatag::$finder->Search($directory, $search);
 
-        if (null == $file_array) {
+        if ($file_array == null) {
             Mediatag::$output->writeln('<comment> No Files Found</>');
 
             return false;
@@ -103,7 +103,7 @@ trait MergeHelper
             $idx = $output_array[3] + $mod;
 
             $fileList[$idx] = $file;
-            ++$index;
+            $index++;
         }
         ksort($fileList);
 

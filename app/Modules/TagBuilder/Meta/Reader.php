@@ -56,7 +56,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
         $key        = $file_array['video_key'];
         $video_info = MediaCache::get($key);
-        if (false === $video_info) {
+        if ($video_info === false) {
             $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
             $video_info = $read->read();
             if (count($video_info[$this->video_key]['metatags']) > 0) {
@@ -71,7 +71,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        if (!array_key_exists($tag, $this->tag_array)) {
+        if (! array_key_exists($tag, $this->tag_array)) {
             $this->tag_array[$tag] = null;
         }
 

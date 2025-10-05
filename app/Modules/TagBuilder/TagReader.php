@@ -35,7 +35,7 @@ class TagReader
     {
         // utminfo(func_get_args());
 
-        $this->dbConn = new Storage();
+        $this->dbConn = new Storage;
     }        // // UTMlog::Logger('data', $this->videoData);
 
     public function updateVideoTable($key, $tag, $value)
@@ -53,7 +53,7 @@ class TagReader
 
         $meta = $this->getMetaValues();
         if (Option::isTrue('add') || Option::isTrue('drop')) {
-            if (null !== $meta['genre']) {
+            if ($meta['genre'] !== null) {
                 $meta_array = explode(',', $meta['genre']);
             }
 
@@ -166,7 +166,7 @@ class TagReader
         // utminfo(func_get_args());
 
         $db = new DbReader($this->videoData);
-        if (null === $db->tag_array) {
+        if ($db->tag_array === null) {
             return null;
         }
 
@@ -180,17 +180,17 @@ class TagReader
             $this->{$tag}();
 
             if (array_key_exists($tag, $this->tag_array)) {
-                Mediatag::$log->notice("Metatags {tag} => '{value}'", ['tag'=>$tag, 'value'=>$this->tag_array[$tag]]);
+                Mediatag::$log->notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);
 
-                if (null !== $this->tag_array[$tag]) {
-                    if (true === $clean) {
+                if ($this->tag_array[$tag] !== null) {
+                    if ($clean === true) {
                         $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
                     }
                 }
             }
         }
 
-        Mediatag::$log->notice("Metatag '{value}'", ['value'=>$this->tag_array]);
+        Mediatag::$log->notice("Metatag '{value}'", ['value' => $this->tag_array]);
 
         return $this->tag_array;
     }

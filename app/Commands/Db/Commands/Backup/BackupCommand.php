@@ -17,9 +17,10 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class BackupCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = false;
 
     public $command = [
-        'backup'    => ['execBackup' => null],
+        'backup' => ['execBackup' => null],
     ];
 }

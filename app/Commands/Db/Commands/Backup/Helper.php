@@ -6,24 +6,28 @@
 
 namespace Mediatag\Commands\Db\Commands\Backup;
 
+use const DIRECTORY_SEPARATOR;
+
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
-use const DIRECTORY_SEPARATOR;
-
 trait Helper
 {
-    private $dbBackupPath       = __DB_BACKUP_ROOT__.DIRECTORY_SEPARATOR;
-    private $video_file_csv     = 'file.csv';
+    private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
+
+    private $video_file_csv = 'file.csv';
+
     private $video_metadata_csv = 'meta.csv';
-    private $video_info_csv     = 'info.csv';
-    private $video_custon_csv   = 'custom.csv';
+
+    private $video_info_csv = 'info.csv';
+
+    private $video_custon_csv = 'custom.csv';
 
     public function execBackup()
     {
         // $this->dbBackupPath = __DB_BACKUP_ROOT__;
         if (Option::isTrue('library')) {
-            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.DIRECTORY_SEPARATOR;
+            $this->dbBackupPath = $this->dbBackupPath . __LIBRARY__ . DIRECTORY_SEPARATOR;
         }
 
         FileSystem::createDir($this->dbBackupPath);
@@ -36,7 +40,7 @@ trait Helper
 
     private function doBackup($table, $csv_file)
     {
-        $csv_file = $this->dbBackupPath.$csv_file;
+        $csv_file = $this->dbBackupPath . $csv_file;
 
         if (file_exists($csv_file)) {
             unlink($csv_file);
@@ -51,7 +55,7 @@ trait Helper
             unset($row['last_updated']);
             unset($row['new']);
 
-            if (0 == $i) {
+            if ($i == 0) {
                 $keys = array_keys($row);
                 fputcsv($fp, $keys, ',', '"', '');
             }
@@ -65,10 +69,10 @@ trait Helper
         $db = parent::$Storage->dbConn;
 
         if (Option::isTrue('library')) {
-            if (!str_contains($table, 'mediatag_video_custom')) {
+            if (! str_contains($table, 'mediatag_video_custom')) {
                 $db->where('Library', __LIBRARY__);
             } else {
-                $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "'.__LIBRARY__.'"';
+                $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "' . __LIBRARY__ . '"';
 
                 return $db->rawQuery($query);
             }

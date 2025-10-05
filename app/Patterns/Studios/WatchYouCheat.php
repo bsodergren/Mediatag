@@ -10,6 +10,7 @@ const WATCHYOUCHEAT_REGEX_COMMON = '//i';
 
 class WatchYouCheat extends AdultTime
 {
-    public $studio  = 'Watch You Cheat';
+    public $studio = 'Watch You Cheat';
+
     public $network = 'Adult Time';
 }

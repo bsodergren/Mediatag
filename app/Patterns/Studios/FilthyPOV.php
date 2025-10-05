@@ -10,6 +10,7 @@ const FILTHYPOV_REGEX_COMMON = '//i';
 
 class FilthyPOV extends AdultTime
 {
-    public $studio  = 'Filthy POV';
+    public $studio = 'Filthy POV';
+
     public $network = 'Adult Time';
 }

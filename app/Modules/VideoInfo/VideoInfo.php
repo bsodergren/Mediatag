@@ -21,27 +21,41 @@ class VideoInfo
     use VideoCleaner;
     use VideoQuery;
     use VideoStrings;
+
     public $video_key;
 
     public $video_file;
+
     public $video_id;
+
     public $returnText;
+
     public $updatedText = '<fg=green>Updated ';
-    public $newText     = '<fg=red>Wrote ';
+
+    public $newText = '<fg=red>Wrote ';
+
     public $resultCount;
+
     public $actionText = '';
+
     public $VideoInfo;
+
     public $fileCount;
-    public $maxLen  = 40;
+
+    public $maxLen = 40;
+
     public $fileLen = 0;
 
-    public $thumbExt  = '.jpg';
-    public $thumbDir  = __INC_WEB_THUMB_DIR__;
+    public $thumbExt = '.jpg';
+
+    public $thumbDir = __INC_WEB_THUMB_DIR__;
+
     public $thumbType = 'preview';
 
     public $progressBar = false;
 
     public $VideoDataTable;
+
     public $VideoFileTable = __MYSQL_VIDEO_FILE__;
 
     /**
@@ -70,7 +84,7 @@ class VideoInfo
         $this->video_file = $file;
         $this->video_key  = $key;
         $exists           = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
-        if (null === $exists) {
+        if ($exists === null) {
             $data_array = Mediatag::$dbconn->createDbEntry($file, $key);
             Mediatag::$dbconn->insert($data_array);
         }
@@ -88,7 +102,7 @@ class VideoInfo
         $this->getMessageLen($file_array);
         if (count($file_array) > 0) {
             $this->fileCount = count($file_array);
-            Mediatag::$output->writeln('<info>Found '.$this->fileCount.' files</info>');
+            Mediatag::$output->writeln('<info>Found ' . $this->fileCount . ' files</info>');
 
             // $this->maxLen = 0;
 
@@ -96,17 +110,17 @@ class VideoInfo
                 if (file_exists($file)) {
                     $res = $this->getVideoInfo($key, $file);
 
-                    if (false !== $res) {
-                        if (false === $this->progressBar) {
-                            Mediatag::$output->writeln($this->printNo($this->fileCount).$this->getVideoText());
-                            --$this->fileCount;
+                    if ($res !== false) {
+                        if ($this->progressBar === false) {
+                            Mediatag::$output->writeln($this->printNo($this->fileCount) . $this->getVideoText());
+                            $this->fileCount--;
                         }
                         $this->progressBar = false;
                     }
                 }
             }
         } else {
-            Mediatag::$output->writeln('All '.$this->thumbType.' files are updated');
+            Mediatag::$output->writeln('All ' . $this->thumbType . ' files are updated');
         }
     }
 
@@ -118,12 +132,12 @@ class VideoInfo
         $this->VideoInfo['library']   = __LIBRARY__;
 
         if (array_key_exists('duration', $this->VideoInfo)) {
-            if (null === $this->VideoInfo['duration']) {
+            if ($this->VideoInfo['duration'] === null) {
                 return false;
             }
         }
         if (array_key_exists('format', $this->VideoInfo)) {
-            if (null === $this->VideoInfo['format']) {
+            if ($this->VideoInfo['format'] === null) {
                 return false;
             }
         }
@@ -140,7 +154,7 @@ class VideoInfo
     {
         $this->VideoInfo = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
         $this->video_id  = null;
-        if (null === $this->VideoInfo) {
+        if ($this->VideoInfo === null) {
             return null;
         }
         $this->video_id = $this->VideoInfo['id'];
@@ -152,20 +166,20 @@ class VideoInfo
     public function clean()
     {
         $this->doClean();
-        Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
+        Filesystem::prunedirs($this->thumbDir . '/' . __LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
 
     public function clearDBValues()
     {
         $this->doClean(true);
-        Filesystem::prunedirs($this->thumbDir.'/'.__LIBRARY__);
+        Filesystem::prunedirs($this->thumbDir . '/' . __LIBRARY__);
         Mediatag::$output->writeln('<comment> All Clean </comment>');
     }
 
     public static function videoDuration($duration, $round = 1000)
     {
-        if (0 == $round) {
+        if ($round == 0) {
             $round = 1;
         }
         // utminfo();

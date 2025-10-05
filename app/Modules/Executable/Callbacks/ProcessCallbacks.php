@@ -22,7 +22,7 @@ trait ProcessCallbacks
     {
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata/" . $this->video_key . ".log", $buffer . PHP_EOL);
         //  $buffer = $this->cleanBuffer($buffer);
-        if (Process::ERR === $type) {
+        if ($type === Process::ERR) {
             $this->errors .= $buffer;
         } else {
             $this->getMetaValue($buffer);
@@ -33,15 +33,15 @@ trait ProcessCallbacks
     public function WriteMetaOutput($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-        if (Process::ERR === $type) {
+        if ($type === Process::ERR) {
             $this->errors .= $buffer;
-        // UTMlog::logError('Writing Metadata', $buffer);
-        // UTMlog::logError('Writing Metadata', $this->video_file);
+            // UTMlog::logError('Writing Metadata', $buffer);
+            // UTMlog::logError('Writing Metadata', $this->video_file);
         } else {
             if (str_contains($buffer, 'error')) {
                 $this->errors .= $buffer;
-            // UTMlog::logError('Writing Metadata', $buffer);
-            // UTMlog::logError('Writing Metadata', $this->video_file);
+                // UTMlog::logError('Writing Metadata', $buffer);
+                // UTMlog::logError('Writing Metadata', $this->video_file);
             } elseif (str_contains($buffer, 'warning')) {
                 // UTMlog::logWarning('Writing Metadata', $buffer);
                 // UTMlog::logWarning('Writing Metadata', $this->video_file);

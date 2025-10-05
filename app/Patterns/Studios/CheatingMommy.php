@@ -11,9 +11,10 @@ namespace Mediatag\Patterns\Studios;
 class CheatingMommy extends Nubiles
 {
     public $studio = 'Cheating Mommy';
-    public $regex  = [
+
+    public $regex = [
         'cheatingmommy' => [
-            'title'  => [
+            'title' => [
                 'pattern' => '/([a-zA-Z]+)_([a-zA-Z_]{1,})\_[0-9]{0,10}/i',
                 // 'pattern' => '/(([a-zA-Z0-9]+))\_s[0-9]{2,3}\_(.*)\_[0-9]{1,4}.*/i',
                 'delim'   => '_',

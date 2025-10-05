@@ -25,7 +25,7 @@ class TagDB extends Storage
 
         $tag = 'genre';
 
-        return (new DbMap())->getTag($tag, $arguments);
+        return (new DbMap)->getTag($tag, $arguments);
     }
 
     public function getKeyword($arguments)
@@ -34,6 +34,6 @@ class TagDB extends Storage
 
         $tag = 'keyword';
 
-        return (new DbMap())->getTag($tag, $arguments);
+        return (new DbMap)->getTag($tag, $arguments);
     }
 }

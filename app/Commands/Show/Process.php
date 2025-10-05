@@ -49,6 +49,7 @@ class Process extends Mediatag
         //     'createPlaylist' => null,
         // ],
     ];
+
     protected $useFuncs = ['addMeta'];
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)

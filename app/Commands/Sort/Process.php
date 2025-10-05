@@ -25,6 +25,7 @@ class Process extends Mediatag
         // 'init' => null,
         'exec' => null,
     ];
+
     public $commandList = [
     ];
 
@@ -55,9 +56,9 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        $finder             = new MediaFinder();
+        $finder             = new MediaFinder;
         $finder->excludeDir = $this->genreDirs;
-        $this->file_array   = $finder->search(__PLEX_HOME__.'/Pornhub/Sort/', '/\.mp4$/i');
+        $this->file_array   = $finder->search(__PLEX_HOME__ . '/Pornhub/Sort/', '/\.mp4$/i');
 
         echo $this->sortFiles();
     }

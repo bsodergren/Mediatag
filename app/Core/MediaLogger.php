@@ -6,6 +6,9 @@
 
 namespace Mediatag\Core;
 
+use const FILE_APPEND;
+use const PHP_EOL;
+
 use DateTimeInterface;
 use Mediatag\Core\Helper\LogFormat;
 use Psr\Log\InvalidArgumentException;
@@ -25,29 +28,39 @@ use function is_object;
 use function is_scalar;
 use function sprintf;
 
-use const FILE_APPEND;
-use const PHP_EOL;
-
 class MediaLogger extends ConsoleLogger implements LoggerInterface
 {
     use LogFormat;
 
-    public const INFO   = 'info';
-    public const ERROR  = 'error';
+    public const INFO = 'info';
+
+    public const ERROR = 'error';
+
     public const NOTICE = 'playlist';
 
     private $backtrace = '';
+
     // private $log;
     public static $logger;
+
     public static $USE_DEBUG = false;
+
     public static $pruneLogs = false;
-    private bool $errored    = false;
+
+    private bool $errored = false;
+
     private $colors;
+
     private $output;
+
     private $dumper;
+
     private $cloner;
+
     private $channel = 'default';
+
     private $logfile;
+
     // private $logfile;
     private array $verbosityLevelMap = [
         LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
@@ -59,25 +72,26 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         LogLevel::INFO      => OutputInterface::VERBOSITY_VERY_VERBOSE,
         LogLevel::DEBUG     => OutputInterface::VERBOSITY_DEBUG,
     ];
+
     private array $logVerbosityLevelMap = [
         // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
         // LogLevel::INFO   => OutputInterface::VERBOSITY_VERY_VERBOSE,
         // LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
         // LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::CRITICAL  => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::ERROR     => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL,
+        LogLevel::ERROR    => OutputInterface::VERBOSITY_NORMAL,
         // LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
-        LogLevel::NOTICE    => OutputInterface::VERBOSITY_VERBOSE,
-        LogLevel::INFO      => OutputInterface::VERBOSITY_QUIET,
+        LogLevel::NOTICE   => OutputInterface::VERBOSITY_VERBOSE,
+        LogLevel::INFO     => OutputInterface::VERBOSITY_QUIET,
         // LogLevel::DEBUG     => OutputInterface::VERBOSITY_DEBUG,
     ];
 
     private array $ColorLevelMap = [
-        LogLevel::DEBUG     => 'cyan',
-        LogLevel::INFO      => 'green',
-        LogLevel::NOTICE    => 'blue',
-        LogLevel::ERROR     => 'red',
-        LogLevel::CRITICAL  => 'orange',
+        LogLevel::DEBUG    => 'cyan',
+        LogLevel::INFO     => 'green',
+        LogLevel::NOTICE   => 'blue',
+        LogLevel::ERROR    => 'red',
+        LogLevel::CRITICAL => 'orange',
     ];
 
     private array $formatLevelMap = [
@@ -95,7 +109,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     {
         $this->channel = $channel;
 
-        $this->colors = new Colors();
+        $this->colors = new Colors;
         // $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
         // $this->formatLevelMap    = $formatLevelMap    + $this->formatLevelMap;
 
@@ -104,23 +118,23 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         //        $log = new ConsoleLogger($output);//, $this->verbosityLevelMap, $this->formatLevelMap);
 
         // utmdd($this->verbosityLevelMap);
-        $this->dumper = new CliDumper();
-        $this->cloner = new VarCloner();
+        $this->dumper = new CliDumper;
+        $this->cloner = new VarCloner;
         $this->output = $output;
 
-        $filename = 'media_'.$this->channel;
+        $filename = 'media_' . $this->channel;
 
         // if ('debug' == $level) {
         //     $filename = $filename.'_'.$level;
         // }
 
-        $this->logfile = __LOGFILE_DIR__.'/'.$filename.'.log';
+        $this->logfile = __LOGFILE_DIR__ . '/' . $filename . '.log';
 
         if (file_exists($this->logfile)) {
             $this->pruneLogFiles($this->logfile);
         }
 
-        if (true === self::$USE_DEBUG) {
+        if (self::$USE_DEBUG === true) {
             $this->pruneLogFiles($this->debugLogFile(), 'debug');
         }
 
@@ -137,11 +151,11 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     public function pruneLogFiles($logfile, $level = 'info')
     {
         if (file_exists($logfile)) {
-            if (true === self::$pruneLogs) {
+            if (self::$pruneLogs === true) {
                 unlink($logfile);
             }
         }
-        $msg = $this->interpolate(PHP_EOL.'==================================='.PHP_EOL.' Running application {0}', [__SCRIPT_NAME__]);
+        $msg = $this->interpolate(PHP_EOL . '===================================' . PHP_EOL . ' Running application {0}', [__SCRIPT_NAME__]);
         $this->file(
             $level,
             $msg);
@@ -162,7 +176,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     public function debug(string|Stringable $message, array $context = []): void
     {
-        if (true == self::$USE_DEBUG) {
+        if (self::$USE_DEBUG == true) {
             $this->debugLog($message, $context);
         }
     }
@@ -220,14 +234,14 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     public function log($level, $message, array $context = []): void
     {
-        if (!isset($this->verbosityLevelMap[$level])) {
+        if (! isset($this->verbosityLevelMap[$level])) {
             throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
         }
 
         $output = $this->output;
 
         // Write to the error output if necessary and available
-        if (self::ERROR === $this->formatLevelMap[$level]) {
+        if ($this->formatLevelMap[$level] === self::ERROR) {
             if ($this->output instanceof ConsoleOutputInterface) {
                 $output = $output->getErrorOutput();
             }
@@ -249,23 +263,23 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     private function interpolate(string $message, array $context): string
     {
-        if (!str_contains($message, '{')) {
-            $class   = new PrettyArray();
+        if (! str_contains($message, '{')) {
+            $class   = new PrettyArray;
             $context = $class->print($context);
 
-            return $message.$context;
+            return $message . $context;
         }
         $replacements = [];
         foreach ($context as $key => $val) {
-            if (null === $val || is_scalar($val) || $val instanceof Stringable) {
+            if ($val === null || is_scalar($val) || $val instanceof Stringable) {
                 $value = $val;
             } elseif ($val instanceof DateTimeInterface) {
                 $value = $val->format(DateTimeInterface::RFC3339);
             } elseif (is_object($val)) {
                 $value = trim($this->dumper->dump($this->cloner->cloneVar(get_class_vars($val::class)), true));
-                $value = ' [object '.$value.']';
+                $value = ' [object ' . $value . ']';
             } else {
-                $value = ' '.trim($this->dumper->dump($this->cloner->cloneVar($val), true));
+                $value = ' ' . trim($this->dumper->dump($this->cloner->cloneVar($val), true));
             }
             $replacements["{{$key}}"] = $value;
         }
@@ -273,29 +287,27 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         return strtr($message, $replacements);
     }
 
-    private function writeFile($level, $string)
-    {
-    }
+    private function writeFile($level, $string) {}
 
     private function file($level, $message)
     {
         // $error = var_export($error,1);
 
-        $error[] = trim('['.date('Y-m-d H:i:s').']:'.$message);
+        $error[] = trim('[' . date('Y-m-d H:i:s') . ']:' . $message);
 
-        if ('debug' == $level) {
-            $error[] = 'Trace:'.self::tracePath();
+        if ($level == 'debug') {
+            $error[] = 'Trace:' . self::tracePath();
         }
         $error[] = '===================================';
 
         $text = implode("\n", $error);
 
         $logfile = $this->logfile;
-        if ('debug' == $level) {
+        if ($level == 'debug') {
             $logfile = $this->debugLogFile();
         }
 
-        file_put_contents($logfile, $text.PHP_EOL, FILE_APPEND);
+        file_put_contents($logfile, $text . PHP_EOL, FILE_APPEND);
     }
 
     // public function __call($method, $args)

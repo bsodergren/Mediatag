@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -11,13 +12,14 @@ use Symfony\Component\Console\Helper\ProgressIndicator;
 class MediaIndicator
 {
     public $BarStyle = ['*----', '-*---', '--*--', '---*-', '----*', '---*-', '--*--', '-*---'];
+
     public $section;
 
     public $progress;
 
     public function __construct($section = null)
     {
-        if (null === $section) {
+        if ($section === null) {
             $section = Mediatag::$output;
         } else {
             $section = Mediatag::$output->section();
@@ -33,11 +35,11 @@ class MediaIndicator
 
     public function startIndicator($message)
     {
-        $this->progress->start('<fg=bright-cyan>'.$message.'</>');
+        $this->progress->start('<fg=bright-cyan>' . $message . '</>');
     }
 
     public function finishIndicator($message)
     {
-        $this->progress->finish('<fg=green>'.$message.'</>');
+        $this->progress->finish('<fg=green>' . $message . '</>');
     }
 }

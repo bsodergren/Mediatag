@@ -13,9 +13,11 @@ use Symfony\Component\Console\Attribute\AsCommand;
 final class CaptionsCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
-    public $command          = [
-        'captions'    => ['execCaptions' => null],
+
+    public $command = [
+        'captions' => ['execCaptions' => null],
     ];
 
     public $defaultCommands = [

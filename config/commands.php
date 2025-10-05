@@ -23,18 +23,40 @@ use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
 return new FactoryCommandLoader([
     //    'app:heavy' => function () { return new HeavyCommand(); },
-    'create'    => function () {return new CreateCommand(); },
-    'playlist'  => function () {return new PlaylistCommand(); },
-    'download'  => function () {return new DlCommand(); },
+    'create'   => function () {
+        return new CreateCommand;
+    },
+    'playlist' => function () {
+        return new PlaylistCommand;
+    },
+    'download' => function () {
+        return new DlCommand;
+    },
 
-    'map'       => function () {return new MapCommand(); },
-    'test'      => function () {return new TestCommand(); },
-    'update'    => function () {return new UpdateCommand(); },
-    'show'      => function () {return new ShowCommand(); },
-    'db'        => function () {return new DBCommand(); },
-    'gallery'   => function () {return new GalleryCommand(); },
-    'rename'    => function () {return new RenameCommand(); },
-    'clip'      => function () {return new ClipCommand(); },
+    'map'      => function () {
+        return new MapCommand;
+    },
+    'test'     => function () {
+        return new TestCommand;
+    },
+    'update'   => function () {
+        return new UpdateCommand;
+    },
+    'show'     => function () {
+        return new ShowCommand;
+    },
+    'db'       => function () {
+        return new DBCommand;
+    },
+    'gallery'  => function () {
+        return new GalleryCommand;
+    },
+    'rename'   => function () {
+        return new RenameCommand;
+    },
+    'clip'     => function () {
+        return new ClipCommand;
+    },
 
     // %%NEW_CMD%%
 ]);

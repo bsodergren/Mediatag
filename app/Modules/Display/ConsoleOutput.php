@@ -17,6 +17,7 @@ class ConsoleOutput
     public $formatter;
 
     public $output;
+
     public $io;
 
     public function __construct($output, $input)
@@ -35,7 +36,7 @@ class ConsoleOutput
 
         $this->output    = $output;
         $this->io        = new SymfonyStyle($input, $this->output);
-        $this->formatter = new FormatterHelper();
+        $this->formatter = new FormatterHelper;
 
         $this->output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
         $this->output->getFormatter()->setStyle('current', new OutputFormatterStyle('magenta'));

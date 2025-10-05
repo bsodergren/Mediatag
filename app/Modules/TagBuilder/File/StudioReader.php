@@ -18,8 +18,8 @@ trait StudioReader
 {
     private function studioParse()
     {
-        $studio_dir   = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__.'/'.__LIBRARY__);
-        $studio_dir   = str_replace('/'.$this->getGenre().'/', '', $studio_dir);
+        $studio_dir   = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
+        $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
         $arr          = explode('/', $studio_dir);
         $studio_array = [];
         foreach ($arr as $idx => $studio_string) {
@@ -46,12 +46,12 @@ trait StudioReader
             }
         }
 
-        if (null === $this->studio) {
+        if ($this->studio === null) {
             $string       = $this->studioParse();
             $studio_array = explode('/', $string);
             // utmdd(["studio_array",$studio_array]);
 
-            if (null !== $studio_array[0]) {
+            if ($studio_array[0] !== null) {
                 $this->studio = $studio_array[0];
                 if (array_key_exists('1', $studio_array)) {
                     $this->studio = $studio_array[1];
@@ -66,8 +66,8 @@ trait StudioReader
     {
         $studio_dir = $this->studioParse();
         $studio     = '';
-        if ('' != $studio_dir) {
-            $studio_dir = '/'.$studio_dir;
+        if ($studio_dir != '') {
+            $studio_dir = '/' . $studio_dir;
             $studio_dir = str_replace('//', '/', $studio_dir);
         }
         //        $studio_dir       = $this->studioParse();
@@ -75,7 +75,7 @@ trait StudioReader
         $success = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
 
         // UTMlog::Logger('File Studio Dir', $matches);
-        if (true == $success) {
+        if ($success == true) {
             if (array_key_exists(2, $matches)) {
                 $network = $matches[1];
                 $studio  = $matches[2];
@@ -86,7 +86,7 @@ trait StudioReader
                 }
             } else {
                 $studio = $matches[1];
-                if ('' != $studio) {
+                if ($studio != '') {
                     foreach (__SKIP_STUDIOS__ as $k) {
                         if ($studio == $k) {
                             $studio = null;
@@ -104,17 +104,17 @@ trait StudioReader
         $studioName  = $this->getStudioClass($this->studio);
 
         $options = Option::getValue('addClass', 1);
-        if (null === $options) {
+        if ($options === null) {
             $options = $this->studio;
         }
 
         if (Option::isTrue('addNetwork')) {
             $networkName = Option::getValue('addNetwork', 1);
-            $options     = $options.'='.$networkName;
+            $options     = $options . '=' . $networkName;
         }
 
         $classOption = [];
-        if (null !== $options) {
+        if ($options !== null) {
             $opt = explode('=', $options);
             if (count($opt) > 1) {
                 $classOption = [

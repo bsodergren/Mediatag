@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Show;
 
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
@@ -17,8 +19,6 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 
-use const PHP_EOL;
-
 trait Helper
 {
     public function findMissing($options)
@@ -28,7 +28,7 @@ trait Helper
         //   utmdd([__METHOD__,$options]);
         $missingTaglist = $options[0];
 
-        if ('all' == $missingTaglist) {
+        if ($missingTaglist == 'all') {
             $missing_tags = __META_TAGS__;
         } else {
             $missing_tags = explode(',', $missingTaglist);
@@ -56,10 +56,10 @@ trait Helper
             $progressBar->advance();
 
             foreach ($missing_tags as $missing_tag) {
-                if (!array_key_exists($missing_tag, $tagList)) {
+                if (! array_key_exists($missing_tag, $tagList)) {
                     $this->missing[$missing_tag][$key] = $filelist_array[$key];
                 } else {
-                    if ('' == $tagList[$missing_tag]) {
+                    if ($tagList[$missing_tag] == '') {
                         $this->missing[$missing_tag][$key] = $filelist_array[$key];
                     }
                 }
@@ -70,7 +70,7 @@ trait Helper
 
         if (count($this->missing) > 0) {
             foreach ($this->missing as $tag => $missing_file) {
-                $obj = new ScriptWriter('missing_'.$tag.'.sh', __CURRENT_DIRECTORY__);
+                $obj = new ScriptWriter('missing_' . $tag . '.sh', __CURRENT_DIRECTORY__);
                 $obj->addCmd('update', ['-o', $tag, '-f']);
                 foreach ($missing_file as $k => $file) {
                     $obj->addFile($file['video_file'], false);
@@ -104,13 +104,13 @@ trait Helper
         $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
-            if (1 == $success) {
+            if ($success == 1) {
                 $video_keys[] = $matches[1];
             }
         }
         $file_string = '';
         foreach ($video_keys as $v => $key) {
-            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
+            $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
         }
 
         Filesystem::writeFile($playlist_file, $file_string);
@@ -123,7 +123,7 @@ trait Helper
         // $playlist_file = Option::getValue('playlist');
         foreach (Mediatag::$SearchArray as $filename) {
             $success = preg_match('/-(p?h?[a-z0-9]{6,}).mp4/i', $filename, $matches);
-            if (0 == $success) {
+            if ($success == 0) {
                 $video_keys[] = $filename;
             }
         }

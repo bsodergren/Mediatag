@@ -6,14 +6,14 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
 
 use function array_key_exists;
 use function dirname;
-
-use const DIRECTORY_SEPARATOR;
 
 class PrivateVid extends Patterns
 {
@@ -45,10 +45,10 @@ class PrivateVid extends Patterns
         $path      = dirname($file);
         $filename  = basename($file);
 
-        $dbData = new TagReader();
+        $dbData = new TagReader;
         $tags   = $dbData->loadVideo($videoData->get())->getDbValues();
         // utmdd(__LINE__,$tags ,$videoData->get());
-        if (null !== $tags) {
+        if ($tags !== null) {
             if (array_key_exists('title', $tags)) {
                 $artist = '';
                 $title  = $tags['title'];
@@ -56,7 +56,7 @@ class PrivateVid extends Patterns
                     $artist = $tags['artist'];
                     $artist = str_replace(' ', '_', $artist);
 
-                    $artist = str_replace(',', '_AND_', $artist).'-';
+                    $artist = str_replace(',', '_AND_', $artist) . '-';
                     $artist = str_replace('__', '_', $artist);
                 }
                 $title = str_replace(' ', '_', $title);
@@ -69,9 +69,9 @@ class PrivateVid extends Patterns
 
                 preg_match($this->regex['privatevid']['title']['pattern'], $filename, $output_array);
 
-                $filename = $title.'-'.$artist.$output_array[3];
+                $filename = $title . '-' . $artist . $output_array[3];
 
-                $file = $path.DIRECTORY_SEPARATOR.$filename;
+                $file = $path . DIRECTORY_SEPARATOR . $filename;
             }
         }
 

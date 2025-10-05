@@ -6,13 +6,13 @@
 
 namespace Mediatag\Modules\Metatags;
 
+use const SORT_STRING;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
-
-use const SORT_STRING;
 
 class Studio extends TagBuilder
 {
@@ -20,15 +20,15 @@ class Studio extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
+        if ($line != '') {
             $studioReplacement = '';
             $studio            = $line;
             if (str_contains($line, ':')) {
                 $studio            = Strings::before($line, ':');
-                $studioReplacement = ':'.Strings::after($line, ':');
+                $studioReplacement = ':' . Strings::after($line, ':');
             }
 
-            return $studio.$studioReplacement;
+            return $studio . $studioReplacement;
         }
 
         return false;
@@ -38,9 +38,9 @@ class Studio extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        if ('' != $line) {
-            if (!str_contains($line, ':')) {
-                $line = $line.':'.$line;
+        if ($line != '') {
+            if (! str_contains($line, ':')) {
+                $line = $line . ':' . $line;
             }
 
             $studio_match = Strings::before($line, ':');
@@ -61,21 +61,19 @@ class Studio extends TagBuilder
         // // UTMlog::Logger('data', $this->videoData);
     }
 
-    public function getTagValue()
-    {
-    }
+    public function getTagValue() {}
 
     public static function getStudioFile($type, $getpaths = true)
     {
         // utminfo(func_get_args());
 
-        if ('A' == $type) {
+        if ($type == 'A') {
             $fileDB = Mediatag::$amateurFile;
         } else {
             $fileDB = Mediatag::$channelFile;
         }
 
-        if (true === $getpaths) {
+        if ($getpaths === true) {
             $callback = 'studioPaths';
         } else {
             $callback = null; // = Callback::check([$self,'studioList']);
@@ -90,7 +88,7 @@ class Studio extends TagBuilder
 
         $type = strtoupper($type);
 
-        if ('A' == $type) {
+        if ($type == 'A') {
             $fileName = Mediatag::$amateurFile;
             $varName  = 'amateurArray';
             $fileDB   = self::getStudioFile('A', false);
@@ -110,8 +108,8 @@ class Studio extends TagBuilder
             }
         }
 
-        if (false !== $newPath) {
-            $studio = $studio.':'.$newPath;
+        if ($newPath !== false) {
+            $studio = $studio . ':' . $newPath;
         }
 
         $fileDB[] = $studio;

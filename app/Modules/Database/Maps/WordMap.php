@@ -6,6 +6,4 @@
 
 namespace Mediatag\Modules\Database\Maps;
 
-trait WordMap
-{
-}
+trait WordMap {}

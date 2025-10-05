@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Sort;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Utilities\Chooser;
@@ -14,15 +16,13 @@ use UTM\Utilities\Option;
 use function count;
 use function dirname;
 
-use const DIRECTORY_SEPARATOR;
-
 trait Helper
 {
     public static $selfClass;
 
     public function sortFiles()
     {
-        if (0 == count($this->file_array)) {
+        if (count($this->file_array) == 0) {
             return false;
         }
 
@@ -47,17 +47,17 @@ trait Helper
                 'text'     => '<comment>%idx%</comment>) Move <download>%filename%</download> to new Genre?',
                 'filename' => $filename,
                 'idx'      => $idx];
-            --$idx;
+            $idx--;
             $newGenre = Chooser::AskQuestion($qText, $this->genreDirs, 'Exit');
 
-            if (false === $newGenre) {
+            if ($newGenre === false) {
                 Mediatag::$Console->writeln('Exiting');
 
                 return false;
                 // break;
             }
-            $newFilename = $basePath.DIRECTORY_SEPARATOR.$newGenre.DIRECTORY_SEPARATOR.$filename;
-            Mediatag::$Console->writeln('Moved '.$filename.' to <info>'.$newGenre.'</info>');
+            $newFilename = $basePath . DIRECTORY_SEPARATOR . $newGenre . DIRECTORY_SEPARATOR . $filename;
+            Mediatag::$Console->writeln('Moved ' . $filename . ' to <info>' . $newGenre . '</info>');
             $this->renameFile($file, $newFilename, false);
         }
 
@@ -80,16 +80,16 @@ trait Helper
                     }
                 }
 
-                if (!Option::isTrue('test')) {
+                if (! Option::isTrue('test')) {
                     Filesystem::renameFile($oldName, $newName);
                 } else {
                     $color = 'fg=red';
                     $write = true;
                 }
 
-                if (true == $write) {
-                    $message = 'Renaming file from <'.$color.'>'.basename($oldName).'</'.$color.'> to <'.$color.'>'.basename($newName).'</'.$color.'> ';
-                    Mediatag::$output->writeln('<info>'.$message.'</info>');
+                if ($write == true) {
+                    $message = 'Renaming file from <' . $color . '>' . basename($oldName) . '</' . $color . '> to <' . $color . '>' . basename($newName) . '</' . $color . '> ';
+                    Mediatag::$output->writeln('<info>' . $message . '</info>');
                 } else {
                     $rtn_message = ['Renaming files', ['Old' => basename($oldName)], ['New' => basename($newName)]];
                 }

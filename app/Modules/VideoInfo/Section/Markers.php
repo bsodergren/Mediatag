@@ -20,6 +20,7 @@ use function dirname;
 class Markers extends VideoInfo
 {
     use MediaFFmpeg;
+
     public $video_key;
 
     public $video_file;
@@ -33,16 +34,21 @@ class Markers extends VideoInfo
     public $returnText;
 
     public $updatedText = '<comment>Updated ';
-    public $newText     = '<fg=red>Wrote ';
-    public $actionText  = 'Thumbnail</> ';
+
+    public $newText = '<fg=red>Wrote ';
+
+    public $actionText = 'Thumbnail</> ';
 
     public $VideoDataTable = __MYSQL_VIDEO_CHAPTER__;
 
     public $thumbType = 'markers';
-    public $maxLen    = 75;
+
+    public $maxLen = 75;
 
     public $thumbExt = '.jpg';
+
     public $thumbDir = __INC_WEB_CHAPTER_DIR__;
+
     public $video_markers;
 
     // public function clean()
@@ -142,16 +148,16 @@ class Markers extends VideoInfo
         $this->video_path = dirname($this->video_file);
         foreach ($this->video_markers as $timeCode) {
             foreach ($timeCode as $id => $time) {
-                $img_name     = basename($this->video_name, '.mp4').'_'.$time.'.jpg';
+                $img_name     = basename($this->video_name, '.mp4') . '_' . $time . '.jpg';
                 $img_name     = Strings::cleanFileName($img_name);
-                $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
-                $img_location = __INC_WEB_CHAPTER_DIR__.'/'.$img_web_path;
-                $img_file     = $img_location.$img_name;
-                $img_url_path = __INC_WEB_CHAPTER_DIR__.'/'.$img_web_path.$img_name;
+                $img_web_path = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__);
+                $img_location = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path;
+                $img_file     = $img_location . $img_name;
+                $img_url_path = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path . $img_name;
 
-                if (!file_exists($img_file)) {
+                if (! file_exists($img_file)) {
                     $timeStamp = self::videoDuration($time);
-                    (new Filesystem())->mkdir($img_location);
+                    (new Filesystem)->mkdir($img_location);
                     $this->ffmegCreateThumb($this->video_file, $img_file, $timeStamp);
                 }
 

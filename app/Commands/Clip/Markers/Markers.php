@@ -40,7 +40,7 @@ trait Markers
             // if( !isset($row['file_name']) ){
             //     return null;
             // }
-            if (!array_key_exists('timeCode', $row)) {
+            if (! array_key_exists('timeCode', $row)) {
                 return null;
             }
 
@@ -57,12 +57,13 @@ trait Markers
 
             // utmdd($markerKey);
             if (str_contains(strtolower($row['markerText']), 'chapter')) {
-                if (0 == $markerIdx) {
+                if ($markerIdx == 0) {
                     $chapterRow[$markerIdx]['start'] = 0;
                     $chapterRow[$markerIdx]['end']   = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
                     $chapterRow[$markerIdx]['text']  = $row['markerText'];
-                    ++$markerIdx;
-                    ++$rowIdx;
+                    $markerIdx++;
+                    $rowIdx++;
+
                     continue;
                 }
 
@@ -81,9 +82,9 @@ trait Markers
                 //     $start = $row['timeCode'];
                 // }
                 $markers[$row['video_key']]['markers'] = $chapterRow;
-                ++$markerIdx;
+                $markerIdx++;
             }
-            ++$rowIdx;
+            $rowIdx++;
 
             // if (str_contains(strtolower($markerKey), 'end')) {
             //     $end = $row['timeCode'];
@@ -108,7 +109,7 @@ trait Markers
         $markers   = [];
         $markerPos = [];
         foreach ($videoInfo as $k => $row) {
-            if (!array_key_exists('timeCode', $row)) {
+            if (! array_key_exists('timeCode', $row)) {
                 return null;
             }
 
@@ -133,10 +134,10 @@ trait Markers
                 $end = $this->videoDuration($end);
 
                 $markerPos[$markerIdx] = [
-                    'text' => $markerText,
-                    'start'=> $start,
-                    'end'  => $end];
-                ++$markerIdx;
+                    'text'  => $markerText,
+                    'start' => $start,
+                    'end'   => $end];
+                $markerIdx++;
             }
 
             $markers[$row['video_key']]['markers'] = $markerPos;

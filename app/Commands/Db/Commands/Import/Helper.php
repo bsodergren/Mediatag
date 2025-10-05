@@ -6,24 +6,28 @@
 
 namespace Mediatag\Commands\Db\Commands\Import;
 
+use const DIRECTORY_SEPARATOR;
+
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
-use const DIRECTORY_SEPARATOR;
-
 trait Helper
 {
-    private $dbBackupPath       = __DB_BACKUP_ROOT__.DIRECTORY_SEPARATOR;
-    private $video_file_csv     = 'file.csv';
+    private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
+
+    private $video_file_csv = 'file.csv';
+
     private $video_metadata_csv = 'meta.csv';
-    private $video_info_csv     = 'info.csv';
-    private $video_custon_csv   = 'custom.csv';
+
+    private $video_info_csv = 'info.csv';
+
+    private $video_custon_csv = 'custom.csv';
 
     public function execImport()
     {
         // $this->dbBackupPath = __DB_BACKUP_ROOT__;
         if (Option::isTrue('library')) {
-            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.DIRECTORY_SEPARATOR;
+            $this->dbBackupPath = $this->dbBackupPath . __LIBRARY__ . DIRECTORY_SEPARATOR;
         }
 
         FileSystem::createDir($this->dbBackupPath);
@@ -36,7 +40,7 @@ trait Helper
 
     private function runImport($table, $csv_file)
     {
-        $csv_file = $this->dbBackupPath.$csv_file;
+        $csv_file = $this->dbBackupPath . $csv_file;
 
         $fp = fopen($csv_file, 'w');
 

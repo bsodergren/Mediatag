@@ -18,7 +18,9 @@ const NAME        = 'watch';
 final class Command extends MediaCommand
 {
     use Lang;
+
     public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
 
     //     protected function execute(InputInterface $input, OutputInterface $output): int

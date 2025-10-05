@@ -12,6 +12,7 @@ const FANTASYMASSAGE_REGEX_COMMON = '//i';
 
 class FantasyMassage extends Patterns
 {
-    public $studio  = 'Fantasy Massage';
+    public $studio = 'Fantasy Massage';
+
     public $network = 'Fantasy Massage';
 }

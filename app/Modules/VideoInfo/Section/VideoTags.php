@@ -16,6 +16,7 @@ use function array_key_exists;
 class VideoTags extends VideoInfo
 {
     public $VideoDataTable = __MYSQL_VIDEO_METADATA__;
+
     public $tagList;
 
     public $actionText = '<comment>Updated Meta Tags</comment>';

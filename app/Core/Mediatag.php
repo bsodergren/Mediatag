@@ -31,10 +31,13 @@ abstract class Mediatag extends MediaCommand
     public static $SearchArray = [];
 
     public static $finder;
+
     public static $Cursor;
+
     public static $filesystem;
 
     public static $Console;
+
     public static $log;
 
     public static $Display;
@@ -52,17 +55,20 @@ abstract class Mediatag extends MediaCommand
     public static $input;
 
     public $helper;
+
     public $actions;
 
     public $default = [
         'exec'  => null,
         'print' => null,
     ];
-    public static $amateurFile = __DATA_MAPS__.'/Amateur.txt';
 
-    public static $channelFile = __DATA_MAPS__.'/Channels.txt';
+    public static $amateurFile = __DATA_MAPS__ . '/Amateur.txt';
+
+    public static $channelFile = __DATA_MAPS__ . '/Channels.txt';
 
     public static $Storage;
+
     public static $IoStyle;
 
     public static $tmpText;
@@ -78,18 +84,18 @@ abstract class Mediatag extends MediaCommand
     {
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
 
-        if ('GetApp' == $method) {
+        if ($method == 'GetApp') {
             if (file_exists(CONFIG['ATOMICPARSLEY'])) {
                 return CONFIG['ATOMICPARSLEY'];
             }
 
-            exit(CONFIG['ATOMICPARSLEY'].' does not exist');
+            exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
         }
     }
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)
     {
-        if (!defined('__CURRENT_DIRECTORY__')) {
+        if (! defined('__CURRENT_DIRECTORY__')) {
             define('__CURRENT_DIRECTORY__', getcwd());
         }
         self::$input  = $input;
@@ -101,25 +107,25 @@ abstract class Mediatag extends MediaCommand
         Option::init(self::$input, $options);
 
         self::$Cursor  = new Cursor(self::$output);
-        self::$Console = new ConsoleOutput( self::$output, self::$input);
+        self::$Console = new ConsoleOutput(self::$output, self::$input);
         self::$Display = new Display(self::$output);
-        self::$dbconn  = new StorageDB();
+        self::$dbconn  = new StorageDB;
 
-        self::$finder     = new Finder();
-        self::$filesystem = new Filesystem();
+        self::$finder     = new Finder;
+        self::$filesystem = new Filesystem;
 
         self::$log->notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
-        if (!Option::isTrue('SKIP_SEARCH')) {
+        if (! Option::isTrue('SKIP_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
-            if (true == Option::isTrue('numberofFiles')) {
+            if (Option::isTrue('numberofFiles') == true) {
                 $this->getNumberofFiles();
                 exit;
             }
         }
 
-        self::$Storage = new Storage();
+        self::$Storage = new Storage;
         if (isset($this->useFuncs)) {
             foreach ($this->useFuncs as $method) {
                 if (method_exists($this, $method)) {
@@ -141,7 +147,7 @@ abstract class Mediatag extends MediaCommand
 
                 $this->{$cmd}($option);
             } else {
-                self::$output->writeln('<info>'.$cmd.' doesnt exist</info>');
+                self::$output->writeln('<info>' . $cmd . ' doesnt exist</info>');
 
                 return 0;
             }
@@ -156,7 +162,7 @@ abstract class Mediatag extends MediaCommand
             return CONFIG['ATOMICPARSLEY'];
         }
 
-        exit(CONFIG['ATOMICPARSLEY'].' does not exist');
+        exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
     }
 
     public function getVideoArray()
@@ -173,7 +179,7 @@ abstract class Mediatag extends MediaCommand
             $fs        = new File($file);
             $videoData = $fs->get();
 
-            if (!array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
+            if (! array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
             } else {
                 $meta_key = 'dupe';
@@ -190,9 +196,7 @@ abstract class Mediatag extends MediaCommand
     //     utmdd($this->VideoList);
     // }
 
-    public function print()
-    {
-    }
+    public function print() {}
 
     public function getNumberofFiles()
     {
@@ -200,7 +204,7 @@ abstract class Mediatag extends MediaCommand
 
         $this->getVideoArray();
         $total = count($this->videoArray['file']);
-        self::$output->writeLn('<info>There are '.$total.' files found</info>');
+        self::$output->writeLn('<info>There are ' . $total . ' files found</info>');
     }
 
     public function runCommand()
@@ -218,8 +222,8 @@ abstract class Mediatag extends MediaCommand
                 $cmd = $option;
 
                 foreach ($array[$option] as $method => $args) {
-                    if (null !== $args) {
-                        if ('default' == $args) {
+                    if ($args !== null) {
+                        if ($args == 'default') {
                             $default = [$method => null];
 
                             continue;
@@ -228,7 +232,7 @@ abstract class Mediatag extends MediaCommand
 
                         if (is_array($commandArgs)) {
                             if (array_key_exists(0, $commandArgs)) {
-                                if ('isset' == $args) {
+                                if ($args == 'isset') {
                                     $Commands[$method] = $commandArgs[0];
 
                                     continue;
@@ -242,7 +246,7 @@ abstract class Mediatag extends MediaCommand
 
                     // utmdd( [$Commands[$method],$method,$args] );
 
-                    if ('default' == $method) {
+                    if ($method == 'default') {
                         unset($Commands[$method]);
                         $Commands = array_merge($Commands, $default);
                     }
@@ -250,7 +254,7 @@ abstract class Mediatag extends MediaCommand
             }
         }
 
-        if (!isset($Commands)) {
+        if (! isset($Commands)) {
             $Commands = $default;
         }
 

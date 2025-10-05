@@ -17,7 +17,7 @@ trait Test
         if (Option::isTrue('test')) {
             Mediatag::$output->writeln($text);
 
-            if (true === $exit) {
+            if ($exit === true) {
                 // exit;
             }
         }

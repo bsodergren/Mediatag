@@ -15,7 +15,7 @@ trait Helper
         // utminfo(func_get_args());
         utmdd($this->video_file);
 
-        $this->obj = new Thumbnail();
+        $this->obj = new Thumbnail;
         $this->checkClean();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();

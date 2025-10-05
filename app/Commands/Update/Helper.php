@@ -6,10 +6,12 @@
 
 namespace Mediatag\Commands\Update;
 
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\WriteMeta;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 // use Mediatag\Traits\CaseHelper;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Nette\Utils\Callback;
@@ -20,8 +22,6 @@ use UTM\Utilities\Option;
 
 use function count;
 use function is_array;
-
-use const PHP_EOL;
 
 trait Helper
 {
@@ -87,7 +87,7 @@ trait Helper
 
     public function getChanges($options)
     {
-        if (null === $this->VideoList) {
+        if ($this->VideoList === null) {
             $this->exec();
         }
 
@@ -102,14 +102,14 @@ trait Helper
         $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
         $progressBar2->setFormat(' ');
         foreach ($VideoList as $key => $videoInfo) {
-            $tagObj = new TagReader();
+            $tagObj = new TagReader;
             $tagObj->loadVideo($videoInfo);
 
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
 
-            $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']).'/'.$videoInfo['video_name'];
+            $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             $message = $name;
             if (count($videoArray['updateTags']) > 0) {
                 $progressBar2->setFormat('custom');
@@ -117,7 +117,7 @@ trait Helper
 
                 $progressBar2->setMessage($idx, 'index');
                 $progressBar2->setMessage($message, 'videoname');
-                ++$idx;
+                $idx++;
                 $progressBar2->advance();
             }
             $progressBar->advance();
@@ -174,10 +174,10 @@ trait Helper
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;
-        if (null === $count) {
+        if ($count === null) {
             $count = 1;
         }
-        if (null === $index) {
+        if ($index === null) {
             $index = 1;
         }
 
@@ -195,7 +195,7 @@ trait Helper
             Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
         }
 
-        if (!Option::isTrue('preview')) {
+        if (! Option::isTrue('preview')) {
             $Command->writeChanges();
             // $this->updateDbEntry($videoArray);
         }
@@ -219,7 +219,7 @@ trait Helper
 
             if ($count != $idx) {
                 $line_array = [];
-                for ($n = 0; $n < $updateCount + 5; ++$n) {
+                for ($n = 0; $n < $updateCount + 5; $n++) {
                     $line_array[] = ' ';
                     // Mediatag::$output->writeln($count.' '.$n);
                 }
@@ -227,7 +227,7 @@ trait Helper
                 Mediatag::$output->writeln($line);
             }
 
-            ++$idx;
+            $idx++;
 
             // Mediatag::$Cursor->clearOutput();
         }
@@ -250,14 +250,14 @@ trait Helper
             $video_filename = $videoInfo['video_name'];
 
             $match = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
-            if (1 == $match) {
+            if ($match == 1) {
                 $number = $output_array[1];
                 $file   = $this->getphdbUrl($number);
                 $found  = $this->findUrl($number, $file);
-                if (false !== $found) {
-                    Mediatag::$output->write('<info>'.$video_filename.'</info>');
+                if ($found !== false) {
+                    Mediatag::$output->write('<info>' . $video_filename . '</info>');
 
-                    Mediatag::$output->write(' was found in <comment>'.basename($file).'</comment>');
+                    Mediatag::$output->write(' was found in <comment>' . basename($file) . '</comment>');
                     [$url,$id] = explode(';', $found);
                     $this->checkurl($url);
                     // Mediatag::$output->writeln("");
@@ -277,8 +277,8 @@ trait Helper
         );
 
         $statusCode = $response->getStatusCode();
-        if ('404' != $statusCode) {
-            Mediatag::$output->writeln(' and is '.$url);
+        if ($statusCode != '404') {
+            Mediatag::$output->writeln(' and is ' . $url);
         } else {
             Mediatag::$output->writeln(' but is 404');
         }
@@ -288,7 +288,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (Process::ERR === $type) {
+        if ($type === Process::ERR) {
             // echo 'ERR > '.$buffer;
         } else {
             $this->lineOut = trim($buffer);

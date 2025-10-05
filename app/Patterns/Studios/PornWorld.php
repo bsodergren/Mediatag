@@ -6,6 +6,11 @@
 
 namespace Mediatag\Patterns\Studios;
 
+use const CASE_LOWER;
+use const DIRECTORY_SEPARATOR;
+use const JSON_PRETTY_PRINT;
+use const PREG_SPLIT_NO_EMPTY;
+
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -17,17 +22,13 @@ use function array_key_exists;
 use function array_slice;
 use function count;
 
-use const CASE_LOWER;
-use const DIRECTORY_SEPARATOR;
-use const JSON_PRETTY_PRINT;
-use const PREG_SPLIT_NO_EMPTY;
-
 const PORNWORLD_REGEX_COMMON = '/(FS[0-9]+|GP[0-9]+)_(.*)_([HDP0-9]+.mp4)/i';
 
 class PornWorld extends Patterns
 {
     public $studio = 'Porn World';
-    public $regex  = [
+
+    public $regex = [
         'pornworld' => [
             'artist' => [
                 'pattern'             => PORNWORLD_REGEX_COMMON,
@@ -89,22 +90,22 @@ class PornWorld extends Patterns
             $aName = implode(' ', $parts);
             // // utmdump($aName);
 
-            if (true === $this->ignoreArtist($aName)) {
+            if ($this->ignoreArtist($aName) === true) {
                 continue;
             }
 
-            if (true === $this->getArtistFullNames()) {
+            if ($this->getArtistFullNames() === true) {
                 $name_key = strtolower($aName);
                 $name_key = str_replace(' ', '_', $name_key);
                 // // utmdump([$artist_matches[0] ,$name_key]);
                 if (array_key_exists($name_key, $artist_matches)) {
                     $aName = $artist_matches[$name_key];
-                    if ('' != $aName) {
+                    if ($aName != '') {
                         $prev_name    = $aName;
                         $namesArray[] = $aName;
                     }
                 } else {
-                    if (false == str_contains($prev_name, $aName)) {
+                    if (str_contains($prev_name, $aName) == false) {
                         $namesArray[] = $aName;
                     }
                 }
@@ -199,14 +200,14 @@ class PornWorld extends Patterns
 
     public function getTitle()
     {
-        $key = $this->video_name.'_'.__FUNCTION__;
+        $key = $this->video_name . '_' . __FUNCTION__;
 
         $name       = MediaCache::get($key);
-        $cache_file = __STUDIO_CACHE_DIR__.DIRECTORY_SEPARATOR.$this->video_key.'.js';
-        if (false === $name) {
+        $cache_file = __STUDIO_CACHE_DIR__ . DIRECTORY_SEPARATOR . $this->video_key . '.js';
+        if ($name === false) {
             // utmdd(preg_match('/(GP[0-9]+)_.*/', $this->video_name, $output_array));
             if (preg_match('/(GP[0-9]+)?(.*)_([0-9HDP]+.mp4)/', $this->video_name, $output_array)) {
-                if ('' != $output_array[1]) {
+                if ($output_array[1] != '') {
                     $search = $output_array[1];
                 } else {
                     $search = $output_array[2];
@@ -226,7 +227,7 @@ class PornWorld extends Patterns
                     // $search = ($search);
                 }
                 // $url = 'https://pornbox.com/application/videos/search/'.$search.'/p1';
-                $url = 'https://pornbox.com/store/search?q='.$search.'&skip=0&is_purchased=-1';
+                $url = 'https://pornbox.com/store/search?q=' . $search . '&skip=0&is_purchased=-1';
                 https:// pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
 
                                 $content = MediaScraper::getUrl($url);
@@ -237,9 +238,9 @@ class PornWorld extends Patterns
                     $name = $content['content']['strict_contents'][0]['name'];
                     $id   = $content['content']['strict_contents'][0]['id'];
 
-                    $subtitle = MediaScraper::getUrl('https://pornbox.com/contents/'.$id.'/subtitles/en');
-// // utmdump($subtitle);
-                    $videocontent = MediaScraper::getUrl('https://pornbox.com/contents/'.$id);
+                    $subtitle = MediaScraper::getUrl('https://pornbox.com/contents/' . $id . '/subtitles/en');
+                    // // utmdump($subtitle);
+                    $videocontent = MediaScraper::getUrl('https://pornbox.com/contents/' . $id);
                     unset($videocontent['gallery']);
                     unset($videocontent['screenshots']);
 
@@ -248,7 +249,7 @@ class PornWorld extends Patterns
                 } else {
                     $fileTitle = strtolower(implode(' ', $matchwords));
 
-                    foreach ($content['content']['contents'] as $id=>$video) {
+                    foreach ($content['content']['contents'] as $id => $video) {
                         $search = str_replace([' -', ':'], '', $video['scene_name']);
                         // // utmdump([strtolower($search),$fileTitle,str_contains(strtolower($search),$fileTitle)]);
 
@@ -263,14 +264,14 @@ class PornWorld extends Patterns
                     }
                     //                    utmdd($video);
                 }
-                if (false === $name) {
+                if ($name === false) {
                     $name = $this->oldTitle();
                 }
             } else {
                 $name = $this->oldTitle();
             }
-            if (null !== $name) {
-                if (false !== $name) {
+            if ($name !== null) {
+                if ($name !== false) {
                     MediaCache::put($key, $name);
                 }
             }
@@ -287,8 +288,8 @@ class PornWorld extends Patterns
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
 
-            if (0 != $success) {
-                if (!array_key_exists($this->gettitleMatch(), $output_array)) {
+            if ($success != 0) {
+                if (! array_key_exists($this->gettitleMatch(), $output_array)) {
                     $name = null;
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
@@ -299,7 +300,7 @@ class PornWorld extends Patterns
                 $title    = str_replace($this->getTitleDelim(), ' ', $title);
                 $pretitle = $title;
                 // $title    = (new Javascript($video_key))->read($title);
-                if ('' == $title) {
+                if ($title == '') {
                     $name = null;
                 }
 

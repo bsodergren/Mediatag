@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Dimsh\React\Filesystem\Monitor;
  *
@@ -8,24 +9,19 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Mediatag\Bundle\Monitor;
 
 /**
  * Trait MonitorTrait
  *
  * Contains common methods used by MonitorConfigurator and Monitor
- *
- * @package Dimsh\React\Filesystem\Monitor
  */
 trait MonitorTrait
 {
-
     /**
      * Return path with trailing slash.
      *
-     * @param string $path
-     *
+     * @param  string  $path
      * @return string
      */
     public function dirPath($path)
@@ -36,8 +32,7 @@ trait MonitorTrait
     /**
      * Directories have trailing slash/
      *
-     * @param string $path
-     *
+     * @param  string  $path
      * @return bool
      */
     public function hasTrailingSlash($path)
@@ -52,8 +47,7 @@ trait MonitorTrait
      * - replace '/../' at the begining with '/'
      * - remove backward pathes '??/../'
      *
-     * @param string $path
-     *
+     * @param  string  $path
      * @return string
      */
     public function fixPathSlashes($path)

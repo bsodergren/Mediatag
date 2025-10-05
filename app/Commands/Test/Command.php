@@ -15,17 +15,19 @@ const NAME        = 'test';
 final class Command extends MediaCommand
 {
     use Lang;
+
     public const USE_LIBRARY = false;
+
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'test'         => [
+        'test'      => [
             'execWord' => null,
             // 'exec'         => null,
             // 'getChanges'   => null,
             // 'writeChanges' => null,
         ],
-        'thumbnail'    => [
+        'thumbnail' => [
             'exec'        => null,
             'doThumbnail' => null,
             //     // 'exec' => null,

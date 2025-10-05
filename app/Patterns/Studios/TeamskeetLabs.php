@@ -10,7 +10,8 @@ const TEAMSKEETLABS_REGEX_COMMON = '//i';
 
 class TeamskeetLabs extends TeamSkeet
 {
-    public $studio          = 'Teamskeet Labs';
+    public $studio = 'Teamskeet Labs';
+
     public $replace_studios = [
         'mylfxsinematica' => 'sinematica',
         // 'freeusemilf'                 => 'freeuse milf',

@@ -6,15 +6,15 @@
 
 namespace Mediatag\Commands\Test;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
 use UTM\Utilities\Option;
-
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
 
 trait Helper
 {
@@ -39,48 +39,48 @@ trait Helper
         utmdd(__METHOD__);
         $sql = "SELECT *  FROM mediatag_video_file WHERE `video_key` IN ('64c3c368aa608',\n"
 
-        ."'64f5b13110be6',\n"
-        ."'64713464ad036',\n"
-        ."'ph5ba35f316a27a',\n"
-        ."'ph5c0fa1de97f01',\n"
-        ."'ph5c052e62d4a23',\n"
-        ."'ph5ca5f1441df6b',\n"
-        ."'ph5cde966665e7c',\n"
-        ."'ph5d44120f3ea6b',\n"
-        ."'ph5d52825f400c3',\n"
-        ."'ph5e01e8fe95407',\n"
-        ."'ph5e468b9a55f04',\n"
-        ."'ph5ec16e29d7dd5',\n"
-        ."'ph5ecf5425b6aa4',\n"
-        ."'ph5ed9db5918dc0',\n"
-        ."'ph5efdb5ac8f26c',\n"
-        ."'ph5f31eefb1525e',\n"
-        ."'ph5f51e462bebd6',\n"
-        ."'ph5fc0f2bf66e98',\n"
-        ."'ph59f82fd31e4d2',\n"
-        ."'ph59f83b0d745b1',\n"
-        ."'ph59f832451c4ca',\n"
-        ."'ph60d02a7da57d2',\n"
-        ."'ph62b04e41183d0',\n"
-        ."'ph62c6d20fbf254',\n"
-        ."'ph62dad25479d07',\n"
-        ."'ph605f88c08e961',\n"
-        ."'ph617bbb9baa501',\n"
-        ."'ph5703a540748d8',\n"
-        ."'ph5703bf1661e26',\n"
-        ."'ph6128c02330165',\n"
-        ."'ph61160ade8fd6b',\n"
-        ."'ph611609b41034e') ORDER BY `video_key` DESC;";
+        . "'64f5b13110be6',\n"
+        . "'64713464ad036',\n"
+        . "'ph5ba35f316a27a',\n"
+        . "'ph5c0fa1de97f01',\n"
+        . "'ph5c052e62d4a23',\n"
+        . "'ph5ca5f1441df6b',\n"
+        . "'ph5cde966665e7c',\n"
+        . "'ph5d44120f3ea6b',\n"
+        . "'ph5d52825f400c3',\n"
+        . "'ph5e01e8fe95407',\n"
+        . "'ph5e468b9a55f04',\n"
+        . "'ph5ec16e29d7dd5',\n"
+        . "'ph5ecf5425b6aa4',\n"
+        . "'ph5ed9db5918dc0',\n"
+        . "'ph5efdb5ac8f26c',\n"
+        . "'ph5f31eefb1525e',\n"
+        . "'ph5f51e462bebd6',\n"
+        . "'ph5fc0f2bf66e98',\n"
+        . "'ph59f82fd31e4d2',\n"
+        . "'ph59f83b0d745b1',\n"
+        . "'ph59f832451c4ca',\n"
+        . "'ph60d02a7da57d2',\n"
+        . "'ph62b04e41183d0',\n"
+        . "'ph62c6d20fbf254',\n"
+        . "'ph62dad25479d07',\n"
+        . "'ph605f88c08e961',\n"
+        . "'ph617bbb9baa501',\n"
+        . "'ph5703a540748d8',\n"
+        . "'ph5703bf1661e26',\n"
+        . "'ph6128c02330165',\n"
+        . "'ph61160ade8fd6b',\n"
+        . "'ph611609b41034e') ORDER BY `video_key` DESC;";
 
         $result = Mediatag::$dbconn->query($sql);
         foreach ($result as $row) {
-            $filename = $row['fullpath'].DIRECTORY_SEPARATOR.$row['filename'];
+            $filename = $row['fullpath'] . DIRECTORY_SEPARATOR . $row['filename'];
             if (file_exists($filename)) {
                 $new_path = str_replace('/XXX/Pornhub', '/XXX/OldPH', $row['fullpath']);
-                (new Filesystem())->mkdir($new_path);
-                $new_name = $new_path.DIRECTORY_SEPARATOR.$row['filename'];
+                (new Filesystem)->mkdir($new_path);
+                $new_name = $new_path . DIRECTORY_SEPARATOR . $row['filename'];
 
-                (new Filesystem())->rename($filename, $new_name, true);
+                (new Filesystem)->rename($filename, $new_name, true);
             }
             // utmdd($filename,$new_name);
         }
@@ -95,11 +95,11 @@ trait Helper
         ];
 
         foreach ($colors as $color) {
-            $text = '<fg='.$color.'>'.$color.'</>';
-            $text .= ' <fg='.$color.';options=bold> bold '.$color.'</>';
-            $text .= ' <fg='.$color.';options=underscore> underscore '.$color.'</>';
-            $text .= ' <fg='.$color.';options=blink> blink '.$color.'</>';
-            $text .= ' <fg='.$color.';options=reverse> Reverse '.$color.'</>';
+            $text = '<fg=' . $color . '>' . $color . '</>';
+            $text .= ' <fg=' . $color . ';options=bold> bold ' . $color . '</>';
+            $text .= ' <fg=' . $color . ';options=underscore> underscore ' . $color . '</>';
+            $text .= ' <fg=' . $color . ';options=blink> blink ' . $color . '</>';
+            $text .= ' <fg=' . $color . ';options=reverse> Reverse ' . $color . '</>';
 
             Mediatag::$output->writeln($text);
         }
@@ -156,7 +156,7 @@ trait Helper
             if ($this->t1($minutes, 50, 60)) {
                 $video_array['50_60'][] = $vidArray['video_file'];
             }
-            if (60 <= $minutes) {
+            if ($minutes >= 60) {
                 $video_array['60'][] = $vidArray['video_file'];
             }
 
@@ -170,18 +170,18 @@ trait Helper
     {
         // utminfo(func_get_args());
         utmdd(__METHOD__);
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem;
 
         foreach ($video_array as $dir => $fileArray) {
-            $new_path = __PLEX_HOME__.'/Duration/'.$dir;
-            if (!is_dir($new_path)) {
+            $new_path = __PLEX_HOME__ . '/Duration/' . $dir;
+            if (! is_dir($new_path)) {
                 $filesystem->mkdir($new_path);
             }
             foreach ($fileArray as $file) {
-                $new_filePath = str_replace(__PLEX_HOME__.'/'.__LIBRARY__, $new_path, $file);
-                if (!file_exists($new_filePath)) {
+                $new_filePath = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__, $new_path, $file);
+                if (! file_exists($new_filePath)) {
                     $filesystem->symlink($file, $new_filePath);
-                    echo 'creating symlink for '.basename($file)."\n";
+                    echo 'creating symlink for ' . basename($file) . "\n";
                     // utmdd([__METHOD__,$new_filePath, $file]);
                 }
             }
@@ -192,25 +192,25 @@ trait Helper
     {
         // utminfo(func_get_args());
         utmdd(__METHOD__);
-        $filesystem = new Filesystem();
+        $filesystem = new Filesystem;
         // foreach ($video_array as $dir => $fileArray)
         // {
-        $new_path = __PLEX_HOME__.'/backup_ph';
+        $new_path = __PLEX_HOME__ . '/backup_ph';
         foreach ($video_array as $file) {
             $file         = trim($file);
-            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Pornhub', $new_path, $file);
-            $new_fileName = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/Studios', $new_path, $new_fileName);
+            $new_fileName = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__ . '/Pornhub', $new_path, $file);
+            $new_fileName = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__ . '/Studios', $new_path, $new_fileName);
 
             //                $new_fileName = str_replace($new_path.'/Studios', $new_path, $new_fileName);
             $new_filePath = str_replace(basename($new_fileName), '', $new_fileName);
-            if (!is_dir($new_filePath)) {
+            if (! is_dir($new_filePath)) {
                 $filesystem->mkdir($new_filePath);
             }
 
             if (file_exists($file)) {
-                if (!file_exists($new_fileName)) {
+                if (! file_exists($new_fileName)) {
                     $filesystem->rename($file, $new_fileName);
-                    echo 'mving for '.basename($file)."\n";
+                    echo 'mving for ' . basename($file) . "\n";
                     //   utmdd([__METHOD__,$new_fileName, $file]);
                 }
             }
@@ -228,14 +228,14 @@ trait Helper
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $filename = basename($vidArray['video_file']);
             //            if(str_contains($filename,$dir)){
-            if (!str_starts_with($key, 'x')) {
-                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey='.$key.PHP_EOL;
-                echo 'adding '.basename($vidArray['video_file'])."\n";
-                $video_array[] = $vidArray['video_file'].PHP_EOL;
+            if (! str_starts_with($key, 'x')) {
+                $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
+                echo 'adding ' . basename($vidArray['video_file']) . "\n";
+                $video_array[] = $vidArray['video_file'] . PHP_EOL;
             }
         }
-        file_put_contents(__LIBRARY__.'_playlist.txt', $ph_video);
-        file_put_contents(__LIBRARY__.'files.txt', $video_array);
+        file_put_contents(__LIBRARY__ . '_playlist.txt', $ph_video);
+        file_put_contents(__LIBRARY__ . 'files.txt', $video_array);
 
         $this->mvFiles($video_array);
     }

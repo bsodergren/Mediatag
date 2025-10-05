@@ -34,7 +34,7 @@ class Reader extends TagReader
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
-        $this->db = new TagDB();
+        $this->db = new TagDB;
 
         $this->expandArray($videoData);
 
@@ -74,10 +74,10 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $key          = 'ph_webpage_'.ltrim(strrchr($webpage_url, '='), '=');
+        $key          = 'ph_webpage_' . ltrim(strrchr($webpage_url, '='), '=');
         $artist_array = MediaCache::get($key);
 
-        if (false === $artist_array) {
+        if ($artist_array === false) {
             $client = Client::createChromeClient();
 
             $webpage_url = str_replace('pornhubpremium.com', 'pornhub.com', $webpage_url);
@@ -109,22 +109,22 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $tag = strtolower($tag);
-        if ('genre' == $tag) {
+        if ($tag == 'genre') {
             $this->getJsonValue($tag, ['tags', 'categories']);
         }
-        if ('title' == $tag) {
+        if ($tag == 'title') {
             $this->getJsonValue($tag, ['title']);
         }
-        if ('studio' == $tag) {
+        if ($tag == 'studio') {
             $this->getJsonValue($tag, ['uploader', 'channel']);
         }
-        if ('keyword' == $tag) {
+        if ($tag == 'keyword') {
             $this->getJsonValue($tag, ['tags', 'categories']);
         }
-        if ('artist' == $tag) {
+        if ($tag == 'artist') {
             $this->getJsonValue($tag, ['cast']);
         }
-        if ('network' == $tag) {
+        if ($tag == 'network') {
             $this->getJsonValue(
                 $tag,
                 ['extractor'],
@@ -138,20 +138,20 @@ class Reader extends TagReader
 
     private function getJsonValue($tag, $keyList = [], $options = [])
     {
-        if (!is_array($keyList)) {
+        if (! is_array($keyList)) {
             $keyList[] = $keyList;
         }
 
         foreach ($keyList as $json_key) {
-            if ('artist' == $tag) {
+            if ($tag == 'artist') {
                 // // utmdump(['artist', $this->json_array['cast']]);
             }
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
-                if ('studio' == $tag) {
+                if ($tag == 'studio') {
                     // // utmdump([$value, $json_key, $tag]);
                 }
-                if ('categories' == $json_key) {
+                if ($json_key == 'categories') {
                     $keyword_value = $this->json_array['tags'];
                     $value         = array_merge($value, $keyword_value);
                 }
@@ -179,13 +179,13 @@ class Reader extends TagReader
                     }
                 }
 
-                if ('' == $this->tag_array[$tag]) {
+                if ($this->tag_array[$tag] == '') {
                     $this->tag_array[$tag] = null;
                 }
             }
 
-            if ('artist' == $tag) {
-                if (!isset($this->tag_array['artist'])) {
+            if ($tag == 'artist') {
+                if (! isset($this->tag_array['artist'])) {
                     $this->titleArtist();
                 }
             }
@@ -197,13 +197,13 @@ class Reader extends TagReader
     private function getJsonFile()
     {
         // utminfo(func_get_args());
-        if (!str_starts_with($this->video_key, 'x')) {
-            $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+        if (! str_starts_with($this->video_key, 'x')) {
+            $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
             if (file_exists($this->json_file)) {
                 $this->json_string = FileSystem::read($this->json_file);
 
-                if ('' == $this->json_string) {
+                if ($this->json_string == '') {
                     return false;
                 }
 
@@ -213,7 +213,7 @@ class Reader extends TagReader
 
                 // $exec->youtubeGetJson($this->video_key);
 
-                $this->json_file = __JSON_CACHE_DIR__.'/'.$this->video_key.'.info.json';
+                $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
                 // if (file_exists($this->json_file)) {
                 // utmdump($this->video_key);
@@ -242,10 +242,10 @@ class Reader extends TagReader
         // //   $name_key = str_replace('.', '', $name_key);
 
         $res = MediaArray::matchArtist(ARTIST_MAP, $string);
-        if (null === $res) {
+        if ($res === null) {
             // // utmdump($string);
         }
-        if (null !== $res) {
+        if ($res !== null) {
             // if (is_array($artists_array))
             // {
             foreach ($res as $names) {

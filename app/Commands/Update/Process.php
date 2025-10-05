@@ -62,8 +62,8 @@ class Process extends Mediatag
     /**
      * __construct.
      *
-     * @param mixed $input
-     * @param mixed $output
+     * @param  mixed  $input
+     * @param  mixed  $output
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {

@@ -6,6 +6,8 @@
 
 namespace Mediatag\Modules\Filesystem;
 
+use const PHP_EOL;
+
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
@@ -21,8 +23,6 @@ use function dirname;
 use function is_array;
 use function is_string;
 
-use const PHP_EOL;
-
 /**
  * Filesystem.
  */
@@ -37,7 +37,7 @@ class MediaFilesystem extends SFilesystem
         // utminfo(func_get_args());
 
         $methodArray = get_class_methods(NetteFile::class);
-        if (null !== MediaArray::search($methodArray, $method)) {
+        if (MediaArray::search($methodArray, $method) !== null) {
             $handler = ['Nette\Utils\FileSystem', $method];
 
             return call_user_func_array($handler, $params);
@@ -47,13 +47,13 @@ class MediaFilesystem extends SFilesystem
     /**
      * getRelative.
      *
-     * @param mixed $path
+     * @param  mixed  $path
      */
     public static function getRelative(string $path): string
     {
         // utminfo(func_get_args());
 
-        $new_path = (new SFilesystem())->makePathRelative($path, __CURRENT_DIRECTORY__);
+        $new_path = (new SFilesystem)->makePathRelative($path, __CURRENT_DIRECTORY__);
 
         return rtrim($new_path, '/');
     }
@@ -65,7 +65,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             touch($file);
         }
 
@@ -74,7 +74,7 @@ class MediaFilesystem extends SFilesystem
         } else {
             $content_string = $content;
         }
-        if (true === $backup) {
+        if ($backup === true) {
             self::backupPlaylist($file);
         }
 
@@ -101,7 +101,7 @@ class MediaFilesystem extends SFilesystem
     /**
      * writeArray.
      *
-     * @param mixed $content
+     * @param  mixed  $content
      */
     public static function writeArray($file, $arrayName, array $content)
     {
@@ -120,36 +120,36 @@ class MediaFilesystem extends SFilesystem
         //        utmdd([__METHOD__,$fileArray]);
 
         self::backupPlaylist($file);
-        file_put_contents($file, '<?php $'.$arrayName.' = '.var_export($fileArray, true).';');
+        file_put_contents($file, '<?php $' . $arrayName . ' = ' . var_export($fileArray, true) . ';');
     }
 
     public static function backupPlaylist($filename, $directory = false, $move = false)
     {
         // utminfo(func_get_args());
 
-        if (!file_exists($filename)) {
+        if (! file_exists($filename)) {
             return 0;
         }
 
-        $filesystem    = new SFilesystem();
+        $filesystem    = new SFilesystem;
         $file          = realpath($filename);
         $filename      = basename($file);
         $fileNameNoExt = Strings::before($filename, '.', 1);
 
-        if (false === $directory) {
+        if ($directory === false) {
             $directory = dirname($file);
-            $directory = $directory.'/'.self::$tempdir.'/'.$fileNameNoExt;
+            $directory = $directory . '/' . self::$tempdir . '/' . $fileNameNoExt;
         }
 
-        if (!is_dir($directory)) {
+        if (! is_dir($directory)) {
             $filesystem->mkdir($directory);
         }
 
-        $backupFile = $directory.'/'.$filename;
+        $backupFile = $directory . '/' . $filename;
 
         $ext = '';
 
-        if ('old' == Strings::after($backupFile, '.', -1)) {
+        if (Strings::after($backupFile, '.', -1) == 'old') {
             $fileNo = 1;
         }
         if (is_numeric(Strings::after($backupFile, '.', -1))) {
@@ -160,35 +160,35 @@ class MediaFilesystem extends SFilesystem
         if (isset($fileNo)) {
             if (self::$clean_up > 0) {
                 if (self::$clean_up < $fileNo) {
-                    $r = MediaFinder::find($filename.'*', $directory);
+                    $r = MediaFinder::find($filename . '*', $directory);
                     rsort($r);
                     unlink($r[0]);
                     foreach ($r as $idx => $rfile) {
                         if (array_key_exists($idx + 1, $r)) {
-                            (new SFilesystem())->rename($r[$idx + 1], $r[$idx]);
+                            (new SFilesystem)->rename($r[$idx + 1], $r[$idx]);
                         }
                     }
                     $fileNo = '';
                 } else {
-                    $ext = '.'.$fileNo;
+                    $ext = '.' . $fileNo;
                 }
             } else {
-                $ext = '.'.$fileNo;
+                $ext = '.' . $fileNo;
             }
         }
 
-        $backup_name1 = $fileNameNoExt.'.old'.$ext;
+        $backup_name1 = $fileNameNoExt . '.old' . $ext;
 
-        $backup_name = $directory.'/'.basename($backup_name1);
+        $backup_name = $directory . '/' . basename($backup_name1);
 
         if (file_exists($backup_name)) {
             self::backupPlaylist($backup_name, $directory, $move);
         }
 
-        if (true == $move) {
-            (new SFilesystem())->rename($file, str_replace('.old', '.txt', $backup_name));
+        if ($move == true) {
+            (new SFilesystem)->rename($file, str_replace('.old', '.txt', $backup_name));
         } else {
-            (new SFilesystem())->copy($file, $backup_name);
+            (new SFilesystem)->copy($file, $backup_name);
         }
 
         // return $backup_name;
@@ -202,34 +202,34 @@ class MediaFilesystem extends SFilesystem
         // utminfo(func_get_args());
 
         $file_array = [];
-        $finder     = new SFinder();
-        $filesystem = new SFilesystem();
+        $finder     = new SFinder;
+        $filesystem = new SFilesystem;
 
         if (is_dir($new)) {
             $finder->files()->in($old)->sortByName();
             if ($finder->hasResults()) {
                 foreach ($finder as $file) {
                     $old_file = $file->getRealPath();
-                    $newpath  = $new.str_replace($old, '', $file->getPath());
-                    if (!is_dir($newpath)) {
+                    $newpath  = $new . str_replace($old, '', $file->getPath());
+                    if (! is_dir($newpath)) {
                         $filesystem->mkdir($newpath);
                     }
-                    $new_file = $newpath.'/'.$file->getBasename();
+                    $new_file = $newpath . '/' . $file->getBasename();
 
                     $oldFile = self::getRelative($old_file);
                     $newFile = self::getRelative($new_file);
 
-                    echo "Renaming {$oldFile} to {$newFile}".PHP_EOL;
+                    echo "Renaming {$oldFile} to {$newFile}" . PHP_EOL;
                     NetteFile::rename($old_file, $new_file);
                 }
             } else {
                 NetteFile::delete($old);
-                echo "No files in {$old} ".PHP_EOL;
+                echo "No files in {$old} " . PHP_EOL;
             }
         } else {
             $oldFile = self::getRelative($old);
             $newFile = self::getRelative($new);
-            echo "Renaming {$oldFile} to {$newFile}".PHP_EOL;
+            echo "Renaming {$oldFile} to {$newFile}" . PHP_EOL;
 
             NetteFile::rename($old, $new);
         }
@@ -239,12 +239,12 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             return false;
         }
 
         if (is_string($callback)) {
-            $n        = new self();
+            $n        = new self;
             $callback = Callback::check([$n, $callback]);
         }
 
@@ -259,10 +259,10 @@ class MediaFilesystem extends SFilesystem
         $array = [];
 
         foreach ($text as $lineNum => $line) {
-            if ('' != $line) {
-                if (true == $callback) {
+            if ($line != '') {
+                if ($callback == true) {
                     $res = $callback($line);
-                    if (false !== $res) {
+                    if ($res !== false) {
                         if (is_array($res)) {
                             $array = array_merge($array, $res);
                         } else {
@@ -285,8 +285,8 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        $filesystem = new SFilesystem();
-        if (!is_dir(dirname($new))) {
+        $filesystem = new SFilesystem;
+        if (! is_dir(dirname($new))) {
             $filesystem->mkdir(dirname($new));
         }
         NetteFile::rename($old, $new, $overwrite);
@@ -296,7 +296,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        if (null === $path) {
+        if ($path === null) {
             $path = __CURRENT_DIRECTORY__;
         }
 

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of Dimsh\React\Filesystem\Monitor;
  *
@@ -8,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-
 namespace Mediatag\Bundle\Monitor;
 
 use Mediatag\Bundle\Monitor\MonitorTrait;
-
 
 class MonitorConfigurator
 {
@@ -32,6 +31,7 @@ class MonitorConfigurator
      * The nesting level to work on after analyzing the patterns in $files_to_monitor
      *
      * @internal
+     *
      * @var int
      */
     protected $effective_level = 0;
@@ -64,7 +64,9 @@ class MonitorConfigurator
      * 'path_level'        : The path level of the pattern (count of slashes excluding the leading
      *                       and the trailing, this should be 0 for recursive patterns and greater
      *                       than 0 for non recursive.
+     *
      * @internal
+     *
      * @var [][]
      */
     protected $analyzed_files_to_monitor = [];
@@ -75,6 +77,7 @@ class MonitorConfigurator
      * base directory for changes.
      *
      * @internal
+     *
      * @var bool
      */
     protected $files_to_monitor_has_empty_string = false;
@@ -84,6 +87,7 @@ class MonitorConfigurator
      * $this->analyzed_files_to_monitor has the key: 'is_not_recursive' as true.
      *
      * @internal
+     *
      * @var bool
      */
     protected $is_all_files_to_monitor_not_recursive = false;
@@ -100,6 +104,7 @@ class MonitorConfigurator
      * This array does not contain the empty string, and do not have duplicates.
      *
      * @internal
+     *
      * @var array
      */
     protected $dirnames_from_files_to_monitor = [];
@@ -108,6 +113,7 @@ class MonitorConfigurator
      * The base directory string applied to preg_quote($base_dir, '@')
      *
      * @internal
+     *
      * @var string
      */
     protected $preg_quoted_base_directory = '';
@@ -119,13 +125,12 @@ class MonitorConfigurator
      */
     protected $fire_modified_on_directories = false;
 
-
     /**
      * @return MonitorConfigurator
      */
     public static function factory()
     {
-        return new static();
+        return new static;
     }
 
     /**
@@ -133,7 +138,6 @@ class MonitorConfigurator
      *
      * Directories ends with slash.
      *
-     * @param string $path
      *
      * @return bool
      */
@@ -174,6 +178,7 @@ class MonitorConfigurator
          * Here we will remove the leading slash.
          */
         $remaining_path = ltrim($remaining_path, '/');
+
         return $this->isStringMatch($remaining_path . $trailing_slash);
     }
 
@@ -181,8 +186,7 @@ class MonitorConfigurator
      * Match string against all patterns saved in $this->getFilesToMonitor()
      * array of patterns (or names)
      *
-     * @param string $relative_path
-     *
+     * @param  string  $relative_path
      * @return bool
      */
     protected function isStringMatch($relative_path)
@@ -193,9 +197,9 @@ class MonitorConfigurator
         $has_trailing_slash               = $this->hasTrailingSlash($relative_path) && $relative_path !== '/';
         $relative_path_with_leading_slash = substr($relative_path, 0, 1) === '/' ?
           $relative_path : '/' . $relative_path;
-        $basename_relative_path           = basename($relative_path) . ($has_trailing_slash ? '/' : '');
+        $basename_relative_path = basename($relative_path) . ($has_trailing_slash ? '/' : '');
         foreach ($this->analyzed_files_to_monitor as $pattern => $properties) {
-            if ($has_trailing_slash && !$properties['end_with_slash']) {
+            if ($has_trailing_slash && ! $properties['end_with_slash']) {
                 /**
                  * if the passed path is a directory, then it matches only patterns which end
                  * with slash, not others.
@@ -217,6 +221,7 @@ class MonitorConfigurator
                 }
             }
         }
+
         return false;
     }
 
@@ -224,8 +229,7 @@ class MonitorConfigurator
      * Tell if the passed directory may contain items that matches the patterns,
      * it may contain them if its nest level is less than the configured level
      *
-     * @param string $directory
-     *
+     * @param  string  $directory
      * @return bool
      */
     public function mayDirectoryContainMonitoredItems($directory)
@@ -273,20 +277,17 @@ class MonitorConfigurator
                     break;
                 }
             }
-            if (!$matched_dirname) {
+            if (! $matched_dirname) {
                 // no dirname pattern will match this path, we return false!
                 return false;
             }
         }
+
         return true;
     }
 
     /**
      * Get an array of dirnames called on $path recursively.
-     *
-     * @param string $path
-     *
-     * @return array
      */
     protected function getDirnamesWithoutEmpty(string $path): array
     {
@@ -296,6 +297,7 @@ class MonitorConfigurator
             $dirnames[] = $dirname;
             $path       = $dirname;
         }
+
         return $dirnames;
     }
 
@@ -305,8 +307,6 @@ class MonitorConfigurator
 
     /**
      * Base dir is always without trailing slash unless it is the root '/' directory.
-     *
-     * @return string
      */
     public function getBaseDirectory(): string
     {
@@ -315,8 +315,6 @@ class MonitorConfigurator
 
     /**
      * Return Base dir with trailing slash.
-     *
-     * @return string
      */
     public function getBaseDirectoryWithTrailingSlash(): string
     {
@@ -331,9 +329,7 @@ class MonitorConfigurator
      *
      * If the directory exists and is a file, an Exception is thrown.
      *
-     * @param string $base_directory
      *
-     * @return MonitorConfigurator
      *
      * @throws \Exception
      */
@@ -342,7 +338,7 @@ class MonitorConfigurator
         if (substr($base_directory, 0, 1) !== '/') {
             $base_directory = getcwd() . '/' . $base_directory;
         }
-        if (file_exists($base_directory) && !is_dir($base_directory)) {
+        if (file_exists($base_directory) && ! is_dir($base_directory)) {
             throw new \Exception("base directory [$base_directory] passed to MonitorConfigurator represents an existing non-directory, it must be an existing directory or not existing at all.");
         }
         $this->base_directory = $this->fixPathSlashes($base_directory);
@@ -350,12 +346,10 @@ class MonitorConfigurator
             $this->base_directory = rtrim($this->base_directory, '/');
         }
         $this->preg_quoted_base_directory = preg_quote($this->base_directory, '@');
+
         return $this;
     }
 
-    /**
-     * @return int
-     */
     public function getLevel(): int
     {
         return $this->level;
@@ -363,8 +357,6 @@ class MonitorConfigurator
 
     /**
      * Report the effective level we operate at according to the analysis of the patterns.
-     *
-     * @return int
      */
     public function getEffectiveLevel(): int
     {
@@ -375,20 +367,17 @@ class MonitorConfigurator
      * Set the deep level to look for files, 0 means all recursive, 1 means
      * only directly inside Base-Dir, 2 means directly inside Base-Dir and
      * directly inside any direct child-directories in it, and so on.
-     *
-     * @param int $level
-     *
-     * @return MonitorConfigurator
      */
     public function setLevel(int $level): MonitorConfigurator
     {
         $this->level = $level;
-        if (!empty($this->files_to_monitor)) {
+        if (! empty($this->files_to_monitor)) {
             /**
              * This is needed because we re-analyze the patterns depending on the new level
              */
             $this->setFilesToMonitor($this->files_to_monitor);
         }
+
         return $this;
     }
 
@@ -439,9 +428,7 @@ class MonitorConfigurator
      * Level is checked for all patterns those which has '/' (slash) or not.
      *
      *
-     * @param string[] $files_to_monitor
-     *
-     * @return MonitorConfigurator
+     * @param  string[]  $files_to_monitor
      */
     public function setFilesToMonitor(array $files_to_monitor): MonitorConfigurator
     {
@@ -465,21 +452,21 @@ class MonitorConfigurator
                 $this->files_to_monitor_has_empty_string = true;
             }
 
-            if (!isset($this->analyzed_files_to_monitor[$pattern])) {
+            if (! isset($this->analyzed_files_to_monitor[$pattern])) {
                 $this->analyzed_files_to_monitor[$pattern] = [
-                  'end_with_slash' => substr($pattern, -1, 1) === '/',
+                    'end_with_slash' => substr($pattern, -1, 1) === '/',
                 ];
 
                 $count_slashes = substr_count($pattern, '/');
 
                 $this->analyzed_files_to_monitor[$pattern]['is_not_recursive'] = (
-                  $count_slashes > 1 && $this->analyzed_files_to_monitor[$pattern]['end_with_slash']
-                  ||
-                  $count_slashes > 0 && !$this->analyzed_files_to_monitor[$pattern]['end_with_slash']
-                  ||
-                  $pattern === ''
-                  ||
-                  $has_leading_slash
+                    $count_slashes > 1 && $this->analyzed_files_to_monitor[$pattern]['end_with_slash']
+                    ||
+                    $count_slashes > 0 && ! $this->analyzed_files_to_monitor[$pattern]['end_with_slash']
+                    ||
+                    $pattern === ''
+                    ||
+                    $has_leading_slash
                 );
 
                 $path_level = $count_slashes;
@@ -508,13 +495,14 @@ class MonitorConfigurator
                      * this is for speed optimization.
                      */
                     unset($this->analyzed_files_to_monitor[$pattern]);
+
                     continue;
                 }
                 $this->analyzed_files_to_monitor[$pattern]['path_level'] = $path_level;
                 $path_levels_array[]                                     = $path_level;
 
                 $this->is_all_files_to_monitor_not_recursive &= $this->analyzed_files_to_monitor[$pattern]['is_not_recursive'];
-                $this->dirnames_from_files_to_monitor        = array_unique(
+                $this->dirnames_from_files_to_monitor = array_unique(
                     array_merge(
                         $this->dirnames_from_files_to_monitor,
                         $this->getDirnamesWithoutEmpty($pattern)
@@ -524,9 +512,9 @@ class MonitorConfigurator
         }
 
         $this->effective_level = $this->level;
-        if (!empty($path_levels_array)) {
+        if (! empty($path_levels_array)) {
             $this->effective_level = max($path_levels_array);
-            if (0 === min($path_levels_array)) {
+            if (min($path_levels_array) === 0) {
                 $this->effective_level = 0;
             }
             if ($this->level !== 0) {
@@ -544,12 +532,10 @@ class MonitorConfigurator
              * good for performance
              */
         }
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function isFireModifiedOnDirectories(): bool
     {
         return $this->fire_modified_on_directories;
@@ -557,21 +543,16 @@ class MonitorConfigurator
 
     /**
      * Set to true to also fire the modified event on directories.
-     *
-     * @param bool $fire_modified_on_directories
-     *
-     * @return MonitorConfigurator
      */
     public function setFireModifiedOnDirectories(bool $fire_modified_on_directories): MonitorConfigurator
     {
         $this->fire_modified_on_directories = $fire_modified_on_directories;
+
         return $this;
     }
 
     /**
      * Is this monitor configuration to monitor the CREATED event only.
-     *
-     * @return bool
      */
     public function isMonitorCreatedOnly(): bool
     {
@@ -580,21 +561,16 @@ class MonitorConfigurator
 
     /**
      * Set a config to monitor the created event only, no modified and no delete.
-     *
-     * @param bool $monitor_created_only
-     *
-     * @return MonitorConfigurator
      */
     public function setMonitorCreatedOnly(bool $monitor_created_only): MonitorConfigurator
     {
         $this->monitor_created_only = $monitor_created_only;
+
         return $this;
     }
 
     /**
      * This instructs the monitor to create a child monitor when the base directory is not found.
-     *
-     * @return bool
      */
     public function isAutoCreateNotFoundMonitor(): bool
     {
@@ -606,14 +582,11 @@ class MonitorConfigurator
      * Base Directory does not exists.
      *
      * @see \Dimsh\React\Filesystem\Monitor\Monitor::__construct()
-     *
-     * @param bool $auto_create_not_found_monitor
-     *
-     * @return MonitorConfigurator
      */
     public function setAutoCreateNotFoundMonitor(bool $auto_create_not_found_monitor): MonitorConfigurator
     {
         $this->auto_create_not_found_monitor = $auto_create_not_found_monitor;
+
         return $this;
     }
 }
