@@ -63,35 +63,38 @@ class MediatagExec
 
     protected $optionArgs = [];
 
-    public function __construct($videoData, $input = null, $output = null)
+    public function __construct($videoData = null, $input = null, $output = null)
     {
-        // utminfo($videoData);
-        $this->videoData = $videoData;
-        //        $this->getTags();
-        // $this->video_key = File::file($this->video_file, 'videokey');
+        if ($videoData !== null) {
+            // utminfo($videoData);
+            $this->videoData = $videoData;
+            //        $this->getTags();
+            // $this->video_key = File::file($this->video_file, 'videokey');
 
-        if (is_string($videoData)) {
-            if (file_exists($videoData)) {
-                $videoData = (new File($videoData))->get();
-            }
-        }
-
-        foreach ($videoData as $key => $value) {
-            if (is_array($value)) {
-                foreach ($value as $key_a => $val_a) {
-                    $this->{$key}[$key_a] = $val_a;
+            if (is_string($videoData)) {
+                if (file_exists($videoData)) {
+                    $videoData = (new File($videoData))->get();
                 }
-            } else {
-                $this->{$key} = $value;
+            }
+
+            foreach ($videoData as $key => $value) {
+                if (is_array($value)) {
+                    foreach ($value as $key_a => $val_a) {
+                        $this->{$key}[$key_a] = $val_a;
+                    }
+                } else {
+                    $this->{$key} = $value;
+                }
             }
         }
-
-        if ($input !== null) {
-            $this->input = $input;
+        if ($input === null) {
+            $input = Mediatag::$input;
         }
-        if ($output !== null) {
-            $this->output = $output;
+        if ($output === null) {
+            $output = Mediatag::$output;
         }
+        $this->input = $input;
+        $this->output = $output;
     }
 
     public function preview()
@@ -147,16 +150,16 @@ class MediatagExec
         //     $this->addOptionArg('--'.$meta_tag.'='.$meta_value);
         // }
     }
-    // protected function testexec($command, $callback = null): mixed
-    // {
-    //     $process = new Process($command);
-    //     $process->setTimeout(60000);
+    protected function testexec($command, $callback = null): mixed
+    {
+        $process = new Process($command);
+        $process->setTimeout(60000);
 
-    //     $this->runCommand = $process->getCommandLine();
-    //     utmdd($this->runCommand);
+        $this->runCommand = $process->getCommandLine();
+        utmdd($this->runCommand);
 
-    //     return true;
-    // }
+        return true;
+    }
     protected function exec($command, $callback = null): mixed
     {
         // utminfo(func_get_args());
@@ -170,6 +173,7 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
+        utmdump($this->runCommand);
         $process->start();
         try {
             // $process->mustRun($callback);
@@ -179,7 +183,6 @@ class MediatagExec
             // echo $exception->getMessage();
             $this->errors = $exception->getMessage();
         }
-
         return $this->errors;
     }
 }

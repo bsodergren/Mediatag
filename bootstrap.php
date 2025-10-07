@@ -35,6 +35,8 @@ define('__SQL_PASSWD__', CONFIG['DB_PASS']);
 define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
 require_once __CONFIG_LIB__ . '/path_constants.php';
+ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
+
 require_once __CONFIG_LIB__ . '/variables.php';
 require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 
@@ -49,7 +51,6 @@ MediaLogger::$pruneLogs = false;
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');
 // }
-ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
 
 // UtmStopWatch::$display  = false;
 // UtmStopWatch::$writeNow = false;

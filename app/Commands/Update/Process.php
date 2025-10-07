@@ -11,12 +11,14 @@ use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Mediatag\Commands\Update\Commands\NewF\Helper as NewHelper;
 
 class Process extends Mediatag
 {
     use Helper;
     use MediaExecute;
     use MediaProcess;
+    use NewHelper;
 
     /**
      * meta.

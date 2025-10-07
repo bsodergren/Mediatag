@@ -429,7 +429,7 @@ class MediaFinder extends SFinder
         }
 
         $db_array = Mediatag::$dbconn->getDbFileList();
-
+// utmdd($db_array);
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);

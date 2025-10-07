@@ -51,13 +51,13 @@ trait Helper
             $newGenre = Chooser::AskQuestion($qText, $this->genreDirs, 'Exit');
 
             if ($newGenre === false) {
-                Mediatag::$Console->writeln('Exiting');
+                Mediatag::$output->writeln('Exiting');
 
                 return false;
                 // break;
             }
             $newFilename = $basePath . DIRECTORY_SEPARATOR . $newGenre . DIRECTORY_SEPARATOR . $filename;
-            Mediatag::$Console->writeln('Moved ' . $filename . ' to <info>' . $newGenre . '</info>');
+            Mediatag::$output->writeln('Moved ' . $filename . ' to <info>' . $newGenre . '</info>');
             $this->renameFile($file, $newFilename, false);
         }
 
