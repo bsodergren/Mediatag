@@ -116,7 +116,7 @@ trait ffmpegTransition
         }
         $this->clipLength = $frame_count;
         // utmdd($this->clipLength, $file_lengths[$i]);
-        $video_transitions .= "[{$last_transition_output}]format=pix_fmts=yuv420p[final];";
+        $video_transitions .= "[{$last_transition_output}]format=pix_fmts=yuvj420p[final];";
         // $normalizer        = str_replace(';', ';'.\PHP_EOL, $normalizer);
         // $video_transitions = str_replace(';', ';'.\PHP_EOL, $video_transitions);
         // $audio_transitions = str_replace(';', ';'.\PHP_EOL, $audio_transitions);

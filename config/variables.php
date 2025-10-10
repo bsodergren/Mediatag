@@ -201,6 +201,8 @@ define(
         'Bisexual',
         'Feature',
         'Hotwife',
+        'White',
+        'Toys',
         //  'Hot',
         //  'Clips',
         //  'misc',

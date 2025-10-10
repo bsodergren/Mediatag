@@ -10,6 +10,9 @@ use const PHP_EOL;
 
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
+use FFMpeg\Format\ProgressListener\VideoProgressListener;
+use FFMpeg\Format\Video\X264;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
@@ -38,7 +41,8 @@ trait MediaFFmpeg
 
     public $barAdvance = 50;
 
-    public $ffmpegArgs = ['-y', '-hide_banner', '-nostdin', '-threads', '4']; // , '-loglevel', 'debug'];
+    // '-hide_banner', '-nostdin',
+    public $ffmpegArgs = ['-y',  '-threads', '1']; // , '-loglevel', 'debug'];
 
     public $ffmpeg_log = __LOGFILE_DIR__ . '/buffer/ffmpeg.log';
 
@@ -98,7 +102,7 @@ trait MediaFFmpeg
         //         // ... do something with the stdout
         //     }
         // });
-        // // utmdump(   $process->getCommandLine());
+        // utmdd($process->getCommandLine());
 
         if (Option::isTrue('output')) {
             $cmd      = $process->getCommandLine();
@@ -261,22 +265,52 @@ trait MediaFFmpeg
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
-        $cmd = $this->generateFfmpegCommand($files, $type, $duration);
+        $ffmpeg = FFMpeg::create();
 
-        if ($cmd === true) {
-            return true;
-        }
-        $cmdArray      = array_merge($cmd, [$ClipName]);
-        $this->cmdline = $cmdArray;
+        // $advancedMedia = $ffmpeg->openAdvanced($files);
 
-        $this->progress = new MediaBar($this->clipLength, 'one', 120);
-        MediaBar::addFormat('%current:4s%/%max:4s% -- [%bar%] -- %percent:3s%%');
-        // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
-        $this->progress->start();
-        // $this->progress->startIndicator('Creating Compilation '.$name);
-        $callback = Callback::check([$this, 'FrameCountCallback']);
+        // $advancedMedia->filters()->pad()
+        // // //     ->custom('[0:v][1:v]', 'xfade=transition=radial', '[v]');
 
-        $this->ffmpegExec($cmdArray, $callback);
+        // $format = new X264('aac', 'libx264');
+        // $format->on('progress', function ($advancedMedia, $format, $percentage) {
+        //     Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
+        //     utmdump("$percentage % transcoded");
+        // });
+
+        // $advancedMedia
+        //     ->map([], $format, $ClipName)
+        //     ->save();
+
+        $video  = $ffmpeg->open($files[0]);
+        $format = new X264;
+        // $format->setAudioCodec("libmp3lame");
+
+        $format->on('progress', function ($video, $format, $percentage) {
+            Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
+            utmdump("$percentage % transcoded");
+        });
+
+        $video
+            ->concat($files)
+            ->saveFromDifferentCodecs($format, $ClipName);
+
+        // $cmd = $this->generateFfmpegCommand($files, $type, $duration);
+
+        // if ($cmd === true) {
+        //     return true;
+        // }
+        // $cmdArray      = array_merge($cmd, [$ClipName]);
+        // $this->cmdline = $cmdArray;
+
+        // $this->progress = new MediaBar($this->clipLength, 'one', 120);
+        // MediaBar::addFormat('%current:4s%/%max:4s% -- [%bar%] -- %percent:3s%%');
+        // // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
+        // $this->progress->start();
+        // // $this->progress->startIndicator('Creating Compilation '.$name);
+        // $callback = Callback::check([$this, 'FrameCountCallback']);
+
+        // $this->ffmpegExec($cmdArray, $callback);
     }
 
     public function ffmpegCreateChapterVideo($file, $markerFile)
