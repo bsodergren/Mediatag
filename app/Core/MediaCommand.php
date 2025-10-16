@@ -82,7 +82,6 @@ class MediaCommand extends DoctrineCommand
         $class = self::getProcessClass();
         Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments' => $arguments,
             'class'                                                                    => $class]);
-
         $Process = new $class($input, $output, self::$optionArg);
 
         Mediatag::$log->info('Command arguments {Process} for {command}', ['Process' => $Process->commandList,
@@ -94,8 +93,6 @@ class MediaCommand extends DoctrineCommand
         if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
-
-        // // utmdump([$arguments, $this->command]);
 
         $Process->$method();
 

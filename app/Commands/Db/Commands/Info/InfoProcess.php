@@ -6,9 +6,10 @@
 
 namespace Mediatag\Commands\Db\Commands\Info;
 
+use Mediatag\Commands\Db\Process;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 
-trait Helper
+class InfoProcess extends Process
 {
     public function execInfo()
     {

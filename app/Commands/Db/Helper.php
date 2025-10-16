@@ -485,33 +485,15 @@ trait Helper
         return $db->get($table);
     }
 
-    public function execInfo()
-    {
-        // utminfo(func_get_args());
-        $this->obj = new VideoFileInfo;
-        // $this->checkClean();
-        $this->obj->updateVideoData();
-    }
 
-    public function execPreview()
-    {
-        // utminfo(func_get_args());
+    // public function execThumb()
+    // {
+    //     // utminfo(func_get_args());
 
-        $this->obj = new GifPreviewFiles;
+    //     $this->obj = new Thumbnail;
 
-        $this->checkClean();
-
-        $this->obj->updateVideoData();
-    }
-
-    public function execThumb()
-    {
-        // utminfo(func_get_args());
-
-        $this->obj = new Thumbnail;
-
-        $this->checkClean();
-        // $this->obj = new Thumbnail(parent::$input, parent::$output);
-        $this->obj->updateVideoData();
-    }
+    //     $this->checkClean();
+    //     // $this->obj = new Thumbnail(parent::$input, parent::$output);
+    //     $this->obj->updateVideoData();
+    // }
 }

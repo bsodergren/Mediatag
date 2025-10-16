@@ -28,11 +28,16 @@ trait CommandHelper
 
     public static function getProcessClass()
     {
-        $className  = static::class;
-        $pathInfo   = explode('\\', $className);
-        $pathInfo   = array_slice($pathInfo, 0, 3);
-        $pathInfo[] = 'Process';
-        $className  = implode('\\', $pathInfo);
+        $className = static::class;
+        $className = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
+        // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
+// utmdump($className,class_exists($className));
+        if (! class_exists($className)) {
+            $pathInfo   = explode('\\', $className);
+            $pathInfo   = array_slice($pathInfo, 0, 3);
+            $pathInfo[] = 'Process';
+            $className  = implode('\\', $pathInfo);
+        }
 
         return $className;
     }

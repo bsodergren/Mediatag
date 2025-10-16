@@ -18,8 +18,8 @@ final class InfoCommand extends MediaCommand
 
     public $command = [
         'info' => [
-            // 'init' => null,
-            // 'exec' => null,
+            'init' => null,
+            'exec' => null,
             'execInfo' => null],
     ];
 }

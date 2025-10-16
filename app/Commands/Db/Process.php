@@ -19,12 +19,6 @@ use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-// use Mediatag\Commands\Db\Commands\Info\Helper as InfoHelper;
-// use Mediatag\Commands\Db\Commands\Captions\Helper as CapHelper;
-// use Mediatag\Commands\Db\Commands\EmptyDB\Helper as EmptyHelper;
-// use Mediatag\Commands\Db\Commands\Preview\Helper as PreviewHelper;
-// use Mediatag\Commands\Db\Commands\Thumbnail\Helper as ThumbHelper;
-// use Mediatag\Commands\Db\Commands\Backup\Helper as BackHelper;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
 use UTM\Utilities\Option;
 

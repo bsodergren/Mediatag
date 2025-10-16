@@ -11,7 +11,6 @@ use Mediatag\Commands\Clip\Commands\Chapter\ChapterHelper;
 use Mediatag\Commands\Clip\Commands\Create\CreateHelper;
 use Mediatag\Commands\Clip\Commands\Delete\DeleteHelper;
 use Mediatag\Commands\Clip\Commands\Merge\MergeHelper;
-use Mediatag\Commands\Clip\Commands\Resize\ResizeHelper;
 use Mediatag\Commands\Clip\Commands\Show\ShowHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
@@ -32,8 +31,8 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
     use MergeHelper;
-    use ResizeHelper;
     use ShowHelper;
+   
 
     public $VideoList = [];
 

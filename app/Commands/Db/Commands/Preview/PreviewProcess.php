@@ -6,9 +6,10 @@
 
 namespace Mediatag\Commands\Db\Commands\Preview;
 
+use Mediatag\Commands\Db\Process;
 use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
 
-trait Helper
+class PreviewProcess extends Process
 {
     public function execPreview()
     {

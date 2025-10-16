@@ -11,6 +11,7 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use FFMpeg\Filters\Video\ResizeFilter;
 use FFMpeg\Format\Video\X264;
+use Mediatag\Commands\Clip\Process;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaIndicator;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -23,7 +24,7 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 
-trait ResizeHelper
+class ResizeProcess extends Process
 {
     use MediaFFmpeg;
 
@@ -45,10 +46,14 @@ trait ResizeHelper
     }
 
     private function fileList()
-    {
+    { 
+        
+        utmdd([__METHOD__,$this->VideoList]);
         foreach ($this->VideoList['file'] as $k => $video) {
             $this->fileArray[] = $video['video_file'];
         }
+               
+
     }
 
     public function resizeFile()

@@ -373,7 +373,7 @@ class MediaFinder extends SFinder
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
             if (Option::isTrue('new') ||
-            Mediatag::$input->getArguments()['command'] == 'new ') {
+            Mediatag::$input->getArguments()['command'] == 'new') {
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
             }
@@ -433,7 +433,6 @@ class MediaFinder extends SFinder
         }
 
         $db_array = Mediatag::$dbconn->getDbFileList();
-        // utmdd($db_array);
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
