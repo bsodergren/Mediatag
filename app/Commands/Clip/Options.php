@@ -30,6 +30,7 @@ class Options extends MediaOptions
             ['dur', 'D', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             ['playlistid', 'P', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
             ['output', 'o', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_SCRIPT_OUTPUT')],
+            ['dim', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_DIMENSION')],
         ];
     }
 

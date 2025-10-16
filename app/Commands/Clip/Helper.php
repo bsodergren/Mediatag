@@ -122,4 +122,19 @@ trait Helper
 
         return $this->markerArray;
     }
+
+    private function backupOrigFile($OriginalName, $NewName, $directory)
+    {
+        $file_path       = dirname($OriginalName);
+        $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
+
+        if (! Mediatag::$filesystem->exists($backup_filepath)) {
+            Mediatag::$filesystem->mkdir($backup_filepath);
+        }
+        $backup_filename = $backup_filepath . '/' . basename($OriginalName);
+        //$outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
+
+        Filesystem::renameFile($OriginalName, $backup_filename);
+        Filesystem::renameFile($NewName, $OriginalName);
+    }
 }

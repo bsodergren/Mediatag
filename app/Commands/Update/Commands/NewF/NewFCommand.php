@@ -1,18 +1,18 @@
 <?php
+
 namespace Mediatag\Commands\Update\Commands\NewF;
 
 /**
  * Command like Metatag writer for video files.
  */
 
-
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-define('new',true);
+//
 
 #[AsCommand(name: 'new', description: 'Add files to Database')]
-final class NewFCommand   extends MediaCommand
+final class NewFCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
@@ -21,10 +21,10 @@ final class NewFCommand   extends MediaCommand
 
     public $command = [
         'new' => [
-           'exec'         => null,
+            'exec'         => null,
             'getChanges'   => null,
             'writeChanges' => null,
-            'dbUpdate' => null
-        ]
+            'dbUpdate'     => null,
+        ],
     ];
 }

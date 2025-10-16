@@ -281,19 +281,20 @@ trait MediaFFmpeg
         // $advancedMedia
         //     ->map([], $format, $ClipName)
         //     ->save();
+        Mediatag::$Display->BarSection1->writeln('<file>Merging files</>');
 
         $video  = $ffmpeg->open($files[0]);
         $format = new X264;
         // $format->setAudioCodec("libmp3lame");
 
         $format->on('progress', function ($video, $format, $percentage) {
-            Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
-            utmdump("$percentage % transcoded");
+            // Mediatag::$Display->BarSection2->overwrite('<info> ' . $percentage . ' </info>');
+            Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
         });
 
-        $video
-            ->concat($files)
-            ->saveFromDifferentCodecs($format, $ClipName);
+        // utmdd($files);
+        $video->concat($files)->saveFromDifferentCodecs($format, $ClipName);
+        Mediatag::$Display->BarSection2->writeln('<comment>Finished</>');
 
         // $cmd = $this->generateFfmpegCommand($files, $type, $duration);
 

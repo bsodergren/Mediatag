@@ -6,11 +6,13 @@
 
 namespace Mediatag\Modules\Filesystem;
 
+use Mediatag\Core\MediaCommand;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
+use ParentClass;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use Symfony\Component\Finder\Finder as SFinder;
 use UTM\Bundle\Monolog\UTMLog;
@@ -328,7 +330,7 @@ class MediaFinder extends SFinder
         if ($path === null) {
             $path = getcwd();
         }
-        if (Option::isTrue('new')) {
+        if (Option::isTrue('new') || Mediatag::$input->getArguments()['command'] == 'new ') {
             // $this->db_array             = Mediatag::$dbconn->getDbFileList();
         }
 
@@ -360,6 +362,7 @@ class MediaFinder extends SFinder
 
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
+
                 if (str_contains($video_file, '-temp-')) {
                     $filesystem->remove($video_file);
 
@@ -369,7 +372,8 @@ class MediaFinder extends SFinder
             }
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
-            if (Option::isTrue('new')) {
+            if (Option::isTrue('new') ||
+            Mediatag::$input->getArguments()['command'] == 'new ') {
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
             }
@@ -429,7 +433,7 @@ class MediaFinder extends SFinder
         }
 
         $db_array = Mediatag::$dbconn->getDbFileList();
-// utmdd($db_array);
+        // utmdd($db_array);
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
