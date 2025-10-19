@@ -72,4 +72,14 @@ if ($default === true) {
     $application->setDefaultCommand($cmdName, $SingleCommand);
 }
 
+
 $application->run();
+$loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__ );
+$class = $loader->load(function ($compiler) {
+	$compiler->loadConfig(__CONFIG_LIB__ . '/config.neon');
+});
+
+
+$container = new $class;
+
+utmdump($container);

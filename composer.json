@@ -33,7 +33,7 @@
     },
     "require": 
     {
-        "symfony/console": "7.2.*",
+        "symfony/console": "^7.3",
         "bhittani/download": "^0.3.0",
         "doctrine/doctrine-bundle": "^2.10",
         "symfony/monolog-bundle": "^3.8",
@@ -58,6 +58,7 @@
         "evenement/evenement": "^3.0",
         "react/event-loop": "^1.5",
         "paramako/pornhub-api-client": "^1.0",
-        "tracy/tracy": "^2.10"
+        "tracy/tracy": "^2.10",
+        "carbon-cli/carbon-cli": "^1.3"
     }
 }
