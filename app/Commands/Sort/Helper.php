@@ -50,6 +50,7 @@ trait Helper
             $idx--;
             $newGenre = Chooser::AskQuestion($qText, $this->genreDirs, 'Exit');
 
+            // utmdd($newGenre);
             if ($newGenre === false) {
                 Mediatag::$output->writeln('Exiting');
 

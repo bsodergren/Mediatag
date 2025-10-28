@@ -50,7 +50,6 @@ trait MediaLibrary
         } else {
             if (! Arrays::contains(__LIBRARIES__, $match[1])) {
                 // UTMlog::logger('Not in a Library directory?', $curent_dir);
-utmdump(get_class_methods('Mediatag'));
                 Mediatag::$output->writeLn('your in a wrong spot ' . $curent_dir, 'error');
                 if ($exit === true) {
                     exit;
