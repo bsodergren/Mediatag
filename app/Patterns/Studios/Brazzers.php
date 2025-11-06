@@ -23,6 +23,11 @@ class Brazzers extends Patterns
             'studio' => [
                 'pattern' => '/^([a-zA-Z]{1,5})_.*/i',
             ],
+            'title'  => [
+                'pattern' => '/(([a-zA-Z0-9\-]+))\_[0-9pk]{1,6}/i',
+                'match'   => 2,
+                'delim'   => '-',
+            ],
         ],
     ];
 
