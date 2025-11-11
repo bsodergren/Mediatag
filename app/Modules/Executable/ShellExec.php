@@ -23,14 +23,23 @@ class ShellExec extends MediatagExec
         parent::__construct();
     }
 
-    public function mediaDb($test=false)
+    public function mediaDb($test = false)
     {
-        $callback = Callback::check([$this, 'Output']);
-$exec = "exec";
-        if($test === true){
-            $exec = "testexec";
+        $callback = Callback::check([$this, 'mediaDbCallback']);
+        $exec     = 'exec';
+        if ($test === true) {
+            $exec = 'testexec';
         }
         $this->$exec(['mediadb', '--path', getcwd()], $callback);
         $this->$exec(['mediadb', '--path', getcwd(), 'all'], $callback);
+    }
+
+    public function mediaDbCallback($type, $buffer)
+    {
+        $buffer = $this->cleanBuffer($buffer);
+
+        Mediatag::$output->writeln($buffer);
+
+        // echo $buffer;
     }
 }
