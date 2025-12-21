@@ -24,8 +24,8 @@ class Brazzers extends Patterns
                 'pattern' => '/^([a-zA-Z]{1,5})_.*/i',
             ],
             'title'  => [
-                'pattern' => '/(([a-zA-Z0-9\-]+))\_[0-9pk]{1,6}/i',
-                'match'   => 2,
+                'pattern' => '/([a-zA-Z0-9\-]+)\_[0-9pk]{1,6}/i',
+                'match'   => 1,
                 'delim'   => '-',
             ],
         ],
@@ -89,4 +89,62 @@ class Brazzers extends Patterns
     //     parent::__construct($object);
     //     parent::$StudioKey = $this->studio;
     // }
+
+       public function getTitle()
+    {
+        // utminfo(func_get_args());
+
+        $regex = $this->getTitleRegex();
+        if ($regex) {
+            $success = preg_match($regex, $this->video_name, $output_array);
+                            utmdump(['regex' => $regex, 'video_name' => $this->video_name, 'output_array' => $output_array]);
+
+            if ($success != 0) {
+                if (! array_key_exists($this->gettitleMatch(), $output_array)) {
+                    return null;
+                }
+
+                $title      = str_replace($this->getTitleDelim(), ' ', $output_array[$this->gettitleMatch()]);
+                $titleArray = explode(' ', $title);
+
+                utmdump($titleArray);
+
+                foreach ($titleArray as $key => $word) {
+
+                     if (strtolower($word) === 't') {
+                        $titleArray[$key - 1] .= strtolower($word);
+                        unset($titleArray[$key]);
+                    }
+                    if (strtolower($word) === 's') {
+                        $titleArray[$key - 1] .= strtolower($word);
+                        unset($titleArray[$key]);
+                    }
+                    if (strtolower($word) === 'x') {
+                        $titleArray[$key] = strtoupper($word . '-') . $titleArray[$key + 1];
+                        unset($titleArray[$key + 1]);
+                    }
+                    if (strtolower($word) === 'episode' || strtolower($word) === 'scene') {
+                        //                        $titleArray[$key] = strtoupper($word.'-') . $titleArray[$key+1];
+
+                        if (array_key_exists('2', $output_array)) {
+                            $output_array[2] = $word . $output_array[2];
+                        }
+
+                        unset($titleArray[$key]);
+                    }
+                }
+
+                if (array_key_exists('2', $output_array)) {
+                    $titleArray[] = trim($output_array[2], '-');
+                }
+
+                $title = implode(' ', $titleArray);
+                $title = trim($title);
+
+                return ucwords($title);
+            }
+        }
+
+        return false;
+    }
 }

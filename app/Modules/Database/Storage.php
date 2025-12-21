@@ -396,13 +396,18 @@ class Storage
                 break;
 
             case 'cleandb':
-                $cleanQuery = 'DELETE f FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
-                // $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
-                // $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
+
+
+
+
+                $cleanQuery = 'DELETE f,m,i FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
+                $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
+                $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
                 $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
                 $cleanQuery .= " f.fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
-                // $cleanQuery .= " and m.video_key = f.video_key ";
-
+                $cleanQuery .= " and ( m.video_key = f.video_key ";
+                $cleanQuery .= " and i.video_key = f.video_key) ";
+                // utmdd($cleanQuery);
                 return $cleanQuery;
 
             default:

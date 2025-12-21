@@ -107,6 +107,8 @@ class Process extends Mediatag
         }
         // $this->DbMap = new DbMap();
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
+        // utmdd($this->allDbFiles,$this->Search_Array);
+
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
@@ -114,17 +116,17 @@ class Process extends Mediatag
                 if (array_key_exists($key, $this->allDbFiles)) {
                     $existing_file = $this->allDbFiles[$key];
 
-                    //    utmdd([$file,$key,$this->allDbFiles[$key]]);
+                       utmdump([$file,$key,$this->allDbFiles[$key]]);
                     if ($existing_file != $file) {
-                        // utmdump([$existing_file, $file]);
+                        utmdump([$existing_file, $file]);
 
                         [$keep,$move] = VideoFileInfo::compareDupes($existing_file, $file);
 
-                        // utmdd(['move'=>$move, $file, $this->file_array[$key]]);
-                        Mediatag::$Console->writeln('existi file ' . $existing_file . '');
-                        Mediatag::$Console->writeln('Keepin file ' . $keep . '');
+                        utmdump(['move'=>$move,'keep'=>$keep]);
+                        // Mediatag::$Console->writeln('existi file ' . $existing_file . '');
+                        // Mediatag::$Console->writeln('Keepin file ' . $keep . '');
                         if (file_exists($move)) {
-                            Mediatag::$Console->writeln('Moving file ' . $move . '');
+                            Mediatag::$Console->write('Moving file ' . $move . ' ' );
                             $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $move);
                             $dupePath  = dirname($movedFile);
                             $filename  = basename($file);
@@ -135,9 +137,10 @@ class Process extends Mediatag
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
                             }
-                            Mediatag::$Console->writeln('to ' . $dupePath . DIRECTORY_SEPARATOR . $filename . '');
-                            (new SfSystem)->rename($move, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
+                            Mediatag::$Console->writeln('to dupe folder');
+                             (new SfSystem)->rename($move, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
                         }
+
                         unset($this->file_array[$key]);
                         $this->file_array[$key] = $keep;
 
@@ -150,7 +153,7 @@ class Process extends Mediatag
         parent::$dbconn->file_array = $this->file_array;
 
         $this->db_array = parent::$dbconn->getDbFileList();
-
+// utmdd($this->db_array,$this->file_array);
         return $this;
     }
 
