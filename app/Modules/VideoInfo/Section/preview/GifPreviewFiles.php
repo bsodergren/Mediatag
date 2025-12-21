@@ -35,8 +35,8 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
-            'ffmpeg.binaries'     => '/home/bjorn/bin/ffmpeg',
-            'ffprobe.binaries'    => '/home/bjorn/bin/ffprobe',
+            'ffmpeg.binaries'     => CONFIG['FFMPEG_CMD'],
+            'ffprobe.binaries'    => CONFIG['FFPROBE_CMD'],
         ];
         (new Filesystem)->mkdir($temp);
 
