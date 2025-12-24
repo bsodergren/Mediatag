@@ -42,6 +42,7 @@ require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 
 MediaLogger::$USE_DEBUG = false;
 MediaLogger::$pruneLogs = false;
+// Tracy\Debugger::enable(Tracy\Debugger::DEVELOPMENT, __LOGFILE_DIR__);
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;

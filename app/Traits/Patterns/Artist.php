@@ -67,7 +67,6 @@ trait Artist
         $name_key = str_replace(' ', '_', $name_key);
         $name_key = str_replace('.', '', $name_key);
         if (MediaArray::search(IGNORE_NAME_MAP, $name_key, true, true)) {
-             utmdd($name_key);
             return true;
         }
 

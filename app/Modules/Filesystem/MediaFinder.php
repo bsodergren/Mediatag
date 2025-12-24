@@ -359,7 +359,6 @@ class MediaFinder extends SFinder
         UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         if ($finder->hasResults()) {
             UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
-
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
 
