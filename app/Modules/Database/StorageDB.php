@@ -88,9 +88,9 @@ class StorageDB extends Storage
 
     public function getAllDbFiles()
     {
-        $query         = $this->queryBuilder('select', 
-        "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key",
-         false, true);
+        $query = $this->queryBuilder('select',
+            "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key",
+            false, true);
         $results       = $this->query($query);
         $fileListArray = [];
 
@@ -230,10 +230,11 @@ class StorageDB extends Storage
         // utminfo(func_get_args());
 
         $this->init($video_file);
-
-        $data = [
+        $filesystem = new SFilesystem;
+        $data       = [
             'video_key'  => $video_key,
             'filename'   => $this->video_name,
+            // 'fullpath'   => $filesystem->makePathRelative($this->video_path, __PLEX_HOME__),
             'fullpath'   => $this->video_path,
             'Library'    => __LIBRARY__,
             'subLibrary' => self::getSubLibrary($this->video_path),
@@ -242,7 +243,6 @@ class StorageDB extends Storage
 
         $data['added'] = $this->dbConn->now();
 
-        // // utmdump($data);
         return $data;
     }
 
@@ -285,29 +285,19 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo = ['No' => '<info>' . $this->MultiIDX . '</info>'];
         $videoBlockInfo               = null;
         $action                       = '<comment>Updated</comment> ';
-        
 
-        $ret = $this->queryOne('select name from sequence where name = "'.__LIBRARY__.'" limit 1');
+        $ret = $this->queryOne('select name from sequence where name = "' . __LIBRARY__ . '" limit 1');
 
         if ($exists === null) {
+            // utminfo(func_get_args());
 
-    
-        // utminfo(func_get_args());
-        
-        if ($ret === null) {
+            if ($ret === null) {
+                $query = 'INSERT INTO `sequence` (`name`, `increment`, `min_value`, `max_value`, `cur_value`, `cycle`)';
+                $query .= " VALUES ('" . __LIBRARY__ . "', '1', '1', '9223372036854775807', '1', '0')";
 
-            $query = "INSERT INTO `sequence` (`name`, `increment`, `min_value`, `max_value`, `cur_value`, `cycle`)";
-             $query .=  " VALUES ('".__LIBRARY__."', '1', '1', '9223372036854775807', '1', '0')";
-        
                 $this->query($query);
                 unset($query);
-       
-        }
-
-
-
-
-
+            }
 
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);
