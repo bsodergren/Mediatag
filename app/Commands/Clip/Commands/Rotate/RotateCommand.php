@@ -27,9 +27,9 @@ class RotateCommand extends MediaCommand
 
     public $command = [
         'rotate' => [
-              'exec'              => null,
-              'init' => null,
-              'rotateFile' => null],
+            'exec'       => null,
+            'init'       => null,
+            'rotateFile' => null],
     ];
     // public $command = [
     //     'merge'           => [

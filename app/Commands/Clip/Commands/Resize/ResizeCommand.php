@@ -27,9 +27,9 @@ class ResizeCommand extends MediaCommand
 
     public $command = [
         'resize' => [
-              'exec'              => null,
-              'init' => null,
-              'resizeFile' => null],
+            'exec'       => null,
+            'init'       => null,
+            'resizeFile' => null],
     ];
     // public $command = [
     //     'merge'           => [

@@ -6,12 +6,12 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Commands\Update\Commands\NewF\Helper as NewHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Mediatag\Commands\Update\Commands\NewF\Helper as NewHelper;
 
 class Process extends Mediatag
 {

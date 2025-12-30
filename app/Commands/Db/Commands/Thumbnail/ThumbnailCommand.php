@@ -19,8 +19,8 @@ final class ThumbnailCommand extends MediaCommand
     public $command = [
 
         'thumbnail' => [
-            'init' => null,
-            'exec' => null,
+            'init'      => null,
+            'exec'      => null,
             'execThumb' => null],
     ];
 }

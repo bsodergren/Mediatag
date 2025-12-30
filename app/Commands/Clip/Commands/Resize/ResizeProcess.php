@@ -46,14 +46,11 @@ class ResizeProcess extends Process
     }
 
     private function fileList()
-    { 
-        
-        utmdd([__METHOD__,$this->VideoList]);
+    {
+        utmdd([__METHOD__, $this->VideoList]);
         foreach ($this->VideoList['file'] as $k => $video) {
             $this->fileArray[] = $video['video_file'];
         }
-               
-
     }
 
     public function resizeFile()
