@@ -44,22 +44,13 @@ trait Helper
         $table->setHeaders(
             [
                 [
-                    new TableCell(
-                        Mediatag::$input->getFirstArgument(),
-                        [
-                            'colspan' => 2,
-                            'style'   => new TableCellStyle(
-                                [
-                                    'align' => 'center',
-                                    'fg'    => 'red',
-                                ],
-                            ),
-                        ],
-                    ),
+                    new TableCell(Mediatag::$input->getFirstArgument(),
+                        ['colspan'  => 2,
+                            'style' => new TableCellStyle(
+                                ['align' => 'center', 'fg' => 'red']),
+                        ]),
                 ],
-                ['name', 'desc'],
-            ],
-        );
+                ['name', 'desc'], ], );
         foreach ($options as $cmd => $info) {
             // $table->setHeaderTitle($cmd);
             $tableRows[] = [$cmd, $info['desc']];
@@ -114,9 +105,9 @@ trait Helper
 
         $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
         Filesystem::createDir(\dirname($filename));
-
+        utmdump($filename);
         if (file_exists($filename)) {
-            if (Chooser::changes(' Overwrite File ', 'overwrite', __LINE__)) {
+            if (Chooser::changes(' Overwrite File ' . __LINE__, 'overwrite', __LINE__)) {
                 unlink($filename);
                 // } else {
                 //     exit;
@@ -159,7 +150,6 @@ trait Helper
             }
         }
         $this->markerArray = $markerArray;
-        utmdump($markerArray);
 
         return $this->markerArray;
     }

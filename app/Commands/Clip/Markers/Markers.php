@@ -108,10 +108,8 @@ trait Markers
         $videoKey  = 0;
         $markers   = [];
         $markerPos = [];
-
-        $total = count($videoInfo);
+        $total     = count($videoInfo);
         foreach ($videoInfo as $k => $row) {
-            utmdump($row, $total, $k + 1);
             if (! array_key_exists('timeCode', $row)) {
                 return null;
             }

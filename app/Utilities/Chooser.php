@@ -57,7 +57,7 @@ class Chooser
         $bypass_id = $optionName . '_' . $bypass_id;
 
         if ($optionName != 'yes') {
-            if (Option::isFalse('overwrite')) {
+            if (Option::isTrue('overwrite')) {
                 if (Option::isFalse('ask')) {
                     return true;
                 }

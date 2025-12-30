@@ -136,6 +136,7 @@ define(
 define(
     '__LIBRARIES__',
     [
+        'Clips',
         'Videos',
         'BiSexual',
         'Pornhub',

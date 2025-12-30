@@ -28,7 +28,7 @@ trait Helper
         //     $this->exec();
         // }
         $videoFile = $this->videoFile[0];
-        $ffmpeg    = FFMpeg::create([], Mediatag::$log);
+        $ffmpeg    = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
         $video     = $ffmpeg->open($videoFile);
         $frame     = $video->frame(TimeCode::fromSeconds(42));
         $frame->save('image.jpg');

@@ -40,7 +40,7 @@ class ResizeProcess extends Process
 
     private function init()
     {
-        $this->rffmpeg  = FFMpeg::create();
+        $this->rffmpeg  = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
         $this->rffprobe = FFProbe::create();
         $this->fileList();
     }

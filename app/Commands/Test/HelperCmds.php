@@ -41,7 +41,7 @@ trait HelperCmds
         //         $duration = $ffprobe->format($this->videoFile)->get('duration');
 
         // utmdd($duration);
-        $ffmpeg = FFMpeg::create([], Mediatag::$log);
+        $ffmpeg = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
         $video  = $ffmpeg->open($videoFile);
 
         // // $video = $ffmpeg->open( '/path/to/video' );
@@ -69,7 +69,7 @@ trait HelperCmds
         $new_file = str_replace('.mp4', '_test.mp4', $videoFile);
         // utmdd( [__METHOD__,$this->videoFile, $new_file ]);
 
-        $ffmpeg = FFMpeg::create([], Mediatag::$log);
+        $ffmpeg = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
         $video  = $ffmpeg->open($videoFile);
         $video->filters()->rotate(RotateFilter::ROTATE_270)->synchronize();
 
@@ -92,7 +92,7 @@ trait HelperCmds
         // $new_file = rtrim($new_file,"_0");
         $new_file .= 'merged.mp4';
         // utmdd($new_file);
-        $ffmpeg = FFMpeg::create([], Mediatag::$log);
+        $ffmpeg = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
 
         $video = $ffmpeg->open($videoFile);
         $video
@@ -108,7 +108,7 @@ trait HelperCmds
         $gifPath = str_replace('.mp4', '.gif', $new_file);
 
         // Transform
-        $ffmpeg      = FFMpeg::create();
+        $ffmpeg      = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
         $ffmpegVideo = $ffmpeg->open($new_file);
         $ffmpegVideo->filters()->framerate(new FrameRate(10), 10);
         $ffmpegVideo->gif(TimeCode::fromSeconds(0), $dimensions, $duration)->save($gifPath);

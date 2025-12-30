@@ -97,7 +97,6 @@ class Brazzers extends Patterns
         $regex = $this->getTitleRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
-            utmdump(['regex' => $regex, 'video_name' => $this->video_name, 'output_array' => $output_array]);
 
             if ($success != 0) {
                 if (! array_key_exists($this->gettitleMatch(), $output_array)) {

@@ -80,12 +80,16 @@ class MediaCommand extends DoctrineCommand
         }
 
         $class = self::getProcessClass();
-        Mediatag::$log->info('Command arguments {arguments} for {class}', ['arguments' => $arguments,
-            'class'                                                                    => $class]);
+        Mediatag::$log->info('Command arguments {arguments} for {class}', [
+            'arguments' => $arguments,
+            'class'     => $class,
+        ]);
         $Process = new $class($input, $output, self::$optionArg);
 
-        Mediatag::$log->info('Command arguments {Process} for {command}', ['Process' => $Process->commandList,
-            'command'                                                                => $this->command]);
+        Mediatag::$log->info('Command arguments {Process} for {command}', [
+            'Process' => $Process->commandList,
+            'command' => $this->command,
+        ]);
 
         $Process->commandList = array_merge($Process->commandList, $this->command);
 
@@ -171,8 +175,10 @@ class MediaCommand extends DoctrineCommand
 
         $input->validate();
 
+        $statusCode = false;
+
         if ($this->code) {
-            utmdd($this->code);
+            // utmdd($this->code);
             $statusCode = ($this->code)($input, $output);
         } else {
             $statusCode = $this->execute($input, $output);

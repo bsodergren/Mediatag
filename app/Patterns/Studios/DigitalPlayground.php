@@ -7,8 +7,8 @@
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Utilities\MediaScraper;
 use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Utilities\MediaScraper;
 
 const DIGITALPLAYGROUND_REGEX_COMMON = '//i';
 
@@ -26,7 +26,6 @@ class DigitalPlayground extends Patterns
             ],
         ],
     ];
-
 
     public function getTitle()
     {

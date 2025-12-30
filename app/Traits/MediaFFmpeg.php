@@ -229,7 +229,7 @@ trait MediaFFmpeg
         FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
-            if (! Chooser::changes(' Overwrite File', 'overwrite', __LINE__)) {
+            if (! Chooser::changes(' Overwrite File ' . basename($outputFile), 'overwrite', __LINE__)) {
                 return;
             }
         }
@@ -267,7 +267,7 @@ trait MediaFFmpeg
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
-        $ffmpeg = FFMpeg::create();
+        $ffmpeg = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
 
         // $advancedMedia = $ffmpeg->openAdvanced($files);
 
@@ -321,7 +321,7 @@ trait MediaFFmpeg
         $outputFile = str_replace('.mp4', '_chapters.mp4', $file);
 
         if (file_exists($outputFile)) {
-            if (! Chooser::changes(' Overwrite File', 'overwrite', __LINE__)) {
+            if (! Chooser::changes(' Overwrite File' . __LINE__, 'overwrite', __LINE__)) {
                 return;
             }
         }
