@@ -175,18 +175,21 @@ class MediaCommand extends DoctrineCommand
 
         $input->validate();
 
-        $statusCode = false;
-
+        $statusCode = 0;
         if ($this->code) {
-            // utmdd($this->code);
+            //
             $statusCode = ($this->code)($input, $output);
         } else {
             $statusCode = $this->execute($input, $output);
-
             //  stopwatch();
 
             if (! is_int($statusCode)) {
-                throw new TypeError(sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.', static::class, get_debug_type($statusCode)));
+                throw new TypeError(
+                    sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.',
+                        /**
+                         * unnamed
+                         */
+                        static::class, get_debug_type($statusCode)));
             }
         }
 
