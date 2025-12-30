@@ -108,7 +108,10 @@ trait Markers
         $videoKey  = 0;
         $markers   = [];
         $markerPos = [];
+
+        $total = count($videoInfo);
         foreach ($videoInfo as $k => $row) {
+            utmdump($row, $total, $k + 1);
             if (! array_key_exists('timeCode', $row)) {
                 return null;
             }
@@ -125,19 +128,29 @@ trait Markers
             [$markerText,$markerKey] = explode('_', $row['markerText']);
 
             if (str_contains(strtolower($markerKey), 'start')) {
-                $start = $row['timeCode'];
-                $start = $this->videoDuration($start);
+                $start   = $row['timeCode'];
+                $start   = $this->videoDuration($start);
+                $endMark = true;
             }
 
             if (str_contains(strtolower($markerKey), 'end')) {
-                $end = $row['timeCode'];
-                $end = $this->videoDuration($end);
-
+                $end                   = $row['timeCode'];
+                $end                   = $this->videoDuration($end);
+                $endMark               = false;
                 $markerPos[$markerIdx] = [
                     'text'  => $markerText,
                     'start' => $start,
                     'end'   => $end];
                 $markerIdx++;
+            }
+
+            if ($k + 1 == $total && $endMark === true) {
+                $end                   = $row['timeCode'] + 100;
+                $end                   = $this->videoDuration($end);
+                $markerPos[$markerIdx] = [
+                    'text'  => $markerText,
+                    'start' => $start,
+                    'end'   => $end];
             }
 
             $markers[$row['video_key']]['markers'] = $markerPos;

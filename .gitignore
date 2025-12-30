@@ -31,3 +31,4 @@ vendor
 db/*
 package-lock.json
 mediaphdb_tracefile.txt
+.php-cs-fixer.cache

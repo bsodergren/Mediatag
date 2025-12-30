@@ -92,7 +92,7 @@ trait MediaFFmpeg
         $process->setTimeout(null);
         MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine() . PHP_EOL);
 
-        // // utmdump($process->getCommandLine());
+        // utmdump($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
         //     if (Process::ERR === $type) {
         //         echo $data;
@@ -238,8 +238,10 @@ trait MediaFFmpeg
             '-v', 'debug',
             '-ss', $marker['start'],
             '-to', $marker['end'],
-            '-i', $file, '-codec',
-            'copy',
+            '-i', $file,
+            '-vf', 'scale=1280:720:force_original_aspect_ratio=decrease',
+            '-c:a', 'copy',
+            // '-codec','copy',
             $outputFile,
         ];
         $this->cmdline = $cmdOptions;

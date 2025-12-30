@@ -16,6 +16,9 @@ use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Traits\ffmpegTransition;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableCellStyle;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -32,6 +35,43 @@ trait Helper
 
     public $markerArray;
 
+    public function defaultCmd($options)
+    {
+        $table = new Table(Mediatag::$output);
+
+        utmdump(Mediatag::$input->getFirstArgument());
+
+        $table->setHeaders(
+            [
+                [
+                    new TableCell(
+                        Mediatag::$input->getFirstArgument(),
+                        [
+                            'colspan' => 2,
+                            'style'   => new TableCellStyle(
+                                [
+                                    'align' => 'center',
+                                    'fg'    => 'red',
+                                ],
+                            ),
+                        ],
+                    ),
+                ],
+                ['name', 'desc'],
+            ],
+        );
+        foreach ($options as $cmd => $info) {
+            // $table->setHeaderTitle($cmd);
+            $tableRows[] = [$cmd, $info['desc']];
+        }
+
+        $table->setRows($tableRows);
+        // $table->setStyle($tableStyle);
+        $table->setStyle('box');
+        $table->render();
+        Mediatag::$output->writeLn('<info> No option found </info>');
+    }
+
     public function timeCodetoSec($time, $mod = 0)
     {
         $pcs     = explode(':', $time);
@@ -41,10 +81,10 @@ trait Helper
 
         rsort($pcs);
         $seconds = $pcs[0];
-        if (array_key_exists(1, $pcs)) {
+        if (\array_key_exists(1, $pcs)) {
             $minutes = $pcs[1] * 60;
         }
-        if (array_key_exists(2, $pcs)) {
+        if (\array_key_exists(2, $pcs)) {
             $hours = $pcs[2] * 60 * 60;
         }
 
@@ -60,7 +100,7 @@ trait Helper
             return $outputFile;
         }
 
-        return dirname($outputFile, $level);
+        return \dirname($outputFile, $level);
     }
 
     public function getClipFilename($filename)
@@ -73,7 +113,7 @@ trait Helper
         $name = str_replace(' ', '_', $name);
 
         $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
-        Filesystem::createDir(dirname($filename));
+        Filesystem::createDir(\dirname($filename));
 
         if (file_exists($filename)) {
             if (Chooser::changes(' Overwrite File ', 'overwrite', __LINE__)) {
@@ -106,12 +146,12 @@ trait Helper
             $this->Marker->getvideoId($key);
 
             if ($this->Marker->video_id !== null) {
-                $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
+                $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
+                $result = Mediatag::$dbconn->query($query);
 
-                $result  = Mediatag::$dbconn->query($query);
                 $markers = $this->getVideoMarks($result);
 
-                if (count($markers) > 0) {
+                if (\count($markers) > 0) {
                     $this->FileIdx++;
 
                     $markerArray[] = $markers;
@@ -119,6 +159,7 @@ trait Helper
             }
         }
         $this->markerArray = $markerArray;
+        utmdump($markerArray);
 
         return $this->markerArray;
     }
@@ -126,10 +167,10 @@ trait Helper
     public function backupOrigFile($OriginalName, $NewName, $directory)
     {
         utmdump(__METHOD__);
-        $file_path       = dirname($OriginalName);
+        $file_path       = \dirname($OriginalName);
         $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
 
-  utmdump($backup_filepath);
+        utmdump($backup_filepath);
 
         if (! Mediatag::$filesystem->exists($backup_filepath)) {
             Mediatag::$filesystem->mkdir($backup_filepath);
@@ -139,7 +180,7 @@ trait Helper
         //$outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
 
         Filesystem::renameFile($OriginalName, $backup_filename);
-                utmdump($NewName);
+        utmdump($NewName);
 
         Filesystem::renameFile($NewName, $OriginalName);
     }

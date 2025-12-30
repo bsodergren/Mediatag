@@ -32,7 +32,6 @@ class Process extends Mediatag
     use MediaProcess;
     use MergeHelper;
     use ShowHelper;
-   
 
     public $VideoList = [];
 
