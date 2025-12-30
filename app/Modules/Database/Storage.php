@@ -271,12 +271,13 @@ class Storage
         // $this->dbConn->onDuplicate($data, 'id');
         // $id = $this->dbConn->insert($table, $data);
         $id = $this->dbConn->update($table, $data);
+        // UtmDump($this->dbConn->getLastQuery());
         if (! $id) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
 
             // return $r;
         }
-        $this->RowBlock->overwrite($this->video_string);
+        // $this->RowBlock->writeln($this->video_string);
 
         // return $r;
     }

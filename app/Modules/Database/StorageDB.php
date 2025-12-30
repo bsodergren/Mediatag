@@ -12,11 +12,13 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoInfo\Section\Thumbnail;
+use Mediatag\Modules\VideoInfo\Section\VideoPreview;
 use Mediatag\Modules\VideoInfo\Section\VideoTags;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mhor\MediaInfo\Attribute\Duration;
 use Nette\Utils\Arrays;
-use Symfony\Component\Filesystem\Filesystem as SFilesystem;
+use Nette\Utils\FileSystem as nFilesystem;
+use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -213,7 +215,7 @@ class StorageDB extends Storage
         // utminfo(func_get_args());
 
         $sublibrary   = null;
-        $filesystem   = new SFilesystem;
+        $filesystem   = new Filesystem;
         $in_directory = $filesystem->makePathRelative($video_path, __PLEX_HOME__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
         if (array_key_exists(2, $match)) {
@@ -225,20 +227,37 @@ class StorageDB extends Storage
         return $sublibrary;
     }
 
+    private function getStudioPath($video_path)
+    {
+        if (File::isPornhubfile($this->video_file) == false) {
+            return null;
+        }
+        $filesystem = new Filesystem;
+
+        $in_directory = $filesystem->makePathRelative(
+            $video_path,
+            __PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__,
+        );
+        preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+
+        return $match[2];
+    }
+
     public function createDbEntry($video_file, $video_key)
     {
         // utminfo(func_get_args());
 
         $this->init($video_file);
-        $filesystem = new SFilesystem;
-        $data       = [
-            'video_key'  => $video_key,
-            'filename'   => $this->video_name,
+
+        $data = [
+            'video_key'   => $video_key,
+            'filename'    => $this->video_name,
             // 'fullpath'   => $filesystem->makePathRelative($this->video_path, __PLEX_HOME__),
-            'fullpath'   => $this->video_path,
-            'Library'    => __LIBRARY__,
-            'subLibrary' => self::getSubLibrary($this->video_path),
-            'filesize'   => filesize($video_file),
+            'fullpath'    => $this->video_path,
+            'studio_path' => $this->getStudioPath($this->video_path),
+            'Library'     => __LIBRARY__,
+            'subLibrary'  => self::getSubLibrary($this->video_path),
+            'filesize'    => filesize($video_file),
         ];
 
         $data['added'] = $this->dbConn->now();
@@ -257,22 +276,81 @@ class StorageDB extends Storage
         return $this->getValue($where, 'thumbnail');
     }
 
-    public function UpdateFilePath()
+    public function UpdateFilePath($file)
     {
         // utminfo(func_get_args());
+        Mediatag::$Display->BlockInfo = ['No' => '<info>' . $this->MultiIDX . '</info>'];
+        $action                       = '<comment>No Changes</comment> ';
 
+        $data               = [];
         $this->video_string = [];
-        $this->init($this->video_file);
-        $data = [
-            'fullpath'  => $this->video_path,
-            'filename'  => $this->video_name,
-            'thumbnail' => null,
-        ];
-        $where              = ['video_key' => $this->video_key];
-        $this->video_string = [$this->video_name . ' has been updated '];
-        $this->update($data, $where);
+        $this->init($file);
 
-        $o = (new VideoTags)->getVideoInfo($this->video_key, $this->video_file);
+        $exists = $this->videoExists($this->video_key);
+        if ($exists !== null) {
+            $video_path   = nFileSystem::normalizePath($this->video_path);
+            $current_path = nFileSystem::normalizePath($exists['fullpath']);
+
+            if ($current_path != $video_path) {
+                $action                = '<comment>File was Moved</comment> ';
+                $exists['studio_path'] = null;
+                $data                  = [
+                    'fullpath' => $video_path,
+                    'filename' => $this->video_name,
+                ];
+
+                $data['thumbnail'] = null;
+                $data['preview']   = null;
+
+                if ($exists['thumbnail'] != null) {
+                    $orig_thumb = __WEB_HOME__ . $exists['thumbnail'];
+                    if (file_exists($orig_thumb)) {
+                        $img_name = (new thumbnail)->videoToThumb($this->video_file);
+                        (new Filesystem)->rename($orig_thumb, $img_name, true);
+                        $img_name          = str_replace(__INC_WEB_THUMB_ROOT__, '', $img_name);
+                        $data['thumbnail'] = $img_name;
+                    }
+                }
+
+                if ($exists['preview'] != null) {
+                    $orig_prev = __WEB_HOME__ . '/' . $exists['preview'];
+                    if (file_exists($orig_prev)) {
+                        $img_name = (new VideoPreview)->videoToThumb($this->video_file);
+                        (new Filesystem)->rename($orig_prev, $img_name, true);
+                        $data['preview'] = str_replace(__INC_WEB_THUMB_ROOT__, '', $img_name);
+                    }
+                }
+            }
+
+            if ($exists['studio_path'] == null) {
+                if (count($data) < 1) {
+                    $action = '<comment>Studio Path was Added</comment> ';
+                }
+
+                $data['studio_path'] = $this->getStudioPath($video_path);
+            }
+            if (count($data) > 0) {
+                $where = ['video_key' => $this->video_key];
+                $this->update($data, $where);
+
+                Mediatag::$Display->BlockInfo['Video'] = $action . basename($file) . ' ';
+
+                foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
+                    $value = trim($value);
+
+                    $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=yellow');
+                }
+                if (is_array($videoBlockInfo)) {
+                    $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
+                    Mediatag::$Display->VideoInfoSection->writeln($videoBlockInfo);
+                    Mediatag::$Display->VideoInfoSection->writeln('');
+                }
+            }
+        }
+
+        // Mediatag::$Display->VideoInfoSection->writeln('');
+        // $o = (new VideoTags)->getVideoInfo($this->video_key, $this->video_file);
+        // utmdd($o);
     }
 
     public function updateDBEntry($key, $videoData, $all = true)

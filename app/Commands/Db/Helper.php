@@ -261,8 +261,7 @@ trait Helper
             $video_name = basename($video_file);
             if (! Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db ' . $video_name);
-
-                parent::$dbconn->UpdateFilePath();
+                parent::$dbconn->UpdateFilePath($video_file);
             } else {
                 parent::$dbconn->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
             }
@@ -274,11 +273,11 @@ trait Helper
     public function execUpdate()
     {
         // utminfo(func_get_args());
+
         $date = null;
-        if (! Option::istrue('yes')) {
+        if (! Option::istrue('yes') && ! Option::istrue('paths')) {
             $date = $this->lastUpdated();
         }
-        // utmdump($date);
         $file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i', $date);
         if (! is_array($file_array)) {
             return 0;
@@ -289,7 +288,11 @@ trait Helper
             $storagedb->MultiIDX = count($file_array);
             foreach ($file_array as $k => $file) {
                 $key = File::getVideoKey($file);
-                $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
+                if (Option::istrue('paths')) {
+                    $storagedb->UpdateFilePath($file);
+                } else {
+                    $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
+                }
                 $storagedb->MultiIDX--;
             }
 
@@ -484,7 +487,6 @@ trait Helper
 
         return $db->get($table);
     }
-
 
     // public function execThumb()
     // {

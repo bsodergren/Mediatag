@@ -122,7 +122,7 @@ trait Helper
             if (! Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db ' . $video_name);
 
-                parent::$dbconn->UpdateFilePath();
+                parent::$dbconn->UpdateFilePath($video_file);
             } else {
                 parent::$dbconn->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
             }

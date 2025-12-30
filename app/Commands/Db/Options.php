@@ -26,6 +26,8 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
+            ['paths', 'P', InputOption::VALUE_NONE, Translate::text('L__DB_PATH_UPDATE')],
+
             ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DB_JSON_UPDATE')],
             ['all', 'a', InputOption::VALUE_NONE, Translate::text('L__DB_ADD')],
             ['markers', 'm', InputOption::VALUE_NONE, Translate::text('L__DB_MARKERS_UPDATE')],
