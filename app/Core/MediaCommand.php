@@ -6,30 +6,33 @@
 
 namespace Mediatag\Core;
 
-use const PHP_OS;
-
 use Closure;
-use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
-use Mediatag\Core\Helper\CommandHelper;
-use Mediatag\Locales\Lang;
-use Mediatag\Modules\Display\ConsoleOutput;
-use Mediatag\Traits\MediaLibrary;
-use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Completion\CompletionInput;
-use Symfony\Component\Console\Exception\ExceptionInterface;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use TypeError;
-use UTM\Utilities\Option;
 
-use function array_key_exists;
-use function call_user_func;
+use TypeError;
+use const PHP_OS;
 use function count;
-use function function_exists;
-use function is_array;
 use function is_int;
 use function sprintf;
+use function is_array;
+use Nette\Utils\Callback;
+use UTM\Utilities\Option;
+use Mediatag\Locales\Lang;
+use function call_user_func;
+use function function_exists;
+use function array_key_exists;
+use Mediatag\Traits\Translate;
+use Mediatag\Traits\MediaLibrary;
+
+use Mediatag\Core\Helper\CommandHelper;
+use Mediatag\Modules\Display\ConsoleOutput;
+use Mediatag\Modules\Executable\MediatagExec;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Completion\CompletionInput;
+use Symfony\Component\Console\Exception\ExceptionInterface;
+use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 
 class MediaCommand extends DoctrineCommand
 {
@@ -58,6 +61,7 @@ class MediaCommand extends DoctrineCommand
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        $originalCommand         = null;
         Mediatag::$ProcessHelper = $this->getHelper('process');
 
         if (Option::istrue('trunc')) {
@@ -73,6 +77,13 @@ class MediaCommand extends DoctrineCommand
 
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
+
+            if (!is_null($cmdArgument)) {
+                if ($cmdArgument == $arguments[$arguments['command']]) {
+                    $cmdArgument     = null;
+                    $originalCommand = $this->getName();
+                }
+            }
 
             if ($cmdArgument !== null) {
                 self::$optionArg = array_merge(self::$optionArg, [$cmdArgument]);
@@ -99,6 +110,19 @@ class MediaCommand extends DoctrineCommand
         }
 
         $Process->$method();
+
+
+        if ($originalCommand !== null) {
+            $args = [__SCRIPT_NAME__, $arguments[$arguments['command']]];
+            $exec = new MediatagExec(null, $input, $output);
+            $exec->exec($args, Callback::check([$exec, 'Output']), true);
+        }
+        // if (!is_null($arguments[$arguments['command']])) {
+        //     $class = str_ireplace(ucfirst($arguments['command']), ucfirst($arguments[$arguments['command']]), static::class);
+        //     utmdump($class);
+        //     $Process2 = new $class($input, $output, self::$optionArg);
+        //     utmdump($class, $Process2);
+        // }
 
         return Command::SUCCESS;
     }
@@ -139,7 +163,7 @@ class MediaCommand extends DoctrineCommand
         try {
             $input->bind($this->getDefinition());
         } catch (ExceptionInterface $e) {
-            if (! $this->ignoreValidationErrors) {
+            if (!$this->ignoreValidationErrors) {
                 throw $e;
             }
         }
@@ -147,7 +171,7 @@ class MediaCommand extends DoctrineCommand
 
         if ($this->processTitle !== null) {
             if (function_exists('cli_set_process_title')) {
-                if (! @cli_set_process_title($this->processTitle)) {
+                if (!@cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
@@ -183,13 +207,17 @@ class MediaCommand extends DoctrineCommand
             $statusCode = $this->execute($input, $output);
             //  stopwatch();
 
-            if (! is_int($statusCode)) {
+            if (!is_int($statusCode)) {
                 throw new TypeError(
-                    sprintf('Return value of "%s::execute()" must be of the type int, "%s" returned.',
+                    sprintf(
+                        'Return value of "%s::execute()" must be of the type int, "%s" returned.',
                         /**
                          * unnamed
                          */
-                        static::class, get_debug_type($statusCode)));
+                        static::class,
+                        get_debug_type($statusCode)
+                    )
+                );
             }
         }
 

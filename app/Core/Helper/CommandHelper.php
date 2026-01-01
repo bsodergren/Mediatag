@@ -20,26 +20,29 @@ trait CommandHelper
     {
         $filesystem = new Filesystem;
         foreach (__CREATE_DIRS__ as $dir) {
-            if (! is_dir($dir)) {
+            if (!is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }
         }
     }
 
-    public static function getProcessClass()
+    public static function getProcessClass($className = null)
     {
-        $className = static::class;
-        $className = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
-        // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
-        // utmdump($className,class_exists($className));
-        if (! class_exists($className)) {
-            $pathInfo   = explode('\\', $className);
-            $pathInfo   = array_slice($pathInfo, 0, 3);
-            $pathInfo[] = 'Process';
-            $className  = implode('\\', $pathInfo);
+
+        if (is_null($className)) {
+            $className = static::class;
         }
 
-        return $className;
+        $class = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
+        // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
+        if (!class_exists($class)) {
+            $pathInfo   = explode('\\', $class);
+            $pathInfo   = array_slice($pathInfo, 0, 3);
+            $pathInfo[] = 'Process';
+            $class      = implode('\\', $pathInfo);
+        }
+
+        return $class;
     }
 
     public static function ArgumentClosure($input, $command)

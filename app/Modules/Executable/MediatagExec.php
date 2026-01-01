@@ -93,7 +93,7 @@ class MediatagExec
         if ($output === null) {
             $output = Mediatag::$output;
         }
-        $this->input = $input;
+        $this->input  = $input;
         $this->output = $output;
     }
 
@@ -160,19 +160,20 @@ class MediatagExec
 
         return true;
     }
-    protected function exec($command, $callback = null): mixed
+    public function exec($command, $callback = null, $tty = false): mixed
     {
         // utminfo(func_get_args());
 
         $process = new Process($command);
         $process->setTimeout(60000);
-
+        $process->setTty($tty);
         $this->runCommand = $process->getCommandLine();
         Mediatag::$log->notice('Command to Run {0}', [$this->runCommand]);
 
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
+
         $process->start();
         try {
             // $process->mustRun($callback);
