@@ -59,6 +59,7 @@
         "react/event-loop": "^1.5",
         "paramako/pornhub-api-client": "^1.0",
         "tracy/tracy": "^2.10",
-        "carbon-cli/carbon-cli": "^1.3"
+        "carbon-cli/carbon-cli": "^1.3",
+        "nette/di": "^3.2"
     }
 }
