@@ -46,7 +46,7 @@ class TagBuilder
         if (! defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
-            Mediatag::$log->notice('updates {updates} ', ['updates' => $updates]);
+            Mediatag::notice('updates {updates} ', ['updates' => $updates]);
 
             // }
 
@@ -60,7 +60,7 @@ class TagBuilder
                     $updates = $jsonupdates;
                 }
 
-                Mediatag::$log->notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
+                Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
@@ -230,7 +230,7 @@ class TagBuilder
     private function compareTags(array $Current, array $New)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->notice("compareTags {Current} => '{new_tag}'", ['Current' => $Current, 'new_tag' => $New]);
+        Mediatag::notice("compareTags {Current} => '{new_tag}'", ['Current' => $Current, 'new_tag' => $New]);
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
             $current_tag    = $tag . '_current';
@@ -246,7 +246,7 @@ class TagBuilder
                 ${$new_tag} = $New[$tag];
             }
 
-            Mediatag::$log->notice("Metatags {tag} {current_tag} => '{new_tag}'", ['tag' => $tag, 'current_tag' => ${$current_tag}, 'new_tag' => ${$new_tag}]);
+            Mediatag::notice("Metatags {tag} {current_tag} => '{new_tag}'", ['tag' => $tag, 'current_tag' => ${$current_tag}, 'new_tag' => ${$new_tag}]);
 
             if (${$current_tag} === null) {
                 if (${$new_tag} === null) {

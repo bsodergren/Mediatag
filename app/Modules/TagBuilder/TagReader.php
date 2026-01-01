@@ -180,7 +180,7 @@ class TagReader
             $this->{$tag}();
 
             if (array_key_exists($tag, $this->tag_array)) {
-                Mediatag::$log->notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);
+                Mediatag::notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);
 
                 if ($this->tag_array[$tag] !== null) {
                     if ($clean === true) {
@@ -190,7 +190,7 @@ class TagReader
             }
         }
 
-        Mediatag::$log->notice("Metatag '{value}'", ['value' => $this->tag_array]);
+        Mediatag::notice("Metatag '{value}'", ['value' => $this->tag_array]);
 
         return $this->tag_array;
     }

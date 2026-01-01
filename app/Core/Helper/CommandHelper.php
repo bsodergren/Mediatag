@@ -6,15 +6,58 @@
 
 namespace Mediatag\Core\Helper;
 
-use Symfony\Component\Filesystem\Filesystem;
-
 use function array_slice;
+
+use Mediatag\Core\Mediatag;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 
 trait CommandHelper
 {
     private $defaultValues = [];
 
     private $completionCmd = [];
+
+
+
+
+    // protected function loadStyles($input, $output)
+    // {
+
+    //     // $output    = $output;
+    //     $this->io        = new SymfonyStyle($input, $output);
+    //     $this->formatter = new FormatterHelper;
+
+    //     Mediatag::$output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
+    //     Mediatag::$output->getFormatter()->setStyle('current', new OutputFormatterStyle('magenta'));
+    //     Mediatag::$output->getFormatter()->setStyle('update', new OutputFormatterStyle('bright-green'));
+
+    //     Mediatag::$output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
+    //     Mediatag::$output->getFormatter()->setStyle('text', new OutputFormatterStyle('green'));
+    //     Mediatag::$output->getFormatter()->setStyle('error', new OutputFormatterStyle('red'));
+    //     Mediatag::$output->getFormatter()->setStyle('playlist', new OutputFormatterStyle('bright-magenta'));
+    //     Mediatag::$output->getFormatter()->setStyle('download', new OutputFormatterStyle('blue'));
+    //     Mediatag::$output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
+    //     // Mediatag::$output = $output;
+
+    //     $styleArray = Mediatag::$output->getFormatter()->getStyles();
+
+    //     utmdump(Mediatag::$output instanceof ConsoleOutputInterface);
+    //     if (Mediatag::$output instanceof ConsoleOutputInterface) {
+    //         Mediatag::$output = $output->getErrorOutput();
+    //         foreach ($styleArray as $name => $obj) {
+    //             Mediatag::$output->getFormatter()->setStyle($name, $obj);
+    //         }
+    //     }
+
+    //     Mediatag::$input = $input;
+    //     //Mediatag::$output = $noutput;
+    //     Mediatag::$Io = $this->io;
+
+    // }
 
     protected function loadDirs()
     {

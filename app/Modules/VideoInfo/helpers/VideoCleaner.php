@@ -19,7 +19,7 @@ trait VideoCleaner
 {
     private function cleanMissing($fileSearch, $dbList)
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
 
         $missing = array_diff($fileSearch, $dbList);
 
@@ -44,7 +44,7 @@ trait VideoCleaner
 
     private function cleanMissingFile($missing_file)
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
 
         if (count($missing_file) > 0) {
             $this->getMessageLen($missing_file);
@@ -64,7 +64,7 @@ trait VideoCleaner
 
     private function cleanMissingThumb($missing)
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
 
         if (count($missing) > 0) {
             $this->getMessageLen($missing);
@@ -94,7 +94,7 @@ trait VideoCleaner
 
     private function doClean($delete = false)
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
         //   $this->doClean('thumbnail',$this->getExistingList(),$res);
 
         $fileSearch = $this->getPreviewFiles();
@@ -125,7 +125,7 @@ trait VideoCleaner
 
     private function getPreviewFiles()
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
         $curDir     = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__, '', __CURRENT_DIRECTORY__);
         $previewDir = $this->thumbDir . '/' . __LIBRARY__ . $curDir;
 
@@ -142,7 +142,7 @@ trait VideoCleaner
 
     private function getExistingList()
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
 
         $missing_thumb = [];
         $missing_mp4   = [];
@@ -183,7 +183,7 @@ trait VideoCleaner
     public function thumbToVideo($file)
     {
         $newFile = str_replace($this->thumbExt, '.mp4', __PLEX_HOME__ . str_replace($this->thumbDir, '', $file));
-        Mediatag::$log->notice("thumbToVideo \n{0}\n{1}", [basename($file), basename($newFile)]);
+        Mediatag::notice("thumbToVideo \n{0}\n{1}", [basename($file), basename($newFile)]);
 
         return $newFile;
     }
@@ -191,14 +191,14 @@ trait VideoCleaner
     public function videoToThumb($file)
     {
         $newFile = str_replace('.mp4', $this->thumbExt, $this->thumbDir . str_replace(__PLEX_HOME__, '', $file));
-        Mediatag::$log->notice("videoToThumb \n{0}\n{1}", [basename($file), basename($newFile)]);
+        Mediatag::notice("videoToThumb \n{0}\n{1}", [basename($file), basename($newFile)]);
 
         return $newFile;
     }
 
     public function renameThumb($file, $delete = false)
     {
-        Mediatag::$log->notice('Method {0}', [__METHOD__]);
+        Mediatag::notice('Method {0}', [__METHOD__]);
 
         if ($delete === true) {
             unlink($file);

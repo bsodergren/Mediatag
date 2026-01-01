@@ -33,17 +33,17 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     use LogFormat;
 
     public const INFO = 'info';
-
     public const ERROR = 'error';
-
+    public const DEBUG = 'debug';
     public const NOTICE = 'playlist';
+    public const WARNING = 'playlist';
 
     private $backtrace = '';
 
     // private $log;
     public static $logger;
 
-    public static $USE_DEBUG = false;
+    public static $USE_DEBUG = true;
 
     public static $pruneLogs = false;
 
@@ -74,20 +74,20 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     ];
 
     private array $logVerbosityLevelMap = [
-        // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-        // LogLevel::INFO   => OutputInterface::VERBOSITY_VERY_VERBOSE,
-        // LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
-        // LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
+            // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+            // LogLevel::INFO   => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            // LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
+            // LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::ERROR    => OutputInterface::VERBOSITY_NORMAL,
-        // LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
+            // LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::NOTICE   => OutputInterface::VERBOSITY_VERBOSE,
         LogLevel::INFO     => OutputInterface::VERBOSITY_QUIET,
-        // LogLevel::DEBUG     => OutputInterface::VERBOSITY_DEBUG,
+        LogLevel::DEBUG    => OutputInterface::VERBOSITY_VERY_VERBOSE,
     ];
 
     private array $ColorLevelMap = [
-        LogLevel::DEBUG    => 'cyan',
+        LogLevel::DEBUG    => 'yellow',
         LogLevel::INFO     => 'green',
         LogLevel::NOTICE   => 'blue',
         LogLevel::ERROR    => 'red',
@@ -99,10 +99,10 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         LogLevel::ALERT     => self::ERROR,
         LogLevel::CRITICAL  => self::ERROR,
         LogLevel::ERROR     => self::ERROR,
-        LogLevel::WARNING   => self::INFO,
+        LogLevel::WARNING   => self::WARNING,
         LogLevel::NOTICE    => self::NOTICE,
         LogLevel::INFO      => self::INFO,
-        LogLevel::DEBUG     => self::INFO,
+        LogLevel::DEBUG     => self::DEBUG,
     ];
 
     public function __construct($output, $channel = 'default')
@@ -117,7 +117,9 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         parent::__construct($output, $this->verbosityLevelMap, $this->formatLevelMap);
         //        $log = new ConsoleLogger($output);//, $this->verbosityLevelMap, $this->formatLevelMap);
 
-        // utmdd($this->verbosityLevelMap);
+        // utmdd($output->getVerbosity(), $this->verbosityLevelMap);
+
+        // utmdd($output->getVerbosity(),$verbosityLevelMap);
         $this->dumper = new CliDumper;
         $this->cloner = new VarCloner;
         $this->output = $output;
@@ -158,59 +160,36 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         $msg = $this->interpolate(PHP_EOL . '===================================' . PHP_EOL . ' Running application {0}', [__SCRIPT_NAME__]);
         $this->file(
             $level,
-            $msg);
+            $msg
+        );
     }
 
     private function debugLogFile()
     {
         return str_replace('.log', '_debug.log', $this->logfile);
     }
-    // public function alert(string|\Stringable $message, array $context = []): void
-    // {
-    // }
-
-    // public function critical(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("error",$message,$context);
-    // }
 
     public function debug(string|Stringable $message, array $context = []): void
     {
         if (self::$USE_DEBUG == true) {
             $this->debugLog($message, $context);
         }
+
+        $level  = LogLevel::DEBUG;
+        $output = $this->output;
+        if ($output->getVerbosity() >= $this->verbosityLevelMap[$level]) {
+            $output->writeln($this->ConsoleFormat($level, $message, $context));
+        }
+
+        if ($output->getVerbosity() >= $this->logVerbosityLevelMap[$level]) {
+            $this->file($level, $this->LogFormat($level, $message, $context));
+        }
     }
 
-    // public function emergency(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("error",$message,$context);
-    // }
-
-    // public function error(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("error",$message,$context);
-    // }
-
-    // public function info(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("info",$message,$context);
-    // }
-
-    // public function notice(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("notice",$message,$context);
-    // }
-
-    // public function warning(string|\Stringable $message, array $context = []): void
-    // {
-    // 	$this->log("warning",$message,$context);
-    // }
     public function debugLog($message, array $context = []): void
     {
         $level = 'debug';
-
         $this->logFormat($level, $message, $context);
-
         $this->file($level, $message);
     }
 
@@ -225,16 +204,23 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     {
         $command = self::tracePath(true);
 
-        return sprintf('[%1$s]:[<file>%2$s</file>]<%3$s> %4$s</%3$s>',
-            $level,
+        return sprintf(
+            '[%1$s]:[<file>%2$s</file>]<%3$s> %4$s</%3$s>',
+            Colors::colorstring($level, $this->ColorLevelMap[$level]),
             $command,
             $this->formatLevelMap[$level],
-            $this->interpolate($message, $context));
+            $this->interpolate($message, $context)
+        );
     }
 
+    public function error(Stringable|string $message, array $context = []): void
+    {
+        $this->log(LogLevel::ERROR, $message, $context);
+        exit(1);
+    }
     public function log($level, $message, array $context = []): void
     {
-        if (! isset($this->verbosityLevelMap[$level])) {
+        if (!isset($this->verbosityLevelMap[$level])) {
             throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
         }
 
@@ -263,13 +249,16 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     private function interpolate(string $message, array $context): string
     {
-        if (! str_contains($message, '{')) {
+
+        if (!str_contains($message, '{')) {
             $class   = new PrettyArray;
             $context = $class->print($context);
 
             return $message . $context;
         }
         $replacements = [];
+
+
         foreach ($context as $key => $val) {
             if ($val === null || is_scalar($val) || $val instanceof Stringable) {
                 $value = $val;
@@ -281,13 +270,15 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             } else {
                 $value = ' ' . trim($this->dumper->dump($this->cloner->cloneVar($val), true));
             }
-            $replacements["{{$key}}"] = $value;
+            $replacements["{{$key}}"] = Colors::colorstring($value, 'red');
         }
 
         return strtr($message, $replacements);
     }
 
-    private function writeFile($level, $string) {}
+    private function writeFile($level, $string)
+    {
+    }
 
     private function file($level, $message)
     {
@@ -309,58 +300,4 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
         file_put_contents($logfile, $text . PHP_EOL, FILE_APPEND);
     }
-
-    // public function __call($method, $args)
-    // {
-    //     return Mediatag::$log->$method(...$args);
-    // }
-
-    // public function emergency(string|Stringable $message, array $context = [])
-    // {
-    //     return $this->alert($message, $context);
-    // }
-
-    // public function alert($message, array $context = [])
-    // {
-    //     return $this->critical($message, $context);
-    // }
-
-    // public function critical($message, array $context = [])
-    // {
-    //     return $this->error($message, $context);
-    // }
-
-    // public function error($message, array $context = [])
-    // {
-    //     $this->file($message);
-
-    //     return $this->warning($message, $context);
-    // }
-
-    // public function warning($message, array $context = [])
-    // {
-    //     return $this->notice($message, $context);
-    // }
-
-    // public function notice($message, array $context = [])
-    // {
-    //     return $this->info($message, $context);
-    // }
-
-    // public function info($message, array $context = [])
-    // {
-    //     return $this->debug($message, $context);
-    // }
-
-    // public function debug($message, array $context = [])
-    // {
-    //     $this->log->info($message);
-
-    //     // return $this->log($message, $context);
-    // }
-
-    // public function log($level, $message, array $context = [])
-    // {
-    //     return true;
-    // }
 }

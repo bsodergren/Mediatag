@@ -40,8 +40,8 @@ ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
 require_once __CONFIG_LIB__ . '/variables.php';
 require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 
-MediaLogger::$USE_DEBUG = false;
-MediaLogger::$pruneLogs = false;
+// MediaLogger::$USE_DEBUG = true;
+MediaLogger::$pruneLogs = true;
 // Tracy\Debugger::enable(Tracy\Debugger::DEVELOPMENT, __LOGFILE_DIR__);
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';

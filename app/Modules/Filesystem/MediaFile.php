@@ -78,7 +78,7 @@ class MediaFile
             'video_key'     => $this->videokey(),
         ];
 
-        Mediatag::$log->notice('Getting Video Data {video}', ['video' => $this->video]);
+        Mediatag::notice('Getting Video Data {video}', ['video' => $this->video]);
 
         return $this->video;
     }

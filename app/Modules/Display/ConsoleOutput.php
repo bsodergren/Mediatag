@@ -24,6 +24,7 @@ class ConsoleOutput
     {
         // utminfo();
 
+        // utmdd($output);
         /*
         black, red, green, yellow, blue,
         magenta, cyan, white, gray,
@@ -48,6 +49,9 @@ class ConsoleOutput
         $this->output->getFormatter()->setStyle('playlist', new OutputFormatterStyle('bright-magenta'));
         $this->output->getFormatter()->setStyle('download', new OutputFormatterStyle('blue'));
         $this->output->getFormatter()->setStyle('file', new OutputFormatterStyle('bright-cyan'));
+
+        $this->output->getFormatter()->setStyle('debug', new OutputFormatterStyle('bright-yellow'));
+
         // Mediatag::$output = $this->output;
 
         $styleArray = $this->output->getFormatter()->getStyles();
@@ -61,12 +65,15 @@ class ConsoleOutput
 
         //    utmdd("something else");
         //
+
+        // Mediatag::$Io = $this->io;
+
     }
 
     public function __call($method, $args)
     {
-        // Mediatag::$log->info("Called {0} in ConsoleOutput",[$method]);
-        //  utmdd([$method,$args]);
+        // Mediatag::info("Called {0} in ConsoleOutput",[$method]);
+        // utmdd([$method, $args]);
         $this->io->$method(...$args);
     }
 

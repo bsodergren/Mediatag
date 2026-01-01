@@ -52,13 +52,18 @@ class Chooser
      */
     public static function changes(
         string $questionText = 'Continue with this action?',
-        $optionName = 'yes', $bypass_id = 25): bool
-    {
+        $optionName = 'yes',
+        $bypass_id = 25
+    ): bool {
         $bypass_id = $optionName . '_' . $bypass_id;
 
+
+
+        // utmdd([Option::isTrue('yes'), Option::isTrue('overwrite'), Option::isTrue('ask')]);
+
         if ($optionName != 'yes') {
-            if (Option::isTrue('overwrite')) {
-                if (Option::isFalse('ask')) {
+            if (Option::isFalse('ask')) {
+                if (Option::isTrue('overwrite') || Option::isTrue('yes')) {
                     return true;
                 }
             }

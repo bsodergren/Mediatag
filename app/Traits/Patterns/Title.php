@@ -105,7 +105,7 @@ trait Title
                 //     return $parts;
                 // }
 
-                Mediatag::$log->notice("title '{title}' ", ['title' => $title]);
+                Mediatag::notice("title '{title}' ", ['title' => $title]);
                 if ($title == '') {
                     return null;
                 }

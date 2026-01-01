@@ -11,6 +11,7 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Paramako\Pornhub\Factory;
@@ -44,11 +45,26 @@ class Process extends Mediatag
         // 'move'       => ['mvOldFiles'=>null],
     ];
 
-    public $words = ['my', 'sexy', 'hotwife',
-        'while',  'he',  'a', 'watches',
-        'from', 'both', 'ends',
-        'when', 'the', 'husband', 'likes', 'to', 'watch',
-        'office', 'xxx', 'parody',
+    public $words = [
+        'my',
+        'sexy',
+        'hotwife',
+        'while',
+        'he',
+        'a',
+        'watches',
+        'from',
+        'both',
+        'ends',
+        'when',
+        'the',
+        'husband',
+        'likes',
+        'to',
+        'watch',
+        'office',
+        'xxx',
+        'parody',
     ];
 
     // public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
@@ -102,37 +118,15 @@ class Process extends Mediatag
 
     public function execWord()
     {
-        $client  = Factory::create();
-        $videoId = '46103552';
+        $bar = 'some var';
+        Mediatag::notice("fasdfsda", [['arrat' => 'ff'], ['two' => 'bar']]);
 
-        $category = 'threesome';
-        $page     = 1;
-        $search   = 'hotwife';
-
-        $response = $client->videos()->get($category, $page, $search);
-        // $response =$client->videos()->getById($videoId);
-        $result = $response->toArray();
-        //  utmdd(array_keys($result));
-        // $response = $client->tags()->get();
-        // $categories = $response->toArray()['video'];
-        //
-        foreach ($result['videos'] as $category) {
-            //     // do some logic here
-            unset($category['thumbs']);
-            // utmdump($category);
-            Mediatag::$Console->writeln('' . $category['title']);
-        }
-        utmdd();
+        Mediatag::info("fasdfsda", $bar);
     }
 
     public function exec($option = null)
     {
-        $this->VideoList = parent::getVideoArray();
 
-        $fileList = $this->VideoList['file'];
-        foreach ($fileList as $key => $file) {
-            $this->videoFile[] = $file['video_file'];
-        }
     }
 
     //     // //

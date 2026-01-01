@@ -278,7 +278,7 @@ class Strings extends \Nette\Utils\Strings
     private static function cleanSpecialChars($text, $file = false, $caseSensitive = false)
     {
         // utminfo(func_get_args());
-        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
+        // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
         $file_special_chars = [];
         $special_chars      = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
@@ -303,7 +303,7 @@ class Strings extends \Nette\Utils\Strings
         }
 
         foreach (str_split($text) as $char) {
-            // Mediatag::$log->notice('Character {char}, {ord}', ['char'=>$char,'ord'=>ord($char) ]);
+            // Mediatag::notice('Character {char}, {ord}', ['char'=>$char,'ord'=>ord($char) ]);
             if (ord($char) > 125) {
                 $str[] = ' ';
             } else {
@@ -312,9 +312,9 @@ class Strings extends \Nette\Utils\Strings
         }
 
         $text = implode('', $str);
-        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
+        // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
-        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
+        // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
         $text          = str_replace($special_chars, '', $text);
         $special_chars = ['(', ')', '~'];
@@ -336,7 +336,7 @@ class Strings extends \Nette\Utils\Strings
         }
 
         $text = str_replace('__', '_', $text);
-        // Mediatag::$log->notice('Getting text value, {text}', ['text'=>$text]);
+        // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
         return trim($text, '.-_');
     }

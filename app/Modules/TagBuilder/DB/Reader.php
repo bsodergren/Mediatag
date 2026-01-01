@@ -67,7 +67,7 @@ class Reader extends TagReader
     private function get($tag)
     {
         // utminfo(func_get_args());
-        // Mediatag::$log->notice('Getting tag info for {tag}', ['tag'=>$tag]);
+        // Mediatag::notice('Getting tag info for {tag}', ['tag'=>$tag]);
         if (array_key_exists($tag, $this->tag_array)) {
             if ($tag == 'studio') {
                 if (array_key_exists('network', $this->tag_array)) {

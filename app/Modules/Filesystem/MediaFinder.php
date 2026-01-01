@@ -180,27 +180,7 @@ class MediaFinder extends SFinder
     {
         // utminfo(func_get_args());
 
-        $FileArray = [];
-        // UTMlog::logger('Search');
-
-        if (Option::isTrue('filelist')) {
-            $file_array = $this->getFilelistOption();
-        } else {
-            $file_array = $this->searchFiles();
-        }
-        if (is_array($file_array)) {
-            if (Option::isTrue('filenumber')) {
-                $FileArray = $this->getFileNumberArray($file_array);
-            } elseif (Option::isTrue('range') || Option::isTrue('max')) {
-                $FileArray = $this->getRangeArray($file_array);
-            } else {
-                $FileArray = $file_array;
-            }
-
-            return $FileArray;
-        }
-
-        return [];
+        return $this->Search();
     }
 
     public function getRangeIds($total, $offset = 1)
@@ -233,11 +213,12 @@ class MediaFinder extends SFinder
     public function getRangeArray($file_array): array
     {
         // utminfo(func_get_args());
+        $FileArray = [];
 
         $start  = 0;
         $ftotal = count($file_array);
 
-        [$total,$start] = $this->getRangeIds($ftotal);
+        [$total, $start] = $this->getRangeIds($ftotal);
         if ($total > $ftotal) {
             $total = $ftotal;
         }
@@ -298,11 +279,31 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    public function Search($path, $search, $date = null, $exit = true)
+    public function Search($path = null, $search = null, $date = null, $exit = true)
     {
         // utminfo(func_get_args());
+        $FileArray = [];
+        if (Option::isTrue('filelist')) {
+            $file_array = $this->getFilelistOption();
+        } else {
 
-        return $this->searchFiles($search, $path, $date, $exit);
+            $search     = self::FilterSearch($search);
+            $file_array = $this->searchFiles($search, $path, $date, $exit);
+        }
+
+        if (is_array($file_array)) {
+            if (Option::isTrue('filenumber')) {
+                $FileArray = $this->getFileNumberArray($file_array);
+            } elseif (Option::isTrue('range') || Option::isTrue('max')) {
+                $FileArray = $this->getRangeArray($file_array);
+            } else {
+                $FileArray = $file_array;
+            }
+
+            return $FileArray;
+        }
+
+        return [];
     }
 
     /**
@@ -317,6 +318,24 @@ class MediaFinder extends SFinder
         return (new self)->searchFiles($file, $location, null, $exit);
     }
 
+
+    private static function FilterSearch($pattern)
+    {
+        if (is_null($pattern)) {
+            return null;
+        }
+
+        set_error_handler(function () { /* ignore warnings */});
+        $isValid = @preg_match($pattern, '') !== false && preg_last_error() === PREG_NO_ERROR;
+        restore_error_handler();
+        if ($isValid == false) {
+            $pattern = str_replace('*', '', $pattern);
+            $pattern = "/\\" . $pattern . "\$/i";
+            $pattern = self::FilterSearch($pattern);
+        }
+
+        return $pattern;
+    }
     /**
      * Summary of searchFiles.
      *
@@ -326,7 +345,14 @@ class MediaFinder extends SFinder
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true)
     {
         // utminfo(func_get_args());
-        Mediatag::$log->info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
+
+        if (is_null($search)) {
+            $search = '/\.mp4$/i';
+        }
+
+        // utmdd($search);
+
+        Mediatag::info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
         if ($path === null) {
             $path = getcwd();
         }
@@ -339,7 +365,6 @@ class MediaFinder extends SFinder
         $finder     = new SFinder;
         $filesystem = new SFilesystem;
 
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
         $finder->files()->in($path);
         if (self::$depth != null) {
             $finder->depth('== 0');
@@ -351,14 +376,12 @@ class MediaFinder extends SFinder
         // else {
         //     $finder->files()->in($path)->name($search)->sortByCaseInsensitiveName();
         // }
-
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
             $finder->date('> ' . $date);
         }
-        UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
+
         if ($finder->hasResults()) {
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
 
@@ -369,15 +392,16 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
 
-            if (Option::isTrue('new') ||
-            Mediatag::$input->getArguments()['command'] == 'new') {
+
+            if (
+                Option::isTrue('new') ||
+                Mediatag::$input->getArguments()['command'] == 'new'
+            ) {
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
             }
 
-            UtmStopWatch::lap(__METHOD__ . ' ' . __LINE__, '');
             if (is_array($file_array)) {
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);

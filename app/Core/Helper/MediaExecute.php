@@ -27,7 +27,7 @@ trait MediaExecute
 
     public function addMeta()
     {
-        Mediatag::$log->notice('addMeta');
+        Mediatag::notice('addMeta', __FILE__);
 
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {
@@ -37,7 +37,7 @@ trait MediaExecute
                 case 'keyword':
                 case 'network':
                 case 'studio':
-                    if (! defined('__UPDATE_SET_ONLY__')) {
+                    if (!defined('__UPDATE_SET_ONLY__')) {
                         define('__UPDATE_SET_ONLY__', true);
                     }
                     $this->meta_tag_arrary = [$option];
@@ -55,36 +55,35 @@ trait MediaExecute
                 $this->meta_tag_arrary = Option::getValue('empty');
             }
         }
-        if (! defined('__META_TAGS__')) {
+        if (!defined('__META_TAGS__')) {
             define('__META_TAGS__', $this->meta_tag_arrary);
         }
 
-        if (! defined('TITLE_REPLACE_MAP')) {
+        if (!defined('TITLE_REPLACE_MAP')) {
             $this->getTitleMap('TITLE_REPLACE_MAP', Mediatag::$Storage->getTitleMap());
         }
-        if (! defined('ARTIST_MAP')) {
+        if (!defined('ARTIST_MAP')) {
             $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
     }
 
     public function setupMap()
     {
-        Mediatag::$log->notice('setupMap');
+        Mediatag::notice('setupMap', __FILE__);
 
-        if (! defined('ARTIST_MAP')) {
+        if (!defined('ARTIST_MAP')) {
             $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
 
-        if (! defined('IGNORE_NAME_MAP')) {
+        if (!defined('IGNORE_NAME_MAP')) {
             $this->mapArtist('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
         }
     }
 
     public function getTitleMap($constant, $file)
     {
-        Mediatag::$log->notice('getTitleMap');
-
-        // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
+        Mediatag::notice('getTitleMap', __FILE__);
+        Mediatag::debug('getTitleMap', __FILE__);
 
         if (is_string($file)) {
             if (is_file($file)) {
@@ -103,7 +102,7 @@ trait MediaExecute
 
         sort($nameArray);
         array_unique($nameArray);
-        if (! defined($constant)) {
+        if (!defined($constant)) {
             define($constant, $nameArray);
         }
     }
@@ -111,6 +110,7 @@ trait MediaExecute
     public function mapArtist($constant, $file)
     {
         // utminfo(func_get_args());
+        Mediatag::notice('mapArtist', __FILE__);
 
         $replacement = null;
         if (is_string($file)) {

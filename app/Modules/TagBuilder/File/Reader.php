@@ -165,7 +165,7 @@ class Reader extends TagReader
 
         $getMethod = 'get' . ucfirst($method);
 
-        Mediatag::$log->notice("__call method =>'{method}' ", ['method' => $getMethod]);
+        Mediatag::notice("__call method =>'{method}' ", ['method' => $getMethod]);
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
         } else {

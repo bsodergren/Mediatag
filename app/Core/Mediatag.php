@@ -70,6 +70,7 @@ abstract class Mediatag extends MediaCommand
     public static $Storage;
 
     public static $IoStyle;
+    public static $Io;
 
     public static $tmpText;
 
@@ -91,20 +92,41 @@ abstract class Mediatag extends MediaCommand
 
             exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
         }
+
+        if (method_exists(self::$log, $method)) {
+            if (array_key_exists(1, $args)) {
+                if (!is_array($args[1])) {
+                    $args[1] = [$args[1]];
+                    $args[0] = $args[0] . " {0}";
+                }
+            }
+            self::$log->$method(...$args);
+            return '';
+        }
+
+
     }
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)
     {
-        if (! defined('__CURRENT_DIRECTORY__')) {
+        if (!defined('__CURRENT_DIRECTORY__')) {
             define('__CURRENT_DIRECTORY__', getcwd());
         }
+
+
+
+
         self::$input  = $input;
         self::$output = $output;
+
+        // $this->loadStyles($input, $output);
 
         $this->command = self::getDefaultName();
 
         MediaCache::init(self::$input, self::$output);
         Option::init(self::$input, $options);
+
+
 
         self::$Cursor  = new Cursor(self::$output);
         self::$Console = new ConsoleOutput(self::$output, self::$input);
@@ -114,10 +136,10 @@ abstract class Mediatag extends MediaCommand
         self::$finder     = new Finder;
         self::$filesystem = new Filesystem;
 
-        self::$log->notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
+        self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
-        if (! Option::isTrue('SKIP_SEARCH')) {
+        if (!Option::isTrue('SKIP_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
 
             // utmdd(self::$SearchArray);
@@ -142,7 +164,7 @@ abstract class Mediatag extends MediaCommand
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
 
         $ClassCmds = $this->runCommand();
-        self::$log->debug('Running command {0}', [$this]);
+        self::debug('Running command {0}', [$this]);
         foreach ($ClassCmds as $cmd => $option) {
             if (method_exists($this, $cmd)) {
                 self::$log->notice('Running command {0}', [$cmd]);
@@ -181,7 +203,7 @@ abstract class Mediatag extends MediaCommand
             $fs        = new File($file);
             $videoData = $fs->get();
 
-            if (! array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
+            if (!array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
             } else {
                 $meta_key = 'dupe';
@@ -189,7 +211,7 @@ abstract class Mediatag extends MediaCommand
             $this->videoArray[$meta_key][$videoData['video_key']] = $videoData;
         }
 
-        // Mediatag::$log->notice("Video List {0}",[count($this->videoArray['file'])]);
+        // Mediatag::notice("Video List {0}",[count($this->videoArray['file'])]);
         return $this->videoArray;
     }
 
@@ -198,7 +220,9 @@ abstract class Mediatag extends MediaCommand
     //     utmdd($this->VideoList);
     // }
 
-    public function print() {}
+    public function print()
+    {
+    }
 
     public function getNumberofFiles()
     {
@@ -256,11 +280,10 @@ abstract class Mediatag extends MediaCommand
             }
         }
 
-        if (! isset($Commands)) {
+        if (!isset($Commands)) {
             $Commands = $default;
         }
 
-        // UTMlog::Logger('Process Commands', $Commands);
         return $Commands;
     }
 }

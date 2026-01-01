@@ -17,21 +17,29 @@ use function is_array;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 use Mediatag\Locales\Lang;
+use SimpleCli\Traits\Name;
+use Mediatag\Core\Mediatag;
 use function call_user_func;
 use function function_exists;
 use function array_key_exists;
-use Mediatag\Traits\Translate;
-use Mediatag\Traits\MediaLibrary;
 
+use Mediatag\Core\MediaLogger;
+use Mediatag\Traits\Translate;
+use Mediatag\Core\MediaOptions;
+use Mediatag\Traits\MediaLibrary;
 use Mediatag\Core\Helper\CommandHelper;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Executable\MediatagExec;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Exception\ExceptionInterface;
+use Symfony\Component\Console\Output\ConsoleOutputInterface;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
 
 class MediaCommand extends DoctrineCommand
@@ -59,8 +67,13 @@ class MediaCommand extends DoctrineCommand
 
     public static $optionArg = [];
 
+
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+
+
+        // $this->loadStyles($input, $output);
+
         $originalCommand         = null;
         Mediatag::$ProcessHelper = $this->getHelper('process');
 
@@ -69,8 +82,6 @@ class MediaCommand extends DoctrineCommand
 
             return Command::SUCCESS;
         }
-
-        Mediatag::$log->debug('Command Class {cls}', ['cls' => $output]);
 
         $class     = static::class;
         $arguments = $input->getArguments();
@@ -91,16 +102,8 @@ class MediaCommand extends DoctrineCommand
         }
 
         $class = self::getProcessClass();
-        Mediatag::$log->info('Command arguments {arguments} for {class}', [
-            'arguments' => $arguments,
-            'class'     => $class,
-        ]);
-        $Process = new $class($input, $output, self::$optionArg);
 
-        Mediatag::$log->info('Command arguments {Process} for {command}', [
-            'Process' => $Process->commandList,
-            'command' => $this->command,
-        ]);
+        $Process = new $class($input, $output, self::$optionArg);
 
         $Process->commandList = array_merge($Process->commandList, $this->command);
 
@@ -229,14 +232,14 @@ class MediaCommand extends DoctrineCommand
         // utminfo();
         $className = static::class;
         Option::init($input);
-        if (Option::getValue('path', true) !== null) {
+
+        if (Option::getValue('path', true) !== "") {
             $path = Option::getValue('path', true);
             chdir($path);
         }
 
         $this->getLibrary($className::USE_LIBRARY);
 
-        Mediatag::$log->info('Init vars {library}', ['library' => __LIBRARY__]);
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();

@@ -36,7 +36,7 @@ trait HelperCmds
 
         // $new_file = str_replace('.mp4', '_test.mp4', $this->videoFile);
 
-        // Mediatag::$log->info("Video Files \n{0} \n{1}",[$this->videoFile,$new_file]);
+        // Mediatag::info("Video Files \n{0} \n{1}",[$this->videoFile,$new_file]);
         //         $ffprobe = FFProbe::create([],  Mediatag::$log);
         //         $duration = $ffprobe->format($this->videoFile)->get('duration');
 

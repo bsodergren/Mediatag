@@ -18,7 +18,8 @@ trait LogFormat
 
     public static function tracePath($only_caller = false)
     {
-        $trace      = debug_backtrace();
+        $trace = debug_backtrace();
+
         $classArray = [];
         $calledFile = null;
         $calledLine = null;
@@ -29,6 +30,7 @@ trait LogFormat
                 continue;
             }
 
+
             if (array_key_exists('class', $row)) {
                 foreach (self::$ClassIgnore as $class) {
                     if (str_contains($row['class'], $class)) {
@@ -38,6 +40,11 @@ trait LogFormat
 
                         continue 2;
                     }
+                }
+                if (str_contains($row['function'], '__callStatic')) {
+                    $calledFile = self::returnTrace('file', $trace[$i]);
+                    continue;
+
                 }
                 if ($i > 0) {
                     $line = $i - 1;
@@ -89,9 +96,16 @@ trait LogFormat
 
     private static function getClassPath($class, $level = 1)
     {
+        $ret = [];
         preg_match('/.*\\\\([A-Za-z]+)\\\\([A-Za-z]+)/', $class, $out);
         if ($level == 2) {
-            return $out[1] . '\\' . $out[2];
+            if (array_key_exists(1, $out)) {
+                $ret[] = $out[1];
+            }
+            if (array_key_exists(2, $out)) {
+                $ret[] = $out[2];
+            }
+            return implode('\\', $ret); //$out[1] . '\\' . $out[2];
         }
 
         return $out[2];
