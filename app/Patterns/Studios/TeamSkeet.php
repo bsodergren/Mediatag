@@ -22,7 +22,8 @@ class TeamSkeet extends Patterns
                 'artistFirstNameOnly' => false,
             ],
             'studio' => [
-                'pattern' => '/^([a-zA-Z0-9-]+)_.*/i', ],
+                'pattern' => '/^([a-zA-Z0-9-]+)_.*/i',
+            ],
         ],
         'title'     => [
             'pattern' => '/^([a-zA-Z-]+)_.*/i',
@@ -104,12 +105,15 @@ class TeamSkeet extends Patterns
         'teamskeetxspankmonster'     => 'teamskeet extras',
         'teamskeetxharmonyfilms'     => 'teamskeet extras',
         'teamskeetfeatures'          => 'Feature Films',
+        'familystrokesfeatures'      => 'Feature Films',
+        'mylffeatures'               => 'Feature Films',
         'mylfxgrandmams'             => 'mylf x grandmams',
         'mylfxsinematica'            => 'sinematica',
         'teamskeetxsinematica'       => 'sinematica',
         'freeusemilf'                => 'freeuse milf',
         'usepov'                     => 'Use POV',
         'tomboyz'                    => 'tom boyz',
+        'reptylefeatures'            => 'Feature Films',
         // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];
 

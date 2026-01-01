@@ -23,4 +23,9 @@ class FamilyStrokes extends TeamSkeet
     //             'pattern' => '/^([a-zA-Z]+)_.*/i', ],
     //     ],
     // ];
+
+    public $replace_studios = [
+        'familystrokesfeatures' => 'Feature Films',
+
+    ];
 }
