@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\VideoInfo\Section\preview;
+namespace Mediatag\Modules\VideoInfo\Section;
 
 use FFMpeg\FFProbe;
 use Mediatag\Core\Mediatag;
@@ -84,7 +84,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         $progressBar->finish();
         Mediatag::$output->writeln('');
 
-        if (! empty($frames)) {
+        if (!empty($frames)) {
             $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.

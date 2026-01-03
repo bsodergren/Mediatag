@@ -138,7 +138,6 @@ class Process extends Mediatag
             $this->playlist = Option::getValue('url');
         }
 
-        // utmdd($file);
 
         if (Option::istrue('archive')) {
             self::$ARCHIVE = __PLEX_PL_ID_DIR__ . '/' . Option::getValue('archive') . '.txt';
@@ -149,7 +148,7 @@ class Process extends Mediatag
         $this->setupFormat();
         $this->setupDb();
 
-        if (! is_dir(__PLEX_PL_TMP_DIR__)) {
+        if (!is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
     }

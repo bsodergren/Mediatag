@@ -63,9 +63,9 @@ class MediaFilesystem extends SFilesystem
      */
     public static function writeFile($file, $content, $backup = true)
     {
-        // utminfo(func_get_args());
+        // utminfo(func_get_args());S
 
-        if (! file_exists($file)) {
+        if (!file_exists($file)) {
             touch($file);
         }
 
@@ -78,7 +78,7 @@ class MediaFilesystem extends SFilesystem
             self::backupPlaylist($file);
         }
 
-        file_put_contents($file, $content_string.PHP_EOL);
+        $out = file_put_contents($file, $content_string . PHP_EOL);
     }
 
     public static function writePlaylist($file, $content)
@@ -127,7 +127,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        if (! file_exists($filename)) {
+        if (!file_exists($filename)) {
             return 0;
         }
 
@@ -141,7 +141,7 @@ class MediaFilesystem extends SFilesystem
             $directory = $directory . '/' . self::$tempdir . '/' . $fileNameNoExt;
         }
 
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             $filesystem->mkdir($directory);
         }
 
@@ -211,7 +211,7 @@ class MediaFilesystem extends SFilesystem
                 foreach ($finder as $file) {
                     $old_file = $file->getRealPath();
                     $newpath  = $new . str_replace($old, '', $file->getPath());
-                    if (! is_dir($newpath)) {
+                    if (!is_dir($newpath)) {
                         $filesystem->mkdir($newpath);
                     }
                     $new_file = $newpath . '/' . $file->getBasename();
@@ -239,7 +239,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        if (! file_exists($file)) {
+        if (!file_exists($file)) {
             return false;
         }
 
@@ -286,7 +286,7 @@ class MediaFilesystem extends SFilesystem
         // utminfo(func_get_args());
 
         $filesystem = new SFilesystem;
-        if (! is_dir(dirname($new))) {
+        if (!is_dir(dirname($new))) {
             $filesystem->mkdir(dirname($new));
         }
         NetteFile::rename($old, $new, $overwrite);
@@ -300,7 +300,7 @@ class MediaFilesystem extends SFilesystem
             $path = __CURRENT_DIRECTORY__;
         }
 
-        $command = [
+        $command  = [
             '/usr/bin/find',
             $path,
             '-mindepth',

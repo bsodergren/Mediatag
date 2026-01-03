@@ -11,12 +11,12 @@ use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 
 class InfoProcess extends Process
 {
-    public function execInfo()
-    {
-        // utminfo(func_get_args());
+    // public function execInfo()
+    // {
+    //     // utminfo(func_get_args());
 
-        $this->obj = new VideoFileInfo;
-        // $this->checkClean();
-        $this->obj->updateVideoData();
-    }
+    //     $this->obj = new VideoFileInfo;
+    //     // $this->checkClean();
+    //     $this->obj->updateVideoData();
+    // }
 }

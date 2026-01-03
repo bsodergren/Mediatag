@@ -11,14 +11,14 @@ use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
 
 class PreviewProcess extends Process
 {
-    public function execPreview()
-    {
-        // utminfo(func_get_args());
+    // public function execPreview()
+    // {
+    //     // utminfo(func_get_args());
 
-        $this->obj = new GifPreviewFiles;
+    //     $this->obj = new GifPreviewFiles;
 
-        $this->checkClean();
+    //     $this->checkClean();
 
-        $this->obj->updateVideoData();
-    }
+    //     $this->obj->updateVideoData();
+    // }
 }

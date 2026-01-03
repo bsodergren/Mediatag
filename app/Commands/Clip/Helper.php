@@ -39,7 +39,7 @@ trait Helper
     {
         $table = new Table(Mediatag::$output);
 
-        utmdump(Mediatag::$input->getFirstArgument());
+        //utmdump(Mediatag::$input->getFirstArgument());
 
         $table->setHeaders(
             [
@@ -105,7 +105,7 @@ trait Helper
 
         $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
         Filesystem::createDir(\dirname($filename));
-        utmdump($filename);
+        //utmdump($filename);
         if (file_exists($filename)) {
             if (Chooser::changes(' Overwrite File ' . __LINE__, 'overwrite', __LINE__)) {
                 unlink($filename);
@@ -156,21 +156,21 @@ trait Helper
 
     public function backupOrigFile($OriginalName, $NewName, $directory)
     {
-        utmdump(__METHOD__);
+        //utmdump(__METHOD__);
         $file_path       = \dirname($OriginalName);
         $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
 
-        utmdump($backup_filepath);
+        //utmdump($backup_filepath);
 
         if (! Mediatag::$filesystem->exists($backup_filepath)) {
             Mediatag::$filesystem->mkdir($backup_filepath);
         }
         $backup_filename = $backup_filepath . '/' . basename($OriginalName);
-        utmdump($backup_filename);
+        //utmdump($backup_filename);
         //$outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
 
         Filesystem::renameFile($OriginalName, $backup_filename);
-        utmdump($NewName);
+        //utmdump($NewName);
 
         Filesystem::renameFile($NewName, $OriginalName);
     }

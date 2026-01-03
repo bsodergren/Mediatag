@@ -7,7 +7,7 @@
 namespace Mediatag\Commands\Playlist;
 
 const DESCRIPTION = 'download PH Playlist';
-const NAME        = 'playlist';
+const NAME = 'playlist';
 
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -15,7 +15,7 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['compact', 'download'])]
+#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['pl', 'compact', 'download'])]
 final class Command extends MediaCommand
 {
     use Lang;

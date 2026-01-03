@@ -6,18 +6,21 @@
 
 namespace Mediatag\Commands\Test;
 
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
+use UTM\Utilities\Option;
+use Mediatag\Core\Mediatag;
+use Paramako\Pornhub\Factory;
+use Mediatag\Core\MediaLogger;
+use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Core\MediaLogger;
-use Mediatag\Core\Mediatag;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+use Symfony\Component\Filesystem\Filesystem;
+use SergiX44\FastImageCompare\FastImageCompare;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
-use Paramako\Pornhub\Factory;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__ . '/WordMap.php';
 
@@ -118,14 +121,36 @@ class Process extends Mediatag
 
     public function execWord()
     {
-        $bar = 'some var';
-        Mediatag::notice("fasdfsda", [['arrat' => 'ff'], ['two' => 'bar']]);
 
-        Mediatag::info("fasdfsda", $bar);
+
     }
+
+
 
     public function exec($option = null)
     {
+
+        $thumbnailFile = [];
+
+        $img_name  = [];
+        $fileArray = parent::$SearchArray;
+        foreach ($fileArray as $file) {
+            $thumbnailFile[] = (new VideoInfo())->videoToThumb($file);
+
+
+        }
+
+        $instance     = new FastImageCompare();
+        $similarArray = $instance->findDuplicates($thumbnailFile, 0.05);
+
+        foreach ($similarArray as $t => $tfile) {
+            $img_name[] = (new VideoInfo())->thumbToVideo($tfile);
+
+        }
+        // mediatag::error($img_name);
+        // $this->mvFiles($img_name);
+        // utmdd($img_name);
+
 
     }
 

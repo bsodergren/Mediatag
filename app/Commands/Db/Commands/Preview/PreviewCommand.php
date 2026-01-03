@@ -18,8 +18,9 @@ final class PreviewCommand extends MediaCommand
 
     public $command = [
         'preview' => [
-            'init'        => null,
-            'exec'        => null,
-            'execPreview' => null],
+            // 'init'        => null,
+            'exec' => 'GifPreviewFiles',
+            // 'execPreview' => null
+        ],
     ];
 }

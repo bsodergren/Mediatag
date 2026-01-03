@@ -86,14 +86,17 @@ class MediaCommand extends DoctrineCommand
         $class     = static::class;
         $arguments = $input->getArguments();
 
+
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-
             if (!is_null($cmdArgument)) {
+
                 if ($cmdArgument == $arguments[$arguments['command']]) {
                     $cmdArgument     = null;
                     $originalCommand = $this->getName();
                 }
+                // utmdd($cmdArgument);
+
             }
 
             if ($cmdArgument !== null) {
@@ -102,7 +105,7 @@ class MediaCommand extends DoctrineCommand
         }
 
         $class = self::getProcessClass();
-
+        // utmdd(self::$optionArg);
         $Process = new $class($input, $output, self::$optionArg);
 
         $Process->commandList = array_merge($Process->commandList, $this->command);

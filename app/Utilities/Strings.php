@@ -114,13 +114,19 @@ class Strings extends \Nette\Utils\Strings
         return $video_filename . $video_key . '.' . $fileExt;
     }
 
-    public static function truncateString($string, $maxlength, $ellipsis = false, $reverse = false)
+    public static function truncateString($string, $maxlength, $ellipsis = false, $middle = false)
     {
         // utminfo(func_get_args());
 
         if (mb_strlen($string) <= $maxlength) {
+
             return $string;
         }
+
+        if ($middle === true) {
+            $maxlength = floor($maxlength / 2);
+        }
+
         $color_length = 0;
         $color_close  = '';
         if (str_contains($string, "\033[0m")) {
@@ -134,14 +140,28 @@ class Strings extends \Nette\Utils\Strings
         }
 
         if ($ellipsis === true) {
-            $ellipsis = '…';
+            $ellipsis = '...';
         }
 
         $ellipsis_length = mb_strlen($ellipsis);
 
         $maxlength = $maxlength - $ellipsis_length - $color_length;
 
-        return trim(mb_substr($string, 0, $maxlength)) . $ellipsis . $color_close;
+        $start = 0;
+
+        $return = mb_substr($string, $start, $maxlength) . $ellipsis;
+
+        if ($middle === true) {
+            $start     = mb_strlen($string) - $maxlength;
+            $maxlength = mb_strlen($string);
+            $end       = mb_substr($string, $start, $maxlength);
+            $return    = $return . $end;
+        }
+        $string = $return;
+
+
+
+        return trim($string) . $color_close;
     }
 
     public static function showStatus($done, $total, $size = 30, $label = '')
@@ -173,12 +193,12 @@ class Strings extends \Nette\Utils\Strings
 
         $bar = floor($perc * $size);
 
-        $status_bar = "\r[" . $label;
+        $status_bar  = "\r[" . $label;
         $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
 
-        $str_len = strlen($status_bar);
-        $size -= $str_len;
-        $bar = floor($perc * $size);
+        $str_len  = strlen($status_bar);
+        $size    -= $str_len;
+        $bar      = floor($perc * $size);
         if ($bar < 1) {
             $bar = 0;
         }
@@ -227,7 +247,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if (! $array) {
+        if (!$array) {
             return '';
         }
 
@@ -281,9 +301,34 @@ class Strings extends \Nette\Utils\Strings
         // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
         $file_special_chars = [];
-        $special_chars      = ['?', '[', '´', ']', '/', '\\', '=', '<', '>', ':',
-            '"', '&', '$', '#', '*', '|', '`', '!', '{', '}',
-            '%',  '«', '»', '”', '“', chr(0)];
+        $special_chars      = [
+            '?',
+            '[',
+            '´',
+            ']',
+            '/',
+            '\\',
+            '=',
+            '<',
+            '>',
+            ':',
+            '"',
+            '&',
+            '$',
+            '#',
+            '*',
+            '|',
+            '`',
+            '!',
+            '{',
+            '}',
+            '%',
+            '«',
+            '»',
+            '”',
+            '“',
+            chr(0)
+        ];
 
         if ($file === true) {
             $file_special_chars = ['.', ';', ','];
@@ -382,28 +427,34 @@ class Strings extends \Nette\Utils\Strings
                 switch (gettype($workArray[$i])) {
                     // Manually set some strings
 
-                    case 'NULL':     $_spFormat = '';
+                    case 'NULL':
+                        $_spFormat = '';
                         break;
 
-                    case 'boolean':  $_spFormat = ($workArray[$i] == true) ? 'true' : 'false';
+                    case 'boolean':
+                        $_spFormat = ($workArray[$i] == true) ? 'true' : 'false';
                         break;
 
-                        // Make sure sprintf has a good datatype to work with
+                    // Make sure sprintf has a good datatype to work with
 
-                    case 'integer':  $_spFormat = '%i';
+                    case 'integer':
+                        $_spFormat = '%i';
                         break;
 
-                    case 'double':   $_spFormat = '%0.2f';
+                    case 'double':
+                        $_spFormat = '%0.2f';
                         break;
 
-                    case 'string':   $_spFormat = '%s';
+                    case 'string':
+                        $_spFormat = '%s';
                         break;
 
-                        // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
+                    // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
 
                     case 'object':
                     case 'resource':
-                    default:         $_spFormat = '';
+                    default:
+                        $_spFormat = '';
                         break;
                 }
 

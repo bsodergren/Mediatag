@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Db;
 
+use Symfony\Component\Console\Command\Command;
 use const DIRECTORY_SEPARATOR;
 
 use Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
@@ -80,7 +81,8 @@ class Process extends Mediatag
         'json' => [
             // 'init'    => null,
             // 'exec'    => null,
-            'getJson' => null],
+            'getJson' => null
+        ],
     ];
 
     private $count;
@@ -117,7 +119,7 @@ class Process extends Mediatag
                     $existing_file = $this->allDbFiles[$key];
 
                     if ($existing_file != $file) {
-                        [$keep,$move] = VideoFileInfo::compareDupes($existing_file, $file);
+                        [$keep, $move] = VideoFileInfo::compareDupes($existing_file, $file);
 
                         // Mediatag::$Console->writeln('existi file ' . $existing_file . '');
                         // Mediatag::$Console->writeln('Keepin file ' . $keep . '');
@@ -128,7 +130,7 @@ class Process extends Mediatag
                             $filename  = basename($file);
 
                             $dupePath = nFileSystem::normalizePath($dupePath);
-                            if (! is_dir($dupePath)) {
+                            if (!is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
@@ -156,6 +158,20 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        if (!is_null($option)) {
+            $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
+            if (class_exists($class)) {
+                $this->obj = new $class();
+                // if(method_exists( $this->obj,'checkClean')){
+                $this->checkClean();
+                // }
+                $this->obj->updateVideoData();
+                return Command::SUCCESS;
+            }
+            Mediatag::error("Class doesnt exist");
+            return Command::FAILURE;
+        }
+
         // utminfo(func_get_args());
         $this->getFileArray();
 
@@ -165,5 +181,11 @@ class Process extends Mediatag
         $this->addDBEntry();
 
         //  $this->execUpdate();
+    }
+
+    public function testExec($option)
+    {
+
+
     }
 }
