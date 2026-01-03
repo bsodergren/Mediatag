@@ -58,7 +58,7 @@ class Pornhub
         // }
         // // UTMlog::Logger('Ph Download', $buffer);
 
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer . TEST_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer . TEST_EOL);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[PornHubPlaylist]'):

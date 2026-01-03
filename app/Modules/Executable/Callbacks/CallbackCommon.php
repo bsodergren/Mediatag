@@ -45,7 +45,7 @@ trait CallbackCommon
             $command = '_' . $opt['command'];
         }
         $this->progress->advance();
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/log_' . __SCRIPT_NAME__ . $command . '.log', $buffer . PHP_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/log_' . __SCRIPT_NAME__ . $command . '.log', $buffer . PHP_EOL);
     }
 
     public function Output($type, $buffer)
