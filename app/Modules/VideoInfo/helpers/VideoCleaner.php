@@ -30,7 +30,7 @@ trait VideoCleaner
             foreach ($missing as $k => $file) {
                 $videoFile = $this->thumbToVideo($file);
 
-                if (!file_exists($videoFile)) {
+                if (! file_exists($videoFile)) {
                     $this->renameThumb($file, false);
                     @unlink($file);
                     // Mediatag::$output->writeln('unlink file '.$file);
@@ -158,13 +158,13 @@ trait VideoCleaner
 
             // // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
 
-            if (!file_exists($row['file_name'])) {
+            if (! file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;
 
                 continue;
             }
 
-            if (!file_exists($thumb)) {
+            if (! file_exists($thumb)) {
                 $missing_thumb[$row['id']] = $row['file_name'];
 
                 continue;
@@ -202,7 +202,7 @@ trait VideoCleaner
     {
         Mediatag::notice('Method {0}', [__METHOD__]);
 
-        if (!file_exists($file)) {
+        if (! file_exists($file)) {
             return 0;
         }
 
@@ -214,7 +214,7 @@ trait VideoCleaner
         $newFile = str_replace('thumbnails', 'backup', $file);
         $path    = dirname($newFile);
 
-        if (!is_dir($path)) {
+        if (! is_dir($path)) {
             (new SFilesystem)->mkdir($path);
         }
         (new SFilesystem)->rename($file, $newFile, true);

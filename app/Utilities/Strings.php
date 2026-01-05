@@ -119,7 +119,6 @@ class Strings extends \Nette\Utils\Strings
         // utminfo(func_get_args());
 
         if (mb_strlen($string) <= $maxlength) {
-
             return $string;
         }
 
@@ -159,8 +158,6 @@ class Strings extends \Nette\Utils\Strings
         }
         $string = $return;
 
-
-
         return trim($string) . $color_close;
     }
 
@@ -193,12 +190,12 @@ class Strings extends \Nette\Utils\Strings
 
         $bar = floor($perc * $size);
 
-        $status_bar  = "\r[" . $label;
+        $status_bar = "\r[" . $label;
         $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
 
-        $str_len  = strlen($status_bar);
-        $size    -= $str_len;
-        $bar      = floor($perc * $size);
+        $str_len = strlen($status_bar);
+        $size -= $str_len;
+        $bar = floor($perc * $size);
         if ($bar < 1) {
             $bar = 0;
         }
@@ -247,7 +244,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if (!$array) {
+        if (! $array) {
             return '';
         }
 
@@ -327,7 +324,7 @@ class Strings extends \Nette\Utils\Strings
             '»',
             '”',
             '“',
-            chr(0)
+            chr(0),
         ];
 
         if ($file === true) {
@@ -435,7 +432,7 @@ class Strings extends \Nette\Utils\Strings
                         $_spFormat = ($workArray[$i] == true) ? 'true' : 'false';
                         break;
 
-                    // Make sure sprintf has a good datatype to work with
+                        // Make sure sprintf has a good datatype to work with
 
                     case 'integer':
                         $_spFormat = '%i';
@@ -449,7 +446,7 @@ class Strings extends \Nette\Utils\Strings
                         $_spFormat = '%s';
                         break;
 
-                    // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
+                        // Unknown or invalid items for a csv - note: the datatype of array is already handled above, assuming the data is nested
 
                     case 'object':
                     case 'resource':

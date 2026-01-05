@@ -43,15 +43,13 @@ class TagBuilder
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
 
-
-        if (!defined('__UPDATE_SET_ONLY__')) {
+        if (! defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
             // }
 
-            if (!str_starts_with($this->video_key, 'x')) {
-
+            if (! str_starts_with($this->video_key, 'x')) {
                 $jsonupdates = $this->ReaderObj->getJsonValues();
                 //
                 //
@@ -69,7 +67,6 @@ class TagBuilder
             $DbUpdates = $this->ReaderObj->getDbValues();
         }
 
-
         // if (null !== $FileUpdates) {
         //     $updates = $FileUpdates;
         // }
@@ -77,22 +74,18 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
         if ($DbUpdates !== null) {
-
-            $updates = $this->mergetags($updates, $DbUpdates, $this->video_key);//, 'combine');
+            $updates = $this->mergetags($updates, $DbUpdates, $this->video_key); //, 'combine');
         }
         if (isset($updates)) {
             // // utmdump($updates);
             // UTMlog::Logger('Reader', $updates);
         }
 
-        if (OptionIsTrue("only")) {
-
+        if (OptionIsTrue('only')) {
             $AddMeta = new TagModify($videoInfo);
 
-            foreach (Option::getValue("only") as $option => $value) {
+            foreach (Option::getValue('only') as $option => $value) {
                 // if ($option == "only") {
-
-
 
                 // utmdd($option, $value);
                 // }
@@ -179,7 +172,7 @@ class TagBuilder
             }
         }
 
-        if (!isset($studio)) {
+        if (! isset($studio)) {
             // // utmdump([$current, $updates, $tmpStudio]);
 
             return null;

@@ -113,8 +113,6 @@ class Youtube extends MediatagExec
             $class = 'Studio';
         }
 
-
-
         $this->library = $class;
         //        use Mediatag\Modules\Executable\Helper\Studio;
 
@@ -168,10 +166,10 @@ class Youtube extends MediatagExec
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (
-            !Option::istrue('ignore')
-            && !Option::istrue('skip')
+            ! Option::istrue('ignore')
+            && ! Option::istrue('skip')
             && $this->downloadFiles === true
-            && !Option::istrue('archive')
+            && ! Option::istrue('archive')
         ) {
             $options = array_merge($options, [
                 '--download-archive',
@@ -229,7 +227,7 @@ class Youtube extends MediatagExec
 
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
-        if (!Option::istrue('url')) {
+        if (! Option::istrue('url')) {
             $names = file($this->playlist);
 
             if (Option::istrue('max')) {
@@ -238,12 +236,12 @@ class Youtube extends MediatagExec
                 $this->num_of_lines = count($names) + 1;
             }
 
-            if (!str_contains('premium', $this->playlist)) {
+            if (! str_contains('premium', $this->playlist)) {
                 $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->premium);
             }
 
-            if (!str_contains('model_hub', $this->playlist)) {
+            if (! str_contains('model_hub', $this->playlist)) {
                 $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->model_hub);
             }
@@ -290,7 +288,7 @@ class Youtube extends MediatagExec
         if ($type == 'premium') {
             $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
             // $this->Console->writeln($url);
-            if (!str_contains('premium', $file)) {
+            if (! str_contains('premium', $file)) {
                 file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
             }
 
@@ -299,7 +297,7 @@ class Youtube extends MediatagExec
 
         if ($type == 'modelhub') {
             $url = 'https://www.modelhub.com/video/' . $this->key;
-            if (!str_contains('model_hub', $file)) {
+            if (! str_contains('model_hub', $file)) {
                 file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
             }
 
@@ -333,7 +331,7 @@ class Youtube extends MediatagExec
         $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
 
         if (Mediatag::$filesystem->exists($json_file)) {
-            if (!Mediatag::$filesystem->exists($newJson_file)) {
+            if (! Mediatag::$filesystem->exists($newJson_file)) {
                 if (Option::istrue('test')) {
                     $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                     Mediatag::$output->writeln($out);

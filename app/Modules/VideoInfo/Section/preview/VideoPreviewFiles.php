@@ -51,7 +51,7 @@ class VideoPreviewFiles extends VideoPreview
         $temp    = __PLEX_VAR_DIR__ . '/build';
         $options = [
             'temporary_directory' => $temp,
-               'timeout'          => 3600
+            'timeout'             => 3600,
         ];
 
         (new Filesystem)->mkdir($temp);
@@ -67,7 +67,7 @@ class VideoPreviewFiles extends VideoPreview
         }
 
         // Create an FFMpeg instance and open the video.
-        $ffmpeg = FFMpeg::create($options,Mediatag::$log);
+        $ffmpeg = FFMpeg::create($options, Mediatag::$log);
         $video  = $ffmpeg->open($this->video_file);
 
         // This array holds our "points" that we are going to extract from the

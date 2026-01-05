@@ -57,8 +57,6 @@ class Chooser
     ): bool {
         $bypass_id = $optionName . '_' . $bypass_id;
 
-
-
         // utmdd([Option::isTrue('yes'), Option::isTrue('overwrite'), Option::isTrue('ask')]);
 
         if ($optionName != 'yes') {

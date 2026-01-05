@@ -51,7 +51,7 @@ trait CallbackCommon
     public function Output($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-         Mediatag::$output->writeln($buffer);
+        Mediatag::$output->writeln($buffer);
 
         // echo $buffer;
     }

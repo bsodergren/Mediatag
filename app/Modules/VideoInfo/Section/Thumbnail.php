@@ -76,7 +76,7 @@ class Thumbnail extends VideoInfo
             (new Filesystem)->mkdir($img_location);
             $ffprobe = FFProbe::create([
                 'ffmpeg.binaries'  => CONFIG['FFMPEG_CMD'],
-                'ffprobe.binaries' => CONFIG['FFPROBE_CMD']
+                'ffprobe.binaries' => CONFIG['FFPROBE_CMD'],
             ]);
             $duration = $ffprobe->streams($this->video_file)->videos()->first()->get('duration');
 

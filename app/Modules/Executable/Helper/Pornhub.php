@@ -112,7 +112,7 @@ class Pornhub
                 $outputText = $this->obj->error($buffer, $line_id, ' Premium Video');
                 $this->obj->updatePlaylist('premium');
                 $this->obj->premiumIds[] = $this->obj->key;
-                $ConsoleCmd = 'writeln';
+                $ConsoleCmd              = 'writeln';
                 break;
 
             case str_contains($buffer, 'encoded url'):
@@ -146,7 +146,6 @@ class Pornhub
                 $ConsoleCmd = 'writeln';
                 break;
         }
-
 
         if ($outputText != '') {
             // if (!str_contains($outputText, '<download>')) {

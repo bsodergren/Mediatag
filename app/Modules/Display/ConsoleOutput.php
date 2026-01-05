@@ -67,7 +67,6 @@ class ConsoleOutput
         //
 
         // Mediatag::$Io = $this->io;
-
     }
 
     public function __call($method, $args)

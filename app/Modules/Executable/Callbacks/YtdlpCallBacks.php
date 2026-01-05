@@ -7,13 +7,13 @@
 namespace Mediatag\Modules\Executable\Callbacks;
 
 use const TEST_EOL;
-use Mediatag\Core\Mediatag;
 
-use function array_key_exists;
+use Mediatag\Commands\Playlist\Process as PlaylistProcess;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Helper\DownloadStrings;
 use Mediatag\Modules\Filesystem\MediaFile;
 
-use Mediatag\Modules\Executable\Helper\DownloadStrings;
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
+use function array_key_exists;
 
 trait YtdlpCallBacks
 {
@@ -158,7 +158,6 @@ trait YtdlpCallBacks
             $newLine      = false;
             // $buffer = $this->cleanBuffer($buffer);
 
-
             //            return $this->ytlpDownloadBuffer('Destination',$buffer);
             // utmdump($buffer);
             // $outputText = str_replace("\n" . '[download]', '</text>' . TEST_EOL . PHP_TAB . '<text>[download]', $buffer);
@@ -186,14 +185,10 @@ trait YtdlpCallBacks
 
     public function fixVideo($buffer, $line_id, $key = 'FixupM3u8')
     {
-
-
         if ($key != 'FixupM3u8') {
-            Mediatag::error("There was an error " . $key);
+            Mediatag::error('There was an error ' . $key);
         }
 
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
-
-
     }
 }

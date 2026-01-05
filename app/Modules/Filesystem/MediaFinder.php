@@ -286,7 +286,6 @@ class MediaFinder extends SFinder
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();
         } else {
-
             $search     = self::FilterSearch($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit);
         }
@@ -318,24 +317,25 @@ class MediaFinder extends SFinder
         return (new self)->searchFiles($file, $location, null, $exit);
     }
 
-
     private static function FilterSearch($pattern)
     {
         if (is_null($pattern)) {
             return null;
         }
 
-        set_error_handler(function () { /* ignore warnings */});
+        set_error_handler(function () { /* ignore warnings */
+        });
         $isValid = @preg_match($pattern, '') !== false && preg_last_error() === PREG_NO_ERROR;
         restore_error_handler();
         if ($isValid == false) {
             $pattern = str_replace('*', '', $pattern);
-            $pattern = "/\\" . $pattern . "\$/i";
+            $pattern = '/\\' . $pattern . '$/i';
             $pattern = self::FilterSearch($pattern);
         }
 
         return $pattern;
     }
+
     /**
      * Summary of searchFiles.
      *
@@ -392,7 +392,6 @@ class MediaFinder extends SFinder
                 }
                 $file_array[] = $video_file;
             }
-
 
             if (
                 Option::isTrue('new') ||

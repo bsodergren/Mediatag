@@ -267,7 +267,7 @@ trait MediaFFmpeg
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
-        $ffmpeg = FFMpeg::create([   'timeout'          => 3600], Mediatag::$log);
+        $ffmpeg = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
 
         // $advancedMedia = $ffmpeg->openAdvanced($files);
 
