@@ -144,7 +144,6 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ($tag == 'studio') {
             $delim = '/';

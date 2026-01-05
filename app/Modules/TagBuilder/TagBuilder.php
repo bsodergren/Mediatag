@@ -84,7 +84,6 @@ class TagBuilder
             // // utmdump($updates);
             // UTMlog::Logger('Reader', $updates);
         }
-        utmdump($updates);
 
         if (OptionIsTrue("only")) {
 
