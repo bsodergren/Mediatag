@@ -30,7 +30,6 @@ trait LogFormat
                 continue;
             }
 
-
             if (array_key_exists('class', $row)) {
                 foreach (self::$ClassIgnore as $class) {
                     if (str_contains($row['class'], $class)) {
@@ -43,8 +42,8 @@ trait LogFormat
                 }
                 if (str_contains($row['function'], '__callStatic')) {
                     $calledFile = self::returnTrace('file', $trace[$i]);
-                    continue;
 
+                    continue;
                 }
                 if ($i > 0) {
                     $line = $i - 1;
@@ -105,6 +104,7 @@ trait LogFormat
             if (array_key_exists(2, $out)) {
                 $ret[] = $out[2];
             }
+
             return implode('\\', $ret); //$out[1] . '\\' . $out[2];
         }
 

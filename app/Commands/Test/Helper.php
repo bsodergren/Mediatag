@@ -109,7 +109,7 @@ trait Helper
         ];
 
         foreach ($colors as $color) {
-            $text  = '<fg=' . $color . '>' . $color . '</>';
+            $text = '<fg=' . $color . '>' . $color . '</>';
             $text .= ' <fg=' . $color . ';options=bold> bold ' . $color . '</>';
             $text .= ' <fg=' . $color . ';options=underscore> underscore ' . $color . '</>';
             $text .= ' <fg=' . $color . ';options=blink> blink ' . $color . '</>';
@@ -188,12 +188,12 @@ trait Helper
 
         foreach ($video_array as $dir => $fileArray) {
             $new_path = __PLEX_HOME__ . '/Duration/' . $dir;
-            if (!is_dir($new_path)) {
+            if (! is_dir($new_path)) {
                 $filesystem->mkdir($new_path);
             }
             foreach ($fileArray as $file) {
                 $new_filePath = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__, $new_path, $file);
-                if (!file_exists($new_filePath)) {
+                if (! file_exists($new_filePath)) {
                     $filesystem->symlink($file, $new_filePath);
                     echo 'creating symlink for ' . basename($file) . "\n";
                     // utmdd([__METHOD__,$new_filePath, $file]);
@@ -219,12 +219,12 @@ trait Helper
             //                $new_fileName = str_replace($new_path.'/Studios', $new_path, $new_fileName);
             $new_filePath = str_replace(basename($new_fileName), '', $new_fileName);
 
-            if (!is_dir($new_filePath)) {
+            if (! is_dir($new_filePath)) {
                 $filesystem->mkdir($new_filePath);
             }
 
             if (file_exists($file)) {
-                if (!file_exists($new_fileName)) {
+                if (! file_exists($new_fileName)) {
                     // Mediatag::error($new_fileName);
 
                     $filesystem->rename($file, $new_fileName);
@@ -246,7 +246,7 @@ trait Helper
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $filename = basename($vidArray['video_file']);
             //            if(str_contains($filename,$dir)){
-            if (!str_starts_with($key, 'x')) {
+            if (! str_starts_with($key, 'x')) {
                 $ph_video[] = 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
                 echo 'adding ' . basename($vidArray['video_file']) . "\n";
                 $video_array[] = $vidArray['video_file'] . PHP_EOL;

@@ -7,7 +7,7 @@
 namespace Mediatag\Commands\Playlist;
 
 const DESCRIPTION = 'download PH Playlist';
-const NAME = 'playlist';
+const NAME        = 'playlist';
 
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;

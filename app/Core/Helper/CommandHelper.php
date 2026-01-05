@@ -6,23 +6,20 @@
 
 namespace Mediatag\Core\Helper;
 
-use function array_slice;
-
 use Mediatag\Core\Mediatag;
-use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutputInterface;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
+use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
+
+use function array_slice;
 
 trait CommandHelper
 {
     private $defaultValues = [];
 
     private $completionCmd = [];
-
-
-
 
     // protected function loadStyles($input, $output)
     // {
@@ -63,7 +60,7 @@ trait CommandHelper
     {
         $filesystem = new Filesystem;
         foreach (__CREATE_DIRS__ as $dir) {
-            if (!is_dir($dir)) {
+            if (! is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }
         }
@@ -71,14 +68,13 @@ trait CommandHelper
 
     public static function getProcessClass($className = null)
     {
-
         if (is_null($className)) {
             $className = static::class;
         }
 
         $class = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
         // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
-        if (!class_exists($class)) {
+        if (! class_exists($class)) {
             $pathInfo   = explode('\\', $class);
             $pathInfo   = array_slice($pathInfo, 0, 3);
             $pathInfo[] = 'Process';

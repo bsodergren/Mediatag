@@ -17,11 +17,8 @@ use function array_key_exists;
 
 trait ResizeHelper
 {
-
-
     // public $cmdOptions = [
     //     'filter'   => ['cmd' => 'showTransitionType', 'desc' => 'Show all transition types'],
     //     'playlist' => ['cmd' => 'showPlaylist', 'desc' => 'Show all playlist types'],
     // ];
-
 }

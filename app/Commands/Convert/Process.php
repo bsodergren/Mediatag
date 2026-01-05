@@ -7,13 +7,13 @@
 namespace Mediatag\Commands\Convert;
 
 use FFMpeg\FFMpeg;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\Option;
 
 class Process extends Mediatag
 {
@@ -24,7 +24,6 @@ class Process extends Mediatag
     /**
      * meta.
      */
-
     public $ffmpeg;
 
     public $commandList = [
@@ -55,7 +54,8 @@ class Process extends Mediatag
     protected $useFuncs = [];
 
     protected $json_file;
-    public $fileExtension = "mov";
+
+    public $fileExtension = 'mov';
 
     /**
      * __construct.
@@ -65,21 +65,19 @@ class Process extends Mediatag
      */
     public function __construct(InputInterface $input, OutputInterface $output)
     {
-
         parent::boot($input, $output);
         if (Option::isTrue('extension')) {
             $this->fileExtension = Option::getValue('extension');
         }
-
     }
+
     public function exec()
     {
         MediaFinder::$depth = 1;
-        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, "*." . $this->fileExtension);
-        $this->ffmpeg       = FFMpeg::create(array(
+        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.' . $this->fileExtension);
+        $this->ffmpeg       = FFMpeg::create([
             'timeout'        => 3600, // The timeout for the underlying process
             'ffmpeg.threads' => 12,   // The number of threads that FFMpeg should use
-        ), Mediatag::$log);
-
+        ], Mediatag::$log);
     }
 }

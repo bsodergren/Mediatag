@@ -6,54 +6,48 @@
 
 namespace Mediatag\Commands\Convert\Commands\Resize;
 
+use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use FFMpeg\Format\Video\X264;
-use Mediatag\Utilities\Chooser;
-use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Filters\Video\ResizeFilter;
+use FFMpeg\Format\Video\X264;
 use Mediatag\Commands\Convert\Process;
-use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
-
+use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Utilities\Chooser;
+use UTM\Utilities\Option;
 
 class ResizeProcess extends Process
 {
-
     use ResizeHelper;
 
     private $FFProbe;
+
     public $ffmpeg;
 
     private $fileDims = [];
 
-
     public function execResize()
     {
         MediaFinder::$depth = 1;
-        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, "*.mp4");
-        $this->FFProbe      = FFProbe::create(array(
+        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mp4');
+        $this->FFProbe      = FFProbe::create([
             'timeout' => 3600, // The timeout for the underlying process
 
-        ), Mediatag::$log);
+        ], Mediatag::$log);
 
-
-        $this->ffmpeg = FFMpeg::create(array(
+        $this->ffmpeg = FFMpeg::create([
             'timeout' => 3600, // The timeout for the underlying process
-        ), Mediatag::$log);
-
+        ], Mediatag::$log);
     }
 
     public function ResizeFiles()
     {
-
         $maxWidth = 0;
         $maxRatio = 0;
 
         foreach ($this->file_array as $k => $file) {
-
             // utmdump($this->FFProbe);
             $videoInfo = $this->FFProbe
                 ->streams($file) // extracts streams informations
@@ -67,9 +61,7 @@ class ResizeProcess extends Process
                 $maxWidth = $width;
             }
 
-
             unset($videoInfo);
-
         }
 
         foreach ($this->file_array as $k => $file) {
@@ -81,10 +73,7 @@ class ResizeProcess extends Process
             $height = $videoInfo->getDimensions()->getRatio()->calculateHeight($maxWidth);
 
             $this->fileDims[$k] = ['width' => $maxWidth, 'height' => $height];
-
         }
-
-
 
         foreach ($this->file_array as $k => $file) {
             $this->doResize($k, $file);
@@ -93,22 +82,18 @@ class ResizeProcess extends Process
         exit(0);
     }
 
-
     private function doResize($key, $video_file)
     {
-
         $mp4_file   = basename($video_file, '.mp4');
         $mp4_file   = basename($mp4_file, '.MP4') . '.mp4';
         $mp4_dir    = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'Resized' . DIRECTORY_SEPARATOR;
         $moved_file = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'Resized_moved' . DIRECTORY_SEPARATOR;
 
-        if (!Mediatag::$filesystem->exists($mp4_dir)) {
+        if (! Mediatag::$filesystem->exists($mp4_dir)) {
             Mediatag::$filesystem->mkdir($mp4_dir);
         }
 
-
-
-        if (!Mediatag::$filesystem->exists($moved_file)) {
+        if (! Mediatag::$filesystem->exists($moved_file)) {
             Mediatag::$filesystem->mkdir($moved_file);
         }
 
@@ -117,10 +102,11 @@ class ResizeProcess extends Process
 
         if (file_exists($mp4_file)) {
             if (
-                !Chooser::changes(' Overwrite File ' . basename($mp4_file), 'overwrite', __LINE__)
+                ! Chooser::changes(' Overwrite File ' . basename($mp4_file), 'overwrite', __LINE__)
                 && Option::isFalse('yes')
             ) {
                 Mediatag::$output->writeln('<info> existing file</info>');
+
                 return;
             } else {
                 Mediatag::$output->writeln('<info> Deleting existing file</info>');
@@ -128,11 +114,10 @@ class ResizeProcess extends Process
             }
         }
 
-
         Mediatag::$output->writeln('<comment>Transcoding file ' . basename($video_file) . ' </>');
         $video = $this->ffmpeg->open($video_file);
 
-        $format = new X264();
+        $format = new X264;
         // $format->on('progress', function ($video, $format, $percentage) {
         //     echo "$percentage % transcoded";
         // });

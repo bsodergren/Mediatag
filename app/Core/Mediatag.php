@@ -70,6 +70,7 @@ abstract class Mediatag extends MediaCommand
     public static $Storage;
 
     public static $IoStyle;
+
     public static $Io;
 
     public static $tmpText;
@@ -95,26 +96,22 @@ abstract class Mediatag extends MediaCommand
 
         if (method_exists(self::$log, $method)) {
             if (array_key_exists(1, $args)) {
-                if (!is_array($args[1])) {
+                if (! is_array($args[1])) {
                     $args[1] = [$args[1]];
-                    $args[0] = $args[0] . " {0}";
+                    $args[0] = $args[0] . ' {0}';
                 }
             }
             self::$log->$method(...$args);
+
             return '';
         }
-
-
     }
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)
     {
-        if (!defined('__CURRENT_DIRECTORY__')) {
+        if (! defined('__CURRENT_DIRECTORY__')) {
             define('__CURRENT_DIRECTORY__', getcwd());
         }
-
-
-
 
         self::$input  = $input;
         self::$output = $output;
@@ -125,8 +122,6 @@ abstract class Mediatag extends MediaCommand
 
         MediaCache::init(self::$input, self::$output);
         Option::init(self::$input, $options);
-
-
 
         self::$Cursor  = new Cursor(self::$output);
         self::$Console = new ConsoleOutput(self::$output, self::$input);
@@ -139,7 +134,7 @@ abstract class Mediatag extends MediaCommand
         self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
-        if (!Option::isTrue('SKIP_SEARCH')) {
+        if (! Option::isTrue('SKIP_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
 
             // utmdd(self::$SearchArray);
@@ -203,7 +198,7 @@ abstract class Mediatag extends MediaCommand
             $fs        = new File($file);
             $videoData = $fs->get();
 
-            if (!array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
+            if (! array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
             } else {
                 $meta_key = 'dupe';
@@ -220,9 +215,7 @@ abstract class Mediatag extends MediaCommand
     //     utmdd($this->VideoList);
     // }
 
-    public function print()
-    {
-    }
+    public function print() {}
 
     public function getNumberofFiles()
     {
@@ -280,7 +273,7 @@ abstract class Mediatag extends MediaCommand
             }
         }
 
-        if (!isset($Commands)) {
+        if (! isset($Commands)) {
             $Commands = $default;
         }
 

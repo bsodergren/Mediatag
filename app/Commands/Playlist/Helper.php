@@ -87,7 +87,7 @@ trait Helper
         $playlist_file = 'missing_playlist.txt';
         $ids           = $this->getDownloadedIds();
         foreach ($ids as $id) {
-            if (!array_key_exists($id, $video_keys)) {
+            if (! array_key_exists($id, $video_keys)) {
                 $missing[] = $id;
             }
         }
@@ -195,7 +195,7 @@ trait Helper
             $current_key     = self::$current_key;
             $archive_content = Filesystem::readLines(self::$ARCHIVE);
             foreach ($archive_content as $lineNum => $line) {
-                if (!str_contains($line, $current_key)) {
+                if (! str_contains($line, $current_key)) {
                     $archive_array[] = $line;
                 }
             }
@@ -225,7 +225,7 @@ trait Helper
 
         $playlist_array = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-        (int) $max = Option::getValue('max');
+        (int) $max       = Option::getValue('max');
         $trimed_playlist = array_slice($playlist_array, 0, $max);
 
         $remaining_playlist = array_slice($playlist_array, $max);
@@ -289,7 +289,7 @@ trait Helper
                 // $array[] = $video_key;
                 // utmdd("key " . $filename);
             } else {
-                if (!str_starts_with($video_key, 'x')) {
+                if (! str_starts_with($video_key, 'x')) {
                     if (file_exists($filename)) {
                         $newids[] = 'pornhub ' . $video_key;
 
@@ -309,9 +309,9 @@ trait Helper
     public function docompactPlaylist()
     {
         // utminfo(func_get_args());
-        if (!Option::istrue('skip')) {
+        if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
-            if (!file_exists($this->playlist)) {
+            if (! file_exists($this->playlist)) {
                 Mediatag::$output->writeln('<info>File doesnt exist</info>');
                 exit;
             }
@@ -390,7 +390,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        if (!str_contains('premium', $this->playlist)) {
+        if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
             if (file_exists($this->premium)) {
                 $this->premiumIds = Filesystem::readLines($this->premium, [$this, 'getpremiumListIds']);
@@ -401,7 +401,7 @@ trait Helper
     public function splitPlaylist()
     {
         (int) $split = Option::getValue('split');
-        $splitName = basename($this->playlist, '.txt');
+        $splitName   = basename($this->playlist, '.txt');
         MediaFile::splitFile($this->playlist, './batch/', $split, $splitName . '_', '.txt');
 
         exit;
@@ -410,7 +410,7 @@ trait Helper
     public function parseArchive($line)
     {
         $key = Strings::after($line, ' ');
-        if (!array_key_exists($key, $this->json_Array)) {
+        if (! array_key_exists($key, $this->json_Array)) {
             return $line;
         }
 
@@ -458,7 +458,7 @@ trait Helper
             }
         }
         // utmdd([$line,$ph_id]);
-        if (!in_array($ph_id, $this->ids)) {
+        if (! in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
                 return $line;
             }
@@ -493,7 +493,7 @@ trait Helper
         // utminfo(func_get_args());
 
         if ($line != '') {
-            if (!str_contains($line, ':')) {
+            if (! str_contains($line, ':')) {
                 $line = $line . ':' . $line;
             }
 

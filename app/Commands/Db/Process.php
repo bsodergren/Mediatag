@@ -6,7 +6,6 @@
 
 namespace Mediatag\Commands\Db;
 
-use Symfony\Component\Console\Command\Command;
 use const DIRECTORY_SEPARATOR;
 
 use Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
@@ -18,6 +17,7 @@ use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
@@ -81,7 +81,7 @@ class Process extends Mediatag
         'json' => [
             // 'init'    => null,
             // 'exec'    => null,
-            'getJson' => null
+            'getJson' => null,
         ],
     ];
 
@@ -130,7 +130,7 @@ class Process extends Mediatag
                             $filename  = basename($file);
 
                             $dupePath = nFileSystem::normalizePath($dupePath);
-                            if (!is_dir($dupePath)) {
+                            if (! is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
@@ -158,17 +158,19 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        if (!is_null($option)) {
+        if (! is_null($option)) {
             $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
             if (class_exists($class)) {
-                $this->obj = new $class();
+                $this->obj = new $class;
                 // if(method_exists( $this->obj,'checkClean')){
                 $this->checkClean();
                 // }
                 $this->obj->updateVideoData();
+
                 return Command::SUCCESS;
             }
-            Mediatag::error("Class doesnt exist");
+            Mediatag::error('Class doesnt exist');
+
             return Command::FAILURE;
         }
 
@@ -183,9 +185,5 @@ class Process extends Mediatag
         //  $this->execUpdate();
     }
 
-    public function testExec($option)
-    {
-
-
-    }
+    public function testExec($option) {}
 }

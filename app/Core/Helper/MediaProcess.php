@@ -16,7 +16,7 @@ trait MediaProcess
 {
     public function exec($option = null)
     {
-        Mediatag::debug("Running Exec on MediaProcess Trait");
+        Mediatag::debug('Running Exec on MediaProcess Trait');
 
         $this->VideoList = parent::getVideoArray();
         if (count($this->VideoList['file']) == 0) {
@@ -26,9 +26,8 @@ trait MediaProcess
 
     public function __call($method, $args)
     {
-
         if (array_key_exists($method, $this->commandList)) {
-            Mediatag::debug("Running command from MediaProcess Trait ", [get_class($this), $method]);
+            Mediatag::debug('Running command from MediaProcess Trait ', [get_class($this), $method]);
 
             foreach ($this->commandList[$method] as $cmd => $option) {
                 if (method_exists($this, $cmd)) {
@@ -40,7 +39,7 @@ trait MediaProcess
                 }
             }
         } else {
-            Mediatag::debug("Running process from MediaProcess Trait ");
+            Mediatag::debug('Running process from MediaProcess Trait ');
 
             $this->process();
         }

@@ -33,9 +33,13 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     use LogFormat;
 
     public const INFO = 'info';
+
     public const ERROR = 'error';
+
     public const DEBUG = 'debug';
+
     public const NOTICE = 'playlist';
+
     public const WARNING = 'playlist';
 
     private $backtrace = '';
@@ -74,13 +78,13 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     ];
 
     private array $logVerbosityLevelMap = [
-            // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            // LogLevel::INFO   => OutputInterface::VERBOSITY_VERY_VERBOSE,
-            // LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
-            // LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
+        // LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
+        // LogLevel::INFO   => OutputInterface::VERBOSITY_VERY_VERBOSE,
+        // LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
+        // LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::CRITICAL => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::ERROR    => OutputInterface::VERBOSITY_NORMAL,
-            // LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
+        // LogLevel::WARNING   => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::NOTICE   => OutputInterface::VERBOSITY_VERBOSE,
         LogLevel::INFO     => OutputInterface::VERBOSITY_QUIET,
         LogLevel::DEBUG    => OutputInterface::VERBOSITY_VERY_VERBOSE,
@@ -218,9 +222,10 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         $this->log(LogLevel::ERROR, $message, $context);
         exit(1);
     }
+
     public function log($level, $message, array $context = []): void
     {
-        if (!isset($this->verbosityLevelMap[$level])) {
+        if (! isset($this->verbosityLevelMap[$level])) {
             throw new InvalidArgumentException(sprintf('The log level "%s" does not exist.', $level));
         }
 
@@ -249,15 +254,13 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     private function interpolate(string $message, array $context): string
     {
-
-        if (!str_contains($message, '{')) {
+        if (! str_contains($message, '{')) {
             $class   = new PrettyArray;
             $context = $class->print($context);
 
             return $message . $context;
         }
         $replacements = [];
-
 
         foreach ($context as $key => $val) {
             if ($val === null || is_scalar($val) || $val instanceof Stringable) {
@@ -276,9 +279,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         return strtr($message, $replacements);
     }
 
-    private function writeFile($level, $string)
-    {
-    }
+    private function writeFile($level, $string) {}
 
     private function file($level, $message)
     {

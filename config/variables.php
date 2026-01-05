@@ -1,10 +1,8 @@
 <?php
 
-use UTM\Bundle\mysql\dbObject;
-use Mediatag\Modules\Database\Storage;
 use Mediatag\Core\Settings\MediaSettings;
-
-
+use Mediatag\Modules\Database\Storage;
+use UTM\Bundle\mysql\dbObject;
 
 /**
  * Command like Metatag writer for video files.
@@ -122,7 +120,7 @@ define(
 
 define('__MAX_SQL_ITEMS__', 5000);
 
-$db    = new Storage();
+$db    = new Storage;
 $query = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
 $val   = $db->rawQuery($query);
 
@@ -130,8 +128,6 @@ foreach ($val as $row => $settingVal) {
     $value = json_decode($settingVal['value']);
     define($settingVal['name'], $value);
 }
-
-
 
 $genre_regex_string = strtolower(implode('|', __GENRE_LIST__));
 

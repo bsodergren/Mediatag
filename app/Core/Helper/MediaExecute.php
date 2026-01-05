@@ -37,7 +37,7 @@ trait MediaExecute
                 case 'keyword':
                 case 'network':
                 case 'studio':
-                    if (!defined('__UPDATE_SET_ONLY__')) {
+                    if (! defined('__UPDATE_SET_ONLY__')) {
                         define('__UPDATE_SET_ONLY__', true);
                     }
                     $this->meta_tag_arrary = [$option];
@@ -55,14 +55,14 @@ trait MediaExecute
                 $this->meta_tag_arrary = Option::getValue('empty');
             }
         }
-        if (!defined('__META_TAGS__')) {
+        if (! defined('__META_TAGS__')) {
             define('__META_TAGS__', $this->meta_tag_arrary);
         }
 
-        if (!defined('TITLE_REPLACE_MAP')) {
+        if (! defined('TITLE_REPLACE_MAP')) {
             $this->getTitleMap('TITLE_REPLACE_MAP', Mediatag::$Storage->getTitleMap());
         }
-        if (!defined('ARTIST_MAP')) {
+        if (! defined('ARTIST_MAP')) {
             $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
     }
@@ -71,11 +71,11 @@ trait MediaExecute
     {
         Mediatag::notice('setupMap', __FILE__);
 
-        if (!defined('ARTIST_MAP')) {
+        if (! defined('ARTIST_MAP')) {
             $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
         }
 
-        if (!defined('IGNORE_NAME_MAP')) {
+        if (! defined('IGNORE_NAME_MAP')) {
             $this->mapArtist('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
         }
     }
@@ -102,7 +102,7 @@ trait MediaExecute
 
         sort($nameArray);
         array_unique($nameArray);
-        if (!defined($constant)) {
+        if (! defined($constant)) {
             define($constant, $nameArray);
         }
     }

@@ -6,21 +6,21 @@
 
 namespace Mediatag\Commands\Test;
 
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Paramako\Pornhub\Factory;
-use Mediatag\Core\MediaLogger;
-use FFMpeg\Coordinate\TimeCode;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Modules\VideoInfo\VideoInfo;
-use Symfony\Component\Filesystem\Filesystem;
-use SergiX44\FastImageCompare\FastImageCompare;
+use Mediatag\Core\MediaLogger;
+use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
+use Mediatag\Modules\VideoInfo\VideoInfo;
+use Paramako\Pornhub\Factory;
+use SergiX44\FastImageCompare\FastImageCompare;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Filesystem\Filesystem;
+use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__ . '/WordMap.php';
 
@@ -119,39 +119,27 @@ class Process extends Mediatag
         return $closest;
     }
 
-    public function execWord()
-    {
-
-
-    }
-
-
+    public function execWord() {}
 
     public function exec($option = null)
     {
-
         $thumbnailFile = [];
 
         $img_name  = [];
         $fileArray = parent::$SearchArray;
         foreach ($fileArray as $file) {
-            $thumbnailFile[] = (new VideoInfo())->videoToThumb($file);
-
-
+            $thumbnailFile[] = (new VideoInfo)->videoToThumb($file);
         }
 
-        $instance     = new FastImageCompare();
+        $instance     = new FastImageCompare;
         $similarArray = $instance->findDuplicates($thumbnailFile, 0.05);
 
         foreach ($similarArray as $t => $tfile) {
-            $img_name[] = (new VideoInfo())->thumbToVideo($tfile);
-
+            $img_name[] = (new VideoInfo)->thumbToVideo($tfile);
         }
         // mediatag::error($img_name);
         // $this->mvFiles($img_name);
         // utmdd($img_name);
-
-
     }
 
     //     // //

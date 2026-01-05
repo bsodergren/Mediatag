@@ -21,7 +21,7 @@ final class Command extends MediaCommand
     public $command = [
         'convert' => [
             'exec'         => null,
-            'ConvertFiles' => null
+            'ConvertFiles' => null,
 
         ],
     ];

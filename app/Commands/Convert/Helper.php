@@ -7,33 +7,31 @@
 namespace Mediatag\Commands\Convert;
 
 use const PHP_EOL;
+
+use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFMpeg;
+use FFMpeg\Filters\Video\ResizeFilter;
+// use Mediatag\Traits\CaseHelper;
+use FFMpeg\Format\Video\X264;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\WriteMeta;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Modules\TagBuilder\TagBuilder;
+use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Utilities\Chooser;
+use Nette\Utils\Callback;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\Process\Process;
+use UTM\Utilities\Option;
 
 use function count;
 use function is_array;
-// use Mediatag\Traits\CaseHelper;
-use Nette\Utils\Callback;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use FFMpeg\Format\Video\X264;
-use Mediatag\Utilities\Chooser;
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Filters\Video\ResizeFilter;
-use Symfony\Component\Process\Process;
-
-use Mediatag\Modules\Executable\WriteMeta;
-use Mediatag\Modules\TagBuilder\TagReader;
-use Mediatag\Modules\TagBuilder\TagBuilder;
-use Mediatag\Modules\Filesystem\MediaFinder;
-use Symfony\Component\HttpClient\HttpClient;
-use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Symfony\Component\Console\Helper\ProgressBar;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 
 trait Helper
 {
-
-
     public function ConvertFiles()
     {
         foreach ($this->file_array as $file) {
@@ -44,20 +42,17 @@ trait Helper
 
     public function convertMedia($video_file)
     {
-
         $mp4_file = basename($video_file, '.' . strtoupper($this->fileExtension));
         $mp4_file = basename($mp4_file, '.' . $this->fileExtension) . '.mp4';
         $mp4_dir  = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'mp4' . DIRECTORY_SEPARATOR;
 
         $moved_file = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'moved' . DIRECTORY_SEPARATOR;
 
-        if (!Mediatag::$filesystem->exists($mp4_dir)) {
+        if (! Mediatag::$filesystem->exists($mp4_dir)) {
             Mediatag::$filesystem->mkdir($mp4_dir);
         }
 
-
-
-        if (!Mediatag::$filesystem->exists($moved_file)) {
+        if (! Mediatag::$filesystem->exists($moved_file)) {
             Mediatag::$filesystem->mkdir($moved_file);
         }
 
@@ -66,11 +61,12 @@ trait Helper
 
         if (file_exists($mp4_file)) {
             if (
-                !Chooser::changes(' Overwrite File ' . basename($mp4_file), 'overwrite', __LINE__)
+                ! Chooser::changes(' Overwrite File ' . basename($mp4_file), 'overwrite', __LINE__)
                 && Option::isFalse('yes')
             ) {
                 Mediatag::$output->writeln('<info> existing file</info>');
                 MediaFilesystem::renameFile($video_file, $moved_file);
+
                 return;
             } else {
                 Mediatag::$output->writeln('<info> Deleting existing file</info>');
@@ -78,11 +74,10 @@ trait Helper
             }
         }
 
-
         Mediatag::$output->writeln('<comment>Transcoding file ' . basename($video_file) . ' </>');
         $video = $this->ffmpeg->open($video_file);
 
-        $format = new X264();
+        $format = new X264;
         // $format->on('progress', function ($video, $format, $percentage) {
         //     echo "$percentage % transcoded";
         // });
@@ -92,7 +87,6 @@ trait Helper
             if ($percentage >= '99') {
                 Mediatag::$output->writeln('<info>finished</info>');
             } else {
-
             }
             // Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
             // utmdump("$percentage % transcoded");
@@ -111,7 +105,5 @@ trait Helper
         $video->save($format, $mp4_file);
 
         MediaFilesystem::renameFile($video_file, $moved_file);
-
     }
-
 }

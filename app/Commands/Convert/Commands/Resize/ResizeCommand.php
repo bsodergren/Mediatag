@@ -23,9 +23,8 @@ final class ResizeCommand extends MediaCommand
     public $command = [
         'resize' => [
             'execResize'  => null,
-            'ResizeFiles' => null
+            'ResizeFiles' => null,
 
         ],
     ];
-
 }
