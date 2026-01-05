@@ -144,7 +144,7 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        // utmdump([$tag, $firstCmp, $secondCmp]);
+        utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ($tag == 'studio') {
             $delim = '/';
@@ -167,7 +167,7 @@ trait MetaTags
                         $return = $second;
                         // utmdump(['return second', $return]);
                     } else {
-                        $return = $second;
+                        $return = $first;
                         // utmdump(['return second', $return]);
 
                         //                        $return = $second;

@@ -69,7 +69,6 @@ class TagBuilder
             $DbUpdates = $this->ReaderObj->getDbValues();
         }
 
-        utmdump($updates);
 
         // if (null !== $FileUpdates) {
         //     $updates = $FileUpdates;
@@ -85,6 +84,7 @@ class TagBuilder
             // // utmdump($updates);
             // UTMlog::Logger('Reader', $updates);
         }
+        utmdump($updates);
 
         if (OptionIsTrue("only")) {
 
