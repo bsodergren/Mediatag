@@ -7,6 +7,7 @@
 namespace Mediatag\Commands\Convert;
 
 use FFMpeg\FFMpeg;
+use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
@@ -54,6 +55,7 @@ class Process extends Mediatag
     protected $useFuncs = [];
 
     protected $json_file;
+    public $fileExtension = "mov";
 
     /**
      * __construct.
@@ -65,12 +67,15 @@ class Process extends Mediatag
     {
 
         parent::boot($input, $output);
+        if (Option::isTrue('extension')) {
+            $this->fileExtension = Option::getValue('extension');
+        }
 
     }
     public function exec()
     {
         MediaFinder::$depth = 1;
-        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, "*.mov");
+        $this->file_array   = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, "*." . $this->fileExtension);
         $this->ffmpeg       = FFMpeg::create(array(
             'timeout'        => 3600, // The timeout for the underlying process
             'ffmpeg.threads' => 12,   // The number of threads that FFMpeg should use

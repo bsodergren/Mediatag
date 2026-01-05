@@ -24,7 +24,7 @@ class Options extends MediaOptions
         Translate::$Class = __CLASS__;
 
         return [
-            // ['changes', 'c', InputOption::VALUE_NONE, Translate::text('L__CONVERT_APPROVE_CHANGES')],
+            ['extension', 'e', InputOption::VALUE_OPTIONAL, Translate::text('L__CONVERT_APPROVE_CHANGES')],
             // ['convert', 'U', InputOption::VALUE_NONE, Translate::text('L__CONVERT_ALL_TAGS')],
             // ['clear', '', InputOption::VALUE_NONE, Translate::text('L__CONVERT_CLEAR')],
 

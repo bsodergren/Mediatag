@@ -3,7 +3,7 @@
 namespace Mediatag\Commands\Db\Commands\All;
 
 use Mediatag\Commands\Db\Process;
-use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
+use Mediatag\Modules\VideoInfo\Section\GifPreviewFiles;
 use Mediatag\Modules\VideoInfo\Section\Thumbnail;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 

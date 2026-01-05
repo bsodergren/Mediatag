@@ -88,7 +88,7 @@ trait MetaTags
             $arr[] = trim($tagValue);
         }
 
-        if (! isset($this->videoData['video_path'])) {
+        if (!isset($this->videoData['video_path'])) {
             $this->videoData['video_path'] = $this->video_path;
         }
 
@@ -309,7 +309,7 @@ trait MetaTags
 
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
-            if (! method_exists($tagDB, $method)) {
+            if (!method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;
@@ -325,7 +325,18 @@ trait MetaTags
                 $newList[] = $value;
             }
         }
+        // if ($tag == 'studio') {
 
+        //     $tmpList = $newList;
+        //     array_walk($tmpList, function (&$value) {
+        //         $value = str_replace(" ", "", $value);
+        //         // $value = trim(ucwords($value));
+        //     });
+        //     $tmpList = array_unique($tmpList);
+        //     $newList = array_diff($newList, $tmpList);
+
+
+        // }
         $string = implode($delim, $newList);
         $arr    = explode($delim, $string);
 

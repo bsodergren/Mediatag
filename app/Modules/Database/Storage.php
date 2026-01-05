@@ -16,7 +16,7 @@ use function count;
 use function get_class;
 use function is_array;
 
-class Storage
+class Storage extends MysqliDb
 {
     public $DbFileArray = [];
 
@@ -63,15 +63,24 @@ class Storage
     {
         // utminfo();
 
-        $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+        $db = parent::getInstance();
+
+        if ($db === null) {
+            parent::__construct('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+            $db = parent::getInstance();
+        }
+        $this->dbConn = $db;
+        // $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->dbConn->setTrace(true);
 
-        $this->mapClass    = new DbMap;
-        $this->output      = Mediatag::$output;
-        $this->input       = Mediatag::$input;
-        $this->FileNumber  = $this->output->section();
-        $this->headerBlock = $this->output->section();
-        $this->RowBlock    = $this->output->section();
+        $this->mapClass = new DbMap;
+        if (!is_null(Mediatag::$output)) {
+            $this->output      = Mediatag::$output;
+            $this->input       = Mediatag::$input;
+            $this->FileNumber  = $this->output->section();
+            $this->headerBlock = $this->output->section();
+            $this->RowBlock    = $this->output->section();
+        }
     }
 
     public function trace()
@@ -120,8 +129,8 @@ class Storage
     public function delete($table, $where = [], $test = false)
     {
         if (array_key_exists(0, $where)) {
-            if (! is_array($where[0])) {
-                if (! array_key_exists('field', $where)) {
+            if (!is_array($where[0])) {
+                if (!array_key_exists('field', $where)) {
                     $field = $where[0];
                     $value = $where[1];
                     unset($where);
@@ -170,7 +179,7 @@ class Storage
         return $ret;
     }
 
-    public function query($sql)
+    public function query($sql, $numRows = null)
     {
         // utminfo(func_get_args());
 
@@ -179,7 +188,7 @@ class Storage
         return $res;
     }
 
-    public function queryOne($sql)
+    public function queryOne($sql, $numRows = null)
     {
         // utminfo(func_get_args());
 
@@ -211,7 +220,7 @@ class Storage
             $commit = true;
             foreach ($rowData as $tableName => $data) {
                 if ($commit === true) {
-                    if (! $this->dbConn->insert($tableName, $data)) {
+                    if (!$this->dbConn->insert($tableName, $data)) {
                         $this->video_string[] = ['insert failed: ' . $this->dbConn->getLastError()];
                         // Error while saving, cancel new record
                         $this->dbConn->rollback();
@@ -237,7 +246,7 @@ class Storage
         }
 
         $ids = $this->dbConn->insertMulti($table, $data);
-        if (! $ids) {
+        if (!$ids) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];
         }
         if ($quiet === false) {
@@ -272,7 +281,7 @@ class Storage
         // $id = $this->dbConn->insert($table, $data);
         $id = $this->dbConn->update($table, $data);
         // UtmDump($this->dbConn->getLastQuery());
-        if (! $id) {
+        if (!$id) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
 
             // return $r;
@@ -313,7 +322,7 @@ class Storage
 
             if ($has !== null) {
                 $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
-                if (! Mediatag::$filesystem->exists($backup_path)) {
+                if (!Mediatag::$filesystem->exists($backup_path)) {
                     Mediatag::$filesystem->mkdir($backup_path);
                 }
                 $old_file = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
@@ -392,7 +401,7 @@ class Storage
                     $search = ' ' . $search[0] . " = '" . $search[1] . "'";
                 }
                 $sel_cols = $search;
-                $die      = true;
+                $die = true;
 
                 break;
 
@@ -412,7 +421,7 @@ class Storage
             default:
                 exit('No command added');
 
-                // break;
+            // break;
         }
 
         $query .= __MYSQL_VIDEO_FILE__ . " WHERE Library = '" . __LIBRARY__ . "'  ";

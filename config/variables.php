@@ -1,5 +1,11 @@
 <?php
 
+use UTM\Bundle\mysql\dbObject;
+use Mediatag\Modules\Database\Storage;
+use Mediatag\Core\Settings\MediaSettings;
+
+
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -116,101 +122,19 @@ define(
 
 define('__MAX_SQL_ITEMS__', 5000);
 
-define(
-    '__CHANNELS__',
-    [
-        'Studios',
-        'Favorite',
-        'OnlyFans',
-        'Animation',
-        'Models',
-        'Amateur',
-        'Channels',
-        'New',
-        'Premium',
-        'Sort',
-        'Misc',
-    ],
-);
+$db    = new Storage();
+$query = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
+$val   = $db->rawQuery($query);
 
-define(
-    '__LIBRARIES__',
-    [
-        'Clips',
-        'Videos',
-        'BiSexual',
-        'Pornhub',
-        'Studio',
-        'Studios',
-        'HomeVideos',
-        'Downloads',
-        'Playlists',
-        'Home Pictures',
-    ],
-);
+foreach ($val as $row => $settingVal) {
+    $value = json_decode($settingVal['value']);
+    define($settingVal['name'], $value);
+}
 
-define(
-    '__SKIP_STUDIOS__',
-    [
-        'New',
-        'Models',
-        'Amateur',
-        'Animation',
-        // 'Misc',
-        'Downloads',
-        // 'Favorite',
-        'Clips',
-        // 'Home',
-        'Premium',
-        'Pornhub',
-        'fav',
-        'OnlyFans',
 
-        // 'Sort',
-        'Channels',
-        'Maybe',
-        'Amateur Models',
-        'Studios',
-        // 'group',
-        // 'mmf',
-        // 'mff',
-        // 'single',
-        // 'only girls',
-        // 'bimale',
-        // 'trans',
-        // 'blowjob',
-
-        // 'only blowjobs',
-        // 'compilation',
-        // 'Bisexual',
-    ],
-);
-
-define(
-    '__GENRE_LIST__',
-    [
-        'Group',
-        'MMF',
-        'MFF',
-        'Single',
-        'Only Girls',
-
-        'Trans',
-        'Blowjob',
-        'Only Blowjobs',
-        'Compilation',
-        'Bisexual',
-        'Feature',
-        'Hotwife',
-        'White',
-        'Toys',
-        //  'Hot',
-        //  'Clips',
-        //  'misc',
-    ],
-);
 
 $genre_regex_string = strtolower(implode('|', __GENRE_LIST__));
+
 define(
     '__GENRE_REGEX__',
     '/[a-zA-Z _0-9\.\/]*\/(' . $genre_regex_string . ')(.*)?(\/*.mp4)?/i',

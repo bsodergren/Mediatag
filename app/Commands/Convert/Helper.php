@@ -45,8 +45,8 @@ trait Helper
     public function convertMedia($video_file)
     {
 
-        $mp4_file = basename($video_file, '.MOV');
-        $mp4_file = basename($mp4_file, '.mov') . '.mp4';
+        $mp4_file = basename($video_file, '.' . strtoupper($this->fileExtension));
+        $mp4_file = basename($mp4_file, '.' . $this->fileExtension) . '.mp4';
         $mp4_dir  = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'mp4' . DIRECTORY_SEPARATOR;
 
         $moved_file = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'moved' . DIRECTORY_SEPARATOR;
@@ -70,6 +70,7 @@ trait Helper
                 && Option::isFalse('yes')
             ) {
                 Mediatag::$output->writeln('<info> existing file</info>');
+                MediaFilesystem::renameFile($video_file, $moved_file);
                 return;
             } else {
                 Mediatag::$output->writeln('<info> Deleting existing file</info>');
@@ -85,12 +86,22 @@ trait Helper
         // $format->on('progress', function ($video, $format, $percentage) {
         //     echo "$percentage % transcoded";
         // });
-
+        //utmdd($format->listeners());
         $format->on('progress', function ($advancedMedia, $format, $percentage) {
-            Mediatag::$output->writeln('<info>Info compilation called  ' . $percentage . ' </info>');
-            utmdump("$percentage % transcoded");
-        });
+            Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
+            if ($percentage >= '99') {
+                Mediatag::$output->writeln('<info>finished</info>');
+            } else {
 
+            }
+            // Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
+            // utmdump("$percentage % transcoded");
+        });
+        $format->on('finish', function ($advancedMedia, $format, $percentage) {
+            // Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
+            Mediatag::$output->writeln('<info>Info compilation called  ' . $percentage . ' </info>');
+            // utmdump("$percentage % transcoded");
+        });
         // $format
         //     ->setKiloBitrate(1000)
         //     ->setAudioChannels(2)
