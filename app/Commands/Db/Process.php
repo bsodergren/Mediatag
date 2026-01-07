@@ -104,17 +104,22 @@ class Process extends Mediatag
     public function init()
     {
         // utminfo(func_get_args());
-        if ($this->Search_Array === null) {
-            $this->Search_Array = parent::$finder->Search(null, '/\.mp4$/i', null, false);
+
+        if ($this->Search_Array === null || count($this->Search_Array) == 0) {
+
+            $this->Search_Array = parent::$finder->Search(getcwd(), '.mp4', null, false);
+
         }
         // $this->DbMap = new DbMap();
+        // 
+        // utmdd($this->Search_Array);
+
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
-        // utmdd($this->allDbFiles,$this->Search_Array);
 
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
-
+                // utmdump($key, $file);
                 if (array_key_exists($key, $this->allDbFiles)) {
                     $existing_file = $this->allDbFiles[$key];
 
@@ -130,7 +135,7 @@ class Process extends Mediatag
                             $filename  = basename($file);
 
                             $dupePath = nFileSystem::normalizePath($dupePath);
-                            if (! is_dir($dupePath)) {
+                            if (!is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
@@ -158,7 +163,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        if (! is_null($option)) {
+        if (!is_null($option)) {
             $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
             if (class_exists($class)) {
                 $this->obj = new $class;
@@ -176,14 +181,14 @@ class Process extends Mediatag
 
         // utminfo(func_get_args());
         $this->getFileArray();
-
         $this->removeDBEntry();
         $this->changeDBEntry();
-
         $this->addDBEntry();
 
         //  $this->execUpdate();
     }
 
-    public function testExec($option) {}
+    public function testExec($option)
+    {
+    }
 }

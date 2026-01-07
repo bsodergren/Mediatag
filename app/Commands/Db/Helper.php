@@ -50,9 +50,11 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $data = ['name' => __LIBRARY__ . '_last_updated',
-            'value'     => parent::$dbconn->dbConn->now(),
-            'type'      => 'update'];
+        $data          = [
+            'name'  => __LIBRARY__ . '_last_updated',
+            'value' => parent::$dbconn->dbConn->now(),
+            'type'  => 'update'
+        ];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
         parent::$dbconn->dbConn->onDuplicate($updateColumns, $lastInsertId);
@@ -89,7 +91,6 @@ trait Helper
     public function getFileArray()
     {
         // utminfo(func_get_args());
-
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
 
         $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
@@ -129,10 +130,10 @@ trait Helper
         // utmdd($this->Changed_Array);
         Mediatag::$Console->definitionList(
             'Database Updates',
-            ['Files found'   => count($this->file_array)],
+            ['Files found' => count($this->file_array)],
             ['Deleted files' => count($this->Deleted_Array)],
             ['Changed files' => count($this->Changed_Array)],
-            ['New files'     => count($this->New_Array)],
+            ['New files' => count($this->New_Array)],
         );
 
         // utmdd([__METHOD__,
@@ -198,7 +199,7 @@ trait Helper
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
             parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
-            if (! Option::istrue('preview')) {
+            if (!Option::istrue('preview')) {
                 parent::$dbconn->removeDBEntry();
                 //  parent::$dbconn->clearDBValues($video_key);
             }
@@ -221,7 +222,6 @@ trait Helper
             $progressbar->setMsgFormat()->setMessage('All Files', 'message')->newbar();
             $progressbar->start();
             parent::$dbconn->progressbar1 = $progressbar;
-            // utmdd($this->New_Array);
             foreach ($this->New_Array as $video_key => $video_file) {
                 $videoDataArray[] = (new StorageDB)->createDbEntry($video_file, $video_key);
                 $idx--;
@@ -259,7 +259,7 @@ trait Helper
             parent::$dbconn->video_file = $video_file;
             // parent::$dbconn->video_key  = $video_key;
             $video_name = basename($video_file);
-            if (! Option::istrue('preview')) {
+            if (!Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db ' . $video_name);
                 parent::$dbconn->UpdateFilePath($video_file);
             } else {
@@ -268,18 +268,20 @@ trait Helper
         }
     }
 
-    public function findRemoved() {}
+    public function findRemoved()
+    {
+    }
 
     public function execUpdate()
     {
         // utminfo(func_get_args());
 
         $date = null;
-        if (! Option::istrue('yes') && ! Option::istrue('paths')) {
+        if (!Option::istrue('yes') && !Option::istrue('paths')) {
             $date = $this->lastUpdated();
         }
         $file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i', $date);
-        if (! is_array($file_array)) {
+        if (!is_array($file_array)) {
             return 0;
         }
         $total = count($file_array);
@@ -307,10 +309,10 @@ trait Helper
         $file_array = Mediatag::$SearchArray;
         foreach ($file_array as $k => $file) {
             $json_key = File::getVideoKey($file);
-            if (! str_starts_with($json_key, 'x')) {
+            if (!str_starts_with($json_key, 'x')) {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
 
-                if (! Mediatag::$filesystem->exists($json_file)) {
+                if (!Mediatag::$filesystem->exists($json_file)) {
                     $exec   = new Youtube('');
                     $return = $exec->youtubeGetJson($json_key);
 
@@ -476,7 +478,7 @@ trait Helper
         $db = parent::$Storage->dbConn;
 
         if (Option::isTrue('library')) {
-            if (! str_contains($table, 'mediatag_video_custom')) {
+            if (!str_contains($table, 'mediatag_video_custom')) {
                 $db->where('Library', __LIBRARY__);
             } else {
                 $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "' . __LIBRARY__ . '"';

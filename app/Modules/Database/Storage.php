@@ -74,7 +74,7 @@ class Storage extends MysqliDb
         $this->dbConn->setTrace(true);
 
         $this->mapClass = new DbMap;
-        if (! is_null(Mediatag::$output)) {
+        if (!is_null(Mediatag::$output)) {
             $this->output      = Mediatag::$output;
             $this->input       = Mediatag::$input;
             $this->FileNumber  = $this->output->section();
@@ -129,8 +129,8 @@ class Storage extends MysqliDb
     public function delete($table, $where = [], $test = false)
     {
         if (array_key_exists(0, $where)) {
-            if (! is_array($where[0])) {
-                if (! array_key_exists('field', $where)) {
+            if (!is_array($where[0])) {
+                if (!array_key_exists('field', $where)) {
                     $field = $where[0];
                     $value = $where[1];
                     unset($where);
@@ -220,7 +220,7 @@ class Storage extends MysqliDb
             $commit = true;
             foreach ($rowData as $tableName => $data) {
                 if ($commit === true) {
-                    if (! $this->dbConn->insert($tableName, $data)) {
+                    if (!$this->dbConn->insert($tableName, $data)) {
                         $this->video_string[] = ['insert failed: ' . $this->dbConn->getLastError()];
                         // Error while saving, cancel new record
                         $this->dbConn->rollback();
@@ -246,7 +246,7 @@ class Storage extends MysqliDb
         }
 
         $ids = $this->dbConn->insertMulti($table, $data);
-        if (! $ids) {
+        if (!$ids) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];
         }
         if ($quiet === false) {
@@ -281,7 +281,7 @@ class Storage extends MysqliDb
         // $id = $this->dbConn->insert($table, $data);
         $id = $this->dbConn->update($table, $data);
         // UtmDump($this->dbConn->getLastQuery());
-        if (! $id) {
+        if (!$id) {
             $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
 
             // return $r;
@@ -322,7 +322,7 @@ class Storage extends MysqliDb
 
             if ($has !== null) {
                 $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
-                if (! Mediatag::$filesystem->exists($backup_path)) {
+                if (!Mediatag::$filesystem->exists($backup_path)) {
                     Mediatag::$filesystem->mkdir($backup_path);
                 }
                 $old_file = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
@@ -382,10 +382,10 @@ class Storage extends MysqliDb
     {
         // utminfo(func_get_args());
 
-        $sel_cols = null;
-        $die      = false;
-        $where    = null;
-
+        $sel_cols     = null;
+        $die          = false;
+        $where        = null;
+        $where_clause = [];
         switch ($query_cmd) {
             case 'select':
                 if ($search === null) {
@@ -401,7 +401,7 @@ class Storage extends MysqliDb
                     $search = ' ' . $search[0] . " = '" . $search[1] . "'";
                 }
                 $sel_cols = $search;
-                $die      = true;
+                $die = true;
 
                 break;
 
@@ -421,21 +421,25 @@ class Storage extends MysqliDb
             default:
                 exit('No command added');
 
-                // break;
+            // break;
         }
 
         $query .= __MYSQL_VIDEO_FILE__ . " WHERE Library = '" . __LIBRARY__ . "'  ";
 
         if (Option::isTrue('filelist')) {
-            foreach ($this->file_array as $key => $file) {
-                $where_clause[] = " video_key = '" . $key . "'";
-            }
-            if (count($where_clause) > 1) {
-                $where  = '( ';
-                $string = implode(' OR ', $where_clause);
-                $where  = $where . $string . ') ';
-            } else {
-                $where = $where_clause[0];
+
+            if ($this->file_array !== null && count($this->file_array) > 0) {
+                foreach ($this->file_array as $key => $file) {
+                    $where_clause[] = " video_key = '" . $key . "'";
+                }
+
+                if (count($where_clause) > 1) {
+                    $where  = '( ';
+                    $string = implode(' OR ', $where_clause);
+                    $where  = $where . $string . ') ';
+                } else {
+                    $where = $where_clause[0];
+                }
             }
         } else {
             if ($allfiles === false) {
@@ -460,7 +464,6 @@ class Storage extends MysqliDb
             }
         }
 
-        // // utmdump($sql);
         return $sql;
     }
 }

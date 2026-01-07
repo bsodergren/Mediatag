@@ -85,7 +85,7 @@ class MediaCommand extends DoctrineCommand
 
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-            if (! is_null($cmdArgument)) {
+            if (!is_null($cmdArgument)) {
                 if ($cmdArgument == $arguments[$arguments['command']]) {
                     $cmdArgument     = null;
                     $originalCommand = $this->getName();
@@ -162,7 +162,7 @@ class MediaCommand extends DoctrineCommand
         try {
             $input->bind($this->getDefinition());
         } catch (ExceptionInterface $e) {
-            if (! $this->ignoreValidationErrors) {
+            if (!$this->ignoreValidationErrors) {
                 throw $e;
             }
         }
@@ -170,7 +170,7 @@ class MediaCommand extends DoctrineCommand
 
         if ($this->processTitle !== null) {
             if (function_exists('cli_set_process_title')) {
-                if (! @cli_set_process_title($this->processTitle)) {
+                if (!@cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
@@ -206,7 +206,7 @@ class MediaCommand extends DoctrineCommand
             $statusCode = $this->execute($input, $output);
             //  stopwatch();
 
-            if (! is_int($statusCode)) {
+            if (!is_int($statusCode)) {
                 throw new TypeError(
                     sprintf(
                         'Return value of "%s::execute()" must be of the type int, "%s" returned.',
@@ -233,6 +233,7 @@ class MediaCommand extends DoctrineCommand
             $path = Option::getValue('path', true);
             chdir($path);
         }
+        // utmdd(getcwd());
 
         $this->getLibrary($className::USE_LIBRARY);
 

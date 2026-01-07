@@ -30,7 +30,7 @@ trait VideoCleaner
             foreach ($missing as $k => $file) {
                 $videoFile = $this->thumbToVideo($file);
 
-                if (! file_exists($videoFile)) {
+                if (!file_exists($videoFile)) {
                     $this->renameThumb($file, false);
                     @unlink($file);
                     // Mediatag::$output->writeln('unlink file '.$file);
@@ -116,9 +116,11 @@ trait VideoCleaner
             $missing_thumb
         ] = $this->getExistingList();
 
-        // utmdd( [$dbList,
-        // $missing_file,
-        // $missing_thumb]);
+        // utmdd([
+        //     $dbList,
+        //     $missing_file,
+        //     $missing_thumb
+        // ]);
 
         $this->cleanMissing($fileSearch, $dbList);
         $this->cleanMissingFile($missing_file);
@@ -150,28 +152,38 @@ trait VideoCleaner
         $missing_mp4   = [];
         $dblist        = [];
 
-        $query  = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  " . $this->getTableField() . " is not null  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%' ";
+
+        //        $query = "  SELECT CONCAT(f.fullpath,'/',f.filename) as file_name,
+//  f.video_key FROM mediatag_video_file f 
+//  LEFT OUTER JOIN mediatag_video_info i on f.video_key=i.video_key  WHERE
+//  i.width  is null and f.library = 'Studios'  
+//  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
+
+        //         $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  " . $this->getTableField() . " is not null  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%' ";
+        $query  = $this->videoQuery();
         $result = Mediatag::$dbconn->query($query);
+
 
         foreach ($result as $_ => $row) {
             $thumb = $this->videoToThumb($row['file_name']);
 
             // // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
+            // utmdump('missing mp4 ' . $row['file_name']);
 
-            if (! file_exists($row['file_name'])) {
+            if (!file_exists($row['file_name'])) {
                 $missing_mp4[$row['id']] = $thumb;
 
                 continue;
             }
 
-            if (! file_exists($thumb)) {
+            if (!file_exists($thumb)) {
                 $missing_thumb[$row['id']] = $row['file_name'];
 
                 continue;
             }
             $dblist[$row['id']] = $thumb;
         }
-        //  utmdd([$dblist, $missing_mp4, $missing_thumb]);
+        // utmdd([$dblist, $missing_mp4, $missing_thumb]);
 
         return [$dblist, $missing_mp4, $missing_thumb];
     }
@@ -202,7 +214,7 @@ trait VideoCleaner
     {
         Mediatag::notice('Method {0}', [__METHOD__]);
 
-        if (! file_exists($file)) {
+        if (!file_exists($file)) {
             return 0;
         }
 
@@ -214,7 +226,7 @@ trait VideoCleaner
         $newFile = str_replace('thumbnails', 'backup', $file);
         $path    = dirname($newFile);
 
-        if (! is_dir($path)) {
+        if (!is_dir($path)) {
             (new SFilesystem)->mkdir($path);
         }
         (new SFilesystem)->rename($file, $newFile, true);

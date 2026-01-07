@@ -285,6 +285,7 @@ class MediaFinder extends SFinder
         $FileArray = [];
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();
+            // 
         } else {
             $search     = self::FilterSearch($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit);
@@ -301,7 +302,6 @@ class MediaFinder extends SFinder
 
             return $FileArray;
         }
-
         return [];
     }
 
@@ -432,11 +432,10 @@ class MediaFinder extends SFinder
     private function getFilelistOption()
     {
         // utminfo(func_get_args());
-        // utmdd(Option::getOptions() );
+        // utmdd(Option::getOptions());
 
         if (Option::isTrue('filelist')) {
             $ret = Option::getValue('filelist');
-
             return $ret;
         }
 

@@ -6,13 +6,17 @@
             "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
             "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php",
             "vendor\\symfony\\console\\Descriptor\\TextDescriptor.php",
-            "vendor/symfony/console/Formatter/OutputFormatter.php"
+            "vendor/symfony/console/Formatter/OutputFormatter.php",
+            "vendor\\Symfony\\Component\\Console\\Output\\OutputInterface.php"
+
         ],
         "psr-4": 
         {
             "Mediatag\\": "app",
             "Descriptor\\": "app/Overrides/",
-            "Command\\": "app/Overrides/"
+            "Command\\": "app/Overrides/",
+            "Formatter\\": "app/Overrides/",
+            "Symfony\\Component\\Console\\Output\\": "app/Overrides/"
         },
         "classmap": 
         [
