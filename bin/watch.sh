@@ -122,7 +122,7 @@ inotifywait -m -r --format '%:e,%w,%f' \
             if [ "$res" = "done" ]; then
 
                 echo $(string.color "Upload complete: $filename" "yellow" "black")
-                $MEDIAUPDATE_CMD --path="$directory" -f="$FILE" $OPTIONS
+                $MEDIAUPDATE_CMD -q --path="$directory" -f="$FILE" $OPTIONS
                 update_media_db "$FILE"
                 echo $(string.color "Video processed: $filename" "green" "black") 
 

@@ -63,7 +63,7 @@ trait Helper
             $videoInfo               = File::file($file);
             $videoInfo['video_file'] = str_replace('.info.json', '.mp4', $videoInfo['video_file']);
             $videoInfo['video_name'] = str_replace('.info.json', '.mp4', $videoInfo['video_name']);
-            if (! Mediatag::$filesystem->exists($videoInfo['video_file'])) {
+            if (!Mediatag::$filesystem->exists($videoInfo['video_file'])) {
                 $this->moveJson($videoInfo);
             }
             // utmdd($videoInfo);
@@ -77,11 +77,10 @@ trait Helper
     public function moveDownloads()
     {
         // utminfo(func_get_args());
-
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.mp4', exit: false);
 
-        $this->moveJson();
-        $this->moveCaption();
+        // $this->moveJson();
+        // $this->moveCaption();
 
         if ($file_array !== null) {
             foreach ($file_array as $key => $file) {
@@ -117,7 +116,7 @@ trait Helper
             $this->cleanDupeFiles();
         }
 
-        if (! Option::istrue('test')) {
+        if (!Option::istrue('test')) {
             Filesystem::prunedirs();
         }
 
@@ -135,7 +134,7 @@ trait Helper
                 $json_file    = $row['src'];
                 $newJson_file = __JSON_CACHE_DIR__ . '/' . $key . '.info.json';
 
-                if (! Mediatag::$filesystem->exists($newJson_file)) {
+                if (!Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                         Mediatag::$output->writeln($out);
@@ -162,7 +161,7 @@ trait Helper
                 $newCaption_file = __INC_WEB_CAPTION_ROOT__ . '/' . $key . '.vtt';
 
                 // if (Mediatag::$filesystem->exists($caption_file)) {
-                if (! Mediatag::$filesystem->exists($newCaption_file)) {
+                if (!Mediatag::$filesystem->exists($newCaption_file)) {
                     if (Option::istrue('test')) {
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($caption_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                         Mediatag::$output->writeln($out);
@@ -207,13 +206,13 @@ trait Helper
         $video_path = str_replace('Premium/' . $new_path, 'Premium', $video_path);
 
         $video_path = str_replace('_', ' ', $video_path);
-        if (! Mediatag::$filesystem->exists($video_path)) {
+        if (!Mediatag::$filesystem->exists($video_path)) {
             Mediatag::$filesystem->mkdir($video_path);
         }
         $old_file = $old_path . '/' . $old_name;
         $new_file = $video_path . '/' . $video_name;
 
-        if (! Mediatag::$filesystem->exists($new_file)) {
+        if (!Mediatag::$filesystem->exists($new_file)) {
             if (Option::istrue('test')) {
                 return "<question>Video</question>\n\t<comment>Old:" . basename($old_file) . "</comment>\n\t<info>New:" . $new_file . "</info>\n";
             }
@@ -268,11 +267,11 @@ trait Helper
         switch ($type) {
             case 'json':
                 $search_params = 'info.json';
-                $desc          = 'Json ';
+                $desc = 'Json ';
                 break;
             case 'srt':
                 $search_params = 'en.srt';
-                $desc          = 'Caption ';
+                $desc = 'Caption ';
                 break;
         }
         $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.' . $search_params, exit: false);

@@ -323,9 +323,11 @@ class MediaFinder extends SFinder
             return null;
         }
 
+
         set_error_handler(function () { /* ignore warnings */
         });
         $isValid = @preg_match($pattern, '') !== false && preg_last_error() === PREG_NO_ERROR;
+
         restore_error_handler();
         if ($isValid == false) {
             $pattern = str_replace('*', '', $pattern);

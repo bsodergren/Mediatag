@@ -187,6 +187,7 @@ class MediaFile
         $in_directory = $filesystem->makePathRelative($directory, __PLEX_HOME__);
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+        // utmdd(__LIBRARIES__);
         if (Arrays::contains(__LIBRARIES__, $match[1])) {
             $this->video_library = $match[1];
         }
@@ -227,7 +228,7 @@ class MediaFile
         $j      = 1;
         $buffer = '';
 
-        if (! str_ends_with($targetpath, '/')) {
+        if (!str_ends_with($targetpath, '/')) {
             $targetpath .= '/';
         }
 
@@ -235,7 +236,7 @@ class MediaFile
 
         $handle = @fopen($source, 'r');
 
-        while (! feof($handle)) {
+        while (!feof($handle)) {
             $buffer .= @fgets($handle, 4096);
             $i++;
 
@@ -261,12 +262,12 @@ class MediaFile
     {
         // utminfo(func_get_args());
 
-        if (! $fhandle = @fopen($fname, 'w')) {
+        if (!$fhandle = @fopen($fname, 'w')) {
             echo "Cannot open file ({$fname})";
 
             exit;
         }
-        if (! @fwrite($fhandle, $buffer)) {
+        if (!@fwrite($fhandle, $buffer)) {
             echo "Cannot write to file ({$fname})";
 
             exit;
