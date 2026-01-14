@@ -10,7 +10,7 @@ use const PHP_EOL;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
+use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;

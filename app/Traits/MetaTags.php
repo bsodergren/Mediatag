@@ -88,7 +88,7 @@ trait MetaTags
             $arr[] = trim($tagValue);
         }
 
-        if (! isset($this->videoData['video_path'])) {
+        if (!isset($this->videoData['video_path'])) {
             $this->videoData['video_path'] = $this->video_path;
         }
 
@@ -308,7 +308,7 @@ trait MetaTags
 
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
-            if (! method_exists($tagDB, $method)) {
+            if (!method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;
@@ -418,7 +418,6 @@ trait MetaTags
     public function expandArray($array)
     {
         // utminfo(func_get_args());
-
         foreach ($array as $key => $value) {
             $this->{$key} = $value;
         }

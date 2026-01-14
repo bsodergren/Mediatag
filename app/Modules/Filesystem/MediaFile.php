@@ -100,19 +100,32 @@ class MediaFile
         return $xkey;
     }
 
-    public static function getVideoKey($filename)
+    public static function getVideoKey($filename, $library = null)
     {
         // utminfo(func_get_args());
         $video_key = null;
         $filename  = basename($filename);
 
-        $isPhFile = self::isPornhubfile($filename);
+        if ($library === null) {
+            $filesystem   = new SFilesystem;
+            $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
 
-        if ($isPhFile === true) {
-            // $filename = realpath($filename);
-            $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
-            if ($success == 1) {
-                $video_key = $matches[1];
+            preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+
+            if (Arrays::contains(__LIBRARIES__, $match[1])) {
+                $library = $match[1];
+            }
+        }
+
+        if ($library == 'Pornhub') {
+            $isPhFile = self::isPornhubfile($filename);
+
+            if ($isPhFile === true) {
+                // $filename = realpath($filename);
+                $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
+                if ($success == 1) {
+                    $video_key = $matches[1];
+                }
             }
         }
         if ($video_key === null) {

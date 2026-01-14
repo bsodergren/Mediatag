@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediatag\Modules\Executable\Helper;
+namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use Mediatag\Utilities\Strings;
 
@@ -29,7 +29,7 @@ trait DownloadStrings
         $output        = $this->$method($buffer);
         // $output        = str_replace("\n", "", $output);
         if ($newLine === true) {
-            $output = TEST_EOL . $output;
+            $output = PHP_EOL . $output;
         }
 
         return $output;
@@ -38,10 +38,19 @@ trait DownloadStrings
     public function downloadDestination($buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
+        utmdump($buffer);
+        preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
+        //preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
+        if (array_key_exists(4, $match) === true) {
+            $file = $this->getShortName($match[4]);
+        }
+        if (array_key_exists(3, $match) === true) {
 
-        preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
-        $text = $match[3];
-        $file = $this->getShortName($match[4]);
+            $text = $match[3];
+        } else {
+            $text = 'file downlaoding';
+        }
+
 
         return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>' . PHP_EOL;
     }
@@ -52,7 +61,7 @@ trait DownloadStrings
         $output = '<download>' . $buffer . '</>';
 
         if (str_contains($buffer, '100%')) {
-            $output = $output . TEST_EOL;
+            $output = $output . PHP_EOL;
         }
 
         return $output;

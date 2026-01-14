@@ -12,7 +12,7 @@ use const PHP_EOL;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
-use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
+use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\Pornhub;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Nette\Utils\Callback;
@@ -97,7 +97,6 @@ class Youtube extends MediatagExec
 
         // utmdd($this->library);
 
-        // utmdd(is_file($class));
         if (is_file($class)) {
             $this->playlist = $class;
             $st_array       = file($this->playlist);
@@ -109,14 +108,17 @@ class Youtube extends MediatagExec
         if (str_contains($class, 'pornhub')) {
             $class = 'Pornhub';
         }
+        if (str_contains($class, 'eporner')) {
+            $class = 'Eporner';
+        }
         if (str_contains($class, 'nubiles')) {
             $class = 'Studio';
         }
-
         $this->library = $class;
         //        use Mediatag\Modules\Executable\Helper\Studio;
 
-        $Class              = 'Mediatag\\Modules\\Executable\\Helper\\' . $class;
+        $Class = 'Mediatag\\Modules\\Executable\\Helper\\' . $class;
+        // utmdd($class);
         $this->LibraryClass = new $Class($this);
 
         // $this->commonOptions = [
@@ -251,8 +253,6 @@ class Youtube extends MediatagExec
         }
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         $command  = $this->youtubeCmdOptions();
-
-        // utmdd($command);
         $this->exec($command, $callback);
     }
 

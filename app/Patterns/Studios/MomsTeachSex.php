@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 const MOMSTEACHSEX_REGEX_COMMON = '//i';
 
-class MomsTeachSex extends Patterns
+class MomsTeachSex extends Nubiles
 {
     public $studio = 'Moms Teach Sex';
 }

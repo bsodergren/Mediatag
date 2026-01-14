@@ -72,7 +72,6 @@ class Process extends Mediatag
         // utminfo();
 
         parent::boot($input, $output);
-        // $this->addMeta();
 
         // $this->setupFormat();
         //  $this->setupDb();

@@ -13,6 +13,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Paramako\Pornhub\Factory;
@@ -30,6 +31,7 @@ class Process extends Mediatag
     use HelperCmds;
     use MediaExecute;
     use MediaProcess;
+    use ytdlptest;
 
     public $VideoList = [];
 
@@ -119,7 +121,9 @@ class Process extends Mediatag
         return $closest;
     }
 
-    public function execWord() {}
+    public function execWord()
+    {
+    }
 
     public function exec($option = null)
     {

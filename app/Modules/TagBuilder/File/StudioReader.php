@@ -32,7 +32,6 @@ trait StudioReader
                 $studio_array[$idx] = $studio_string;
             }
         }
-
         return implode('/', $studio_array);
     }
 
@@ -40,6 +39,8 @@ trait StudioReader
     {
         $json   = new jsonReader($this->videoData);
         $return = $json->studio();
+
+
         if (count($return) > 0) {
             if (array_key_exists('studio', $return)) {
                 $this->studio = $return['studio'];
@@ -59,11 +60,24 @@ trait StudioReader
                 // $this->network = "Pornhub";
             }
         }
+
         // utmdd([$this->network , $this->studio ]);
     }
 
     private function notPhFile()
     {
+        $json   = new jsonReader($this->videoData);
+        $return = $json->studio();
+
+        if (count($return) > 0) {
+            if (array_key_exists('studio', $return)) {
+                $this->studio = $return['studio'];
+            }
+        }
+        if ($this->studio !== null) {
+            return;
+        }
+
         $studio_dir = $this->studioParse();
         $studio     = '';
         if ($studio_dir != '') {
@@ -95,6 +109,7 @@ trait StudioReader
                 }
             }
         }
+
         $this->studio = $studio;
     }
 

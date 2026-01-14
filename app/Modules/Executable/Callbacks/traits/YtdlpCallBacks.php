@@ -4,13 +4,12 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\Executable\Callbacks;
+namespace Mediatag\Modules\Executable\Callbacks\traits;
 
-use const TEST_EOL;
+use const PHP_EOL;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Helper\DownloadStrings;
 use Mediatag\Modules\Filesystem\MediaFile;
 
 use function array_key_exists;
@@ -60,9 +59,9 @@ trait YtdlpCallBacks
     public function watchlistCallback($type, $buffer)
     {
         $buffer = $this->cleanBuffer($buffer);
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/playlist.log', $buffer . TEST_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/playlist.log', $buffer . PHP_EOL);
 
-        return $buffer . TEST_EOL;
+        return $buffer . PHP_EOL;
         // if (str_contains($buffer, '[PLAYLIST]')) {
         //     $this->Console->writeln($buffer);
         // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
@@ -86,8 +85,8 @@ trait YtdlpCallBacks
         $buffer = $this->cleanBuffer($buffer);
 
         // $outputText = '';
-        // $line_id    = \TEST_EOL . '<id>' . $this->num_of_lines . '</id>';
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . TEST_EOL);
+        // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
                 if ($matches[2] != '') {
@@ -121,7 +120,7 @@ trait YtdlpCallBacks
 
         // $this->Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
-        return $outputText . TEST_EOL;
+        return $outputText . PHP_EOL;
     }
 
     public function downloadableIds($buffer)
@@ -138,7 +137,7 @@ trait YtdlpCallBacks
             }
         }
 
-        return $outputText . TEST_EOL;
+        return $outputText . PHP_EOL;
     }
 
     public function downloadVideo($buffer, $line_id)
@@ -146,7 +145,7 @@ trait YtdlpCallBacks
         // $buffer = $this->cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = $this->key;
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . TEST_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
         $bufferMethod = 'Progress';
         $newLine      = false;
         // if (str_contains($buffer, 'Destination')) {
@@ -156,17 +155,7 @@ trait YtdlpCallBacks
         if (str_contains($buffer, 'Destination')) {
             $bufferMethod = 'Destination';
             $newLine      = false;
-            // $buffer = $this->cleanBuffer($buffer);
 
-            //            return $this->ytlpDownloadBuffer('Destination',$buffer);
-            // utmdump($buffer);
-            // $outputText = str_replace("\n" . '[download]', '</text>' . TEST_EOL . PHP_TAB . '<text>[download]', $buffer);
-            // $outputText = '<text>' . str_replace(__PLEX_DOWNLOAD__, '', $outputText) . '</file>' . TEST_EOL;
-
-            // $outputText = PHP_TAB . str_replace('Destination:', 'Destination:</text> <file>', $outputText);
-
-            // // utmdump([__LINE__, $outputText]);
-            // return $outputText;
         }
 
         if (str_contains($buffer, 'already been')) {

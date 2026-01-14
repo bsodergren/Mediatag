@@ -86,9 +86,12 @@ class MediaCommand extends DoctrineCommand
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
             if (!is_null($cmdArgument)) {
-                if ($cmdArgument == $arguments[$arguments['command']]) {
-                    $cmdArgument     = null;
-                    $originalCommand = $this->getName();
+                if (array_key_exists($arguments['command'], $arguments)) {
+
+                    if ($cmdArgument == $arguments[$arguments['command']]) {
+                        $cmdArgument     = null;
+                        $originalCommand = $this->getName();
+                    }
                 }
                 // utmdd($cmdArgument);
             }

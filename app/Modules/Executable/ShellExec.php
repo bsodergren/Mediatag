@@ -8,7 +8,7 @@ namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
+use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Nette\Utils\Callback;
 
 class ShellExec extends MediatagExec

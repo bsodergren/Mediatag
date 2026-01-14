@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Download;
 
+use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +17,8 @@ class Process extends Mediatag
 {
     use Helper;
     use MediaProcess;
+
+    use MediaExecute;
 
     /**
      * file_array.
@@ -45,6 +48,8 @@ class Process extends Mediatag
 
     private $filesToRemove = [];
 
+    protected $useFuncs = ['addMeta', 'setupMap'];
+
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
         // utminfo(func_get_args());
@@ -53,10 +58,15 @@ class Process extends Mediatag
         //     chdir(__PLEX_DOWNLOAD__);
         // }
 
+
+
         if (Option::istrue('convert')) {
             parent::boot($input, $output, ['SKIP_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
         }
+        $this->addMeta();
+
+
     }
 }

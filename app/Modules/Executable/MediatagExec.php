@@ -8,7 +8,7 @@ namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\Helper\MediaCommand;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
+use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
 use Mediatag\Traits\ExecArgs;
@@ -175,7 +175,7 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-
+        // utmdump($this->runCommand);
         $process->start();
         try {
             // $process->mustRun($callback);

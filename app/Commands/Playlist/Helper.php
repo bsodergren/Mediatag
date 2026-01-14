@@ -465,6 +465,9 @@ trait Helper
             if (str_contains($line, 'watch')) {
                 return $line;
             }
+            if (str_contains($line, 'video-')) {
+                return $line;
+            }
         }
 
         return false;

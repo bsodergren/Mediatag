@@ -75,6 +75,8 @@ class MediaApplication extends Application
             default => ($shellVerbosity = 0) ?: $output->getVerbosity(),
         });
 
+        
+
         if (0 > $shellVerbosity || $input->hasParameterOption(['--no-interaction', '-n'], true)) {
             $input->setInteractive(false);
         }

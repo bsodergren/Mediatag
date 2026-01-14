@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 const PETITEHDPORN_REGEX_COMMON = '//i';
 
-class PetiteHDPorn extends Patterns
+class PetiteHDPorn extends Nubiles
 {
     public $studio = 'Petite HDPorn';
 }

@@ -60,7 +60,7 @@ trait Helper
             $file       = Option::getValue('filelist', 1);
             $video_file = realpath($file);
 
-            if (! file_exists($video_file)) {
+            if (!file_exists($video_file)) {
                 utmdd([__METHOD__, 'File doesnt exist']);
 
                 return false;
@@ -116,7 +116,7 @@ trait Helper
             $message    = $videoData['msg'];
             $metatags   = (new TagReader)->loadVideo($videoData)->getMetaValues();
 
-            if (! is_array($message)) {
+            if (!is_array($message)) {
                 $message = [];
                 //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
             } else {
@@ -186,18 +186,18 @@ trait Helper
             $newPath = str_replace(__LIBRARY__ . '/' . __LIBRARY__ . '/', __LIBRARY__ . '/', $newPath);
 
             $newPath = nFileSystem::normalizePath($newPath);
-            //   utmdd([$newPath]);
+            // utmdd([$newPath]);
 
-            if (! is_dir($newPath)) {
-                if (! Option::isTrue('test')) {
+            if (!is_dir($newPath)) {
+                if (!Option::isTrue('test')) {
                     nFileSystem::createDir($newPath, 0755);
                 }
             }
             if ($SortDir == true) {
                 foreach (__GENRE_LIST__ as $geneDir) {
                     $gebrePath = $newPath . '/' . $geneDir;
-                    if (! is_dir($gebrePath)) {
-                        if (! Option::isTrue('test')) {
+                    if (!is_dir($gebrePath)) {
+                        if (!Option::isTrue('test')) {
                             nFileSystem::createDir($gebrePath, 0755);
                         }
                     }
@@ -213,7 +213,7 @@ trait Helper
                 continue;
             }
             // /*
-            if (! file_exists($newFile)) {
+            if (!file_exists($newFile)) {
                 $text[] = 'Moving File';
 
                 if (Option::isTrue('genre')) {
@@ -223,7 +223,7 @@ trait Helper
                 $text[] = ['Moving' => File::videoPath($video_name)];
                 Mediatag::$output->writeln('Renaming <file>' . File::videoPath($video_file) . '</>' . PHP_EOL . ' <comment>' . File::videoPath($newFile) . '</>');
 
-                if (! Option::isTrue('test')) {
+                if (!Option::isTrue('test')) {
                     (new SfSystem)->rename($video_file, $newFile, false);
                 } else {
                 }
@@ -232,24 +232,24 @@ trait Helper
                 $infoMsg = array_merge($message, $text);
                 // Mediatag::$Console->table($infoMsg);
             } else {
-                if (! Option::isTrue('test')) {
-                    [$newFile,$video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
+                if (!Option::isTrue('test')) {
+                    [$newFile, $video_file] = VideoFileInfo::compareDupes($newFile, $video_file);
 
                     $dupePath = __PLEX_HOME__ . '/Dupes/' . __LIBRARY__ . '/' . $video_path;
 
                     $dupePath = nFileSystem::normalizePath($dupePath);
                     $dupeFile = $dupePath . '/' . $video_name;
 
-                    if (! is_dir($dupePath)) {
+                    if (!is_dir($dupePath)) {
                         Mediatag::$output->writeln('Creating <file> ' . $studio_dir . '</> ' . PHP_EOL . '<comment>' . $genrePath . '</>');
-                        if (! Option::isTrue('test')) {
+                        if (!Option::isTrue('test')) {
                             nFileSystem::createDir($dupePath, 0755);
                         }
                     }
 
                     // if (!file_exists($newFile)) {
                     Mediatag::$output->writeln('Renaming duplicate ' . PHP_EOL . '<file>' . File::videoPath($video_file) . '</> ' . PHP_EOL . '<comment> ' . File::videoPath($dupeFile) . '</>');
-                    if (! Option::isTrue('test')) {
+                    if (!Option::isTrue('test')) {
                         (new SfSystem)->rename($video_file, $dupeFile, true);
                     }
 
@@ -319,25 +319,27 @@ trait Helper
         // }
         // utmdd([__METHOD__,$code]);
 
-        if ((self::istrue('mmf') || self::istrue('double_penetration'))
-        && ! self::istrue('group') && ! self::istrue('Compilation')) {
+        if (
+            (self::istrue('mmf') || self::istrue('double_penetration'))
+            && !self::istrue('group') && !self::istrue('Compilation')
+        ) {
             return 'MMF';
         }
 
-        if (self::istrue('mff') && ! self::istrue('group') && ! self::istrue('Compilation')) {
+        if (self::istrue('mff') && !self::istrue('group') && !self::istrue('Compilation')) {
             return 'MFF';
         }
 
-        if (self::istrue('mff') && (self::istrue('mmf') || self::istrue('double_penetration')) && ! self::istrue('Compilation')) {
+        if (self::istrue('mff') && (self::istrue('mmf') || self::istrue('double_penetration')) && !self::istrue('Compilation')) {
             return false;
             // return 'Threesome';
         }
-        if (self::istrue('Threesome') && ! self::istrue('group') && ! self::istrue('Compilation') && ! self::istrue('Single')) {
+        if (self::istrue('Threesome') && !self::istrue('group') && !self::istrue('Compilation') && !self::istrue('Single')) {
             return false;
             // return 'Threesome';
         }
 
-        if (self::istrue('Group') || self::istrue('orgy') && ! self::istrue('Compilation')) {
+        if (self::istrue('Group') || self::istrue('orgy') && !self::istrue('Compilation')) {
             return 'Group';
         }
         if (self::istrue('Compilation')) {
@@ -396,10 +398,10 @@ trait Helper
             $newName = $this->cleanFilename($file);
 
             //  utmdd([__METHOD__, $oldName, $newName]);
-            if (! str_starts_with($oldName, __PLEX_HOME__)) {
+            if (!str_starts_with($oldName, __PLEX_HOME__)) {
                 continue;
             }
-            if (! str_starts_with($newName, __PLEX_HOME__)) {
+            if (!str_starts_with($newName, __PLEX_HOME__)) {
                 continue;
             }
             if (strtolower($newName) == strtolower($oldName)) {
@@ -444,7 +446,7 @@ trait Helper
                     }
                 }
 
-                if (! Option::isTrue('test')) {
+                if (!Option::isTrue('test')) {
                     $color = 'fg=red';
                     // utmdd([__METHOD__, $oldName, $newName]);
 

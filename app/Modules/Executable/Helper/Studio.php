@@ -15,9 +15,8 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 
-class Studio
+class Studio extends VideoDownloader
 {
-    use YtdlpCallBacks;
 
     public $options = [
         '-o',
@@ -28,12 +27,7 @@ class Studio
         CONFIG['NUB_PASSWORD'],
     ];
 
-    public $obj;
 
-    public function __construct($obj)
-    {
-        $this->obj = $obj;
-    }
 
     public function downloadCallback($type, $buffer)
     {
@@ -54,32 +48,36 @@ class Studio
         // }
         // // UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[NubilesPorn]'):
                 $outputText = $this->obj->NubilesPorn($buffer, $line_id);
+                $ConsoleCmd = 'writeln';
                 break;
 
             case str_contains($buffer, 'Interrupted by user'):
                 $this->obj->error($buffer, $line_id, 'cancelled');
+                $ConsoleCmd = 'writeln';
 
                 return 0;
 
             case str_contains($buffer, 'private.'):
                 $outputText = $this->obj->error($buffer, $line_id, 'private');
                 $this->obj->updateIdList(PlaylistProcess::DISABLED);
-
+                $ConsoleCmd = 'writeln';
                 break;
 
             case str_contains($buffer, 'restriction'):
                 $outputText = $this->obj->error($buffer, $line_id, 'is restricted ');
                 $this->obj->updateIdList(PlaylistProcess::DISABLED);
+                $ConsoleCmd = 'writeln';
                 break;
 
             case str_contains($buffer, 'disabled'):
                 $outputText = $this->obj->error($buffer, $line_id, ' has been disabled ');
                 $this->obj->updateIdList(PlaylistProcess::DISABLED);
+                $ConsoleCmd = 'writeln';
 
                 break;
 
@@ -87,7 +85,7 @@ class Studio
                 $outputText = $this->obj->error($buffer, $line_id, 'NOT FOUND');
 
                 // $this->obj->premiumIds[] = $this->obj->key;
-
+                $ConsoleCmd = 'writeln';
                 $this->obj->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
@@ -96,6 +94,7 @@ class Studio
                 $outputText = $this->obj->error($buffer, $line_id, ' Premium Video');
                 $this->obj->updatePlaylist('premium');
                 $this->obj->premiumIds[] = $this->obj->key;
+                $ConsoleCmd = 'writeln';
 
                 break;
 
@@ -103,30 +102,30 @@ class Studio
                 $outputText = $this->obj->error($buffer, $line_id, 'ModelHub Video');
                 // $this->obj->updatePlaylist('modelhub');
                 // $this->obj->updateIdList(PlaylistProcess::MODELHUB);
-
+                $ConsoleCmd = 'writeln';
                 break;
 
-                // case str_starts_with($buffer, '[info]'):
-                //     if ($this->obj->downloadFiles === false) {
-                //         $outputText = $this->obj->downloadableIds($buffer);
-                //     }
-                //     break;
+            // case str_starts_with($buffer, '[info]'):
+            //     if ($this->obj->downloadFiles === false) {
+            //         $outputText = $this->obj->downloadableIds($buffer);
+            //     }
+            //     break;
 
             case str_contains($buffer, '[download]'):
                 $outputText = $this->obj->downloadVideo($buffer, $line_id);
-
+                $ConsoleCmd = 'write';
                 break;
 
             case str_contains($buffer, '[EmbedThumbnail]'):
                 $outputText = $this->obj->fixVideo($buffer, $line_id, 'EmbedThumbnail');
-
+                $ConsoleCmd = 'writeln';
                 break;
 
             case str_contains($buffer, 'ERROR'):
                 $outputText = $this->obj->error($buffer, $line_id, 'Uncaught Error </>  <comment>' . $buffer . '</comment><error>');
                 // $this->obj->updatePlaylist('error');
                 // $this->obj->updateIdList(PlaylistProcess::ERRORIDS);
-
+                $ConsoleCmd = 'writeln';
                 break;
         }
 
@@ -140,7 +139,10 @@ class Studio
         //     $outputText = __LINE__ . '<comment>' . $this->obj->num_of_lines . '</comment> <' . $style . '>' . $buffer . '</' . $style_end . '>' ;
         // }
         if ($outputText != '') {
-            $this->obj->Console->write($outputText);
+            // if (!str_contains($outputText, '<download>')) {
+            //     utmdump([$ConsoleCmd, $outputText]);
+            // }
+            $this->obj->Console->$ConsoleCmd($outputText);
         }
     }
 }

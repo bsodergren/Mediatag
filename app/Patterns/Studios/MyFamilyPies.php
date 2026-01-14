@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 const MYFAMILYPIES_REGEX_COMMON = '//i';
 
-class MyFamilyPies extends Patterns
+class MyFamilyPies extends Nubiles
 {
     public $studio = 'My Family Pies';
 }

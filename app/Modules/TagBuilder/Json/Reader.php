@@ -38,6 +38,7 @@ class Reader extends TagReader
 
         $this->expandArray($videoData);
 
+        // utmdd($this->video_key);
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
         }
@@ -51,6 +52,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // UTMlog::logger('Call in json', $method);
+
         $this->get($method);
 
         return $this->tag_array;
@@ -74,7 +76,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $key          = 'ph_webpage_' . ltrim(strrchr($webpage_url, '='), '=');
+        $key          = 'ph_webpage__' . ltrim(strrchr($webpage_url, '='), '=');
         $artist_array = MediaCache::get($key);
 
         if ($artist_array === false) {
@@ -108,6 +110,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
+        // utmdump($tag);
         $tag = strtolower($tag);
         if ($tag == 'genre') {
             $this->getJsonValue($tag, ['tags', 'categories']);
@@ -116,7 +119,7 @@ class Reader extends TagReader
             $this->getJsonValue($tag, ['title']);
         }
         if ($tag == 'studio') {
-            $this->getJsonValue($tag, ['uploader', 'channel']);
+            $this->getJsonValue($tag, ['uploader', 'channel', 'series']);
         }
         if ($tag == 'keyword') {
             $this->getJsonValue($tag, ['tags', 'categories']);
@@ -138,10 +141,9 @@ class Reader extends TagReader
 
     private function getJsonValue($tag, $keyList = [], $options = [])
     {
-        if (! is_array($keyList)) {
+        if (!is_array($keyList)) {
             $keyList[] = $keyList;
         }
-
         foreach ($keyList as $json_key) {
             if ($tag == 'artist') {
                 // // utmdump(['artist', $this->json_array['cast']]);
@@ -149,7 +151,7 @@ class Reader extends TagReader
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ($tag == 'studio') {
-                    // // utmdump([$value, $json_key, $tag]);
+
                 }
                 if ($json_key == 'categories') {
                     $keyword_value = $this->json_array['tags'];
@@ -185,47 +187,46 @@ class Reader extends TagReader
             }
 
             if ($tag == 'artist') {
-                if (! isset($this->tag_array['artist'])) {
+                if (!isset($this->tag_array['artist'])) {
                     $this->titleArtist();
                 }
             }
         }
 
-        // // utmdump([$tag,$this->tag_array[$tag]]);
     }
 
     private function getJsonFile()
     {
         // utminfo(func_get_args());
-        if (! str_starts_with($this->video_key, 'x')) {
-            $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
+        // if (! str_starts_with($this->video_key, 'x')) {
+        $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
-            if (file_exists($this->json_file)) {
-                $this->json_string = FileSystem::read($this->json_file);
+        if (file_exists($this->json_file)) {
+            $this->json_string = FileSystem::read($this->json_file);
 
-                if ($this->json_string == '') {
-                    return false;
-                }
-
-                return true;
-            } else {
-                // $exec = new Youtube(__LIBRARY__);
-
-                // $exec->youtubeGetJson($this->video_key);
-
-                $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
-
-                // if (file_exists($this->json_file)) {
-                // utmdump($this->video_key);
-                //     $this->json_string = FileSystem::read($this->json_file);
-                //     // utmdd($this->json_string);
-
-                //     return true;
-                // } else {
-                touch($this->json_file);
-                // }
+            if ($this->json_string == '') {
+                return false;
             }
+
+            return true;
+            // } else {
+            // $exec = new Youtube(__LIBRARY__);
+
+            // $exec->youtubeGetJson($this->video_key);
+
+            // $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
+
+            // if (file_exists($this->json_file)) {
+            // utmdump($this->video_key);
+            //     $this->json_string = FileSystem::read($this->json_file);
+            //     // utmdd($this->json_string);
+
+            //     return true;
+            // } else {
+            // touch($this->json_file);
+            // }
         }
+        // }
 
         return false;
     }

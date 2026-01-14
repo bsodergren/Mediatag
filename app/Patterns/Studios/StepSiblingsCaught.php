@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 const STEPSIBLINGSCAUGHT_REGEX_COMMON = '//i';
 
-class StepSiblingsCaught extends Patterns
+class StepSiblingsCaught extends Nubiles
 {
     public $studio = 'Step Siblings Caught';
 }

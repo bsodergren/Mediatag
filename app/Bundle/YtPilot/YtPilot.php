@@ -1,0 +1,1312 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Mediatag\Bundle\YtPilot;
+
+use Mediatag\Bundle\YtPilot\DTO\DownloadResult;
+use Mediatag\Bundle\YtPilot\DTO\FormatItem;
+use Mediatag\Bundle\YtPilot\DTO\PlatformConfig;
+use Mediatag\Bundle\YtPilot\DTO\SubtitleList;
+use Mediatag\Bundle\YtPilot\Enums\ProxyProtocol;
+use Mediatag\Bundle\YtPilot\Enums\TikTokApi;
+use Mediatag\Bundle\YtPilot\Enums\TwitterApi;
+use Mediatag\Bundle\YtPilot\Exceptions\MissingUrlException;
+use Mediatag\Bundle\YtPilot\Services\Binary\BinaryLocatorService;
+use Mediatag\Bundle\YtPilot\Services\Binary\FfmpegBinaryService;
+use Mediatag\Bundle\YtPilot\Services\Binary\ManifestService;
+use Mediatag\Bundle\YtPilot\Services\Binary\ReleaseResolverService;
+use Mediatag\Bundle\YtPilot\Services\Binary\YtDlpBinaryService;
+use Mediatag\Bundle\YtPilot\Services\Conversion\ConversionService;
+use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
+use Mediatag\Bundle\YtPilot\Services\Http\DownloaderService;
+use Mediatag\Bundle\YtPilot\Services\Metadata\MediaInfoService;
+use Mediatag\Bundle\YtPilot\Services\Parsing\FormatsParserService;
+use Mediatag\Bundle\YtPilot\Services\Parsing\SubtitlesParserService;
+use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
+use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
+
+final class YtPilot
+{
+
+
+    private ?string $downloadArchive = null;
+    private ?string $batchFile = null;
+
+
+    public function downloadArchive(?string $filePath): self
+    {
+        $this->downloadArchive = $filePath;
+
+        return $this;
+    }
+
+    public function batchFile(?string $filePath): self
+    {
+        $this->batchFile = $filePath;
+
+        return $this;
+    }
+
+    private ?int $maxDownloads = null;
+
+    public function maxDownloads(?int $number): self
+    {
+        $this->maxDownloads = $number;
+
+        return $this;
+    }
+
+
+    private ?string $url = null;
+
+    private ?string $outputTemplate = null;
+
+    private ?string $outputPath = null;
+
+    private ?string $formatSelector = null;
+
+    private ?int $timeout = null;
+
+    private ?string $ytDlpPath = null;
+
+    private ?string $ffmpegPath = null;
+
+    private ?string $ffprobePath = null;
+
+    /** @var ?callable(int, float, float): void */
+    private $onDownloadProgress = null;
+
+    /** @var ?callable(int, float, float): void */
+    private $onConvertProgress = null;
+
+    private bool $downloadVideo = false;
+
+    private bool $downloadAudio = false;
+
+    private bool $downloadSubtitles = false;
+
+    private bool $downloadAutoSubtitles = false;
+
+    private bool $downloadMetadata = false;
+
+    private bool $downloadThumbnail = false;
+
+    private bool $audioOnly = false;
+
+    private ?string $audioFormat = null;
+
+    private ?string $audioQuality = null;
+
+    /** @var list<string> */
+    private array $subtitleLanguages = [];
+
+    private ?string $subtitleFormat = null;
+
+    private bool $skipDownload = false;
+
+    private bool $simulate = false;
+
+    private bool $overwrite = false;
+
+    private ?string $cookiesFile = null;
+
+    private ?string $cookiesBrowser = null;
+
+    private ?string $cookiesBrowserProfile = null;
+
+    private ?string $cookiesBrowserContainer = null;
+
+    private bool $noCookies = false;
+
+    private ?DownloadResult $lastDownloadResult = null;
+
+    private ?PlatformConfig $platformConfig = null;
+
+    private ?string $username = null;
+
+    private ?string $password = null;
+
+    /** @var array<string, string> */
+    private array $extractorArgs = [];
+
+    private ?string $proxyUrl = null;
+
+    private bool $noProxy = false;
+
+    private ?string $geoVerificationProxy = null;
+
+    private ?string $sourceAddress = null;
+
+    private bool $forceIpv4 = false;
+
+    private bool $forceIpv6 = false;
+
+    private PlatformService $platform;
+
+    private PathService $pathService;
+
+    private ProcessRunnerService $processRunner;
+
+    private DownloaderService $downloader;
+
+    private ReleaseResolverService $releaseResolver;
+
+    private ManifestService $manifestService;
+
+    private BinaryLocatorService $locator;
+
+    private YtDlpBinaryService $ytDlpService;
+
+    private FfmpegBinaryService $ffmpegService;
+
+    private FormatsParserService $formatsParser;
+
+    private SubtitlesParserService $subtitlesParser;
+
+    private MediaInfoService $mediaInfo;
+
+    private ConversionService $conversionService;
+
+    private function __construct()
+    {
+        $this->initializeServices();
+        $this->ensureInstalled();
+    }
+
+    public static function make(): self
+    {
+        return new self;
+    }
+
+    public function ensureInstalled(): self
+    {
+        $this->ytDlpService->ensureInstalled($this->ytDlpPath);
+
+        if (Config::get('ffmpeg.enabled', true)) {
+            $this->ffmpegService->ensureInstalled($this->ffmpegPath, $this->ffprobePath);
+        }
+
+        return $this;
+    }
+
+    public function url(string $url): self
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    public function outputPath(string $directory): self
+    {
+        $this->outputPath = rtrim($directory, DIRECTORY_SEPARATOR);
+
+        return $this;
+    }
+
+    public function output(string $template): self
+    {
+        $this->outputTemplate = $template;
+
+        return $this;
+    }
+
+    public function format(string $selector): self
+    {
+        $this->formatSelector = $selector;
+
+        return $this;
+    }
+
+    public function best(): self
+    {
+        $this->formatSelector = 'bestvideo+bestaudio/best';
+
+        return $this;
+    }
+
+    public function worst(): self
+    {
+        $this->formatSelector = 'worstvideo+worstaudio/worst';
+
+        return $this;
+    }
+
+    public function resolution(string $label): self
+    {
+        $height = match (strtolower($label)) {
+            '4k', '2160p' => 2160,
+            '1440p', '2k' => 1440,
+            '1080p', 'fhd' => 1080,
+            '720p', 'hd' => 720,
+            '480p' => 480,
+            '360p' => 360,
+            '240p' => 240,
+            '144p' => 144,
+            default => (int) preg_replace('/\D/', '', $label),
+        };
+
+        $this->formatSelector = "bestvideo[height<={$height}]+bestaudio/best[height<={$height}]";
+
+        return $this;
+    }
+
+    public function fps(int $fps): self
+    {
+        $current              = $this->formatSelector ?? 'bestvideo';
+        $this->formatSelector = str_replace('bestvideo', "bestvideo[fps<={$fps}]", $current);
+
+        return $this;
+    }
+
+    public function videoCodec(string $codec): self
+    {
+        $current              = $this->formatSelector ?? 'bestvideo+bestaudio/best';
+        $this->formatSelector = str_replace('bestvideo', "bestvideo[vcodec^={$codec}]", $current);
+
+        return $this;
+    }
+
+    public function audioCodec(string $codec): self
+    {
+        $current              = $this->formatSelector ?? 'bestvideo+bestaudio/best';
+        $this->formatSelector = str_replace('bestaudio', "bestaudio[acodec^={$codec}]", $current);
+
+        return $this;
+    }
+
+    public function container(string $ext): self
+    {
+        $current              = $this->formatSelector ?? 'bestvideo+bestaudio/best';
+        $this->formatSelector = str_replace('bestvideo', "bestvideo[ext={$ext}]", $current);
+
+        return $this;
+    }
+
+    public function hdr(): self
+    {
+        $this->formatSelector = 'bestvideo[vcodec^=vp9.2]+bestaudio/bestvideo[dynamic_range=HDR]+bestaudio/best';
+
+        return $this;
+    }
+
+    public function sdr(): self
+    {
+        $this->formatSelector = 'bestvideo[dynamic_range=SDR]+bestaudio/best';
+
+        return $this;
+    }
+
+    public function audioOnly(): self
+    {
+        $this->audioOnly     = true;
+        $this->downloadVideo = false;
+        $this->downloadAudio = true;
+
+        return $this;
+    }
+
+    public function audioFormat(string $format): self
+    {
+        $this->audioFormat = $format;
+
+        return $this;
+    }
+
+    public function audioQuality(string $quality): self
+    {
+        $this->audioQuality = $quality;
+
+        return $this;
+    }
+
+    /** @param list<string> $langs */
+    public function subtitleLanguages(array $langs): self
+    {
+        $this->subtitleLanguages = $langs;
+
+        return $this;
+    }
+
+    public function subtitleFormat(string $format): self
+    {
+        $this->subtitleFormat = $format;
+
+        return $this;
+    }
+
+    public function subtitleAsSrt(): self
+    {
+        $this->subtitleFormat = 'srt';
+
+        return $this;
+    }
+
+    public function subtitleAsVtt(): self
+    {
+        $this->subtitleFormat = 'vtt';
+
+        return $this;
+    }
+
+    public function subtitleAsAss(): self
+    {
+        $this->subtitleFormat = 'ass';
+
+        return $this;
+    }
+
+    public function subtitleAsSsa(): self
+    {
+        $this->subtitleFormat = 'ssa';
+
+        return $this;
+    }
+
+    public function subtitleAsLrc(): self
+    {
+        $this->subtitleFormat = 'lrc';
+
+        return $this;
+    }
+
+    public function subtitleAsSrv1(): self
+    {
+        $this->subtitleFormat = 'srv1';
+
+        return $this;
+    }
+
+    public function subtitleAsSrv2(): self
+    {
+        $this->subtitleFormat = 'srv2';
+
+        return $this;
+    }
+
+    public function subtitleAsSrv3(): self
+    {
+        $this->subtitleFormat = 'srv3';
+
+        return $this;
+    }
+
+    public function subtitleAsTtml(): self
+    {
+        $this->subtitleFormat = 'ttml';
+
+        return $this;
+    }
+
+    public function subtitleAsJson3(): self
+    {
+        $this->subtitleFormat = 'json3';
+
+        return $this;
+    }
+
+    public function cinema(): self
+    {
+        $this->formatSelector = 'bestvideo[height>=1080][vcodec^=av01]/bestvideo[height>=1080][vcodec^=vp9]/bestvideo[height>=1080][vcodec^=avc1]/bestvideo[height>=1080]+bestaudio/best';
+
+        return $this;
+    }
+
+    public function mobile(): self
+    {
+        $this->formatSelector = 'bestvideo[height<=720][vcodec^=avc1]+bestaudio[abr<=128]/best[height<=720]';
+
+        return $this;
+    }
+
+    public function archive(): self
+    {
+        $this->formatSelector = 'bestvideo[vcodec^=av01]/bestvideo[vcodec^=vp9]/bestvideo+bestaudio/best';
+
+        return $this;
+    }
+
+    public function video(): self
+    {
+        $this->downloadVideo = true;
+
+        return $this;
+    }
+
+    public function audio(): self
+    {
+        $this->downloadAudio = true;
+
+        return $this;
+    }
+
+    public function subtitles(): self
+    {
+        $this->downloadSubtitles = true;
+
+        return $this;
+    }
+
+    public function autoSubtitles(): self
+    {
+        $this->downloadAutoSubtitles = true;
+
+        return $this;
+    }
+
+    public function metadata(): self
+    {
+        $this->downloadMetadata = true;
+
+        return $this;
+    }
+
+    public function thumbnail(): self
+    {
+        $this->downloadThumbnail = true;
+
+        return $this;
+    }
+
+    public function skipDownload(): self
+    {
+        $this->skipDownload = true;
+
+        return $this;
+    }
+
+    public function simulate(): self
+    {
+        $this->simulate = true;
+
+        return $this;
+    }
+
+    public function overwrite(): self
+    {
+        $this->overwrite = true;
+
+        return $this;
+    }
+
+    public function timeout(int $seconds): self
+    {
+        $this->timeout = $seconds;
+
+        return $this;
+    }
+
+    public function withYtDlpPath(?string $path): self
+    {
+        $this->ytDlpPath = $path;
+
+        return $this;
+    }
+
+    public function withFfmpegPath(?string $path): self
+    {
+        $this->ffmpegPath = $path;
+
+        return $this;
+    }
+
+    public function withFfprobePath(?string $path): self
+    {
+        $this->ffprobePath = $path;
+
+        return $this;
+    }
+
+    public function cookies(string $filePath): self
+    {
+        $this->cookiesFile    = $filePath;
+        $this->cookiesBrowser = null;
+        $this->noCookies      = false;
+
+        return $this;
+    }
+
+    public function cookiesFromBrowser(
+        string $browser,
+        ?string $profile = null,
+        ?string $container = null,
+    ): self {
+        $this->cookiesBrowser          = strtolower($browser);
+        $this->cookiesBrowserProfile   = $profile;
+        $this->cookiesBrowserContainer = $container;
+        $this->cookiesFile             = null;
+        $this->noCookies               = false;
+
+        return $this;
+    }
+
+    public function noCookies(): self
+    {
+        $this->noCookies      = true;
+        $this->cookiesFile    = null;
+        $this->cookiesBrowser = null;
+
+        return $this;
+    }
+
+    public function configTwitter(TwitterApi $api = TwitterApi::Syndication): self
+    {
+        $this->platformConfig = new PlatformConfig(
+            platform: 'twitter',
+            extractorArgs: ['api' => $api->value],
+        );
+
+        return $this;
+    }
+
+    public function configTikTok(TikTokApi $api = TikTokApi::Web): self
+    {
+        $this->platformConfig = new PlatformConfig(
+            platform: 'tiktok',
+            extractorArgs: ['api' => $api->value],
+        );
+
+        return $this;
+    }
+
+    public function configVimeo(string $password): self
+    {
+        $this->platformConfig = new PlatformConfig(
+            platform: 'vimeo',
+            password: $password,
+        );
+
+        return $this;
+    }
+
+    public function configBilibili(string $sessionData): self
+    {
+        $this->platformConfig = new PlatformConfig(
+            platform: 'bilibili',
+            extractorArgs: ['sess_data' => $sessionData],
+        );
+
+        return $this;
+    }
+
+    public function withCredentials(string $username, string $password): self
+    {
+        $this->username = $username;
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * @param  array<string, string>  $args
+     */
+    public function extractorArgs(string $extractor, array $args): self
+    {
+        foreach ($args as $key => $value) {
+            $this->extractorArgs["{$extractor}:{$key}"] = $value;
+        }
+
+        return $this;
+    }
+
+    public function proxy(string $url): self
+    {
+        $this->proxyUrl = $url;
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function proxyWithAuth(
+        string $host,
+        int $port,
+        string $username,
+        string $password,
+        ProxyProtocol $protocol = ProxyProtocol::Http,
+    ): self {
+        $this->proxyUrl = sprintf(
+            '%s://%s:%s@%s:%d',
+            $protocol->value,
+            urlencode($username),
+            urlencode($password),
+            $host,
+            $port,
+        );
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function httpProxy(string $host, int $port): self
+    {
+        $this->proxyUrl = sprintf('http://%s:%d', $host, $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function httpsProxy(string $host, int $port): self
+    {
+        $this->proxyUrl = sprintf('https://%s:%d', $host, $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function socks4Proxy(string $host, int $port): self
+    {
+        $this->proxyUrl = sprintf('socks4://%s:%d', $host, $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function socks5Proxy(string $host, int $port): self
+    {
+        $this->proxyUrl = sprintf('socks5://%s:%d', $host, $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function socks5hProxy(string $host, int $port): self
+    {
+        $this->proxyUrl = sprintf('socks5h://%s:%d', $host, $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function torProxy(int $port = 9050): self
+    {
+        $this->proxyUrl = sprintf('socks5://127.0.0.1:%d', $port);
+        $this->noProxy  = false;
+
+        return $this;
+    }
+
+    public function noProxy(): self
+    {
+        $this->noProxy  = true;
+        $this->proxyUrl = null;
+
+        return $this;
+    }
+
+    public function geoVerificationProxy(string $url): self
+    {
+        $this->geoVerificationProxy = $url;
+
+        return $this;
+    }
+
+    public function sourceAddress(string $ip): self
+    {
+        $this->sourceAddress = $ip;
+
+        return $this;
+    }
+
+    public function forceIpv4(): self
+    {
+        $this->forceIpv4 = true;
+        $this->forceIpv6 = false;
+
+        return $this;
+    }
+
+    public function forceIpv6(): self
+    {
+        $this->forceIpv6 = true;
+        $this->forceIpv4 = false;
+
+        return $this;
+    }
+
+    /**
+     * @param  callable(int, float, float): void  $callback
+     */
+    public function onDownloading(callable $callback): self
+    {
+        $this->onDownloadProgress = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @param  callable(int, float, float): void  $callback
+     */
+    public function onConverting(callable $callback): self
+    {
+        $this->onConvertProgress = $callback;
+
+        return $this;
+    }
+
+    public function download(): DownloadResult
+    {
+        $this->requireUrl();
+
+        $command = $this->buildCommand();
+        $timeout = $this->timeout ?? Config::get('timeout', 300);
+
+        // Use configured default download path if not set
+        $workingDir = $this->outputPath ?? Config::get('download_path');
+
+        $callback = null;
+        if ($this->onDownloadProgress !== null) {
+            $totalSize      = 0.0;
+            $downloadedSize = 0.0;
+
+            $callback = function (string $type, string $buffer) use (&$totalSize, &$downloadedSize): void {
+                if ($totalSize === 0.0 && preg_match('/\[download\]\s+(\d+\.\d+)%/', $buffer, $matches)) {
+                    $percentage = (int) round((float) $matches[1]);
+                    ($this->onDownloadProgress)($percentage, $downloadedSize, $totalSize);
+                } elseif (preg_match('/\[download\]\s+(\d+\.\d+)%\s+of\s+~?\s*(\d+\.\d+)([KMG]iB)/', $buffer, $matches)) {
+                    $percentage = (int) round((float) $matches[1]);
+                    $size       = (float) $matches[2];
+                    $unit       = $matches[3];
+
+                    $totalSize = match ($unit) {
+                        'GiB' => $size * 1024 * 1024 * 1024,
+                        'MiB' => $size * 1024 * 1024,
+                        default => $size * 1024,
+                    };
+
+                    $downloadedSize = ($percentage / 100) * $totalSize;
+                    ($this->onDownloadProgress)($percentage, $downloadedSize, $totalSize);
+                }
+            };
+        }
+
+        $result = $this->processRunner->run($command, $workingDir, $timeout, $callback);
+
+        if (!$result->success) {
+            return DownloadResult::failure($result->errorOutput ?: $result->output, $result->exitCode);
+        }
+
+        $downloadedFiles = $this->parseDownloadedFiles($result->output);
+
+        $this->lastDownloadResult = DownloadResult::success(
+            output: $result->output,
+            downloadedFiles: $downloadedFiles,
+            videoPath: $this->findFileByType($downloadedFiles, ['mp4', 'mkv', 'webm', 'avi']),
+            audioPath: $this->findFileByType($downloadedFiles, ['mp3', 'm4a', 'opus', 'ogg', 'wav']),
+            thumbnailPath: $this->findFileByType($downloadedFiles, ['jpg', 'jpeg', 'png', 'webp']),
+            metadataPath: $this->findFileByType($downloadedFiles, ['json', 'info.json']),
+            subtitlePaths: $this->findFilesByType($downloadedFiles, ['srt', 'vtt', 'ass']),
+        );
+
+        return $this->lastDownloadResult;
+    }
+
+    /**
+     * @return FormatItem[]
+     */
+    public function getAvailableFormats(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableFormats($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<string> */
+    public function getAvailableResolutions(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableResolutions($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<int> */
+    public function getAvailableFrameRates(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableFrameRates($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<string> */
+    public function getAvailableVideoCodecs(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableVideoCodecs($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<string> */
+    public function getAvailableAudioCodecs(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableAudioCodecs($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<string> */
+    public function getAvailableContainers(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableContainers($this->url, $this->ytDlpPath);
+    }
+
+    /** @return list<string> */
+    public function getAvailableDynamicRanges(): array
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableDynamicRanges($this->url, $this->ytDlpPath);
+    }
+
+    public function getAvailableSubtitles(): SubtitleList
+    {
+        $this->requireUrl();
+
+        return $this->mediaInfo->getAvailableSubtitles($this->url, $this->ytDlpPath);
+    }
+
+    public function convertVideoTo(
+        ?string $inputPath = null,
+        ?string $outputPath = null,
+        string $format = 'mp4',
+        bool $deleteOriginalAfterConvert = true,
+    ): void {
+        $resolvedInput  = $this->resolveConversionInput($inputPath, 'video');
+        $resolvedOutput = $this->resolveConversionOutput($resolvedInput, $outputPath, $format);
+
+        $this->conversionService->convert(
+            $resolvedInput,
+            $resolvedOutput,
+            $format,
+            $this->ffmpegPath,
+            $this->onConvertProgress,
+        );
+
+        if ($deleteOriginalAfterConvert && $resolvedInput !== $resolvedOutput && is_file($resolvedInput)) {
+            unlink($resolvedInput);
+        }
+    }
+
+    public function convertAudioTo(
+        ?string $inputPath = null,
+        ?string $outputPath = null,
+        string $format = 'mp3',
+        bool $deleteOriginalAfterConvert = true,
+    ): void {
+        $resolvedInput  = $this->resolveConversionInput($inputPath, 'audio');
+        $resolvedOutput = $this->resolveConversionOutput($resolvedInput, $outputPath, $format);
+
+        $this->conversionService->convert(
+            $resolvedInput,
+            $resolvedOutput,
+            $format,
+            $this->ffmpegPath,
+            $this->onConvertProgress,
+        );
+
+        if ($deleteOriginalAfterConvert && $resolvedInput !== $resolvedOutput && is_file($resolvedInput)) {
+            unlink($resolvedInput);
+        }
+    }
+
+    public function convertVideoToMp4(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertVideoTo($inputPath, $outputPath, 'mp4', $deleteOriginalAfterConvert);
+    }
+
+    public function convertVideoToMkv(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertVideoTo($inputPath, $outputPath, 'mkv', $deleteOriginalAfterConvert);
+    }
+
+    public function convertVideoToWebm(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertVideoTo($inputPath, $outputPath, 'webm', $deleteOriginalAfterConvert);
+    }
+
+    public function convertVideoToAvi(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertVideoTo($inputPath, $outputPath, 'avi', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToMp3(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'mp3', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToM4a(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'm4a', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToOpus(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'opus', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToOgg(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'ogg', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToWav(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'wav', $deleteOriginalAfterConvert);
+    }
+
+    public function convertAudioToFlac(?string $inputPath = null, ?string $outputPath = null, bool $deleteOriginalAfterConvert = true): void
+    {
+        $this->convertAudioTo($inputPath, $outputPath, 'flac', $deleteOriginalAfterConvert);
+    }
+
+    private function resolveConversionInput(?string $inputPath, string $type): string
+    {
+        if ($inputPath !== null) {
+            return $inputPath;
+        }
+
+        if ($this->lastDownloadResult === null) {
+            throw new \InvalidArgumentException('No input file specified and no previous download available.');
+        }
+
+        $path = $type === 'video'
+            ? $this->lastDownloadResult->videoPath
+            : $this->lastDownloadResult->audioPath;
+
+        if ($path === null) {
+            throw new \InvalidArgumentException("No {$type} file found in the last download result.");
+        }
+
+        return $path;
+    }
+
+    private function resolveConversionOutput(string $inputPath, ?string $outputPath, string $format): string
+    {
+        if ($outputPath !== null) {
+            return $outputPath;
+        }
+
+        $directory = dirname($inputPath);
+        $filename  = pathinfo($inputPath, PATHINFO_FILENAME);
+
+        return $directory . DIRECTORY_SEPARATOR . $filename . '.' . $format;
+    }
+
+    /** @return list<string> */
+    private function buildCommand(): array
+    {
+        $binary  = $this->locator->requireYtDlp($this->ytDlpPath);
+        $command = [$binary];
+
+        if (!$this->hasAnyTarget()) {
+            $this->downloadVideo = true;
+            $this->downloadAudio = true;
+        }
+
+        if ($this->formatSelector !== null) {
+            $command[] = '-f';
+            $command[] = $this->formatSelector;
+        }
+
+        if ($this->outputTemplate !== null) {
+            $command[] = '-o';
+            $command[] = $this->outputTemplate;
+        }
+        if ($this->downloadArchive !== null) {
+            $command[] = '--download-archive';
+            $command[] = $this->downloadArchive;
+        }
+
+        if ($this->maxDownloads !== null) {
+
+            $command[] = '--max-downloads';
+            $command[] = $this->maxDownloads;
+        }
+
+        if ($this->batchFile !== null) {
+            $command[] = '-a';
+            $command[] = $this->batchFile;
+        }
+
+
+        if ($this->audioOnly) {
+            $command[] = '-x';
+
+            if ($this->audioFormat !== null) {
+                $command[] = '--audio-format';
+                $command[] = $this->audioFormat;
+            }
+
+            if ($this->audioQuality !== null) {
+                $command[] = '--audio-quality';
+                $command[] = $this->audioQuality;
+            }
+        }
+
+        if ($this->downloadSubtitles) {
+            $command[] = '--write-subs';
+
+            if ($this->subtitleLanguages !== []) {
+                $command[] = '--sub-langs';
+                $command[] = implode(',', $this->subtitleLanguages);
+            }
+
+            if ($this->subtitleFormat !== null) {
+                $command[] = '--sub-format';
+                $command[] = $this->subtitleFormat;
+            }
+        }
+
+        if ($this->downloadAutoSubtitles) {
+            $command[] = '--write-auto-subs';
+
+            if ($this->subtitleLanguages !== []) {
+                $command[] = '--sub-langs';
+                $command[] = implode(',', $this->subtitleLanguages);
+            }
+        }
+
+        if ($this->downloadMetadata) {
+            $command[] = '--write-info-json';
+        }
+
+        if ($this->downloadThumbnail) {
+            $command[] = '--write-thumbnail';
+        }
+
+        if ($this->skipDownload) {
+            $command[] = '--skip-download';
+        }
+
+        if ($this->simulate) {
+            $command[] = '--simulate';
+        }
+
+        if ($this->overwrite) {
+            $command[] = '--force-overwrites';
+        }
+
+        if ($this->cookiesFile !== null) {
+            $command[] = '--cookies';
+            $command[] = $this->cookiesFile;
+        } elseif ($this->cookiesBrowser !== null) {
+            $command[] = '--cookies-from-browser';
+            $command[] = $this->buildBrowserCookieArg();
+        } elseif ($this->noCookies) {
+            $command[] = '--no-cookies';
+        }
+
+        if ($this->username !== null) {
+            $command[] = '--username';
+            $command[] = $this->username;
+        }
+
+        if ($this->password !== null) {
+            $command[] = '--password';
+            $command[] = $this->password;
+        }
+
+        if ($this->platformConfig !== null) {
+            $command = [...$command, ...$this->platformConfig->toCommandArgs()];
+        }
+
+        foreach ($this->extractorArgs as $key => $value) {
+            $command[] = '--extractor-args';
+            $command[] = "{$key}={$value}";
+        }
+
+        if ($this->proxyUrl !== null) {
+            $command[] = '--proxy';
+            $command[] = $this->proxyUrl;
+        } elseif ($this->noProxy) {
+            $command[] = '--proxy';
+            $command[] = '';
+        }
+
+        if ($this->geoVerificationProxy !== null) {
+            $command[] = '--geo-verification-proxy';
+            $command[] = $this->geoVerificationProxy;
+        }
+
+        if ($this->sourceAddress !== null) {
+            $command[] = '--source-address';
+            $command[] = $this->sourceAddress;
+        }
+
+        if ($this->forceIpv4) {
+            $command[] = '--force-ipv4';
+        }
+
+        if ($this->forceIpv6) {
+            $command[] = '--force-ipv6';
+        }
+
+        $ffmpegLocation = $this->resolveFfmpegLocation();
+        if ($ffmpegLocation !== null) {
+            $command[] = '--ffmpeg-location';
+            $command[] = $ffmpegLocation;
+        }
+
+        $command[] = '--no-abort-on-error';
+        $command[] = '--no-warnings';
+
+        $command[] = '--newline';
+        $command[] = $this->url;
+
+        return $command;
+    }
+
+    private function hasAnyTarget(): bool
+    {
+        return $this->downloadVideo
+            || $this->downloadAudio
+            || $this->downloadSubtitles
+            || $this->downloadAutoSubtitles
+            || $this->downloadMetadata
+            || $this->downloadThumbnail
+            || $this->audioOnly;
+    }
+
+    private function buildBrowserCookieArg(): string
+    {
+        $arg = $this->cookiesBrowser;
+
+        if ($this->cookiesBrowserProfile !== null) {
+            $arg .= ':' . $this->cookiesBrowserProfile;
+        }
+
+        if ($this->cookiesBrowserContainer !== null) {
+            $arg .= '::' . $this->cookiesBrowserContainer;
+        }
+
+        return $arg;
+    }
+
+    private function resolveFfmpegLocation(): ?string
+    {
+        if (!Config::get('ffmpeg.enabled', true)) {
+            return null;
+        }
+
+        $ffmpeg = $this->locator->locateFfmpeg($this->ffmpegPath);
+
+        if ($ffmpeg === null) {
+            return null;
+        }
+
+        return dirname($ffmpeg);
+    }
+
+    private function requireUrl(): void
+    {
+        // if ($this->url === null || $this->url === '') {
+        //     throw MissingUrlException::required();
+        // }
+    }
+
+    /** @return list<string> */
+    private function parseDownloadedFiles(string $output): array
+    {
+        $files    = [];
+        $patterns = [
+            '/\[download\] Destination: (.+)$/m',
+            '/\[Merger\] Merging formats into "(.+)"$/m',
+            '/\[ExtractAudio\] Destination: (.+)$/m',
+            '/\[ThumbnailsConvertor\] Converting thumbnail "(.+)"$/m',
+            '/\[info\] Writing video metadata as JSON to: (.+)$/m',
+            '/Already downloaded: (.+)$/m',
+        ];
+
+        foreach ($patterns as $pattern) {
+            if (preg_match_all($pattern, $output, $matches)) {
+                foreach ($matches[1] as $file) {
+                    $files[] = trim($file);
+                }
+            }
+        }
+
+        return array_unique($files);
+    }
+
+    /**
+     * @param  list<string>  $files
+     * @param  list<string>  $extensions
+     */
+    private function findFileByType(array $files, array $extensions): ?string
+    {
+        foreach ($files as $file) {
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            if (in_array($ext, $extensions, true)) {
+                return $file;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param  list<string>  $files
+     * @param  list<string>  $extensions
+     * @return list<string>
+     */
+    private function findFilesByType(array $files, array $extensions): array
+    {
+        $found = [];
+
+        foreach ($files as $file) {
+            $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+
+            if (in_array($ext, $extensions, true)) {
+                $found[] = $file;
+            }
+        }
+
+        return $found;
+    }
+
+    private function initializeServices(): void
+    {
+        $this->platform        = new PlatformService;
+        $this->pathService     = new PathService($this->platform);
+        $this->processRunner   = new ProcessRunnerService;
+        $this->downloader      = new DownloaderService($this->pathService);
+        $this->releaseResolver = new ReleaseResolverService($this->platform);
+        $this->manifestService = new ManifestService($this->pathService);
+        $this->locator         = new BinaryLocatorService($this->pathService);
+
+        $this->ytDlpService = new YtDlpBinaryService(
+            $this->pathService,
+            $this->downloader,
+            $this->releaseResolver,
+            $this->locator,
+            $this->manifestService,
+            $this->processRunner,
+        );
+
+        $this->ffmpegService = new FfmpegBinaryService(
+            $this->pathService,
+            $this->downloader,
+            $this->releaseResolver,
+            $this->locator,
+            $this->manifestService,
+            $this->processRunner,
+            $this->platform,
+        );
+
+        $this->formatsParser   = new FormatsParserService;
+        $this->subtitlesParser = new SubtitlesParserService;
+
+        $this->mediaInfo = new MediaInfoService(
+            $this->processRunner,
+            $this->locator,
+            $this->formatsParser,
+            $this->subtitlesParser,
+        );
+
+        $this->conversionService = new ConversionService(
+            $this->processRunner,
+            $this->locator,
+        );
+    }
+}

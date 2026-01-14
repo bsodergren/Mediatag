@@ -32,7 +32,7 @@ trait VideoQuery
         }
         $query = $this->videoQuery();
 
-        if (!Option::istrue('clean')) {
+        if (! Option::istrue('clean')) {
             if (Option::isTrue('max')) {
                 $total = (int) Option::getValue('max');
                 $query = $query . ' LIMIT ' . $total;
@@ -58,27 +58,30 @@ trait VideoQuery
 
     public function videoQuery($video_id = null, $search = null)
     {
+        $_where[] = 'Library = "' . __LIBRARY__ . '"';
         if ($this->thumbType == 'info') {
             return $this->InfoVideoQuery($video_id);
         }
         if ($this->thumbType == 'markers') {
             return $this->MarkersVideoQuery($video_id, $search);
         }
-        $searchPath = ' AND fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
+        $_where[] = '  fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
 
-        $where = $this->thumbType . ' is null ';
-
+        //utmdd(Option::getOptions());
         if (Option::istrue('update') || Option::istrue('clear')) {
-            $where = $this->thumbType . ' is not null ';
+            $_where[] = $this->thumbType . ' is not null ';
+        } else {
+            $_where[] = $this->thumbType . ' is null ';
         }
 
         if ($this->thumbType == 'duration') {
-            $where = ' (duration is null or duration < 50) ';
+            $_where[] = ' (duration is null or duration < 50) ';
         }
 
-        $where .= $searchPath;
+        $where = implode(' AND ', $_where);
 
-        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key FROM " . $this->VideoDataTable . " WHERE  Library = '" . __LIBRARY__ . "' AND  " . $where;
+        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key, " . $this->thumbType . '  FROM ' . $this->VideoDataTable . ' WHERE ';
+        $query = $query . $where;
 
         return $query;
     }
@@ -100,15 +103,16 @@ trait VideoQuery
 
     private function InfoVideoQuery($video_id = null)
     {
-        $searchPath  = ' AND fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
-        $sql         = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
-        $sql        .= 'FROM ' . $this->VideoFileTable . ' f ';
-        $sql        .= 'LEFT OUTER JOIN ' . $this->VideoDataTable . ' i on f.video_key=i.video_key ';
-        $sql        .= " WHERE ";
-        if (!Option::istrue('clean')) {
-            $sql .= " i.width  is null and ";
+        $searchPath = ' AND fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
+        $sql        = "SELECT CONCAT(f.fullpath,'/',f.filename) as file_name, f.video_key ";
+        $sql .= 'FROM ' . $this->VideoFileTable . ' f ';
+        $sql .= 'LEFT OUTER JOIN ' . $this->VideoDataTable . ' i on f.video_key=i.video_key ';
+        $sql .= ' WHERE ';
+        if (! Option::istrue('clean')) {
+            $sql .= ' i.width  is null and ';
         }
         $sql .= " f.library = '" . __LIBRARY__ . "' " . $searchPath;
+
         return $sql;
     }
 
@@ -119,9 +123,9 @@ trait VideoQuery
         if ($video_id === null) {
             $where = ' vm.markerThumbnail is null ';
         } else {
-            $where   = ' vm.video_id =  ' . $video_id . ' ';
+            $where = ' vm.video_id =  ' . $video_id . ' ';
             $fields .= ', vm.markerText ';
-            $order   = ' ORDER BY `vm`.`timeCode` ASC';
+            $order = ' ORDER BY `vm`.`timeCode` ASC';
         }
         if (Option::istrue('update')) {
             $where = ' vm.markerThumbnail is not null ';

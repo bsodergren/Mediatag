@@ -10,7 +10,7 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 const REALITYSIS_REGEX_COMMON = '//i';
 
-class RealitySis extends Patterns
+class RealitySis extends Nubiles
 {
     public $studio = 'Reality Sis';
 }

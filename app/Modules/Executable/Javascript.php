@@ -6,12 +6,12 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\MediaCache;
-use Mediatag\Modules\Executable\Callbacks\ProcessCallbacks;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Nette\Utils\Callback;
-
 use function is_array;
+use Nette\Utils\Callback;
+use Mediatag\Core\MediaCache;
+
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 
 class Javascript extends MediatagExec
 {

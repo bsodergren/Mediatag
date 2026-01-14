@@ -73,6 +73,7 @@ trait OptionsDefault
             ['dump', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_DUMP')],
             ['flush', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
             ['nocache', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_FLUSH')],
+            ['no-progress', null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_NO_PROGRESS')],
             // ['trunc',null, InputOption::VALUE_NONE, Translate::text('L__DEFAULT_TEST_TRUNC')],
         ];
 

@@ -43,14 +43,18 @@ class TagBuilder
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
 
-        if (! defined('__UPDATE_SET_ONLY__')) {
+        if (!defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
             // }
 
-            if (! str_starts_with($this->video_key, 'x')) {
-                $jsonupdates = $this->ReaderObj->getJsonValues();
+            // if (! str_starts_with($this->video_key, 'x')) {
+            $jsonupdates = $this->ReaderObj->getJsonValues();
+            if (count($jsonupdates) > 0) {
+
+                Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
+
                 //
                 //
                 if ($updates !== null) {
@@ -172,7 +176,7 @@ class TagBuilder
             }
         }
 
-        if (! isset($studio)) {
+        if (!isset($studio)) {
             // // utmdump([$current, $updates, $tmpStudio]);
 
             return null;

@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\Executable\Callbacks;
+namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use const PHP_EOL;
 

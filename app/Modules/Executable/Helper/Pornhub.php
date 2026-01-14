@@ -7,7 +7,6 @@
 namespace Mediatag\Modules\Executable\Helper;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
-use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
@@ -15,12 +14,10 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 
-// define('TEST_EOL', '\n' . PHP_EOL);
-define('TEST_EOL', PHP_EOL);
+// define('PHP_EOL', '\n' . PHP_EOL);
 
-class Pornhub
+class Pornhub extends VideoDownloader
 {
-    use YtdlpCallBacks;
 
     public $options = [
         '-o',
@@ -31,12 +28,6 @@ class Pornhub
         //  CONFIG['PH_PASSWORD'],
     ];
 
-    public $obj;
-
-    public function __construct($obj)
-    {
-        $this->obj = $obj;
-    }
 
     public function downloadCallback($type, $buffer)
     {
@@ -58,7 +49,7 @@ class Pornhub
         // }
         // // UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer . TEST_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer . PHP_EOL);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[PornHubPlaylist]'):
@@ -112,7 +103,7 @@ class Pornhub
                 $outputText = $this->obj->error($buffer, $line_id, ' Premium Video');
                 $this->obj->updatePlaylist('premium');
                 $this->obj->premiumIds[] = $this->obj->key;
-                $ConsoleCmd              = 'writeln';
+                $ConsoleCmd = 'writeln';
                 break;
 
             case str_contains($buffer, 'encoded url'):
