@@ -36,7 +36,7 @@ trait FilterMethods
     public function ytlpDownloadBuffer($command, $buffer, $line_id = null, $newLine = false): string
     {
         if ($command != 'Progress') {
-            $buffer = VideoDownloader::cleanBuffer($buffer);
+            $buffer = MediatagExec::cleanBuffer($buffer);
         }
 
         $this->line_id = $line_id;
@@ -108,7 +108,7 @@ trait FilterMethods
 
     public function error($buffer, $line_id, $error)
     {
-        $buffer = VideoDownloader::cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = ' . $this->key . '', $buffer, 'download_error.log');
 
@@ -219,7 +219,7 @@ trait FilterMethods
 
     public function downloadableIds($buffer, $line_id)
     {
-        $buffer = videoDownloader::cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         $outputText = '';
 
