@@ -8,28 +8,29 @@ namespace Mediatag\Traits;
 
 use const PHP_EOL;
 
+use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
-use function count;
-use function dirname;
-use Nette\Utils\Callback;
-use UTM\Utilities\Option;
-use Mediatag\Core\Mediatag;
-use Nette\Utils\FileSystem;
+use FFMpeg\Format\ProgressListener\VideoProgressListener;
 use FFMpeg\Format\Video\X264;
-use Mhor\MediaInfo\MediaInfo;
-use UTM\Bundle\Monolog\UTMLog;
-use FFMpeg\Coordinate\TimeCode;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Display\MediaBar;
+use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
+use Mediatag\Modules\Executable\MediatagExec;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
-use Mediatag\Modules\Display\MediaBar;
-use Symfony\Component\Process\Process;
-use Mediatag\Modules\Filesystem\MediaFile;
+use Mhor\MediaInfo\MediaInfo;
+use Nette\Utils\Callback;
+use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\ProgressBar;
-
-use FFMpeg\Format\ProgressListener\VideoProgressListener;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
+use Symfony\Component\Process\Process;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
+
+use function count;
+use function dirname;
 
 trait MediaFFmpeg
 {
@@ -50,7 +51,7 @@ trait MediaFFmpeg
 
     public function FrameCountCallback($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
         if ($this->progress !== null) {
@@ -65,7 +66,7 @@ trait MediaFFmpeg
 
     public function ProgressbarOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         if ($this->progress !== null) {
             $this->progress->advance();
@@ -74,7 +75,7 @@ trait MediaFFmpeg
 
     public function Outputdebug($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
 
         if ($this->progress !== null) {

@@ -10,9 +10,10 @@ use const DIRECTORY_SEPARATOR;
 use const FILE_IGNORE_NEW_LINES;
 use const FILE_SKIP_EMPTY_LINES;
 use const PHP_EOL;
-// use Nette\Utils\FileSystem as NetteFile;
 use const SORT_STRING;
 
+// use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Commands\Playlist\Traits\PlaylistIds;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -30,11 +31,15 @@ use function is_array;
 
 trait Helper
 {
+    use PlaylistIds;
+
     public $url = 'https://www.pornhub.com/playlist/watchlater';
 
     public $idList = [];
 
     public $DownloadableIds = [];
+
+    private $secondRun = false;
 
     public function youtubeWatchPlaylist()
     {
@@ -53,6 +58,7 @@ trait Helper
     {
         $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
+        $this->secondRun = true;
     }
 
     public function dodownloadPlaylist()
@@ -62,6 +68,8 @@ trait Helper
         $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
         $youtube->downloadPlaylist();
         $this->premiumIds = $youtube->premiumIds;
+        $this->secondRun  = true;
+
         $this->docompactPlaylist();
     }
 
@@ -71,6 +79,7 @@ trait Helper
         $youtube->downloadPlaylist(false);
         $this->premiumIds      = $youtube->premiumIds;
         $this->DownloadableIds = $youtube->DownloadableIds;
+
         $this->docompactPlaylist();
     }
 
@@ -178,6 +187,7 @@ trait Helper
                 $ytdl = $file;
                 $mp4  = $info['dirname'] . DIRECTORY_SEPARATOR . $info['filename'];
                 $json = $info['dirname'] . DIRECTORY_SEPARATOR . basename($info['filename'], '.mp4') . '.info.json';
+
                 Filesystem::delete($ytdl);
                 Filesystem::delete($mp4);
                 Filesystem::delete($json);
@@ -309,6 +319,10 @@ trait Helper
     public function docompactPlaylist()
     {
         // utminfo(func_get_args());
+        if ($this->secondRun === false) {
+            return '';
+        }
+
         if (! Option::istrue('skip')) {
             $this->ids = $this->getDownloadedIds();
             if (! file_exists($this->playlist)) {
@@ -344,60 +358,6 @@ trait Helper
         }
     }
 
-    public function getDownloadedIds()
-    {
-        // utminfo(func_get_args());
-
-        if (Option::isTrue('ignore')) {
-            return [];
-        }
-
-        $archive_content = Filesystem::readLines(self::$ARCHIVE);
-        if (is_array($archive_content)) {
-            foreach ($archive_content as $lineNum => $line) {
-                $this->idList[] = Strings::after($line, ' ');
-            }
-        }
-
-        $this->idList = array_unique($this->idList);
-
-        $fileidArray = [
-            0 => [self::DISABLED, 0],
-            1 => [self::MODELHUB, 1],
-            2 => [self::IGNORED, 0],
-            3 => [self::ERRORIDS, 0],
-            // 4 => [self::TRIMMED, 1],
-        ];
-
-        foreach ($fileidArray as $i => $fileId) {
-            $file = $fileId[0];
-            if ($fileId[1] == 0) {
-                $idArray = Filesystem::readLines($file);
-
-                if (is_array($idArray)) {
-                    $this->idList = array_merge($this->idList, $idArray);
-                }
-            }
-        }
-        $this->getpremiumIds();
-        $this->idList = array_merge($this->idList, $this->premiumIds);
-        $this->idList = array_merge($this->idList, $this->DownloadableIds);
-
-        return $this->idList;
-    }
-
-    public function getpremiumIds()
-    {
-        // utminfo(func_get_args());
-
-        if (! str_contains('premium', $this->playlist)) {
-            $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
-            if (file_exists($this->premium)) {
-                $this->premiumIds = Filesystem::readLines($this->premium, [$this, 'getpremiumListIds']);
-            }
-        }
-    }
-
     public function splitPlaylist()
     {
         (int) $split = Option::getValue('split');
@@ -405,16 +365,6 @@ trait Helper
         MediaFile::splitFile($this->playlist, './batch/', $split, $splitName . '_', '.txt');
 
         exit;
-    }
-
-    public function parseArchive($line)
-    {
-        $key = Strings::after($line, ' ');
-        if (! array_key_exists($key, $this->json_Array)) {
-            return $line;
-        }
-
-        return false;
     }
 
     public function filemap($line)
@@ -457,6 +407,7 @@ trait Helper
                 $ph_id = Strings::before($ph_id, '/');
             }
         }
+
         // utmdd([$line,$ph_id]);
         if (! in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {

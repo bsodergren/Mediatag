@@ -36,7 +36,7 @@ class ShellExec extends MediatagExec
 
     public function mediaDbCallback($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         Mediatag::$output->writeln($buffer);
 

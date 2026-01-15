@@ -23,9 +23,11 @@ use function count;
 
 class Youtube extends MediatagExec
 {
-    use YtdlpCallBacks;
+    // use YtdlpCallBacks;
 
     public $execMode = 'write';
+
+    public $DownloadableIds = [];
 
     public $premium;
 
@@ -229,11 +231,12 @@ class Youtube extends MediatagExec
 
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
+
         if (! Option::istrue('url')) {
             $names = file($this->playlist);
 
             if (Option::istrue('max')) {
-                $this->num_of_lines = (int) Option::getValue('max', true) + 1;
+                $this->num_of_lines = (int) Option::getValue('max', true);
             } else {
                 $this->num_of_lines = count($names) + 1;
             }
@@ -251,64 +254,11 @@ class Youtube extends MediatagExec
             // } else {
             //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
         }
+
+        $this->LibraryClass->init($this);
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         $command  = $this->youtubeCmdOptions();
         $this->exec($command, $callback);
-    }
-
-    public function updateIdList($keyfile)
-    {
-        // utminfo(func_get_args());
-
-        file_put_contents($keyfile, $this->key . PHP_EOL, FILE_APPEND);
-    }
-
-    public function updatePlaylist($type, $file = null)
-    {
-        // utminfo(func_get_args());
-        if ($file === null) {
-            $file = $this->playlist;
-        }
-
-        if ($type == 'watchlaterPr') {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
-
-            return 1;
-        }
-        if ($type == 'watchlater') {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
-
-            return 1;
-        }
-
-        if ($type == 'premium') {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            if (! str_contains('premium', $file)) {
-                file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
-            }
-
-            return 1;
-        }
-
-        if ($type == 'modelhub') {
-            $url = 'https://www.modelhub.com/video/' . $this->key;
-            if (! str_contains('model_hub', $file)) {
-                file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
-            }
-
-            return 1;
-        }
-        if ($type == 'error') {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-            file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url . PHP_EOL, FILE_APPEND);
-
-            return 1;
-        }
     }
 
     public function moveJson($json_file)

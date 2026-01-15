@@ -14,6 +14,7 @@ use UTM\Utilities\Option;
 use UTM\Bundle\Monolog\UTMLog;
 use Symfony\Component\Process\Process;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Executable\MediatagExec;
 
 trait ProcessCallbacks
 {
@@ -22,7 +23,7 @@ trait ProcessCallbacks
     public function ReadMetaOutput($type, $buffer)
     {
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata/" . $this->video_key . ".log", $buffer . PHP_EOL);
-        //  $buffer = $this->cleanBuffer($buffer);
+        //  $buffer = MediatagExec::cleanBuffer($buffer);
         if ($type === Process::ERR) {
             $this->errors .= $buffer;
         } else {
@@ -33,7 +34,7 @@ trait ProcessCallbacks
 
     public function WriteMetaOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata_" . $this->video_key . ".log", $buffer . PHP_EOL);
 
         if ($type === Process::ERR) {

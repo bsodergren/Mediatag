@@ -97,6 +97,7 @@ class MediaFinder extends SFinder
     public $defaultCmd;
 
     public static $depth;
+    public static $quiet = false;
 
     /**
      * renameCommaFiles.
@@ -285,7 +286,7 @@ class MediaFinder extends SFinder
         $FileArray = [];
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();
-            // 
+            //
         } else {
             $search     = self::FilterSearch($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit);
@@ -302,6 +303,7 @@ class MediaFinder extends SFinder
 
             return $FileArray;
         }
+
         return [];
     }
 
@@ -322,7 +324,6 @@ class MediaFinder extends SFinder
         if (is_null($pattern)) {
             return null;
         }
-
 
         set_error_handler(function () { /* ignore warnings */
         });
@@ -406,7 +407,9 @@ class MediaFinder extends SFinder
             if (is_array($file_array)) {
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);
-                    Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
+                    if(self::$quiet === false){
+                        Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
+                    }
 
                     if (Option::isTrue('dump')) {
                         $this->scriptNewFiles($file_array);
@@ -438,6 +441,7 @@ class MediaFinder extends SFinder
 
         if (Option::isTrue('filelist')) {
             $ret = Option::getValue('filelist');
+
             return $ret;
         }
 

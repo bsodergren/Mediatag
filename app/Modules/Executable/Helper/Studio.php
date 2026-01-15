@@ -8,6 +8,8 @@ namespace Mediatag\Modules\Executable\Helper;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Modules\Executable\Callbacks\YtdlpCallBacks;
+use Mediatag\Modules\Executable\Helper\VideoDownloader;
+use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Bundle\Monolog\UTMLog;
@@ -17,7 +19,6 @@ use function array_key_exists;
 
 class Studio extends VideoDownloader
 {
-
     public $options = [
         '-o',
         __PLEX_DOWNLOAD__ . '/Studios/' . Youtube::__YT_DL_FORMAT__,
@@ -27,7 +28,26 @@ class Studio extends VideoDownloader
         CONFIG['NUB_PASSWORD'],
     ];
 
+    public function NubilesPorn($buffer, $line_id)
+    {
+        $outputText = '';
+        $buffer     = MediatagExec::cleanBuffer($buffer);
 
+        PlaylistProcess::$current_key = false;
+        if ($this->key !== null) {
+            // // utmdump($buffer,$this->key);
+
+            if (str_contains($buffer, $this->key . ': Downloading')) {
+                $this->num_of_lines--;
+                $line_id = '<id>' . $this->num_of_lines . '</id>';
+
+                $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
+            }
+        }
+
+        // // utmdump([__LINE__,$outputText]);
+        return $outputText;
+    }
 
     public function downloadCallback($type, $buffer)
     {
@@ -48,7 +68,7 @@ class Studio extends VideoDownloader
         // }
         // // UTMlog::Logger('Ph Download', $buffer);
 
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->obj->key . ".log", $buffer);
 
         switch ($buffer) {
             case str_starts_with($buffer, '[NubilesPorn]'):
@@ -94,7 +114,7 @@ class Studio extends VideoDownloader
                 $outputText = $this->obj->error($buffer, $line_id, ' Premium Video');
                 $this->obj->updatePlaylist('premium');
                 $this->obj->premiumIds[] = $this->obj->key;
-                $ConsoleCmd = 'writeln';
+                $ConsoleCmd              = 'writeln';
 
                 break;
 
@@ -105,11 +125,11 @@ class Studio extends VideoDownloader
                 $ConsoleCmd = 'writeln';
                 break;
 
-            // case str_starts_with($buffer, '[info]'):
-            //     if ($this->obj->downloadFiles === false) {
-            //         $outputText = $this->obj->downloadableIds($buffer);
-            //     }
-            //     break;
+                // case str_starts_with($buffer, '[info]'):
+                //     if ($this->obj->downloadFiles === false) {
+                //         $outputText = $this->obj->downloadableIds($buffer);
+                //     }
+                //     break;
 
             case str_contains($buffer, '[download]'):
                 $outputText = $this->obj->downloadVideo($buffer, $line_id);

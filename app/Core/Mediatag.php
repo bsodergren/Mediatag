@@ -95,16 +95,31 @@ abstract class Mediatag extends MediaCommand
         }
 
         if (method_exists(self::$log, $method)) {
-            if (array_key_exists(1, $args)) {
-                if (! is_array($args[1])) {
-                    $args[1] = [$args[1]];
-                    $args[0] = $args[0] . ' {0}';
+            if ($method == 'file') {
+                if (array_key_exists(2, $args)) {
+                    if (! is_array($args[2])) {
+                        $tmp = [$args[2]];
+                        unset($args[2]);
+                        $args[2] = $tmp;
+                    }
+                }
+            } else {
+                if (array_key_exists(1, $args)) {
+                    if (! is_array($args[1])) {
+                        $args[1] = [$args[1]];
+                        $args[0] = $args[0] . ' {0}';
+                    }
                 }
             }
+
             self::$log->$method(...$args);
 
-            return '';
+            // return '';
+        } else {
+            self::error($method . ' in ' . get_class(self::$log) . ' does not exist');
         }
+
+        return '';
     }
 
     public function boot(?InputInterface $input = null, ?OutputInterface $output = null, $options = null)

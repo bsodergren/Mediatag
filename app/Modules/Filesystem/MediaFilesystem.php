@@ -160,7 +160,9 @@ class MediaFilesystem extends SFilesystem
         if (isset($fileNo)) {
             if (self::$clean_up > 0) {
                 if (self::$clean_up < $fileNo) {
-                    $r = MediaFinder::find($filename . '*', $directory);
+                    MediaFinder::$quiet = true;
+                    $r                  = MediaFinder::find($filename . '*', $directory);
+                    MediaFinder::$quiet = false;
                     rsort($r);
                     unlink($r[0]);
                     foreach ($r as $idx => $rfile) {

@@ -8,28 +8,23 @@ namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use const PHP_EOL;
 
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Symfony\Component\Process\Process;
 use UTM\Utilities\Option;
-
+use Mediatag\Core\Mediatag;
 use function array_key_exists;
+use Symfony\Component\Process\Process;
+use Mediatag\Modules\Filesystem\MediaFile;
+
+use Mediatag\Modules\Executable\MediatagExec;
+use Mediatag\Modules\Executable\Helper\VideoDownloader;
 
 /**
  * Command like Metatag writer for video files.
  */
 trait CallbackCommon
 {
-    public function cleanBuffer($buffer)
-    {
-        $buffer = str_replace(["\n", "\r"], '', $buffer);
-
-        return $buffer;
-    }
-
     public function splitFileOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         Mediatag::$output->writeln($buffer);
         // echo $buffer;
         // $this->Console->writeln($buffer);
@@ -37,7 +32,7 @@ trait CallbackCommon
 
     public function LogOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         // Mediatag::$output->writeln($buffer);
         $opt     = Option::getOptions();
         $command = null;
@@ -50,7 +45,7 @@ trait CallbackCommon
 
     public function Output($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         Mediatag::$output->writeln($buffer);
 
         // echo $buffer;
@@ -58,13 +53,13 @@ trait CallbackCommon
 
     public function ReadOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         $this->stdout .= $buffer;
     }
 
     public function ProcessOutput($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
         if ($type === Process::ERR) {
             // echo 'ERR > ' . $buffer;
         } else {

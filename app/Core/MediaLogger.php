@@ -11,6 +11,7 @@ use const PHP_EOL;
 
 use DateTimeInterface;
 use Mediatag\Core\Helper\LogFormat;
+use Nette\Utils\FileSystem as NetteFile;
 use Psr\Log\InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -49,7 +50,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     public static $USE_DEBUG = true;
 
-    public static $pruneLogs = false;
+    public static $pruneLogs = true;
 
     private bool $errored = false;
 
@@ -128,13 +129,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         $this->cloner = new VarCloner;
         $this->output = $output;
 
-        $filename = 'media_' . $this->channel;
-
-        // if ('debug' == $level) {
-        //     $filename = $filename.'_'.$level;
-        // }
-
-        $this->logfile = __LOGFILE_DIR__ . '/' . $filename . '.log';
+        $this->logfile = $this->getLogFile();
 
         if (file_exists($this->logfile)) {
             $this->pruneLogFiles($this->logfile);
@@ -154,6 +149,33 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         // }
     }
 
+    private function getLogFile($filename = null, $directory = null): string
+    {
+        if ($filename === null) {
+            $filename = 'media_' . $this->channel;
+        }
+
+        $filename = basename($filename, '.log');
+
+        if ($directory === null) {
+            $directory = str_replace('.', '', dirname($filename));
+        }
+
+        $directory = __LOGFILE_DIR__ . '/' . $directory;
+
+        if (! is_dir($directory)) {
+            NetteFile::createDir($directory);
+        }
+
+        // if ('debug' == $level) {
+        //     $filename = $filename.'_'.$level;
+        // }
+
+        $logfile = NetteFile::normalizePath($directory . '/' . $filename . '.log');
+
+        return $logfile;
+    }
+
     public function pruneLogFiles($logfile, $level = 'info')
     {
         if (file_exists($logfile)) {
@@ -162,7 +184,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             }
         }
         $msg = $this->interpolate(PHP_EOL . '===================================' . PHP_EOL . ' Running application {0}', [__SCRIPT_NAME__]);
-        $this->file(
+        $this->writeFile(
             $level,
             $msg
         );
@@ -186,7 +208,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         }
 
         if ($output->getVerbosity() >= $this->logVerbosityLevelMap[$level]) {
-            $this->file($level, $this->LogFormat($level, $message, $context));
+            $this->writeFile($level, $this->LogFormat($level, $message, $context));
         }
     }
 
@@ -194,7 +216,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     {
         $level = 'debug';
         $this->logFormat($level, $message, $context);
-        $this->file($level, $message);
+        $this->writeFile($level, $message);
     }
 
     private function LogFormat($level, $message, $context)
@@ -215,6 +237,15 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             $this->formatLevelMap[$level],
             $this->interpolate($message, $context)
         );
+    }
+
+    public function file(string $file, $message, array $context = []): void
+    {
+        $oldlog        = $this->logfile;
+        $this->logfile = $this->getLogFile(basename($file), dirname($file));
+        $level         = LogLevel::INFO;
+        $this->writeFile($level, $this->interpolate($message, $context));
+        $this->logfile = $oldlog;
     }
 
     public function error(Stringable|string $message, array $context = []): void
@@ -248,7 +279,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         }
 
         if ($output->getVerbosity() >= $this->logVerbosityLevelMap[$level]) {
-            $this->file($level, $this->LogFormat($level, $message, $context));
+            $this->writeFile($level, $this->LogFormat($level, $message, $context));
         }
     }
 
@@ -279,9 +310,9 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         return strtr($message, $replacements);
     }
 
-    private function writeFile($level, $string) {}
+    // private function writeFile($level, $string) {}
 
-    private function file($level, $message)
+    private function writeFile($level, $message)
     {
         // $error = var_export($error,1);
 

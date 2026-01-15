@@ -97,6 +97,15 @@ class MediatagExec
         $this->output = $output;
     }
 
+    public static function cleanBuffer($buffer)
+    {
+        if (is_string($buffer)) {
+            $buffer = str_replace(["\n", "\r"], '', $buffer);
+        }
+
+        return $buffer;
+    }
+
     public function preview()
     {
         // utminfo(func_get_args());

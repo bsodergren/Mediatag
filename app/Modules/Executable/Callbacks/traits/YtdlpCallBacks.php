@@ -8,58 +8,23 @@ namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use const PHP_EOL;
 
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Filesystem\MediaFile;
-
 use function array_key_exists;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Executable\MediatagExec;
+
+use Mediatag\Modules\Executable\Helper\VideoDownloader;
+use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 
 trait YtdlpCallBacks
 {
     use CallbackCommon;
     use DownloadStrings;
 
-    public function Pornhub($buffer, $line_id)
-    {
-        $outputText = '';
-        $buffer     = $this->cleanBuffer($buffer);
-
-        PlaylistProcess::$current_key = false;
-        if (str_contains($buffer, 'webpage')) {
-            $this->num_of_lines--;
-            $line_id = '<id>' . $this->num_of_lines . '</id>';
-
-            $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
-        }
-
-        return $outputText;
-    }
-
-    public function NubilesPorn($buffer, $line_id)
-    {
-        $outputText = '';
-        $buffer     = $this->cleanBuffer($buffer);
-
-        PlaylistProcess::$current_key = false;
-        if ($this->key !== null) {
-            // // utmdump($buffer,$this->key);
-
-            if (str_contains($buffer, $this->key . ': Downloading')) {
-                $this->num_of_lines--;
-                $line_id = '<id>' . $this->num_of_lines . '</id>';
-
-                $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
-            }
-        }
-
-        // // utmdump([__LINE__,$outputText]);
-        return $outputText;
-    }
-
     public function watchlistCallback($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/playlist.log', $buffer . PHP_EOL);
+        $buffer = MediatagExec::cleanBuffer($buffer);
+        VideoDownloader::LogBuffer('' . $type . '', $buffer, 'playlist.log');
 
         return $buffer . PHP_EOL;
         // if (str_contains($buffer, '[PLAYLIST]')) {
@@ -82,7 +47,7 @@ trait YtdlpCallBacks
 
     public function downloadJsonCallback($type, $buffer)
     {
-        $buffer = $this->cleanBuffer($buffer);
+        $buffer = MediatagExec::cleanBuffer($buffer);
 
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
@@ -108,76 +73,5 @@ trait YtdlpCallBacks
                 }
                 break;
         }
-    }
-
-    public function error($buffer, $line_id, $error)
-    {
-        $buffer = $this->cleanBuffer($buffer);
-
-        $outputText                   = '';
-        PlaylistProcess::$current_key = false;
-        $outputText                   = $line_id . '  <error> ' . $this->key . ' ' . $error . ' </error>';
-
-        // $this->Console->writeln($outputText);
-        // $this->updateIdList(PlaylistProcess::DISABLED);
-        return $outputText . PHP_EOL;
-    }
-
-    public function downloadableIds($buffer)
-    {
-        $buffer = $this->cleanBuffer($buffer);
-
-        $outputText = '';
-
-        if (str_contains($buffer, 'Downloading')) {
-            if (str_contains($buffer, $this->key)) {
-                $outputText = "\t" . ' <file>file ' . $this->key . ' is downloadable </file>';
-                $this->updatePlaylist('watchlater', 'trimmed_list.txt');
-                $this->DownloadableIds[] = $this->key;
-            }
-        }
-
-        return $outputText . PHP_EOL;
-    }
-
-    public function downloadVideo($buffer, $line_id)
-    {
-        // $buffer = $this->cleanBuffer($buffer);
-
-        PlaylistProcess::$current_key = $this->key;
-        MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
-        $bufferMethod = 'Progress';
-        $newLine      = false;
-        // if (str_contains($buffer, 'Destination')) {
-
-        // }
-
-        if (str_contains($buffer, 'Destination')) {
-            $bufferMethod = 'Destination';
-            $newLine      = false;
-
-        }
-
-        if (str_contains($buffer, 'already been')) {
-            $bufferMethod = 'Exists';
-            $newLine      = true;
-            $this->num_of_lines--;
-            $this->updatePlaylist('errors', 'downloaded_list.txt');
-        }
-        if (str_contains($buffer, 'Got error')) {
-            $bufferMethod = 'Error';
-            $newLine      = true;
-        }
-
-        return $this->ytlpDownloadBuffer($bufferMethod, $buffer, $line_id, $newLine);
-    }
-
-    public function fixVideo($buffer, $line_id, $key = 'FixupM3u8')
-    {
-        if ($key != 'FixupM3u8') {
-            Mediatag::error('There was an error ' . $key);
-        }
-
-        return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
     }
 }
