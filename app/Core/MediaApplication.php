@@ -8,20 +8,42 @@ namespace Mediatag\Core;
 
 use const PHP_EOL;
 
+use Mediatag\Core\MediaCompletionCommand;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Application;
 // use Mediatag\Core\Helper\MediaOutputInterface as OutputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Application;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\CompleteCommand;
+use Symfony\Component\Console\Command\DumpCompletionCommand;
+use Symfony\Component\Console\Command\HelpCommand;
+use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputArgument;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class MediaApplication extends Application
 {
     use Lang;
     use Translate;
+
+    /**
+     * Gets the default commands that should always be available.
+     *
+     * @return Command[]
+     */
+    protected function getDefaultCommands(): array
+    {
+        return [
+            new HelpCommand,
+            new ListCommand,
+            new CompleteCommand,
+            new DumpCompletionCommand,
+            new MediaCompletionCommand,
+        ];
+    }
 
     protected function getDefaultInputDefinition(): InputDefinition
     {
@@ -39,6 +61,7 @@ class MediaApplication extends Application
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, Translate::text('L__APP_DEFAULT_PATH')),
         ]);
     }
+
     /**
      * Configures the input and output instances based on the user arguments and options.
      */
@@ -51,33 +74,30 @@ class MediaApplication extends Application
         }
 
         $shellVerbosity = match (true) {
-            $input->hasParameterOption(['--silent'], true) => -4,
-            $input->hasParameterOption('-qqq', true) || $input->hasParameterOption('--quiet=3', true) || -3 === $input->getParameterOption('--quiet', false, true) => -3,
-            $input->hasParameterOption('-qq', true) || $input->hasParameterOption('--quiet=2', true) || -2 === $input->getParameterOption('--quiet', false, true) => -2,
-            $input->hasParameterOption('-q', true) || $input->hasParameterOption('--quiet=1', true) || $input->hasParameterOption('--quiet', true) || -1 === $input->getParameterOption('--quiet', false, true) => -1,
+            $input->hasParameterOption(['--silent'], true)                                                                                                                                                      => -4,
+            $input->hasParameterOption('-qqq', true) || $input->hasParameterOption('--quiet=3', true) || $input->getParameterOption('--quiet', false, true) === -3                                              => -3,
+            $input->hasParameterOption('-qq', true) || $input->hasParameterOption('--quiet=2', true) || $input->getParameterOption('--quiet', false, true) === -2                                               => -2,
+            $input->hasParameterOption('-q', true) || $input->hasParameterOption('--quiet=1', true) || $input->hasParameterOption('--quiet', true) || $input->getParameterOption('--quiet', false, true) === -1 => -1,
 
             // $input->hasParameterOption(['--quiet', '-q'], true) => -1,
-            $input->hasParameterOption('-vvv', true) || $input->hasParameterOption('--verbose=3', true) || 3 === $input->getParameterOption('--verbose', false, true) => 3,
-            $input->hasParameterOption('-vv', true) || $input->hasParameterOption('--verbose=2', true) || 2 === $input->getParameterOption('--verbose', false, true) => 2,
-            $input->hasParameterOption('-v', true) || $input->hasParameterOption('--verbose=1', true) || $input->hasParameterOption('--verbose', true) || $input->getParameterOption('--verbose', false, true) => 1,
-            default => (int) ($_ENV['SHELL_VERBOSITY'] ?? $_SERVER['SHELL_VERBOSITY'] ?? getenv('SHELL_VERBOSITY')),
+            $input->hasParameterOption('-vvv', true) || $input->hasParameterOption('--verbose=3', true) || $input->getParameterOption('--verbose', false, true) === 3                                           => 3,
+            $input->hasParameterOption('-vv', true) || $input->hasParameterOption('--verbose=2', true) || $input->getParameterOption('--verbose', false, true) === 2                                            => 2,
+            $input->hasParameterOption('-v', true) || $input->hasParameterOption('--verbose=1', true) || $input->hasParameterOption('--verbose', true) || $input->getParameterOption('--verbose', false, true)  => 1,
+            default                                                                                                                                                                                             => (int) ($_ENV['SHELL_VERBOSITY'] ?? $_SERVER['SHELL_VERBOSITY'] ?? getenv('SHELL_VERBOSITY')),
         };
 
-
         $output->setVerbosity(match ($shellVerbosity) {
-            -1 => OutputInterface::VERBOSITY_QUIET,
-            -2 => OutputInterface::VERBOSITY_SILENT,
-            -4 => OutputInterface::VERBOSITY_VERY_QUIET,
-            -3 => OutputInterface::VERBOSITY_VERY_VERY_QUIET,
-            1 => OutputInterface::VERBOSITY_VERBOSE,
-            2 => OutputInterface::VERBOSITY_VERY_VERBOSE,
-            3 => OutputInterface::VERBOSITY_DEBUG,
+            -1      => OutputInterface::VERBOSITY_QUIET,
+            -2      => OutputInterface::VERBOSITY_SILENT,
+            -4      => OutputInterface::VERBOSITY_VERY_QUIET,
+            -3      => OutputInterface::VERBOSITY_VERY_VERY_QUIET,
+            1       => OutputInterface::VERBOSITY_VERBOSE,
+            2       => OutputInterface::VERBOSITY_VERY_VERBOSE,
+            3       => OutputInterface::VERBOSITY_DEBUG,
             default => ($shellVerbosity = 0) ?: $output->getVerbosity(),
         });
 
-        
-
-        if (0 > $shellVerbosity || $input->hasParameterOption(['--no-interaction', '-n'], true)) {
+        if ($shellVerbosity < 0 || $input->hasParameterOption(['--no-interaction', '-n'], true)) {
             $input->setInteractive(false);
         }
 
@@ -87,5 +107,4 @@ class MediaApplication extends Application
         $_ENV['SHELL_VERBOSITY']    = $shellVerbosity;
         $_SERVER['SHELL_VERBOSITY'] = $shellVerbosity;
     }
-
 }

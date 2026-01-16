@@ -6,6 +6,10 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Bundle\BashCompletion\Completion;
+use Mediatag\Bundle\BashCompletion\Completion\ShellPathCompletion;
+use Mediatag\Bundle\BashCompletion\CompletionCommand;
+use Mediatag\Bundle\BashCompletion\CompletionHandler;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 

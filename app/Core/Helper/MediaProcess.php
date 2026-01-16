@@ -30,6 +30,9 @@ trait MediaProcess
             Mediatag::debug('Running command from MediaProcess Trait ', [get_class($this), $method]);
 
             foreach ($this->commandList[$method] as $cmd => $option) {
+                if ($cmd == 'handler') {
+                    continue;
+                }
                 if (method_exists($this, $cmd)) {
                     $this->{$cmd}($option);
                 } else {

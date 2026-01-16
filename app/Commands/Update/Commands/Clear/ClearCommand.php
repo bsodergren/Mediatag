@@ -21,6 +21,7 @@ final class ClearCommand extends MediaCommand
 
     public $command = [
         'clear' => [
+
             'exec'      => null,
             'clearMeta' => null,
             // 'exec' => null,

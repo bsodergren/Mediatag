@@ -66,5 +66,5 @@
         "carbon-cli/carbon-cli": "^1.3",
         "nette/di": "^3.2",
         "sergix44/php-fast-image-compare": "^2.0"
-    }
+        }
 }

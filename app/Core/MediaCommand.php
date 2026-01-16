@@ -6,10 +6,16 @@
 
 namespace Mediatag\Core;
 
-use const PHP_OS;
+// use const PHP_OS;
 
 use Closure;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
+use Mediatag\Bundle\BashCompletion\Completion;
+use Mediatag\Bundle\BashCompletion\Completion\CompletionAwareInterface;
+use Mediatag\Bundle\BashCompletion\Completion\ShellPathCompletion;
+use Mediatag\Bundle\BashCompletion\CompletionCommand;
+use Mediatag\Bundle\BashCompletion\CompletionContext;
+use Mediatag\Bundle\BashCompletion\CompletionHandler;
 use Mediatag\Core\Helper\CommandHelper;
 use Mediatag\Core\MediaLogger;
 use Mediatag\Core\MediaOptions;
@@ -42,7 +48,7 @@ use function is_array;
 use function is_int;
 use function sprintf;
 
-class MediaCommand extends DoctrineCommand
+class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
 {
     use CommandHelper;
     use Lang;
@@ -50,6 +56,8 @@ class MediaCommand extends DoctrineCommand
     use Translate;
 
     public static $Console;
+
+    public static $CompletionHandlers = [];
 
     public const USE_LIBRARY = false;
 
@@ -66,6 +74,23 @@ class MediaCommand extends DoctrineCommand
     private ?Closure $code = null;
 
     public static $optionArg = [];
+
+    public $Handlers = [
+        'handler' => [
+            [
+                'Helper'     => 'ShellPathCompletion',
+                'targetName' => 'filelist',
+                'type'       => 'Completion::ALL_TYPES',
+            ],
+            [
+                'Helper'      => 'Completion',
+                'commandName' => 'Completion::ALL_COMMANDS',
+                'targetName'  => 'only',
+                'type'        => 'Completion::ALL_TYPES',
+                'completion'  => 'MediaCommand::getAllInput',
+            ],
+        ],
+    ];
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -85,9 +110,8 @@ class MediaCommand extends DoctrineCommand
 
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-            if (!is_null($cmdArgument)) {
+            if (! is_null($cmdArgument)) {
                 if (array_key_exists($arguments['command'], $arguments)) {
-
                     if ($cmdArgument == $arguments[$arguments['command']]) {
                         $cmdArgument     = null;
                         $originalCommand = $this->getName();
@@ -103,11 +127,12 @@ class MediaCommand extends DoctrineCommand
 
         $class = self::getProcessClass();
         // utmdd(self::$optionArg);
-        $Process = new $class($input, $output, self::$optionArg);
+        $Process        = new $class($input, $output, self::$optionArg);
+        $this->Handlers = $Process->Handlers;
 
-        $Process->commandList = array_merge($Process->commandList, $this->command);
-
-        $method = 'process';
+        $Process->completionHandlers = $this->setCompletionHandler();
+        $Process->commandList        = array_merge($Process->commandList, $this->command);
+        $method                      = 'process';
         if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
@@ -165,7 +190,7 @@ class MediaCommand extends DoctrineCommand
         try {
             $input->bind($this->getDefinition());
         } catch (ExceptionInterface $e) {
-            if (!$this->ignoreValidationErrors) {
+            if (! $this->ignoreValidationErrors) {
                 throw $e;
             }
         }
@@ -173,7 +198,7 @@ class MediaCommand extends DoctrineCommand
 
         if ($this->processTitle !== null) {
             if (function_exists('cli_set_process_title')) {
-                if (!@cli_set_process_title($this->processTitle)) {
+                if (! @cli_set_process_title($this->processTitle)) {
                     if ('Darwin' === PHP_OS) {
                         $output->writeln('<comment>Running "cli_set_process_title" as an unprivileged user is not supported on MacOS.</comment>', OutputInterface::VERBOSITY_VERY_VERBOSE);
                     } else {
@@ -209,7 +234,7 @@ class MediaCommand extends DoctrineCommand
             $statusCode = $this->execute($input, $output);
             //  stopwatch();
 
-            if (!is_int($statusCode)) {
+            if (! is_int($statusCode)) {
                 throw new TypeError(
                     sprintf(
                         'Return value of "%s::execute()" must be of the type int, "%s" returned.',
@@ -243,5 +268,33 @@ class MediaCommand extends DoctrineCommand
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
+    }
+
+    public function completeArgumentValues($argumentName, CompletionContext $context)
+    {
+        // UtmDump('', $argumentName, $context);
+        if ($argumentName == 'pl') {
+            return $context->getCurrentWord();
+        }
+
+        return [];
+    }
+
+    public function completeOptionValues($optionName, CompletionContext $context)
+    {
+        $this->setCompletionHandler();
+        foreach (self::$CompletionHandlers as $handler) {
+            if ($optionName === $handler->getTargetName()) {
+                return $handler->run();
+            }
+        }
+
+        return [];
+    }
+
+    public static function getAllInput()
+    {
+        $class = self::findClass('Mediatag');
+        utmdump($class);
     }
 }

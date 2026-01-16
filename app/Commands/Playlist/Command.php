@@ -35,11 +35,23 @@ final class Command extends MediaCommand
 
     public $command = [
         'pl'       => [
+            'handler'            => [
+                'Helper' => 'ShellPathCompletion',
+                'Option' => 'file',
+                'Type'   => 'Completion::ALL_TYPES',
+            ],
+
             'cleanBrkDownloads'  => null,
+
             'docompactPlaylist'  => null,
             'dodownloadPlaylist' => null,
         ],
         'download' => [
+            'handler'               => [
+                'Helper' => 'ShellPathCompletion',
+                'Option' => 'file',
+                'Type'   => 'Completion::ALL_TYPES',
+            ],
             'cleanBrkDownloads'     => null,
             // 'docompactPlaylist'           => null,
             'dodownloadPlaylistURL' => null,
@@ -82,33 +94,4 @@ final class Command extends MediaCommand
         //     'splitPlaylist' => null,
         // ],
     ];
-
-    // public function handleSignal(int $signal): void
-    // {
-    //     // utminfo(func_get_args());
-
-    //     if (\SIGINT === $signal) {
-    //         echo \PHP_EOL;
-    //         echo 'Exiting, cleaning up';
-    //         echo \PHP_EOL;
-    //         Process::Cleanup();
-
-    //         exit;
-    //     }
-    // }
-
-    /*
-     * Method execute.
-     *
-     * @param InputInterface  $input  [explicite description]
-     * @param OutputInterface $output [explicite description]
-     */
-    // protected function execute(InputInterface $input, OutputInterface $output): int
-    // {
-    //     // utminfo(func_get_args());
-
-    //     parent::execute($input, $output);
-
-    //     return SymCommand::SUCCESS;
-    // }
 }
