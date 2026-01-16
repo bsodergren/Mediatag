@@ -155,7 +155,7 @@ trait CommandHelper
             $parse = false;
         }
 
-        utmdump($command);
+        // utmdump($command);
 
         if ($parse === true) {
             return call_user_func($command);
@@ -184,7 +184,7 @@ trait CommandHelper
 
             $args[] = $completion;
         }
-        utmdump($args);
+        // utmdump($args);
         self::$CompletionHandlers[] = new $Class(...$args);
     }
 
@@ -221,7 +221,7 @@ trait CommandHelper
                 if ($HelperName === null || $type === null || $targetName === null) {
                     continue;
                 }
-                utmdump([$HelperName, $commandName, $targetName, $type]);
+                // utmdump([$HelperName, $commandName, $targetName, $type]);
                 $this->processHandler($HelperName, $commandName, $targetName, $type, $completion);
             }
         }
@@ -234,7 +234,7 @@ trait CommandHelper
     public static function getCompletionHandler()
     {
         foreach (self::$CompletionHandlers as $handler) {
-            utmdump($handler);
+            // utmdump($handler);
         }
     }
 }

@@ -24,7 +24,7 @@ final class ProcessRunnerService
         $process = new Process($command, $cwd);
         $process->setTimeout($timeout);
 
-        utmdump($process->getCommandLine());
+        // utmdump($process->getCommandLine());
         if ($outputCallback !== null) {
             $process->run(function ($type, $buffer) use ($outputCallback): void {
                 $outputCallback($type === Process::ERR ? 'err' : 'out', $buffer);

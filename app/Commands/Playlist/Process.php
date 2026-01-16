@@ -126,14 +126,14 @@ class Process extends Mediatag
 
         define('SKIP_SEARCH', true);
 
-        if (count($file) == 0) {
-            if (Option::isFalse('file')) {
-                $this->playlist = Option::getValue('playlist');
-            } else {
-                $this->playlist = Option::getValue('file');
-            }
+        // if (count($file) == 0) {
+        if (Option::isFalse('file')) {
+            $this->playlist = Option::getValue('playlist');
+        } else {
+            $this->playlist = Option::getValue('file');
         }
-
+        // }
+        // utmdd($this->playlist);
         if (Option::istrue('url')) {
             $this->playlist = Option::getValue('url');
         }

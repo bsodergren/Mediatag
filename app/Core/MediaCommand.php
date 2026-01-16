@@ -295,6 +295,6 @@ class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
     public static function getAllInput()
     {
         $class = self::findClass('Mediatag');
-        utmdump($class);
+        // utmdump($class);
     }
 }
