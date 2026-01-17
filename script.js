@@ -1,5 +1,6 @@
 
   function copyText () {
+    var text= '';
       var videoPlaylist = document.getElementById('videoPlaylist')
     var linkList = videoPlaylist.querySelectorAll('div > a')
     for (var i = 0; i < linkList.length; i++) {
@@ -9,4 +10,14 @@
         text = text + '\n' + linkList[i].href
       }
     }
-}
+
+    navigator.clipboard
+      .writeText(text)
+      // .then(() => {
+      //   alert('Copied the text: ' +text)
+      // })
+      // .catch(err => {
+      //   console.error('Failed to copy: ', err)
+      // })
+    RemoveOuterModalPanel()
+  }
