@@ -48,6 +48,8 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     // private $log;
     public static $logger;
 
+    public static $LOG_BUFFER = false;
+
     public static $USE_DEBUG = true;
 
     public static $pruneLogs = true;
@@ -241,6 +243,10 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     public function file(string $file, $message, array $context = []): void
     {
+        if (self::$LOG_BUFFER === false) {
+            return;
+        }
+
         $oldlog        = $this->logfile;
         $this->logfile = $this->getLogFile(basename($file), dirname($file));
         $level         = LogLevel::INFO;

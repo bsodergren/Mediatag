@@ -68,7 +68,7 @@ final class Command extends MediaCommand
         //     'cleanBrkDownloads' => null,
         // ],
         'compact'  => [
-            'docompactPlaylist' => null,
+            'docompactPlaylist' => true,
         ],
         // 'clean'             => [
         //     'clean' => null,

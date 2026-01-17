@@ -316,11 +316,15 @@ trait Helper
         }
     }
 
-    public function docompactPlaylist()
+    public function docompactPlaylist($firstRun = false)
     {
+        // utmdump($firstRun);
         // utminfo(func_get_args());
+        //   Mediatag::debug('Compact Playlist', var_dump($firstRun));
         if ($this->secondRun === false) {
-            return '';
+            if ($firstRun !== true) {
+                return '';
+            }
         }
 
         if (! Option::istrue('skip')) {

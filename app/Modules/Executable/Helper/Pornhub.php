@@ -8,16 +8,16 @@ namespace Mediatag\Modules\Executable\Helper;
 
 use const PHP_EOL;
 
-use UTM\Utilities\Option;
+use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
-use function array_key_exists;
-use UTM\Bundle\Monolog\UTMLog;
+use Mediatag\Modules\Executable\Helper\VideoDownloader;
+use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Executable\MediatagExec;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
-use Mediatag\Modules\Executable\Helper\VideoDownloader;
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
+use function array_key_exists;
 
 // define('PHP_EOL', '\n' . PHP_EOL);
 
@@ -134,7 +134,7 @@ class Pornhub extends VideoDownloader
             // $this->num_of_lines--;
             $line_id = '<id>' . $this->num_of_lines . '</id>';
 
-            $outputText = PHP_EOL . $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
+            $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
         }
 
         return $outputText;
