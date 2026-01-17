@@ -10,14 +10,6 @@
         text = text + '\n' + linkList[i].href
       }
     }
-
     navigator.clipboard
       .writeText(text)
-      // .then(() => {
-      //   alert('Copied the text: ' +text)
-      // })
-      // .catch(err => {
-      //   console.error('Failed to copy: ', err)
-      // })
-    RemoveOuterModalPanel()
   }
