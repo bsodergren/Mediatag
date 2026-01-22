@@ -70,7 +70,7 @@ trait Helper
 
     public function addCommand()
     {
-        // utmdd(Option::getOptions());
+        utmdd(Option::getOptions());
         $params          = [];
         $CommandName     = Option::getValue('name', true);
         $CommandFileName = ucfirst($CommandName . 'Command');

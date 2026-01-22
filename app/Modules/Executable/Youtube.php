@@ -23,7 +23,7 @@ use function count;
 
 class Youtube extends MediatagExec
 {
-    // use YtdlpCallBacks;
+    use YtdlpCallBacks;
 
     public $execMode = 'write';
 
@@ -234,7 +234,7 @@ class Youtube extends MediatagExec
 
         if (! Option::istrue('url')) {
             $names = file($this->playlist);
-
+            // utmdd($names);
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);
             } else {

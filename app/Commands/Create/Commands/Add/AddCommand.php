@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Create;
+namespace Mediatag\Commands\Create\Commands\Add;
 
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;

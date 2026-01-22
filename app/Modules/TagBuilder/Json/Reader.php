@@ -141,7 +141,7 @@ class Reader extends TagReader
 
     private function getJsonValue($tag, $keyList = [], $options = [])
     {
-        if (!is_array($keyList)) {
+        if (! is_array($keyList)) {
             $keyList[] = $keyList;
         }
         foreach ($keyList as $json_key) {
@@ -151,7 +151,6 @@ class Reader extends TagReader
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ($tag == 'studio') {
-
                 }
                 if ($json_key == 'categories') {
                     $keyword_value = $this->json_array['tags'];
@@ -187,19 +186,18 @@ class Reader extends TagReader
             }
 
             if ($tag == 'artist') {
-                if (!isset($this->tag_array['artist'])) {
+                if (! isset($this->tag_array['artist'])) {
                     $this->titleArtist();
                 }
             }
         }
-
     }
 
     private function getJsonFile()
     {
         // utminfo(func_get_args());
         // if (! str_starts_with($this->video_key, 'x')) {
-        $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
+        $this->json_file = __JSON_CACHE_DIR__ . '/' . strtolower($this->video_key) . '.info.json';
 
         if (file_exists($this->json_file)) {
             $this->json_string = FileSystem::read($this->json_file);

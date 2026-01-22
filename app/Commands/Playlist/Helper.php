@@ -257,8 +257,10 @@ trait Helper
         $file_string = '';
         $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json', exit: false);
         foreach ($file_array as $key => $val) {
-            $ph_key                    = basename($val, '.info.json');
-            $this->json_Array[$ph_key] = $val;
+            $ph_key = basename($val, '.info.json');
+            if (! str_starts_with($ph_key, 'x')) {
+                $this->json_Array[$ph_key] = $val;
+            }
         }
 
         //   $file_array  = Mediatag::$finder->ExecuteSearch();

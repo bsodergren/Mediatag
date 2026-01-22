@@ -48,7 +48,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     // private $log;
     public static $logger;
 
-    public static $LOG_BUFFER = false;
+    public static $LOG_BUFFER = true;
 
     public static $USE_DEBUG = true;
 

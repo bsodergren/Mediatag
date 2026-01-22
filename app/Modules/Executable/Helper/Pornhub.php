@@ -109,7 +109,7 @@ class Pornhub extends VideoDownloader
             ],
             '[FixupM3u8]'         => [
                 'search'       => 'str_contains',
-                'ConsoleCmd'   => 'write',
+                'ConsoleCmd'   => 'writeln',
                 'OutputMethod' => 'fixVideo',
             ],
 

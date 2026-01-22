@@ -15,7 +15,7 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['pl', 'compact', 'download'])]
+#[AsCommand(name: 'playlist', description: 'download PH Playlist', aliases: ['pl', 'compact', 'download', 'json'])]
 final class Command extends MediaCommand
 {
     use Lang;
@@ -77,9 +77,9 @@ final class Command extends MediaCommand
         //     'trimPlaylist' => null,
         //     'default'      => null,
         // ],
-        // 'json'              => [
-        //     'cleanjSon' => null,
-        // ],
+        'json'     => [
+            'cleanjSon' => null,
+        ],
         // 'watchlater'        => [
         //     'youtubeWatchPlaylist' => null,
         //     'compact'              => null,

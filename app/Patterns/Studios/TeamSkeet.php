@@ -114,6 +114,8 @@ class TeamSkeet extends Patterns
         'usepov'                     => 'Use POV',
         'tomboyz'                    => 'tom boyz',
         'reptylefeatures'            => 'Feature Films',
+        'mydirtyuncle'               => 'My Dirty Uncle',
+
         // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];
 

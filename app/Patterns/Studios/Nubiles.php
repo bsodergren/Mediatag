@@ -30,4 +30,8 @@ class Nubiles extends Patterns
             ],
         ],
     ];
+
+    public $replace_studios = [
+        'familyswap' => 'Family Swap',
+    ];
 }
