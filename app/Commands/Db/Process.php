@@ -8,6 +8,8 @@ namespace Mediatag\Commands\Db;
 
 use const DIRECTORY_SEPARATOR;
 
+use Mediatag\Commands\Db\Commands\Export\ExportHelper;
+use Mediatag\Commands\Db\Commands\Import\Helper as ImportHelper;
 use Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
@@ -28,10 +30,13 @@ use function dirname;
 
 class Process extends Mediatag
 {
+    use ExportHelper;
     // use CapHelper;s
     // use EmptyHelper;
     // use BackHelper;
     use Helper;
+
+    use ImportHelper;
 
     // use InfoHelper;
     use Lang;
@@ -106,12 +111,10 @@ class Process extends Mediatag
         // utminfo(func_get_args());
 
         if ($this->Search_Array === null || count($this->Search_Array) == 0) {
-
             $this->Search_Array = parent::$finder->Search(getcwd(), '.mp4', null, false);
-
         }
         // $this->DbMap = new DbMap();
-        // 
+        //
         // utmdd($this->Search_Array);
 
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
@@ -135,7 +138,7 @@ class Process extends Mediatag
                             $filename  = basename($file);
 
                             $dupePath = nFileSystem::normalizePath($dupePath);
-                            if (!is_dir($dupePath)) {
+                            if (! is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
@@ -163,7 +166,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        if (!is_null($option)) {
+        if (! is_null($option)) {
             $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
             if (class_exists($class)) {
                 $this->obj = new $class;
@@ -188,7 +191,5 @@ class Process extends Mediatag
         //  $this->execUpdate();
     }
 
-    public function testExec($option)
-    {
-    }
+    public function testExec($option) {}
 }

@@ -88,7 +88,7 @@ trait MetaTags
             $arr[] = trim($tagValue);
         }
 
-        if (!isset($this->videoData['video_path'])) {
+        if (! isset($this->videoData['video_path'])) {
             $this->videoData['video_path'] = $this->video_path;
         }
 
@@ -164,12 +164,14 @@ trait MetaTags
                         // utmdump(['return first', $return]);
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
                         $return = $second;
-                        // utmdump(['return second', $return]);
                     } else {
-                        $return = $first;
-                        // utmdump(['return second', $return]);
-
-                        //                        $return = $second;
+                        $a = str_replace($firstCmp, '', strtoupper($secondCmp));
+                        $b = str_replace($secondCmp, '', strtoupper($firstCmp));
+                        if ($b . $a == $secondCmp) {
+                            $return = $second;
+                        } else {
+                            $return = $first;
+                        }
                     }
                 }
             }
@@ -256,11 +258,13 @@ trait MetaTags
         return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
     }
 
-    public function mergetags($tag_array, $tag_array2, $obj, $priority = null)
+    public static function mergetags($tag_array, $tag_array2, $obj = null, $priority = null)
     {
         // utminfo(func_get_args());
 
-        Metatags::$Videokey = $obj;
+        if (is_object($obj)) {
+            Metatags::$Videokey = $obj;
+        }
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
                 $value = Metatags::mergeTag($tag, $value, $tag_array2[$tag], $priority);
@@ -308,7 +312,7 @@ trait MetaTags
 
         foreach ($tag_array as $tagValue) {
             // $tagValue = str_replace("_"," ",$tagValue);
-            if (!method_exists($tagDB, $method)) {
+            if (! method_exists($tagDB, $method)) {
                 //  $newList[] = str_replace(' ', '_', $tagValue);
 
                 $newList[] = $tagValue;

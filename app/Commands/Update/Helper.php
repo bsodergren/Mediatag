@@ -207,7 +207,6 @@ trait Helper
 
         $videoList = $this->ChangesArray;
         $count     = count($videoList);
-        // utmdd([$videoList, $count]);
         $idx = 1;
 
         Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);

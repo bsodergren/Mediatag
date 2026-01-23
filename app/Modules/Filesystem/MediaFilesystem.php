@@ -77,7 +77,7 @@ class MediaFilesystem extends SFilesystem
         if ($backup === true) {
             self::backupPlaylist($file);
         }
-        $content_string .= PHP_EOL;
+        $content_string .= PHP_EOL . '#  file'.PHP_EOL;
 
         $out = file_put_contents($file, $content_string . PHP_EOL);
     }

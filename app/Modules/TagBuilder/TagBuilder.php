@@ -43,7 +43,7 @@ class TagBuilder
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = null;
 
-        if (!defined('__UPDATE_SET_ONLY__')) {
+        if (! defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
@@ -52,14 +52,13 @@ class TagBuilder
             // if (! str_starts_with($this->video_key, 'x')) {
             $jsonupdates = $this->ReaderObj->getJsonValues();
             if (count($jsonupdates) > 0) {
-
                 Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
 
                 //
                 //
                 if ($updates !== null) {
                     // if (Option::isFalse("update")) {
-                    $updates = $this->mergetags($updates, $jsonupdates, $this->video_key, 'combine');
+                    $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'combine');
                     // }
                 } else {
                     $updates = $jsonupdates;
@@ -78,7 +77,7 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
         if ($DbUpdates !== null) {
-            $updates = $this->mergetags($updates, $DbUpdates, $this->video_key); //, 'combine');
+            $updates = self::mergetags($updates, $DbUpdates, $this->video_key); //, 'combine');
         }
         if (isset($updates)) {
             // // utmdump($updates);
@@ -117,7 +116,7 @@ class TagBuilder
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
-            $videoInfo['updateTags'] = $this->compareTags($current, $updates);
+            $videoInfo['updateTags'] = self::compareTags($current, $updates);
         }
         // utmdd($videoInfo);
 
@@ -176,7 +175,7 @@ class TagBuilder
             }
         }
 
-        if (!isset($studio)) {
+        if (! isset($studio)) {
             // // utmdump([$current, $updates, $tmpStudio]);
 
             return null;
@@ -244,7 +243,7 @@ class TagBuilder
     //     return $tagList;
     // }
 
-    private function compareTags(array $Current, array $New)
+    public static function compareTags(array $Current, array $New)
     {
         // utminfo(func_get_args());
         Mediatag::notice("compareTags {Current} => '{new_tag}'", ['Current' => $Current, 'new_tag' => $New]);

@@ -115,6 +115,7 @@ class TeamSkeet extends Patterns
         'tomboyz'                    => 'tom boyz',
         'reptylefeatures'            => 'Feature Films',
         'mydirtyuncle'               => 'My Dirty Uncle',
+        'mylfclassics' => 'Mylf Classics'
 
         // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];
