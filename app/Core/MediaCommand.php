@@ -10,13 +10,8 @@ namespace Mediatag\Core;
 
 use Closure;
 use Doctrine\Migrations\Tools\Console\Command\DoctrineCommand;
-use Mediatag\Bundle\BashCompletion\Completion;
-use Mediatag\Bundle\BashCompletion\Completion\CompletionAwareInterface;
-use Mediatag\Bundle\BashCompletion\Completion\ShellPathCompletion;
-use Mediatag\Bundle\BashCompletion\CompletionCommand;
-use Mediatag\Bundle\BashCompletion\CompletionContext;
-use Mediatag\Bundle\BashCompletion\CompletionHandler;
 use Mediatag\Core\Helper\CommandHelper;
+use Mediatag\Core\Helper\SignalEvents;
 use Mediatag\Core\MediaLogger;
 use Mediatag\Core\MediaOptions;
 use Mediatag\Core\Mediatag;
@@ -48,11 +43,12 @@ use function is_array;
 use function is_int;
 use function sprintf;
 
-class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
+class MediaCommand extends DoctrineCommand
 {
     use CommandHelper;
     use Lang;
     use MediaLibrary;
+    use SignalEvents;
     use Translate;
 
     public static $Console;
@@ -130,9 +126,9 @@ class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
         $Process        = new $class($input, $output, self::$optionArg);
         $this->Handlers = $Process->Handlers;
 
-        $Process->completionHandlers = $this->setCompletionHandler();
-        $Process->commandList        = array_merge($Process->commandList, $this->command);
-        $method                      = 'process';
+        // $Process->completionHandlers = $this->setCompletionHandler();
+        $Process->commandList = array_merge($Process->commandList, $this->command);
+        $method               = 'process';
         if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
@@ -152,11 +148,6 @@ class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
         // }
 
         return Command::SUCCESS;
-    }
-
-    public function cleanOnEvent()
-    {
-        // utmdd(get_class_vars(Mediatag::class));
     }
 
     public function configure(): void
@@ -268,28 +259,6 @@ class MediaCommand extends DoctrineCommand implements CompletionAwareInterface
         Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
 
         $this->loadDirs();
-    }
-
-    public function completeArgumentValues($argumentName, CompletionContext $context)
-    {
-        // UtmDump('', $argumentName, $context);
-        if ($argumentName == 'pl') {
-            return $context->getCurrentWord();
-        }
-
-        return [];
-    }
-
-    public function completeOptionValues($optionName, CompletionContext $context)
-    {
-        $this->setCompletionHandler();
-        foreach (self::$CompletionHandlers as $handler) {
-            if ($optionName === $handler->getTargetName()) {
-                return $handler->run();
-            }
-        }
-
-        return [];
     }
 
     public static function getAllInput()

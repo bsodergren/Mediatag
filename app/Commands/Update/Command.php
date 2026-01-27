@@ -6,12 +6,10 @@
 
 namespace Mediatag\Commands\Update;
 
-use Mediatag\Bundle\BashCompletion\Completion;
-use Mediatag\Bundle\BashCompletion\Completion\ShellPathCompletion;
-use Mediatag\Bundle\BashCompletion\CompletionCommand;
-use Mediatag\Bundle\BashCompletion\CompletionHandler;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
+use Symfony\Component\Console\Event\ConsoleSignalEvent;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 #[AsCommand(name: 'update', description: 'Updates metatags on files')]
 final class Command extends MediaCommand
@@ -29,4 +27,25 @@ final class Command extends MediaCommand
             'writeChanges' => null,
         ],
     ];
+
+    // public function cleanOnEvent()
+    // {
+    //     $this->output->writeln(sprintf('Command <info>%s</info> failed with code <error>%s</error>', $this->getName(), $this->signal));
+
+    //     utmdd('fasdfsda');
+    // }
+    // public function handleSignal(int $signal, int|false $previousExitCode = 0): int|false
+    // {
+    //     utmdd($signal);
+    //     // set here any of the constants defined by PCNTL extension
+    //     if (in_array($signal, [\SIGINT, \SIGTERM], true)) {
+    //         // ...
+    //     }
+
+    //     // ...
+
+    //     // set an integer exit code, or
+    //     // false to continue normal execution
+    //     return 0;
+    // }
 }

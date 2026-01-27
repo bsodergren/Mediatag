@@ -144,7 +144,7 @@ trait Helper
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                         Mediatag::$output->writeln($out);
                     } else {
-                        Mediatag::$filesystem->copy($json_file, $newJson_file, false);
+                        Mediatag::$filesystem->rename($json_file, $newJson_file, false);
                     }
                 } else {
                     $this->filesToRemove[] = $json_file;

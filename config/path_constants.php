@@ -22,8 +22,10 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 
 const __DATA_LIB__ = __CONFIG_LIB__ . '/data';
 
-const __PLEX_VAR_DIR__   = __APP_HOME__ . '/var';
-const __LOGFILE_DIR__    = __PLEX_VAR_DIR__ . '/log';
+const __PLEX_VAR_DIR__ = __APP_HOME__ . '/var';
+
+DEFINE_DIR('__LOGFILE_DIR__', __PLEX_VAR_DIR__ . '/log');
+
 const __DB_BACKUP_ROOT__ = __PLEX_VAR_DIR__ . '/db';
 
 const __PLEX_PL_DIR__      = __PLEX_HOME__ . '/Playlists';

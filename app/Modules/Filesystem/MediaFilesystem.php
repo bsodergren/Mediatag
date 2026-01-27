@@ -12,6 +12,7 @@ use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
 use Nette\Utils\Strings;
+use SplFileObject;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use Symfony\Component\Finder\Finder as SFinder;
 use Symfony\Component\Process\Process as ExecProcess;
@@ -77,7 +78,7 @@ class MediaFilesystem extends SFilesystem
         if ($backup === true) {
             self::backupPlaylist($file);
         }
-        $content_string .= PHP_EOL . '#  file'.PHP_EOL;
+        $content_string .= PHP_EOL; //. '#  file'.PHP_EOL;
 
         $out = file_put_contents($file, $content_string . PHP_EOL);
     }
@@ -236,6 +237,17 @@ class MediaFilesystem extends SFilesystem
 
             NetteFile::rename($old, $new);
         }
+    }
+
+    public static function readLineNo($filename, $getLine)
+    {
+        $file = new SplFileObject($filename);
+        // foreach ($file as $k => $line) {
+        //     utmdump(($file->key() + 1) . ': ' . $file->current());
+        // }
+        $file->seek($getLine - 1);
+
+        return $file->current();
     }
 
     public static function readLines($file, $callback = false)

@@ -6,10 +6,6 @@
 
 namespace Mediatag\Core\Helper;
 
-use Mediatag\Bundle\BashCompletion\Completion;
-use Mediatag\Bundle\BashCompletion\Completion\ShellPathCompletion;
-use Mediatag\Bundle\BashCompletion\CompletionCommand;
-use Mediatag\Bundle\BashCompletion\CompletionHandler;
 use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Strings;
 use ReflectionClass;
@@ -112,15 +108,15 @@ trait CommandHelper
         return $currentValue;
     }
 
-    public function setDefault($command, $default)
-    {
-        $this->defaultValues[$command] = $default;
-    }
+    // public function setDefault($command, $default)
+    // {
+    //     $this->defaultValues[$command] = $default;
+    // }
 
-    public function setCompletionCmd($command, $value)
-    {
-        $this->completionCmd[$command] = $value;
-    }
+    // public function setCompletionCmd($command, $value)
+    // {
+    //     $this->completionCmd[$command] = $value;
+    // }
 
     public static function findClass($class)
     {
@@ -164,77 +160,77 @@ trait CommandHelper
         return $command;
     }
 
-    private function processHandler($Helper, $commandName, $targetName, $type, $completion = null)
-    {
-        // $Helper = '';
+    // private function processHandler($Helper, $commandName, $targetName, $type, $completion = null)
+    // {
+    //     // $Helper = '';
 
-        if ($Helper != 'Completion') {
-            $Helper = 'Completion\\' . $Helper;
-        }
+    //     if ($Helper != 'Completion') {
+    //         $Helper = 'Completion\\' . $Helper;
+    //     }
 
-        $Class = 'Mediatag\\Bundle\\BashCompletion\\' . $Helper;
+    //     $Class = 'Mediatag\\Bundle\\BashCompletion\\' . $Helper;
 
-        $type        = self::call_user_class($type, true);
-        $commandName = self::call_user_class($commandName, true);
+    //     $type        = self::call_user_class($type, true);
+    //     $commandName = self::call_user_class($commandName, true);
 
-        $args = [$commandName, $targetName, $type];
+    //     $args = [$commandName, $targetName, $type];
 
-        if ($completion !== null) {
-            $completion = self::call_user_class($completion);
+    //     if ($completion !== null) {
+    //         $completion = self::call_user_class($completion);
 
-            $args[] = $completion;
-        }
-        // utmdump($args);
-        self::$CompletionHandlers[] = new $Class(...$args);
-    }
+    //         $args[] = $completion;
+    //     }
+    //     // utmdump($args);
+    //     self::$CompletionHandlers[] = new $Class(...$args);
+    // }
 
-    public function setCompletionHandler()
-    {
-        $commandKeys = array_keys($this->command);
-        $Handlers    = [];
+    // public function setCompletionHandler()
+    // {
+    //     $commandKeys = array_keys($this->command);
+    //     $Handlers    = [];
 
-        foreach ($commandKeys as $i => $command) {
-            $Handlers[$command] = [];
+    //     foreach ($commandKeys as $i => $command) {
+    //         $Handlers[$command] = [];
 
-            foreach ($this->Handlers['handler'] as $handlerRow) {
-                $Handlers[$command][] = $handlerRow;
-            }
+    //         foreach ($this->Handlers['handler'] as $handlerRow) {
+    //             $Handlers[$command][] = $handlerRow;
+    //         }
 
-            $handler = array_key_first($this->command[$command]);
+    //         $handler = array_key_first($this->command[$command]);
 
-            if ($handler != 'handler') {
-                continue;
-            }
-            $Handlers[$command][] = $this->command[$command][$handler];
-        }
+    //         if ($handler != 'handler') {
+    //             continue;
+    //         }
+    //         $Handlers[$command][] = $this->command[$command][$handler];
+    //     }
 
-        // $commandName, $targetName, $type, $completion)
+    //     // $commandName, $targetName, $type, $completion)
 
-        foreach ($Handlers as $command => $HandlerRow) {
-            foreach ($HandlerRow as $HandlerArray) {
-                $HelperName  = isset($HandlerArray['Helper']) ? $HandlerArray['Helper'] : null;
-                $commandName = isset($HandlerArray['commandName']) ? $HandlerArray['commandName'] : $command;
+    //     foreach ($Handlers as $command => $HandlerRow) {
+    //         foreach ($HandlerRow as $HandlerArray) {
+    //             $HelperName  = isset($HandlerArray['Helper']) ? $HandlerArray['Helper'] : null;
+    //             $commandName = isset($HandlerArray['commandName']) ? $HandlerArray['commandName'] : $command;
 
-                $targetName = isset($HandlerArray['targetName']) ? $HandlerArray['targetName'] : null;
-                $type       = isset($HandlerArray['type']) ? $HandlerArray['type'] : null;
-                $completion = isset($HandlerArray['completion']) ? $HandlerArray['completion'] : null;
-                if ($HelperName === null || $type === null || $targetName === null) {
-                    continue;
-                }
-                // utmdump([$HelperName, $commandName, $targetName, $type]);
-                $this->processHandler($HelperName, $commandName, $targetName, $type, $completion);
-            }
-        }
+    //             $targetName = isset($HandlerArray['targetName']) ? $HandlerArray['targetName'] : null;
+    //             $type       = isset($HandlerArray['type']) ? $HandlerArray['type'] : null;
+    //             $completion = isset($HandlerArray['completion']) ? $HandlerArray['completion'] : null;
+    //             if ($HelperName === null || $type === null || $targetName === null) {
+    //                 continue;
+    //             }
+    //             // utmdump([$HelperName, $commandName, $targetName, $type]);
+    //             $this->processHandler($HelperName, $commandName, $targetName, $type, $completion);
+    //         }
+    //     }
 
-        // utmdd('');
+    //     // utmdd('');
 
-        return self::$CompletionHandlers;
-    }
+    //     return self::$CompletionHandlers;
+    // }
 
-    public static function getCompletionHandler()
-    {
-        foreach (self::$CompletionHandlers as $handler) {
-            // utmdump($handler);
-        }
-    }
+    // public static function getCompletionHandler()
+    // {
+    //     foreach (self::$CompletionHandlers as $handler) {
+    //         // utmdump($handler);
+    //     }
+    // }
 }

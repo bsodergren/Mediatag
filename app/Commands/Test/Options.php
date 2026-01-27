@@ -29,6 +29,7 @@ class Options extends MediaOptions
             ['colors', 'C', InputOption::VALUE_NONE, Translate::text('L__TEST_CLIP')],
             ['move', 'm', InputOption::VALUE_NONE, Translate::text('L__TEST_MOVE')],
 
+            ['search', 's', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_CLIP')],
             ['cmd', 'c', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_CLIP')],
             ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
         ];

@@ -305,29 +305,34 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i');
-        utmdump($file_array);
+
+        $count = count($file_array);
         foreach ($file_array as $k => $file) {
-            $json_key = File::getVideoKey($file);
+            $json_key = File::getVideoKey($file, 'Pornhub');
             if (! str_starts_with($json_key, 'x')) {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
 
+                if (Mediatag::$filesystem->exists($json_file)) {
+                    // if (filesize($json_file) < 1024) {
+                    //     MediaFilesystem::delete($json_file);
+                    // }
+                }
                 if (! Mediatag::$filesystem->exists($json_file)) {
-                    $exec   = new Youtube('');
-                    $return = $exec->youtubeGetJson($json_key);
-
+                    $return = (new Youtube)->run('')->youtubeGetJson($json_key);
+                    utmdump($return);
                     if (Mediatag::$filesystem->exists($json_file)) {
-                        parent::$output->writeln('<info>adding json ' . basename($return) . ' </info>');
+                        parent::$output->writeln('<info>' . $count . ' adding json ' . basename($return) . ' </info>');
                     } else {
-                        parent::$output->writeln('<error>adding fake json for ' . basename($file) . ' </error>');
-                        MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '"}', false);
+                        parent::$output->writeln('<error>' . $count . ' : ' . $return . ' </error>');
+                        MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '", "error":"' . $return . '"}', false);
                     }
-                    // utmdd($file,$json_key);
                 } else {
-                    parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
+                    // parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
                 }
             } else {
-                parent::$output->writeln('<comment>skipping ' . basename($file) . ' </comment>');
+                parent::$output->writeln('<comment>' . $count . 'skipping ' . basename($file) . ' </comment>');
             }
+            $count--;
         }
     }
 

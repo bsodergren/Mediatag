@@ -50,14 +50,13 @@ trait Helper
         if (Option::istrue('url')) {
             $this->url = Option::getValue('url');
         }
-        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
-        $youtube->createWatchList($this->url);
+
+        $this->youtube->run($this->playlist)->createWatchList($this->url);
     }
 
     public function dodownloadPlaylistURL()
     {
-        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
-        $youtube->downloadPlaylist();
+        $this->youtube->run($this->playlist)->downloadPlaylist();
         $this->secondRun = true;
     }
 
@@ -65,9 +64,8 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
-        $youtube->downloadPlaylist();
-        $this->premiumIds = $youtube->premiumIds;
+        $this->youtube->run($this->playlist)->downloadPlaylist();
+        $this->premiumIds = $this->youtube->premiumIds;
         $this->secondRun  = true;
 
         $this->docompactPlaylist();
@@ -75,10 +73,9 @@ trait Helper
 
     public function premium()
     {
-        $youtube = new Youtube($this->playlist, Mediatag::$input, Mediatag::$output);
-        $youtube->downloadPlaylist(false);
-        $this->premiumIds      = $youtube->premiumIds;
-        $this->DownloadableIds = $youtube->DownloadableIds;
+        $this->youtube->run($this->playlist)->downloadPlaylist(false);
+        $this->premiumIds      = $this->youtube->premiumIds;
+        $this->DownloadableIds = $this->youtube->DownloadableIds;
 
         $this->docompactPlaylist();
     }
@@ -255,22 +252,28 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_string = '';
-        $file_array  = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json', exit: false);
-        foreach ($file_array as $key => $val) {
-            $ph_key = basename($val, '.info.json');
-            if (! str_starts_with($ph_key, 'x')) {
-                $this->json_Array[$ph_key] = $val;
+        if (! Option::istrue('missing')) {
+            $file_array = Mediatag::$finder->Search(__JSON_CACHE_DIR__, '*.json', exit: false);
+            foreach ($file_array as $key => $val) {
+                $ph_key = basename($val, '.info.json');
+                if (! str_starts_with($ph_key, 'x')) {
+                    $this->json_Array[$ph_key] = $val;
+                }
             }
         }
 
-        //   $file_array  = Mediatag::$finder->ExecuteSearch();
+        //$file_array = Mediatag::$finder->ExecuteSearch();
 
-        foreach (Mediatag::$SearchArray as $key => $val) {
-            if (array_key_exists($key, $this->json_Array)) {
-                unset($this->json_Array[$key]);
+        foreach ($this->VideoList['file'] as $key => $val) {
+            if (Option::istrue('missing')) {
+                $this->json_Array[$key] = $val;
+            } else {
+                if (array_key_exists($key, $this->json_Array)) {
+                    unset($this->json_Array[$key]);
+                }
             }
         }
-
+        UtmDump($this->json_Array);
         //        $archive_array = Filesystem::readLines(self::$ARCHIVE, [$this, 'parseArchive']);
         //        Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 

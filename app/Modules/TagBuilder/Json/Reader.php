@@ -10,6 +10,7 @@ use Facebook\WebDriver\Exception\WebDriverException;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Database\TagDB;
 use Mediatag\Modules\Executable\Youtube;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\FileSystem;
@@ -27,7 +28,7 @@ class Reader extends TagReader
 
     private $json_file;
 
-    private $json_string;
+    private $json_string = '{}';
 
     private $json_array = [];
 
@@ -148,6 +149,8 @@ class Reader extends TagReader
             if ($tag == 'artist') {
                 // // utmdump(['artist', $this->json_array['cast']]);
             }
+
+            // utmdump($this->json_array);
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ($tag == 'studio') {
@@ -197,34 +200,20 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // if (! str_starts_with($this->video_key, 'x')) {
-        $this->json_file = __JSON_CACHE_DIR__ . '/' . strtolower($this->video_key) . '.info.json';
+        $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
 
         if (file_exists($this->json_file)) {
-            $this->json_string = FileSystem::read($this->json_file);
+            $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);
+            // if ($this->video_key == 'ph5e8649773f814') {
+            //     utmdd($this->json_string);
+            // }
 
             if ($this->json_string == '') {
-                return false;
+                $this->json_string = '{}';
             }
 
             return true;
-            // } else {
-            // $exec = new Youtube(__LIBRARY__);
-
-            // $exec->youtubeGetJson($this->video_key);
-
-            // $this->json_file = __JSON_CACHE_DIR__ . '/' . $this->video_key . '.info.json';
-
-            // if (file_exists($this->json_file)) {
-            // utmdump($this->video_key);
-            //     $this->json_string = FileSystem::read($this->json_file);
-            //     // utmdd($this->json_string);
-
-            //     return true;
-            // } else {
-            // touch($this->json_file);
-            // }
         }
-        // }
 
         return false;
     }

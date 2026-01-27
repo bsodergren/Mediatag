@@ -4,7 +4,6 @@
         "exclude-from-classmap": 
         [
             "vendor\\symfony\\console\\Descriptor\\ApplicationDescription.php",
-            "vendor\\symfony\\console\\Command\\DumpCompletionCommand.php",
             "vendor\\symfony\\console\\Descriptor\\TextDescriptor.php",
             "vendor/symfony/console/Formatter/OutputFormatter.php",
             "vendor\\Symfony\\Component\\Console\\Output\\OutputInterface.php"

@@ -8,13 +8,13 @@ namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use const PHP_EOL;
 
-use Mediatag\Core\Mediatag;
-use function array_key_exists;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Executable\MediatagExec;
-
-use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Helper\VideoDownloader;
+use Mediatag\Modules\Executable\MediatagExec;
+use Mediatag\Modules\Filesystem\MediaFile;
+
+use function array_key_exists;
 
 trait YtdlpCallBacks
 {
@@ -51,7 +51,6 @@ trait YtdlpCallBacks
 
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/json" . ".log", $buffer . PHP_EOL);
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
                 if ($matches[2] != '') {
@@ -59,6 +58,7 @@ trait YtdlpCallBacks
                 }
             }
         }
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/json_' . $this->key . '.log', $buffer . PHP_EOL);
 
         switch ($buffer) {
             // case str_contains($buffer, 'ERROR:'):
@@ -70,7 +70,12 @@ trait YtdlpCallBacks
             case str_contains($buffer, '[info]'):
                 if (str_contains($buffer, 'as JSON')) {
                     $this->yt_json_string = $buffer;
+                    Mediatag::$Console->writeln($buffer);
                 }
+                break;
+            case str_contains($buffer, 'Upgrade now'):
+                $this->yt_error_string = $buffer;
+
                 break;
         }
     }

@@ -296,7 +296,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
         // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
-
+        $str                = [];
         $file_special_chars = [];
         $special_chars      = [
             '?',
@@ -353,6 +353,7 @@ class Strings extends \Nette\Utils\Strings
             }
         }
 
+        // utmdump($str);
         $text = implode('', $str);
         // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 

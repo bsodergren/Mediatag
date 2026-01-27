@@ -100,11 +100,14 @@ class MediaFile
         return $xkey;
     }
 
-    public static function getVideoKey($filename, $library = null)
+    public static function getVideoKey($file, $library = null)
     {
         // utminfo(func_get_args());
         $video_key = null;
-        $filename  = basename($filename);
+        $pcs       = pathinfo($file);
+
+        $filename = $pcs['basename'];
+        $ext      = $pcs['extension'];
 
         if ($library === null) {
             $filesystem   = new SFilesystem;
@@ -119,10 +122,13 @@ class MediaFile
 
         if ($library == 'Pornhub') {
             $isPhFile = self::isPornhubfile($filename);
-
+            if ($ext == 'json') {
+                $isPhFile = true;
+            }
             if ($isPhFile === true) {
                 // $filename = realpath($filename);
-                $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
+                $success = preg_match('/-?(p?h?P?H?[a-z0-9]{4,}).(mp4|info.*)/', $filename, $matches);
+                // $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
                 if ($success == 1) {
                     $video_key = $matches[1];
                 }
@@ -134,7 +140,7 @@ class MediaFile
         }
 
         // // utmdump([$filename,$video_key]);
-        return $video_key;
+        return strtolower(trim($video_key, '-'));
     }
 
     /**
@@ -241,7 +247,7 @@ class MediaFile
         $j      = 1;
         $buffer = '';
 
-        if (!str_ends_with($targetpath, '/')) {
+        if (! str_ends_with($targetpath, '/')) {
             $targetpath .= '/';
         }
 
@@ -249,7 +255,7 @@ class MediaFile
 
         $handle = @fopen($source, 'r');
 
-        while (!feof($handle)) {
+        while (! feof($handle)) {
             $buffer .= @fgets($handle, 4096);
             $i++;
 
@@ -275,12 +281,12 @@ class MediaFile
     {
         // utminfo(func_get_args());
 
-        if (!$fhandle = @fopen($fname, 'w')) {
+        if (! $fhandle = @fopen($fname, 'w')) {
             echo "Cannot open file ({$fname})";
 
             exit;
         }
-        if (!@fwrite($fhandle, $buffer)) {
+        if (! @fwrite($fhandle, $buffer)) {
             echo "Cannot write to file ({$fname})";
 
             exit;
@@ -334,7 +340,7 @@ class MediaFile
             $library = $match[1];
         }
 
-        $success = preg_match('/-(p?h?[a-z0-9]{4,}).mp4/i', $filename, $matches);
+        $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
 
         if ($success == 1) {
             if ($library == 'Studios') {

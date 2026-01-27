@@ -30,7 +30,7 @@ use function is_string;
 class MediaOptions
 {
     use Lang;
-    use OptionCompletion;
+    // use OptionCompletion;
     use OptionsDefault;
     use Translate;
 

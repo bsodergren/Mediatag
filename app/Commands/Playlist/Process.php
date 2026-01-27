@@ -10,6 +10,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 // use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -120,6 +121,10 @@ class Process extends Mediatag
 
     public $premium;
 
+    public $VideoList;
+
+    protected $useFuncs = ['addMeta', 'setupMap'];
+
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
         // utminfo(func_get_args());
@@ -149,5 +154,7 @@ class Process extends Mediatag
         if (! is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
+
+        $this->youtube = new Youtube(Mediatag::$input, Mediatag::$output);
     }
 }

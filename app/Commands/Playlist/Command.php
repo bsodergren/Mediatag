@@ -78,6 +78,7 @@ final class Command extends MediaCommand
         //     'default'      => null,
         // ],
         'json'     => [
+            'exec'      => null,
             'cleanjSon' => null,
         ],
         // 'watchlater'        => [
@@ -94,4 +95,9 @@ final class Command extends MediaCommand
         //     'splitPlaylist' => null,
         // ],
     ];
+
+    public function cleanOnEvent()
+    {
+        utmdd($this->youtube);
+    }
 }

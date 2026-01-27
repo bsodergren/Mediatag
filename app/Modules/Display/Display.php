@@ -157,7 +157,6 @@ class Display
             return false;
         }
         // $tagCount += 6;
-
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);

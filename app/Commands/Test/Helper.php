@@ -11,13 +11,49 @@ use const PHP_EOL;
 
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
+use Symfony\Component\Finder\Finder;
 use UTM\Utilities\Option;
 
 trait Helper
 {
+    public function searchJson()
+    {
+        $val = Option::getValue('search');
+        // $val    = 'Dpfanatics_Sexy_Liza_Shay_Gets_Double-Fucked_During_Work_Hours';
+        $string = str_replace('_', ' ', $val);
+
+        $grephp = new Grephp;
+        $res    = $grephp->grep(__JSON_CACHE_DIR__, '/' . $string . '/i');
+
+        if ($res->hasErrors()) {
+            foreach ($res->errors as $err) {
+                // $err->file (may be null), $err->errorCode, $err->errorMessage
+            }
+        }
+
+        foreach ($res->matches as $file => $matches) {
+            $key = MediaFile::getVideoKey($file, 'Pornhub');
+            Mediatag::$Console->writeln($key);
+
+            // $matches is a list of full-match strings
+        }
+
+        // $finder = new Finder;
+        // // first, configure the common options for the following searches
+        // $finder->in(__JSON_CACHE_DIR__);
+
+        // $finder->files()->contains($string);
+        // utmdump($finder);
+        // foreach ($finder as $file) {
+        //     utmdump($file->getContents());
+        // }
+    }
+
     // use HelperCmds;
 
     public function doThumbnail()

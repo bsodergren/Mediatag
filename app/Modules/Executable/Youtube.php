@@ -14,6 +14,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\Pornhub;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
@@ -91,12 +92,15 @@ class Youtube extends MediatagExec
 
     public $library;
 
-    public function __construct($class, $input = null, $output = null)
+    public function __construct($input = null, $output = null)
     {
         // utminfo(func_get_args());
 
         $this->Console = new ConsoleOutput(Mediatag::$output, Mediatag::$input);
+    }
 
+    public function run($class)
+    {
         // utmdd($this->library);
 
         if (is_file($class)) {
@@ -123,6 +127,7 @@ class Youtube extends MediatagExec
         // utmdd($class);
         $this->LibraryClass = new $Class($this);
 
+        return $this;
         // $this->commonOptions = [
         //     CONFIG['YOUTUBEDL_CMD'],
         //     '-i',
@@ -137,33 +142,6 @@ class Youtube extends MediatagExec
         //     '--no-warnings',
         //     '--ignore-config',
         // ];
-    }
-
-    public function youtubeGetJson($video_key)
-    {
-        // utminfo(func_get_args());
-        if ($this->library != 'Pornhub') {
-            return null;
-        }
-        // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
-        $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
-        $options   = array_merge($options, ['--skip-download']);
-        $video_url = 'https://www.pornhub.com/view_video.php?viewkey=' . $video_key;
-
-        $command = array_merge($options, [$video_url]);
-
-        $callback = Callback::check([$this, 'downloadJsonCallback']);
-        $this->exec($command, $callback);
-        preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
-        $json_file = '';
-
-        if (array_key_exists(1, $output_array)) {
-            $json_file = $output_array[1];
-            $this->moveJson($json_file);
-        }
-        // UtmDd($json_file,$this->yt_json_string);
-
-        return $json_file;
     }
 
     public function youtubeCmdOptions()
@@ -261,6 +239,33 @@ class Youtube extends MediatagExec
         $this->exec($command, $callback);
     }
 
+    public function youtubeGetJson($video_key)
+    {
+        // utminfo(func_get_args());
+        if ($this->library != 'Pornhub') {
+            return null;
+        }
+        // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
+        $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
+        $options   = array_merge($options, ['--skip-download']);
+        $video_url = strtolower('http://www.pornhub.com/video/show?viewkey=' . $video_key);
+        //648719015
+        $command = array_merge($options, [$video_url]);
+
+        $callback = Callback::check([$this, 'downloadJsonCallback']);
+        $this->exec($command, $callback);
+        preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
+        $json_file = $this->yt_error_string;
+
+        if (array_key_exists(1, $output_array)) {
+            $json_file = $output_array[1];
+            $this->moveJson($json_file);
+        }
+        // UtmDd($json_file,$this->yt_json_string);
+
+        return $json_file;
+    }
+
     public function moveJson($json_file)
     {
         // utminfo(func_get_args());
@@ -269,13 +274,15 @@ class Youtube extends MediatagExec
         // $old_path = $videoInfo['video_path'];
         $json_key = '';
         // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
+        // utmdump([__METHOD__, $json_file]);
         if (Mediatag::$filesystem->exists($json_file)) {
-            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
-            if ($success === 1) {
-                $json_key = $matches[1];
-            } else {
-                // utmdd($matches);
-            }
+            $json_key = MediaFile::getVideoKey($json_file, 'Pornhub');
+            //            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
+
+            //     if ($success === 1) {
+            //         $json_key = $matches[1];
+            //     } else {
+            //     }
         }
 
         $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
@@ -286,7 +293,7 @@ class Youtube extends MediatagExec
                     $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                     Mediatag::$output->writeln($out);
                 } else {
-                    Mediatag::$filesystem->rename($json_file, $newJson_file, false);
+                    Mediatag::$filesystem->copy($json_file, $newJson_file, false);
                 }
             }
 

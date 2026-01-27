@@ -40,8 +40,6 @@ class MediaApplication extends Application
             new HelpCommand,
             new ListCommand,
             new CompleteCommand,
-            new DumpCompletionCommand,
-            new MediaCompletionCommand,
         ];
     }
 
