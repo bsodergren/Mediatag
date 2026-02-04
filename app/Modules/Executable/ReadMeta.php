@@ -24,12 +24,15 @@ class ReadMeta extends MediatagExec
         parent::__construct($videoData, $input, $output);
     }
 
-    public function read()
+    public function read($update = false)
     {
         // utminfo(func_get_args());
-
         $array = MediaCache::get($this->video_key);
-        // $array = false;
+        if ($update === true) {
+            $array = false;
+        }
+
+        //
         if ($array === false) {
             $command = [
                 Mediatag::App(),

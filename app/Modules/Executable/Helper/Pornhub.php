@@ -91,7 +91,7 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'HTTPError'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::DISABLED'],
+                    'updateIdList' => ['args' => 'PlaylistProcess::NOTFOUND'],
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],

@@ -55,8 +55,8 @@ class Youtube extends MediatagExec
         '--restrict-filenames',
         // '-w',
         '-c',
+        '--abort-on-unavailable-fragments',
         // '--no-part',
-        '--write-info-json',
         '--no-warnings',
         '--ignore-config',
         '--write-info-json',
@@ -92,6 +92,8 @@ class Youtube extends MediatagExec
 
     public $library;
 
+    public $download_url;
+
     public function __construct($input = null, $output = null)
     {
         // utminfo(func_get_args());
@@ -102,15 +104,18 @@ class Youtube extends MediatagExec
     public function run($class)
     {
         // utmdd($this->library);
+        // utmdd($this->playlist);
 
         if (is_file($class)) {
             $this->playlist = $class;
             $st_array       = file($this->playlist);
             $class          = $st_array[0];
         } else {
-            $class = 'Pornhub';
+            $this->download_url = $class;
+            $class              = 'Pornhub';
         }
 
+        // utmdump($this->download_url, $class);
         if (str_contains($class, 'pornhub')) {
             $class = 'Pornhub';
         }
@@ -178,7 +183,8 @@ class Youtube extends MediatagExec
         }
 
         // utmdd($options, Option::getOptions());
-        $playlist_opt = ['-a', $this->playlist];
+        // $playlist_opt = ['-a', $this->playlist];
+        $playlist_opt = [$this->download_url];
 
         if (Option::istrue('url')) {
             $playlist_opt = [Option::getValue('url')];
@@ -208,34 +214,35 @@ class Youtube extends MediatagExec
         Mediatag::$output->writeln('<info> Downloaded new Playlist </info>');
 
         $this->downloadFiles = $downloadFiles;
-        $this->num_of_lines  = 100;
+        // $this->num_of_lines  = 100;
 
-        if (! Option::istrue('url')) {
-            $names = file($this->playlist);
-            // utmdd($names);
-            if (Option::istrue('max')) {
-                $this->num_of_lines = (int) Option::getValue('max', true);
-            } else {
-                $this->num_of_lines = count($names) + 1;
-            }
+        // if (! Option::istrue('url')) {
+        //     $names = file($this->playlist);
+        //     // utmdd($names);
+        //     if (Option::istrue('max')) {
+        //         $this->num_of_lines = (int) Option::getValue('max', true);
+        //     } else {
+        //         $this->num_of_lines = count($names) + 1;
+        //     }
 
-            if (! str_contains('premium', $this->playlist)) {
-                $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
-                Filesystem::backupPlaylist($this->premium);
-            }
+        //     if (! str_contains('premium', $this->playlist)) {
+        //         $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
+        //         Filesystem::backupPlaylist($this->premium);
+        //     }
 
-            if (! str_contains('model_hub', $this->playlist)) {
-                $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
-                Filesystem::backupPlaylist($this->model_hub);
-            }
+        //     if (! str_contains('model_hub', $this->playlist)) {
+        //         $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
+        //         Filesystem::backupPlaylist($this->model_hub);
+        //     }
 
-            // } else {
-            //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
-        }
+        //     // } else {
+        //     //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
+        // }
 
         $this->LibraryClass->init($this);
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         $command  = $this->youtubeCmdOptions();
+        // utmdd($command);
         $this->exec($command, $callback);
     }
 

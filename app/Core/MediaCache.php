@@ -57,12 +57,15 @@ class MediaCache
         }
 
         $value = self::$stash->get($key);
+        // utmdump('Getting key ' . $key . ' from cache with a value of ', $value);
 
         return $value;
     }
 
     public static function put($key, $value)
     {
+        // utmdump('Adding key ' . $key . ' to cache with a value of ', $value);
+
         return self::$stash->put($key, $value, self::$expire);
     }
 

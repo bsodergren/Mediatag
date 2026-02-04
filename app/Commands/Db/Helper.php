@@ -92,7 +92,7 @@ trait Helper
     {
         // utminfo(func_get_args());
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
-
+        // utmdd($this->Deleted_Array);
         $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
 
         // utmdd([__METHOD__,count($this->db_array), count($this->file_array)

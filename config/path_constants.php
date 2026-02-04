@@ -39,7 +39,7 @@ const __JSON_CACHE_DIR__   = __CACHE_DIR__ . '/json';
 const __PH_CACHE_DIR__     = __CACHE_DIR__ . '/Pornhub';
 const __STUDIO_CACHE_DIR__ = __CACHE_DIR__ . '/Studio';
 
-const __APP_CACHE_DIR__ = __PLEX_VAR_DIR__ . '/cache';
+const __APP_CACHE_DIR__ = __CACHE_DIR__ . '/mediatag';
 
 const __PATTERNS_LIB_DIR__ = __APP_HOME__ . '/app/Patterns';
 const __COMMANDS_DIR__     = __APP_HOME__ . '/app/Commands';

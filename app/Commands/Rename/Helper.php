@@ -13,6 +13,7 @@ use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
@@ -386,17 +387,22 @@ trait Helper
     {
         // utminfo(func_get_args());
         // utmdd([__METHOD__, Mediatag::$SearchArray]);
-        foreach (Mediatag::$SearchArray as $key => $file) {
-            $php = MediaFile::getVideoKey($file);
 
-            $matched = preg_match('/(p?h?P?H?[a-z0-9]{8,})/', $php, $output_array);
-            if ($matched == 0) {
-                Mediatag::$Console->writeln($file);
-            }
-            // utmdd($matched, $output_array, $php);
-        }
-        exit;
-        foreach (Mediatag::$SearchArray as $key => $file) {
+        $file_array = (new MediaFinder)->search(__CURRENT_DIRECTORY__, '/Ph[a-z0-9]{8,}\.mp4$/');
+        // utmdd($file_array);
+
+        // foreach ($file_array as $key => $file) {
+        //     $php = MediaFile::getVideoKey($file);
+
+        //     $matched = preg_match('/(p?h?P?H?[a-z0-9]{8,})/', $php, $output_array);
+        //     if ($matched == 0) {
+        //         Mediatag::$Console->writeln($file);
+        //     }
+        //     // utmdd($matched, $output_array, $php);
+        // }
+        // exit;
+
+        foreach ($file_array as $key => $file) {
             $oldName = $file;
 
             $fs        = new File($file);
@@ -410,10 +416,11 @@ trait Helper
             if (Option::isTrue('lowercase')) {
                 $video_key = MediaFile::getVideoKey($file);
                 preg_match('/(.*)(-p?h?[a-z0-9]{5,}).(.*)/i', $file, $output_array);
-                $newName = $output_array[1] . '-' . $video_key . '.' . $output_array[3];
-                $newName = $this->cleanFilename($newName);
+                $newName    = $output_array[1] . '-' . $video_key . '.' . $output_array[3];
+                $newName    = $this->cleanFilename($newName);
+                $backupName = str_replace('XXX', 'XXX/backup', $oldName);
             }
-            //  utmdd([__METHOD__, $oldName, $newName]);
+            // utmdd([__METHOD__, $oldName, $newName]);
             if (! str_starts_with($oldName, __PLEX_HOME__)) {
                 continue;
             }
@@ -426,10 +433,11 @@ trait Helper
 
                 continue;
             }
-            utmdump($output_array, $video_key);
+            // utmdump($output_array, $video_key);
             // ;
             // Mediatag::$output->writeln('renaming file <comment> ' . $oldName . '</>');
             // Mediatag::$output->writeln('<comment> ' . $newName . '</>');
+            (new SfSystem)->copy($oldName, $backupName);
 
             $this->renameFile($oldName, $newName);
         }

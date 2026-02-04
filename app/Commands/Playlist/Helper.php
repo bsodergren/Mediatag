@@ -54,16 +54,42 @@ trait Helper
         $this->youtube->run($this->playlist)->createWatchList($this->url);
     }
 
-    public function dodownloadPlaylistURL()
-    {
-        $this->youtube->run($this->playlist)->downloadPlaylist();
-        $this->secondRun = true;
-    }
-
     public function dodownloadPlaylist()
     {
-        // utminfo(func_get_args());
+        $this->youtube->playlist = $this->playlist;
+        $fileArray               = file($this->playlist);
+        $count                   = count($fileArray);
 
+        foreach ($fileArray as $i => $download_url) {
+            $url                         = trim($download_url);
+            $this->youtube->num_of_lines = $count;
+            $count--;
+            if (Option::istrue('max')) {
+                if (Option::getValue('max') < $i - 1) {
+                    continue;
+                }
+            }
+            // utmdump(['i' => $i, 'max' => Option::getValue('max') - 1, 'cur' => $i - 1, 'url' => $url]);
+
+            if ($url != '') {
+                $this->youtube->run($url)->downloadPlaylist();
+
+                // utmdd($url);
+            }
+        }
+        $this->secondRun = true;
+
+        $this->premiumIds = $this->youtube->premiumIds;
+        $this->docompactPlaylist();
+    }
+
+    public function ddodownloadPlaylist()
+    {
+        // utminfo(func_get_args());
+        foreach (file($this->playlist) as $download_url) {
+            utmdump($download_url);
+        }
+        utmdd($download_url);
         $this->youtube->run($this->playlist)->downloadPlaylist();
         $this->premiumIds = $this->youtube->premiumIds;
         $this->secondRun  = true;

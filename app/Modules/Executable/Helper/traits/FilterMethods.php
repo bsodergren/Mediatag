@@ -116,8 +116,8 @@ trait FilterMethods
         PlaylistProcess::$current_key = false;
         $outputText                   = $line_id . '  <error> ' . $this->key . ' ' . $error . ' </error>';
 
-        // $this->Console->writeln($outputText);
-        $this->updateIdList(PlaylistProcess::DISABLED);
+        // Mediatag::$Console->writeln($outputText);
+        // $this->updateIdList(PlaylistProcess::DISABLED);
 
         return $outputText;
     }
@@ -126,54 +126,63 @@ trait FilterMethods
     {
         // utminfo(func_get_args());
         $id = $this->KeyPrefix . ' ' . $this->key;
-        file_put_contents($keyfile, $id . PHP_EOL, FILE_APPEND);
+        file_put_contents($keyfile, PHP_EOL . $id . PHP_EOL, FILE_APPEND);
     }
 
     public function updatePlaylist($type, $file = null)
     {
+        if ($file !== null) {
+            $pcs = pathinfo($file);
+            if ($pcs['dirname'] == '.') {
+                $file = __CURRENT_DIRECTORY__ . '/' . $file;
+            }
+        }
+
+        // utmdump($file);
+
         // utminfo(func_get_args());
         if ($file === null) {
             $file = $this->playlist;
         }
 
-        if ($type == 'watchlaterPr') {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+        switch ($type) {
+            case 'watchlaterPr':
+                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
+                // $this->Console->writeln($url);
+                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                break;
+            case 'watchlater':
+                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                // $this->Console->writeln($url);
+                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
 
-            return 1;
-        }
-        if ($type == 'watchlater') {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                break;
+            case 'premium':
+                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
+                // $this->Console->writeln($url);
+                if (! str_contains('premium', $file)) {
+                    file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
+                }
 
-            return 1;
-        }
+                break;
+            case 'modelhub':
+                $url = 'https://www.modelhub.com/video/' . $this->key;
+                if (! str_contains('model_hub', $file)) {
+                    file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
+                }
 
-        if ($type == 'premium') {
-            $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-            // $this->Console->writeln($url);
-            if (! str_contains('premium', $file)) {
-                file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
-            }
+                break;
+            case 'error':
+                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                // $ret = file_put_contents(PlaylistProcess::NOTFOUND, $url . PHP_EOL, FILE_APPEND);
+                // $this->updateIdList(PlaylistProcess::DISABLED);
 
-            return 1;
-        }
-
-        if ($type == 'modelhub') {
-            $url = 'https://www.modelhub.com/video/' . $this->key;
-            if (! str_contains('model_hub', $file)) {
-                file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
-            }
-
-            return 1;
-        }
-        if ($type == 'error') {
-            $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-            $ret = file_put_contents(PlaylistProcess::ERRORPLAYLIST, $url . PHP_EOL, FILE_APPEND);
-
-            return 1;
+                break;
+            default:
+                $url = $type . '=>' . 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                // Mediatag::$Console->writeln($url);
+                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                break;
         }
     }
 
@@ -197,12 +206,14 @@ trait FilterMethods
         if (str_contains($buffer, 'already been')) {
             $bufferMethod = 'Exists';
             $newLine      = true;
+
             // $this->num_of_lines--;
-            $this->updatePlaylist('errors', 'downloaded_list.txt');
+            $this->updatePlaylist('error', 'downloaded_list.txt');
         }
         if (str_contains($buffer, 'Got error')) {
             $bufferMethod = 'Error';
             $newLine      = true;
+            $this->updatePlaylist('404', PlaylistProcess::NOTFOUND);
         }
 
         return $this->ytlpDownloadBuffer($bufferMethod, $buffer, $line_id, $newLine);

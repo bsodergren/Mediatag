@@ -11,6 +11,7 @@ use const PHP_EOL;
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
+use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;
@@ -68,18 +69,23 @@ class WriteMeta extends MediatagExec
                 }
             }
             if ($update === true) {
-                // $videoData[$this->video_key] = $this->videoData;
-                // $videoData[$this->video_key]['metatags'] = array_merge($this->videoData['currentTags'],$this->videoData['updateTags']);
+                $videoData[$this->video_key] = $this->videoData;
+                // $videoData[$this->video_key]['metatags'] =
+                //  array_merge($this->videoData['updateTags'], $this->videoData['currentTags']);
+                $videoData[$this->video_key]['metatags'] = TagReader::mergetags($videoData[$this->video_key]['currentTags'],
+                    $videoData[$this->video_key]['updateTags']);
 
-                // unset($videoData[$this->video_key]['currentTags']);
-                // unset($videoData[$this->video_key]['updateTags']);
-                // unset($videoData[$this->video_key]['video_key']);
+                unset($videoData[$this->video_key]['currentTags']);
+                unset($videoData[$this->video_key]['updateTags']);
+                unset($videoData[$this->video_key]['video_key']);
 
                 // utmdd($videoData);
 
                 $this->addOptionArg('--overWrite');
-                //   MediaCache::put($this->video_key,$videoData);
+                MediaCache::put($this->video_key, $videoData);
                 $this->write();
+                // $read       = new ReadMeta($this->videoData, Mediatag::$input, Mediatag::$output);
+                //  $read->read(true);
             }
         }
 
