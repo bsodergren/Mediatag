@@ -87,6 +87,7 @@ trait Helper
     public function getClipDirectory($filename, $level = 1)
     {
         $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
+        Filesystem::createDir($outputFile);
         if ($level == 0) {
             return $outputFile;
         }

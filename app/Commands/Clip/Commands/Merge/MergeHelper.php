@@ -79,7 +79,7 @@ trait MergeHelper
 
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
 
-        if ($fileSearch !== null) {
+        if ($fileSearch != "") {
             $search = '/.*_(' . $fileSearch . ')_\d+\.mp4/i';
         } else {
             $search = '*.mp4';
@@ -87,7 +87,6 @@ trait MergeHelper
         if ($name === null) {
             $name = 'Compilation';
         }
-
         $file_array = Mediatag::$finder->Search($directory, $search);
 
         if ($file_array == null) {
@@ -120,8 +119,6 @@ trait MergeHelper
         // Filesystem::write($listFile, $string, 0755);
         $ClipName = $this->setClipFilename($name);
         // $this->progress = new MediaIndicator('one');
-
-        // utmdd($file);
 
         $this->createCompilation($fileList, $ClipName, $name);
     }
