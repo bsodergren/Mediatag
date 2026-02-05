@@ -38,10 +38,10 @@ class TagBuilder
     public function getTags($videoInfo)
     {
         // utminfo(func_get_args());
-        $DbUpdates = null;
-        $updates   = null;
+        $DbUpdates = [];
+        $updates   = [];
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
-        $jsonupdates = null;
+        $jsonupdates = [];
 
         if (! defined('__UPDATE_SET_ONLY__')) {
             // if (str_starts_with($this->video_key, 'x')) {
@@ -102,7 +102,7 @@ class TagBuilder
             }
         }
 
-        // utmdd($updates);
+        // utmdd($videoInfo);
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
             $updates['studio']        = $this->addNetwork($updates, $updates);
@@ -116,7 +116,9 @@ class TagBuilder
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
-            $videoInfo['updateTags'] = self::compareTags($current, $updates);
+            if (is_array($current) && is_array($updates)) {
+                $videoInfo['updateTags'] = self::compareTags($current, $updates);
+            }
         }
         // utmdd($videoInfo);
 

@@ -97,6 +97,7 @@ class MediaFinder extends SFinder
     public $defaultCmd;
 
     public static $depth;
+
     public static $quiet = false;
 
     /**
@@ -407,7 +408,7 @@ class MediaFinder extends SFinder
             if (is_array($file_array)) {
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);
-                    if(self::$quiet === false){
+                    if (self::$quiet === false) {
                         Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
                     }
 
@@ -491,8 +492,8 @@ class MediaFinder extends SFinder
                 $obj->addFile($missing_file, false);
             }
             $obj->addFiles();
-            $obj->addCmd('db', [], false, false);
-            $obj->addCmd('db', ['all'], false, false);
+            // $obj->addCmd('db', [], false, false);
+            // $obj->addCmd('db', ['all'], false, false);
 
             $obj->write();
             Mediatag::$output->writeln('Wrote new script');

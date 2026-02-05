@@ -20,8 +20,8 @@ class Bang extends Patterns
                 'match'               => 2,
                 'artistFirstNameOnly' => false,
             ],
-            'studio' => [
-                'pattern' => '/^([a-zA-Z]+)_.*/i', ],
+            // 'studio' => [
+            //     'pattern' => '/^([a-zA-Z]+)-.*/i', ],
         ],
     ];
 
