@@ -21,11 +21,11 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DOWNLOAD_MOVE')],
-            ['convert', '', InputOption::VALUE_NONE, Translate::text('L__DOWNLOAD_CONVERT')],
+            ['json', 'j', InputOption::VALUE_NONE, self::text('L__DOWNLOAD_MOVE')],
+            ['convert', '', InputOption::VALUE_NONE, self::text('L__DOWNLOAD_CONVERT')],
         ];
     }
 }

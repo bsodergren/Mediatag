@@ -57,6 +57,8 @@ class Storage extends MysqliDb
 
     public object $mapClass;
 
+    public static $DB;
+
     private $MultiIDX = 1;
 
     public function __construct()
@@ -72,6 +74,7 @@ class Storage extends MysqliDb
         $this->dbConn = $db;
         // $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
         $this->dbConn->setTrace(true);
+        self::$DB = $this->dbConn;
 
         $this->mapClass = new DbMap;
         if (! is_null(Mediatag::$output)) {

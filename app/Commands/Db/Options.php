@@ -23,20 +23,20 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['paths', 'P', InputOption::VALUE_NONE, Translate::text('L__DB_PATH_UPDATE')],
+            ['paths', 'P', InputOption::VALUE_NONE, self::text('L__DB_PATH_UPDATE')],
 
-            ['json', 'j', InputOption::VALUE_NONE, Translate::text('L__DB_JSON_UPDATE')],
-            ['all', 'a', InputOption::VALUE_NONE, Translate::text('L__DB_ADD')],
-            ['markers', 'm', InputOption::VALUE_NONE, Translate::text('L__DB_MARKERS_UPDATE')],
+            ['json', 'j', InputOption::VALUE_NONE, self::text('L__DB_JSON_UPDATE')],
+            ['all', 'a', InputOption::VALUE_NONE, self::text('L__DB_ADD')],
+            ['markers', 'm', InputOption::VALUE_NONE, self::text('L__DB_MARKERS_UPDATE')],
             ['break'],
-            ['update', 'u', InputOption::VALUE_NONE, Translate::text('L__DB_FILE_UPDATE')],
-            ['clean', 'c', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_CLEAN')],
-            ['delete', 'd', InputOption::VALUE_NONE, Translate::text('L__DB_THUMBNAIL_DELETE')],
-            ['yes', 'y', InputOption::VALUE_NONE, Translate::text('L__DB_YES')],
-            ['library', 'l', InputOption::VALUE_NONE, Translate::text('L__DB_YES')],
+            ['update', 'u', InputOption::VALUE_NONE, self::text('L__DB_FILE_UPDATE')],
+            ['clean', 'c', InputOption::VALUE_NONE, self::text('L__DB_THUMBNAIL_CLEAN')],
+            ['delete', 'd', InputOption::VALUE_NONE, self::text('L__DB_THUMBNAIL_DELETE')],
+            ['yes', 'y', InputOption::VALUE_NONE, self::text('L__DB_YES')],
+            ['library', 'l', InputOption::VALUE_NONE, self::text('L__DB_YES')],
         ];
     }
 

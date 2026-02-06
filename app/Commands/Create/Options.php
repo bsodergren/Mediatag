@@ -23,14 +23,14 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['cmd', 'c', InputOption::VALUE_REQUIRED, Translate::text('L__DB_MARKERS_UPDATE')],
-            ['name', '', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
-            ['desc', 'd', InputOption::VALUE_REQUIRED, Translate::text('L__DB_FILE_UPDATE')],
-            ['method', 'm', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
-            ['options', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L__DB_FILE_UPDATE')],
+            ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__DB_MARKERS_UPDATE')],
+            ['name', '', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
+            ['desc', 'd', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
+            ['method', 'm', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_FILE_UPDATE')],
+            ['options', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_FILE_UPDATE')],
 
             ['break'],
         ];

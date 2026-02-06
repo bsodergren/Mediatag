@@ -22,7 +22,7 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
         ];

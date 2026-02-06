@@ -21,20 +21,20 @@ class Options extends MediaOptions
     {
         // utminfo();
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['changes', 'c', InputOption::VALUE_NONE, Translate::text('L__UPDATE_APPROVE_CHANGES')],
-            ['updates', 'U', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
-            ['clear', '', InputOption::VALUE_NONE, Translate::text('L__UPDATE_CLEAR')],
+            ['changes', 'c', InputOption::VALUE_NONE, self::text('L__UPDATE_APPROVE_CHANGES')],
+            ['updates', 'U', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
+            ['clear', '', InputOption::VALUE_NONE, self::text('L__UPDATE_CLEAR')],
 
-            ['rename', 'R', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
-            ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],
-            ['addNetwork', 'P', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__UPDATE_ALL_TAGS')],
-            ['cache', '', InputOption::VALUE_NONE, Translate::text('L__UPDATE_NEWFILES_REPLACEMENT')],
-            // ['cacheUpdate', 'u', InputOption::VALUE_NONE, Translate::text('L__UPDATE_ALL_TAGS')],
+            ['rename', 'R', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
+            ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__UPDATE_ALL_TAGS')],
+            ['addNetwork', 'P', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__UPDATE_ALL_TAGS')],
+            ['cache', '', InputOption::VALUE_NONE, self::text('L__UPDATE_NEWFILES_REPLACEMENT')],
+            // ['cacheUpdate', 'u', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
             ['break'],
-            ['download', 'D', InputOption::VALUE_NONE, Translate::text('L__UPDATE_DOWNloAD')],
+            ['download', 'D', InputOption::VALUE_NONE, self::text('L__UPDATE_DOWNloAD')],
         ];
     }
 

@@ -133,16 +133,16 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        Translate::$Class             = __CLASS__;
+        self::$Class             = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
         $videos                       = Mediatag::$dbconn->getVideoCount();
         if (Option::istrue('yes')) {
             $go     = true;
             $answer = 'y';
         } else {
-            Mediatag::$output->writeln(Translate::text('L__GALLERY_VIDEO_COUNT', ['VID' => $videos]));
+            Mediatag::$output->writeln(self::text('L__GALLERY_VIDEO_COUNT', ['VID' => $videos]));
             $ask      = new QuestionHelper;
-            $question = new Question(Translate::text('L__GALLERY_ASK_CONTINUE'));
+            $question = new Question(self::text('L__GALLERY_ASK_CONTINUE'));
 
             $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         }

@@ -22,15 +22,15 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['info', 'i', InputOption::VALUE_NONE, Translate::text('L__GALLERY_FILEINFO_UPDATE')],
+            ['info', 'i', InputOption::VALUE_NONE, self::text('L__GALLERY_FILEINFO_UPDATE')],
             ['break'],
-            ['update', 'u', InputOption::VALUE_NONE, Translate::text('L__GALLERY_FILE_UPDATE')],
-            ['clean', 'c', InputOption::VALUE_NONE, Translate::text('L__GALLERY_THUMBNAIL_CLEAN')],
-            ['empty', 'e', InputOption::VALUE_NONE, Translate::text('L__GALLERY_EMPTY')],
-            ['yes', 'y', InputOption::VALUE_NONE, Translate::text('L__GALLERY_YES')],
+            ['update', 'u', InputOption::VALUE_NONE, self::text('L__GALLERY_FILE_UPDATE')],
+            ['clean', 'c', InputOption::VALUE_NONE, self::text('L__GALLERY_THUMBNAIL_CLEAN')],
+            ['empty', 'e', InputOption::VALUE_NONE, self::text('L__GALLERY_EMPTY')],
+            ['yes', 'y', InputOption::VALUE_NONE, self::text('L__GALLERY_YES')],
         ];
     }
 }

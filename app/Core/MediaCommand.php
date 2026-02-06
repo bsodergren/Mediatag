@@ -250,7 +250,9 @@ class MediaCommand extends DoctrineCommand
 
         if (Option::getValue('path', true) !== '') {
             $path = Option::getValue('path', true);
-            chdir($path);
+            if ($path !== null) {
+                chdir($path);
+            }
         }
         // utmdd(getcwd());
 

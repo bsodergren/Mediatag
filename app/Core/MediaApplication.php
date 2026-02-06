@@ -45,18 +45,18 @@ class MediaApplication extends Application
 
     protected function getDefaultInputDefinition(): InputDefinition
     {
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return new InputDefinition([
-            new InputArgument('command', InputArgument::REQUIRED, Translate::text('L__APP_DEFAULT_CMD') . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL),
+            new InputArgument('command', InputArgument::REQUIRED, self::text('L__APP_DEFAULT_CMD') . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL),
 
-            new InputOption('--help', '-h', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_HELP')),
-            new InputOption('--quiet', '-q|qq|qqq', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_QUIET')),
-            new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_VERBOSE')),
-            new InputOption('--version', '-V', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_VERSION')),
+            new InputOption('--help', '-h', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_HELP')),
+            new InputOption('--quiet', '-q|qq|qqq', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_QUIET')),
+            new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_VERBOSE')),
+            new InputOption('--version', '-V', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_VERSION')),
             new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
-            new InputOption('--no-interaction', '', InputOption::VALUE_NONE, Translate::text('L__APP_DEFAULT_NOASK')),
-            new InputOption('--path', '', InputOption::VALUE_REQUIRED, Translate::text('L__APP_DEFAULT_PATH')),
+            new InputOption('--no-interaction', '', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_NOASK')),
+            new InputOption('--path', '', InputOption::VALUE_REQUIRED, self::text('L__APP_DEFAULT_PATH')),
         ]);
     }
 

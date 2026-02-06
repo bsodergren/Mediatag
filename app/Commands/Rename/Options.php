@@ -22,14 +22,14 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['depth', 'D', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_TITLE')],
-            ['genre', 'g', InputOption::VALUE_NONE, Translate::text('L__TEST_MOVE_FILES')],
-            ['studio', 's', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_TITLE')],
-            ['lowercase', 'l', InputOption::VALUE_NONE, Translate::text('L__RENAME_LOWER')],
-            ['trans', 't', InputOption::VALUE_REQUIRED, Translate::text('L__RENAME_TRANS')],
+            ['depth', 'D', InputOption::VALUE_REQUIRED, self::text('L__TEST_TITLE')],
+            ['genre', 'g', InputOption::VALUE_NONE, self::text('L__TEST_MOVE_FILES')],
+            ['studio', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_TITLE')],
+            ['lowercase', 'l', InputOption::VALUE_NONE, self::text('L__RENAME_LOWER')],
+            ['trans', 't', InputOption::VALUE_REQUIRED, self::text('L__RENAME_TRANS')],
         ];
 
         // return array_merge( parent::getMetaOptions(),$options);

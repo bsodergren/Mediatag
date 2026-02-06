@@ -23,15 +23,15 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['colors', 'C', InputOption::VALUE_NONE, Translate::text('L__TEST_CLIP')],
-            ['move', 'm', InputOption::VALUE_NONE, Translate::text('L__TEST_MOVE')],
+            ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
+            ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
 
-            ['search', 's', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_CLIP')],
-            ['cmd', 'c', InputOption::VALUE_REQUIRED, Translate::text('L__TEST_CLIP')],
-            ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, Translate::text('L__CLIP_MERGED_NAME')],
+            ['search', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
+            ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
+            ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],
         ];
     }
 }

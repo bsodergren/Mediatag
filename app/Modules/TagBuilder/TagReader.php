@@ -31,6 +31,18 @@ class TagReader
 
     private object $dbConn;
 
+    private array $data = [];
+
+    public function __set(string $name, $value): void
+    {
+        $this->data[$name] = $value;
+    }
+
+    public function __get(string $name)
+    {
+        return $this->data[$name] ?? null;
+    }
+
     public function __construct()
     {
         // utminfo(func_get_args());

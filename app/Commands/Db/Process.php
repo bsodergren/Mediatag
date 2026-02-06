@@ -17,6 +17,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use Mediatag\Modules\VideoInfo\VideoDetails;
 use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Command\Command;
@@ -31,11 +32,11 @@ use function dirname;
 class Process extends Mediatag
 {
     use ExportHelper;
+
     // use CapHelper;s
     // use EmptyHelper;
     // use BackHelper;
     use Helper;
-
     use ImportHelper;
 
     // use InfoHelper;
@@ -166,6 +167,8 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
+        $key = VideoDetails::getVideoKey(36697);
+        Utmdd($key);
         if (! is_null($option)) {
             $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
             if (class_exists($class)) {

@@ -18,7 +18,7 @@ trait Translate
 
     public static function getClass()
     {
-        return Translate::$Class;
+        return self::$Class;
     }
 
     public static function text($constant, $vars = [])

@@ -69,7 +69,7 @@ foreach ($commandClasses as $className) {
 if ($default === true) {
     $application->setDefaultCommand($cmdName, $SingleCommand);
 }
-$application->setDispatcher($dispatcher);
+// $application->setDispatcher($dispatcher);
 $application->run();
 $loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__);
 $class  = $loader->load(function ($compiler) {

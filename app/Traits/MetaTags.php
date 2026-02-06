@@ -235,17 +235,17 @@ trait MetaTags
         $return = self::$method($first, $second, $tag);
 
         // if (null !== $firstCmp && $first != $second) {
-        //     $data['video_key'] = Metatags::$Videokey;
+        //     $data['video_key'] = self::$Videokey;
 
         //     if ('studio' == $tag) {
         //         if ($firstCmp == $secondCmp) {
-        //             $data['studio'] = MetaTags::clean($first, $tag);
+        //             $data['studio'] = self::clean($first, $tag);
         //         } else {
-        //             $data['studio']  = MetaTags::clean($first, $tag);
-        //             $data['network'] = MetaTags::clean($second, $tag);
+        //             $data['studio']  = self::clean($first, $tag);
+        //             $data['network'] = self::clean($second, $tag);
         //         }
         //     } else {
-        //         $data[$tag] = MetaTags::clean($return, $tag);
+        //         $data[$tag] = self::clean($return, $tag);
         //     }
 
         //     // Mediatag::$dbconn->insert(
@@ -255,7 +255,7 @@ trait MetaTags
         // }
         // utmdump(['return '.$tag, $return]);
 
-        return MetaTags::clean($return, $tag); // MetaTags::clean($return, $tag);
+        return self::clean($return, $tag); // self::clean($return, $tag);
     }
 
     public static function mergetags($tag_array, $tag_array2, $obj = null, $priority = null)
@@ -263,14 +263,14 @@ trait MetaTags
         // utminfo(func_get_args());
 
         if (is_object($obj)) {
-            Metatags::$Videokey = $obj;
+            self::$Videokey = $obj;
         }
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
-                $value = Metatags::mergeTag($tag, $value, $tag_array2[$tag], $priority);
+                $value = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);
             }
 
-            $tagArray[$tag] = MetaTags::clean($value, $tag);
+            $tagArray[$tag] = self::clean($value, $tag);
             $tagArray[$tag] = $value;
         }
 
@@ -283,6 +283,9 @@ trait MetaTags
 
         // UTMlog::Logger('Clean', [$tag, $text]);
         if ($tag == 'artist' && $text === null) {
+            return null;
+        }
+        if ($text === null) {
             return null;
         }
         $delim = ',';

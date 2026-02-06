@@ -20,13 +20,13 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        Translate::$Class = __CLASS__;
+        self::$Class = __CLASS__;
 
         return [
-            ['db', '', InputOption::VALUE_NONE, Translate::text('L__BACKUP_DATABASE')],
+            ['db', '', InputOption::VALUE_NONE, self::text('L__BACKUP_DATABASE')],
 
-            ['directory', 'D', InputOption::VALUE_REQUIRED, Translate::text('L__BACKUP_DIRECTORY')],
-            ['backup', 'b', InputOption::VALUE_REQUIRED, Translate::text('L__BACKUP_TYPE')],
+            ['directory', 'D', InputOption::VALUE_REQUIRED, self::text('L__BACKUP_DIRECTORY')],
+            ['backup', 'b', InputOption::VALUE_REQUIRED, self::text('L__BACKUP_TYPE')],
         ];
     }
 
@@ -34,14 +34,14 @@ class Options extends MediaOptions
     {
         // utminfo(func_get_args());
 
-        return [$varName, InputArgument::OPTIONAL, Translate::text('L__BACKUP_DATABASE_NAME')];
+        return [$varName, InputArgument::OPTIONAL, self::text('L__BACKUP_DATABASE_NAME')];
     }
     // public function DefaultOptions()
     // {
-    //     Translate::$Class = __CLASS__;
+    //     self::$Class = __CLASS__;
 
     //     $options = [
-    //         ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, Translate::text('L_FAULT_RANGE')],
+    //         ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L_FAULT_RANGE')],
     //     ];
 
     //     return self::getOptions($options);

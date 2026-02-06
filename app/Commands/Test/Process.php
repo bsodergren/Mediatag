@@ -15,6 +15,7 @@ use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
+use Mediatag\Modules\VideoInfo\VideoDetails;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Paramako\Pornhub\Factory;
 use SergiX44\FastImageCompare\FastImageCompare;
@@ -28,10 +29,11 @@ include_once __DATA_MAPS__ . '/WordMap.php';
 class Process extends Mediatag
 {
     use Helper;
-    use HelperCmds;
+
+    // use HelperCmds;
     use MediaExecute;
     use MediaProcess;
-    use ytdlptest;
+    // use ytdlptest;
 
     public $VideoList = [];
 
@@ -82,134 +84,136 @@ class Process extends Mediatag
         parent::boot($input, $output);
     }
 
-    public function wordMap($input)
-    {
-        // no shortest distance found, yet
-        $shortest = -1;
+    // public function wordMap($input)
+    // {
+    //     // no shortest distance found, yet
+    //     $shortest = -1;
 
-        // loop through words to find the closest
-        foreach ($this->words as $word) {
-            // calculate the distance between the input word,
-            // and the current word
-            $lev = levenshtein($input, $word);
+    //     // loop through words to find the closest
+    //     foreach ($this->words as $word) {
+    //         // calculate the distance between the input word,
+    //         // and the current word
+    //         $lev = levenshtein($input, $word);
 
-            // check for an exact match
-            if ($lev == 0) {
-                // closest word is this one (exact match)
-                $closest  = $word;
-                $shortest = 0;
+    //         // check for an exact match
+    //         if ($lev == 0) {
+    //             // closest word is this one (exact match)
+    //             $closest  = $word;
+    //             $shortest = 0;
 
-                // break out of the loop; we've found an exact match
-                break;
-            }
+    //             // break out of the loop; we've found an exact match
+    //             break;
+    //         }
 
-            // if this distance is less than the next found shortest
-            // distance, OR if a next shortest word has not yet been found
-            if ($lev <= $shortest || $shortest < 0) {
-                // set the closest match, and shortest distance
-                $closest  = $word;
-                $shortest = $lev;
-            }
-        }
-        //   Mediatag::$Console->writeln("Input word: $input\n");
-        // if (0 == $shortest) {
-        Mediatag::$Console->writeln("Exact match found: $closest");
-        // } else {
-        //
-        // }
-
-        return $closest;
-    }
-
-    public function execWord()
-    {
-    }
-
-    public function exec($option = null)
-    {
-        $thumbnailFile = [];
-
-        $img_name  = [];
-        $fileArray = parent::$SearchArray;
-        foreach ($fileArray as $file) {
-            $thumbnailFile[] = (new VideoInfo)->videoToThumb($file);
-        }
-
-        $instance     = new FastImageCompare;
-        $similarArray = $instance->findDuplicates($thumbnailFile, 0.05);
-
-        foreach ($similarArray as $t => $tfile) {
-            $img_name[] = (new VideoInfo)->thumbToVideo($tfile);
-        }
-        // mediatag::error($img_name);
-        // $this->mvFiles($img_name);
-        // utmdd($img_name);
-    }
-
-    //     // //
-    //     // foreach ($this->VideoList['file'] as $key => $videoInfo) {
-    //     //     // $preview    = new VideoPreview();
-    //     //     // $previewLoc = $preview->BuildPreview($videoInfo);
-
-    //     //     $file[] = $videoInfo['video_file'];
-
-    //     // }
-    //     // $outputFile = Option::getValue('output', true);
-
-    //     // // $ffprobe = FFProbe::create();
-    //     // // $ret = $ffprobe
-    //     // //     ->streams($file[1]) // extracts streams informations
-    //     // //     ->videos()                      // filters video streams
-    //     // //     ->first()                       // returns the first video stream
-    //     // //     ->all();
-    //     // // utmdd($ret);
-    //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
-    //     // $video  = $ffmpeg->open($file[1]);
-
-    //     // $tmpFile = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
-
-    //     // $video->filters()->clip(TimeCode::fromSeconds(3.5));
-    //     // $format = new \FFMpeg\Format\Video\X264('copy', 'copy');
-    //     // $format->setPasses(1);
-    //     // $video->save($format, $tmpFile);
-    //     // //  $r = $video->getFFMpegDriver()->getProcessRunner();
-    //     // // // utmdump($r);
-    //     // unset($ffmpeg);
-    //     // unset($video);
-
-    //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
-    //     // $video  = $ffmpeg->open($file[0]);
-
-    //     // if ($outputFile === null) {
-    //     //     $key        = $videoInfo['video_key'];
-    //     //     $filename   = basename($file[1], '.mp4');
-    //     //     $firstVideo = basename($file[0], '.mp4');
-    //     //     $secondName = str_split($filename);
-    //     //     $firstName  = str_split($firstVideo);
-    //     //     foreach ($secondName as $i=> $char) {
-    //     //         if ($firstName[$i] == $char) {
-    //     //             $name[] = $char;
-    //     //             continue;
-    //     //         }
-    //     //         break;
-    //     //     }
-
-    //     //     //$filename = str_replace("-".$key,'',);
-    //     //     $outputFile = dirname($file[1]) . DIRECTORY_SEPARATOR . implode('', $name) . '.mp4' ;
+    //         // if this distance is less than the next found shortest
+    //         // distance, OR if a next shortest word has not yet been found
+    //         if ($lev <= $shortest || $shortest < 0) {
+    //             // set the closest match, and shortest distance
+    //             $closest  = $word;
+    //             $shortest = $lev;
+    //         }
+    //     }
+    //     //   Mediatag::$Console->writeln("Input word: $input\n");
+    //     // if (0 == $shortest) {
+    //     Mediatag::$Console->writeln("Exact match found: $closest");
+    //     // } else {
+    //     //
     //     // }
 
-    //     // // utmdd($outputFile);
-    //     // $video->concat([$file[0],$tmpFile])->saveFromSameCodecs($outputFile, true);
-    //     // // $r = $video->getFFMpegDriver()->getProcessRunner();
-    //     // // // utmdump($r);
-    //     // unlink($tmpFile);
-    //     // // unlink($outputFile);
-    //     // //echo $exec->stdout;
-    //     // return 1;
+    //     return $closest;
     // }
 
-    public function print()
+    public function exec()
     {
-        // utminfo(func_get_args());
+        $key = VideoDetails::setLibrary(36601, 'Studios');
+        Utmdd($key);
     }
+
+    // public function exec($option = null)
+    // {
+    //     $thumbnailFile = [];
+
+    //     $img_name  = [];
+    //     $fileArray = parent::$SearchArray;
+    //     foreach ($fileArray as $file) {
+    //         $thumbnailFile[] = (new VideoInfo)->videoToThumb($file);
+    //     }
+
+    //     $instance     = new FastImageCompare;
+    //     $similarArray = $instance->findDuplicates($thumbnailFile, 0.05);
+
+    //     foreach ($similarArray as $t => $tfile) {
+    //         $img_name[] = (new VideoInfo)->thumbToVideo($tfile);
+    //     }
+    //     // mediatag::error($img_name);
+    //     // $this->mvFiles($img_name);
+    //     // utmdd($img_name);
+    // }
+
+    // //     // //
+    // //     // foreach ($this->VideoList['file'] as $key => $videoInfo) {
+    // //     //     // $preview    = new VideoPreview();
+    // //     //     // $previewLoc = $preview->BuildPreview($videoInfo);
+
+    // //     //     $file[] = $videoInfo['video_file'];
+
+    // //     // }
+    // //     // $outputFile = Option::getValue('output', true);
+
+    // //     // // $ffprobe = FFProbe::create();
+    // //     // // $ret = $ffprobe
+    // //     // //     ->streams($file[1]) // extracts streams informations
+    // //     // //     ->videos()                      // filters video streams
+    // //     // //     ->first()                       // returns the first video stream
+    // //     // //     ->all();
+    // //     // // utmdd($ret);
+    // //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
+    // //     // $video  = $ffmpeg->open($file[1]);
+
+    // //     // $tmpFile = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
+
+    // //     // $video->filters()->clip(TimeCode::fromSeconds(3.5));
+    // //     // $format = new \FFMpeg\Format\Video\X264('copy', 'copy');
+    // //     // $format->setPasses(1);
+    // //     // $video->save($format, $tmpFile);
+    // //     // //  $r = $video->getFFMpegDriver()->getProcessRunner();
+    // //     // // // utmdump($r);
+    // //     // unset($ffmpeg);
+    // //     // unset($video);
+
+    // //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
+    // //     // $video  = $ffmpeg->open($file[0]);
+
+    // //     // if ($outputFile === null) {
+    // //     //     $key        = $videoInfo['video_key'];
+    // //     //     $filename   = basename($file[1], '.mp4');
+    // //     //     $firstVideo = basename($file[0], '.mp4');
+    // //     //     $secondName = str_split($filename);
+    // //     //     $firstName  = str_split($firstVideo);
+    // //     //     foreach ($secondName as $i=> $char) {
+    // //     //         if ($firstName[$i] == $char) {
+    // //     //             $name[] = $char;
+    // //     //             continue;
+    // //     //         }
+    // //     //         break;
+    // //     //     }
+
+    // //     //     //$filename = str_replace("-".$key,'',);
+    // //     //     $outputFile = dirname($file[1]) . DIRECTORY_SEPARATOR . implode('', $name) . '.mp4' ;
+    // //     // }
+
+    // //     // // utmdd($outputFile);
+    // //     // $video->concat([$file[0],$tmpFile])->saveFromSameCodecs($outputFile, true);
+    // //     // // $r = $video->getFFMpegDriver()->getProcessRunner();
+    // //     // // // utmdump($r);
+    // //     // unlink($tmpFile);
+    // //     // // unlink($outputFile);
+    // //     // //echo $exec->stdout;
+    // //     // return 1;
+    // // }
+
+    // public function print()
+    // {
+    //     // utminfo(func_get_args());
+    // }
 }

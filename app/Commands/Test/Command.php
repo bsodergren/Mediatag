@@ -21,20 +21,20 @@ final class Command extends MediaCommand
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'test'     => [
-            'execWord' => null,
+        'test' => [
+            'exec' => null,
             // 'exec'         => null,
             // 'getChanges'   => null,
             // 'writeChanges' => null,
         ],
-        'download' => [
-            'execDownload' => null,
-            //     'doThumbnail' => null,
-            //     //     // 'exec' => null,
-        ],
-        'search'   => [
-            'searchJson' => null,
-        ],
+        // 'download' => [
+        //     'execDownload' => null,
+        //     //     'doThumbnail' => null,
+        //     //     //     // 'exec' => null,
+        // ],
+        // 'search'   => [
+        //     'searchJson' => null,
+        // ],
 
     ];
 }
