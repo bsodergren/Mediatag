@@ -105,10 +105,9 @@ class Process extends Mediatag
         }
         // $this->DbMap = new DbMap();
         //
-        // utmdd($this->Search_Array);
 
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
-
+        // utmdd($this->allDbFiles);
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
