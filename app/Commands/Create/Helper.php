@@ -90,8 +90,10 @@ trait Helper
                     continue;
                 }
             }
-            if (ucfirst($type) != ucfirst($fileType)) {
-                continue;
+            if ($type) {
+                if (ucfirst($type) != ucfirst($fileType)) {
+                    continue;
+                }
             }
             $this->parseOptions($fileType);
             foreach ($methods as $method) {
