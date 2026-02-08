@@ -1,22 +1,23 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Rename\Commands\Move;
 
-/*
- * Command like Metatag writer for video files.
- */
-
+use Mediatag\Commands\Rename\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'move', description: 'Move downloaded files from Premium')]
-final class MoveCommand extends MediaCommand
+/**
+ * Description for Move Command
+ *
+ * @package Mediatag\Commands\Rename\Commands\Move
+ * @version 2026-02-08 13:26:42
+ */
+#[AsCommand(name: 'move', description: 'Description for Move Command')]
+class MoveCommand extends MediaCommand
 {
-    public const USE_LIBRARY = true;
+    use Lang;
+
+   public const USE_LIBRARY = true;
 
     public const SKIP_SEARCH = false;
 

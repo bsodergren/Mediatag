@@ -17,7 +17,8 @@ class ImportCommand extends MediaCommand
 {
     use Lang;
 
-    public const USE_LIBRARY = false;
+    public const USE_LIBRARY = true;
+
     public const SKIP_SEARCH = true;
 
     public $command = ['import' => ['importMethod' => null]];

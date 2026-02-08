@@ -18,7 +18,8 @@ class CaptionsCommand extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
-    public const SKIP_SEARCH = false;
+
+    public const SKIP_SEARCH = true;
 
     public $command = ['captions' => ['captionsMethod' => null]];
 }

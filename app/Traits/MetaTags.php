@@ -141,6 +141,13 @@ trait MetaTags
 
     private static function priority($first, $second, $tag)
     {
+        if ($first === null) {
+            $first = '';
+        }
+        if ($second === null) {
+            $second = '';
+        }
+
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
