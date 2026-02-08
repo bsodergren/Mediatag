@@ -1,27 +1,24 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Captions;
 
+use Mediatag\Commands\Db\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'captions', description: 'ACaptions')]
-final class CaptionsCommand extends MediaCommand
+/**
+ * Description for Captions Command
+ *
+ * @package Mediatag\Commands\Db\Commands\Captions
+ * @version 2026-02-08 12:28:50
+ */
+#[AsCommand(name: 'captions', description: 'Description for Captions Command')]
+class CaptionsCommand extends MediaCommand
 {
+    use Lang;
+
     public const USE_LIBRARY = true;
+    public const SKIP_SEARCH = false;
 
-    public const SKIP_SEARCH = true;
-
-    public $command = [
-        'captions' => ['execCaptions' => null],
-    ];
-
-    public $defaultCommands = [
-        //  'init' => null,
-        //  'exec' => null,
-    ];
+    public $command = ['captions' => ['captionsMethod' => null]];
 }

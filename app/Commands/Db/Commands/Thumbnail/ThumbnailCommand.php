@@ -1,27 +1,24 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Thumbnail;
 
+use Mediatag\Commands\Db\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'thumbnail', description: 'Add files to Database')]
-final class ThumbnailCommand extends MediaCommand
+/**
+ * Description for Thumbnail Command
+ *
+ * @version 2026-02-08 11:40:00
+ */
+#[AsCommand(name: 'thumbnail', description: 'Description for Thumbnail Command')]
+class ThumbnailCommand extends MediaCommand
 {
+    use Lang;
+
     public const USE_LIBRARY = true;
 
-    public const SKIP_SEARCH = true;
+    public const SKIP_SEARCH = false;
 
-    public $command = [
-
-        'thumbnail' => [
-            // 'init'      => null,
-            'exec' => 'Thumbnail',
-            // 'execThumb' => null
-        ],
-    ];
+    public $command = ['thumbnail' => ['thumbnailMethod' => null]];
 }

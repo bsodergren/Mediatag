@@ -32,13 +32,13 @@ use function dirname;
 class Process extends Mediatag
 {
     use DynamicProperty;
-    use ExportHelper;
+    // use ExportHelper;
 
     // use CapHelper;s
     // use EmptyHelper;
     // use BackHelper;
     use Helper;
-    use ImportHelper;
+    // use ImportHelper;
 
     // use InfoHelper;
     use Lang;
@@ -46,7 +46,7 @@ class Process extends Mediatag
     use MediaProcess;
 
     // use PreviewHelper;
-    use SubHelper;
+    // use SubHelper;
     use Translate;
 
     protected $useFuncs = ['addMeta'];
@@ -77,21 +77,7 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-        // 'markers'      => [
-        // 'init'        => null,
-        // 'exec'        => null,
-        // 'execMarkers' => null],
 
-        // 'update'       => [
-        //     // 'init'       => null,
-        //     // 'exec'       => null,
-        //     'execUpdate' => 'default'],
-
-        'json' => [
-            // 'init'    => null,
-            // 'exec'    => null,
-            'getJson' => null,
-        ],
     ];
 
     private $count;
@@ -170,23 +156,6 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        if (! is_null($option)) {
-            $class = 'Mediatag\\Modules\\VideoInfo\\Section\\' . $option;
-            if (class_exists($class)) {
-                $this->obj = new $class;
-                // if(method_exists( $this->obj,'checkClean')){
-                $this->checkClean();
-                // }
-                $this->obj->updateVideoData();
-
-                return Command::SUCCESS;
-            }
-            Mediatag::error('Class doesnt exist');
-
-            return Command::FAILURE;
-        }
-
-        // utminfo(func_get_args());
         $this->getFileArray();
         $this->removeDBEntry();
         $this->changeDBEntry();

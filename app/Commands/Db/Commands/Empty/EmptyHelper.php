@@ -1,24 +1,19 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
-namespace Mediatag\Commands\Db\Commands\EmptyDB;
+namespace Mediatag\Commands\Db\Commands\Empty;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
 
-trait Helper
+trait EmptyHelper
 {
     public function execEmpty()
     {
         // utminfo(func_get_args());
 
-        self::$Class             = __CLASS__;
+        self::$Class                  = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
         $videos                       = Mediatag::$dbconn->getVideoCount();
 

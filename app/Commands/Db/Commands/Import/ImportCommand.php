@@ -1,26 +1,24 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Import;
 
-/*
- * Command like Metatag writer for video files.
- */
-
+use Mediatag\Commands\Db\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'import', description: 'backup the db at the directory')]
-final class ImportCommand extends MediaCommand
+/**
+ * Description for Import Command
+ *
+ * @package Mediatag\Commands\Db\Commands\Import
+ * @version 2026-02-08 11:40:18
+ */
+#[AsCommand(name: 'import', description: 'Description for Import Command')]
+class ImportCommand extends MediaCommand
 {
-    public const USE_LIBRARY = true;
+    use Lang;
 
+    public const USE_LIBRARY = false;
     public const SKIP_SEARCH = true;
 
-    public $command = [
-        'import' => ['execImport' => null],
-    ];
+    public $command = ['import' => ['importMethod' => null]];
 }

@@ -23,6 +23,8 @@ use function is_array;
 
 trait ClassMethods
 {
+    use DynamicProperty;
+
     public $cmd = null;
 
     public $type = null;
@@ -33,7 +35,7 @@ trait ClassMethods
 
     public $CmdMethod = null;
 
-    public $options = [];
+    public $params = [];
 
     public $className = null;
 
@@ -86,6 +88,7 @@ trait ClassMethods
                 $this->name = $parts[1];
             }
             if (count($parts) === 3) {
+                $this->name = $parts[1];
                 $this->type = ucfirst($parts[2]);
             }
         }
@@ -98,7 +101,7 @@ trait ClassMethods
             $this->CmdMethod = ucfirst($this->name) . 'Method';
         }
 
-        $this->options = Option::getValue('options', true);
+        $this->processOptions(Option::getValue('params'));
 
         $this->className = ucfirst($this->name) . ucfirst($this->type);
 
@@ -109,15 +112,31 @@ trait ClassMethods
                 $this->createBinFile();
             }
         }
-        utmdump([
-            'defaultCommandFile' => isset($DefaultCommandFile) ? $DefaultCommandFile : null,
-            'type'               => $this->type,
-            'cmd'                => $this->cmd,
-            'name'               => $this->name,
-            'desc'               => $this->desc,
-            'CmdMethod'          => $this->CmdMethod,
-            'options'            => $this->options,
-        ]);
+        // utmdd([
+        //     'defaultCommandFile' => isset($DefaultCommandFile) ? $DefaultCommandFile : null,
+        //     'type'               => $this->type,
+        //     'cmd'                => $this->cmd,
+        //     'name'               => $this->name,
+        //     'parts'              => $parts,
+        //     'desc'               => $this->desc,
+        //     'userCommand'        => $this->userCommand,
+        //     'CmdMethod'          => $this->CmdMethod,
+        //     'params'             => $this->params,
+        // ]);
+    }
+
+    private function processOptions($options)
+    {
+        if (is_array($options)) {
+            if (count($options) > 0) {
+                foreach ($options as $x => $value) {
+                    $parts         = explode('=', $value);
+                    $name          = $parts[0];
+                    $v             = $parts[1];
+                    $this->{$name} = $v;
+                }
+            }
+        }
     }
 
     private function addMethods()
@@ -158,7 +177,7 @@ trait ClassMethods
                 // case 'Helper':
                 //     return 'Mediatag\\Commands\\' . ucfirst($this->cmd) . '\\Helper';
             case 'Options':
-                return 'Mediatag\\Core\\MediaOptions';
+                return 'Mediatag\\Commands\\' . ucfirst($this->cmd) . '\\Options';
         }
 
         return null;
@@ -196,8 +215,9 @@ trait ClassMethods
                 $this->NewNamespace->addUse('Symfony\Component\Console\Input\InputOption');
                 $this->NewNamespace->addUse('Symfony\Component\Console\Input\InputArgument');
                 $this->NewNamespace->addUse('Mediatag\Traits\Translate');
-                $this->NewNamespace->addUse('Mediatag\Core\MediaOptions');
+                // $this->NewNamespace->addUse('Mediatag\Core\MediaOptions');
                 $this->NewNamespace->addUse('Mediatag\\Commands\\' . ucfirst($this->cmd) . '\\Lang');
+                $this->NewNamespace->addUse('Mediatag\\Commands\\' . ucfirst($this->cmd) . '\\Options');
 
                 return $this;
 
@@ -257,8 +277,18 @@ trait ClassMethods
 
     private function addConstants()
     {
-        $this->GeneratedClass->addConstant('USE_LIBRARY', false);
-        $this->GeneratedClass->addConstant('SKIP_SEARCH', true);
+        $useLibrary = false;
+        if ($this->library == true) {
+            $useLibrary = true;
+        }
+
+        $skipSearch = true;
+        if ($this->search == true) {
+            $skipSearch = false;
+        }
+
+        $this->GeneratedClass->addConstant('USE_LIBRARY', $useLibrary);
+        $this->GeneratedClass->addConstant('SKIP_SEARCH', $skipSearch);
     }
 
     private function addDefaultCommand()
@@ -273,19 +303,15 @@ trait ClassMethods
     private function addOptionBody()
     {
         $DefinitionBody = <<<'EOT'
-    self::$Class = __CLASS__;
+        self::$Class   = __CLASS__;
+        $parentOptions = parent::Definitions();
+        $options       = [
+            // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
+            ['break'],
+        ];
 
-    return [
-        // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
-        // ['break'],
-    ];
-      // public function Arguments($varName = null, $description = null)
-    // {
-    //     // utminfo(func_get_args());
-
-    //     return [$varName, InputArgument::OPTIONAL, $description];
-    // }
-
+        return array_merge($parentOptions, $options);
+     
 EOT;
         $this->GeneratedClass->addProperty('options')
             ->setPublic()

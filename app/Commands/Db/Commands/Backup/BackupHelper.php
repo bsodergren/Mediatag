@@ -1,9 +1,5 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Backup;
 
 use const DIRECTORY_SEPARATOR;
@@ -11,7 +7,7 @@ use const DIRECTORY_SEPARATOR;
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
-trait Helper
+trait BackupHelper
 {
     private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
 
@@ -23,9 +19,8 @@ trait Helper
 
     private $video_custon_csv = 'custom.csv';
 
-    public function execBackup()
+    public function backupMethod()
     {
-        // $this->dbBackupPath = __DB_BACKUP_ROOT__;
         if (Option::isTrue('library')) {
             $this->dbBackupPath = $this->dbBackupPath . __LIBRARY__ . DIRECTORY_SEPARATOR;
         }

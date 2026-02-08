@@ -1,26 +1,24 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Info;
 
+use Mediatag\Commands\Db\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'info', description: 'Add files to Database')]
-final class InfoCommand extends MediaCommand
+/**
+ * Description for Info Command
+ *
+ * @version 2026-02-08 11:29:18
+ */
+#[AsCommand(name: 'info', description: 'Description for Info Command')]
+class InfoCommand extends MediaCommand
 {
+    use Lang;
+
     public const USE_LIBRARY = true;
 
     public const SKIP_SEARCH = true;
 
-    public $command = [
-        'info' => [
-            'exec' => 'VideoFileInfo',
-            // 'exec'     => null,
-            // 'execInfo' => null
-        ],
-    ];
+    public $command = ['info' => ['infoMethod' => null]];
 }

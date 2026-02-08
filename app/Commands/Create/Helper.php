@@ -23,6 +23,8 @@ trait Helper
     use ClassMethods;
     use CreateBaseCommandHelper;
 
+    public $excludeFiles = [];
+
     private $functions = [
         'Command' => [
             'getClassBase',
@@ -59,7 +61,38 @@ trait Helper
 
     public function createCommand()
     {
+        $this->excludeFiles = Option::getValue('exclude', true, []);
+        if (! is_array($this->excludeFiles)) {
+            $tmp[] = $this->excludeFiles;
+            unset($this->excludeFiles);
+            $this->excludeFiles = $tmp;
+        }
+        if (count($this->excludeFiles) > 0) {
+            $this->excludeFiles = array_map('ucfirst', $this->excludeFiles);
+        }
+
+        $type = Option::getValue('type', true);
+        if ($type) {
+            $type = ucfirst($type);
+        }
+        $userCommand = Option::getValue('userCommand', true);
+        if ($userCommand !== null) {
+            $parts = explode(':', $userCommand);
+            if (count($parts) === 3) {
+                $type = ucfirst($parts[2]);
+            }
+        }
         foreach ($this->functions as $fileType => $methods) {
+            if (count($this->excludeFiles) > 0) {
+                if (in_array($fileType, $this->excludeFiles)) {
+                    Mediatag::$Console->writeln('skipping ' . $fileType);
+
+                    continue;
+                }
+            }
+            if (ucfirst($type) != ucfirst($fileType)) {
+                continue;
+            }
             $this->parseOptions($fileType);
             foreach ($methods as $method) {
                 $this->$method();

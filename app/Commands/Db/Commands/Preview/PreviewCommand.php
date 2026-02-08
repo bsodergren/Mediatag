@@ -1,26 +1,24 @@
 <?php
 
-/**
- * Command like Metatag writer for video files.
- */
-
 namespace Mediatag\Commands\Db\Commands\Preview;
 
+use Mediatag\Commands\Db\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'preview', description: 'Add files to Database')]
-final class PreviewCommand extends MediaCommand
+/**
+ * Description for Preview Command
+ *
+ * @version 2026-02-08 11:46:00
+ */
+#[AsCommand(name: 'preview', description: 'Description for Preview Command')]
+class PreviewCommand extends MediaCommand
 {
+    use Lang;
+
     public const USE_LIBRARY = true;
 
-    public const SKIP_SEARCH = true;
+    public const SKIP_SEARCH = false;
 
-    public $command = [
-        'preview' => [
-            // 'init'        => null,
-            'exec' => 'GifPreviewFiles',
-            // 'execPreview' => null
-        ],
-    ];
+    public $command = ['preview' => ['previewMethod' => null]];
 }
