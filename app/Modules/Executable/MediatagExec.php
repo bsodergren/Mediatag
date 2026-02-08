@@ -11,6 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Traits\DynamicProperty;
 use Mediatag\Traits\ExecArgs;
 use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
@@ -22,6 +23,7 @@ use function is_string;
 
 class MediatagExec
 {
+    use DynamicProperty;
     use ExecArgs;
     // use MediaCommand;
 

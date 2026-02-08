@@ -9,7 +9,10 @@ namespace Mediatag\Commands\Create;
 use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
+use Mediatag\Commands\Create\ClassMethods;
+use Mediatag\Commands\Create\Traits\CreateBaseCommandHelper;
 use Mediatag\Core\Mediatag;
+use Mediatag\Utilities\Chooser;
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
@@ -17,154 +20,186 @@ use function is_array;
 
 trait Helper
 {
-    private $CMD_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Command_template.txt';
+    use ClassMethods;
+    use CreateBaseCommandHelper;
 
-    public $COMMAND_PATH = __APP_HOME__ . '/app/Commands/%%CMD_NAME%%/Commands';
+    private $functions = [
+        'Command' => [
+            'getClassBase',
+            'setNameSpace',
+            'getUseClasses',
+            'getCommandHeader',
+            'addConstants',
+            'addDefaultCommand',
+            'getTraits',
+        ],
+        'Helper'  => [
+            'getClassBase',
+            'setNameSpace',
+            'getUseClasses',
+            'addMethods',
+            'getTraits',
+        ],
+        'Process' => [
+            'getClassBase',
+            'setNameSpace',
+            'getUseClasses',
+            'getTraits',
+        ],
+        'Options' => [
+            'getClassBase',
+            'setNameSpace',
+            'getUseClasses',
+            'getTraits',
+            'addOptionBody',
 
-    public $LANGUAGE_FILE = __APP_HOME__ . '/app/Commands/%%CMD_NAME%%/Lang.php';
+        ],
 
-    public $GLOBAL_LANG = __APP_HOME__ . '/app/Locales/Lang.php';
+    ];
 
     public function createCommand()
     {
-        utmdd([__METHOD__, Option::getOptions()]);
-    }
-
-    public function langCommand()
-    {
-        $translationKey  = Option::getValue('name', true);
-        $CommandFileName = Option::getValue('cmd', true);
-        $desc            = Option::getValue('desc', true);
-
-        $string = "\t" . 'public const ' . $translationKey . '            = \'' . $desc . '\';';
-
-        $MediaCommand = ucfirst(strtolower(Option::getValue('cmd', true)));
-
-        if ($MediaCommand == 'Global') {
-            $this->LANGUAGE_FILE = $this->GLOBAL_LANG;
-        } else {
-            $this->LANGUAGE_FILE = $this->parse($this->LANGUAGE_FILE, ['CMD_NAME' => ucfirst($MediaCommand)]);
-        }
-
-        $lines = FileSystem::readLines($this->LANGUAGE_FILE);
-        foreach ($lines as $lineNum => $line) {
-            if (str_contains($line, $translationKey)) {
-                Mediatag::$output->writeln('already tehre');
-
-                return false;
+        foreach ($this->functions as $fileType => $methods) {
+            $this->parseOptions($fileType);
+            foreach ($methods as $method) {
+                $this->$method();
             }
-            if ($line == '}') {
-                $newFile[] = $string;
-                $newFile[] = '}';
-
-                continue;
-            }
-            $newFile[] = $line;
+            $this->saveClass();
         }
-        $contents = implode("\n", $newFile);
-        // utmdd($contents);
-        FileSystem::write($this->LANGUAGE_FILE, $contents);
-
-        utmdd($this->LANGUAGE_FILE);
     }
 
-    public function addCommand()
-    {
-        utmdd(Option::getOptions());
-        $params          = [];
-        $CommandName     = Option::getValue('name', true);
-        $CommandFileName = ucfirst($CommandName . 'Command');
-        $desc            = Option::getValue('desc', true);
-        if ($desc === null) {
-            $desc = $CommandName . ' command';
-        }
+    // public function langCommand()
+    // {
+    //     $translationKey  = Option::getValue('name', true);
+    //     $CommandFileName = Option::getValue('cmd', true);
+    //     $desc            = Option::getValue('desc', true);
 
-        $params['USELIBRARY'] = 'true';
-        $params['SKIPSEARCH'] = 'false';
+    //     $string = "\t" . 'public const ' . $translationKey . '            = \'' . $desc . '\';';
 
-        if (Option::isTrue('Library') === false) {
-            $params['USELIBRARY'] = 'false';
-        }
-        if (Option::isTrue('Search') === false) {
-            $params['SKIPSEARCH'] = 'true';
-        }
+    //     $MediaCommand = ucfirst(strtolower(Option::getValue('cmd', true)));
 
-        $MediaCommand            = ucfirst(strtolower(Option::getValue('cmd', true)));
-        $params['Command']       = $MediaCommand;
-        $params['CMD_CLASS_DIR'] = ucfirst($CommandName);
+    //     if ($MediaCommand == 'Global') {
+    //         $this->LANGUAGE_FILE = $this->GLOBAL_LANG;
+    //     } else {
+    //         $this->LANGUAGE_FILE = $this->parse($this->LANGUAGE_FILE, ['CMD_NAME' => ucfirst($MediaCommand)]);
+    //     }
 
-        $params['CommandClass']   = $CommandFileName;
-        $params['CommandName']    = $CommandName;
-        $params['CommandDesc']    = Option::getValue('desc', true);
-        $params['CommandMethods'] = $this->getMethods(Option::getValue('method'));
+    //     $lines = FileSystem::readLines($this->LANGUAGE_FILE);
+    //     foreach ($lines as $lineNum => $line) {
+    //         if (str_contains($line, $translationKey)) {
+    //             Mediatag::$output->writeln('already tehre');
 
-        $template = $this->template($this->CMD_TEMPLATE, $params);
+    //             return false;
+    //         }
+    //         if ($line == '}') {
+    //             $newFile[] = $string;
+    //             $newFile[] = '}';
 
-        $this->COMMAND_PATH = $this->parse($this->COMMAND_PATH, ['CMD_NAME' => ucfirst($MediaCommand)]);
-        $CommandDir         = $this->COMMAND_PATH . '/' . ucfirst($CommandName);
-        FileSystem::createDir($CommandDir);
-        $CommandFileName = $CommandDir . DIRECTORY_SEPARATOR . $CommandFileName . '.php';
+    //             continue;
+    //         }
+    //         $newFile[] = $line;
+    //     }
+    //     $contents = implode("\n", $newFile);
+    //     // utmdd($contents);
+    //     FileSystem::write($this->LANGUAGE_FILE, $contents);
 
-        if (file_exists($CommandFileName)) {
-            FileSystem::delete($CommandFileName);
-        }
+    //     utmdd($this->LANGUAGE_FILE);
+    // }
 
-        FileSystem::write($CommandFileName, $template);
-    }
+    //     $params          = [];
+    //     $CommandName     = Option::getValue('name', true);
+    //     $CommandFileName = ucfirst($CommandName . 'Command');
+    //     $desc            = Option::getValue('desc', true);
+    //     if ($desc === null) {
+    //         $desc = $CommandName . ' command';
+    //     }
 
-    private function getMethods($methodArray)
-    {
-        $text = [];
-        foreach ($methodArray as $cmd) {
-            $text[] = "'" . $cmd . "' => null,";
-        }
+    //     $params['USELIBRARY'] = 'true';
+    //     $params['SKIPSEARCH'] = 'false';
 
-        return implode(PHP_EOL, $text);
-    }
+    //     if (Option::isTrue('Library') === false) {
+    //         $params['USELIBRARY'] = 'false';
+    //     }
+    //     if (Option::isTrue('Search') === false) {
+    //         $params['SKIPSEARCH'] = 'true';
+    //     }
 
-    public function template($template, $params = [])
-    {
-        // utminfo(func_get_args());
+    //     $MediaCommand            = ucfirst(strtolower(Option::getValue('cmd', true)));
+    //     $params['Command']       = $MediaCommand;
+    //     $params['CMD_CLASS_DIR'] = ucfirst($CommandName);
 
-        $template_text = $this->loadTemplate($template);
+    //     $params['CommandClass']   = $CommandFileName;
+    //     $params['CommandName']    = $CommandName;
+    //     $params['CommandDesc']    = Option::getValue('desc', true);
+    //     $params['CommandMethods'] = $this->getMethods(Option::getValue('method'));
 
-        return $this->parse($template_text, $params);
-    }
+    //     $template = $this->template($this->CMD_TEMPLATE, $params);
 
-    public function callback_replace($matches)
-    {
-        // utminfo(func_get_args());
+    //     $this->COMMAND_PATH = $this->parse($this->COMMAND_PATH, ['CMD_NAME' => ucfirst($MediaCommand)]);
+    //     $CommandDir         = $this->COMMAND_PATH . '/' . ucfirst($CommandName);
+    //     FileSystem::createDir($CommandDir);
+    //     $CommandFileName = $CommandDir . DIRECTORY_SEPARATOR . $CommandFileName . '.php';
 
-        return '';
-    }
+    //     if (file_exists($CommandFileName)) {
+    //         FileSystem::delete($CommandFileName);
+    //     }
 
-    private function loadTemplate($template)
-    {
-        // utminfo(func_get_args());
+    //     FileSystem::write($CommandFileName, $template);
+    // }
 
-        if ($template !== null) {
-            $template_file = $template;
+    // private function getMethods($methodArray)
+    // {
+    //     $text = [];
+    //     foreach ($methodArray as $cmd) {
+    //         $text[] = "'" . $cmd . "' => null,";
+    //     }
 
-            return file_get_contents($template_file);
-        }
+    //     return implode(PHP_EOL, $text);
+    // }
 
-        return null;
-    }
+    // public function template($template, $params = [])
+    // {
+    //     // utminfo(func_get_args());
 
-    private function parse($text, $params = [])
-    {
-        // utminfo(func_get_args());
+    //     $template_text = $this->loadTemplate($template);
 
-        if (is_array($params)) {
-            foreach ($params as $key => $value) {
-                $key = '%%' . strtoupper($key) . '%%';
-                // // utmdump([$text,$value,$key]);
-                $text = str_replace($key, $value, $text);
-            }
+    //     return $this->parse($template_text, $params);
+    // }
 
-            $text = preg_replace_callback('|%%(\w+)%%|i', [$this, 'callback_replace'], $text);
-        }
+    // public function callback_replace($matches)
+    // {
+    //     // utminfo(func_get_args());
 
-        return $text;
-    }
+    //     return '';
+    // }
+
+    // private function loadTemplate($template)
+    // {
+    //     // utminfo(func_get_args());
+
+    //     if ($template !== null) {
+    //         $template_file = $template;
+
+    //         return file_get_contents($template_file);
+    //     }
+
+    //     return null;
+    // }
+
+    // private function parse($text, $params = [])
+    // {
+    //     // utminfo(func_get_args());
+
+    //     if (is_array($params)) {
+    //         foreach ($params as $key => $value) {
+    //             $key = '%%' . strtoupper($key) . '%%';
+    //             // // utmdump([$text,$value,$key]);
+    //             $text = str_replace($key, $value, $text);
+    //         }
+
+    //         $text = preg_replace_callback('|%%(\w+)%%|i', [$this, 'callback_replace'], $text);
+    //     }
+
+    //     return $text;
+    // }
 }

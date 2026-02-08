@@ -12,6 +12,7 @@ use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
+use Mediatag\Traits\DynamicProperty;
 use Mediatag\Traits\MetaTags;
 use UTM\Utilities\Option;
 
@@ -19,6 +20,7 @@ use function array_key_exists;
 
 class TagReader
 {
+    use DynamicProperty;
     use MetaTags;
 
     public $tag_array = [];
@@ -30,18 +32,6 @@ class TagReader
     public $videoData;
 
     private object $dbConn;
-
-    private array $data = [];
-
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
 
     public function __construct()
     {

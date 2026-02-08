@@ -75,9 +75,21 @@ trait CommandHelper
         if (is_null($className)) {
             $className = static::class;
         }
-
+        // utmdump($className);
         $class = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
+
+        $file = __COMMANDS_DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+        $file = str_replace('Mediatag/Commands', '', $file);
+
+        // utmdd([$className, $file, file_exists($file)]);
         // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
+
+        if (file_exists($file)) {
+            // require_once $file;
+
+            return $class;
+        }
+
         if (! class_exists($class)) {
             $pathInfo   = explode('\\', $class);
             $pathInfo   = array_slice($pathInfo, 0, 3);

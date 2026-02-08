@@ -9,8 +9,8 @@ namespace Mediatag\Commands\Create;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'create', description: 'Create a new Command')]
-final class Command extends MediaCommand
+#[AsCommand(name: 'new', description: 'Create a new Command')]
+class Command extends MediaCommand
 {
     use Lang;
 
@@ -19,6 +19,6 @@ final class Command extends MediaCommand
     public const SKIP_SEARCH = true;
 
     public $command = [
-        'create' => ['createCommand' => null],
+        'new' => ['createCommand' => null],
     ];
 }

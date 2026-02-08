@@ -9,6 +9,7 @@ namespace Mediatag\Utilities;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
 
@@ -105,17 +106,21 @@ class Chooser
 
     public static function AskQuestion($questionText = '', $Answers = [], $default = null)
     {
-        $Answers              = array_merge($Answers, ['Exit']);
-        $questionFormatedText = self::getQuestion($questionText);
+        // $Answers              = array_merge($Answers, ['Exit']);
+        // $questionFormatedText = self::getQuestion($questionText);
         // $text = Mediatag::$output->writeln($questionFormatedText );
 
         // utmdd( $text,"ex");
-        $ask      = new QuestionHelper;
-        $question = new ChoiceQuestion($questionFormatedText, $Answers, $default);
-        $question->setAutocompleterValues($Answers);
-        $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+        $ask = new QuestionHelper;
+        // $question = new ConfirmationQuestion($questionFormatedText, false);
+        // $question = new ConfirmationQuestion('Continue with this action?', false);
+        $question = new Question('Please enter the name of the bundle', 'AcmeDemoBundle');
 
-        // utmdd(get_class_methods(get_class(Mediatag::$output)));
+        $bundleName = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+        // $question->setAutocompleterValues($Answers);
+        // $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+
+        utmdd(get_class_methods(get_class($question)), $bundleName);
 
         if ($answer == 'Exit') {
             return false;

@@ -11,6 +11,7 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
 use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
 use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
+use Mediatag\Traits\DynamicProperty;
 
 use function array_key_exists;
 use function count;
@@ -18,6 +19,7 @@ use function sprintf;
 
 class VideoInfo
 {
+    use DynamicProperty;
     use VideoCleaner;
     use VideoQuery;
     use VideoStrings;

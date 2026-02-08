@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Create;
 
+use Mediatag\Commands\Create\Commands\Add\AddHelper;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Traits\Translate;
@@ -18,17 +19,6 @@ class Process extends Mediatag
     use Lang;
     use MediaProcess;
     use Translate;
-
-    public $defaultCommands = [
-        'init' => null,
-        'exec' => null,
-    ];
-
-    // public $commandList = [
-
-    //     'create'    => ['createCommand' => null],
-    //     'add'    => ['addCommand' => null],
-    // ];
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {

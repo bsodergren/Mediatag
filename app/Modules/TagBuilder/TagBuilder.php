@@ -8,6 +8,7 @@ namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
+use Mediatag\Traits\DynamicProperty;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
@@ -17,6 +18,7 @@ use function defined;
 
 class TagBuilder
 {
+    use DynamicProperty;
     use MetaTags;
 
     public static $dbConn;
@@ -26,18 +28,6 @@ class TagBuilder
     public $video_key;
 
     public $ReaderObj;
-
-    private array $data = [];
-
-    public function __set(string $name, $value): void
-    {
-        $this->data[$name] = $value;
-    }
-
-    public function __get(string $name)
-    {
-        return $this->data[$name] ?? null;
-    }
 
     public function __construct($key, $tagObj)
     {

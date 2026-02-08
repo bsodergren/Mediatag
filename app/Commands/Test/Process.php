@@ -11,14 +11,21 @@ use FFMpeg\FFMpeg;
 use FFMpeg\FFProbe;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
+use Mediatag\Core\MediaCommand;
 use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Mediatag\Modules\VideoInfo\VideoDetails;
 use Mediatag\Modules\VideoInfo\VideoInfo;
+use Nette\PhpGenerator\ClassType;
+use Nette\PhpGenerator\Literal;
+use Nette\PhpGenerator\PhpFile;
+use Nette\PhpGenerator\PhpNamespace;
+use Nette\PhpGenerator\PsrPrinter;
 use Paramako\Pornhub\Factory;
 use SergiX44\FastImageCompare\FastImageCompare;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -125,8 +132,51 @@ class Process extends Mediatag
 
     public function exec()
     {
-        $key = VideoDetails::setLibrary(36601, 'Studios');
-        Utmdd($key);
+        // $file = new PhpFile;
+        // $file->addComment('This file is auto-generated.');
+        // $file->setStrictTypes(); // adds declare(strict_types=1)
+
+        // $namespace = $file->addNamespace('Foo');
+        // $class     = $namespace->addClass('A');
+        // $function  = $namespace->addFunction('foo');
+        // // $class = $file->addClass('Foo\A');
+        // // $function = $file->addFunction('Foo\foo');
+
+        // echo (new PsrPrinter)->printFile($file);
+
+        // return Command::SUCCESS;
+
+        $namespace = new PhpNamespace(__NAMESPACE__);
+        $namespace->addUse(MediaCommand::class);
+        $namespace->addUse('Symfony\Component\Console\Attribute\AsCommand');
+        $namespace->addUse('Mediatag\Core\Helper\MediaExecute');
+        $namespace->addUse('Mediatag\Core\Helper\MediaProcess');
+        $class = new ClassType('TestCommand');
+        $class
+            ->setExtends(MediaCommand::class)
+            ->addComment("Class description.\nSecond line\n")
+            ->addComment('@property-read Nette\Forms\Form $form')
+            ->addTrait('Mediatag\Core\Helper\MediaExecute');
+
+        $class->addAttribute('AsCommand', [
+            'name'        => 'test',
+            'description' => 'Test Command',
+            'aliases'     => ['thumbnail', 'compare', 'download', 'search'],
+
+        ])
+            ->addMethod('execute')
+            ->setReturnType('int')
+            ->addBody('return parent::execute();')
+            ->addComment('Executes the current command.')
+            ->addComment('@return int Exit code');
+        $namespace->add($class);
+
+        $printer = new TestPrinter;
+        echo $printer->printNamespace($namespace);
+
+        return SymfonyCommand::SUCCESS;
+        // $file = PhpFile::fromCode(file_get_contents('/home/bjorn/scripts/Mediatag/app/Modules/Executable/MediatagExec.php'));
+        // Utmdd($file->getClasses());
     }
 
     // public function exec($option = null)

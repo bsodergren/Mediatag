@@ -58,5 +58,5 @@ return new FactoryCommandLoader([
         return new ClipCommand;
     },
 
-    // %%NEW_CMD%%
+    // %%NEW_COMMAND%%
 ]);
