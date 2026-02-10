@@ -37,7 +37,7 @@ trait MediaLibrary
         $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
         if (count($match) == 0) {
-            Mediatag::$output->writeLn('your in a wrong spot ' . $curent_dir, 'error');
+            exit('your in a wrong spot ' . $curent_dir . '  error' . PHP_EOL);
 
             // UTMlog::logger('Wrong spot?', $curent_dir);
             if ($exit === true) {
@@ -50,7 +50,7 @@ trait MediaLibrary
         } else {
             if (! Arrays::contains(__LIBRARIES__, $match[1])) {
                 // UTMlog::logger('Not in a Library directory?', $curent_dir);
-                Mediatag::$output->writeLn('your in a wrong spot ' . $curent_dir, 'error');
+                exit('your in a wrong spot ' . $curent_dir . '  error' . PHP_EOL);
                 if ($exit === true) {
                     exit;
                 }

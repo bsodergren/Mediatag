@@ -1,6 +1,6 @@
 <?php
 
-namespace Mediatag\Core\Helper;
+namespace Mediatag\Core\Traits\Command;
 
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\SignalRegistry\SignalMap;

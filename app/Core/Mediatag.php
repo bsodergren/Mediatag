@@ -149,7 +149,7 @@ abstract class Mediatag extends MediaCommand
         self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
-        if (! Option::isTrue('USE_SEARCH')) {
+        if (Option::isTrue('USE_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
 
             // utmdd(self::$SearchArray);
@@ -169,24 +169,23 @@ abstract class Mediatag extends MediaCommand
         }
     }
 
-    public function process()
-    {
-        // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
+    // public function process()
+    // {
+    //     // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
+    //     $ClassCmds = $this->runCommand();
+    //     self::debug('Running command {0}', [$this]);
+    //     foreach ($ClassCmds as $cmd => $option) {
+    //         if (method_exists($this, $cmd)) {
+    //             self::$log->notice('Running command {0}', [$cmd]);
 
-        $ClassCmds = $this->runCommand();
-        self::debug('Running command {0}', [$this]);
-        foreach ($ClassCmds as $cmd => $option) {
-            if (method_exists($this, $cmd)) {
-                self::$log->notice('Running command {0}', [$cmd]);
+    //             $this->{$cmd}($option);
+    //         } else {
+    //             self::$output->writeln('<info>' . $cmd . ' doesnt exist</info>');
 
-                $this->{$cmd}($option);
-            } else {
-                self::$output->writeln('<info>' . $cmd . ' doesnt exist</info>');
-
-                return 0;
-            }
-        }
-    }
+    //             return 0;
+    //         }
+    //     }
+    // }
 
     public static function App(): string
     {
@@ -241,57 +240,57 @@ abstract class Mediatag extends MediaCommand
         self::$output->writeLn('<info>There are ' . $total . ' files found</info>');
     }
 
-    public function runCommand()
-    {
-        // utminfo(func_get_args());
+    // public function runCommand()
+    // {
+    //     // utminfo(func_get_args());
 
-        $array   = $this->commandList;
-        $default = $this->default;
-        if (isset($this->defaultCommands)) {
-            $default = $this->defaultCommands;
-        }
+    //     $array   = $this->commandList;
+    //     $default = $this->default;
+    //     if (isset($this->defaultCommands)) {
+    //         $default = $this->defaultCommands;
+    //     }
 
-        foreach (Option::getOptions() as $option => $value) {
-            if (array_key_exists($option, $array)) {
-                $cmd = $option;
+    //     foreach (Option::getOptions() as $option => $value) {
+    //         if (array_key_exists($option, $array)) {
+    //             $cmd = $option;
 
-                foreach ($array[$option] as $method => $args) {
-                    if ($args !== null) {
-                        if ($args == 'default') {
-                            $default = [$method => null];
+    //             foreach ($array[$option] as $method => $args) {
+    //                 if ($args !== null) {
+    //                     if ($args == 'default') {
+    //                         $default = [$method => null];
 
-                            continue;
-                        }
-                        $commandArgs = Option::getValue($cmd);
+    //                         continue;
+    //                     }
+    //                     $commandArgs = Option::getValue($cmd);
 
-                        if (is_array($commandArgs)) {
-                            if (array_key_exists(0, $commandArgs)) {
-                                if ($args == 'isset') {
-                                    $Commands[$method] = $commandArgs[0];
+    //                     if (is_array($commandArgs)) {
+    //                         if (array_key_exists(0, $commandArgs)) {
+    //                             if ($args == 'isset') {
+    //                                 $Commands[$method] = $commandArgs[0];
 
-                                    continue;
-                                }
-                            }
-                        }
-                        $args = $commandArgs;
-                    }
+    //                                 continue;
+    //                             }
+    //                         }
+    //                     }
+    //                     $args = $commandArgs;
+    //                 }
 
-                    $Commands[$method] = $args; // => $value];
+    //                 $Commands[$method] = $args; // => $value];
 
-                    // utmdd( [$Commands[$method],$method,$args] );
+    //                 // utmdd( [$Commands[$method],$method,$args] );
 
-                    if ($method == 'default') {
-                        unset($Commands[$method]);
-                        $Commands = array_merge($Commands, $default);
-                    }
-                }
-            }
-        }
+    //                 if ($method == 'default') {
+    //                     unset($Commands[$method]);
+    //                     $Commands = array_merge($Commands, $default);
+    //                 }
+    //             }
+    //         }
+    //     }
 
-        if (! isset($Commands)) {
-            $Commands = $default;
-        }
+    //     if (! isset($Commands)) {
+    //         $Commands = $default;
+    //     }
 
-        return $Commands;
-    }
+    //     return $Commands;
+    // }
 }

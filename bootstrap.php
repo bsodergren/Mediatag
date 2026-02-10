@@ -28,7 +28,7 @@ define('CONFIG', Utm::$UTM_CONFIG['path']);
 
 new Utm;
 
-$container = require __CONFIG_LIB__ . '/container.php';
+// $container = require __CONFIG_LIB__ . '/container.php';
 
 define('__SQL_USER__', CONFIG['DB_USER']);
 define('__SQL_PASSWD__', CONFIG['DB_PASS']);
@@ -46,8 +46,8 @@ require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;
-// Debug::$PrettyLogs  = false;
-// Debug::$RealTimeLog = false;
+Debug::$PrettyLogs  = false;
+Debug::$RealTimeLog = true;
 
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');
@@ -56,13 +56,13 @@ require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 // UtmStopWatch::$display  = false;
 // UtmStopWatch::$writeNow = false;
 // // define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_FILENAME'],'.php'));
-// TimerStart();
+TimerStart();
 // utminfo('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 // utmdebug('---- START OF PAGE VIEW ' . __SCRIPT_NAME__);
 
 // register_shutdown_function('utmshutdown', ['write' => ['info'],
 // 'write'                                        => 'debug']);
 
-AppFactory::setContainer($container);
+// AppFactory::setContainer($container);
 
-return AppFactory::create();
+// return AppFactory::create();

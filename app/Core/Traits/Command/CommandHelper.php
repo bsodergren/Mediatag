@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Core\Helper;
+namespace Mediatag\Core\Traits\Command;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Strings;
@@ -84,18 +84,15 @@ trait CommandHelper
         // utmdd([$className, $file, file_exists($file)]);
         // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
 
-        if (file_exists($file)) {
-            // require_once $file;
-
-            return $class;
+        if (! file_exists($file)) {
+            if (! class_exists($class)) {
+                $pathInfo   = explode('\\', $class);
+                $pathInfo   = array_slice($pathInfo, 0, 3);
+                $pathInfo[] = 'Process';
+                $class      = implode('\\', $pathInfo);
+            }
         }
-
-        if (! class_exists($class)) {
-            $pathInfo   = explode('\\', $class);
-            $pathInfo   = array_slice($pathInfo, 0, 3);
-            $pathInfo[] = 'Process';
-            $class      = implode('\\', $pathInfo);
-        }
+        utmdebug('CommandHelper GetProccessClass => ' . $class);
 
         return $class;
     }

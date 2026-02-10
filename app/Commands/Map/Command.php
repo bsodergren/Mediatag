@@ -9,9 +9,7 @@ namespace Mediatag\Commands\Map;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-const DESCRIPTION = 'Adds DB Mapping for Genre, Keywords and studio';
-const NAME        = 'map';
-#[AsCommand(name: NAME, description: DESCRIPTION)]
+#[AsCommand(name: 'map', description: 'Adds DB Mapping for Genre, Keywords and studio')]
 final class Command extends MediaCommand
 {
     use Lang;

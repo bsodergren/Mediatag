@@ -148,6 +148,7 @@ class Process extends Mediatag
         }
 
         parent::boot($input, $output);
+        utmdd(Option::getOptions());
         $this->setupFormat();
         $this->setupDb();
 

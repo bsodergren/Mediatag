@@ -1,17 +1,16 @@
 #!/usr/bin/env php
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
-
-use Mediatag\Core\MediaApplication;
-
 define('__ROOT_DIRECTORY__', dirname(realpath($_SERVER['SCRIPT_FILENAME']), 2));
-define('__CONFIG_LIB__', __ROOT_DIRECTORY__.'/config');
+define('__CONFIG_LIB__', __ROOT_DIRECTORY__ . '/config');
 
-$app            = require __ROOT_DIRECTORY__.'/bootstrap.php';
-$customCommands = require __CONFIG_LIB__.'/commands.php';
-$application    = new MediaApplication('App Name', '1.0');
-$application->setCommandLoader($customCommands);
+require __ROOT_DIRECTORY__ . '/bootstrap.php';
 
-$application->run();
+if ($argv[0] == __FILE__) {
+    exit('Cannot call ' . basename($argv[0]) . ' directly' . PHP_EOL);
+}
+
+require __CONFIG_LIB__ . '/applicationLoader.php';

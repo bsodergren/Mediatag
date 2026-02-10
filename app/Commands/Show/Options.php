@@ -8,6 +8,7 @@ namespace Mediatag\Commands\Show;
 
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class Options extends MediaOptions
@@ -28,6 +29,14 @@ class Options extends MediaOptions
             ['new', '', InputOption::VALUE_NONE, self::text('L__SHOW_NEW')],
             ['playlist', '', InputOption::VALUE_REQUIRED, self::text('L__SHOW_PLAYLIST')],
             ['duplicates', 'D', InputOption::VALUE_NONE, self::text('L__SHOW_DUPES')],
+        ];
+    }
+
+    public function CmdArguments()
+    {
+        // utminfo(func_get_args());
+        return [
+            ['name', InputArgument::OPTIONAL, 'Who do you want to greet?'],
         ];
     }
 }

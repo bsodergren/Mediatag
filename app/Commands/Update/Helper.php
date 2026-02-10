@@ -90,7 +90,6 @@ trait Helper
         if ($this->VideoList === null) {
             $this->exec();
         }
-
         $VideoList   = $this->VideoList['file'];
         $count       = count($VideoList);
         $idx         = 1;

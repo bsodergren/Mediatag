@@ -51,13 +51,4 @@ trait Translate
 
         return $text;
     }
-
-    public function Arguments(string $name, string $description = '', ?int $mode = InputArgument::OPTIONAL, mixed $default = null, array|Closure $suggestedValues = [])
-
-    // public function Arguments($varName = null, $description = null, $inputArgs =InputArgument::OPTIONAL, $defaultValue = null, $CompletionInput = Closure)
-    {
-        // utminfo(func_get_args());
-
-        return [$name, $mode, $description, $default, $suggestedValues];
-    }
 }

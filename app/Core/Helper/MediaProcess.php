@@ -26,6 +26,7 @@ trait MediaProcess
 
     public function __call($method, $args)
     {
+        // utmdd($this->commandList);
         if (array_key_exists($method, $this->commandList)) {
             Mediatag::debug('Running command from MediaProcess Trait ', [get_class($this), $method]);
 

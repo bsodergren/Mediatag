@@ -54,7 +54,7 @@ EOT;
             FileSystem::write($binFile, $this->binFile());
             chmod($binFile, 0755);
         }
-        $this->addToCommandsConfig();
+        //$this->addToCommandsConfig();
         $this->createCmdFiles();
     }
 

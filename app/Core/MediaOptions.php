@@ -10,6 +10,7 @@ use const PHP_EOL;
 
 use Mediatag\Core\Helper\OptionCompletion;
 use Mediatag\Core\Helper\OptionsDefault;
+use Mediatag\Core\Traits\ArgOptions;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Completion\CompletionInput;
@@ -29,7 +30,9 @@ use function is_string;
  */
 class MediaOptions
 {
+    use ArgOptions;
     use Lang;
+
     // use OptionCompletion;
     use OptionsDefault;
     use Translate;
@@ -174,19 +177,6 @@ class MediaOptions
         }
 
         return new InputDefinition($cmdOptions);
-    }
-
-    public static function getArguments($varName, $description, $closure)
-    {
-        // utminfo(func_get_args());
-
-        //    self::getClassObject();
-
-        if (is_object(self::$classObj)) {
-            return self::$classObj->Arguments($varName, $description, InputArgument::OPTIONAL, null, $closure);
-        }
-
-        return null;
     }
 
     public static function getOptions($optionArray)

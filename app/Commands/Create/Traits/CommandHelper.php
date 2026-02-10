@@ -30,7 +30,7 @@ trait CommandHelper
         $this->newCmdNamespace->addUse('Symfony\Component\Console\Attribute\AsCommand');
 
         $this->newCmdClass->addConstant('USE_LIBRARY', false);
-        $this->newCmdClass->addConstant('USE_SEARCH', true);
+        $this->newCmdClass->addConstant('USE_SEARCH', false);
 
         $this->newCmdClass->addProperty('command')
             ->setPublic()

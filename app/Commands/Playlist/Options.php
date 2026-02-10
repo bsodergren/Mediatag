@@ -47,6 +47,15 @@ class Options extends MediaOptions
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DEFAULT_RANGE')],
         ];
     }
+
+    public function CmdArguments()
+    {
+        // utminfo(func_get_args());
+        return [
+            ['batchfile', InputArgument::OPTIONAL, 'Who do you want to greet?'],
+        ];
+    }
+
     //     public function Arguments($varName = null, $description = null)
     //     {
     //         // utminfo(func_get_args());

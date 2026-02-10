@@ -53,11 +53,12 @@ if (file_exists($commandsDir)) {
 $SingleCommand = false;
 if (count($commandClasses) == 1) {
     $default = true;
-    // $SingleCommand = true;
 }
 
 foreach ($commandClasses as $className) {
     $Command = new $className;
+
+    // utmdd($Command);
     $application->add($Command);
 
     if ($Command::$SingleCommand === true) {
@@ -69,13 +70,13 @@ foreach ($commandClasses as $className) {
 if ($default === true) {
     $application->setDefaultCommand($cmdName, $SingleCommand);
 }
-$application->setDispatcher($dispatcher);
+// $application->setDispatcher($dispatcher);
 $application->run();
-$loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__);
-$class  = $loader->load(function ($compiler) {
-    $compiler->loadConfig(__CONFIG_LIB__ . '/config.neon');
-});
+// $loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__);
+// $class  = $loader->load(function ($compiler) {
+//     $compiler->loadConfig(__CONFIG_LIB__ . '/config.neon');
+// });
 
-$container = new $class;
+// $container = new $class;
 
 // utmdump($container);
