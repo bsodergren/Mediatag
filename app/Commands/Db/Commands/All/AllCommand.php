@@ -18,7 +18,7 @@ class AllCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const SKIP_SEARCH = false;
+    public const USE_SEARCH=true;
 
     public $command = ['all' => [
         'init'        => null,

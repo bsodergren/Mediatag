@@ -149,7 +149,7 @@ abstract class Mediatag extends MediaCommand
         self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
-        if (! Option::isTrue('SKIP_SEARCH')) {
+        if (! Option::isTrue('USE_SEARCH')) {
             self::$SearchArray = self::$finder->ExecuteSearch();
 
             // utmdd(self::$SearchArray);

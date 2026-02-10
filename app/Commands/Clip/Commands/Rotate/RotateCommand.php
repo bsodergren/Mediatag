@@ -23,7 +23,7 @@ class RotateCommand extends MediaCommand
     // use Helper;
     public const USE_LIBRARY = true;
 
-    // public const SKIP_SEARCH = true;
+    // public const USE_SEARCH = false;
 
     public $command = [
         'rotate' => [

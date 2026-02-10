@@ -16,7 +16,7 @@ class Command extends MediaCommand
 
     public const USE_LIBRARY = false;
 
-    public const SKIP_SEARCH = true;
+    public const USE_SEARCH = false;
 
     public $command = [
         'new' => ['createCommand' => null],

@@ -129,7 +129,7 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        define('SKIP_SEARCH', true);
+        define('USE_SEARCH', true);
 
         // if (count($file) == 0) {
         if (Option::isFalse('file')) {

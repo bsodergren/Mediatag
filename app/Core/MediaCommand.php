@@ -57,7 +57,7 @@ class MediaCommand extends DoctrineCommand
 
     public const USE_LIBRARY = false;
 
-    public const SKIP_SEARCH = false;
+    public const USE_SEARCH=true;
 
     public static $SingleCommand = false;
 
@@ -258,7 +258,7 @@ class MediaCommand extends DoctrineCommand
 
         $this->getLibrary($className::USE_LIBRARY);
 
-        Option::set('SKIP_SEARCH', $className::SKIP_SEARCH);
+        Option::set('USE_SEARCH', $className::USE_SEARCH);
 
         $this->loadDirs();
     }

@@ -86,7 +86,7 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         // if (Option::isTrue('colors')) {
-        //     \define('SKIP_SEARCH', true);
+        //     \define('USE_SEARCH', true);
         // }
         parent::boot($input, $output);
     }

@@ -18,7 +18,7 @@ class BackupCommand extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
-    public const SKIP_SEARCH = false;
+    public const USE_SEARCH=true;
 
     public $command = ['backup' => ['backupMethod' => null]];
 }

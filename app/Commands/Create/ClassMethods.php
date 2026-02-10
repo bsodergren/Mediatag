@@ -288,7 +288,7 @@ trait ClassMethods
         }
 
         $this->GeneratedClass->addConstant('USE_LIBRARY', $useLibrary);
-        $this->GeneratedClass->addConstant('SKIP_SEARCH', $skipSearch);
+        $this->GeneratedClass->addConstant('USE_SEARCH', $skipSearch);
     }
 
     private function addDefaultCommand()

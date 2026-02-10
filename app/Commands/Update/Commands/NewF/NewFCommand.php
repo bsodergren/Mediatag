@@ -16,7 +16,7 @@ final class NewFCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
-    public const SKIP_SEARCH = false;
+    public const USE_SEARCH=true;
     // public const new = true;
 
     public $command = [

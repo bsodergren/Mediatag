@@ -61,7 +61,7 @@ class Process extends Mediatag
 
 
         if (Option::istrue('convert')) {
-            parent::boot($input, $output, ['SKIP_SEARCH' => true]);
+            parent::boot($input, $output, ['USE_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
         }

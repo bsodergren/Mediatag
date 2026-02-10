@@ -52,7 +52,7 @@ class Process extends Mediatag
     {
         // utminfo(func_get_args());
 
-        define('SKIP_SEARCH', true);
+        define('USE_SEARCH', true);
 
         parent::__construct($input, $output);
 
