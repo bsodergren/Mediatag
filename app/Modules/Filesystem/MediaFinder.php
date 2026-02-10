@@ -351,10 +351,8 @@ class MediaFinder extends SFinder
         // utminfo(func_get_args());
 
         if (is_null($search)) {
-            $search = '/\.mp4$/i';
+            $search = '*.mp4';
         }
-
-        // utmdd($search);
 
         Mediatag::info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
         if ($path === null) {
@@ -386,6 +384,8 @@ class MediaFinder extends SFinder
         }
 
         if ($finder->hasResults()) {
+            // utmdd(['search' => $search, 'path' => $path, 'files' => $finder]);
+
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
 

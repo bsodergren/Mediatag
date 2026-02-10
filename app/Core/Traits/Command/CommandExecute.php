@@ -32,7 +32,7 @@ trait CommandExecute
         utmdump($arguments);
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
-            utmdump($cmdArgument);
+
             if (! is_null($cmdArgument)) {
                 if (array_key_exists($arguments['command'], $arguments)) {
                     if ($cmdArgument == $arguments[$arguments['command']]) {
@@ -60,7 +60,7 @@ trait CommandExecute
         if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
-
+        utmdump($method);
         $Process->$method();
 
         if ($originalCommand !== null) {

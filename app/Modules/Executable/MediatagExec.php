@@ -81,6 +81,7 @@ class MediatagExec
 
             foreach ($videoData as $key => $value) {
                 if (is_array($value)) {
+                    utmdump($value);
                     foreach ($value as $key_a => $val_a) {
                         $this->{$key}[$key_a] = $val_a;
                     }

@@ -1,0 +1,220 @@
+0:0.00 MiB - 393 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 169 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 459 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 43 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 206 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 39 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Info\\InfoProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 37 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Thumbnail\\ThumbnailProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 41 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Info\\InfoProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Thumbnail\\ThumbnailProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 41 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 41 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Info\\InfoProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Thumbnail\\ThumbnailProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 37 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\All\\AllProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 52 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 42 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Info\\InfoProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 41 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Thumbnail\\ThumbnailProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 39 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Info\\InfoProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\Thumbnail\\ThumbnailProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 37 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Commands\\All\\AllProcess',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 37 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 37 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 42 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 39 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 38 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 42 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
+________________________________________________________________________________
+________________________________________________________________________________
+0:0.00 MiB - 36 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Db\\Process',
+  ]
