@@ -64,7 +64,8 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         parent::boot($input, $output);
-        $this->setupFormat();
-        $this->setupDb();
+
+        // $this->setupFormat();
+        // $this->setupDb();
     }
 }

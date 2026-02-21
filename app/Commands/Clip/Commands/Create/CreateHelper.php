@@ -21,6 +21,7 @@ trait CreateHelper
     {
         $this->progress = new MediaIndicator('one');
 
+        // utmdd($this->markerArray);
         foreach ($this->markerArray as $i => $fileRow) {
             foreach ($fileRow as $K => $FILE) {
                 $filename = $FILE['filename'];

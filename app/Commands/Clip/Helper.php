@@ -88,7 +88,6 @@ trait Helper
     {
         $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
 
-        UtmDump(dirname($outputFile));
         // Filesystem::createDir(dirname($outputFile));
         if ($level == 0) {
             return $outputFile;
@@ -133,7 +132,6 @@ trait Helper
         $this->FileIdx = 0;
 
         $search = Option::getValue('clip', true);
-
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers;
 
