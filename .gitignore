@@ -32,3 +32,5 @@ db/*
 package-lock.json
 mediaphdb_tracefile.txt
 .php-cs-fixer.cache
+bin/mediadb_debug.log
+bin/mediaupdate_debug.log
