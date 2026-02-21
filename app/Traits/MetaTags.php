@@ -36,7 +36,24 @@ trait MetaTags
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
 
-        return trim($this->{$method}($text));
+        $out = trim($this->{$method}($text));
+
+        return $out;
+    }
+
+    public function cleanEpisode($text)
+    {
+        return $text;
+    }
+
+    public function cleanMovie($text)
+    {
+        return $text;
+    }
+
+    public function cleanScene($text)
+    {
+        return $text;
     }
 
     public function cleanGenre($text)
@@ -61,6 +78,8 @@ trait MetaTags
     public function cleanTitle($text)
     {
         // utminfo(func_get_args());
+        // utmdd([__FILE__, __METHOD__, __LINE__]);
+
         return Title::clean($text);
     }
 
@@ -275,10 +294,17 @@ trait MetaTags
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
                 $value = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);
+
+                unset($tag_array2[$tag]);
             }
 
             $tagArray[$tag] = self::clean($value, $tag);
-            $tagArray[$tag] = $value;
+            //            $tagArray[$tag] = $value;
+        }
+        foreach ($tag_array2 as $tag => $value) {
+            if (! is_null($value)) {
+                $tagArray[$tag] = self::clean($value, $tag);
+            }
         }
 
         return $tagArray;

@@ -39,7 +39,7 @@ trait Helper
         // utminfo(func_get_args());
         // utmdd([__METHOD__, Mediatag::$SearchArray]);
 
-        $file_array = (new MediaFinder)->search(__CURRENT_DIRECTORY__, '/Ph[a-z0-9]{8,}\.mp4$/');
+        $file_array = (new MediaFinder)->search(__CURRENT_DIRECTORY__, '/\.mp4$/');
         // utmdd($file_array);
 
         // foreach ($file_array as $key => $file) {
@@ -73,7 +73,7 @@ trait Helper
             $newName    = $this->cleanFilename($newName);
             $backupName = str_replace('XXX', 'XXX/backup', $oldName);
 
-            // utmdd([__METHOD__, $oldName, $newName]);
+            // utmdump([__METHOD__,  basename($oldName),  basename($newName), basename($file)]);
             if (! str_starts_with($oldName, __PLEX_HOME__)) {
                 continue;
             }
@@ -82,17 +82,17 @@ trait Helper
             }
 
             if ($newName == $oldName) {
-                // Mediatag::$output->writeln('<comment> Skipping renaming file ' . $oldName . '</>');
+                // Mediatag::$output->writeln('<comment> Skipping renaming file ' . basename($oldName) . '</>');
 
                 continue;
             }
             // utmdump($output_array, $video_key);
             // ;
-            // Mediatag::$output->writeln('renaming file <comment> ' . $oldName . '</>');
-            // Mediatag::$output->writeln('<comment> ' . $newName . '</>');
+            Mediatag::$output->writeln('renaming file <comment> ' . basename($oldName) . '</>');
+            Mediatag::$output->writeln('<comment> ' . basename($newName) . '</>');
             // (new SfSystem)->copy($oldName, $backupName);
 
-            $this->renameFile($oldName, $newName);
+            // $this->renameFile($oldName, $newName);
         }
 
         return 0;

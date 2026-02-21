@@ -7,6 +7,7 @@
 namespace Mediatag\Core\Helper;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Entities\MetaEntities;
 use UTM\Utilities\Option;
 
 use function define;
@@ -28,6 +29,9 @@ trait MediaExecute
     public function addMeta()
     {
         Mediatag::notice('addMeta', __FILE__);
+
+        $ent                   = new MetaEntities;
+        $this->meta_tag_arrary = $ent->meta_tags;
 
         foreach (Option::getOptions() as $option => $v) {
             switch ($option) {

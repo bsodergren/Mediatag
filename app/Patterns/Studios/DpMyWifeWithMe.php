@@ -18,7 +18,7 @@ class DpMyWifeWithMe extends MileHighMedia
         'dpmywifewithme' => [
             'artist' => [
                 'pattern'             => DPMYWIFE_REGEX_COMMON,
-                'delim'               => '_',
+                'delim'               => '-',
                 'match'               => 4,
                 'artistFirstNameOnly' => true,
             ],

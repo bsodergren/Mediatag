@@ -6,12 +6,12 @@
 
 namespace Mediatag\Modules\Executable;
 
-use function is_array;
-use Nette\Utils\Callback;
 use Mediatag\Core\MediaCache;
-
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Nette\Utils\Callback;
+
+use function is_array;
 
 class Javascript extends MediatagExec
 {
@@ -61,17 +61,17 @@ class Javascript extends MediatagExec
             return trim($line);
         });
 
-        $array = MediaCache::get($this->wordCache);
+        // $array = MediaCache::get($this->wordCache);
 
-        if ($array === false) {
-            $array = $archive_content;
-        } else {
-            if ($this->identical_values($archive_content, $array) == false) {
-                $array = $archive_content;
-            }
-        }
+        // if ($array === false) {
+        $array = $archive_content;
+        // } else {
+        // if ($this->identical_values($archive_content, $array) == false) {
+        // $array = $archive_content;
+        // }
+        // }
 
-        MediaCache::put($this->wordCache, $array);
+        // MediaCache::put($this->wordCache, $array);
 
         if (is_array($array)) {
             $this->wordList = implode(',', $array);
@@ -90,7 +90,7 @@ class Javascript extends MediatagExec
             $string,
             $this->wordList,
         ];
-        // // utmdump($command);
+        // utmdump($command);
         $callback       = Callback::check([$this, 'ReadOutput']);
         $this->execMode = 'write';
 

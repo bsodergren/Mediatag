@@ -31,7 +31,7 @@ class Title extends TagBuilder
 
     public function getTagValue() {}
 
-    public static function clean($clean_text, $file = null)
+    public static function clean($clean_text, $isFile = false)
     {
         // utminfo(func_get_args());
 
@@ -57,33 +57,38 @@ class Title extends TagBuilder
         $text      = str_replace(',,', '', $text);
         $titleText = trim($text);
 
-        $r = false;
-        foreach (TITLE_REPLACE_MAP as $filter) {
-            $filter = strtolower($filter);
-            if (str_contains(strtolower($text), $filter)) {
-                $titleText = str_ireplace($filter, '', $titleText);
-                $titleText = trim($titleText);
+        // utmdd([__FILE__, __METHOD__, __LINE__]);
 
-                if (str_starts_with($titleText, '-')) {
-                    $titleText = trim($titleText, '-');
-                }
-                if (str_starts_with($titleText, '_')) {
-                    $titleText = trim($titleText, '_');
-                }
+        if ($isFile === false) {
+            $r = false;
+            // utmdd([__FILE__, __METHOD__, __LINE__]);
+            foreach (TITLE_REPLACE_MAP as $filter) {
+                $filter = strtolower($filter);
+                if (str_contains(strtolower($text), $filter)) {
+                    $titleText = str_ireplace($filter, '', $titleText);
+                    $titleText = trim($titleText);
 
-                if (str_ends_with($titleText, '-')) {
-                    $titleText = trim($titleText, '-');
-                }
-                if (str_ends_with($titleText, '_')) {
-                    $titleText = trim($titleText, '_');
-                }
-                $titleText = str_ireplace('  ', ' ', $titleText);
+                    if (str_starts_with($titleText, '-')) {
+                        $titleText = trim($titleText, '-');
+                    }
+                    if (str_starts_with($titleText, '_')) {
+                        $titleText = trim($titleText, '_');
+                    }
 
-                $titleText = trim($titleText);
-                $r         = true;
+                    if (str_ends_with($titleText, '-')) {
+                        $titleText = trim($titleText, '-');
+                    }
+                    if (str_ends_with($titleText, '_')) {
+                        $titleText = trim($titleText, '_');
+                    }
+                    $titleText = str_ireplace('  ', ' ', $titleText);
+
+                    $titleText = trim($titleText);
+                    $r         = true;
+                }
             }
+            // utmdump([$text, $titleText, $clean_text]);
         }
-
         if (! isset($titleText)) {
         }
 

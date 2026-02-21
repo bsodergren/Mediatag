@@ -128,6 +128,7 @@ trait Artist
                 $namesArray[] = $aName;
             }
         }
+
         $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
 
         if ($titleNames !== null) {
@@ -144,10 +145,10 @@ trait Artist
             }
             $namesArray = array_unique(array_merge($namesArray, $titleNames));
         }
+
         if (count($namesArray) > 0) {
             $delim = ', ';
             $names = implode($delim, $namesArray);
-
             $names = str_replace('_', ' ', $names);
             $names = str_replace('  ', ' ', $names);
             $names = ucwords($names);

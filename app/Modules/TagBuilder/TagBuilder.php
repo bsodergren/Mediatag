@@ -81,11 +81,11 @@ class TagBuilder
         if ($DbUpdates !== null) {
             $updates = self::mergetags($updates, $DbUpdates, $this->video_key); //, 'combine');
         }
+
         if (isset($updates)) {
-            // // utmdump($updates);
+            // //
             // UTMlog::Logger('Reader', $updates);
         }
-
         if (OptionIsTrue('only')) {
             $AddMeta = new TagModify($videoInfo);
 
@@ -104,11 +104,11 @@ class TagBuilder
             }
         }
 
-        // utmdd($videoInfo);
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
-            $updates['studio']        = $this->addNetwork($updates, $updates);
-            $videoInfo['updateTags']  = $updates;
+            $updates['studio']       = $this->addNetwork($updates, $updates);
+            $videoInfo['updateTags'] = $updates;
+
             $videoInfo['currentTags'] = [];
         } else {
             $current                  = $this->ReaderObj->getMetaValues();
@@ -118,6 +118,7 @@ class TagBuilder
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
+
             if (is_array($current) && is_array($updates)) {
                 $videoInfo['updateTags'] = self::compareTags($current, $updates);
             }
@@ -254,9 +255,9 @@ class TagBuilder
         $updates = [];
         foreach (__META_TAGS__ as $tag) {
             $current_tag    = $tag . '_current';
-            ${$current_tag} = '';
+            ${$current_tag} = null;
             $new_tag        = $tag . '_new';
-            ${$new_tag}     = '';
+            ${$new_tag}     = null;
 
             if (array_key_exists($tag, $Current)) {
                 ${$current_tag} = $Current[$tag];
@@ -277,6 +278,7 @@ class TagBuilder
 
                 continue;
             }
+
             if (${$new_tag} != '') {
                 $lev           = levenshtein(${$current_tag}, ${$new_tag});
                 $sim           = similar_text(${$current_tag}, ${$new_tag});

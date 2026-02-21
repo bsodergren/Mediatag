@@ -66,11 +66,19 @@ trait Title
                 $title = $output_array[$this->gettitleMatch()];
 
                 $title    = str_replace('_s_', 's_', $title);
-                $title    = str_replace($this->getTitleDelim(), ' ', $title);
+                $title    = trim(str_replace($this->getTitleDelim(), ' ', $title));
                 $pretitle = $title;
                 $title    = (new Javascript($video_key))->read($title);
 
-                // UTMlog::Logger('Title Tag', [$pretitle,$title]);
+                // utmdump(['Title Tag', ['before' => $pretitle, 'after' => $title]]);
+
+                if ($pretitle != $title) {
+                    // utmdump(['Title Tag', ['before' => $pretitle, 'after' => $title]]);
+                    $preArray   = explode(' ', $pretitle);
+                    $titleArray = explode(' ', $title);
+
+                    // utmdd(['Title Tag', ['before' => $preArray, 'after' => $titleArray]]);
+                }
 
                 /*
                                 foreach (BASIC_WORD_MAP as $find => $replace) {

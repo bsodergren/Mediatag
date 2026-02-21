@@ -8,6 +8,7 @@ namespace Mediatag\Modules\Executable;
 
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
+use Mediatag\Entities\MetaEntities;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Nette\Utils\Callback;
 
@@ -32,7 +33,6 @@ class ReadMeta extends MediatagExec
             $array = false;
         }
 
-        //
         if ($array === false) {
             $command = [
                 Mediatag::App(),
@@ -54,9 +54,9 @@ class ReadMeta extends MediatagExec
                 ],
             ];
 
-            // if (\count($this->metatags) > 0) {
-            MediaCache::put($this->video_key, $array);
-            // }
+            if (\count($this->metatags) > 0) {
+                MediaCache::put($this->video_key, $array);
+            }
         }
 
         return $array;
@@ -64,29 +64,15 @@ class ReadMeta extends MediatagExec
 
     public function getMetaValue($text)
     {
-        // utminfo(func_get_args());
-        $return = preg_replace_callback_array([
-            '/.*(alb).*contains\:\ (.*)/' => function ($matches) {
-                return $this->metatags['studio'] = $matches[2];
-            },
-            '/(gen).*contains\:\ (.*)/'   => function ($matches) {
-                return $this->metatags['genre'] = $matches[2];
-            },
-            '/(nam).*contains\:\ (.*)/'   => function ($matches) {
-                return $this->metatags['title'] = $matches[2];
-            },
-            '/(aART).*contains\:\ (.*)/'  => function ($matches) {
-                return $this->metatags['artist'] = $matches[2];
-            },
-            '/(keyw).*contains\:\ (.*)/'  => function ($matches) {
-                return $this->metatags['keyword'] = $matches[2];
-            },
-            '/(tvnn).*contains\:\ (.*)/'  => function ($matches) {
-                return $this->metatags['network'] = $matches[2];
-            },
-        ], $text);
+        $callbackPatterns = (new MetaEntities)->init()->getCallbackArray();
 
-        // // utmdump([$return,$text]);
-        return $return;
+        foreach ($callbackPatterns as $class => $pattern) {
+            $class   = strtolower($class);
+            $matched = preg_replace_callback($pattern,
+                function ($matches) use ($class) {
+                    return $this->metatags[$class] = $matches[2];
+                },
+                $text);
+        }
     }
 }

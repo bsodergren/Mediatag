@@ -92,7 +92,10 @@ class Reader extends TagReader
   m.genre as genre ,
   m.studio as studio ,
   m.network as network ,
-  m.keyword as keyword
+  m.keyword as keyword,
+  m.movie as movie,
+  m.episode as episode,
+  m.scene as scene
   FROM  mediatag_video_metadata m WHERE m.video_key = '" . $key . "'";
 
         // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";

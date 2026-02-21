@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Entities\MetaEntities;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
@@ -186,7 +187,20 @@ class TagReader
 
                 if ($this->tag_array[$tag] !== null) {
                     if ($clean === true) {
+                        // utmdd([__FILE__, __METHOD__, __LINE__]);
+
                         $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
+                    }
+                }
+            }
+        }
+
+        if (is_array($this->videoData)) {
+            if (array_key_exists('video_name', $this->videoData)) {
+                $tvParams = MetaEntities::CheckForTvParams($this->videoData['video_name']);
+                if (is_array($tvParams)) {
+                    foreach ($tvParams as $tag => $valure) {
+                        $this->tag_array[$tag] = $valure;
                     }
                 }
             }

@@ -6,6 +6,7 @@
 
 namespace Mediatag\Traits;
 
+use Mediatag\Entities\MetaEntities;
 use Mediatag\Modules\Metatags\Artist;
 
 trait ExecArgs
@@ -28,26 +29,33 @@ trait ExecArgs
     {
         // utminfo(func_get_args());
 
-        if ($meta_tag == 'artist') {
-            $this->addOptionArg('--rDNSatom');
-            if ($meta_value != '') {
-                $xml_value = Artist::ArtistXML($meta_value);
-                $this->addOptionArg($xml_value);
-                $this->addOptionArg('name=iTunMOVI');
-                $this->addOptionArg('domain=com.apple.iTunes');
-            } else {
-                $this->addOptionArg('');
-                $this->addOptionArg('name=');
-                $this->addOptionArg('domain=');
-            }
-
-            $this->addOptionArg('--albumArtist=' . $meta_value);
-        } elseif ($meta_tag == 'studio') {
-            $this->addOptionArg('--album=' . $meta_value);
-        } elseif ($meta_tag == 'network') {
-            $this->addOptionArg('--TVNetwork=' . $meta_value);
-        } else {
-            $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
+        $options = MetaEntities::CreateCmdOption($meta_tag, $meta_value);
+        foreach ($options as $arg) {
+            $this->addOptionArg($arg);
         }
+        // if ($meta_tag == 'artist') {
+        //     $this->addOptionArg('--rDNSatom');
+        //     if ($meta_value != '') {
+        //         $xml_value = Artist::ArtistXML($meta_value);
+        //         $this->addOptionArg($xml_value);
+        //         $this->addOptionArg('name=iTunMOVI');
+        //         $this->addOptionArg('domain=com.apple.iTunes');
+        //     } else {
+        //         $this->addOptionArg('');
+        //         $this->addOptionArg('name=');
+        //         $this->addOptionArg('domain=');
+        //     }
+
+        //     $this->addOptionArg('--albumArtist=' . $meta_value);
+
+        //     } elseif ($meta_tag == 'studio') {
+        //     $this->addOptionArg('--album=' . $meta_value);
+
+        //     } elseif ($meta_tag == 'network') {
+        //     $this->addOptionArg('--TVNetwork=' . $meta_value);
+
+        //     } else {
+        //     $this->addOptionArg('--' . $meta_tag . '=' . $meta_value);
+        // }
     }
 }

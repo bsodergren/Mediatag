@@ -136,6 +136,7 @@ class Reader extends TagReader
                 $rep                  = ucwords(str_replace('_', ' ', $rep));
                 $artist_matches[$key] = $rep;
             }
+
             $this->PatternObject->artist_match = $artist_matches;
         }
     }
@@ -164,7 +165,6 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $getMethod = 'get' . ucfirst($method);
-
         Mediatag::notice("__call method =>'{method}' ", ['method' => $getMethod]);
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
@@ -176,7 +176,7 @@ class Reader extends TagReader
                 if (method_exists($this->PatternObject, $method)) {
                     return $this->PatternObject->{$method}($arg[0]);
                 }
-                utmdd([__METHOD__, $this->PatternObject, $method, Debug::tracepath()]);
+                // } else {
             }
         }
 

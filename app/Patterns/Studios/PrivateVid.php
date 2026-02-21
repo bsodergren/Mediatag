@@ -41,6 +41,7 @@ class PrivateVid extends Patterns
     public function getFilename($file)
     {
         // utminfo(func_get_args());
+        $oldFile   = $file;
         $videoData = new MediaFile($file);
         $path      = dirname($file);
         $filename  = basename($file);
@@ -60,9 +61,10 @@ class PrivateVid extends Patterns
                     $artist = str_replace('__', '_', $artist);
                 }
                 $title = str_replace(' ', '_', $title);
+                utmdump([__LINE__, $filename, $title]);
 
                 if (str_contains($filename, $title)) {
-                    // utmdd(__LINE__,$file);
+                    utmdump([__LINE__, $filename, $title]);
 
                     return $file;
                 }
@@ -75,7 +77,7 @@ class PrivateVid extends Patterns
             }
         }
 
-        // utmdd(__LINE__,$file);
+        utmdump([__LINE__, $file, $oldFile]);
 
         return $file;
         //  $title = get_class_vars(get_class($dbData));

@@ -143,10 +143,10 @@ class Display
             $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
         }
 
-        // utmdd($fileinfo,$tagCount);
+        // utmdd($fileinfo, $tagCount);
 
-        $this->MetaBlockSection->setMaxHeight($tagCount + 6);
-        $this->VideoInfoSection->setMaxHeight(3);
+        $this->MetaBlockSection->setMaxHeight($tagCount + 9);
+        $this->VideoInfoSection->setMaxHeight(12);
 
         if ($tagCount == 0) {
             utmdd($tagCount);

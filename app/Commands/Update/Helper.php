@@ -98,8 +98,8 @@ trait Helper
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
         ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
 
-        // $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
-        // $progressBar2->setFormat('');
+        $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+        $progressBar2->setFormat('');
         foreach ($VideoList as $key => $videoInfo) {
             $tagObj = new TagReader;
             $tagObj->loadVideo($videoInfo);
@@ -111,18 +111,18 @@ trait Helper
             $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             $message = $name;
             if (count($videoArray['updateTags']) > 0) {
-                // $progressBar2->setFormat('custom');
-                // $this->ChangesArray[] = $videoArray;
+                $progressBar2->setFormat('custom');
+                $this->ChangesArray[] = $videoArray;
                 $this->writeMetaToVideo($videoArray, $count, $idx);
-                // $progressBar2->setMessage($idx, 'index');
-                // $progressBar2->setMessage($message, 'videoname');
-                // $progressBar2->advance();
+                $progressBar2->setMessage($idx, 'index');
+                $progressBar2->setMessage($message, 'videoname');
+                $progressBar2->advance();
             }
             $idx++;
 
             $progressBar->advance();
         }
-        // $progressBar2->finish();
+        $progressBar2->finish();
     }
 
     // public function saveChanges($json_file = '')

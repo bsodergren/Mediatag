@@ -1,0 +1,4 @@
+0:0.00 MiB - 383 ms:/home/bjorn/scripts/Mediatag/app/Core/Traits/Command/CommandHelper.php:getProcessClass:95
+  0 => 
+    0 => 'CommandHelper GetProccessClass => Mediatag\\Commands\\Clip\\Process',
+  ]

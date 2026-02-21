@@ -14,6 +14,8 @@ use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\MediaCommand;
 use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
+use Mediatag\Entities\MetaEntities;
+use Mediatag\Entities\Tags\Movie;
 use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\VideoData\Data\VideoPreview;
 use Mediatag\Modules\VideoInfo\VideoDetails;
@@ -132,6 +134,24 @@ class Process extends Mediatag
 
     public function exec()
     {
+        $tvRegex = '/^(?P<movie1>[a-zA-Z_\-]+)(?:(?:-|_)(?:(?:s|scene)|(?:e)(?:[\d]+))).*|(?:(?:[a-zA-Z0-9\-_]+)_(?:(?P<movie2>[a-zA-Z]+)(?:[\d]+))\.mp4)|^(?P<movie3>[a-zA-Z_\-]+)/i';
+
+        $files = [
+            'MyWifesFirstBlowBang3-Scene4_s04_ChadAlva_CodeySteele_2160p.mp4',
+            'ProudStagofaSexyVixen-Scene3_s03_MandyMuse_JamesDeen_2160p_h264.mp4',
+            'dp-my-wife-with-me-05-scene-4_Kagney_Lynn_Karter_1080p.mp4',
+            'dp-my-wife-with-me-scene-1_1080p.mp4',
+            'MyHusbandBroughtHomeHisMistress_e16-s02_AthenaFarisJamieMichelleTommyPistol_TommyPistol_AthenaFaris_1080p.mp4',
+            'lasirena_69_ramon_nomar_proudstagofasexyvixen03.mp4',
+            'MHBHM_s04_CaughtCheatingWithMyMistress-MarkZane_LilyLane_1080p.mp4',
+        ];
+
+        foreach ($files as $file) {
+            $r = Movie::isMovie($file);
+            utmdump($r);
+        }
+        //      (new MetaEntities)->init()->getCallbackArray();
+        //MetaEntities::CreateCmdOption('Artist', 'frank jorge');
         // $file = new PhpFile;
         // $file->addComment('This file is auto-generated.');
         // $file->setStrictTypes(); // adds declare(strict_types=1)
@@ -146,35 +166,35 @@ class Process extends Mediatag
 
         // return Command::SUCCESS;
 
-        $namespace = new PhpNamespace(__NAMESPACE__);
-        $namespace->addUse(MediaCommand::class);
-        $namespace->addUse('Symfony\Component\Console\Attribute\AsCommand');
-        $namespace->addUse('Mediatag\Core\Helper\MediaExecute');
-        $namespace->addUse('Mediatag\Core\Helper\MediaProcess');
-        $class = new ClassType('TestCommand');
-        $class
-            ->setExtends(MediaCommand::class)
-            ->addComment("Class description.\nSecond line\n")
-            ->addComment('@property-read Nette\Forms\Form $form')
-            ->addTrait('Mediatag\Core\Helper\MediaExecute');
+        // $namespace = new PhpNamespace(__NAMESPACE__);
+        // $namespace->addUse(MediaCommand::class);
+        // $namespace->addUse('Symfony\Component\Console\Attribute\AsCommand');
+        // $namespace->addUse('Mediatag\Core\Helper\MediaExecute');
+        // $namespace->addUse('Mediatag\Core\Helper\MediaProcess');
+        // $class = new ClassType('TestCommand');
+        // $class
+        //     ->setExtends(MediaCommand::class)
+        //     ->addComment("Class description.\nSecond line\n")
+        //     ->addComment('@property-read Nette\Forms\Form $form')
+        //     ->addTrait('Mediatag\Core\Helper\MediaExecute');
 
-        $class->addAttribute('AsCommand', [
-            'name'        => 'test',
-            'description' => 'Test Command',
-            'aliases'     => ['thumbnail', 'compare', 'download', 'search'],
+        // $class->addAttribute('AsCommand', [
+        //     'name'        => 'test',
+        //     'description' => 'Test Command',
+        //     'aliases'     => ['thumbnail', 'compare', 'download', 'search'],
 
-        ])
-            ->addMethod('execute')
-            ->setReturnType('int')
-            ->addBody('return parent::execute();')
-            ->addComment('Executes the current command.')
-            ->addComment('@return int Exit code');
-        $namespace->add($class);
+        // ])
+        //     ->addMethod('execute')
+        //     ->setReturnType('int')
+        //     ->addBody('return parent::execute();')
+        //     ->addComment('Executes the current command.')
+        //     ->addComment('@return int Exit code');
+        // $namespace->add($class);
 
-        $printer = new TestPrinter;
-        echo $printer->printNamespace($namespace);
+        // $printer = new TestPrinter;
+        // echo $printer->printNamespace($namespace);
 
-        return SymfonyCommand::SUCCESS;
+        // return SymfonyCommand::SUCCESS;
         // $file = PhpFile::fromCode(file_get_contents('/home/bjorn/scripts/Mediatag/app/Modules/Executable/MediatagExec.php'));
         // Utmdd($file->getClasses());
     }

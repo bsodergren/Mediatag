@@ -38,7 +38,6 @@ class VideoTags extends VideoInfo
         // unset($tagList);
 
         $tagList = $meta->getTagArray();
-
         if (array_key_exists('title', $tagList)) {
             $tagList['title'] = Strings::clean($tagList['title']);
         }

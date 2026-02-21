@@ -461,6 +461,7 @@ class MediaFinder extends SFinder
         }
 
         $db_array = Mediatag::$dbconn->getDbFileList();
+
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
@@ -472,7 +473,7 @@ class MediaFinder extends SFinder
                 }
             }
         }
-
+        utmdump($New_Array);
         if (count($New_Array) > 0) {
             return $New_Array;
         } else {
