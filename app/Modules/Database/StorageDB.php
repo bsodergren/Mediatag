@@ -90,8 +90,7 @@ class StorageDB extends Storage
 
     public function getAllDbFiles()
     {
-
-        $query         = $this->queryBuilder(
+        $query = $this->queryBuilder(
             'select',
             "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key",
             false,
@@ -267,6 +266,7 @@ class StorageDB extends Storage
         ];
 
         $data['added'] = $this->dbConn->now();
+
         // utmdd($data);
         return $data;
     }
@@ -317,7 +317,7 @@ class StorageDB extends Storage
 
                         $path = dirname($img_name);
 
-                        if (!is_dir($path)) {
+                        if (! is_dir($path)) {
                             (new Filesystem)->mkdir($path);
                         }
 
@@ -333,7 +333,7 @@ class StorageDB extends Storage
                         $img_name = (new VideoPreview)->videoToThumb($this->video_file);
                         $path     = dirname($img_name);
 
-                        if (!is_dir($path)) {
+                        if (! is_dir($path)) {
                             (new Filesystem)->mkdir($path);
                         }
                         (new Filesystem)->rename($orig_prev, $img_name, true);
@@ -390,7 +390,7 @@ class StorageDB extends Storage
             // utminfo(func_get_args());
 
             if ($ret === null) {
-                $query  = 'INSERT INTO `sequence` (`name`, `increment`, `min_value`, `max_value`, `cur_value`, `cycle`)';
+                $query = 'INSERT INTO `sequence` (`name`, `increment`, `min_value`, `max_value`, `cur_value`, `cycle`)';
                 $query .= " VALUES ('" . __LIBRARY__ . "', '1', '1', '9223372036854775807', '1', '0')";
 
                 $this->query($query);
@@ -398,9 +398,10 @@ class StorageDB extends Storage
             }
 
             $data_array = $this->createDbEntry($video_file, $key);
-            $video_id   = $this->insert($data_array);
+
+            $video_id = $this->insert($data_array);
             if ($video_id !== null) {
-                $query  = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
+                $query = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
                 $query .= " (nextseq('" . __LIBRARY__ . "')," . $video_id . ",'" . $key . "','" . __LIBRARY__ . "')";
                 $this->query($query);
 
@@ -411,9 +412,12 @@ class StorageDB extends Storage
         }
 
         Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
+
         if ($video_id !== null) {
             // $this->vtags = new VideoTags();
+            // utmdump((new VideoTags)->getVideoInfo($key, $video_file));
             Mediatag::$Display->BlockInfo['MetaTags'] = (new VideoTags)->getVideoInfo($key, $video_file);
+
             // $this->vinfo = new VideoInfo();
             //
             if ($all === true) {

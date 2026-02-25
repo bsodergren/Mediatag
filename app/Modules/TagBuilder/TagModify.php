@@ -17,6 +17,14 @@ class TagModify
         //   utmdd("", $key, $value);
     }
 
+    public function setGenre($value, $key)
+    {
+        // utmdump([$value[0], $key]);
+
+        return $value[0];
+        //   utmdd("", $key, $value);
+    }
+
     public function __call($method, $args)
     {
         utmdd($method, $args);

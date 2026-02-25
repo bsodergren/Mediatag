@@ -42,12 +42,14 @@ class Reader extends TagReader
 
         $this->expandArray($videoData);
         $this->tag_array = $this->getvideoData($videoData);
+        // utmdd($videoData, $this->tag_array);
         // utmdd([__METHOD__,$this->tag_array,$videoData]);
     }
 
     public function __call($method, $arguments)
     {
         // utminfo(func_get_args());
+        // utmdump($method);
         $this->get($method);
     }
 
@@ -59,6 +61,7 @@ class Reader extends TagReader
         // if ($video_info === false) {
         $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
         $video_info = $read->read();
+        // utmdd($video_info);
         // if (count($video_info[$this->video_key]['metatags']) > 0) {
         //     MediaCache::put($key, $video_info);
         // }
@@ -70,10 +73,11 @@ class Reader extends TagReader
     private function get($tag)
     {
         // utminfo(func_get_args());
-
+        // utmdd($this->tag_array);
         if (! array_key_exists($tag, $this->tag_array)) {
             $this->tag_array[$tag] = null;
         }
+        // utmdump([$tag, $this->tag_array[$tag]]);
 
         return $this->tag_array[$tag];
     }

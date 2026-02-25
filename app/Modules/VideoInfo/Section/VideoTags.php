@@ -38,8 +38,11 @@ class VideoTags extends VideoInfo
         // unset($tagList);
 
         $tagList = $meta->getTagArray();
+        // utmdump($tagList);
         if (array_key_exists('title', $tagList)) {
+            // utmdump($tagList['title']);
             $tagList['title'] = Strings::clean($tagList['title']);
+            // utmdump($tagList['title']);
         }
 
         if (array_key_exists('studio', $tagList)) {

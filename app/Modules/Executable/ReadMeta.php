@@ -28,51 +28,55 @@ class ReadMeta extends MediatagExec
     public function read($update = false)
     {
         // utminfo(func_get_args());
-        $array = MediaCache::get($this->video_key);
-        if ($update === true) {
-            $array = false;
+        // $array = MediaCache::get($this->video_key);
+        // if ($update === true) {
+        //     $array = false;
+        // }
+
+        // if ($array === false) {
+        $command = [
+            Mediatag::App(),
+            $this->video_file,
+            '-t',
+        ];
+
+        $callback = Callback::check([$this, 'ReadMetaOutput']);
+
+        $this->exec($command, $callback);
+
+        $array = [
+            $this->video_key => [
+                'video_file'    => $this->video_file,
+                'video_path'    => $this->video_path,
+                'video_name'    => $this->video_name,
+                'video_library' => $this->video_library,
+                'metatags'      => $this->metatags,
+            ],
+        ];
+        // utmdd($this->metatags);
+        if (\count($this->metatags) > 0) {
+            // MediaCache::put($this->video_key, $array);
         }
-
-        if ($array === false) {
-            $command = [
-                Mediatag::App(),
-                $this->video_file,
-                '-t',
-            ];
-
-            $callback = Callback::check([$this, 'ReadMetaOutput']);
-
-            $this->exec($command, $callback);
-
-            $array = [
-                $this->video_key => [
-                    'video_file'    => $this->video_file,
-                    'video_path'    => $this->video_path,
-                    'video_name'    => $this->video_name,
-                    'video_library' => $this->video_library,
-                    'metatags'      => $this->metatags,
-                ],
-            ];
-
-            if (\count($this->metatags) > 0) {
-                MediaCache::put($this->video_key, $array);
-            }
-        }
+        // }
 
         return $array;
     }
 
-    public function getMetaValue($text)
+    public function getMetaValueFromBuffer($text)
     {
         $callbackPatterns = (new MetaEntities)->init()->getCallbackArray();
-
+        // utmdump($callbackPatterns);
         foreach ($callbackPatterns as $class => $pattern) {
             $class   = strtolower($class);
             $matched = preg_replace_callback($pattern,
                 function ($matches) use ($class) {
                     return $this->metatags[$class] = $matches[2];
+
+                    // return $this->metatags;
                 },
                 $text);
+
+            // utmdump($matched);
         }
     }
 }

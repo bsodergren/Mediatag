@@ -181,6 +181,7 @@ class TagReader
         // utminfo(func_get_args());
         foreach (__META_TAGS__ as $tag) {
             $this->{$tag}();
+            // utmdump([$tag, $this->tag_array]);
 
             if (array_key_exists($tag, $this->tag_array)) {
                 Mediatag::notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);
@@ -188,7 +189,6 @@ class TagReader
                 if ($this->tag_array[$tag] !== null) {
                     if ($clean === true) {
                         // utmdd([__FILE__, __METHOD__, __LINE__]);
-
                         $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
                     }
                 }

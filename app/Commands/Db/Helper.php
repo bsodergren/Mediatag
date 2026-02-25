@@ -319,7 +319,7 @@ trait Helper
                 }
                 if (! Mediatag::$filesystem->exists($json_file)) {
                     $return = (new Youtube)->run('')->youtubeGetJson($json_key);
-                    utmdump($return);
+                    // utmdump($return);
                     if (Mediatag::$filesystem->exists($json_file)) {
                         parent::$output->writeln('<info>' . $count . ' adding json ' . basename($return) . ' </info>');
                     } else {

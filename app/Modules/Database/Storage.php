@@ -410,14 +410,30 @@ class Storage extends MysqliDb
 
             case 'cleandb':
 
-                $cleanQuery = 'DELETE f FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
-                // $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
-                // $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
+                $field = 'f';
+                if (Option::getValue('type') == 'meta') {
+                    $field = 'm';
+                }
+                if (Option::getValue('type') == 'info') {
+                    $field = 'i';
+                }
+
+                $cleanQuery = 'DELETE ' . $field . ' FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
+                if (Option::getValue('type') == 'meta') {
+                    $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
+                }
+                if (Option::getValue('type') == 'info') {
+                    $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
+                }
                 $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
                 $cleanQuery .= " f.fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
-                // $cleanQuery .= ' and ( m.video_key = f.video_key ';
-                // $cleanQuery .= ' and i.video_key = f.video_key) ';
-                // UtmDump($cleanQuery);
+                if (Option::getValue('type') == 'meta') {
+                    $cleanQuery .= ' and ( m.video_key = f.video_key )';
+                }
+                if (Option::getValue('type') == 'info') {
+                    $cleanQuery .= ' and (i.video_key = f.video_key) ';
+                }
+                // utmdd($cleanQuery);
 
                 return $cleanQuery;
 

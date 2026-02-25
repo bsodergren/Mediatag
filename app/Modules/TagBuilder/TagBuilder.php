@@ -44,11 +44,12 @@ class TagBuilder
         $updates   = [];
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = [];
-
-        if (! defined('__UPDATE_SET_ONLY__')) {
+        // utmdump(OptionIsTrue('add'));
+        if (! defined('__UPDATE_SET_ONLY__') || OptionIsTrue('add')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
+            // utmdump(['File Updates' => $updates]);
             // }
 
             // if (! str_starts_with($this->video_key, 'x')) {
@@ -70,6 +71,7 @@ class TagBuilder
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
+            // utmdump(['DbUpdates Updates' => $DbUpdates]);
         }
 
         // if (null !== $FileUpdates) {
@@ -79,15 +81,17 @@ class TagBuilder
         //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
         // }
         if ($DbUpdates !== null) {
-            $updates = self::mergetags($updates, $DbUpdates, $this->video_key); //, 'combine');
+            $updates = self::mergetags($updates, $DbUpdates, $this->video_key);
         }
-
+        // utmdump(['All Updates' => $updates]);
         if (isset($updates)) {
             // //
             // UTMlog::Logger('Reader', $updates);
         }
+
         if (OptionIsTrue('only')) {
             $AddMeta = new TagModify($videoInfo);
+            // utmdump(OptionIsTrue('only'), Option::getValue('only'), __UPDATE_SET_ONLY__, Option::getValue('genre'), $AddMeta);
 
             foreach (Option::getValue('only') as $option => $value) {
                 // if ($option == "only") {
@@ -96,14 +100,18 @@ class TagBuilder
                 // }
 
                 $method    = 'set' . $value;
+                $value     = strtolower($value);
                 $metaValue = Option::getValue($value);
+
                 if (method_exists($AddMeta, $method)) {
                     // UTMlog::Logger('Option ' . $option, $method, $value);
-                    $updates[$value] = $AddMeta->{$method}($metaValue, $videoInfo['video_key']);
+                    $OnlyUpdates[$value] = $AddMeta->{$method}($metaValue, $videoInfo['video_key']);
+                    // utmdd([$updates, $metaValue, $value]);
                 }
             }
+            // utmdump([$OnlyUpdates, $updates]);
+            $updates = self::mergetags($updates, $OnlyUpdates, $this->video_key);
         }
-
         // UTMlog::Logger('updates', $updates);
         if (Option::isTrue('update')) {
             $updates['studio']       = $this->addNetwork($updates, $updates);
@@ -118,7 +126,7 @@ class TagBuilder
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
-
+            // utmdd([$current, $updates]);
             if (is_array($current) && is_array($updates)) {
                 $videoInfo['updateTags'] = self::compareTags($current, $updates);
             }

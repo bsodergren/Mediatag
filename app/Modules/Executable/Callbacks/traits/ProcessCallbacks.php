@@ -10,11 +10,11 @@ namespace Mediatag\Modules\Executable\Callbacks\traits;
  * Command like Metatag writer for video files.
  */
 
-use UTM\Utilities\Option;
-use UTM\Bundle\Monolog\UTMLog;
-use Symfony\Component\Process\Process;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Executable\MediatagExec;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Symfony\Component\Process\Process;
+use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\Option;
 
 trait ProcessCallbacks
 {
@@ -27,7 +27,7 @@ trait ProcessCallbacks
         if ($type === Process::ERR) {
             $this->errors .= $buffer;
         } else {
-            $this->getMetaValue($buffer);
+            $this->getMetaValueFromBuffer($buffer);
         }
         $this->stdout .= $buffer;
     }
@@ -42,8 +42,6 @@ trait ProcessCallbacks
             // UTMlog::logError('Writing Metadata', $buffer);
             // UTMlog::logError('Writing Metadata', $this->video_file);
         } else {
-
-
             if (str_contains($buffer, 'error')) {
                 $this->errors .= $buffer;
                 // UTMlog::logError('Writing Metadata', $buffer);
@@ -56,7 +54,6 @@ trait ProcessCallbacks
                     $this->Display->processOutput->overwrite($buffer);
                 }
             } else {
-
                 $this->Display->processOutput->overwrite($buffer);
             }
         }
