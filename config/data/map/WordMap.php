@@ -197,5 +197,6 @@ const WORD__MAP = [
     'Beautyon'              => 'BeautyOn',
     'BF'                    => 'Bf',
     'C Lea'                 => 'Clea',
+    'POV'                   => 'Pov',
     // 'BroTher'=>'Brother',
 ];

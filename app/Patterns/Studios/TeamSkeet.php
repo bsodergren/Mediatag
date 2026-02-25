@@ -76,7 +76,7 @@ class TeamSkeet extends Patterns
         'teamskeetxfuckingawesome'   => 'teamskeet extras',
         'teamskeetxmrluckypov'       => 'teamskeet extras',
         'teamskeetxpurgatoryx'       => 'teamskeet extras',
-        'teamskeetxrawattack'        => 'raw attack',
+        // 'teamskeetxrawattack'        => 'raw attack',
         'teamskeetxreislin'          => 'teamskeet extras',
         'teamskeetxspizoo'           => 'teamskeet extras',
         'teamskeetxbananafever'      => 'teamskeet extras',
@@ -108,14 +108,14 @@ class TeamSkeet extends Patterns
         'familystrokesfeatures'      => 'Feature Films',
         'mylffeatures'               => 'Feature Films',
         'mylfxgrandmams'             => 'mylf x grandmams',
-        'mylfxsinematica'            => 'sinematica',
-        'teamskeetxsinematica'       => 'sinematica',
+        // 'mylfxsinematica'            => 'sinematica',
+        // 'teamskeetxsinematica'       => 'sinematica',
         'freeusemilf'                => 'freeuse milf',
         'usepov'                     => 'Use POV',
         'tomboyz'                    => 'tom boyz',
         'reptylefeatures'            => 'Feature Films',
         'mydirtyuncle'               => 'My Dirty Uncle',
-        'mylfclassics' => 'Mylf Classics'
+        'mylfclassics'               => 'Mylf Classics',
 
         // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];

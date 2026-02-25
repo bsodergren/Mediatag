@@ -31,7 +31,7 @@ class Episode extends MetaEntities
     public static function isEpisode($file)
     {
         preg_match(self::$tvRegex, $file, $output_array);
-
+        utmdump([$file, $output_array]);
         foreach ($output_array as $k => $v) {
             if (str_contains($k, 'epi') && $v != '') {
                 $v = ltrim($v, 0);

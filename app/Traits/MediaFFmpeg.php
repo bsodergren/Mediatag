@@ -230,9 +230,9 @@ trait MediaFFmpeg
         FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
-            if (! Chooser::changes(' Overwrite File ' . basename($outputFile), 'overwrite', __LINE__)) {
-                return;
-            }
+            // if (! Chooser::changes(' Overwrite File ' . basename($outputFile), 'overwrite', __LINE__)) {
+            return;
+            // }
         }
 
         $cmdOptions = [

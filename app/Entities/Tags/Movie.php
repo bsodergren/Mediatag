@@ -57,7 +57,8 @@ class Movie extends MetaEntities
         $parts = preg_split('/(?=[A-Z])/', $name, -1, PREG_SPLIT_NO_EMPTY);
         $aName = implode(' ', $parts);
         $aName = str_replace('  ', ' ', $aName);
-        utmdump($aName);
+        $aName = str_replace('P O V', 'POV', $aName);
+        // utmdump($aName);
         $aName = (new Javascript)->read($aName);
 
         return $aName;

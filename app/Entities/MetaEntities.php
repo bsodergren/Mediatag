@@ -95,7 +95,11 @@ class MetaEntities
                 $Movie  = Movie::isMovie($file);
                 $params = array_merge($scene, $episode, $Movie);
             }
+            if ($params['episode'] == '264') {
+                $params = null;
+            }
         }
+        utmdump($params);
 
         return $params;
     }
