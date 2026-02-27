@@ -2,12 +2,8 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Console;
+namespace Mediatag\Bundle\YtPilot\Services\Console;
 
-use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Mediatag\Bundle\YtPilot\Config;
 use Mediatag\Bundle\YtPilot\Services\Binary\BinaryLocatorService;
 use Mediatag\Bundle\YtPilot\Services\Binary\FfmpegBinaryService;
@@ -18,11 +14,16 @@ use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
 use Mediatag\Bundle\YtPilot\Services\Http\DownloaderService;
 use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
 use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class DoctorCommand extends Command
 {
     /** @var string */
     protected static $defaultName = 'doctor';
+
     /** @var string */
     protected static $defaultDescription = 'Diagnose YtPilot installation and configuration';
 
@@ -38,13 +39,13 @@ final class DoctorCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('YtPilot Doctor');
 
-        $platform = new PlatformService();
-        $pathService = new PathService($platform);
-        $processRunner = new ProcessRunnerService();
-        $downloader = new DownloaderService($pathService);
+        $platform        = new PlatformService;
+        $pathService     = new PathService($platform);
+        $processRunner   = new ProcessRunnerService;
+        $downloader      = new DownloaderService($pathService);
         $releaseResolver = new ReleaseResolverService($platform);
         $manifestService = new ManifestService($pathService);
-        $locator = new BinaryLocatorService($pathService);
+        $locator         = new BinaryLocatorService($pathService);
 
         $ytDlpService = new YtDlpBinaryService(
             $pathService,
@@ -81,15 +82,15 @@ final class DoctorCommand extends Command
 
         $io->section('Binary Status');
 
-        $ytDlpPath = $locator->locateYtDlp();
+        $ytDlpPath   = $locator->locateYtDlp();
         $ytDlpStatus = $ytDlpPath !== null ? '✓ Installed' : '✗ Not found';
         $ytDlpSource = $this->determineBinarySource($ytDlpPath, $pathService);
 
-        $ffmpegPath = $locator->locateFfmpeg();
+        $ffmpegPath   = $locator->locateFfmpeg();
         $ffmpegStatus = $ffmpegPath !== null ? '✓ Installed' : '✗ Not found';
         $ffmpegSource = $this->determineBinarySource($ffmpegPath, $pathService);
 
-        $ffprobePath = $locator->locateFfprobe();
+        $ffprobePath   = $locator->locateFfprobe();
         $ffprobeStatus = $ffprobePath !== null ? '✓ Installed' : '✗ Not found';
         $ffprobeSource = $this->determineBinarySource($ffprobePath, $pathService);
 
@@ -116,8 +117,8 @@ final class DoctorCommand extends Command
 
         $io->section('Permissions');
 
-        $binDir = $pathService->getBinDirectory();
-        $binDirExists = is_dir($binDir);
+        $binDir         = $pathService->getBinDirectory();
+        $binDirExists   = is_dir($binDir);
         $binDirWritable = $binDirExists && is_writable($binDir);
 
         $io->table(
@@ -127,9 +128,9 @@ final class DoctorCommand extends Command
             ]
         );
 
-        if (!$binDirWritable && !$binDirExists) {
+        if (! $binDirWritable && ! $binDirExists) {
             $parentDir = dirname($binDir);
-            if (!is_writable($parentDir)) {
+            if (! is_writable($parentDir)) {
                 $issues[] = "Cannot create bin directory: {$binDir}";
             }
         }

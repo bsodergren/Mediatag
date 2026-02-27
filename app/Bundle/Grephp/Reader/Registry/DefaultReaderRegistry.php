@@ -15,7 +15,7 @@ final class DefaultReaderRegistry implements ReaderRegistryInterface
     private array $readers;
 
     /**
-     * @param ReaderInterface[] $readers
+     * @param  ReaderInterface[]  $readers
      */
     public function __construct(array $readers)
     {
@@ -29,6 +29,7 @@ final class DefaultReaderRegistry implements ReaderRegistryInterface
                 return $reader;
             }
         }
+
         return null;
     }
 }

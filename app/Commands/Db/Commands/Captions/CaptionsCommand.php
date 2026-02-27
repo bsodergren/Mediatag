@@ -9,7 +9,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 /**
  * Description for Captions Command
  *
- * @package Mediatag\Commands\Db\Commands\Captions
  * @version 2026-02-08 12:28:50
  */
 #[AsCommand(name: 'captions', description: 'Description for Captions Command')]

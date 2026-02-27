@@ -10,6 +10,7 @@ namespace Mediatag\Bundle\Grephp;
 final class GrephpOptions
 {
     public const STREAM_MODE_LINE = 'line';
+
     public const STREAM_MODE_CHUNK = 'chunk';
 
     public function __construct(
@@ -21,6 +22,5 @@ final class GrephpOptions
         // New: batched line processing options (used in STREAM_MODE_LINE)
         public readonly int $linesPerBatch = 1000,
         public readonly int $linesBatchOverlap = 0
-    ) {
-    }
+    ) {}
 }

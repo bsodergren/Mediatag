@@ -18,12 +18,12 @@ class ExportOptions extends Options
     public function Definitions()
     {
         self::$Class   = __CLASS__;
-                $parentOptions = parent::Definitions();
-                $options       = [
-                    // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
-                    ['break'],
-                ];
+        $parentOptions = parent::Definitions();
+        $options       = [
+            // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
+            ['break'],
+        ];
 
-                return array_merge($parentOptions, $options);
+        return array_merge($parentOptions, $options);
     }
 }

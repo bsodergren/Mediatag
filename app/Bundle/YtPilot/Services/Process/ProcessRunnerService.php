@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace Mediatag\Bundle\YtPilot\Services\Process;
 
-use Symfony\Component\Process\Process;
 use Mediatag\Bundle\YtPilot\Config;
 use Mediatag\Bundle\YtPilot\Exceptions\ProcessFailedException;
+use Symfony\Component\Process\Process;
 
 final class ProcessRunnerService
 {
     /**
-     * @param list<string> $command
+     * @param  list<string>  $command
      */
     public function run(
         array $command,
@@ -43,7 +43,7 @@ final class ProcessRunnerService
     }
 
     /**
-     * @param list<string> $command
+     * @param  list<string>  $command
      */
     public function runOrFail(
         array $command,
@@ -53,7 +53,7 @@ final class ProcessRunnerService
     ): ProcessResult {
         $result = $this->run($command, $cwd, $timeout, $outputCallback);
 
-        if (!$result->success) {
+        if (! $result->success) {
             throw ProcessFailedException::fromProcess(
                 $result->command,
                 $result->output,
@@ -66,7 +66,7 @@ final class ProcessRunnerService
     }
 
     /**
-     * @param list<string> $command
+     * @param  list<string>  $command
      */
     public function runAsync(
         array $command,
@@ -91,6 +91,5 @@ final readonly class ProcessResult
         public string $errorOutput,
         public int $exitCode,
         public string $command,
-    ) {
-    }
+    ) {}
 }

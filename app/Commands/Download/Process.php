@@ -16,9 +16,8 @@ use UTM\Utilities\Option;
 class Process extends Mediatag
 {
     use Helper;
-    use MediaProcess;
-
     use MediaExecute;
+    use MediaProcess;
 
     /**
      * file_array.
@@ -58,15 +57,11 @@ class Process extends Mediatag
         //     chdir(__PLEX_DOWNLOAD__);
         // }
 
-
-
         if (Option::istrue('convert')) {
             parent::boot($input, $output, ['USE_SEARCH' => true]);
         } else {
             parent::boot($input, $output);
         }
         $this->addMeta();
-
-
     }
 }

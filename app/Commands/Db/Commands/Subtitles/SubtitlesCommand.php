@@ -9,7 +9,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 /**
  * Description for Subtitles Command
  *
- * @package Mediatag\Commands\Db\Commands\Subtitles
  * @version 2026-02-08 13:15:50
  */
 #[AsCommand(name: 'subtitles', description: 'Description for Subtitles Command')]
@@ -18,7 +17,8 @@ class SubtitlesCommand extends MediaCommand
     use Lang;
 
     public const USE_LIBRARY = true;
-    public const USE_SEARCH=true;
+
+    public const USE_SEARCH = true;
 
     public $command = ['subtitles' => ['subtitlesMethod' => null]];
 }

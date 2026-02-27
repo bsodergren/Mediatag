@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Http;
+namespace Mediatag\Bundle\YtPilot\Services\Http;
 
 use Mediatag\Bundle\YtPilot\Exceptions\BinaryDownloadException;
 use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
@@ -19,16 +19,16 @@ final class DownloaderService
 
         $context = stream_context_create([
             'http' => [
-                'method' => 'GET',
-                'header' => [
+                'method'          => 'GET',
+                'header'          => [
                     'User-Agent: YtPilot/1.0',
                     'Accept: application/octet-stream',
                 ],
                 'follow_location' => true,
-                'timeout' => 300,
+                'timeout'         => 300,
             ],
-            'ssl' => [
-                'verify_peer' => true,
+            'ssl'  => [
+                'verify_peer'      => true,
                 'verify_peer_name' => true,
             ],
         ]);
@@ -73,12 +73,12 @@ final class DownloaderService
         }
 
         curl_setopt_array($ch, [
-            CURLOPT_FILE => $fp,
+            CURLOPT_FILE           => $fp,
             CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_USERAGENT => 'YtPilot/1.0',
-            CURLOPT_TIMEOUT => 300,
+            CURLOPT_USERAGENT      => 'YtPilot/1.0',
+            CURLOPT_TIMEOUT        => 300,
             CURLOPT_SSL_VERIFYPEER => true,
-            CURLOPT_NOPROGRESS => $progressCallback === null,
+            CURLOPT_NOPROGRESS     => $progressCallback === null,
         ]);
 
         if ($progressCallback !== null) {
@@ -91,14 +91,14 @@ final class DownloaderService
             });
         }
 
-        $success = curl_exec($ch);
+        $success  = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_error($ch);
+        $error    = curl_error($ch);
 
         curl_close($ch);
         fclose($fp);
 
-        if (!$success || $httpCode >= 400) {
+        if (! $success || $httpCode >= 400) {
             @unlink($destination);
             throw BinaryDownloadException::failedToDownload(
                 basename($destination),

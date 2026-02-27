@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Parsing;
+namespace Mediatag\Bundle\YtPilot\Services\Parsing;
 
 use Mediatag\Bundle\YtPilot\DTO\SubtitleList;
 
@@ -12,8 +12,8 @@ final class SubtitlesParserService
 
     public function parse(string $output): SubtitleList
     {
-        $manual = [];
-        $automatic = [];
+        $manual         = [];
+        $automatic      = [];
         $currentSection = null;
 
         $lines = explode("\n", $output);
@@ -67,7 +67,7 @@ final class SubtitlesParserService
             $formats = array_filter($formats, fn ($f) => $f !== '');
 
             return [
-                'lang' => $matches['lang'],
+                'lang'    => $matches['lang'],
                 'formats' => array_values($formats),
             ];
         }
@@ -76,7 +76,7 @@ final class SubtitlesParserService
 
         if (count($parts) >= 1 && preg_match('/^[a-zA-Z]{2,3}(-[a-zA-Z0-9]+)?$/', $parts[0])) {
             return [
-                'lang' => $parts[0],
+                'lang'    => $parts[0],
                 'formats' => isset($parts[1]) ? array_map('trim', explode(',', $parts[1])) : [],
             ];
         }

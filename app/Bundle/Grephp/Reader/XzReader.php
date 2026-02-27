@@ -20,19 +20,19 @@ final class XzReader implements ReaderInterface
 
     public function __construct(?ProcessRunnerInterface $runner = null)
     {
-        $this->runner = $runner ?? new ProcOpenProcessRunner();
+        $this->runner = $runner ?? new ProcOpenProcessRunner;
     }
 
     public function iterate(string $path): iterable
     {
-        if (!$this->supports($path)) {
+        if (! $this->supports($path)) {
             return; // empty iterator
         }
         $cmd = 'xz -dc ' . escapeshellarg($path);
         // If the runner supports streaming, accumulate directly into a temp stream
         if ($this->runner instanceof StreamingProcessRunnerInterface) {
             $tmp = fopen('php://temp', 'w+b');
-            if (!is_resource($tmp)) {
+            if (! is_resource($tmp)) {
                 return; // empty iterator
             }
             $code = $this->runner->runStreaming($cmd, function (string $chunk) use ($tmp): void {
@@ -40,10 +40,12 @@ final class XzReader implements ReaderInterface
             });
             if ($code !== 0) {
                 fclose($tmp);
+
                 return; // empty iterator
             }
             rewind($tmp);
             yield ['logicalPath' => $path, 'stream' => $tmp];
+
             return;
         }
         // Fallback to non-streaming execution then expose it as stream
@@ -52,7 +54,7 @@ final class XzReader implements ReaderInterface
             return; // empty iterator
         }
         $tmp = fopen('php://temp', 'w+b');
-        if (!is_resource($tmp)) {
+        if (! is_resource($tmp)) {
             return; // empty iterator
         }
         fwrite($tmp, $result->stdout);

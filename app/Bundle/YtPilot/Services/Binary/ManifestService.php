@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Binary;
+namespace Mediatag\Bundle\YtPilot\Services\Binary;
 
 use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
 
@@ -17,7 +17,7 @@ final class ManifestService
     {
         $path = $this->pathService->getManifestPath();
 
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return [];
         }
 
@@ -44,7 +44,7 @@ final class ManifestService
     /** @param array<string, mixed> $value */
     public function update(string $key, array $value): void
     {
-        $manifest = $this->read();
+        $manifest       = $this->read();
         $manifest[$key] = array_merge($value, ['updated_at' => date('c')]);
         $this->write($manifest);
     }
@@ -66,9 +66,9 @@ final class ManifestService
     public function setBinaryInfo(string $binary, string $path, string $version, string $source): void
     {
         $this->update($binary, [
-            'path' => $path,
+            'path'    => $path,
             'version' => $version,
-            'source' => $source,
+            'source'  => $source,
         ]);
     }
 }

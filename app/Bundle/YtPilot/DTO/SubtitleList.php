@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\DTO;
+namespace Mediatag\Bundle\YtPilot\DTO;
 
 final readonly class SubtitleList
 {
     /**
-     * @param array<string, list<string>> $manual
-     * @param array<string, list<string>> $automatic
+     * @param  array<string, list<string>>  $manual
+     * @param  array<string, list<string>>  $automatic
      */
     public function __construct(
         public array $manual,
@@ -16,8 +16,8 @@ final readonly class SubtitleList
     ) {}
 
     /**
-     * @param array<string, list<string>> $manual
-     * @param array<string, list<string>> $automatic
+     * @param  array<string, list<string>>  $manual
+     * @param  array<string, list<string>>  $automatic
      */
     public static function fromParsed(array $manual, array $automatic): self
     {
@@ -45,7 +45,7 @@ final readonly class SubtitleList
     public function toArray(): array
     {
         return [
-            'manual' => $this->manual,
+            'manual'    => $this->manual,
             'automatic' => $this->automatic,
         ];
     }

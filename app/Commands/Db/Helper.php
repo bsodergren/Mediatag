@@ -358,7 +358,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        self::$Class             = __CLASS__;
+        self::$Class                  = __CLASS__;
         Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
         $videos                       = Mediatag::$dbconn->getVideoCount();
 

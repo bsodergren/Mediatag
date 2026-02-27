@@ -79,7 +79,7 @@ trait MergeHelper
 
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
 
-        if ($fileSearch != "") {
+        if ($fileSearch != '') {
             $search = '/.*_(' . $fileSearch . ')_\d+\.mp4/i';
         } else {
             $search = '*.mp4';

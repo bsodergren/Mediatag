@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Metadata;
+namespace Mediatag\Bundle\YtPilot\Services\Metadata;
 
 use Mediatag\Bundle\YtPilot\DTO\FormatItem;
 use Mediatag\Bundle\YtPilot\DTO\SubtitleList;

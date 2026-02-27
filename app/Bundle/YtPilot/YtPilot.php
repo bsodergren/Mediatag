@@ -28,11 +28,9 @@ use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
 
 final class YtPilot
 {
-
-
     private ?string $downloadArchive = null;
-    private ?string $batchFile = null;
 
+    private ?string $batchFile = null;
 
     public function downloadArchive(?string $filePath): self
     {
@@ -56,7 +54,6 @@ final class YtPilot
 
         return $this;
     }
-
 
     private ?string $url = null;
 
@@ -239,10 +236,10 @@ final class YtPilot
             '1440p', '2k' => 1440,
             '1080p', 'fhd' => 1080,
             '720p', 'hd' => 720,
-            '480p' => 480,
-            '360p' => 360,
-            '240p' => 240,
-            '144p' => 144,
+            '480p'  => 480,
+            '360p'  => 360,
+            '240p'  => 240,
+            '144p'  => 144,
             default => (int) preg_replace('/\D/', '', $label),
         };
 
@@ -632,7 +629,7 @@ final class YtPilot
             $host,
             $port,
         );
-        $this->noProxy  = false;
+        $this->noProxy = false;
 
         return $this;
     }
@@ -768,8 +765,8 @@ final class YtPilot
                     $unit       = $matches[3];
 
                     $totalSize = match ($unit) {
-                        'GiB' => $size * 1024 * 1024 * 1024,
-                        'MiB' => $size * 1024 * 1024,
+                        'GiB'   => $size * 1024 * 1024 * 1024,
+                        'MiB'   => $size * 1024 * 1024,
                         default => $size * 1024,
                     };
 
@@ -781,7 +778,7 @@ final class YtPilot
 
         $result = $this->processRunner->run($command, $workingDir, $timeout, $callback);
 
-        if (!$result->success) {
+        if (! $result->success) {
             return DownloadResult::failure($result->errorOutput ?: $result->output, $result->exitCode);
         }
 
@@ -998,7 +995,7 @@ final class YtPilot
         $binary  = $this->locator->requireYtDlp($this->ytDlpPath);
         $command = [$binary];
 
-        if (!$this->hasAnyTarget()) {
+        if (! $this->hasAnyTarget()) {
             $this->downloadVideo = true;
             $this->downloadAudio = true;
         }
@@ -1018,7 +1015,6 @@ final class YtPilot
         }
 
         if ($this->maxDownloads !== null) {
-
             $command[] = '--max-downloads';
             $command[] = $this->maxDownloads;
         }
@@ -1027,7 +1023,6 @@ final class YtPilot
             $command[] = '-a';
             $command[] = $this->batchFile;
         }
-
 
         if ($this->audioOnly) {
             $command[] = '-x';
@@ -1184,7 +1179,7 @@ final class YtPilot
 
     private function resolveFfmpegLocation(): ?string
     {
-        if (!Config::get('ffmpeg.enabled', true)) {
+        if (! Config::get('ffmpeg.enabled', true)) {
             return null;
         }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\DTO;
+namespace Mediatag\Bundle\YtPilot\DTO;
 
 final readonly class FormatItem
 {
@@ -26,7 +26,7 @@ final readonly class FormatItem
     /** @param array<string, mixed> $data */
     public static function fromParsed(array $data): self
     {
-        $resolution = $data['resolution'] ?? null;
+        $resolution  = $data['resolution'] ?? null;
         $isAudioOnly = $resolution === 'audio only' || str_contains($resolution ?? '', 'audio');
 
         return new self(
@@ -42,7 +42,7 @@ final readonly class FormatItem
             acodec: ($data['acodec'] ?? 'none') !== 'none' ? $data['acodec'] : null,
             abr: $data['abr'] ?? null,
             isAudioOnly: $isAudioOnly,
-            isVideoOnly: ($data['acodec'] ?? 'none') === 'none' && !$isAudioOnly,
+            isVideoOnly: ($data['acodec'] ?? 'none') === 'none' && ! $isAudioOnly,
         );
     }
 
@@ -50,17 +50,17 @@ final readonly class FormatItem
     public function toArray(): array
     {
         return [
-            'id' => $this->id,
-            'ext' => $this->ext,
-            'resolution' => $this->resolution,
-            'fps' => $this->fps,
-            'filesize' => $this->filesize,
-            'tbr' => $this->tbr,
-            'protocol' => $this->protocol,
-            'vcodec' => $this->vcodec,
-            'vbr' => $this->vbr,
-            'acodec' => $this->acodec,
-            'abr' => $this->abr,
+            'id'            => $this->id,
+            'ext'           => $this->ext,
+            'resolution'    => $this->resolution,
+            'fps'           => $this->fps,
+            'filesize'      => $this->filesize,
+            'tbr'           => $this->tbr,
+            'protocol'      => $this->protocol,
+            'vcodec'        => $this->vcodec,
+            'vbr'           => $this->vbr,
+            'acodec'        => $this->acodec,
+            'abr'           => $this->abr,
             'is_audio_only' => $this->isAudioOnly,
             'is_video_only' => $this->isVideoOnly,
         ];

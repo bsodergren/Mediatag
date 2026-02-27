@@ -2,8 +2,6 @@
 
 namespace Mediatag\Bundle\YtPilot;
 
-use Mediatag\Bundle\YtPilot\YtPilot;
-
 use Mediatag\Bundle\YtPilot\DTO\DownloadResult;
 use Mediatag\Bundle\YtPilot\DTO\FormatItem;
 use Mediatag\Bundle\YtPilot\DTO\PlatformConfig;
@@ -25,10 +23,12 @@ use Mediatag\Bundle\YtPilot\Services\Parsing\FormatsParserService;
 use Mediatag\Bundle\YtPilot\Services\Parsing\SubtitlesParserService;
 use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
 use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
+use Mediatag\Bundle\YtPilot\YtPilot;
 
 class MediaPilot extends YtPilot
 {
     private ?string $downloadArchive = null;
+
     private ?string $batchFile = null;
 
     public function downloadArchive(?string $filePath): self
@@ -37,6 +37,7 @@ class MediaPilot extends YtPilot
 
         return $this;
     }
+
     public function url(string $url): self
     {
         $this->url = $url;
@@ -57,7 +58,7 @@ class MediaPilot extends YtPilot
         $binary  = $this->locator->requireYtDlp($this->ytDlpPath);
         $command = [$binary];
 
-        if (!$this->hasAnyTarget()) {
+        if (! $this->hasAnyTarget()) {
             $this->downloadVideo = true;
             $this->downloadAudio = true;
         }
@@ -212,5 +213,4 @@ class MediaPilot extends YtPilot
         //     throw MissingUrlException::required();
         // }
     }
-
 }

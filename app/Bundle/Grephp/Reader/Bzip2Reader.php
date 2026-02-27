@@ -13,21 +13,21 @@ final class Bzip2Reader implements ReaderInterface
 {
     public function iterate(string $path): iterable
     {
-        if (!$this->supports($path)) {
+        if (! $this->supports($path)) {
             return; // empty iterator
         }
         // Basic validation: bzip2 files start with magic bytes 'BZh'
         $hfp = @fopen($path, 'rb');
-        if (!is_resource($hfp)) {
+        if (! is_resource($hfp)) {
             return; // empty iterator
         }
         $header = fread($hfp, 3);
         fclose($hfp);
-        if ($header === false || strlen((string)$header) < 3 || strncmp((string)$header, 'BZh', 3) !== 0) {
+        if ($header === false || strlen((string) $header) < 3 || strncmp((string) $header, 'BZh', 3) !== 0) {
             return; // empty iterator
         }
-        $fp = @fopen('compress.bzip2://'.$path, 'rb');
-        if (!is_resource($fp)) {
+        $fp = @fopen('compress.bzip2://' . $path, 'rb');
+        if (! is_resource($fp)) {
             return; // empty iterator
         }
         yield ['logicalPath' => $path, 'stream' => $fp];

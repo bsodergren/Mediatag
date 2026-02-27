@@ -26,16 +26,16 @@ final class GrephpFactory
      */
     public static function default(): Grephp
     {
-        $matcher = new PregPatternMatcher();
+        $matcher  = new PregPatternMatcher;
         $registry = new DefaultReaderRegistry([
-            new ZipReader(),
-            new GzipReader(),
-            new Bzip2Reader(),
-            new XzReader(),
-            new PlainFileReader(),
+            new ZipReader,
+            new GzipReader,
+            new Bzip2Reader,
+            new XzReader,
+            new PlainFileReader,
         ]);
-        $enumerator = new RecursiveDirectoryEnumerator();
-        $options = new GrephpOptions(); // defaults: auto-streaming with line mode
+        $enumerator = new RecursiveDirectoryEnumerator;
+        $options    = new GrephpOptions; // defaults: auto-streaming with line mode
 
         return new Grephp($matcher, $registry, $enumerator, $options);
     }
@@ -50,16 +50,17 @@ final class GrephpFactory
         int $chunkOverlap = 1024,
         ?int $maxMatchPerFile = null
     ): Grephp {
-        $matcher = new PregPatternMatcher();
+        $matcher  = new PregPatternMatcher;
         $registry = new DefaultReaderRegistry([
-            new ZipReader(),
-            new GzipReader(),
-            new Bzip2Reader(),
-            new XzReader(),
-            new PlainFileReader(),
+            new ZipReader,
+            new GzipReader,
+            new Bzip2Reader,
+            new XzReader,
+            new PlainFileReader,
         ]);
-        $enumerator = new RecursiveDirectoryEnumerator();
-        $options = new GrephpOptions($streamThresholdBytes, $streamMode, $chunkSize, $chunkOverlap, $maxMatchPerFile);
+        $enumerator = new RecursiveDirectoryEnumerator;
+        $options    = new GrephpOptions($streamThresholdBytes, $streamMode, $chunkSize, $chunkOverlap, $maxMatchPerFile);
+
         return new Grephp($matcher, $registry, $enumerator, $options);
     }
 }

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\DTO;
+namespace Mediatag\Bundle\YtPilot\DTO;
 
 final readonly class PlatformConfig
 {

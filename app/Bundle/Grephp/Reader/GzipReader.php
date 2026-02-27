@@ -13,21 +13,21 @@ final class GzipReader implements ReaderInterface
 {
     public function iterate(string $path): iterable
     {
-        if (!$this->supports($path)) {
+        if (! $this->supports($path)) {
             return; // empty iterator
         }
         // Basic validation: gzip files start with magic bytes 1F 8B
         $hfp = @fopen($path, 'rb');
-        if (!is_resource($hfp)) {
+        if (! is_resource($hfp)) {
             return; // empty iterator
         }
         $header = fread($hfp, 2);
         fclose($hfp);
-        if ($header === false || strlen((string)$header) < 2 || $header !== "\x1F\x8B") {
+        if ($header === false || strlen((string) $header) < 2 || $header !== "\x1F\x8B") {
             return; // empty iterator
         }
-        $fp = @fopen('compress.zlib://'.$path, 'rb');
-        if (!is_resource($fp)) {
+        $fp = @fopen('compress.zlib://' . $path, 'rb');
+        if (! is_resource($fp)) {
             return; // empty iterator
         }
         yield ['logicalPath' => $path, 'stream' => $fp];

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Exceptions;
+namespace Mediatag\Bundle\YtPilot\Exceptions;
 
 use RuntimeException;
 

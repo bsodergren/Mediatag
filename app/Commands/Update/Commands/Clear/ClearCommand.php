@@ -17,7 +17,7 @@ final class ClearCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH=true;
+    public const USE_SEARCH = true;
 
     public $command = [
         'clear' => [

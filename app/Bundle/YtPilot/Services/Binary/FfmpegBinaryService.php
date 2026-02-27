@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Binary;
+namespace Mediatag\Bundle\YtPilot\Services\Binary;
 
 use Mediatag\Bundle\YtPilot\Config;
 use Mediatag\Bundle\YtPilot\Exceptions\BinaryDownloadException;
@@ -29,11 +29,11 @@ final class FfmpegBinaryService
     /** @return array{ffmpeg: string, ffprobe: string} */
     public function install(?callable $progressCallback = null): array
     {
-        $url = $this->releaseResolver->getFfmpegDownloadUrl();
+        $url         = $this->releaseResolver->getFfmpegDownloadUrl();
         $archiveType = $this->releaseResolver->getFfmpegArchiveType();
-        $binDir = $this->pathService->ensureBinDirectory();
+        $binDir      = $this->pathService->ensureBinDirectory();
 
-        $archivePath = $binDir.DIRECTORY_SEPARATOR.'ffmpeg-archive.'.$archiveType;
+        $archivePath = $binDir . DIRECTORY_SEPARATOR . 'ffmpeg-archive.' . $archiveType;
 
         if ($progressCallback !== null) {
             $this->downloaderService->downloadWithProgress($url, $archivePath, $progressCallback);
@@ -63,7 +63,7 @@ final class FfmpegBinaryService
     /** @return array{ffmpeg: string, ffprobe: string} */
     public function ensureInstalled(?string $ffmpegPath = null, ?string $ffprobePath = null): array
     {
-        $ffmpeg = $this->locator->locateFfmpeg($ffmpegPath);
+        $ffmpeg  = $this->locator->locateFfmpeg($ffmpegPath);
         $ffprobe = $this->locator->locateFfprobe($ffprobePath);
 
         if ($ffmpeg !== null && $ffprobe !== null) {
@@ -71,7 +71,7 @@ final class FfmpegBinaryService
         }
 
         if (Config::get('ffmpeg.prefer_global', true)) {
-            $globalFfmpeg = $this->pathService->findInPath('ffmpeg');
+            $globalFfmpeg  = $this->pathService->findInPath('ffmpeg');
             $globalFfprobe = $this->pathService->findInPath('ffprobe');
 
             if ($globalFfmpeg !== null && $globalFfprobe !== null) {
@@ -113,7 +113,7 @@ final class FfmpegBinaryService
             return 'unknown';
         }
 
-        $lines = explode("\n", $result->output);
+        $lines     = explode("\n", $result->output);
         $firstLine = array_shift($lines);
 
         if (in_array($firstLine, [0, null, ''], true)) {
@@ -137,7 +137,7 @@ final class FfmpegBinaryService
     public function getPaths(?string $ffmpegPath = null, ?string $ffprobePath = null): array
     {
         return [
-            'ffmpeg' => $this->locator->locateFfmpeg($ffmpegPath),
+            'ffmpeg'  => $this->locator->locateFfmpeg($ffmpegPath),
             'ffprobe' => $this->locator->locateFfprobe($ffprobePath),
         ];
     }
@@ -146,10 +146,10 @@ final class FfmpegBinaryService
     private function extractBinaries(string $archivePath, string $binDir): array
     {
         $archiveType = $this->releaseResolver->getFfmpegArchiveType();
-        $ext = $this->platform->getExecutableExtension();
+        $ext         = $this->platform->getExecutableExtension();
 
-        $ffmpegDest = $binDir.DIRECTORY_SEPARATOR.'ffmpeg'.$ext;
-        $ffprobeDest = $binDir.DIRECTORY_SEPARATOR.'ffprobe'.$ext;
+        $ffmpegDest  = $binDir . DIRECTORY_SEPARATOR . 'ffmpeg' . $ext;
+        $ffprobeDest = $binDir . DIRECTORY_SEPARATOR . 'ffprobe' . $ext;
 
         if ($archiveType === 'zip') {
             $this->extractFromZip($archivePath, $binDir, $ffmpegDest, $ffprobeDest);
@@ -158,7 +158,7 @@ final class FfmpegBinaryService
         }
 
         return [
-            'ffmpeg' => $ffmpegDest,
+            'ffmpeg'  => $ffmpegDest,
             'ffprobe' => $ffprobeDest,
         ];
     }
@@ -171,8 +171,8 @@ final class FfmpegBinaryService
             throw BinaryDownloadException::failedToDownload('ffmpeg', $archivePath, 'Failed to open archive');
         }
 
-        $ext = $this->platform->getExecutableExtension();
-        $ffmpegFound = false;
+        $ext          = $this->platform->getExecutableExtension();
+        $ffmpegFound  = false;
         $ffprobeFound = false;
 
         for ($i = 0; $i < $zip->numFiles; $i++) {
@@ -184,7 +184,7 @@ final class FfmpegBinaryService
 
             $basename = basename($name);
 
-            if ($basename === 'ffmpeg'.$ext || $basename === 'ffmpeg') {
+            if ($basename === 'ffmpeg' . $ext || $basename === 'ffmpeg') {
                 $content = $zip->getFromIndex($i);
                 if ($content !== false) {
                     file_put_contents($ffmpegDest, $content);
@@ -193,7 +193,7 @@ final class FfmpegBinaryService
                 }
             }
 
-            if ($basename === 'ffprobe'.$ext || $basename === 'ffprobe') {
+            if ($basename === 'ffprobe' . $ext || $basename === 'ffprobe') {
                 $content = $zip->getFromIndex($i);
                 if ($content !== false) {
                     file_put_contents($ffprobeDest, $content);
@@ -212,7 +212,7 @@ final class FfmpegBinaryService
 
     private function extractFromTarXz(string $archivePath, string $binDir, string $ffmpegDest, string $ffprobeDest): void
     {
-        $tempDir = $binDir.DIRECTORY_SEPARATOR.'ffmpeg-extract-'.uniqid();
+        $tempDir = $binDir . DIRECTORY_SEPARATOR . 'ffmpeg-extract-' . uniqid();
         mkdir($tempDir, 0755, true);
 
         $result = $this->processRunner->run([
@@ -224,7 +224,7 @@ final class FfmpegBinaryService
             throw BinaryDownloadException::failedToDownload('ffmpeg', $archivePath, 'Failed to extract archive');
         }
 
-        $ffmpegSource = $this->findBinaryInDir($tempDir, 'ffmpeg');
+        $ffmpegSource  = $this->findBinaryInDir($tempDir, 'ffmpeg');
         $ffprobeSource = $this->findBinaryInDir($tempDir, 'ffprobe');
 
         if ($ffmpegSource !== null) {

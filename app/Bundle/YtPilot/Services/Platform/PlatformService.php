@@ -2,24 +2,28 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Platform;
+namespace Mediatag\Bundle\YtPilot\Services\Platform;
 
 final class PlatformService
 {
     public const string OS_LINUX = 'linux';
+
     public const string OS_WINDOWS = 'windows';
+
     public const string OS_MACOS = 'darwin';
 
     public const string ARCH_X64 = 'x64';
+
     public const string ARCH_ARM64 = 'arm64';
+
     public const string ARCH_X86 = 'x86';
 
     public function getOs(): string
     {
         return match (PHP_OS_FAMILY) {
             'Windows' => self::OS_WINDOWS,
-            'Darwin' => self::OS_MACOS,
-            default => self::OS_LINUX,
+            'Darwin'  => self::OS_MACOS,
+            default   => self::OS_LINUX,
         };
     }
 
@@ -29,24 +33,24 @@ final class PlatformService
 
         return match (true) {
             // Check ARM variants first (before checking for '64')
-            str_contains($arch, 'arm64'), 
+            str_contains($arch, 'arm64'),
             str_contains($arch, 'aarch64'),
             str_contains($arch, 'armv8') => self::ARCH_ARM64,
-            
+
             // Check x64 variants
             str_contains($arch, 'x86_64'),
             str_contains($arch, 'amd64'),
-            str_contains($arch, 'x64') => self::ARCH_X64,
-            
+            str_contains($arch, 'x64')   => self::ARCH_X64,
+
             // Check x86 variants
             str_contains($arch, 'i386'),
             str_contains($arch, 'i686'),
-            str_contains($arch, 'x86') => self::ARCH_X86,
-            
+            str_contains($arch, 'x86')   => self::ARCH_X86,
+
             // Fallback: if contains '64' but not matched above
-            str_contains($arch, '64') => self::ARCH_X64,
-            
-            default => self::ARCH_X86,
+            str_contains($arch, '64')    => self::ARCH_X64,
+
+            default                      => self::ARCH_X86,
         };
     }
 
@@ -67,7 +71,7 @@ final class PlatformService
 
     public function isMusl(): bool
     {
-        if (!$this->isLinux()) {
+        if (! $this->isLinux()) {
             return false;
         }
 
@@ -78,7 +82,7 @@ final class PlatformService
         }
 
         // Method 2: Check if musl libc exists
-        if (file_exists('/lib/ld-musl-x86_64.so.1') || 
+        if (file_exists('/lib/ld-musl-x86_64.so.1') ||
             file_exists('/lib/ld-musl-aarch64.so.1') ||
             file_exists('/lib/libc.musl-x86_64.so.1')) {
             return true;

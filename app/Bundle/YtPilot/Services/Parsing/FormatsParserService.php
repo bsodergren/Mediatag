@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Parsing;
+namespace Mediatag\Bundle\YtPilot\Services\Parsing;
 
 use Mediatag\Bundle\YtPilot\DTO\FormatItem;
 
@@ -13,8 +13,8 @@ final class FormatsParserService
     /** @return list<FormatItem> */
     public function parse(string $output): array
     {
-        $formats = [];
-        $lines = explode("\n", $output);
+        $formats         = [];
+        $lines           = explode("\n", $output);
         $inFormatSection = false;
 
         foreach ($lines as $line) {
@@ -30,7 +30,7 @@ final class FormatsParserService
                 continue;
             }
 
-            if (!$inFormatSection || $line === '') {
+            if (! $inFormatSection || $line === '') {
                 continue;
             }
 
@@ -59,15 +59,15 @@ final class FormatsParserService
         }
 
         return FormatItem::fromParsed([
-            'id' => $parts[0],
-            'ext' => $parts[1],
+            'id'         => $parts[0],
+            'ext'        => $parts[1],
             'resolution' => $parts[2] ?? null,
-            'fps' => $parts[3] ?? null,
+            'fps'        => $parts[3] ?? null,
         ]);
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<string>
      */
     public function extractResolutions(array $formats): array
@@ -75,7 +75,7 @@ final class FormatsParserService
         $resolutions = [];
 
         foreach ($formats as $format) {
-            if ($format->resolution !== null && !$format->isAudioOnly) {
+            if ($format->resolution !== null && ! $format->isAudioOnly) {
                 $resolutions[] = $format->resolution;
             }
         }
@@ -84,7 +84,7 @@ final class FormatsParserService
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<int>
      */
     public function extractFrameRates(array $formats): array
@@ -101,7 +101,7 @@ final class FormatsParserService
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<string>
      */
     public function extractVideoCodecs(array $formats): array
@@ -118,7 +118,7 @@ final class FormatsParserService
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<string>
      */
     public function extractAudioCodecs(array $formats): array
@@ -135,7 +135,7 @@ final class FormatsParserService
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<string>
      */
     public function extractContainers(array $formats): array
@@ -152,7 +152,7 @@ final class FormatsParserService
     }
 
     /**
-     * @param list<FormatItem> $formats
+     * @param  list<FormatItem>  $formats
      * @return list<string>
      */
     public function extractDynamicRanges(array $formats): array

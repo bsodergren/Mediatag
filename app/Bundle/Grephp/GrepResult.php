@@ -10,8 +10,8 @@ namespace Mediatag\Bundle\Grephp;
 final class GrepResult
 {
     /**
-     * @param array<string,string[]> $matches Map of logicalPath => list of full-match strings
-     * @param GrepError[] $errors Pattern/matching errors observed during the run
+     * @param  array<string,string[]>  $matches  Map of logicalPath => list of full-match strings
+     * @param  GrepError[]  $errors  Pattern/matching errors observed during the run
      */
     public function __construct(
         public array $matches = [],
@@ -20,6 +20,6 @@ final class GrepResult
 
     public function hasErrors(): bool
     {
-        return !empty($this->errors);
+        return ! empty($this->errors);
     }
 }

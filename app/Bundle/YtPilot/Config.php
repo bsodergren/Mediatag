@@ -17,7 +17,7 @@ final class Config
         $value = self::$config;
 
         foreach ($keys as $segment) {
-            if (!is_array($value) || !array_key_exists($segment, $value)) {
+            if (! is_array($value) || ! array_key_exists($segment, $value)) {
                 return $default;
             }
             $value = $value[$segment];
@@ -37,7 +37,7 @@ final class Config
             if ($i === count($keys) - 1) {
                 $config[$segment] = $value;
             } else {
-                if (!isset($config[$segment]) || !is_array($config[$segment])) {
+                if (! isset($config[$segment]) || ! is_array($config[$segment])) {
                     $config[$segment] = [];
                 }
                 $config = &$config[$segment];

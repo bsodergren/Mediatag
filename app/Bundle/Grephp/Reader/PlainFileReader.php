@@ -15,7 +15,7 @@ class PlainFileReader implements ReaderInterface
 
     public function iterate(string $path): iterable
     {
-        if (!$this->supports($path)) {
+        if (! $this->supports($path)) {
             return; // empty iterator
         }
         $fp = @fopen($path, 'rb');

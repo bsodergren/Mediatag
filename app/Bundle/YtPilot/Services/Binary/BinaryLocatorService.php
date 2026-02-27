@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Binary;
+namespace Mediatag\Bundle\YtPilot\Services\Binary;
 
 use Mediatag\Bundle\YtPilot\Config;
 use Mediatag\Bundle\YtPilot\Exceptions\BinaryValidationException;
@@ -61,7 +61,7 @@ final class BinaryLocatorService
             return $localPath;
         }
 
-        if (!Config::get('ffmpeg.prefer_global', true)) {
+        if (! Config::get('ffmpeg.prefer_global', true)) {
             $systemPath = $this->pathService->findInPath('ffmpeg');
             if ($systemPath !== null) {
                 return $systemPath;
@@ -94,7 +94,7 @@ final class BinaryLocatorService
             return $localPath;
         }
 
-        if (!Config::get('ffmpeg.prefer_global', true)) {
+        if (! Config::get('ffmpeg.prefer_global', true)) {
             $systemPath = $this->pathService->findInPath('ffprobe');
             if ($systemPath !== null) {
                 return $systemPath;

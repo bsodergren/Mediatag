@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Binary;
+namespace Mediatag\Bundle\YtPilot\Services\Binary;
 
 use Mediatag\Bundle\YtPilot\Exceptions\BinaryValidationException;
 use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
@@ -22,7 +22,7 @@ final class YtDlpBinaryService
 
     public function install(?callable $progressCallback = null): string
     {
-        $url = $this->releaseResolver->getYtDlpDownloadUrl();
+        $url         = $this->releaseResolver->getYtDlpDownloadUrl();
         $destination = $this->pathService->getYtDlpPath();
 
         if ($progressCallback !== null) {
@@ -57,17 +57,17 @@ final class YtDlpBinaryService
 
     public function validate(string $path): void
     {
-        if (!is_file($path)) {
+        if (! is_file($path)) {
             throw BinaryValidationException::notFound($path);
         }
 
-        if (!is_executable($path)) {
+        if (! is_executable($path)) {
             throw BinaryValidationException::notExecutable($path);
         }
 
         $result = $this->processRunner->run([$path, '--version'], timeout: 10);
 
-        if (!$result->success) {
+        if (! $result->success) {
             throw BinaryValidationException::versionCheckFailed('yt-dlp', $result->errorOutput);
         }
     }
@@ -75,7 +75,7 @@ final class YtDlpBinaryService
     public function getVersion(?string $path = null): string
     {
         $binaryPath = $path ?? $this->locator->requireYtDlp();
-        $result = $this->processRunner->run([$binaryPath, '--version'], timeout: 10);
+        $result     = $this->processRunner->run([$binaryPath, '--version'], timeout: 10);
 
         return trim($result->output);
     }

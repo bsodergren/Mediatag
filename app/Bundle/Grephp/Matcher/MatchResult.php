@@ -11,9 +11,9 @@ namespace Mediatag\Bundle\Grephp\Matcher;
 final readonly class MatchResult
 {
     /**
-     * @param string[] $matches Full-match strings
-     * @param int|null $errorCode PCRE error code (preg_last_error), when available
-     * @param string|null $errorMessage Human-readable message, when available
+     * @param  string[]  $matches  Full-match strings
+     * @param  int|null  $errorCode  PCRE error code (preg_last_error), when available
+     * @param  string|null  $errorMessage  Human-readable message, when available
      */
     public function __construct(
         public array $matches,

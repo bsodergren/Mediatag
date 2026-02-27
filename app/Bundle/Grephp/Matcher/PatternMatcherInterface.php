@@ -16,8 +16,8 @@ interface PatternMatcherInterface
     /**
      * Find all matches of the given pattern in the provided content.
      *
-     * @param string $content The text to search in
-     * @param string $pattern A PCRE pattern (e.g., '/foo/i')
+     * @param  string  $content  The text to search in
+     * @param  string  $pattern  A PCRE pattern (e.g., '/foo/i')
      * @return MatchResult Result containing matches and optional error info
      */
     public function matchAll(string $content, string $pattern): MatchResult;

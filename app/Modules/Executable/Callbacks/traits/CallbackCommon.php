@@ -8,14 +8,14 @@ namespace Mediatag\Modules\Executable\Callbacks\traits;
 
 use const PHP_EOL;
 
-use UTM\Utilities\Option;
 use Mediatag\Core\Mediatag;
-use function array_key_exists;
-use Symfony\Component\Process\Process;
-use Mediatag\Modules\Filesystem\MediaFile;
-
-use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Executable\Helper\VideoDownloader;
+use Mediatag\Modules\Executable\MediatagExec;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Symfony\Component\Process\Process;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
 
 /**
  * Command like Metatag writer for video files.

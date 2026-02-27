@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Enums;
+namespace Mediatag\Bundle\YtPilot\Enums;
 
 enum TikTokApi: string
 {

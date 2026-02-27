@@ -2,27 +2,28 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Console;
+namespace Mediatag\Bundle\YtPilot\Services\Console;
 
+use Mediatag\Bundle\YtPilot\Services\Binary\BinaryLocatorService;
+use Mediatag\Bundle\YtPilot\Services\Binary\FfmpegBinaryService;
+use Mediatag\Bundle\YtPilot\Services\Binary\ManifestService;
+use Mediatag\Bundle\YtPilot\Services\Binary\ReleaseResolverService;
+use Mediatag\Bundle\YtPilot\Services\Binary\YtDlpBinaryService;
+use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
+use Mediatag\Bundle\YtPilot\Services\Http\DownloaderService;
+use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
+use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Mediatag\Bundle\YtPilot\Services\Binary\FfmpegBinaryService;
-use Mediatag\Bundle\YtPilot\Services\Binary\YtDlpBinaryService;
-use Mediatag\Bundle\YtPilot\Services\Binary\BinaryLocatorService;
-use Mediatag\Bundle\YtPilot\Services\Binary\ManifestService;
-use Mediatag\Bundle\YtPilot\Services\Binary\ReleaseResolverService;
-use Mediatag\Bundle\YtPilot\Services\Filesystem\PathService;
-use Mediatag\Bundle\YtPilot\Services\Http\DownloaderService;
-use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
-use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
 
 final class UpdateCommand extends Command
 {
     /** @var string */
     protected static $defaultName = 'update';
+
     /** @var string */
     protected static $defaultDescription = 'Update yt-dlp and ffmpeg binaries to latest versions';
 
@@ -39,13 +40,13 @@ final class UpdateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->title('YtPilot Binary Updater');
 
-        $platform = new PlatformService();
-        $pathService = new PathService($platform);
-        $processRunner = new ProcessRunnerService();
-        $downloader = new DownloaderService($pathService);
+        $platform        = new PlatformService;
+        $pathService     = new PathService($platform);
+        $processRunner   = new ProcessRunnerService;
+        $downloader      = new DownloaderService($pathService);
         $releaseResolver = new ReleaseResolverService($platform);
         $manifestService = new ManifestService($pathService);
-        $locator = new BinaryLocatorService($pathService);
+        $locator         = new BinaryLocatorService($pathService);
 
         $ytDlpService = new YtDlpBinaryService(
             $pathService,
@@ -92,7 +93,7 @@ final class UpdateCommand extends Command
             return Command::FAILURE;
         }
 
-        if (!$skipFfmpeg) {
+        if (! $skipFfmpeg) {
             $io->section('Updating ffmpeg');
 
             $currentFfmpegVersion = $ffmpegService->getVersion();

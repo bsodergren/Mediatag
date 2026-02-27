@@ -13,6 +13,5 @@ final readonly class ProcessResult
         public int $exitCode,
         public string $stdout,
         public string $stderr
-    ) {
-    }
+    ) {}
 }

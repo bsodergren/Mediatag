@@ -19,11 +19,12 @@ final class RecursiveDirectoryEnumerator implements FileEnumeratorInterface
      */
     public function iterate(string $root): iterable
     {
-        if (!is_dir($root)) {
+        if (! is_dir($root)) {
             if (is_file($root)) {
                 // In case a file path is accidentally passed, be forgiving and yield it.
                 yield $root;
             }
+
             return;
         }
 

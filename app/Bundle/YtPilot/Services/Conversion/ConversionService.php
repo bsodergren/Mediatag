@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Conversion;
+namespace Mediatag\Bundle\YtPilot\Services\Conversion;
 
+use Mediatag\Bundle\YtPilot\Exceptions\ProcessFailedException;
 use Mediatag\Bundle\YtPilot\Services\Binary\BinaryLocatorService;
 use Mediatag\Bundle\YtPilot\Services\Process\ProcessRunnerService;
-use Mediatag\Bundle\YtPilot\Exceptions\ProcessFailedException;
 
 final class ConversionService
 {
@@ -22,15 +22,15 @@ final class ConversionService
         ?string $ffmpegPath = null,
         ?callable $progressCallback = null,
     ): ConversionResult {
-        if (!is_file($inputPath)) {
+        if (! is_file($inputPath)) {
             throw new \InvalidArgumentException("Input file not found: {$inputPath}");
         }
 
-        $ffmpeg = $this->locator->requireFfmpeg($ffmpegPath);
+        $ffmpeg  = $this->locator->requireFfmpeg($ffmpegPath);
         $command = $this->buildConversionCommand($ffmpeg, $inputPath, $outputPath, $format);
 
         $outputBuffer = '';
-        $duration = null;
+        $duration     = null;
 
         $callback = null;
         if ($progressCallback !== null) {
@@ -38,16 +38,16 @@ final class ConversionService
                 $outputBuffer .= $buffer;
 
                 if ($duration === null && preg_match('/Duration: (\d{2}):(\d{2}):(\d{2}\.\d{2})/', $buffer, $matches)) {
-                    $hours = (int) $matches[1];
-                    $minutes = (int) $matches[2];
-                    $seconds = (float) $matches[3];
+                    $hours    = (int) $matches[1];
+                    $minutes  = (int) $matches[2];
+                    $seconds  = (float) $matches[3];
                     $duration = ($hours * 3600) + ($minutes * 60) + $seconds;
                 }
 
                 if ($duration !== null && preg_match('/time=(\d{2}):(\d{2}):(\d{2}\.\d{2})/', $buffer, $matches)) {
-                    $hours = (int) $matches[1];
-                    $minutes = (int) $matches[2];
-                    $seconds = (float) $matches[3];
+                    $hours       = (int) $matches[1];
+                    $minutes     = (int) $matches[2];
+                    $seconds     = (float) $matches[3];
                     $currentTime = ($hours * 3600) + ($minutes * 60) + $seconds;
 
                     $percentage = min(100, (int) round(($currentTime / $duration) * 100));
@@ -58,7 +58,7 @@ final class ConversionService
 
         $result = $this->processRunner->run($command, null, null, $callback);
 
-        if (!$result->success) {
+        if (! $result->success) {
             throw ProcessFailedException::fromProcess(
                 $result->command,
                 $result->output,
@@ -86,16 +86,16 @@ final class ConversionService
         ];
 
         $command = match (strtolower($format)) {
-            'mp4' => [...$command, '-c:v', 'libx264', '-c:a', 'aac', '-movflags', '+faststart', $output],
-            'mkv' => [...$command, '-c:v', 'copy', '-c:a', 'copy', $output],
-            'webm' => [...$command, '-c:v', 'libvpx-vp9', '-c:a', 'libopus', $output],
-            'avi' => [...$command, '-c:v', 'libx264', '-c:a', 'mp3', $output],
-            'mp3' => [...$command, '-vn', '-c:a', 'libmp3lame', '-q:a', '2', $output],
-            'm4a' => [...$command, '-vn', '-c:a', 'aac', '-b:a', '192k', $output],
-            'opus' => [...$command, '-vn', '-c:a', 'libopus', '-b:a', '128k', $output],
-            'ogg' => [...$command, '-vn', '-c:a', 'libvorbis', '-q:a', '5', $output],
-            'wav' => [...$command, '-vn', '-c:a', 'pcm_s16le', $output],
-            'flac' => [...$command, '-vn', '-c:a', 'flac', $output],
+            'mp4'   => [...$command, '-c:v', 'libx264', '-c:a', 'aac', '-movflags', '+faststart', $output],
+            'mkv'   => [...$command, '-c:v', 'copy', '-c:a', 'copy', $output],
+            'webm'  => [...$command, '-c:v', 'libvpx-vp9', '-c:a', 'libopus', $output],
+            'avi'   => [...$command, '-c:v', 'libx264', '-c:a', 'mp3', $output],
+            'mp3'   => [...$command, '-vn', '-c:a', 'libmp3lame', '-q:a', '2', $output],
+            'm4a'   => [...$command, '-vn', '-c:a', 'aac', '-b:a', '192k', $output],
+            'opus'  => [...$command, '-vn', '-c:a', 'libopus', '-b:a', '128k', $output],
+            'ogg'   => [...$command, '-vn', '-c:a', 'libvorbis', '-q:a', '5', $output],
+            'wav'   => [...$command, '-vn', '-c:a', 'pcm_s16le', $output],
+            'flac'  => [...$command, '-vn', '-c:a', 'flac', $output],
             default => [...$command, $output],
         };
 

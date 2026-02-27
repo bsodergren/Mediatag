@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\Services\Filesystem;
+namespace Mediatag\Bundle\YtPilot\Services\Filesystem;
 
 use Mediatag\Bundle\YtPilot\Config;
 use Mediatag\Bundle\YtPilot\Services\Platform\PlatformService;
@@ -17,7 +17,7 @@ final class PathService
     {
         $binPath = Config::get('bin_path', '.ytpilot/bin');
 
-        if (!str_starts_with($binPath, '/') && !str_starts_with($binPath, '\\')) {
+        if (! str_starts_with($binPath, '/') && ! str_starts_with($binPath, '\\')) {
             $binPath = getcwd() . DIRECTORY_SEPARATOR . $binPath;
         }
 
@@ -28,7 +28,7 @@ final class PathService
     {
         $binDir = $this->getBinDirectory();
 
-        if (!is_dir($binDir)) {
+        if (! is_dir($binDir)) {
             mkdir($binDir, 0755, true);
         }
 
@@ -63,7 +63,7 @@ final class PathService
 
     public function findInPath(string $binary): ?string
     {
-        $pathEnv = getenv('PATH') ?: '';
+        $pathEnv   = getenv('PATH') ?: '';
         $separator = $this->platform->isWindows() ? ';' : ':';
         $extension = $this->platform->getExecutableExtension();
 
@@ -75,7 +75,7 @@ final class PathService
             }
         }
 
-        $which = $this->platform->isWindows() ? 'where' : 'which';
+        $which  = $this->platform->isWindows() ? 'where' : 'which';
         $result = @shell_exec("{$which} {$binary} 2>/dev/null");
 
         if ($result !== null && $result !== '') {
@@ -91,7 +91,7 @@ final class PathService
 
     public function makeExecutable(string $path): void
     {
-        if (!$this->platform->isWindows() && is_file($path)) {
+        if (! $this->platform->isWindows() && is_file($path)) {
             chmod($path, 0755);
         }
     }

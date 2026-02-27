@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace  Mediatag\Bundle\YtPilot\DTO;
+namespace Mediatag\Bundle\YtPilot\DTO;
 
 final readonly class DownloadResult
 {
     /**
-     * @param list<string> $downloadedFiles
-     * @param list<string> $subtitlePaths
+     * @param  list<string>  $downloadedFiles
+     * @param  list<string>  $subtitlePaths
      */
     public function __construct(
         public bool $success,
@@ -23,8 +23,8 @@ final readonly class DownloadResult
     ) {}
 
     /**
-     * @param list<string> $downloadedFiles
-     * @param list<string> $subtitlePaths
+     * @param  list<string>  $downloadedFiles
+     * @param  list<string>  $subtitlePaths
      */
     public static function success(
         string $output,

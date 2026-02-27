@@ -9,7 +9,6 @@ use Symfony\Component\Console\Attribute\AsCommand;
 /**
  * Description for Import Command
  *
- * @package Mediatag\Commands\Db\Commands\Import
  * @version 2026-02-08 11:40:18
  */
 #[AsCommand(name: 'import', description: 'Description for Import Command')]

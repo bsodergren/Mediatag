@@ -32,6 +32,7 @@ trait StudioReader
                 $studio_array[$idx] = $studio_string;
             }
         }
+
         return implode('/', $studio_array);
     }
 
@@ -39,7 +40,6 @@ trait StudioReader
     {
         $json   = new jsonReader($this->videoData);
         $return = $json->studio();
-
 
         if (count($return) > 0) {
             if (array_key_exists('studio', $return)) {

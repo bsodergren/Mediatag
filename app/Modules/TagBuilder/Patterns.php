@@ -206,24 +206,20 @@ class Patterns extends TagBuilder
         $regex  = $this->regex;
         $studio = strtolower($this->studio_key);
 
+        // $this->getKeyName($studio);
 
-            // $this->getKeyName($studio);
-
-        if (!array_key_exists($studio, $regex)) {
-           $studio = 'default';
+        if (! array_key_exists($studio, $regex)) {
+            $studio = 'default';
         }
 
-        if(!is_null( $this->network)){
+        if (! is_null($this->network)) {
             $network = str_replace(' ', '', $this->network);
             $network = strtolower($network);
 
             if (array_key_exists($network, $regex)) {
                 $studio = $network;
             }
-
         }
-
-    
 
         $array = $regex[$studio];
 

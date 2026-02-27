@@ -6,8 +6,8 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use Mediatag\Patterns\Studios\Nubiles;
 use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Patterns\Studios\Nubiles;
 
 const CHEATINGSIS_REGEX_COMMON = '//i';
 

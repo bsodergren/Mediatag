@@ -8,7 +8,7 @@ trait CompactHelper
 {
     public function compactMethod()
     {
-        Mediatag::$Console->writeln("Hello ". __METHOD__);
+        Mediatag::$Console->writeln('Hello ' . __METHOD__);
         exit;
     }
 }

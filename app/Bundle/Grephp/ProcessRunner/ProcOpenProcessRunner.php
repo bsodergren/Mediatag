@@ -14,7 +14,7 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
 {
     public function run(string $command): ProcessResult
     {
-        if (!function_exists('proc_open')) {
+        if (! function_exists('proc_open')) {
             return new ProcessResult(127, '', 'proc_open unavailable');
         }
         $desc = [
@@ -27,7 +27,7 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
             return new ProcessResult(127, '', 'proc_open disabled');
         }
         $proc = proc_open($command, $desc, $pipes);
-        if (!is_resource($proc)) {
+        if (! is_resource($proc)) {
             return new ProcessResult(127, '', 'failed to start process');
         }
         // We don't need to provide stdin
@@ -37,12 +37,13 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
         $stderr = stream_get_contents($pipes[2]);
         fclose($pipes[2]);
         $code = proc_close($proc);
+
         return new ProcessResult($code, $stdout !== false ? $stdout : '', $stderr !== false ? $stderr : '');
     }
 
     public function runStreaming(string $command, callable $onStdoutChunk, ?callable $onStderrChunk = null): int
     {
-        if (!function_exists('proc_open')) {
+        if (! function_exists('proc_open')) {
             return 127;
         }
         $disabled = ini_get('disable_functions');
@@ -55,7 +56,7 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
             2 => ['pipe', 'w'],
         ];
         $proc = proc_open($command, $desc, $pipes);
-        if (!is_resource($proc)) {
+        if (! is_resource($proc)) {
             return 127;
         }
         // Close stdin
@@ -67,7 +68,8 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
         $stderr = $pipes[2];
         while (true) {
             $r = [$stdout, $stderr];
-            $w = null; $e = null;
+            $w = null;
+            $e = null;
             if (stream_select($r, $w, $e, 0, 200000) === false) {
                 break;
             }
@@ -85,9 +87,13 @@ final class ProcOpenProcessRunner implements StreamingProcessRunnerInterface
             if (! $status || $status['running'] === false) {
                 // Drain any remaining data
                 $rest = stream_get_contents($stdout);
-                if ($rest !== false && $rest !== '') { $onStdoutChunk($rest); }
+                if ($rest !== false && $rest !== '') {
+                    $onStdoutChunk($rest);
+                }
                 $rest = stream_get_contents($stderr);
-                if ($onStderrChunk && $rest !== false && $rest !== '') { $onStderrChunk($rest); }
+                if ($onStderrChunk && $rest !== false && $rest !== '') {
+                    $onStderrChunk($rest);
+                }
                 break;
             }
         }
