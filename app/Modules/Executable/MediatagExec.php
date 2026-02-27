@@ -17,6 +17,7 @@ use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
 use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\Process;
+use UTM\Utilities\Debug\Debug;
 
 use function is_array;
 use function is_string;
@@ -67,6 +68,7 @@ class MediatagExec
 
     public function __construct($videoData = null, $input = null, $output = null)
     {
+        // utmdump(Debug::tracePath());
         if ($videoData !== null) {
             // utminfo($videoData);
             $this->videoData = $videoData;
@@ -82,7 +84,10 @@ class MediatagExec
             foreach ($videoData as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $key_a => $val_a) {
-                        $this->{$key}[$key_a] = $val_a;
+                        // utmdump(['key' => $key, 'class var' => $this->{$key}, 'value' => $value]);
+                        if (! is_null($this->{$key})) {
+                            $this->{$key}[$key_a] = $val_a;
+                        }
                     }
                 } else {
                     $this->{$key} = $value;

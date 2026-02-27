@@ -24,6 +24,7 @@ use Mhor\MediaInfo\MediaInfo;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Filesystem\Filesystem as SfSystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 use UTM\Bundle\Monolog\UTMLog;
@@ -225,15 +226,27 @@ trait MediaFFmpeg
 
     public function ffmpegCreateClip($file, $marker, $idx)
     {
-        $outputFile = $this->getClipFilename($file);
-        $outputFile = str_replace('.mp4', '_' . $marker['text'] . '_' . $idx . '.mp4', $outputFile);
+        $videoFile  = $this->getClipFilename($file);
+        $outputFile = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
         FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
+            // $rename = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
+            // (new SfSystem)->rename($outputFile, $rename, false);
+
             // if (! Chooser::changes(' Overwrite File ' . basename($outputFile), 'overwrite', __LINE__)) {
             return;
             // }
         }
+        // $outputFile = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
+
+        // if (file_exists($outputFile)) {
+        //     //  $rename = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
+        //     // (new SfSystem)->rename($outputFile, $rename, false);
+        //     // if (! Chooser::changes(' Overwrite File ' . basename($outputFile), 'overwrite', __LINE__)) {
+        //     return;
+        //     // }
+        // }
 
         $cmdOptions = [
             '-v', 'debug',

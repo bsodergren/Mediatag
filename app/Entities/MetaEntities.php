@@ -5,6 +5,7 @@ namespace Mediatag\Entities;
 use Mediatag\Entities\Tags\Episode;
 use Mediatag\Entities\Tags\Movie;
 use Mediatag\Entities\Tags\Scene;
+use Nette\Utils\Arrays;
 use Symfony\Component\Finder\Finder;
 
 class MetaEntities
@@ -84,7 +85,7 @@ class MetaEntities
 
     public static function CheckForTvParams($file)
     {
-        $params = null;
+        $params = [];
         if (! is_null($file)) {
             $scene = Scene::isScene($file);
             if (count($scene) > 0) {
@@ -95,11 +96,17 @@ class MetaEntities
                 $Movie  = Movie::isMovie($file);
                 $params = array_merge($scene, $episode, $Movie);
             }
-            if ($params['episode'] == '264') {
-                $params = null;
+
+            // utmdump([$params, Arrays::get($params, 'episode', '264')]);
+
+            if (Arrays::get($params, 'episode', '264')) {
+                $params = [];
             }
         }
-        utmdump($params);
+        if (count($params) == 0) {
+            return null;
+        }
+        // utmdump($params);
 
         return $params;
     }
