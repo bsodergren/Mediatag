@@ -79,6 +79,7 @@ class MediaFile
         ];
 
         Mediatag::notice('Getting Video Data {video}', ['video' => $this->video]);
+        utmdump($this->video);
 
         return $this->video;
     }

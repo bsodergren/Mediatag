@@ -179,9 +179,10 @@ class Reader extends TagReader
                 // } else {
             }
         }
+        utmdump([$method, $this->tag_array]);
 
         return null;
-        // // utmdump([$method,$this->tag_array]);
+        // //
     }
 
     public function mapStudio($studio)

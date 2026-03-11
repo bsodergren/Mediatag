@@ -58,8 +58,11 @@ trait Helper
 
             $fs        = new File($file);
             $videoData = $fs->get();
-            $fileObj   = new fileReader($videoData);
-            $filename  = $fileObj->getFilename($file);
+            // utmdump($videoData);
+            $fileObj  = new fileReader($videoData);
+            $filename = $fileObj->getFilename($file);
+            utmdump($filename);
+
             if ($filename !== null) {
                 $file    = $filename;
                 $newName = $file;
@@ -67,8 +70,9 @@ trait Helper
 
             if (Option::isTrue('lowercase')) {
                 $video_key = MediaFile::getVideoKey($file);
-                preg_match('/(.*)(-p?h?[a-z0-9]{5,}).(.*)/i', $file, $output_array);
-                $newName = $output_array[1] . '-' . $video_key . '.' . $output_array[3];
+                if (preg_match('/(.*)(-p?h?[a-z0-9]{5,}).(.*)/i', $file, $output_array)) {
+                    $newName = $output_array[1] . '-' . $video_key . '.' . $output_array[3];
+                }
             }
             $newName    = $this->cleanFilename($newName);
             $backupName = str_replace('XXX', 'XXX/backup', $oldName);
