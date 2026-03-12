@@ -59,7 +59,7 @@ foreach ($commandClasses as $className) {
     $Command = new $className;
 
     // utmdd($Command);
-    $application->add($Command);
+    $application->addCommand($Command);
 
     if ($Command::$SingleCommand === true) {
         // utmdd($Command::$SingleCommand);

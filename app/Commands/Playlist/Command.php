@@ -12,6 +12,9 @@ use Symfony\Component\Console\Command\Command as SymCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+const DESCRIPTION = 'download PH Playlist';
+const NAME        = 'playlist';
+
 #[AsCommand(name: 'playlist', description: 'download PH Playlist')]
 final class Command extends MediaCommand
 {

@@ -29,7 +29,7 @@ trait CommandExecute
 
         $class     = static::class;
         $arguments = $input->getArguments();
-        utmdump($arguments);
+        // utmdump($arguments);
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
 
@@ -49,8 +49,10 @@ trait CommandExecute
         }
 
         $class = self::getProcessClass();
+        // utmdd($class);
         // utmdd(self::$optionArg);
         $Process = new $class($input, $output, self::$optionArg);
+
         // $this->Handlers = $Process->Handlers;
 
         // $Process->completionHandlers = $this->setCompletionHandler();

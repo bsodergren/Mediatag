@@ -65,6 +65,8 @@ class Youtube extends MediatagExec
         'srt',
         '--sub-langs',
         'en',
+        '--referer',
+        'https://www.pornhub.com',
     ];
 
     // private $jsonoptions = [
@@ -183,8 +185,8 @@ class Youtube extends MediatagExec
         }
 
         // utmdd($options, Option::getOptions());
-        // $playlist_opt = ['-a', $this->playlist];
-        $playlist_opt = [$this->download_url];
+        $playlist_opt = ['-a', $this->playlist];
+        // $playlist_opt = [$this->download_url];
 
         if (Option::istrue('url')) {
             $playlist_opt = [Option::getValue('url')];
@@ -214,30 +216,30 @@ class Youtube extends MediatagExec
         Mediatag::$output->writeln('<info> Downloaded new Playlist </info>');
 
         $this->downloadFiles = $downloadFiles;
-        // $this->num_of_lines  = 100;
+        $this->num_of_lines  = 100;
 
-        // if (! Option::istrue('url')) {
-        //     $names = file($this->playlist);
-        //     // utmdd($names);
-        //     if (Option::istrue('max')) {
-        //         $this->num_of_lines = (int) Option::getValue('max', true);
-        //     } else {
-        //         $this->num_of_lines = count($names) + 1;
-        //     }
+        if (! Option::istrue('url')) {
+            $names = file($this->playlist, FILE_SKIP_EMPTY_LINES);
+            // utmdd($names);
+            if (Option::istrue('max')) {
+                $this->num_of_lines = (int) Option::getValue('max', true);
+            } else {
+                $this->num_of_lines = count($names) + 1;
+            }
 
-        //     if (! str_contains('premium', $this->playlist)) {
-        //         $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
-        //         Filesystem::backupPlaylist($this->premium);
-        //     }
+            if (! str_contains('premium', $this->playlist)) {
+                $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
+                Filesystem::backupPlaylist($this->premium);
+            }
 
-        //     if (! str_contains('model_hub', $this->playlist)) {
-        //         $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
-        //         Filesystem::backupPlaylist($this->model_hub);
-        //     }
+            if (! str_contains('model_hub', $this->playlist)) {
+                $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
+                Filesystem::backupPlaylist($this->model_hub);
+            }
 
-        //     // } else {
-        //     //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
-        // }
+            // } else {
+            //     $callback = Callback::check([$this->LibraryClass, 'watchlistCallback']);
+        }
 
         $this->LibraryClass->init($this);
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);

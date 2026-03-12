@@ -54,7 +54,7 @@ trait Helper
         $this->youtube->run($this->playlist)->createWatchList($this->url);
     }
 
-    public function dodownloadPlaylist()
+    public function dddodownloadPlaylist()
     {
         $this->youtube->playlist = $this->playlist;
         $fileArray               = file($this->playlist);
@@ -83,13 +83,13 @@ trait Helper
         $this->docompactPlaylist();
     }
 
-    public function ddodownloadPlaylist()
+    public function dodownloadPlaylist()
     {
         // utminfo(func_get_args());
-        foreach (file($this->playlist) as $download_url) {
-            utmdump($download_url);
-        }
-        utmdd($download_url);
+        // foreach (file($this->playlist) as $download_url) {
+        //     utmdump($download_url);
+        // }
+        // utmdd($download_url);
         $this->youtube->run($this->playlist)->downloadPlaylist();
         $this->premiumIds = $this->youtube->premiumIds;
         $this->secondRun  = true;

@@ -47,7 +47,7 @@ require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;
 Debug::$PrettyLogs  = false;
-Debug::$RealTimeLog = true;
+Debug::$RealTimeLog = false;
 
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');

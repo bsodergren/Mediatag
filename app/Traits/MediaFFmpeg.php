@@ -54,7 +54,7 @@ trait MediaFFmpeg
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
 
-        MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
+        // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
         if ($this->progress !== null) {
             if (preg_match('/frame=\s([0-9.]+)/', $buffer, $output_array)) {
                 $frame              = $output_array[1];
@@ -77,7 +77,7 @@ trait MediaFFmpeg
     public function Outputdebug($type, $buffer)
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
-        MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
+        // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
 
         if ($this->progress !== null) {
             $this->progress->advance();
@@ -92,7 +92,7 @@ trait MediaFFmpeg
 
         $process = new Process($command);
         $process->setTimeout(null);
-        MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine() . PHP_EOL);
+        // MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine() . PHP_EOL);
 
         // utmdump($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
@@ -141,7 +141,7 @@ trait MediaFFmpeg
 
     public function ffmpegExec($cmdOptions, $callback = null)
     {
-        FileSystem::delete($this->ffmpeg_log);
+        // FileSystem::delete($this->ffmpeg_log);
 
         return $this->ffExec(CONFIG['FFMPEG_CMD'], $cmdOptions, $callback);
     }

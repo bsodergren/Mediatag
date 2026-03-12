@@ -191,7 +191,8 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-        // utmdump(explode("' '", $this->runCommand));
+        // utmdd($this->runCommand);
+        // utmdd($callback);
         $process->start();
         try {
             // $process->mustRun($callback);

@@ -150,7 +150,7 @@ define('__LIMIT_CRON_QUERY__', 1000);
 
 define('__CACHE_TIMEOUT__', 240);
 
-define('__TIMER_LOG__', true);
+define('__TIMER_LOG__', false);
 define('__TIMER_DISPLAY__', false);
 
 const PHP_DBL = \PHP_EOL . \PHP_EOL;

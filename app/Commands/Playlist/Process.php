@@ -123,13 +123,14 @@ class Process extends Mediatag
 
     public $VideoList;
 
-    protected $useFuncs = ['addMeta', 'setupMap'];
+    // protected $useFuncs = ['addMeta', 'setupMap'];
+    protected $useFuncs = ['setupMap', 'setupDb'];
 
-    public function __construct(InputInterface $input, OutputInterface $output, $file = null)
+    public function __construct(InputInterface $input, OutputInterface $output)
     {
         // utminfo(func_get_args());
 
-        define('USE_SEARCH', true);
+        define('USE_SEARCH', false);
 
         // if (count($file) == 0) {
         if (Option::isFalse('file')) {
@@ -148,9 +149,9 @@ class Process extends Mediatag
         }
 
         parent::boot($input, $output);
-        utmdd(Option::getOptions());
-        $this->setupFormat();
-        $this->setupDb();
+        // utmdd(Option::getOptions());
+        // $this->setupFormat();
+        // $this->setupDb();
 
         if (! is_dir(__PLEX_PL_TMP_DIR__)) {
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);

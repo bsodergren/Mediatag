@@ -39,7 +39,7 @@ trait FilterMethods
             $buffer = MediatagExec::cleanBuffer($buffer);
         }
 
-        $this->line_id = $line_id;
+        $this->line_id = $line_id . ' ';
         $this->command = $command;
         $method        = 'download' . $command;
 
@@ -85,7 +85,7 @@ trait FilterMethods
         VideoDownloader::LogBuffer('downloadExists = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return $this->line_id . '<error>' . $this->key . ' Already been downloaded </error>' . PHP_EOL;
+        return $this->line_id . ' <error>' . $this->key . ' Already been downloaded </error>' . PHP_EOL;
     }
 
     public function downloadError($buffer)
@@ -93,7 +93,7 @@ trait FilterMethods
         VideoDownloader::LogBuffer('downloadError = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return '<error>' . $buffer . '</error>';
+        return ' <error>' . $buffer . '</error>';
     }
 
     public function downloadFixupM3u8($buffer)

@@ -58,7 +58,7 @@ trait YtdlpCallBacks
                 }
             }
         }
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/json_' . $this->key . '.log', $buffer . PHP_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/json_' . $this->key . '.log', $buffer . PHP_EOL);
 
         switch ($buffer) {
             // case str_contains($buffer, 'ERROR:'):

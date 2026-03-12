@@ -8,9 +8,9 @@ namespace Mediatag\Commands\Playlist;
 
 trait Lang
 {
-    public const CMD_DESCRIPTION = DESCRIPTION;
+    // public const CMD_DESCRIPTION = DESCRIPTION;
 
-    public const CMD_NAME = NAME;
+    // public const CMD_NAME = NAME;
 
     public const L__PLAYLIST_MAX = 'Max items to download from playlist';
 

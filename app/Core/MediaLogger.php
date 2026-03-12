@@ -336,6 +336,6 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             $logfile = $this->debugLogFile();
         }
 
-        file_put_contents($logfile, $text . PHP_EOL, FILE_APPEND);
+        //file_put_contents($logfile, $text . PHP_EOL, FILE_APPEND);
     }
 }
