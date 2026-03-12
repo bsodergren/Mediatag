@@ -150,7 +150,7 @@ class Reader extends TagReader
                 // // utmdump(['artist', $this->json_array['cast']]);
             }
 
-            // utmdump($this->json_array);
+            //
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];
                 if ($tag == 'studio') {
@@ -205,7 +205,6 @@ class Reader extends TagReader
         if (file_exists($this->json_file)) {
             $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);
             // if ($this->video_key == 'ph5e8649773f814') {
-            //     utmdd($this->json_string);
             // }
 
             if ($this->json_string == '') {

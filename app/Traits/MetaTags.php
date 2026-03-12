@@ -227,7 +227,7 @@ trait MetaTags
             $delim = '';
         }
         if ($tag == 'genre') {
-            utmdd($first . $delim . $second);
+            // utmdd($first . $delim . $second);
 
             return $first . $delim . $second;
         }

@@ -179,7 +179,7 @@ class Reader extends TagReader
                 // } else {
             }
         }
-        utmdump([$method, $this->tag_array]);
+        // utmdump([$method, $this->tag_array]);
 
         return null;
         // //

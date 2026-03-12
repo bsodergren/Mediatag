@@ -32,18 +32,18 @@ class Process extends Mediatag
 
     public $textSection;
 
-    public $commandList = [
-        'json'    => [
-            'jSonCache' => null,
-        ],
-        'convert' => [
-            'convertVideos' => null,
-        ],
-    ];
+    // public $commandList = [
+    //     'json'    => [
+    //         'jSonCache' => null,
+    //     ],
+    //     'convert' => [
+    //         'convertVideos' => null,
+    //     ],
+    // ];
 
-    public $defaultCommands = [
-        'moveDownloads' => null,
-    ];
+    // public $defaultCommands = [
+    //     'moveDownloads' => null,
+    // ];
 
     private $filesToRemove = [];
 
@@ -62,6 +62,6 @@ class Process extends Mediatag
         } else {
             parent::boot($input, $output);
         }
-        $this->addMeta();
+        // $this->addMeta();
     }
 }

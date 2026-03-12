@@ -17,4 +17,17 @@ final class Command extends MediaCommand
     public const USE_SEARCH = false;
 
     public const USE_LIBRARY = false;
+
+    public $command = [
+        'json'     => [
+            'jSonCache' => null,
+        ],
+        'convert'  => [
+            'convertVideos' => null,
+        ],
+
+        'download' => [
+            'moveDownloads' => null,
+        ],
+    ];
 }

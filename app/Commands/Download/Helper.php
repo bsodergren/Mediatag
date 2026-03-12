@@ -82,7 +82,6 @@ trait Helper
     {
         // utminfo(func_get_args());
         $file_array = (new MediaFinder)->Search(getcwd(), '*.mp4', exit: false);
-
         $this->moveJson();
         // $this->moveCaption();
 
@@ -255,7 +254,7 @@ trait Helper
                 if (! file_exists($file)) {
                     Mediatag::$output->writeLn('<info>  file ' . $file . ' doesnt exist?</info>');
                 }
-                NetteFile::delete($file);
+                // NetteFile::delete($file);
                 //$ret = Mediatag::$filesystem->remove($file);
             }
         }

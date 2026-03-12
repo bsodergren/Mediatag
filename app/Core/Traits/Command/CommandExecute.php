@@ -62,7 +62,6 @@ trait CommandExecute
         if (array_key_exists('command', $arguments)) {
             $method = $arguments['command'];
         }
-        utmdump($method);
         $Process->$method();
 
         if ($originalCommand !== null) {

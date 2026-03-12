@@ -79,7 +79,7 @@ class MediaFile
         ];
 
         Mediatag::notice('Getting Video Data {video}', ['video' => $this->video]);
-        utmdump($this->video);
+        // utmdump($this->video);
 
         return $this->video;
     }
@@ -205,11 +205,17 @@ class MediaFile
 
         $filesystem   = new SFilesystem;
         $in_directory = $filesystem->makePathRelative($directory, __PLEX_HOME__);
-
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+
+        // utmdd($match);
+
         // utmdd(__LIBRARIES__);
         if (Arrays::contains(__LIBRARIES__, $match[1])) {
             $this->video_library = $match[1];
+        }
+
+        if (Arrays::contains(__LIBRARIES__, $match[2])) {
+            $this->video_library = $match[2];
         }
 
         return $this->video_library;
@@ -331,12 +337,13 @@ class MediaFile
     public static function isPornhubfile($filename)
     {
         // utminfo(func_get_args());
+        $library = '';
 
         $filesystem   = new SFilesystem;
         $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
-
+        // utmdd($in_directory, $match);
         if (Arrays::contains(__LIBRARIES__, $match[1])) {
             $library = $match[1];
         }

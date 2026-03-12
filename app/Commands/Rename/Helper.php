@@ -58,10 +58,9 @@ trait Helper
 
             $fs        = new File($file);
             $videoData = $fs->get();
-            // utmdump($videoData);
-            $fileObj  = new fileReader($videoData);
-            $filename = $fileObj->getFilename($file);
-            utmdump($filename);
+            $fileObj   = new fileReader($videoData);
+            $filename  = $fileObj->getFilename($file);
+            // utmdd($file);
 
             if ($filename !== null) {
                 $file    = $filename;

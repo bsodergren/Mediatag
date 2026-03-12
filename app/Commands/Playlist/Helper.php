@@ -172,7 +172,7 @@ trait Helper
         // $archive_content = array_merge($archive_content, $archive_ids);
         // $archive_array   = array_unique($archive_content);
         $archive_array = array_unique($archive_ids);
-
+        utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
         return 0;
@@ -232,6 +232,7 @@ trait Helper
                     $archive_array[] = $line;
                 }
             }
+            utmdump(__METHOD__);
             Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
             $files = Finder::Find('*' . $current_key . '*', __PLEX_DOWNLOAD__, exit: false);
@@ -341,6 +342,7 @@ trait Helper
             }
         }
 
+        utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE . '.new', $newids);
         if (count($playlist) > 0) {
             Filesystem::writeFile(self::PLAYLIST . '.new', $playlist);
