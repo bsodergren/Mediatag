@@ -111,6 +111,7 @@ class VideoFileInfo extends VideoInfo
         // $videoInfo = MediaCache::get($cacheKey);
 
         // if (false === $videoInfo) {
+        //   utmdd(self::getVideoDetails());
         $mediaInfo          = new MediaInfo;
         $mediaInfoContainer = $mediaInfo->getInfo($file);
         $videos             = $mediaInfoContainer->getVideos();

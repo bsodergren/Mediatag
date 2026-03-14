@@ -111,7 +111,6 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        // utmdump($tag);
         $tag = strtolower($tag);
         if ($tag == 'genre') {
             $this->getJsonValue($tag, ['tags', 'categories']);
@@ -138,6 +137,9 @@ class Reader extends TagReader
                 ]
             );
         }
+        if ($tag == 'actiontags') {
+            $this->getJsonValue($tag, ['actionTags']);
+        }
     }
 
     private function getJsonValue($tag, $keyList = [], $options = [])
@@ -145,11 +147,11 @@ class Reader extends TagReader
         if (! is_array($keyList)) {
             $keyList[] = $keyList;
         }
+
         foreach ($keyList as $json_key) {
             if ($tag == 'artist') {
                 // // utmdump(['artist', $this->json_array['cast']]);
             }
-
             //
             if (array_key_exists($json_key, $this->json_array)) {
                 $value = $this->json_array[$json_key];

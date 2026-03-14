@@ -49,6 +49,7 @@ trait YtdlpCallBacks
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
 
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/metadata_' . $this->video_key . '.log', $buffer . PHP_EOL);
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
@@ -61,16 +62,17 @@ trait YtdlpCallBacks
         // MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/json_' . $this->key . '.log', $buffer . PHP_EOL);
 
         switch ($buffer) {
-            // case str_contains($buffer, 'ERROR:'):
-            //     $this->yt_json_string = null;
-            //     // return $this->error($buffer,$this->num_of_lines,$matches[3]);
-            //     return null;
-            //     break;
+            case str_contains($buffer, 'ERROR:'):
+                $this->yt_json_string = null;
+                 $this->yt_error_string = $buffer;
+                // return $this->error($buffer,$this->num_of_lines,$matches[3]);
+                return null;
+                break;
 
             case str_contains($buffer, '[info]'):
                 if (str_contains($buffer, 'as JSON')) {
                     $this->yt_json_string = $buffer;
-                    Mediatag::$Console->writeln($buffer);
+                   // Mediatag::$Console->writeln($buffer);
                 }
                 break;
             case str_contains($buffer, 'Upgrade now'):

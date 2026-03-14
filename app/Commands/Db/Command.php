@@ -9,7 +9,7 @@ namespace Mediatag\Commands\Db;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'db', description: 'Add files to Database', aliases: ['update', 'json'])]
+#[AsCommand(name: 'db', description: 'Add files to Database', aliases: ['update'])]
 final class Command extends MediaCommand
 {
     public const USE_LIBRARY = true;
@@ -25,10 +25,6 @@ final class Command extends MediaCommand
             'execUpdate' => null,
             // 'exec' => null,
         ],
-        'json'   => [
-            // 'init'    => null,
-            // 'exec'    => null,
-            'getJson' => null,
-        ],
+
     ];
 }

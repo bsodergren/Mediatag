@@ -117,7 +117,6 @@ class Youtube extends MediatagExec
             $class              = 'Pornhub';
         }
 
-        // utmdump($this->download_url, $class);
         if (str_contains($class, 'pornhub')) {
             $class = 'Pornhub';
         }
@@ -250,6 +249,7 @@ class Youtube extends MediatagExec
 
     public function youtubeGetJson($video_key)
     {
+        $json_file = null;
         // utminfo(func_get_args());
         if ($this->library != 'Pornhub') {
             return null;
@@ -257,21 +257,19 @@ class Youtube extends MediatagExec
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
         $options   = array_merge($options, ['--skip-download']);
-        $video_url = strtolower('http://www.pornhub.com/video/show?viewkey=' . $video_key);
+        $video_url = strtolower('https://www.pornhub.com/view_video.php?viewkey=' . $video_key);
         //648719015
         $command = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
         $this->exec($command, $callback);
+
         preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
-        $json_file = $this->yt_error_string;
 
         if (array_key_exists(1, $output_array)) {
             $json_file = $output_array[1];
             $this->moveJson($json_file);
         }
-        // UtmDd($json_file,$this->yt_json_string);
-
         return $json_file;
     }
 
@@ -296,6 +294,8 @@ class Youtube extends MediatagExec
 
         $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
 
+        // utmdd(['json'      => [$json_file, Mediatag::$filesystem->exists($json_file)],
+        //     'newJson_file' => [$newJson_file, Mediatag::$filesystem->exists($newJson_file)]]);
         if (Mediatag::$filesystem->exists($json_file)) {
             if (! Mediatag::$filesystem->exists($newJson_file)) {
                 if (Option::istrue('test')) {

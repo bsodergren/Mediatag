@@ -207,16 +207,13 @@ class MediaFile
         $in_directory = $filesystem->makePathRelative($directory, __PLEX_HOME__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
-        // utmdd($match);
-
         // utmdd(__LIBRARIES__);
         if (Arrays::contains(__LIBRARIES__, $match[1])) {
             $this->video_library = $match[1];
-        }
-
-        if (Arrays::contains(__LIBRARIES__, $match[2])) {
+        } elseif (Arrays::contains(__LIBRARIES__, $match[2])) {
             $this->video_library = $match[2];
         }
+        // utmdd($this->video_library);
 
         return $this->video_library;
     }

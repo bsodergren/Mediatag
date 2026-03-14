@@ -337,11 +337,16 @@ class Storage extends MysqliDb
                 return null;
             }
         }
+
+        $dupCols = array_keys($fieldArray);
+        // utmdd($dupCols);
         //     unset();
         // }
 
-        $this->dbConn->onDuplicate($fieldArray, 'id');
+        $this->dbConn->onDuplicate($dupCols, 'id');
         $id = $this->dbConn->insert($table, $data);
+
+        utmdump($this->dbConn->getLastQuery());
         // } catch (\Exception $e) {
 
         // }
