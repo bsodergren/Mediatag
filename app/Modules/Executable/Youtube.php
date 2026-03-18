@@ -302,7 +302,8 @@ class Youtube extends MediatagExec
                     $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
                     Mediatag::$output->writeln($out);
                 } else {
-                    Mediatag::$filesystem->copy($json_file, $newJson_file, false);
+                    // utmdump([$json_file, $newJson_file, true]);
+                    Filesystem::renameFile($json_file, $newJson_file, true);
                 }
             }
 

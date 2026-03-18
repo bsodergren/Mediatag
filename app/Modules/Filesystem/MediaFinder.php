@@ -473,7 +473,7 @@ class MediaFinder extends SFinder
                 }
             }
         }
-        utmdump($New_Array);
+        // utmdump($New_Array);
         if (count($New_Array) > 0) {
             return $New_Array;
         } else {

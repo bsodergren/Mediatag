@@ -135,7 +135,7 @@ trait FilterMethods
     {
         $archive_content = Filesystem::readLines($file);
         array_push($archive_content, $line);
-        array_unique($archive_content);
+        $archive_content = array_unique($archive_content);
         Filesystem::writeFile($file, $archive_content, false);
         // utmdump($archive_content);
     }

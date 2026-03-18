@@ -15,6 +15,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Mediatag\Traits\DynamicProperty;
@@ -48,6 +49,8 @@ class Process extends Mediatag
     // use PreviewHelper;
     // use SubHelper;
     use Translate;
+
+    public $dbConn;
 
     protected $useFuncs = ['addMeta'];
 
@@ -91,7 +94,7 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-
+        $this->dbConn = new Storage;
         //
         //parent::$SearchArray;
     }
@@ -107,7 +110,6 @@ class Process extends Mediatag
         //
 
         $this->allDbFiles = parent::$dbconn->getAllDbFiles();
-        // utmdd($this->allDbFiles);
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);

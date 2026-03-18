@@ -110,15 +110,20 @@ class StorageDB extends Storage
     }
 
     // end init()
-    public function getDbFileList()
+    public function getDbFileList($where = '')
     {
         // utminfo(func_get_args());
 
-        $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
+        // $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
         $fileListArray = [];
 
-        $query   = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
+        $query = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key") . $where;
+        if (Option::isTrue('max')) {
+            $query .= ' LIMIT  ' . Option::getValue('max');
+        }
+
         $results = $this->query($query);
+
         foreach ($results as $key => $arr) {
             if ($arr['fullpath'] === null) {
                 continue;
@@ -371,6 +376,12 @@ class StorageDB extends Storage
         // Mediatag::$Display->VideoInfoSection->writeln('');
         // $o = (new VideoTags)->getVideoInfo($this->video_key, $this->video_file);
         // utmdd($o);
+    }
+
+    public function updatedJson($key, $value)
+    {
+        $sql = "UPDATE `mediatag_video_file` SET `updatedJson` = '" . $value . "' WHERE `mediatag_video_file`.`video_key` = '" . $key . "'";
+        $ret = self::$DB->rawQuery($sql);
     }
 
     public function updateDBEntry($key, $videoData, $all = true)
