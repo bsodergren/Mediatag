@@ -26,6 +26,7 @@ class Options extends MediaOptions
         return [
             ['json', 'j', InputOption::VALUE_NONE, self::text('L__DOWNLOAD_MOVE')],
             ['convert', '', InputOption::VALUE_NONE, self::text('L__DOWNLOAD_CONVERT')],
+            ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
         ];
     }
 }

@@ -57,7 +57,7 @@ trait Helper
     public function dddodownloadPlaylist()
     {
         $this->youtube->playlist = $this->playlist;
-        $fileArray               = file($this->playlist);
+        $fileArray               = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         $count                   = count($fileArray);
 
         foreach ($fileArray as $i => $download_url) {
@@ -371,7 +371,7 @@ trait Helper
             $before = count($f);
 
             $idCnt = count($this->ids);
-            // utmdd([$before,$idCnt]);
+            // utmdd([$before, $idCnt]);
             if ($before > 0) {
                 $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
                 $array = array_unique($array);
@@ -445,7 +445,6 @@ trait Helper
             }
         }
 
-        // utmdd([$line,$ph_id]);
         if (! in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
                 return $line;

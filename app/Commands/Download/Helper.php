@@ -88,7 +88,8 @@ trait Helper
         if ($file_array !== null) {
             foreach ($file_array as $key => $file) {
                 $videoInfo = File::file($file);
-
+                utmdump($videoInfo);
+                $out       = '';
                 $ytdl_file = $videoInfo['video_file'] . '.ytdl';
                 $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);
                 if (file_exists($ytdl_file)) {
@@ -106,6 +107,7 @@ trait Helper
                 Mediatag::$output->writeln($out);
             }
         }
+        // utmdd('f');
         if (count($this->newFiles) > 0) {
             $ScriptWriter = new ScriptWriter('addedFiles.sh', __PLEX_HOME__ . '/Pornhub');
             $ScriptWriter->addCmd('update', ['-f']);
@@ -137,6 +139,7 @@ trait Helper
                 $key          = $row['key'];
                 $json_file    = $row['src'];
                 $newJson_file = __JSON_CACHE_DIR__ . '/' . $key . '.info.json';
+
                 if (! Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
@@ -145,8 +148,14 @@ trait Helper
                         Mediatag::$filesystem->rename($json_file, $newJson_file, false);
                     }
                 } else {
-                    $this->filesToRemove[] = $json_file;
-                    $out                   = '<question>' . basename($newJson_file) . ' already exists</question>';
+                    if (Option::istrue('overwrite')) {
+                        $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
+
+                        Mediatag::$filesystem->rename($json_file, $newJson_file, true);
+                    } else {
+                        $this->filesToRemove[] = $json_file;
+                        $out                   = '<question>' . basename($newJson_file) . ' already exists</question>';
+                    }
                     Mediatag::$output->writeln($out);
                 }
             }
@@ -247,15 +256,17 @@ trait Helper
         // utminfo(func_get_args());
 
         $go = Chooser::changes('Remove Duplicate files');
+        if ($go == 'overwrite') {
+        }
 
-        if ($go == true) {
+        if ($go === true) {
             foreach ($this->filesToRemove as $file) {
                 Mediatag::$output->writeLn('<info> removing file ' . basename($file) . '</info>');
                 if (! file_exists($file)) {
                     Mediatag::$output->writeLn('<info>  file ' . $file . ' doesnt exist?</info>');
                 }
                 // NetteFile::delete($file);
-                //$ret = Mediatag::$filesystem->remove($file);
+                $ret = Mediatag::$filesystem->remove($file);
             }
         }
     }

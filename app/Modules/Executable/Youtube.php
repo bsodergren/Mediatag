@@ -110,7 +110,7 @@ class Youtube extends MediatagExec
 
         if (is_file($class)) {
             $this->playlist = $class;
-            $st_array       = file($this->playlist);
+            $st_array       = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             $class          = $st_array[0];
         } else {
             $this->download_url = $class;
@@ -218,8 +218,7 @@ class Youtube extends MediatagExec
         $this->num_of_lines  = 100;
 
         if (! Option::istrue('url')) {
-            $names = file($this->playlist, FILE_SKIP_EMPTY_LINES);
-            // utmdd($names);
+            $names = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);
             } else {
@@ -270,6 +269,7 @@ class Youtube extends MediatagExec
             $json_file = $output_array[1];
             $this->moveJson($json_file);
         }
+
         return $json_file;
     }
 

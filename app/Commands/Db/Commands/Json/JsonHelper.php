@@ -76,14 +76,14 @@ trait JsonHelper
                 // utmdd($json_file, Mediatag::$filesystem->exists($json_file));
 
                 if (Mediatag::$filesystem->exists($json_file)) {
-                    utmdump(['json file exists' => $json_file]);
+                    // utmdump(['json file exists' => $json_file]);
                     if (filesize($json_file) < 1024) {
-                        utmdump(['delete file file' => $json_file]);
+                        // utmdump(['delete file file' => $json_file]);
                         MediaFilesystem::delete($json_file);
                     } else {
                         $backupFile = __JSON_CACHE_DIR__ . '/prev/' . $json_key . '.info.json';
                         MediaFilesystem::renameFile($json_file, $backupFile, false);
-                        utmdump(['backupFile file' => $backupFile]);
+                        // utmdump(['backupFile file' => $backupFile]);
                     }
                 }
                 if (! Mediatag::$filesystem->exists($json_file)) {
@@ -137,7 +137,7 @@ trait JsonHelper
             if (is_null($res)) {
                 parent::$output->writeln('<id>Updating markers  for ' . basename($videoInfo['video_file']) . '</id>');
                 $dbConn->insert(__MYSQL_VIDEO_CHAPTER__, $data);
-                utmdump($dbConn->getLastQuery());
+                // utmdump($dbConn->getLastQuery());
             }
         }
 

@@ -346,7 +346,7 @@ class Storage extends MysqliDb
         $this->dbConn->onDuplicate($dupCols, 'id');
         $id = $this->dbConn->insert($table, $data);
 
-        utmdump($this->dbConn->getLastQuery());
+        // utmdump($this->dbConn->getLastQuery());
         // } catch (\Exception $e) {
 
         // }

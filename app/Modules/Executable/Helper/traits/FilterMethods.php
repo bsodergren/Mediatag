@@ -12,6 +12,7 @@ use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Utilities\Strings;
 
 use function array_key_exists;
@@ -125,8 +126,18 @@ trait FilterMethods
     public function updateIdList($keyfile)
     {
         // utminfo(func_get_args());
+
         $id = $this->KeyPrefix . ' ' . $this->key;
         file_put_contents($keyfile, PHP_EOL . $id . PHP_EOL, FILE_APPEND);
+    }
+
+    private function writeidList($file, $line)
+    {
+        $archive_content = Filesystem::readLines($file);
+        array_push($archive_content, $line);
+        array_unique($archive_content);
+        Filesystem::writeFile($file, $archive_content, false);
+        // utmdump($archive_content);
     }
 
     public function updatePlaylist($type, $file = null)
@@ -177,6 +188,12 @@ trait FilterMethods
                 // $ret = file_put_contents(PlaylistProcess::NOTFOUND, $url . PHP_EOL, FILE_APPEND);
                 // $this->updateIdList(PlaylistProcess::DISABLED);
 
+                break;
+            case '404':
+                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                // Mediatag::$Console->writeln($url);
+                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                $this->writeidList($file, $url);
                 break;
             default:
                 $url = $type . '=>' . 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;

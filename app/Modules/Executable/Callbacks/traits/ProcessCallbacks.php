@@ -35,7 +35,7 @@ trait ProcessCallbacks
     public function WriteMetaOutput($type, $buffer)
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata_" . $this->video_key . ".log", $buffer . PHP_EOL);
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . '/metadata_' . $this->video_key . '.log', $buffer . PHP_EOL);
 
         if ($type === Process::ERR) {
             $this->errors .= $buffer;
@@ -50,6 +50,8 @@ trait ProcessCallbacks
                 // UTMlog::logWarning('Writing Metadata', $buffer);
                 // UTMlog::logWarning('Writing Metadata', $this->video_file);
             } elseif (str_contains($buffer, 'Progress')) {
+                //  $buffer = trim($buffer) . "\n";
+
                 if (Option::isFalse('no-progress')) {
                     $this->Display->processOutput->overwrite($buffer);
                 }

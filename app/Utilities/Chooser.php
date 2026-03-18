@@ -77,7 +77,7 @@ class Chooser
         }
 
         $ask      = new QuestionHelper;
-        $question = new Question(self::getQuestion($questionText) . ' yY|nN|A|N: ');
+        $question = new Question(self::getQuestion($questionText) . ' yY|nN|A|N|O: ');
         $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
 
         switch ($answer) {
@@ -99,6 +99,8 @@ class Chooser
 
             case 'Y':
                 return true;
+            case 'O':
+                return 'overwrite';
             default:
                 return false;
         }

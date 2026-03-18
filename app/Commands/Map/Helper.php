@@ -59,14 +59,14 @@ trait Helper
 
         $word = Option::getValue('word', 1);
 
-        $lines = file($this->wordDict);
+        $lines = file($this->wordDict, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
             if (str_contains($line, $word)) {
                 return false;
             }
         }
 
-        $lines = file($this->wordMap);
+        $lines = file($this->wordMap, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
             if (str_contains($line, $word)) {
                 return false;
