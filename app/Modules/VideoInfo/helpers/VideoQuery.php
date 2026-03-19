@@ -80,7 +80,7 @@ trait VideoQuery
 
         $where = implode(' AND ', $_where);
 
-        $query = "SELECT CONCAT(fullpath,'/',filename) as file_name, video_key, " . $this->thumbType . '  FROM ' . $this->VideoDataTable . ' WHERE ';
+        $query = "SELECT id, CONCAT(fullpath,'/',filename) as file_name, video_key, " . $this->thumbType . '  FROM ' . $this->VideoDataTable . ' WHERE ';
         $query = $query . $where;
 
         return $query;

@@ -105,6 +105,7 @@ trait VideoCleaner
         // utmdd($fileSearch );
         if ($delete === true) {
             foreach ($fileSearch as $k => $file) {
+                // utmdump($file);
                 unlink($file);
                 unset($fileSearch[$k]);
             }
@@ -181,7 +182,6 @@ trait VideoCleaner
             }
             $dblist[$row['id']] = $thumb;
         }
-        // utmdd([$dblist, $missing_mp4, $missing_thumb]);
 
         return [$dblist, $missing_mp4, $missing_thumb];
     }
