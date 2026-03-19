@@ -54,16 +54,16 @@ class Process extends Mediatag
 
     public $VideoList = [];
 
-    public $defaultCommands = [
-        'init' => null,
-        'exec' => null,
-    ];
+    // public $defaultCommands = [
+    //     'init' => null,
+    //     'exec' => null,
+    // ];
 
-    public $commandList = [
-        // 'info'         => ['execInfo' => null, 'checkClean' => null],
-        // 'update'       => ['execUpdate' => 'default'],
-        'empty' => ['execEmpty' => 'default'],
-    ];
+    // public $commandList = [
+    //     // 'info'         => ['execInfo' => null, 'checkClean' => null],
+    //     // 'update'       => ['execUpdate' => 'default'],
+    //     'empty' => ['execEmpty' => 'default'],
+    // ];
 
     private $count;
 
@@ -76,14 +76,14 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {
         // utminfo(func_get_args());
-        define('USE_SEARCH', true);
+        // define('USE_SEARCH', false);
         parent::boot($input, $output);
         parent::$dbconn = new GalleryStorageDB($input, $output);
     }
 
     public function exec($option = null)
     {
-        // utminfo(func_get_args());
+        // utmdd(func_get_args());
         $this->getFileArray();
         $this->removeDBEntry();
         $this->changeDBEntry();

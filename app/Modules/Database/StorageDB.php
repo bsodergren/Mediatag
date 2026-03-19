@@ -247,8 +247,10 @@ class StorageDB extends Storage
             __PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__,
         );
 
-        // utmdd($in_directory, $video_path, __PLEX_HOME__, __LIBRARY__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+        if (! array_key_exists(2, $match)) {
+            utmdd([$in_directory, $video_path, __PLEX_HOME__, __LIBRARY__, $match]);
+        }
 
         return $match[2];
     }

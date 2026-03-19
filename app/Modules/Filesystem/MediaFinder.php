@@ -283,13 +283,15 @@ class MediaFinder extends SFinder
      */
     public function Search($path = null, $search = null, $date = null, $exit = true)
     {
-        // utminfo(func_get_args());
+        // utmdd(func_get_args());
         $FileArray = [];
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();
             //
         } else {
-            $search     = self::FilterSearch($search);
+            // utmdump($search);
+            $search = self::FilterSearch($search);
+            // utmdump($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit);
         }
 
@@ -336,6 +338,7 @@ class MediaFinder extends SFinder
             $pattern = '/\\' . $pattern . '$/i';
             $pattern = self::FilterSearch($pattern);
         }
+        // utmdump($pattern);
 
         return $pattern;
     }
@@ -378,6 +381,7 @@ class MediaFinder extends SFinder
         // else {
         //     $finder->files()->in($path)->name($search)->sortByCaseInsensitiveName();
         // }
+        // utmdd($path, $search);
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
             $finder->date('> ' . $date);

@@ -169,7 +169,7 @@ trait MetaTags
 
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
-
+        // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
         if ($tag == 'studio') {
             $delim = '/';
@@ -265,7 +265,7 @@ trait MetaTags
         // utminfo(func_get_args());
 
         $method = 'priority' . $priority;
-
+        // utmdump([$tag, $first, $second]);
         $return = self::$method($first, $second, $tag);
 
         // if (null !== $firstCmp && $first != $second) {
@@ -323,7 +323,7 @@ trait MetaTags
 
     public static function clean($text, $tag)
     {
-        // utminfo(func_get_args());
+        // utmdump(func_get_args());
         if ($tag == 'genre') {
         }
         // UTMlog::Logger('Clean', [$tag, $text]);
@@ -373,9 +373,12 @@ trait MetaTags
             $value = $tagDB->{$method}($tagValue);
             if ($tag == 'genre') {
                 $newList[] = $tagValue;
+                // utmdump(['1' => $newList]);
             }
+
             if ($value !== false) {
                 $newList[] = $value;
+                // utmdump(['2' => $newList]);
             }
         }
         // if ($tag == 'studio') {
@@ -389,8 +392,10 @@ trait MetaTags
         //     $newList = array_diff($newList, $tmpList);
 
         // }
+        // utmdump(['3' => $newList]);
         $string = implode($delim, $newList);
-        $arr    = explode($delim, $string);
+        // utmdump(['4' => $string]);
+        $arr = explode($delim, $string);
         array_walk($arr, function (&$value) {
             $value = trim(ucwords($value));
         });

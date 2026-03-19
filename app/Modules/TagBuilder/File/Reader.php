@@ -231,9 +231,11 @@ class Reader extends TagReader
 
         $genre = '';
         if ($this->genre === null) {
-            $res      = $this->getFileTag('Genre');
+            $res      = $this->getFileTag('genre');
             $filename = dirname($this->video_file);
-            $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
+
+            $success = preg_match(__GENRE_REGEX__, $filename, $matches);
+            // utmdump([$success, $filename, $matches]);
             if ($success == true) {
                 $this->genre = $matches[1];
                 //  $genre = $matches[1];
@@ -248,7 +250,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         if ($this->title === null) {
-            $res = $this->getFileTag('Title');
+            $res = $this->getFileTag('title');
             if ($res !== false) {
                 $this->title = $res;
 
@@ -263,7 +265,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $res = $this->getFileTag('Artist');
+        $res = $this->getFileTag('artist');
         if ($res === false) {
             return null;
         }
