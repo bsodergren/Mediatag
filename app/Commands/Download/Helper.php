@@ -88,7 +88,7 @@ trait Helper
         if ($file_array !== null) {
             foreach ($file_array as $key => $file) {
                 $videoInfo = File::file($file);
-                utmdump($videoInfo);
+                // utmdump($videoInfo);
                 $out       = '';
                 $ytdl_file = $videoInfo['video_file'] . '.ytdl';
                 $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);

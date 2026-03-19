@@ -250,7 +250,7 @@ trait Helper
 
                 if (! Option::isTrue('test')) {
                     $color = 'fg=red';
-                    utmdump([__METHOD__, $oldName, $newName]);
+                    // utmdump([__METHOD__, $oldName, $newName]);
 
                     Filesystem::renameFile($oldName, $newName);
                     // } else {

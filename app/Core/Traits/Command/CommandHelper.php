@@ -46,7 +46,7 @@ trait CommandHelper
 
     //     $styleArray = Mediatag::$output->getFormatter()->getStyles();
 
-    //     utmdump(Mediatag::$output instanceof ConsoleOutputInterface);
+    //     // utmdump(Mediatag::$output instanceof ConsoleOutputInterface);
     //     if (Mediatag::$output instanceof ConsoleOutputInterface) {
     //         Mediatag::$output = $output->getErrorOutput();
     //         foreach ($styleArray as $name => $obj) {

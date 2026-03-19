@@ -78,7 +78,7 @@ class RotateProcess extends Process
         $video->save($format, $newVideoFile);
         Mediatag::$Display->BarSection2->writeln('<comment>Finished</>');
 
-        utmdump([$videoFile, $newVideoFile]);
+        // utmdump([$videoFile, $newVideoFile]);
         $this->backupOrigFile($videoFile, $newVideoFile, 'Rotates');
     }
 }

@@ -61,10 +61,10 @@ class PrivateVid extends Patterns
                     $artist = str_replace('__', '_', $artist);
                 }
                 $title = str_replace(' ', '_', $title);
-                utmdump([__LINE__, $filename, $title]);
+                // utmdump([__LINE__, $filename, $title]);
 
                 if (str_contains($filename, $title)) {
-                    utmdump([__LINE__, $filename, $title]);
+                    // utmdump([__LINE__, $filename, $title]);
 
                     return $file;
                 }
@@ -77,7 +77,7 @@ class PrivateVid extends Patterns
             }
         }
 
-        utmdump([__LINE__, $file, $oldFile]);
+        // utmdump([__LINE__, $file, $oldFile]);
 
         return $file;
         //  $title = get_class_vars(get_class($dbData));

@@ -50,7 +50,7 @@ trait Helper
         // $finder->files()->contains($string);
         // utmdump($finder);
         // foreach ($finder as $file) {
-        //     utmdump($file->getContents());
+        //     // utmdump($file->getContents());
         // }
     }
 

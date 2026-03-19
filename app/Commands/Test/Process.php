@@ -148,7 +148,7 @@ class Process extends Mediatag
 
         foreach ($files as $file) {
             $r = Movie::isMovie($file);
-            utmdump($r);
+            // utmdump($r);
         }
         //      (new MetaEntities)->init()->getCallbackArray();
         //MetaEntities::CreateCmdOption('Artist', 'frank jorge');

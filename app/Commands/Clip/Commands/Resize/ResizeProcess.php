@@ -94,7 +94,7 @@ class ResizeProcess extends Process
 
         // $height = $video->get('height');
 
-        utmdump($stream->all());
+        // utmdump($stream->all());
 
         return $dims;
     }

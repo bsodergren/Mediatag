@@ -87,7 +87,7 @@ trait Helper
     {
         // utminfo(func_get_args());
         // foreach (file($this->playlist) as $download_url) {
-        //     utmdump($download_url);
+        //     // utmdump($download_url);
         // }
         // utmdd($download_url);
         $this->youtube->run($this->playlist)->downloadPlaylist();
@@ -172,7 +172,7 @@ trait Helper
         // $archive_content = array_merge($archive_content, $archive_ids);
         // $archive_array   = array_unique($archive_content);
         $archive_array = array_unique($archive_ids);
-        utmdump(__METHOD__);
+        // utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
         return 0;
@@ -232,7 +232,7 @@ trait Helper
                     $archive_array[] = $line;
                 }
             }
-            utmdump(__METHOD__);
+            // utmdump(__METHOD__);
             Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
             $files = Finder::Find('*' . $current_key . '*', __PLEX_DOWNLOAD__, exit: false);
@@ -300,7 +300,7 @@ trait Helper
                 }
             }
         }
-        UtmDump($this->json_Array);
+        // UtmDump($this->json_Array);
         //        $archive_array = Filesystem::readLines(self::$ARCHIVE, [$this, 'parseArchive']);
         //        Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
@@ -342,7 +342,7 @@ trait Helper
             }
         }
 
-        utmdump(__METHOD__);
+        // utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE . '.new', $newids);
         if (count($playlist) > 0) {
             Filesystem::writeFile(self::PLAYLIST . '.new', $playlist);

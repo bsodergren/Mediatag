@@ -7,7 +7,9 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Utilities\Strings;
+use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
 
@@ -394,6 +396,9 @@ class Storage extends MysqliDb
         $die          = false;
         $where        = null;
         $where_clause = [];
+
+        $current_dir = (new Filesystem)->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
+        // utmdump($current_dir);
         switch ($query_cmd) {
             case 'select':
                 if ($search === null) {
@@ -431,7 +436,7 @@ class Storage extends MysqliDb
                     $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
                 }
                 $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
-                $cleanQuery .= " f.fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
+                $cleanQuery .= " f.fullpath like '%" . $current_dir . "%'";
                 if (Option::getValue('type') == 'meta') {
                     $cleanQuery .= ' and ( m.video_key = f.video_key )';
                 }
@@ -466,7 +471,7 @@ class Storage extends MysqliDb
             }
         } else {
             if ($allfiles === false) {
-                $where = " fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
+                $where = " fullpath like '%" . $current_dir . "%'";
             }
         }
         if ($sel_cols !== null) {

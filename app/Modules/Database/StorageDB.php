@@ -118,11 +118,19 @@ class StorageDB extends Storage
         $fileListArray = [];
 
         $query = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key") . $where;
-        if (Option::isTrue('max')) {
-            $query .= ' LIMIT  ' . Option::getValue('max');
+
+        if (Option::isTrue('numberofFiles') == false) {
+            if (Option::isTrue('max')) {
+                $query .= ' LIMIT  ' . Option::getValue('max');
+            }
         }
 
         $results = $this->query($query);
+        if (Option::isTrue('numberofFiles') == true) {
+            $count = count($results);
+            Mediatag::$Display->VideoInfoSection->writeln($count);
+            exit;
+        }
 
         foreach ($results as $key => $arr) {
             if ($arr['fullpath'] === null) {

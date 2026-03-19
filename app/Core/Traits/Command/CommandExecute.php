@@ -71,9 +71,9 @@ trait CommandExecute
         }
         // if (!is_null($arguments[$arguments['command']])) {
         //     $class = str_ireplace(ucfirst($arguments['command']), ucfirst($arguments[$arguments['command']]), static::class);
-        //     utmdump($class);
+        //     // utmdump($class);
         //     $Process2 = new $class($input, $output, self::$optionArg);
-        //     utmdump($class, $Process2);
+        //     // utmdump($class, $Process2);
         // }
 
         return Command::SUCCESS;

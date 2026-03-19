@@ -291,7 +291,7 @@ trait MediaFFmpeg
         // $format = new X264('aac', 'libx264');
         // $format->on('progress', function ($advancedMedia, $format, $percentage) {
         //     Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
-        //     utmdump("$percentage % transcoded");
+        //     // utmdump("$percentage % transcoded");
         // });
 
         // $advancedMedia

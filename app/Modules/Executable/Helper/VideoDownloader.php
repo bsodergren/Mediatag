@@ -139,7 +139,7 @@ class VideoDownloader
                     }
                     if ($outputText != '') {
                         // if (!str_contains($outputText, '<download>')) {
-                        //     utmdump([$ConsoleCmd, $outputText]);
+                        //     // utmdump([$ConsoleCmd, $outputText]);
                         // }
                         VideoDownloader::LogBuffer($ConsoleCmd . ' -> ' . $outputText, $buffer, '/buffer/' . $this->key);
                         Mediatag::$Console->$ConsoleCmd($outputText);
