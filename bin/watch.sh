@@ -1,84 +1,53 @@
 #!/bin/bash
 
+__PROJECT_HOME="/home/bjorn/scripts/Mediatag/var"
+__SCRIPT__=$(basename $0)
+__PROJECT__="Mediatag"
+__INC_LIB_DIR="/home/bjorn/scripts/Mediatag/bin/inc"
+source "${__INC_LIB_DIR}/header.sh"
+
+BIN_DIR="/home/bjorn/scripts/Mediatag/bin/"
+
 # Configuration
 WATCH_DIR="/media/Videos/Plex/XXX/Studios" # Directory to monitor (relative or absolute path)
 BIN_DIR="/home/bjorn/scripts/Mediatag/bin/"
 
-MEDIADB_CMD="${BIN_DIR}mediadb" # Path to the media database command
+MEDIADB_CMD="${BIN_DIR}mediadb"         # Path to the media database command
 MEDIAUPDATE_CMD="${BIN_DIR}mediaupdate" # Path to the media update command
 
-function string.color() {
+OPTIONS=""
 
-    local __string=$1
-    local __background=$2
-    local __RAINBOWPALETTE=$3
-
-    __color=${FUNCNAME[1]##*.}
-
-    case ${__background} in
-    "black") __background_code=";40" ;;
-    "red") __background_code=";41" ;;
-    "green") __background_code=";42" ;;
-    "yellow") __background_code=";43" ;;
-    "blue") __background_code=";44" ;;
-    "magenta") __background_code=";45" ;;
-    "cyan") __background_code=";46" ;;
-    "light gray") __background_code=";47" ;;
-    "dark gray") __background_code=";100" ;;
-    "light red") __background_code=";101" ;;
-    "light green") __background_code=";102" ;;
-    "light yellow") __background_code=";103" ;;
-    "light blue") __background_code=";104" ;;
-    "light magenta") __background_code=";105" ;;
-    "light cyan") __background_code=";106" ;;
-    "white") __background_code=";107" ;;
-    *) __background_code=";49" ;;
-    esac
-
-    case ${__color} in
-    "black") __color_code="$__RAINBOWPALETTE;30${__background_code}" ;;
-    "red") __color_code="$__RAINBOWPALETTE;31${__background_code}" ;;
-    "green") __color_code="$__RAINBOWPALETTE;32${__background_code}" ;;
-    "yellow") __color_code="$__RAINBOWPALETTE;33${__background_code}" ;;
-    "blue") __color_code="$__RAINBOWPALETTE;34${__background_code}" ;;
-    "purple") __color_code="$__RAINBOWPALETTE;35${__background_code}" ;;
-    "cyan") __color_code="$__RAINBOWPALETTE;36${__background_code}" ;;
-    "light_gray") __color_code="$__RAINBOWPALETTE;37${__background_code}" ;;
-    "dark_gray") __color_code="$__RAINBOWPALETTE;90${__background_code}" ;;
-    "light_red") __color_code="$__RAINBOWPALETTE;91${__background_code}" ;;
-    "light_green") __color_code="$__RAINBOWPALETTE;92${__background_code}" ;;
-    "light_yellow") __color_code="$__RAINBOWPALETTE;93${__background_code}" ;;
-    "light_blue") __color_code="$__RAINBOWPALETTE;94${__background_code}" ;;
-    "light_magenta") __color_code="$__RAINBOWPALETTE;95${__background_code}" ;;
-    "light_cyan") __color_code="$__RAINBOWPALETTE;96${__background_code}" ;;
-    "white") __color_code="$__RAINBOWPALETTE;97${__background_code}" ;;
-    *) __color_code="$__RAINBOWPALETTE;39${__background_code}" ;;
-    esac
-
-    echo -e "\e[${__color_code}m$1\e[0m"
+function update_media_file {
+    local filename="$1"
+    local directory="$2"
+    FILE="${directory}$filename"
+    $MEDIAUPDATE_CMD --no-progress --path="$directory" -f="$FILE" $OPTIONS
+    # echo "$MEDIAUPDATE_CMD --no-progress --path=$directory -f=$FILE $OPTIONS"
 }
 
-OPTIONS=" "
-
 function update_media_db {
-    local file_path="$1"
-    echo $(string.color "Updating media database for $file_path" "green" "black")
-    # Placeholder for actual media database update command
+    local filename="$1"
+    local directory="$2"
+    FILE="${directory}$filename"
 
-    $MEDIADB_CMD $OPTIONS --path="$(dirname "$file_path")" -f="$file_path"
-    $MEDIADB_CMD $OPTIONS --path="$(dirname "$file_path")" info
-    $MEDIADB_CMD $OPTIONS --path="$(dirname "$file_path")" thumbnail
-    # mediadb $OPTIONS --path="$(dirname "$file_path")" preview
+    filenameColored=$(string.yellow $filename)
+
+    echo $(string.yellow "Updating media database for $filenameColored")
+    # Placeholder for actual media database update command
+    $MEDIADB_CMD --path="$directory" -f="$FILE"
+    $MEDIADB_CMD --path="$directory" info
+    $MEDIADB_CMD --path="$directory" thumbnail
+    # mediadb $OPTIONS --path="$directory" preview
+    echo $(string.green "Finished updating database for $filenameColored")
 }
 
 function process_deleted_file {
-    local dir_path="$1"
-    echo $(string.color "Updating media database for $dir_path after deletion" "green" "black")
-    $MEDIADB_CMD $OPTIONS --path="$dir_path"
-        echo $(string.color "Updating media database for $dir_path after thumbnail deletion" "green" "black")
-
-    $MEDIADB_CMD $OPTIONS --path="$dir_path" -c thumbnail
-    # mediadb $OPTIONS --path="$dir_path" -c preview
+    local directory="$1"
+    echo $(string.red "Updating media database for $directory after deletion")
+    $MEDIADB_CMD  --path="$directory"
+    echo $(string.red "Updating media database for $directory after thumbnail deletion")
+    $MEDIADB_CMD --path="$directory" -c thumbnail
+    # mediadb $OPTIONS --path="$directory" -c preview
 }
 
 function waitForUploadCompletion {
@@ -89,43 +58,60 @@ function waitForUploadCompletion {
         exit_code=$?
 
         if [ ! $exit_code -eq 0 ]; then
-            echo "failed"
+            echo $(string.red "failed: $exit_code")
             break
         fi
+
         if [[ "$current_size" -eq "$prev_size" ]]; then
-            # echo "done"
+            echo $(string.green "finished: $current_size = $prev_size ")
             break
+        else
+            echo $(string.green "finished: $current_size,  $prev_size ")
+
+            prev_size=$current_size
         fi
-        prev_size=$current_size
-        sleep 5
+        sleep 10
     done
     echo "done"
 }
 
+PrevEvent=""
 inotifywait -m -r --format '%:e,%w,%f' \
     --exclude '(-temp-|-data-|Premium|Sort)' \
-    -e close_write,move,delete,create "$WATCH_DIR" |
+    -e close_write,move,delete,create,moved_to "$WATCH_DIR" |
     while IFS="," read -r events directory filename; do
 
-        echo $(string.color "Change detected:$events " "red" "black")
+        # FILE="${directory}$filename"
+        filenameColored=$(string.yellow $filename)
+        echo $(string.red "Change detected: '$events' => $filenameColored")
 
         if [ "$events" = "DELETE" ]; then
-            process_deleted_file "$directory"
-            echo $(string.color "directory processed: $directory" "green" "black")
+            # process_deleted_file "$directory"
+            echo $(string.green "directory processed: $directory")
         fi
 
         if [ "$events" = "CREATE" ]; then
-            FILE="${directory}$filename"
+            PrevEvent=$events
+            # res=$(waitForUploadCompletion "$FILE")
+            # echo $(string.yellow "res $res" "yellow" "black")
+            # if [ "$res" = "done" ]; then
+            #     echo $(string.green "directory CREATE: $directory" )
+            # fi
+        fi
 
-            res=$(waitForUploadCompletion "$FILE")
-            # echo $(string.yellow "res res: $res")
-            if [ "$res" = "done" ]; then
-
-                echo $(string.color "Upload complete: $filename" "yellow" "black")
-                $MEDIAUPDATE_CMD --no-progress --path="$directory" -f="$FILE" $OPTIONS
-                update_media_db "$FILE"
-                echo $(string.color "Video processed: $filename" "green" "black") 
-
+        if [ "$PrevEvent" = "CREATE" ]; then
+            if [ "$events" = "CLOSE_WRITE:CLOSE" ]; then
+                echo $(string.blue "Upload complete: $filenameColored")
+                update_media_file "$filename" "$directory"
+                  sleep 10
+                update_media_db "$filename" "$directory"
+                echo $(string.green "Video processed: $filenameColored")
+                PrevEvent=""
             fi
+            # if [ "$events" = "MOVED_TO" ]; then
+            #     update_media_db "$filename" "$directory"
+            #     echo $(string.green "Video processed: $filenameColored")
+            #     PrevEvent=""
+            # fi
         fi
     done

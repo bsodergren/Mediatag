@@ -15,6 +15,7 @@ use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;
+use Symfony\Component\Console\Helper\ProgressIndicator;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
@@ -115,9 +116,19 @@ class WriteMeta extends MediatagExec
         }
 
         if (Chooser::$bypass === true || $go === true) {
+            if (Option::isTrue('no-progress')) {
+                $this->progressIndicator = new ProgressIndicator($this->output);
+
+                // starts and displays the progress indicator with a custom message
+                $this->progressIndicator->start('Processing...');
+            }
+
             $callback = Callback::check([$this, 'WriteMetaOutput']);
 
             $this->exec($command, $callback);
+            if (Option::isTrue('no-progress')) {
+                $this->progressIndicator->finish('Finished');
+            }
             MediaCache::forget($this->video_key);
 
             $results = ($this->errors != '') ? $this->errors : $this->stdout;

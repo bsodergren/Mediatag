@@ -54,6 +54,11 @@ trait ProcessCallbacks
 
                 if (Option::isFalse('no-progress')) {
                     $this->Display->processOutput->overwrite($buffer);
+                } else {
+                    preg_match('/([0-9]+%)/', $buffer, $output_array);
+
+                    // $this->progressIndicator->advance();
+                    $this->Display->processOutput->overwrite("\t" . $output_array[1]);
                 }
             } else {
                 $this->Display->processOutput->overwrite($buffer);
