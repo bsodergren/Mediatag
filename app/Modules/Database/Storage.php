@@ -398,6 +398,7 @@ class Storage extends MysqliDb
         $where_clause = [];
 
         $current_dir = (new Filesystem)->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
+        $current_dir = rtrim($current_dir, '/');
         // utmdump($current_dir);
         switch ($query_cmd) {
             case 'select':

@@ -92,8 +92,7 @@ trait Helper
     {
         // utminfo(func_get_args());
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
-        // utmdd($this->Deleted_Array);
-        $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
+        $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
 
         // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
         // ,count($this->Deleted_Array), count($this->New_Array)]);
@@ -195,13 +194,12 @@ trait Helper
     public function removeDBEntry()
     {
         // utminfo(func_get_args());
-
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             parent::$dbconn->video_key = $video_key;
             parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
             if (! Option::istrue('preview')) {
                 parent::$dbconn->removeDBEntry();
-                //  parent::$dbconn->clearDBValues($video_key);
+                parent::$dbconn->clearDBValues($video_key);
             }
         }
     }
@@ -299,8 +297,6 @@ trait Helper
             $this->updateNow();
         }
     }
-
- 
 
     public function TestMethod()
     {

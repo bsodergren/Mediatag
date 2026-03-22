@@ -29,6 +29,8 @@ class Options extends MediaOptions
             ['genre', 'g', InputOption::VALUE_NONE, self::text('L__TEST_MOVE_FILES')],
             ['studio', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_TITLE')],
             ['lowercase', 'l', InputOption::VALUE_NONE, self::text('L__RENAME_LOWER')],
+            ['backup', 'b', InputOption::VALUE_NONE, self::text('L__RENAME_TRANS')],
+
             ['trans', 't', InputOption::VALUE_REQUIRED, self::text('L__RENAME_TRANS')],
         ];
 

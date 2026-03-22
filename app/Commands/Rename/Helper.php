@@ -93,9 +93,11 @@ trait Helper
             // ;
             Mediatag::$output->writeln('renaming file <comment> ' . basename($oldName) . '</>');
             Mediatag::$output->writeln('<comment> ' . basename($newName) . '</>');
-            // (new SfSystem)->copy($oldName, $backupName);
+            if (Option::isTrue('backup')) {
+                (new SfSystem)->copy($oldName, $backupName);
+            }
 
-            // $this->renameFile($oldName, $newName);
+            $this->renameFile($oldName, $newName);
         }
 
         return 0;
