@@ -8,10 +8,9 @@ namespace Mediatag\Core;
 
 use const PHP_EOL;
 
-use Mediatag\Core\MediaCompletionCommand;
+use Mediatag\Core\Mediatag;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
-// use Mediatag\Core\Helper\MediaOutputInterface as OutputInterface;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Command\CompleteCommand;
@@ -34,29 +33,29 @@ class MediaApplication extends Application
      *
      * @return Command[]
      */
-    protected function getDefaultCommands(): array
-    {
-        return [
-            new HelpCommand,
-            new ListCommand,
-            new CompleteCommand,
-        ];
-    }
+    // protected function getDefaultCommands(): array
+    // {
+    //     return [
+    //         new HelpCommand,
+    //         new ListCommand,
+    //         new CompleteCommand,
+    //     ];
+    // }
 
     protected function getDefaultInputDefinition(): InputDefinition
     {
         self::$Class = __CLASS__;
 
         return new InputDefinition([
-            new InputArgument('command', InputArgument::REQUIRED, self::text('L__APP_DEFAULT_CMD') . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL),
-
-            new InputOption('--help', '-h', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_HELP')),
-            new InputOption('--quiet', '-q|qq|qqq', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_QUIET')),
-            new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_VERBOSE')),
-            new InputOption('--version', '-V', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_VERSION')),
-            new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
-            new InputOption('--no-interaction', '', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_NOASK')),
+            new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
+            new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display help for the given command. When no command is given display help for the <info>' . $this->getName() . '</info> command'),
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, self::text('L__APP_DEFAULT_PATH')),
+            new InputOption('--silent', null, InputOption::VALUE_NONE, 'Do not output any message'),
+            new InputOption('--quiet', '-q', InputOption::VALUE_NONE, 'Only errors are displayed. All other output is suppressed'),
+            new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, 'Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug'),
+            new InputOption('--version', '-V', InputOption::VALUE_NONE, 'Display this application version'),
+            new InputOption('--ansi', '', InputOption::VALUE_NEGATABLE, 'Force (or disable --no-ansi) ANSI output', null),
+            // new InputOption('--no-interaction', '-n', InputOption::VALUE_NONE, 'Do not ask any interactive question'),
         ]);
     }
 
