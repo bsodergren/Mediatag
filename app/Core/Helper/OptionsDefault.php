@@ -6,7 +6,6 @@
 
 namespace Mediatag\Core\Helper;
 
-use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputOption;
 
 trait OptionsDefault
@@ -90,13 +89,13 @@ trait OptionsDefault
             ['only', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__META_ONLY',
 
                 ['TXT' => $cmdName]), [], ['Studio', 'Genre', 'Title', 'Artist', 'Keyword']],
-            ['title', 't', InputOption::VALUE_REQUIRED, self::text('L__META_TITLE', ['TXT' => $cmdName])],
-            ['genre', 'g', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__META_GENRE', ['TXT' => $cmdName])],
-            ['studio', 's', InputOption::VALUE_REQUIRED, self::text('L__META_STUDIO', ['TXT' => $cmdName])],
-            ['network', 'n', InputOption::VALUE_REQUIRED, self::text('L__META_NETWORK', ['TXT' => $cmdName])],
+            ['title', 't', InputOption::VALUE_OPTIONAL, self::text('L__META_TITLE', ['TXT' => $cmdName])],
+            ['genre', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_GENRE', ['TXT' => $cmdName])],
+            ['studio', 's', InputOption::VALUE_OPTIONAL, self::text('L__META_STUDIO', ['TXT' => $cmdName])],
+            ['network', '', InputOption::VALUE_OPTIONAL, self::text('L__META_NETWORK', ['TXT' => $cmdName])],
 
-            ['artist', 'a', InputOption::VALUE_REQUIRED, self::text('L__META_ARTIST', ['TXT' => $cmdName])],
-            ['keyword', 'k', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT' => $cmdName])],
+            ['artist', 'a', InputOption::VALUE_OPTIONAL, self::text('L__META_ARTIST', ['TXT' => $cmdName])],
+            ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT' => $cmdName])],
         ];
 
         return self::getOptions($options);

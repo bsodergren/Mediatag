@@ -43,9 +43,22 @@ class WriteMeta extends MediatagExec
 
     public function clearMeta($options = null)
     {
+        $IsTrue = null;
+
+        $var = Mediatag::$input->getArgument('clear');
         // utminfo(func_get_args());
+        // foreach (__META_TAGS__ as $tag) {
+        //     utmdump([$tag, Option::isTrue($tag)]);
+        //     if (Option::isTrue($tag)) {
+        //         $IsTrue[] = $tag;
+        //     }
+        // }
         if (Option::getValue('empty', 1) === null) {
-            $this->addOptionArg('--metaEnema');
+            if ($var === null) {
+                $this->addOptionArg('--metaEnema');
+            } else {
+                $this->createOptionArg($var, '');
+            }
         } else {
             foreach (__META_TAGS__ as $tag) {
                 $this->createOptionArg($tag, '');

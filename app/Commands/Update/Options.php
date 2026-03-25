@@ -8,6 +8,7 @@ namespace Mediatag\Commands\Update;
 
 use Mediatag\Core\MediaOptions;
 use Mediatag\Traits\Translate;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class Options extends MediaOptions
@@ -26,7 +27,7 @@ class Options extends MediaOptions
         return [
             ['changes', 'c', InputOption::VALUE_NONE, self::text('L__UPDATE_APPROVE_CHANGES')],
             ['updates', 'U', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
-            ['clear', '', InputOption::VALUE_NONE, self::text('L__UPDATE_CLEAR')],
+            ['clear', '', InputOption::VALUE_OPTIONAL, self::text('L__UPDATE_CLEAR')],
 
             ['rename', 'R', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
             ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__UPDATE_ALL_TAGS')],
@@ -37,6 +38,14 @@ class Options extends MediaOptions
             ['download', 'D', InputOption::VALUE_NONE, self::text('L__UPDATE_DOWNloAD')],
         ];
     }
+
+    // public function CmdArguments()
+    // {
+    //     // utminfo(func_get_args());
+    //     return [
+    //         ['tags', InputArgument::OPTIONAL, 'Who do you want to greet?'],
+    //     ];
+    // }
 
     // public function optionClosure($input,$option)
     // {
