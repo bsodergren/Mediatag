@@ -38,10 +38,11 @@ include_once __DATA_MAPS__ . '/WordMap.php';
 class Process extends Mediatag
 {
     use Helper;
-
     // use HelperCmds;
     use MediaExecute;
+
     use MediaProcess;
+    use VariablesTrait;
     // use ytdlptest;
 
     public $VideoList = [];

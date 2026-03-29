@@ -19,10 +19,10 @@ final class Command extends MediaCommand
 
     public const USE_LIBRARY = false;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH = true;
 
     public $command = [
-        'test' => [
+        'test'   => [
             'exec' => null,
             // 'exec'         => null,
             // 'getChanges'   => null,
@@ -33,9 +33,10 @@ final class Command extends MediaCommand
         //     //     'doThumbnail' => null,
         //     //     //     // 'exec' => null,
         // ],
-        // 'search'   => [
-        //     'searchJson' => null,
-        // ],
+        'search' => [
+            // 'exec'        => null,
+            'searchFiles' => null,
+        ],
 
     ];
 }

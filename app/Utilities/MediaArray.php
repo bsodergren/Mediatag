@@ -42,11 +42,11 @@ class MediaArray
     /**
      * Summary of search.
      */
-    public static function search($arr, $string, $exact = false, $nodelim = false)
+    public static function search($arr, $string, $exact = false, $nodelim = false, $noCase = true)
     {
         // utminfo(func_get_args());
 
-        $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim) {
+        $ret = array_filter($arr, function ($value) use ($string, $exact, $nodelim, $noCase) {
             if (is_array($value)) {
                 if (str_contains($string, $value['name'])) {
                     if ($value['replacement'] != '') {
@@ -59,8 +59,10 @@ class MediaArray
 
                 // return 0;
             } else {
-                if ($exact === true) {
+                if ($noCase === true) {
                     $value = strtolower($value);
+                }
+                if ($exact === true) {
                     $value = str_replace(' ', '_', $value);
 
                     if ($nodelim === true) {
@@ -75,7 +77,7 @@ class MediaArray
                     return 0;
                 }
 
-                if (str_contains($value, $string)) {
+                if (str_contains(strtolower($value), strtolower($string))) {
                     return $value;
                 }
             }

@@ -57,14 +57,14 @@ __logr_LOG_DIR="${__PROJECT_HOME}/log"
 
 [[ -z "${__logr_LOG_NAME}" ]] && __logr_LOG_NAME=$(basename "$0")
 logr start  "${__logr_LOG_NAME}"
-logr clear
+# logr clear
 logr info "starting loggin"
 
 
 ## Setup color functions, string.color
 
 
-__bash_colors=("red" "green" "blue" "yellow" "purple")
+__bash_colors=("red" "green" "blue" "yellow" "purple" "cyan" "black")
 
 for __bash_color in ${__bash_colors[@]}
 do

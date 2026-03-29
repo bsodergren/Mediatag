@@ -107,7 +107,7 @@ class MediatagExec
     public static function cleanBuffer($buffer)
     {
         if (is_string($buffer)) {
-            $buffer = str_replace(["\n", "\r"], '', $buffer);
+            $buffer = str_replace(["\n", "\r"], ["\n"], $buffer);
         }
 
         return $buffer;

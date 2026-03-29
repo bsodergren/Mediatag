@@ -279,6 +279,7 @@ class StorageDB extends Storage
             'subLibrary'  => self::getSubLibrary($this->video_path),
             'filesize'    => filesize($video_file),
         ];
+        // utmdump($data);
 
         $data['added'] = $this->dbConn->now();
 

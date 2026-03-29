@@ -119,7 +119,7 @@ class WriteMeta extends MediatagExec
 
         $command = array_merge($command, $this->getOptionArgs());
         // // UTMlog::Logger('Writing Metadata', $run_cmd);
-
+        // utmdd($command);
         if (Option::isTrue('changes') == 1) {
             if (Chooser::$bypass === null) {
                 $go = Chooser::changes();

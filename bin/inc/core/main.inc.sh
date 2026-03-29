@@ -27,7 +27,7 @@ function main.log() {
 	fi
 
 	#echo  ${__txt}
-	logr "info" "${__func}:${__line}::${__txt} ${__vars}"
+	logr "info" "${__func}:${__line}::${__txt} ${__vars}" 
 
 	#logr "info" "${BASH_LINENO}::${__txt}"
 
@@ -39,7 +39,7 @@ function run_cmd() {
 	typeset ret_code
 
 	#main.log "Running Command:"
-	main.log $cmd
+	main.log "Running Command: " $cmd
 
 	eval $cmd
 	ret_code=$?

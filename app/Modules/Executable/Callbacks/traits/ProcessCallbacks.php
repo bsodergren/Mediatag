@@ -50,9 +50,13 @@ trait ProcessCallbacks
                 // UTMlog::logWarning('Writing Metadata', $buffer);
                 // UTMlog::logWarning('Writing Metadata', $this->video_file);
             } elseif (str_contains($buffer, 'Progress')) {
+                // utmdump($buffer);
                 //  $buffer = trim($buffer) . "\n";
 
                 if (Option::isFalse('no-progress')) {
+                    MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/' . $this->video_key . '.log', $buffer . PHP_EOL);
+
+                    $progressArray = explode('|', $buffer);
                     $this->Display->processOutput->overwrite($buffer);
                 } else {
                     preg_match('/([0-9]+%)/', $buffer, $output_array);

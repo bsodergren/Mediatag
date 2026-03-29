@@ -145,7 +145,7 @@ abstract class Mediatag extends MediaCommand
 
         self::$finder     = new Finder;
         self::$filesystem = new Filesystem;
-
+        // utmdump(__CURRENT_DIRECTORY__);
         self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 

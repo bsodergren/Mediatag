@@ -14,13 +14,36 @@ use FFMpeg\FFMpeg;
 use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
+use Mediatag\Utilities\MediaArray;
+use Nette\Utils\Arrays;
 use Symfony\Component\Finder\Finder;
 use UTM\Utilities\Option;
 
 trait Helper
 {
+    public function searchFiles()
+    {
+        $files = parent::$SearchArray;
+        // utmdd(array_keys($files));
+        foreach ($this->videoFileArray as $file) {
+            $filename = basename($file, '.mp4');
+            $filename = str_replace(['_1080p', '_1080', '_h264', '_720p', '_720', '_1920'], '', $filename);
+            $res      = MediaArray::search($files, $filename);
+            if ($res === null) {
+                $missing[] = $filename;
+            } else {
+                $found[] = $res;
+            }
+        }
+        MediaFilesystem::writeFile('/home/bjorn/test.txt', $missing);
+        utmdd($missing);
+        // utmdd($this->videoFileArray);
+        // utmdd(parent::$SearchArray);
+    }
+
     public function searchJson()
     {
         $val = Option::getValue('search');
