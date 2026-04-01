@@ -108,35 +108,35 @@ trait JsonHelper
 
                 // utmdd($json_file, Mediatag::$filesystem->exists($json_file));
 
+                // if (Mediatag::$filesystem->exists($json_file)) {
+                //     // utmdump(['json file exists' => $json_file]);
+                //     if (filesize($json_file) < 1024) {
+                //         // utmdump(['delete file file' => $json_file]);
+                //         MediaFilesystem::delete($json_file);
+                //     } else {
+                //         $backupFile = __JSON_CACHE_DIR__ . '/prev/' . $json_key . '.info.json';
+                //         if (! Mediatag::$filesystem->exists($backupFile)) {
+                //             MediaFilesystem::renameFile($json_file, $backupFile, false);
+                //         }
+                //         // utmdump(['backupFile file' => $backupFile]);
+                //     }
+                // }
+
                 if (Mediatag::$filesystem->exists($json_file)) {
-                    // utmdump(['json file exists' => $json_file]);
-                    if (filesize($json_file) < 1024) {
-                        // utmdump(['delete file file' => $json_file]);
-                        MediaFilesystem::delete($json_file);
-                    } else {
-                        $backupFile = __JSON_CACHE_DIR__ . '/prev/' . $json_key . '.info.json';
-                        if (! Mediatag::$filesystem->exists($backupFile)) {
-                            MediaFilesystem::renameFile($json_file, $backupFile, false);
-                        }
-                        // utmdump(['backupFile file' => $backupFile]);
-                    }
-                }
+                    // $ytdl   = (new Youtube)->run('');
+                    // $return = $ytdl->youtubeGetJson($json_key);
 
-                if (! Mediatag::$filesystem->exists($json_file)) {
-                    $ytdl   = (new Youtube)->run('');
-                    $return = $ytdl->youtubeGetJson($json_key);
-
-                    if (is_null($return)) {
-                        if (Mediatag::$filesystem->exists($backupFile)) {
-                            MediaFilesystem::renameFile($backupFile, $json_file);
-                        }
-                        parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
-                    } elseif (Mediatag::$filesystem->exists($json_file)) {
-                        parent::$output->writeln('<info>' . $count . ' adding json ' . basename($json_file) . ' </info>');
-                    } else {
-                        parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
-                        MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '", "error":"' . $ytdl->yt_error_string . '"}', false);
-                    }
+                    // if (is_null($return)) {
+                    //     if (Mediatag::$filesystem->exists($backupFile)) {
+                    //         MediaFilesystem::renameFile($backupFile, $json_file);
+                    //     }
+                    //     parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
+                    // } elseif (Mediatag::$filesystem->exists($json_file)) {
+                    //     parent::$output->writeln('<info>' . $count . ' adding json ' . basename($json_file) . ' </info>');
+                    // } else {
+                    //     parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
+                    //     MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '", "error":"' . $ytdl->yt_error_string . '"}', false);
+                    // }
                 } else {
                     parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
                 }

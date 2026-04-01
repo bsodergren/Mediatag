@@ -82,6 +82,7 @@ trait Helper
     {
         // utminfo(func_get_args());
         $file_array = (new MediaFinder)->Search(getcwd(), '*.mp4', exit: false);
+        // utmdd($file_array, getcwd());
         $this->moveJson();
         // $this->moveCaption();
 

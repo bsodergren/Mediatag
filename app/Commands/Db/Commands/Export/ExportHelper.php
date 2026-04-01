@@ -15,7 +15,7 @@ use Nette\Utils\FileSystem;
 
 trait ExportHelper
 {
-    public static $EXPORT_DIR = __PLEX_VAR_DIR__ . DIRECTORY_SEPARATOR . 'export';
+    public static $EXPORT_DIR = __STUDIO_CACHE_DIR__ . DIRECTORY_SEPARATOR . 'export';
 
     public function exportMethod($option = null)
     {
@@ -46,13 +46,16 @@ trait ExportHelper
         foreach ($fileArray as $key => $data) {
             $this->console->overwrite('Reading file ' . basename($data['video_file']));
 
-            $json_path = self::$EXPORT_DIR . DIRECTORY_SEPARATOR . MediaFile::videoPath($data['video_path']);
+            $json_path = self::$EXPORT_DIR; //. MediaFile::videoPath($data['video_path']);
             $json_file = $json_path . DIRECTORY_SEPARATOR . $key . '.info.json';
+
             if (! is_dir($json_path)) {
                 FileSystem::createDir($json_path);
             }
             $tagArray    = $this->createJsonData($data['Meta']);
             $json_string = json_encode($tagArray);
+
+            utmdd($json_string, $json_file);
             if (! file_exists($json_file)) {
                 $method = 'WriteJsonFile';
             } else {

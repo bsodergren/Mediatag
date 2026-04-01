@@ -46,10 +46,10 @@ class Thumbnail extends VideoInfo
         // utminfo(func_get_args());
 
         $this->video_file = $file;
-        // // utmdump($file);
+        utmdump($file);
         $this->video_key = (string) $key;
-        //        $VideoData             = new VideoData();
-        //        $VideoData->video_file = $this->video_file;
+        //    $VideoData             = new VideoData();
+        //    $VideoData->video_file = $this->video_file;
         $thumbnail = $this->getThumbImg();
 
         return ['thumbnail' => $thumbnail, 'video_key' => $this->video_key];
@@ -80,7 +80,7 @@ class Thumbnail extends VideoInfo
             ]);
             $duration = $ffprobe->streams($this->video_file)->videos()->first()->get('duration');
 
-            // // utmdump($this->video_file,$ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));
+            utmdump($this->video_file, $ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));
 
             $time = '00:01:00.00';
 
@@ -96,6 +96,7 @@ class Thumbnail extends VideoInfo
             }
             $time = self::videoDuration($duration, 10);
 
+            utmdump([$this->video_file, $img_file, $time]);
             // utmdd($duration,$time);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
