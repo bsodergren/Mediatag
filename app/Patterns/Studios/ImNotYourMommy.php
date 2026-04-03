@@ -8,9 +8,11 @@ namespace Mediatag\Patterns\Studios;
 
 const ImNotYourMommy_REGEX_COMMON = '//i';
 
-class ImNotYourMommy extends Nubiles
+class ImNotYourMommy extends MomLover
 {
     public $studio = 'Im Not Your Mommy';
+
+    public $network = 'Mom Lover';
 
     public $regex = [
         'imnotyourmommy' => [
