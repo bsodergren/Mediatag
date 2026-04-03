@@ -119,12 +119,12 @@ trait Helper
         }
 
         $changed_string = 0;
-        if (count($this->Changed_Array) > 0) {
-            foreach ($this->Changed_Array as $k => $file) {
-                $changed_files[] = Strings::getFilePath($file);
-            }
-            //  $changed_string = implode("\n", $changed_files);
-        }
+        // if (count($this->Changed_Array) > 0) {
+        //     foreach ($this->Changed_Array as $k => $file) {
+        //         $changed_files[] = Strings::getFilePath($file);
+        //     }
+        //     //  $changed_string = implode("\n", $changed_files);
+        // }
 
         // utmdd($this->Changed_Array);
         Mediatag::$Console->definitionList(

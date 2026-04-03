@@ -20,6 +20,8 @@ trait ProcessCallbacks
 {
     use CallbackCommon;
 
+    public $currentProgress = null;
+
     public function ReadMetaOutput($type, $buffer)
     {
         // MediaFile::file_append_file(__LOGFILE_DIR__ . "/metadata/" . $this->video_key . ".log", $buffer . PHP_EOL);
@@ -54,10 +56,19 @@ trait ProcessCallbacks
                 //  $buffer = trim($buffer) . "\n";
 
                 if (Option::isFalse('no-progress')) {
-                    MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/' . $this->video_key . '.log', $buffer . PHP_EOL);
-
                     $progressArray = explode('|', $buffer);
-                    $this->Display->processOutput->overwrite($buffer);
+                    array_pop($progressArray);
+                    foreach ($progressArray as $k => $v) {
+                        $output = trim($v);
+                        preg_match('/([0-9]+%)/', $output, $perc);
+                        if (isset($perc[1]) &&
+                        $this->currentProgress !== $perc[1]) {
+                            // MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/' . $this->video_key . '.log', $output . PHP_EOL);
+
+                            $this->Display->processOutput->overwrite($output);
+                            $this->currentProgress = $perc[1];
+                        }
+                    }
                 } else {
                     preg_match('/([0-9]+%)/', $buffer, $output_array);
 
