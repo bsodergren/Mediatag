@@ -318,7 +318,6 @@ trait Helper
     private function LogDifferences($videoarray)
     {
         // utminfo(func_get_args());
-utmdump($videoarray);
         $logString = 'File: ' .  $videoarray['video_name'] . PHP_EOL;
 
         

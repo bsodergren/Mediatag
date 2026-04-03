@@ -56,7 +56,7 @@ class Process extends Mediatag
         if (getcwd() != __PLEX_DOWNLOAD__) {
             chdir(__PLEX_DOWNLOAD__);
         }
-        utmdump([__PLEX_DOWNLOAD__, getcwd()]);
+        // utmdump([__PLEX_DOWNLOAD__, getcwd()]);
 
         if (Option::istrue('convert')) {
             parent::boot($input, $output, ['USE_SEARCH' => true]);
