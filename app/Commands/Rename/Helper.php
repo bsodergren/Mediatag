@@ -94,7 +94,7 @@ trait Helper
             Mediatag::$output->writeln('renaming file <comment> ' . basename($oldName) . '</>');
             Mediatag::$output->writeln('<comment> ' . basename($newName) . '</>');
             if (Option::isTrue('backup')) {
-                (new SfSystem)->copy($oldName, $backupName);
+                // (new SfSystem)->copy($oldName, $backupName);
             }
 
             $this->renameFile($oldName, $newName);
