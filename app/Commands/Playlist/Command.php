@@ -87,7 +87,7 @@ final class Command extends MediaCommand
         //     'compact' => null,
         // ],
         // 'split'             => [
-        //     // 'exec'        => null,
+        //     'exec'        => null,
         //     'splitPlaylist' => null,
         // ],
     ];

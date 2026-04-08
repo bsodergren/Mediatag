@@ -96,7 +96,7 @@ class Process extends Mediatag
         //     'compact' => null,
         // ],
         // 'split'             => [
-        //     // 'exec'        => null,
+        //     'exec'        => null,
         //     'splitPlaylist' => null,
         // ],
     ];

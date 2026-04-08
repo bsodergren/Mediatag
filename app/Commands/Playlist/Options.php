@@ -34,7 +34,7 @@ class Options extends MediaOptions
 
             ['break'],
             ['archive', 'a', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_ARCHIVE')],
-            ['split', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
+            ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
 
             ['missing', 'm', InputOption::VALUE_NONE, self::text('L__PLAYLIST_MISSING')],
             ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_MAX')],

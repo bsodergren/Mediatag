@@ -395,15 +395,6 @@ trait Helper
         }
     }
 
-    public function splitPlaylist()
-    {
-        (int) $split = Option::getValue('split');
-        $splitName   = basename($this->playlist, '.txt');
-        MediaFile::splitFile($this->playlist, './batch/', $split, $splitName . '_', '.txt');
-
-        exit;
-    }
-
     public function filemap($line)
     {
         if ($line != '') {
