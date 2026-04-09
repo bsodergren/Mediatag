@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Update;
 
+use const PHP_EOL;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\WriteMeta;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -20,8 +22,6 @@ use UTM\Utilities\Option;
 
 use function count;
 use function is_array;
-
-use const PHP_EOL;
 
 trait Helper
 {
@@ -192,12 +192,22 @@ trait Helper
 
         if (is_array($videoBlockInfo)) {
             $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
-            
+
             Mediatag::$Display->VideoInfoSection->overwrite($videoBlockInfo);
         }
 
         if (! Option::isTrue('preview')) {
             $Command->writeChanges();
+
+            if (Option::isTrue('rename')) {
+                $Command->renameFile();
+            }
+
+            if (Option::isTrue('updates')) {
+                $Command->dbUpdate();
+                // Handle updates
+            }
+
             // $this->updateDbEntry($videoArray);
         }
     }
@@ -318,17 +328,15 @@ trait Helper
     private function LogDifferences($videoarray)
     {
         // utminfo(func_get_args());
-        $logString = 'File: ' .  $videoarray['video_name'] . PHP_EOL;
+        $logString = 'File: ' . $videoarray['video_name'] . PHP_EOL;
 
-        
         foreach ($videoarray['updateTags'] as $tag => $value) {
-            $logString .= "\t". 'Tag: ' . $tag . PHP_EOL;
-            if(!is_null($videoarray['currentTags'][$tag]) || $videoarray['currentTags'][$tag] != '') {
-             $logString .= "\t\t". 'Current: ' . $videoarray['currentTags'][$tag] . PHP_EOL;
+            $logString .= "\t" . 'Tag: ' . $tag . PHP_EOL;
+            if (! is_null($videoarray['currentTags'][$tag]) || $videoarray['currentTags'][$tag] != '') {
+                $logString .= "\t\t" . 'Current: ' . $videoarray['currentTags'][$tag] . PHP_EOL;
             }
-             $logString .= "\t\t". 'New: ' . $value . PHP_EOL;
+            $logString .= "\t\t" . 'New: ' . $value . PHP_EOL;
         }
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/changes/'.basename($videoarray['video_name'], '.mp4').'.log', $logString);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/changes/' . basename($videoarray['video_name'], '.mp4') . '.log', $logString);
     }
-    
 }

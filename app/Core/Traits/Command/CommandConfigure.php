@@ -13,7 +13,6 @@ trait CommandConfigure
         MediaOptions::$callingClass = $child;
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
-
         $arguments = MediaOptions::getArguments(
             $this->getName(),
             $this->getDescription(),

@@ -59,6 +59,17 @@ class MediaFilesystem extends SFilesystem
         return rtrim($new_path, '/');
     }
 
+    public static function getRelativeVideoFile(string $videoFile): string
+    {
+        // utminfo(func_get_args());
+
+        $video_path   = dirname($videoFile);
+        $video_file   = basename($videoFile);
+        $newVideoFile = self::getRelative($video_path) . DIRECTORY_SEPARATOR . $video_file;
+
+        return rtrim($newVideoFile, '/');
+    }
+
     /**
      * writeFile.
      */

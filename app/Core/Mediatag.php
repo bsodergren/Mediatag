@@ -187,15 +187,26 @@ abstract class Mediatag extends MediaCommand
     //     }
     // }
 
-    public static function App(): string
+    public static function App($application = null): string
     {
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);
-
-        if (file_exists(CONFIG['ATOMICPARSLEY'])) {
-            return CONFIG['ATOMICPARSLEY'];
+        if (is_null($application)) {
+            if (file_exists(CONFIG['ATOMICPARSLEY'])) {
+                $AppCommand = CONFIG['ATOMICPARSLEY'];
+            }
+        } else {
+            $AppCommand = self::getApplicationPath($application);
         }
 
-        exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
+        return $AppCommand ?? exit('No Application defined');
+    }
+
+    public static function getApplicationPath($application)
+    {
+        $command = CONFIG['mediatag'] . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'media' . $application;
+        // utmdd('CommandHelper GetApplicationPath => ' . $command);
+
+        return $command;
     }
 
     public function getVideoArray()

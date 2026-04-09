@@ -11,10 +11,12 @@ use const PHP_EOL;
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\Callback;
+use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\ProgressIndicator;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
@@ -30,6 +32,8 @@ class WriteMeta extends MediatagExec
     public $execMode = 'write';
 
     public $Display;
+
+    public $command = [];
 
     public $cursor;
 
@@ -68,6 +72,39 @@ class WriteMeta extends MediatagExec
         $this->addOptionArg('--overWrite');
         //  MediaCache::forget($this->video_key);
         $this->write();
+    }
+
+    public function dbUpdate()
+    {
+        $dbFunc = new MediatagExec;
+
+        $video   = MediaFilesystem::getRelativeVideoFile($this->command[1]);
+        $command = [
+            Mediatag::App('db'),
+        ];
+
+        $dbFunc->exec($command);
+
+        $command = [
+            Mediatag::App('db'),
+            'info',
+            'thumbnail',
+        ];
+        $dbFunc->exec($command);
+    }
+
+    public function renameFile()
+    {
+        $renameFunc = new MediatagExec;
+
+        $video   = MediaFilesystem::getRelativeVideoFile($this->command[1]);
+        $command = [
+            Mediatag::App('rename'),
+            'rename',
+            '-f',
+            $video,
+        ];
+        $renameFunc->exec($command);
     }
 
     public function writeChanges($options = null)
@@ -112,14 +149,14 @@ class WriteMeta extends MediatagExec
 
         $this->errors = null;
 
-        $command = [
+        $this->command = [
             Mediatag::App(),
             $this->video_file,
         ];
 
-        $command = array_merge($command, $this->getOptionArgs());
+        $this->command = array_merge($this->command, $this->getOptionArgs());
         // // UTMlog::Logger('Writing Metadata', $run_cmd);
-        // utmdd($command);
+        // utmdd($this->command);
         if (Option::isTrue('changes') == 1) {
             if (Chooser::$bypass === null) {
                 $go = Chooser::changes();
@@ -138,7 +175,7 @@ class WriteMeta extends MediatagExec
 
             $callback = Callback::check([$this, 'WriteMetaOutput']);
 
-            $this->exec($command, $callback);
+            $this->exec($this->command, $callback);
             if (Option::isTrue('no-progress')) {
                 $this->progressIndicator->finish('Finished');
             }
@@ -147,7 +184,7 @@ class WriteMeta extends MediatagExec
             $results = ($this->errors != '') ? $this->errors : $this->stdout;
         } else {
             $results = false;
-            $this->output->write("\t Skipping " . basename($command[1]));
+            $this->output->write("\t Skipping " . basename($this->command[1]));
         }
         if ($results == true) {
             // utmdump($results);

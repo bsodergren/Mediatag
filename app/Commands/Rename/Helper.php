@@ -84,7 +84,7 @@ trait Helper
                 continue;
             }
 
-            if ($newName == $oldName) {
+            if (strtolower($newName) == strtolower($oldName)) {
                 // Mediatag::$output->writeln('<comment> Skipping renaming file ' . basename($oldName) . '</>');
 
                 continue;
