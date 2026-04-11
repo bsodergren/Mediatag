@@ -28,6 +28,7 @@ class Options extends MediaOptions
         return [
             ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
+            ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
 
             ['search', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
             ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],

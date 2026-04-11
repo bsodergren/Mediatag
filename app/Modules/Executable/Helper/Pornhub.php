@@ -26,10 +26,10 @@ class Pornhub extends VideoDownloader
     public $options = [
         '-o',
         __PLEX_DOWNLOAD__ . '/Pornhub/' . Youtube::__YT_DL_FORMAT__,
-        //  '-u',
-        //  CONFIG['PH_USERNAME'],
-        //  '-p',
-        //  CONFIG['PH_PASSWORD'],
+        '-u',
+        CONFIG['PH_USERNAME'],
+        '-p',
+        CONFIG['PH_PASSWORD'],
     ];
 
     public $KeyPrefix = 'pornhub';

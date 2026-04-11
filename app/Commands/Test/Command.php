@@ -12,7 +12,7 @@ use Symfony\Component\Console\Attribute\AsCommand;
 // const DESCRIPTION = 'Test Command';
 // const NAME        = 'test';
 
-#[AsCommand(name: 'test', description: 'Test Command', aliases: ['thumbnail', 'compare', 'download', 'search'])]
+#[AsCommand(name: 'test', description: 'Test Command', aliases: ['thumbnail', 'compare', 'download', 'search', 'split'])]
 final class Command extends MediaCommand
 {
     // use Lang;
@@ -27,6 +27,9 @@ final class Command extends MediaCommand
             // 'exec'         => null,
             // 'getChanges'   => null,
             // 'writeChanges' => null,
+        ],
+        'split'  => [
+            'splitMethod' => null,
         ],
         // 'download' => [
         //     'execDownload' => null,

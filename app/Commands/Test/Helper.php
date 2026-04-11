@@ -24,6 +24,14 @@ use UTM\Utilities\Option;
 
 trait Helper
 {
+    public function splitMethod()
+    {
+        $files       = parent::$SearchArray;
+        (int) $split = Option::getValue('splitlines');
+        utmdump($split);
+        MediaFile::splitFile($files[0], './batch/', $split, 'batch_', '.csv');
+    }
+
     public function searchFiles()
     {
         $files = parent::$SearchArray;
