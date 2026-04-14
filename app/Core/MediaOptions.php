@@ -76,7 +76,7 @@ class MediaOptions
     private static function getCommandOptions()
     {
         $className = self::$callingClass;
-        utmdump([__LINE__ => ['ClassName' => $className]]);
+  // utmdump([__LINE__ => ['ClassName' => $className]]);
         if ($pos = strrpos($className, '\\')) {
             $class = substr($className, $pos + 1);
         }
@@ -90,7 +90,7 @@ class MediaOptions
 
         $classPath .= $tmpClass . 'Options';
 
-        utmdump([__LINE__ => ['classPath' => $classPath]]);
+  // utmdump([__LINE__ => ['classPath' => $classPath]]);
 
         if (class_exists($classPath)) {
             return $classPath;
@@ -105,7 +105,7 @@ class MediaOptions
 
         // $OptionClassName = Strings::before($className, $CommandName, 1);
         // utmdump(['classname' => $className, 'OptionClassPath' => $OptionClassPath, 'CommandName' => $CommandName, 'OptionClassName' => $OptionClassName]);
-        utmdump([__LINE__ => ['className' => $classPath]]);
+  // utmdump([__LINE__ => ['className' => $classPath]]);
 
         if (\class_exists($classPath)) {
             return $classPath;

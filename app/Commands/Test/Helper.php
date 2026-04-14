@@ -6,13 +6,16 @@
 
 namespace Mediatag\Commands\Test;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoData\Duration;
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Arrays;
@@ -20,54 +23,48 @@ use Paramako\Pornhub\Factory;
 use Symfony\Component\Finder\Finder;
 use UTM\Utilities\Option;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 trait Helper
 {
-
     public function searchPh()
     {
+        $client = Factory::create(['base_uri' => 'https://www.pornhub.com/webmasters/']);
+        $client->disableHttpErrorExceptions();
+        // $client->disableResponseWrapper();
 
-            $client = Factory::create(['base_uri' => 'https://www.pornhub.com/webmasters/']);
-            $client->disableHttpErrorExceptions();
-            // $client->disableResponseWrapper();
+        //  0 => "__construct"
+        //   1 => "getStatusCode"
+        //   2 => "getReasonPhrase"
+        //   3 => "withStatus"
+        //   4 => "getProtocolVersion"
+        //   5 => "withProtocolVersion"
+        //   6 => "getHeaders"
+        //   7 => "hasHeader"
+        //   8 => "getHeader"
+        //   9 => "getHeaderLine"
+        //   10 => "withHeader"
+        //   11 => "withAddedHeader"
+        //   12 => "withoutHeader"
+        //   13 => "getBody"
+        //   14 => "withBody"
+        // ]
 
-//  0 => "__construct"
-//   1 => "getStatusCode"
-//   2 => "getReasonPhrase"
-//   3 => "withStatus"
-//   4 => "getProtocolVersion"
-//   5 => "withProtocolVersion"
-//   6 => "getHeaders"
-//   7 => "hasHeader"
-//   8 => "getHeader"
-//   9 => "getHeaderLine"
-//   10 => "withHeader"
-//   11 => "withAddedHeader"
-//   12 => "withoutHeader"
-//   13 => "getBody"
-//   14 => "withBody"
-// ]
+        $response = $client->videos()->getById('69730652dc13b');
+        //  utmdump(\get_class_methods(get_class($response)));
+        $search = $response->toArray();
+        // utmdump($search);
 
- $response = $client->videos()->getById('69730652dc13b');
-//  utmdump(\get_class_methods(get_class($response)));
-$search = $response->toArray();
-// utmdump($search);
+        foreach ($search as $video) {
+            Mediatag::$Console->writeln($video['url']);
+        }
 
-            foreach ($search as $video) {
-                ;
-                Mediatag::$Console->writeln($video['url']);
-            }
-
-return true;
-
+        return true;
     }
+
     public function splitMethod()
     {
         $files       = parent::$SearchArray;
         (int) $split = Option::getValue('splitlines');
-        utmdump($split);
+        // utmdump($split);
         MediaFile::splitFile($files[0], './batch/', $split, 'batch_', '.csv');
     }
 

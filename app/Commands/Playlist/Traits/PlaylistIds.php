@@ -33,7 +33,7 @@ trait PlaylistIds
     {
         $content         = [];
         $archive_content = Filesystem::readLines(self::$ARCHIVE);
-        utmdump(count($archive_content));
+  // utmdump(count($archive_content));
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $CurrentId = Strings::after($line, ' ');

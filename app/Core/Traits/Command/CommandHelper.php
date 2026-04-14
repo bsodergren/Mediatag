@@ -99,7 +99,7 @@ trait CommandHelper
 
     public static function ArgumentClosure($input, $command)
     {
-        utmdump(['CommandHelper', $command]);
+  // utmdump(['CommandHelper', $command]);
         // the value the user already typed, e.g. when typing "app:greet Fa" before
         // pressing Tab, this will contain "Fa"
         $currentValue = $input->getCompletionValue();
