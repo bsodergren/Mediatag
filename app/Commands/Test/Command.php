@@ -38,7 +38,8 @@ final class Command extends MediaCommand
         // ],
         'search' => [
             // 'exec'        => null,
-            'searchFiles' => null,
+            'searchPh' => null,
+            // 'searchFiles' => null,
         ],
 
     ];

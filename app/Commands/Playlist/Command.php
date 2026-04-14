@@ -52,48 +52,6 @@ final class Command extends MediaCommand
             // 'docompactPlaylist'           => null,
             'dodownloadPlaylistURL' => null,
         ],
-        // 'missing'           => [
-        //     // 'exec'        => null,
-        //     'missing' => null,
-        // ],
-        'find'     => [
-            'find' => null,
-            // 'default' => null,
-        ],
-        // 'cleanBrkDownloads' => [
-        //     'cleanBrkDownloads' => null,
-        // ],
-        'compact'  => [
-            'docompactPlaylist' => true,
-        ],
-        // 'clean'             => [
-        //     'clean' => null,
-        // ],
-        // 'max'               => [
-        //     'trimPlaylist' => null,
-        //     'default'      => null,
-        // ],
-        'json'     => [
-            'exec'      => null,
-            'cleanjSon' => null,
-        ],
-        // 'watchlater'        => [
-        //     'youtubeWatchPlaylist' => null,
-        //     'compact'              => null,
-        // ],
-        // 'premium'           => [
-        //     // 'exec'        => null,
-        //     'premium' => null,
-        //     'compact' => null,
-        // ],
-        // 'split'             => [
-        //     'exec'        => null,
-        //     'splitPlaylist' => null,
-        // ],
-    ];
 
-    public function cleanOnEvent()
-    {
-        utmdd($this->youtube);
-    }
+    ];
 }

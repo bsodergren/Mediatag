@@ -26,8 +26,6 @@ Utm::LoadEnv(__ROOT_DIRECTORY__)->load();
 
 define('CONFIG', Utm::$UTM_CONFIG['path']);
 
-new Utm;
-
 // $container = require __CONFIG_LIB__ . '/container.php';
 
 define('__SQL_USER__', CONFIG['DB_USER']);
@@ -48,6 +46,7 @@ require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
+new Utm(__LOGFILE_DIR__);
 
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');

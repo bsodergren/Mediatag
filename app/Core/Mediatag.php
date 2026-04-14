@@ -6,12 +6,15 @@
 
 namespace Mediatag\Core;
 
+use JBZoo\Cli\CliCommand;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Display\Display;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -24,7 +27,7 @@ use function define;
 use function defined;
 use function is_array;
 
-abstract class Mediatag extends MediaCommand
+class Mediatag extends Command
 {
     public $commandList = [];
 
@@ -132,8 +135,9 @@ abstract class Mediatag extends MediaCommand
         self::$output = $output;
 
         // $this->loadStyles($input, $output);
-
-        $this->command = self::getDefaultName();
+        // utmdump($this->getName(),\get_class_vars($this::class)) ;
+        // $this->command = $this->getDefaultName();
+        // $this->command = self::getDefaultName();
 
         MediaCache::init(self::$input, self::$output);
         Option::init(self::$input, $options);
@@ -218,7 +222,9 @@ abstract class Mediatag extends MediaCommand
         $this->videoArray['dupe'] = [];
         $count                    = count($file_array);
 
-        self::$output->writeln('<info>Getting Video array</info>');
+        if (MediaFinder::$quiet === false) {
+            self::$output->writeln('<info>Getting Video array</info>');
+        }
         foreach ($file_array as $__ => $file) {
             $fs        = new File($file);
             $videoData = $fs->get();

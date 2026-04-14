@@ -126,7 +126,7 @@ class VideoDownloader
                                         $args[]     = $value['msg'];
                                         $outputText = call_user_func_array([$this, $func], $args);
                                     } elseif (array_key_exists('args', $value)) {
-                                        $args = [$value['args']];
+                                        $args = $value['args'];
                                         call_user_func_array([$this, $func], $args);
                                     }
                                 }

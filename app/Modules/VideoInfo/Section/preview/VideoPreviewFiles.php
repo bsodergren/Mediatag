@@ -13,9 +13,8 @@ use GifCreator\GifCreator;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Mediatag\Core\Mediatag;
-// use Intervention\Image\Image;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
+use Mediatag\Modules\VideoInfo\Section\VideoPreview;
 
 use function count;
 

@@ -112,6 +112,7 @@ trait FilterMethods
         $buffer = MediatagExec::cleanBuffer($buffer);
 
         VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = ' . $this->key . '', $buffer, 'download_error.log');
+        // utmdd([$this->key, $buffer]);
 
         $outputText                   = '';
         PlaylistProcess::$current_key = false;
@@ -142,14 +143,13 @@ trait FilterMethods
 
     public function updatePlaylist($type, $file = null)
     {
+        // utmdd($type, $file);
         if ($file !== null) {
             $pcs = pathinfo($file);
             if ($pcs['dirname'] == '.') {
                 $file = __CURRENT_DIRECTORY__ . '/' . $file;
             }
         }
-
-        // utmdump($file);
 
         // utminfo(func_get_args());
         if ($file === null) {
@@ -171,9 +171,9 @@ trait FilterMethods
             case 'premium':
                 $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
                 // $this->Console->writeln($url);
-                if (! str_contains('premium', $file)) {
-                    file_put_contents($this->premium, $url . PHP_EOL, FILE_APPEND);
-                }
+                // if (! str_contains('premium', $file)) {
+                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                // }
 
                 break;
             case 'modelhub':

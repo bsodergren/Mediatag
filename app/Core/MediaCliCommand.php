@@ -49,17 +49,21 @@ use function is_array;
 use function is_int;
 use function sprintf;
 
-class MediaCommand extends DoctrineCommand
+class MediaCliCommand extends CliCommand
 {
     use CommandConfigure;
-    use CommandExecute;
+
+    // use CommandExecute;
     use CommandHelper;
     use CommandInit;
-    use CommandRun;
-    use Lang;
+
+    // use CommandRun;
+    // use Lang;
     use MediaLibrary;
-    use SignalEvents;
-    use Translate;
+    // use SignalEvents;
+    // use Translate;
+
+    public static $DEFAULT_CMD = false;
 
     public static $Console;
 
@@ -81,6 +85,16 @@ class MediaCommand extends DoctrineCommand
 
     protected function executeAction(): int
     {
-        return 0;
+        new Mediatag($this->input, $this->output);
+
+        foreach ($this->command as $cmd => $methods) {
+            if (is_array($methods)) {
+                foreach ($methods as $method => $arg) {
+                    $this->$method();
+                }
+            }
+        }
+
+        return self::SUCCESS;
     }
 }

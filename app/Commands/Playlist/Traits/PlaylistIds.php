@@ -9,6 +9,7 @@ use const PHP_EOL;
 // use Nette\Utils\FileSystem as NetteFile;
 use const SORT_STRING;
 
+use Illuminate\Contracts\Container\ContextualBindingBuilder;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -27,6 +28,34 @@ use function is_array;
 trait PlaylistIds
 {
     public $idList = [];
+
+    public function removeFromArchive($id)
+    {
+        $content         = [];
+        $archive_content = Filesystem::readLines(self::$ARCHIVE);
+        utmdump(count($archive_content));
+        if (is_array($archive_content)) {
+            foreach ($archive_content as $lineNum => $line) {
+                $CurrentId = Strings::after($line, ' ');
+
+                if (is_array($id)) {
+                    if ($pos = array_search($CurrentId, $id)) {
+                        // utmdd($CurrentId, $id[$pos]);
+                        continue;
+                    }
+                } elseif ($CurrentId == $id) {
+                    // utmdd($CurrentId, $id);
+                    continue;
+                }
+
+                $content[] = $line;
+            }
+        }
+        // utmdd(count($content));
+        \asort($content);
+        $content = array_unique($content);
+        Filesystem::writeFile(self::$ARCHIVE, $content);
+    }
 
     public function getUniqueIds($file)
     {

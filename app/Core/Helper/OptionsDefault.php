@@ -6,7 +6,27 @@
 
 namespace Mediatag\Core\Helper;
 
+use JBZoo\Cli\CliHelper;
+use JBZoo\Cli\OutputMods\AbstractOutputMode;
+use JBZoo\Cli\OutputMods\Cron;
+use JBZoo\Cli\OutputMods\Logstash;
+use JBZoo\Cli\OutputMods\Text;
+use JBZoo\Cli\ProgressBars\AbstractProgressBar;
+use JBZoo\Utils\Arr;
+use JBZoo\Utils\Str;
+use JBZoo\Utils\Vars;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ChoiceQuestion;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
+use Symfony\Component\Console\Question\Question;
+
+use function JBZoo\Utils\bool;
+use function JBZoo\Utils\float;
+use function JBZoo\Utils\int;
 
 trait OptionsDefault
 {
@@ -96,6 +116,28 @@ trait OptionsDefault
 
             ['artist', 'a', InputOption::VALUE_OPTIONAL, self::text('L__META_ARTIST', ['TXT' => $cmdName])],
             ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT' => $cmdName])],
+        ];
+
+        return self::getOptions($options);
+    }
+
+    public static function getCliCmdOptions()
+    {
+        self::$Class = __CLASS__;
+        $cmdName     = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
+        $options     = [
+            ['no-progress', null, InputOption::VALUE_NONE, 'Disable progress bar animation for logs. ' . 'It will be used only for <info>' . Text::getName() . '</info> output format.'],
+            ['mute-errors', null, InputOption::VALUE_NONE, "Mute any sort of errors. So exit code will be always \"0\" (if it's possible).\n" . "It has major priority then <info>--non-zero-on-error</info>. It's on your own risk!"],
+            ['stdout-only', null, InputOption::VALUE_NONE, "For any errors messages application will use StdOut instead of StdErr. It's on your own risk!"],
+            ['non-zero-on-error', null, InputOption::VALUE_NONE, 'None-zero exit code on any StdErr message.'],
+            ['timestamp', null, InputOption::VALUE_NONE, 'Show timestamp at the beginning of each message.' . 'It will be used only for <info>' . Text::getName() . '</info> output format.'],
+            ['profile', null, InputOption::VALUE_NONE, 'Display timing and memory usage information.'],
+
+            ['output-mode', null, InputOption::VALUE_REQUIRED, "Output format. Available options:\n" .
+            CliHelper::renderListForHelpDescription([Text::getName() => Text::getDescription(),
+                Cron::getName()                                      => Cron::getDescription(),
+                Logstash::getName()                                  => Logstash::getDescription(), ]), Text::getName()],
+            [Cron::getName(), null, InputOption::VALUE_NONE, 'Alias for <info>--output-mode=' . Cron::getName() . '</info>. <comment>Deprecated!</comment>'],
         ];
 
         return self::getOptions($options);

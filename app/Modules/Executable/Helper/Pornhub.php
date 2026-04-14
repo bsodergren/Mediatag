@@ -59,7 +59,7 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'cancelled'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::DISABLED'],
+                    'updateIdList' => ['args' => PlaylistProcess::DISABLED],
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],
@@ -67,7 +67,7 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'private'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::DISABLED'],
+                    'updateIdList' => ['args' => PlaylistProcess::DISABLED],
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],
@@ -75,7 +75,7 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'restriction'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::DISABLED'],
+                    'updateIdList' => ['args' => PlaylistProcess::DISABLED],
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],
@@ -83,7 +83,7 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'disabled'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::DISABLED'],
+                    'updateIdList' => ['args' => PlaylistProcess::DISABLED],
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],
@@ -91,7 +91,16 @@ class Pornhub extends VideoDownloader
                 'search'       => 'str_contains',
                 'OutputMethod' => [
                     'error'        => ['msg' => 'HTTPError'],
-                    'updateIdList' => ['args' => 'PlaylistProcess::NOTFOUND'],
+                    'updateIdList' => ['args' => PlaylistProcess::NOTFOUND],
+                ],
+                'ConsoleCmd'   => 'writeLn',
+            ],
+            'Upgrade'             => [
+                'search'       => 'str_contains',
+                'OutputMethod' => [
+                    'error'          => ['msg' => 'Premium Video'],
+                    'updatePlaylist' => ['args' => ['premium', PlaylistProcess::PREMIUM_PLAYLIST]],
+
                 ],
                 'ConsoleCmd'   => 'writeLn',
             ],

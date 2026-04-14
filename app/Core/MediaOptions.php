@@ -13,6 +13,7 @@ use Mediatag\Core\Helper\OptionsDefault;
 use Mediatag\Core\Traits\ArgOptions;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
+use Nette\Utils\Strings;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
@@ -37,7 +38,7 @@ class MediaOptions
     use OptionsDefault;
     use Translate;
 
-    public $options = ['Default' => false, 'Meta' => false, 'Test' => false, 'Display' => false];
+    public $options = ['Default' => true, 'Meta' => true, 'Test' => true, 'Display' => true];
 
     public static $callingClass;
 
@@ -63,7 +64,7 @@ class MediaOptions
     {
         $className = static::class;
 
-        // // utmdump($className);
+        // utmdump($className);
         $pathInfo   = explode('\\', $className);
         $pathInfo   = array_slice($pathInfo, 0, 3);
         $pathInfo[] = 'Options';
@@ -75,24 +76,40 @@ class MediaOptions
     private static function getCommandOptions()
     {
         $className = self::$callingClass;
+        utmdump([__LINE__ => ['ClassName' => $className]]);
         if ($pos = strrpos($className, '\\')) {
             $class = substr($className, $pos + 1);
         }
 
-        $tmpClass = str_replace('Command', '', $class);
-
+        $tmpClass  = str_replace('Command', '', $class);
         $classPath = rtrim($className, $class);
 
         // $classPath = str_replace($tmpClass,"",$classPath);
-        // // utmdump($classPath);
 
         // $classPath = rtrim($classPath, 'Commands\\') . '\\';
 
         $classPath .= $tmpClass . 'Options';
+
+        utmdump([__LINE__ => ['classPath' => $classPath]]);
+
         if (class_exists($classPath)) {
             return $classPath;
         }
 
+        $classPath = str_replace('Commands', 'Options', $classPath);
+        // $OptionClassPath = Strings::after($className, 'Controller\\', 1);
+        // // $OptionClassName = Strings::before($className, 'Commands\\', 1);
+
+        // $CommandName = Strings::before($OptionClassPath, '\\', 1);
+        // $className   = Strings::before($className, 'Commands\\', 1) . '\\Options\\';
+
+        // $OptionClassName = Strings::before($className, $CommandName, 1);
+        // utmdump(['classname' => $className, 'OptionClassPath' => $OptionClassPath, 'CommandName' => $CommandName, 'OptionClassName' => $OptionClassName]);
+        utmdump([__LINE__ => ['className' => $classPath]]);
+
+        if (\class_exists($classPath)) {
+            return $classPath;
+        }
         self::$CmdClass = $className;
 
         return null;
@@ -101,7 +118,9 @@ class MediaOptions
     public static function getClassObject($command)
     {
         // utminfo(func_get_args());
+
         $command = ucfirst(strtolower($command));
+        // utmdump($command);
         $command = str_replace('Db', 'DB', $command);
         // $command = str_replace("Ph","PH",$command);
 
@@ -113,7 +132,7 @@ class MediaOptions
         if ($className === null) {
             $className = self::$callingClass;
 
-            // // utmdump([$className, self::$CmdClass]);
+            // utmdump([$className, self::$CmdClass]);
 
             if ($pos = strrpos($className, '\\')) {
                 $class = substr($className, $pos + 1);
@@ -164,7 +183,12 @@ class MediaOptions
                 }
             }
             // // utmdump(self::$classObj);
-            $definitions = self::$classObj->Definitions();
+            $OptionMethod = $command . 'Options';
+            if (method_exists(self::$classObj, $OptionMethod)) {
+                $definitions = self::$classObj->$OptionMethod();
+            } else {
+                $definitions = self::$classObj->Definitions();
+            }
             if (is_array($definitions)) {
                 $cmdOptions = self::getOptions(
                     $definitions
@@ -197,7 +221,7 @@ class MediaOptions
             $breakText = '';
             if ($optionName[0] == 'break') {
                 $key = $idx - 1;
-                $prev[3] .= PHP_EOL . PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
+                $prev[3] .= PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
                 $commandOptions[$key] = new InputOption(...$prev);
 
                 continue;

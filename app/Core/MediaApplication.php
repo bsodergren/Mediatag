@@ -16,8 +16,9 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Contracts\Service\ResetInterface;
 
-class MediaApplication extends Application
+class MediaApplication extends Application implements ResetInterface
 {
     use Lang;
     use Translate;

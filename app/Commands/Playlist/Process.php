@@ -55,50 +55,13 @@ class Process extends Mediatag
 
     public const MISSING_PLAYLIST = __PLEX_PL_DIR__ . '/missing_playlist.txt';
 
+    public const PREMIUM_PLAYLIST = __PLEX_PL_DIR__ . '/premium_playlist.txt';
+
     public $defaultCommands = [
-        // 'cleanBrkDownloads' => null,
-        // 'compact'           => null,
-        // 'download'          => null,
     ];
 
     public $commandList = [
-        // 'missing'           => [
-        //     // 'exec'        => null,
-        //     'missing' => null,
-        // ],
-        // 'find'              => [
-        //     'find' => null,
-        //     // 'default' => null,
-        // ],
-        // 'cleanBrkDownloads' => [
-        //     'cleanBrkDownloads' => null,
-        // ],
-        // 'compact'           => [
-        //     'compact' => null,
-        // ],
-        // 'clean'             => [
-        //     'clean' => null,
-        // ],
-        // 'max'               => [
-        //     'trimPlaylist' => null,
-        //     'default'      => null,
-        // ],
-        // 'json'              => [
-        //     'cleanjSon' => null,
-        // ],
-        // 'watchlater'        => [
-        //     'youtubeWatchPlaylist' => null,
-        //     'compact'              => null,
-        // ],
-        // 'premium'           => [
-        //     // 'exec'        => null,
-        //     'premium' => null,
-        //     'compact' => null,
-        // ],
-        // 'split'             => [
-        //     'exec'        => null,
-        //     'splitPlaylist' => null,
-        // ],
+
     ];
 
     public static $current_key = false;
@@ -120,6 +83,8 @@ class Process extends Mediatag
     public $ids;
 
     public $premium;
+
+    public $youtube;
 
     public $VideoList;
 
