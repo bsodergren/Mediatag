@@ -12,7 +12,7 @@ trait ArgOptions
     // public function Arguments($varName = null, $description = null, $inputArgs =InputArgument::OPTIONAL, $defaultValue = null, $CompletionInput = Closure)
     {
         // utminfo(func_get_args());
-// utmdump(func_get_args());
+        // utmdump(func_get_args());
         return [$name, $mode, $description, $default, $suggestedValues];
     }
 
@@ -36,7 +36,6 @@ trait ArgOptions
         // utminfo(func_get_args());
 
         //    self::getClassObject();/
-
         if (is_object(self::$classObj)) {
             return self::$classObj->Arguments($varName, $description, InputArgument::OPTIONAL, null, $closure);
         }

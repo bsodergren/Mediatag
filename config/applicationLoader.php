@@ -17,6 +17,30 @@ use Symfony\Component\Finder\Finder;
 // use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 // use Symfony\Component\Console\CommandLoader\FactoryCommandLoader;
 
+class Factory
+{
+    /**
+     * Create an instance of a class dynamically.
+     *
+     * @param  string  $className  The name of the class to instantiate.
+     * @param  array  $args  Optional arguments to pass to the class constructor.
+     * @return object The created instance of the class.
+     *
+     * @throws Exception if the class does not exist.
+     */
+    public static function create(string $className, array $args = [])
+    {
+        if (! class_exists($className)) {
+            throw new Exception("Class '$className' does not exist.");
+        }
+
+        // Create an instance dynamically with optional constructor arguments
+        $reflection = new ReflectionClass($className);
+
+        return $reflection->newInstanceArgs($args);
+    }
+}
+
 $input  = new ArgvInput;
 $output = new ConsoleOutput;
 
@@ -50,27 +74,20 @@ if (file_exists($commandsDir)) {
     }
 }
 
-$SingleCommand = false;
 if (count($commandClasses) == 1) {
     $default = true;
 }
-
+$defaultCmd = 'list';
 foreach ($commandClasses as $className) {
-    $Command = new $className;
-
-    // utmdd($Command);
+    $Command = Factory::create($className);
     $application->addCommand($Command);
 
-    if ($Command::$SingleCommand === true) {
-        // utmdd($Command::$SingleCommand);
-        $SingleCommand = true;
+    if ($Command::$DEFAULT_CMD === true) {
+        $defaultCmd = $Command->getName();
     }
 }
 
-if ($default === true) {
-    $application->setDefaultCommand($cmdName, $SingleCommand);
-}
-// $application->setDispatcher($dispatcher);
+$application->setDefaultCommand($defaultCmd);
 $application->run();
 // $loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__);
 // $class  = $loader->load(function ($compiler) {

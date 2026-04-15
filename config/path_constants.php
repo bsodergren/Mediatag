@@ -24,7 +24,7 @@ const __DATA_LIB__ = __CONFIG_LIB__ . '/data';
 
 const __PLEX_VAR_DIR__ = __APP_HOME__ . '/var';
 
-DEFINE_DIR('__LOGFILE_DIR__', __PLEX_VAR_DIR__ . '/log');
+const __LOGFILE_DIR__ = __PLEX_VAR_DIR__ . '/log';
 
 const __DB_BACKUP_ROOT__ = __PLEX_VAR_DIR__ . '/db';
 

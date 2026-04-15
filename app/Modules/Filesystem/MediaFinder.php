@@ -362,9 +362,6 @@ class MediaFinder extends SFinder
         if ($path === null) {
             $path = getcwd();
         }
-        if (Option::isTrue('new') || Mediatag::$input->getArguments()['command'] == 'new ') {
-            // $this->db_array             = Mediatag::$dbconn->getDbFileList();
-        }
 
         // UTMlog::logger('Search Directory', $path);
 
@@ -403,8 +400,7 @@ class MediaFinder extends SFinder
             }
 
             if (
-                Option::isTrue('new') ||
-                Mediatag::$input->getArguments()['command'] == 'new'
+                Option::isTrue('new')
             ) {
                 $file_array = $this->onlyNew($path, $file_array);
                 //  utmdd($file_array);
@@ -414,7 +410,7 @@ class MediaFinder extends SFinder
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);
                     if (self::$quiet === false) {
-                        Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
+                        Mediatag::$output->writeln('<info> mediaFinder ' . $noFiles . ' files found</info>');
                     }
 
                     if (Option::isTrue('dump')) {

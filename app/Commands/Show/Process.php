@@ -26,30 +26,6 @@ class Process extends Mediatag
 
     public $VideoList = [];
 
-    public $defaultCommands = [
-        'exec' => null,
-        // 'compact'           => null,
-        // 'download'          => null,
-    ];
-
-    public $commandList = [
-        // 'missing'    => [
-        //     'exec'        => null,
-        //     'findMissing' => ['missing' => true],
-        // ],
-        // 'new'        => [
-        //     'newFiles' => null,
-        // ],
-        // 'duplicates' => [
-        //     'duplicateFiles' => null,
-        // ],
-
-        // 'playlist'   => [
-        //     'exec'           => null,
-        //     'createPlaylist' => null,
-        // ],
-    ];
-
     protected $useFuncs = ['addMeta'];
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
@@ -60,7 +36,7 @@ class Process extends Mediatag
     public function print()
     {
         // utminfo(func_get_args());
-
+        utmdump('print');
         $filelist_array                = $this->VideoList['file'];
         Mediatag::$Display->LineBreaks = true;
         Mediatag::$Display->DisplayTable($filelist_array);

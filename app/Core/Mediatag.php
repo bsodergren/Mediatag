@@ -254,7 +254,7 @@ class Mediatag extends Command
 
         $this->getVideoArray();
         $total = count($this->videoArray['file']);
-        self::$output->writeLn('<info>There are ' . $total . ' files found</info>');
+        self::$output->writeLn('<info>MediaTag There are ' . $total . ' files found</info>');
     }
 
     // public function runCommand()

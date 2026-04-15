@@ -54,6 +54,7 @@ class TagBuilder
 
             // if (! str_starts_with($this->video_key, 'x')) {
             $jsonupdates = $this->ReaderObj->getJsonValues();
+            // utmdd($jsonupdates);
             if (count($jsonupdates) > 0) {
                 Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
 

@@ -71,6 +71,10 @@ class MediaCommand extends DoctrineCommand
 
     public static $SingleCommand = false;
 
+    public static $DEFAULT_CMD = false;
+
+    public $defaultCmd = 'list';
+
     public $command = [];
 
     private ?string $processTitle = null;

@@ -33,6 +33,10 @@ define('__SQL_PASSWD__', CONFIG['DB_PASS']);
 define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
 require_once __CONFIG_LIB__ . '/path_constants.php';
+
+if (! defined('__LOGFILE_DIR__')) {
+    define('__LOGFILE_DIR__', __PROJECT_ROOT__ . '/logs');
+}
 ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
 
 require_once __CONFIG_LIB__ . '/variables.php';

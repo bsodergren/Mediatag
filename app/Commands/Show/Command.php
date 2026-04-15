@@ -17,6 +17,10 @@ final class Command extends MediaCommand
 {
     use Lang;
 
+    public static $DEFAULT_CMD = true;
+
+    // public static $SingleCommand = true;
+
     public const USE_LIBRARY = true;
 
     public $command = [

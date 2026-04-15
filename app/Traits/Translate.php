@@ -23,9 +23,12 @@ trait Translate
 
     public static function text($constant, $vars = [])
     {
+        $text      = false;
         $class     = self::getClass();
         $thisClass = new ReflectionClass($class);
-        $text      = $thisClass->getConstant($constant);
+        if ($thisClass->hasConstant($constant)) {
+            $text = $thisClass->getConstant($constant);
+        }
 
         if ($text == false) {
             if (! str_contains($class, 'Commands')) {

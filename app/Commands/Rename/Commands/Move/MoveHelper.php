@@ -207,9 +207,13 @@ trait MoveHelper
                 if (Option::isTrue('genre')) {
                     $text[] = ['Genre List' => $metatags['genre']];
                 }
-
+                $style = '<comment>';
+                if ($SortDir == true) {
+                    $style = '<error>';
+                }
                 $text[] = ['Moving' => File::videoPath($video_name)];
-                Mediatag::$output->writeln('Renaming <file>' . File::videoPath($video_file) . '</>' . PHP_EOL . ' <comment>' . File::videoPath($newFile) . '</>');
+                Mediatag::$output->writeln('Renaming <file>' . File::videoPath($video_file) . '</>' . PHP_EOL .
+                $style . File::videoPath($newFile) . '</>');
 
                 if (! Option::isTrue('test')) {
                     (new SfSystem)->rename($video_file, $newFile, false);

@@ -43,7 +43,7 @@ trait JsonHelper
             parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
-            $this->file_array = parent::$dbconn->getDbFileList(' AND updatedJson = 0');
+            $this->file_array = parent::$dbconn->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
         }
@@ -55,7 +55,6 @@ trait JsonHelper
     {
         $this->file_keys = $this->searchDownloads('json');
 
-        // utmdd($this->file_array);
         $count = count($this->file_keys);
         // utmdump($count);
         // utmdd($this->file_array);
@@ -123,6 +122,15 @@ trait JsonHelper
                 // }
 
                 if (Mediatag::$filesystem->exists($json_file)) {
+                    $data = file_get_contents($json_file);
+                    if (\str_contains($data, 'actionTags')) {
+                        $jsondata = \json_decode($data, true);
+
+                        if ($jsondata['actionTags'] != '') {
+                            parent::$output->writeln('<info>' . $jsondata['actionTags'] . ' ' . basename($json_file) . ' </info>');
+                        }
+                    }
+
                     // $ytdl   = (new Youtube)->run('');
                     // $return = $ytdl->youtubeGetJson($json_key);
 

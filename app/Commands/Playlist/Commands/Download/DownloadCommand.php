@@ -4,8 +4,9 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Commands\Playlist;
+namespace Mediatag\Commands\Playlist\Commands\Download;
 
+use Mediatag\Commands\Playlist\Lang;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command as SymCommand;
@@ -13,24 +14,26 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 const DESCRIPTION = 'download PH Playlist';
-const NAME        = 'playlist';
+const NAME        = 'download';
 
-#[AsCommand(name: 'playlist', description: 'download PH Playlist')]
-final class Command extends MediaCommand
+#[AsCommand(name: 'download', description: 'download PH Playlist')]
+final class DownloadCommand extends MediaCommand
 {
     use Lang;
 
     public const USE_LIBRARY = false;
 
     public const USE_SEARCH = false;
+
     // public static $SingleCommand = true;
+    public static $DEFAULT_CMD = true;
 
     public $process;
 
     protected $db;
 
     public $command = [
-        'playlist' => [
+        'download' => [
             'handler'            => [
                 'Helper' => 'ShellPathCompletion',
                 'Option' => 'file',
@@ -41,16 +44,6 @@ final class Command extends MediaCommand
 
             'docompactPlaylist'  => null,
             'dodownloadPlaylist' => null,
-        ],
-        'download' => [
-            'handler'               => [
-                'Helper' => 'ShellPathCompletion',
-                'Option' => 'file',
-                'Type'   => 'Completion::ALL_TYPES',
-            ],
-            'cleanBrkDownloads'     => null,
-            // 'docompactPlaylist'           => null,
-            'dodownloadPlaylistURL' => null,
         ],
 
     ];

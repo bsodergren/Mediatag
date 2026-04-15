@@ -29,7 +29,6 @@ trait CommandExecute
 
         $class     = static::class;
         $arguments = $input->getArguments();
-        // utmdump($arguments);
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
 

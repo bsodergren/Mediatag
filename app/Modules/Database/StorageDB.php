@@ -124,7 +124,6 @@ class StorageDB extends Storage
                 $query .= ' LIMIT  ' . Option::getValue('max');
             }
         }
-
         $results = $this->query($query);
         if (Option::isTrue('numberofFiles') == true) {
             $count = count($results);
