@@ -66,6 +66,8 @@ class MediatagExec
 
     protected $optionArgs = [];
 
+    public $taglist = \__META_TAGS__;
+
     public function __construct($videoData = null, $input = null, $output = null)
     {
         // utmdump(Debug::tracePath());
@@ -80,7 +82,6 @@ class MediatagExec
                     $videoData = (new File($videoData))->get();
                 }
             }
-
             foreach ($videoData as $key => $value) {
                 if (is_array($value)) {
                     foreach ($value as $key_a => $val_a) {
@@ -135,7 +136,7 @@ class MediatagExec
     {
         // utminfo(func_get_args());
 
-        foreach (__META_TAGS__ as $value) {
+        foreach ($this->taglist as $value) {
             $this->metatags[$value] = '';
         }
     }
@@ -191,7 +192,7 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-        utmdump($this->runCommand);
+        // utmdump($this->runCommand);
         // utmdd($callback);
         $process->start();
         try {

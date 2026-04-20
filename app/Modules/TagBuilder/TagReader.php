@@ -26,6 +26,8 @@ class TagReader
 
     public $tag_array = [];
 
+    public $taglist = \__META_TAGS__;
+
     public $fileReader;
 
     public $metaReader;
@@ -131,10 +133,7 @@ class TagReader
 
     public function loadVideo($video)
     {
-        // utminfo(func_get_args());
-
         $this->videoData = $video;
-
         return $this;
     }
 
@@ -157,17 +156,14 @@ class TagReader
 
     public function getMetaValues()
     {
-        // utminfo(func_get_args());
-
-        $meta = new metaReader($this->videoData);
-
+        $meta          = new metaReader($this->videoData);
+        $meta->taglist = $this->taglist;
+        $meta->tag_array = $meta->getvideoData($this->videoData);
         return $meta->getTagArray(false);
     }
 
     public function getDbValues()
     {
-        // utminfo(func_get_args());
-
         $db = new DbReader($this->videoData);
         if ($db->tag_array === null) {
             return null;
@@ -179,9 +175,8 @@ class TagReader
     public function getTagArray($clean = true)
     {
         // utminfo(func_get_args());
-        foreach (__META_TAGS__ as $tag) {
+        foreach ($this->taglist as $tag) {
             $this->{$tag}();
-            // utmdump([$tag, $this->tag_array]);
 
             if (array_key_exists($tag, $this->tag_array)) {
                 Mediatag::notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);

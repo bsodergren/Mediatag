@@ -36,7 +36,7 @@ class Process extends Mediatag
     public function print()
     {
         // utminfo(func_get_args());
-        utmdump('print');
+        // utmdump('print');
         $filelist_array                = $this->VideoList['file'];
         Mediatag::$Display->LineBreaks = true;
         Mediatag::$Display->DisplayTable($filelist_array);

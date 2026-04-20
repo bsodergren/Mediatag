@@ -114,7 +114,7 @@ trait Helper
             if (count($videoArray['updateTags']) > 0) {
                 $progressBar2->setFormat('custom');
                 $this->ChangesArray[] = $videoArray;
-                $this->LogDifferences($videoArray);
+                // $this->LogDifferences($videoArray);
                 $progressBar2->setMessage($idx, 'index');
                 $progressBar2->setMessage($message, 'videoname');
                 $idx++;

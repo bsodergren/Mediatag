@@ -11,6 +11,8 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
 use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
 use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
+use Mediatag\Modules\VideoInfo\VideoInfoTraits\VideoGetters;
+use Mediatag\Modules\VideoInfo\VideoInfoTraits\VideoSetters;
 use Mediatag\Traits\DynamicProperty;
 
 use function array_key_exists;
@@ -21,7 +23,9 @@ class VideoInfo
 {
     use DynamicProperty;
     use VideoCleaner;
+    use VideoGetters;
     use VideoQuery;
+    use VideoSetters;
     use VideoStrings;
 
     public $video_key;
@@ -64,112 +68,6 @@ class VideoInfo
     {
         $this->video_key  = $key;
         $this->video_file = $file;
-    }
-
-    /**
-     * Summary of getVideoDetails.
-     *
-     * @return array
-     */
-    public function getVideoDetails()
-    {
-        // utminfo(func_get_args());
-
-        return $this->get($this->video_key, $this->video_file);
-    }
-
-    public function saveVideoDetails()
-    {
-        // utminfo(func_get_args());
-
-        return $this->save();
-    }
-
-    public function getVideoInfo($key, $file)
-    {
-        // utminfo(func_get_args());
-
-        $this->video_file = $file;
-        $this->video_key  = $key;
-        $exists           = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
-        if ($exists === null) {
-            $data_array = Mediatag::$dbconn->createDbEntry($file, $key);
-            Mediatag::$dbconn->insert($data_array);
-        }
-
-        $this->VideoInfo = $this->getVideoDetails();
-        // utmdump($this->VideoInfo);
-
-        return $this->saveVideoDetails();
-    }
-
-    public function updateVideoData()
-    {
-        // utminfo(func_get_args());
-
-        $file_array = $this->getDbList();
-        $this->getMessageLen($file_array);
-        if (count($file_array) > 0) {
-            $this->fileCount = count($file_array);
-            Mediatag::$output->writeln('<info>Found ' . $this->fileCount . ' files</info>');
-
-            // $this->maxLen = 0;
-
-            foreach ($file_array as $key => $file) {
-                if (file_exists($file)) {
-                    $res = $this->getVideoInfo($key, $file);
-
-                    if ($res !== false) {
-                        if ($this->progressBar === false) {
-                            Mediatag::$output->writeln($this->printNo($this->fileCount) . $this->getVideoText());
-                            $this->fileCount--;
-                        }
-                        $this->progressBar = false;
-                    }
-                }
-            }
-        } else {
-            Mediatag::$output->writeln('All ' . $this->thumbType . ' files are updated');
-        }
-    }
-
-    public function save()
-    {
-        // utminfo(func_get_args());
-
-        $this->VideoInfo['video_key'] = $this->video_key;
-        $this->VideoInfo['library']   = __LIBRARY__;
-
-        if (array_key_exists('duration', $this->VideoInfo)) {
-            if ($this->VideoInfo['duration'] === null) {
-                return false;
-            }
-        }
-        if (array_key_exists('format', $this->VideoInfo)) {
-            if ($this->VideoInfo['format'] === null) {
-                return false;
-            }
-        }
-        // // utmdump($this->VideoInfo);
-
-        if (Mediatag::$dbconn->insert($this->VideoInfo, $this->VideoDataTable)) {
-            // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;
-            // utmdd(["ffdssd",$this->getVideoText(),$this->returnText]);
-            return $this->getVideoText();
-        }
-    }
-
-    public function getvideoId($key)
-    {
-        $this->VideoInfo = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
-        $this->video_id  = null;
-        if ($this->VideoInfo === null) {
-            return null;
-        }
-        $this->video_id = $this->VideoInfo['id'];
-
-        return $this->video_id;
-        // utmdd($exists);
     }
 
     public function clean()

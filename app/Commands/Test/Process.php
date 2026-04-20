@@ -6,31 +6,13 @@
 
 namespace Mediatag\Commands\Test;
 
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
+use Mediatag\Commands\Test\HelperCmd\Helper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
-use Mediatag\Core\MediaCommand;
-use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
-use Mediatag\Entities\MetaEntities;
-use Mediatag\Entities\Tags\Movie;
-use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
-use Mediatag\Modules\VideoData\Data\VideoPreview;
-use Mediatag\Modules\VideoInfo\VideoDetails;
-use Mediatag\Modules\VideoInfo\VideoInfo;
-use Nette\PhpGenerator\ClassType;
-use Nette\PhpGenerator\Literal;
-use Nette\PhpGenerator\PhpFile;
-use Nette\PhpGenerator\PhpNamespace;
-use Nette\PhpGenerator\PsrPrinter;
-use Paramako\Pornhub\Factory;
-use SergiX44\FastImageCompare\FastImageCompare;
-use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Mediatag\Modules\Display\MediaTable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
 
 include_once __DATA_MAPS__ . '/WordMap.php';
@@ -38,253 +20,43 @@ include_once __DATA_MAPS__ . '/WordMap.php';
 class Process extends Mediatag
 {
     use Helper;
-    // use HelperCmds;
     use MediaExecute;
-
     use MediaProcess;
-    use VariablesTrait;
-    // use ytdlptest;
 
     public $VideoList = [];
 
-    public $defaultCommands = [
-        // 'exec' => null,
-    ];
+    public $videoFiles = [];
 
-    public $commandList = [
-        // 'colors'     => [
-        //     'colors'      => null,
-        // ],
-        // 'cmd'        => [
-        //     'exec'         => null,
-        //     'execCmd'      => null,
-        // ],
-        // 'move'       => ['mvOldFiles'=>null],
-    ];
+    public $method = null;
 
-    public $words = [
-        'my',
-        'sexy',
-        'hotwife',
-        'while',
-        'he',
-        'a',
-        'watches',
-        'from',
-        'both',
-        'ends',
-        'when',
-        'the',
-        'husband',
-        'likes',
-        'to',
-        'watch',
-        'office',
-        'xxx',
-        'parody',
-    ];
+    protected $useFuncs = ['addMeta'];
+
+    public $displayTable;
 
     // public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-        // if (Option::isTrue('colors')) {
-        //     \define('USE_SEARCH', true);
-        // }
         parent::boot($input, $output);
-    }
-
-    // public function wordMap($input)
-    // {
-    //     // no shortest distance found, yet
-    //     $shortest = -1;
-
-    //     // loop through words to find the closest
-    //     foreach ($this->words as $word) {
-    //         // calculate the distance between the input word,
-    //         // and the current word
-    //         $lev = levenshtein($input, $word);
-
-    //         // check for an exact match
-    //         if ($lev == 0) {
-    //             // closest word is this one (exact match)
-    //             $closest  = $word;
-    //             $shortest = 0;
-
-    //             // break out of the loop; we've found an exact match
-    //             break;
-    //         }
-
-    //         // if this distance is less than the next found shortest
-    //         // distance, OR if a next shortest word has not yet been found
-    //         if ($lev <= $shortest || $shortest < 0) {
-    //             // set the closest match, and shortest distance
-    //             $closest  = $word;
-    //             $shortest = $lev;
-    //         }
-    //     }
-    //     //   Mediatag::$Console->writeln("Input word: $input\n");
-    //     // if (0 == $shortest) {
-    //     Mediatag::$Console->writeln("Exact match found: $closest");
-    //     // } else {
-    //     //
-    //     // }
-
-    //     return $closest;
-    // }
-
-    public function exec()
-    {
-        $tvRegex = '/^(?P<movie1>[a-zA-Z_\-]+)(?:(?:-|_)(?:(?:s|scene)|(?:e)(?:[\d]+))).*|(?:(?:[a-zA-Z0-9\-_]+)_(?:(?P<movie2>[a-zA-Z]+)(?:[\d]+))\.mp4)|^(?P<movie3>[a-zA-Z_\-]+)/i';
-
-        $files = [
-            'MyWifesFirstBlowBang3-Scene4_s04_ChadAlva_CodeySteele_2160p.mp4',
-            'ProudStagofaSexyVixen-Scene3_s03_MandyMuse_JamesDeen_2160p_h264.mp4',
-            'dp-my-wife-with-me-05-scene-4_Kagney_Lynn_Karter_1080p.mp4',
-            'dp-my-wife-with-me-scene-1_1080p.mp4',
-            'MyHusbandBroughtHomeHisMistress_e16-s02_AthenaFarisJamieMichelleTommyPistol_TommyPistol_AthenaFaris_1080p.mp4',
-            'lasirena_69_ramon_nomar_proudstagofasexyvixen03.mp4',
-            'MHBHM_s04_CaughtCheatingWithMyMistress-MarkZane_LilyLane_1080p.mp4',
-        ];
-
-        foreach ($files as $file) {
-            $r = Movie::isMovie($file);
-            // utmdump($r);
+        $cmd = Option::getValue('cmd');
+        if (\method_exists($this, $cmd)) {
+              Mediatag::$Console->writeln($cmd. ' found');
+            $this->displayTable = new MediaTable($output);
+            $this->method       = $cmd;
+        } else {
+            Mediatag::$Console->writeln('No method found');
         }
-        //      (new MetaEntities)->init()->getCallbackArray();
-        //MetaEntities::CreateCmdOption('Artist', 'frank jorge');
-        // $file = new PhpFile;
-        // $file->addComment('This file is auto-generated.');
-        // $file->setStrictTypes(); // adds declare(strict_types=1)
-
-        // $namespace = $file->addNamespace('Foo');
-        // $class     = $namespace->addClass('A');
-        // $function  = $namespace->addFunction('foo');
-        // // $class = $file->addClass('Foo\A');
-        // // $function = $file->addFunction('Foo\foo');
-
-        // echo (new PsrPrinter)->printFile($file);
-
-        // return Command::SUCCESS;
-
-        // $namespace = new PhpNamespace(__NAMESPACE__);
-        // $namespace->addUse(MediaCommand::class);
-        // $namespace->addUse('Symfony\Component\Console\Attribute\AsCommand');
-        // $namespace->addUse('Mediatag\Core\Helper\MediaExecute');
-        // $namespace->addUse('Mediatag\Core\Helper\MediaProcess');
-        // $class = new ClassType('TestCommand');
-        // $class
-        //     ->setExtends(MediaCommand::class)
-        //     ->addComment("Class description.\nSecond line\n")
-        //     ->addComment('@property-read Nette\Forms\Form $form')
-        //     ->addTrait('Mediatag\Core\Helper\MediaExecute');
-
-        // $class->addAttribute('AsCommand', [
-        //     'name'        => 'test',
-        //     'description' => 'Test Command',
-        //     'aliases'     => ['thumbnail', 'compare', 'download', 'search'],
-
-        // ])
-        //     ->addMethod('execute')
-        //     ->setReturnType('int')
-        //     ->addBody('return parent::execute();')
-        //     ->addComment('Executes the current command.')
-        //     ->addComment('@return int Exit code');
-        // $namespace->add($class);
-
-        // $printer = new TestPrinter;
-        // echo $printer->printNamespace($namespace);
-
-        // return SymfonyCommand::SUCCESS;
-        // $file = PhpFile::fromCode(file_get_contents('/home/bjorn/scripts/Mediatag/app/Modules/Executable/MediatagExec.php'));
-        // Utmdd($file->getClasses());
     }
 
-    // public function exec($option = null)
-    // {
-    //     $thumbnailFile = [];
-
-    //     $img_name  = [];
-    //     $fileArray = parent::$SearchArray;
-    //     foreach ($fileArray as $file) {
-    //         $thumbnailFile[] = (new VideoInfo)->videoToThumb($file);
-    //     }
-
-    //     $instance     = new FastImageCompare;
-    //     $similarArray = $instance->findDuplicates($thumbnailFile, 0.05);
-
-    //     foreach ($similarArray as $t => $tfile) {
-    //         $img_name[] = (new VideoInfo)->thumbToVideo($tfile);
-    //     }
-    //     // mediatag::error($img_name);
-    //     // $this->mvFiles($img_name);
-    //     // utmdd($img_name);
-    // }
-
-    // //     // //
-    // //     // foreach ($this->VideoList['file'] as $key => $videoInfo) {
-    // //     //     // $preview    = new VideoPreview();
-    // //     //     // $previewLoc = $preview->BuildPreview($videoInfo);
-
-    // //     //     $file[] = $videoInfo['video_file'];
-
-    // //     // }
-    // //     // $outputFile = Option::getValue('output', true);
-
-    // //     // // $ffprobe = FFProbe::create();
-    // //     // // $ret = $ffprobe
-    // //     // //     ->streams($file[1]) // extracts streams informations
-    // //     // //     ->videos()                      // filters video streams
-    // //     // //     ->first()                       // returns the first video stream
-    // //     // //     ->all();
-    // //     // // utmdd($ret);
-    // //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
-    // //     // $video  = $ffmpeg->open($file[1]);
-
-    // //     // $tmpFile = dirname($file[1]) . DIRECTORY_SEPARATOR . "tmp_" . basename($file[1]);
-
-    // //     // $video->filters()->clip(TimeCode::fromSeconds(3.5));
-    // //     // $format = new \FFMpeg\Format\Video\X264('copy', 'copy');
-    // //     // $format->setPasses(1);
-    // //     // $video->save($format, $tmpFile);
-    // //     // //  $r = $video->getFFMpegDriver()->getProcessRunner();
-    // //     // // // utmdump($r);
-    // //     // unset($ffmpeg);
-    // //     // unset($video);
-
-    // //     // $ffmpeg = FFMpeg::create(['timeout' => 3000], Command::$logger);
-    // //     // $video  = $ffmpeg->open($file[0]);
-
-    // //     // if ($outputFile === null) {
-    // //     //     $key        = $videoInfo['video_key'];
-    // //     //     $filename   = basename($file[1], '.mp4');
-    // //     //     $firstVideo = basename($file[0], '.mp4');
-    // //     //     $secondName = str_split($filename);
-    // //     //     $firstName  = str_split($firstVideo);
-    // //     //     foreach ($secondName as $i=> $char) {
-    // //     //         if ($firstName[$i] == $char) {
-    // //     //             $name[] = $char;
-    // //     //             continue;
-    // //     //         }
-    // //     //         break;
-    // //     //     }
-
-    // //     //     //$filename = str_replace("-".$key,'',);
-    // //     //     $outputFile = dirname($file[1]) . DIRECTORY_SEPARATOR . implode('', $name) . '.mp4' ;
-    // //     // }
-
-    // //     // // utmdd($outputFile);
-    // //     // $video->concat([$file[0],$tmpFile])->saveFromSameCodecs($outputFile, true);
-    // //     // // $r = $video->getFFMpegDriver()->getProcessRunner();
-    // //     // // // utmdump($r);
-    // //     // unlink($tmpFile);
-    // //     // // unlink($outputFile);
-    // //     // //echo $exec->stdout;
-    // //     // return 1;
-    // // }
-
-    // public function print()
-    // {
-    //     // utminfo(func_get_args());
-    // }
+    public function execCmdOption()
+    {
+        if (! is_null($this->method)) {
+            $fileList = $this->VideoList['file'];
+            foreach ($fileList as $key => $file) {
+                $this->videoFiles[] = $file['video_file'];
+            }
+            $cmd = $this->method;
+            $this->$cmd();
+        }
+    }
 }

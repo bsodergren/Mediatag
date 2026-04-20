@@ -18,6 +18,8 @@ class ReadMeta extends MediatagExec
 
     public $execMode;
 
+    public $taglist = \__META_TAGS__;
+
     public function __construct($videoData, $input = null, $output = null)
     {
         // utminfo($videoData);
@@ -70,12 +72,12 @@ class ReadMeta extends MediatagExec
             $class   = strtolower($class);
             $matched = preg_replace_callback($pattern,
                 function ($matches) use ($class) {
-                    return $this->metatags[$class] = $matches[2];
-
+                    if (\in_array($class, $this->taglist)) {
+                        return $this->metatags[$class] = $matches[2];
+                    }
                     // return $this->metatags;
                 },
                 $text);
-
             // utmdump($matched);
         }
     }

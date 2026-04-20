@@ -18,12 +18,16 @@ class MediaTable
 
     public $table;
 
+    public $output;
+
+    public $section1;
+
     public function __construct(OutputInterface $output)
     {
         // utminfo(func_get_args());
 
-        $output->{$this}->output = $output;
-        $this->section1          = $output->section();
+        $this->output   = $output;
+        $this->section1 = $output->section();
     }
 
     public function displayTable($videoInfo)

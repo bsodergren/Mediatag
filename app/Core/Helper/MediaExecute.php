@@ -51,7 +51,10 @@ trait MediaExecute
         }
 
         if (Option::isTrue('only') == true) {
-            $this->meta_tag_arrary = Option::getValue('only');
+            $this->meta_tag_arrary = [];
+            foreach (Option::getValue('only') as $tag) {
+                $this->meta_tag_arrary[] = $tag;
+            }
         }
 
         if (Option::isTrue('empty') == true) {

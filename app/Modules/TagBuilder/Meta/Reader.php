@@ -36,12 +36,16 @@ class Reader extends TagReader
 
     public $VideoInfo;
 
+    public $videoData;
+
+    public $taglist = \__META_TAGS__;
+
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
 
         $this->expandArray($videoData);
-        $this->tag_array = $this->getvideoData($videoData);
+        // $this->videoData = $videoData;
         // utmdd($videoData, $this->tag_array);
         // utmdd([__METHOD__,$this->tag_array,$videoData]);
     }
@@ -49,7 +53,6 @@ class Reader extends TagReader
     public function __call($method, $arguments)
     {
         // utminfo(func_get_args());
-        // utmdump($method);
         $this->get($method);
     }
 
@@ -59,9 +62,11 @@ class Reader extends TagReader
         // $key        = $file_array['video_key'];
         // $video_info = MediaCache::get($key);
         // if ($video_info === false) {
-        $read       = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
+        $read          = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
+        $read->taglist = $this->taglist;
+
         $video_info = $read->read();
-        // utmdd($video_info);
+        // utmdd($video_info[$this->video_key]['metatags']);
         // if (count($video_info[$this->video_key]['metatags']) > 0) {
         //     MediaCache::put($key, $video_info);
         // }

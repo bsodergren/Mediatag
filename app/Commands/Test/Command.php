@@ -12,34 +12,21 @@ use Symfony\Component\Console\Attribute\AsCommand;
 // const DESCRIPTION = 'Test Command';
 // const NAME        = 'test';
 
-#[AsCommand(name: 'test', description: 'Test Command', aliases: ['thumbnail', 'compare', 'download', 'search', 'split'])]
+#[AsCommand(name: 'test', description: 'Test Command')]
 final class Command extends MediaCommand
 {
     // use Lang;
 
     public const USE_LIBRARY = false;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH = false;
+
+    public static $DEFAULT_CMD = true;
 
     public $command = [
-        'test'   => [
-            'exec' => null,
-            // 'exec'         => null,
-            // 'getChanges'   => null,
-            // 'writeChanges' => null,
-        ],
-        'split'  => [
-            'splitMethod' => null,
-        ],
-        // 'download' => [
-        //     'execDownload' => null,
-        //     //     'doThumbnail' => null,
-        //     //     //     // 'exec' => null,
-        // ],
-        'search' => [
-            // 'exec'        => null,
-            'searchPh' => null,
-            // 'searchFiles' => null,
+        'test' => [
+            'exec'          => null,
+            'execCmdOption' => null,
         ],
 
     ];

@@ -11,11 +11,13 @@ mediatag:
         - tags
         - keyword
         - title
-        - gallery
+        - genre_map
+        - artists_map
 plexweb:
     prefix: "plexweb_"
     tables:
         - 'video_chapter'
+        - 'video_markers'
         - 'settings'
         - 'search_data'
         - 'video_sequence'

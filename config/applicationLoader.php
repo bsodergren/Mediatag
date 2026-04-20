@@ -73,21 +73,23 @@ if (file_exists($commandsDir)) {
         }
     }
 }
-
+$singleCommand = false;
 if (count($commandClasses) == 1) {
-    $default = true;
+    // $singleCommand = true;
 }
+
 $defaultCmd = 'list';
+
 foreach ($commandClasses as $className) {
     $Command = Factory::create($className);
     $application->addCommand($Command);
-
-    if ($Command::$DEFAULT_CMD === true) {
+    if ($Command::$DEFAULT_CMD === true ||
+     $singleCommand === true) {
         $defaultCmd = $Command->getName();
     }
 }
 
-$application->setDefaultCommand($defaultCmd);
+$application->setDefaultCommand($defaultCmd, $singleCommand);
 $application->run();
 // $loader = new Nette\DI\ContainerLoader(__PLEX_PL_TMP_DIR__);
 // $class  = $loader->load(function ($compiler) {

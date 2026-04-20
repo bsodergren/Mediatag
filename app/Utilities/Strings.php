@@ -57,7 +57,7 @@ class Strings extends \Nette\Utils\Strings
         return sprintf('%02d:%02d:%02d', $hours, $minutes, $sec);
     }
 
-    public static function clean($text)
+    public static function clean($text, $noSpaces = false)
     {
         // utminfo(func_get_args());
 
@@ -65,7 +65,7 @@ class Strings extends \Nette\Utils\Strings
             return $text;
         }
         $translate = self::translate($text);
-        $new_text  = trim(self::cleanSpecialChars($translate));
+        $new_text  = trim(self::cleanSpecialChars($translate, $noSpaces));
         // if($new_text == "") {
 
         // // // utmdump([$text,$new_text,$translate]);

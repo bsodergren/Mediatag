@@ -256,6 +256,7 @@ class MediaFile
         }
 
         NetteFile::createDir($targetpath);
+        utmdump($targetpath);
 
         $handle = @fopen($source, 'r');
 
@@ -265,7 +266,6 @@ class MediaFile
 
             $file_name = sprintf('%s%02d%s', $filename, $j, $ext);
             $fname     = $targetpath . $file_name;
-
             Strings::showstatus($i, $lines, 80, $file_name);
             if ($i >= $lines) {
                 self::saveToFile($buffer, $fname);

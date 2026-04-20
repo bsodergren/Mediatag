@@ -17,7 +17,7 @@ class Options extends MediaOptions
 
     // public $options                          = ['Default'=>false];
     // public $options = ['Default'=>true, 'Test'=>true];
-    public $options = ['Default',  'Test'];
+    public $options = ['Default', 'Meta']; //['Default',  'Test'];
 
     public function Definitions()
     {
@@ -26,13 +26,15 @@ class Options extends MediaOptions
         self::$Class = __CLASS__;
 
         return [
-            ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
-            ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
-            ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
-
-            ['search', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
             ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
-            ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],
+
+            // ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
+            // ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
+            // ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
+
+            // ['search', 's', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
+            //
+            // ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],
         ];
     }
 }
