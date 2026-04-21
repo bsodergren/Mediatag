@@ -89,7 +89,7 @@ class Process extends Mediatag
     public $VideoList;
 
     // protected $useFuncs = ['addMeta', 'setupMap'];
-    protected $useFuncs = ['setupMap', 'setupDb'];
+    protected $useFuncs = ['setupMap', 'setupDb', 'addMeta'];
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {

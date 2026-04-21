@@ -241,6 +241,7 @@ trait FilterMethods
         if ($key != 'FixupM3u8') {
             Mediatag::error('There was an error ' . $key);
         }
+        $this->num_of_lines--;
 
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
     }

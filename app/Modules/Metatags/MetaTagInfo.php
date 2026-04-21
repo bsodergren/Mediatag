@@ -4,7 +4,7 @@ namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\TagDB;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 use UTM\Bundle\mysql\MysqliDb;
 
 class MetaTagInfo extends Mediatag

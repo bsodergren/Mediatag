@@ -13,7 +13,7 @@ use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\MetaTags;
 use UTM\Utilities\Option;
 

@@ -13,7 +13,7 @@ use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
 use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
 use Mediatag\Modules\VideoInfo\VideoInfoTraits\VideoGetters;
 use Mediatag\Modules\VideoInfo\VideoInfoTraits\VideoSetters;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 
 use function array_key_exists;
 use function count;

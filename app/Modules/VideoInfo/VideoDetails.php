@@ -5,7 +5,7 @@ namespace Mediatag\Modules\VideoInfo;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 
 class VideoDetails
 {

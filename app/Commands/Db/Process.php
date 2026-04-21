@@ -18,7 +18,7 @@ use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Command\Command;

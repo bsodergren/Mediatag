@@ -222,7 +222,7 @@ class Youtube extends MediatagExec
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);
             } else {
-                $this->num_of_lines = count($names) + 1;
+                $this->num_of_lines = count($names); // + 1;
             }
 
             if (! str_contains('premium', $this->playlist)) {

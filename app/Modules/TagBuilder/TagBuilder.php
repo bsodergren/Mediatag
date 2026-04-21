@@ -8,7 +8,7 @@ namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
-use Mediatag\Traits\DynamicProperty;
+use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;

@@ -8,7 +8,6 @@ use const PHP_EOL;
 use Mediatag\Commands\Create\Traits\BaseCommand;
 use Mediatag\Core\MediaCommand;
 use Mediatag\Core\Mediatag;
-use Mediatag\Traits\DynamicProperty;
 use Mediatag\Utilities\Chooser;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
@@ -17,6 +16,7 @@ use Nette\PhpGenerator\TraitType;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
+use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function is_array;
@@ -311,7 +311,7 @@ trait ClassMethods
         ];
 
         return array_merge($parentOptions, $options);
-     
+
 EOT;
         $this->GeneratedClass->addProperty('options')
             ->setPublic()
