@@ -6,7 +6,8 @@
 
 namespace Mediatag\Modules\Metatags;
 
-use Mediatag\Modules\Database\TagDB;
+use Mediatag\Modules\Database\Storage;
+
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\MediaArray;
 
@@ -24,14 +25,14 @@ class Genre extends TagBuilder
         // utminfo(func_get_args());
 
         if (parent::$dbConn === null) {
-            parent::$dbConn = new TagDB;
+           Storage::$DB =Storage::$DB;
         }
-        self::$genreArray = parent::$dbConn->listGenre();
+        self::$genreArray =Storage::$DB->listGenre();
         $textArray        = explode(',', $text);
         foreach ($textArray as $genre) {
-            $key = parent::$dbConn->makeKey($genre);
+            $key =Storage::$DB->makeKey($genre);
             if (MediaArray::search(self::$genreArray, $key) === null) {
-                parent::$dbConn->addGenre($genre);
+               Storage::$DB->addGenre($genre);
             }
         }
     }

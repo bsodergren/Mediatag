@@ -47,7 +47,7 @@ trait MergeHelper
          d.id = p.playlist_id ) ORDER BY v.filename DESC';
         $sql     = str_replace(PHP_EOL, '', $sql);
         $sql     = str_replace('  ', ' ', $sql);
-        $results = Mediatag::$dbconn->query($sql);
+        $results = Storage::$DB->query($sql);
 
         return $results;
     }

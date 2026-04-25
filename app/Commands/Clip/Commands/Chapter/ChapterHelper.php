@@ -44,7 +44,7 @@ trait ChapterHelper
             // utmdump($this->Marker->video_id);
             if ($this->Marker->video_id !== null) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
-                $result = Mediatag::$dbconn->query($query);
+                $result = Storage::$DB->query($query);
                 // // utmdump($result);
                 if (count($result) > 0) {
                     $markers = $this->getVideoChapters($result);

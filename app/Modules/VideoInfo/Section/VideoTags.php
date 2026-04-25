@@ -6,6 +6,7 @@
 
 namespace Mediatag\Modules\VideoInfo\Section;
 
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
 use Mediatag\Modules\VideoInfo\VideoInfo;
@@ -53,7 +54,7 @@ class VideoTags extends VideoInfo
             }
         }
 
-        $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
+        $tagList['subLibrary'] = Storage::getSubLibrary($vdata['video_path']);
 
         $this->tagList = $tagList;
 

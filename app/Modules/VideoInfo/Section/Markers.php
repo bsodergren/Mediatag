@@ -90,7 +90,7 @@ class Markers extends VideoInfo
     //         foreach ($missing_thumb as $k => $file) {
     //             $query = 'update '.$this->VideoDataTable.' set thumbnail = null WHERE id = '.$k.'';
 
-    //             $result = Mediatag::$dbconn->query($query);
+    //             $result = Storage::$DB->query($query);
     //             $file   = $this->thumbToVideo($file);
 
     //             Mediatag::$output->write('<comment>Changing '.$k.' to null, '.$file.' </comment>');
@@ -133,7 +133,7 @@ class Markers extends VideoInfo
         foreach ($this->VideoInfo as $data) {
             $id = $data['id'];
             unset($data['id']);
-            Mediatag::$dbconn->update($data, ['id' => $id], $this->VideoDataTable);
+            Storage::$DB->update($data, ['id' => $id], $this->VideoDataTable);
         }
         $this->returnText = '<comment>Updated</comment> ';
 
@@ -210,7 +210,7 @@ class Markers extends VideoInfo
     //     $file_array = [];
 
     //     $query  = $this->videoQuery();
-    //     $result = Mediatag::$dbconn->query($query);
+    //     $result = Storage::$DB->query($query);
 
     //     foreach ($result as $_ => $row) {
     //         $video_key = $row['video_key'];

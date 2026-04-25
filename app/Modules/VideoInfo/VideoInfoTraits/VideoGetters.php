@@ -3,6 +3,7 @@
 namespace Mediatag\Modules\VideoInfo\VideoInfoTraits;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
 use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
@@ -34,10 +35,10 @@ trait VideoGetters
 
         $this->video_file = $file;
         $this->video_key  = $key;
-        $exists           = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
+        $exists           = Storage::$DB->videoExists($key, null, $this->VideoFileTable);
         if ($exists === null) {
-            $data_array = Mediatag::$dbconn->createDbEntry($file, $key);
-            Mediatag::$dbconn->insert($data_array);
+            $data_array = Storage::$DB->createDbEntry($file, $key);
+            Storage::$DB->insert($data_array);
         }
 
         $this->VideoInfo = $this->getVideoDetails();
@@ -48,7 +49,7 @@ trait VideoGetters
 
     public function getvideoId($key)
     {
-        $this->VideoInfo = Mediatag::$dbconn->videoExists($key, null, $this->VideoFileTable);
+        $this->VideoInfo = Storage::$DB->videoExists($key, null, $this->VideoFileTable);
         $this->video_id  = null;
         if ($this->VideoInfo === null) {
             return null;

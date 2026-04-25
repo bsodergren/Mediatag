@@ -248,7 +248,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        Mediatag::$dbconn->updateDBEntry($videoData['video_key'], $videoData, false);
+        Storage::$DB->updateDBEntry($videoData['video_key'], $videoData, false);
     }
 
     public function download()

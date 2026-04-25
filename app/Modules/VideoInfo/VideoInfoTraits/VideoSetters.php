@@ -36,7 +36,7 @@ trait VideoSetters
         }
         // // utmdump($this->VideoInfo);
 
-        if (Mediatag::$dbconn->insert($this->VideoInfo, $this->VideoDataTable)) {
+        if (Storage::$DB->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;
             // utmdd(["ffdssd",$this->getVideoText(),$this->returnText]);
             return $this->getVideoText();

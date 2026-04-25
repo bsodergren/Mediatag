@@ -76,14 +76,14 @@ trait Artist
     /**
      * getArtistTransform.
      */
-    public function getArtistTransform($names, $delim = ', ')
+    public function getArtistTransform($names, $delim = ',')
     {
         // utminfo(func_get_args());
 
         $namesArray = [];
         $names      = str_replace('_1080p', '', $names);
         $names      = str_replace($this->getArtistDelim(), $delim, $names);
-        // $names          = str_replace('_', ' ', $names);
+        $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
 
@@ -100,9 +100,11 @@ trait Artist
         */
         foreach ($names_array as $aName) {
             //  $aName = ucwords($aName);
+            $aName = str_replace(' ', '', $aName);
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
-
+// utmdump($parts);
             $aName = implode(' ', $parts);
+            //  $name_key = str_replace(' ', '', $name_key);
             // // utmdump($aName);
 
             if ($this->ignoreArtist($aName) === true) {
@@ -183,13 +185,13 @@ trait Artist
             if ($success != 0) {
                 if ($this->getArtistFullNames() === true) {
                     if ($this->getGenre() == 'MFF') {
-                        $delim = ', ';
+                        $delim = ',';
                     } else {
-                        $delim = ', ';
+                        $delim = ',';
                         $delim = $this->getArtistDelim();
                     }
                 } else {
-                    $delim = ', ';
+                    $delim = ',';
                 }
                 if (! array_key_exists($this->getArtistMatch(), $output_array)) {
                     return null;

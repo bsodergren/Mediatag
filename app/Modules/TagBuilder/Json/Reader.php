@@ -8,7 +8,8 @@ namespace Mediatag\Modules\TagBuilder\Json;
 
 use Facebook\WebDriver\Exception\WebDriverException;
 use Mediatag\Core\MediaCache;
-use Mediatag\Modules\Database\TagDB;
+use Mediatag\Modules\Database\Storage;
+
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\TagBuilder\TagReader;
@@ -35,7 +36,7 @@ class Reader extends TagReader
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
-        $this->db = new TagDB;
+        $this->db =Storage::$DB;
 
         $this->expandArray($videoData);
 

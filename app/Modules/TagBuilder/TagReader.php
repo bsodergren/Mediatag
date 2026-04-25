@@ -13,8 +13,8 @@ use Mediatag\Modules\TagBuilder\DB\Reader as DbReader;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\TagBuilder\Json\Reader as jsonReader;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
-use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\MetaTags;
+use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -39,7 +39,7 @@ class TagReader
     public function __construct()
     {
         // utminfo(func_get_args());
-
+        // utmdd(__META_TAGS__);
         $this->dbConn = new Storage;
     }        // // UTMlog::Logger('data', $this->videoData);
 
@@ -134,6 +134,7 @@ class TagReader
     public function loadVideo($video)
     {
         $this->videoData = $video;
+
         return $this;
     }
 
@@ -156,9 +157,10 @@ class TagReader
 
     public function getMetaValues()
     {
-        $meta          = new metaReader($this->videoData);
-        $meta->taglist = $this->taglist;
-        $meta->tag_array = $meta->getvideoData($this->videoData);
+        $meta = new metaReader($this->videoData);
+        // $meta->taglist   = $this->taglist;
+        // $meta->tag_array = $meta->getvideoData($this->videoData);
+
         return $meta->getTagArray(false);
     }
 

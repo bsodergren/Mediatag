@@ -14,7 +14,7 @@ trait CaptionsHelper
         foreach ($file_array as $file) {
             $video_file = str_replace('.vtt', '.mp4', $file);
             $videoKey   = MediaFile::file($video_file, 'videokey');
-            $exists     = parent::$dbconn->videoExists($videoKey, null, __MYSQL_VIDEO_INFO__);
+            $exists     =Storage::$DB->videoExists($videoKey, null, __MYSQL_VIDEO_INFO__);
 
             utmdd($exists);
         }

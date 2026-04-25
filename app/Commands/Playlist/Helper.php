@@ -48,40 +48,40 @@ trait Helper
         Mediatag::$output->writeln('<info> downloading the watchlater list </info>');
 
         if (Option::istrue('url')) {
-            $this->url = Option::getValue('url');
+            $this->playlist_url = Option::getValue('url');
         }
 
-        $this->youtube->run($this->playlist)->createWatchList($this->url);
+        $this->youtube->run($this->playlist)->createPlaylistFromPH($this->playlist_url);
     }
 
-    public function dddodownloadPlaylist()
-    {
-        $this->youtube->playlist = $this->playlist;
-        $fileArray               = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-        $count                   = count($fileArray);
+    // public function dddodownloadPlaylist()
+    // {
+    //     $this->youtube->playlist = $this->playlist;
+    //     $fileArray               = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    //     $count                   = count($fileArray);
 
-        foreach ($fileArray as $i => $download_url) {
-            $url                         = trim($download_url);
-            $this->youtube->num_of_lines = $count;
-            $count--;
-            if (Option::istrue('max')) {
-                if (Option::getValue('max') < $i - 1) {
-                    continue;
-                }
-            }
-            // utmdump(['i' => $i, 'max' => Option::getValue('max') - 1, 'cur' => $i - 1, 'url' => $url]);
+    //     foreach ($fileArray as $i => $download_url) {
+    //         $url                         = trim($download_url);
+    //         $this->youtube->num_of_lines = $count;
+    //         $count--;
+    //         if (Option::istrue('max')) {
+    //             if (Option::getValue('max') < $i - 1) {
+    //                 continue;
+    //             }
+    //         }
+    //         // utmdump(['i' => $i, 'max' => Option::getValue('max') - 1, 'cur' => $i - 1, 'url' => $url]);
 
-            if ($url != '') {
-                $this->youtube->run($url)->downloadPlaylist();
+    //         if ($url != '') {
+    //             $this->youtube->run($url)->downloadPlaylist();
 
-                // utmdd($url);
-            }
-        }
-        $this->secondRun = true;
+    //             // utmdd($url);
+    //         }
+    //     }
+    //     $this->secondRun = true;
 
-        $this->premiumIds = $this->youtube->premiumIds;
-        $this->docompactPlaylist();
-    }
+    //     $this->premiumIds = $this->youtube->premiumIds;
+    //     $this->docompactPlaylist();
+    // }
 
     public function dodownloadPlaylist()
     {
@@ -90,6 +90,13 @@ trait Helper
         //     // utmdump($download_url);
         // }
         // utmdd($download_url);
+
+        if (Option::istrue('url')) {
+            $this->youtubeWatchPlaylist();
+
+            return true;
+        }
+
         $this->youtube->run($this->playlist)->downloadPlaylist();
         $this->premiumIds = $this->youtube->premiumIds;
         $this->secondRun  = true;
@@ -221,6 +228,10 @@ trait Helper
 
     public function docompactPlaylist($firstRun = false)
     {
+        if (Option::istrue('url')) {
+            return '';
+        }
+
         // utmdump($firstRun);
         // utminfo(func_get_args());
         //   Mediatag::debug('Compact Playlist', var_dump($firstRun));

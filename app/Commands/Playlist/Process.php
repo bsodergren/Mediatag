@@ -84,6 +84,8 @@ class Process extends Mediatag
 
     public $premium;
 
+    public $playlist_url;
+
     public $youtube;
 
     public $VideoList;
@@ -103,10 +105,11 @@ class Process extends Mediatag
         } else {
             $this->playlist = Option::getValue('file');
         }
+
+        $this->playlist = __PLEX_PL_DIR__ . \DIRECTORY_SEPARATOR . basename($this->playlist);
         // }
-        // utmdd($this->playlist);
         if (Option::istrue('url')) {
-            $this->playlist = Option::getValue('url');
+            $this->playlist_url = Option::getValue('url');
         }
 
         if (Option::istrue('archive')) {
@@ -122,6 +125,7 @@ class Process extends Mediatag
             Filesystem::createDir(__PLEX_PL_TMP_DIR__, 0755);
         }
 
-        $this->youtube = new Youtube(Mediatag::$input, Mediatag::$output);
+        $this->youtube           = new Youtube(Mediatag::$input, Mediatag::$output);
+        $this->youtube->playlist = $this->playlist;
     }
 }

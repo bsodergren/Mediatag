@@ -139,7 +139,7 @@ trait Helper
 
             if ($this->Marker->video_id !== null) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
-                $result = Mediatag::$dbconn->query($query);
+                $result = Storage::$DB->query($query);
 
                 $markers = $this->getVideoMarks($result);
 

@@ -4,14 +4,14 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\Database;
+namespace Mediatag\Modules\Database\Traits;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\VideoInfo\Section\Gallery;
 
 use function is_array;
 
-class GalleryStorageDB extends StorageDB
+trait GalleryStorageDB
 {
     public function createDbEntry($video_file, $video_key)
     {

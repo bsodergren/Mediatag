@@ -11,7 +11,7 @@ use const DIRECTORY_SEPARATOR;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFinder;
@@ -78,7 +78,7 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         // define('USE_SEARCH', false);
         parent::boot($input, $output);
-        parent::$dbconn = new GalleryStorageDB($input, $output);
+       Storage::$DB = new GalleryStorageDB($input, $output);
     }
 
     public function exec($option = null)
@@ -104,7 +104,7 @@ class Process extends Mediatag
 
         parent::$SearchArray = $this->VideoList;
         $file_array          = parent::$SearchArray;
-        $this->DbMap         = new DbMap;
+        $this->DbMap         =Storage::$DB;
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
@@ -128,8 +128,8 @@ class Process extends Mediatag
             $this->file_array[$key] = $file;
         }
 
-        parent::$dbconn->file_array = $this->file_array;
-        $this->db_array             = parent::$dbconn->getDbFileList();
+       Storage::$DB->file_array = $this->file_array;
+        $this->db_array             =Storage::$DB->getDbFileList();
 
         return $this;
     }

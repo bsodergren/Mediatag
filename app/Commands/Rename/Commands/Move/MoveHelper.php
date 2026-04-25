@@ -5,7 +5,7 @@ namespace Mediatag\Commands\Rename\Commands\Move;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -42,7 +42,7 @@ trait MoveHelper
         // utmdd('fasdfsd', $this->VideoList);
 
         $file_array = [];
-        $tagConn    = new DbMap;
+        $tagConn    =Storage::$DB;
 
         if (Option::isTrue('filelist')) {
             $file       = Option::getValue('filelist', 1);
@@ -103,7 +103,6 @@ trait MoveHelper
             $video_file = $videoData['video_file'];
             $message    = $videoData['msg'];
             $metatags   = (new TagReader)->loadVideo($videoData)->getMetaValues();
-
             if (! is_array($message)) {
                 $message = [];
                 //     Mediatag::$Console->info($message[0],$message[1],$message[2]);
@@ -119,7 +118,7 @@ trait MoveHelper
                 $studio = $metatags['studio'];
             }
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
-            if (Option::isTrue('genre')) {
+            if (Option::isTrue('byGenre')) {
                 $genrePath = '/Sort';
                 $SortDir   = true;
 
@@ -138,8 +137,8 @@ trait MoveHelper
             }
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
 
-            if (Option::isTrue('studio')) {
-                $prefix = '/' . Option::getValue('studio', 1)[0];
+            if (Option::isTrue('byStudio')) {
+                $prefix = '/' . Option::getValue('byStudio', 1)[0];
             }
             if (self::istrue('pov')) {
                 //   $prefix = '/POV';
@@ -204,7 +203,7 @@ trait MoveHelper
             if (! file_exists($newFile)) {
                 $text[] = 'Moving File';
 
-                if (Option::isTrue('genre')) {
+                if (Option::isTrue('byGenre')) {
                     $text[] = ['Genre List' => $metatags['genre']];
                 }
                 $style = '<comment>';

@@ -38,17 +38,17 @@ trait ImportHelper
             $jsonArray           = json_decode($fileContent[0], 1);
             $jsonArray['studio'] = trim(str_replace($jsonArray['network'], '', $jsonArray['studio']), '/');
 
-            $videoinfo  = Mediatag::$dbconn->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
+            $videoinfo  = Storage::$DB->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
             $updateData = 'updateData';
             if (is_null($videoinfo)) {
-                $exists     = Mediatag::$dbconn->videoExists($video_key, table: __MYSQL_VIDEO_FILE__);
+                $exists     = Storage::$DB->videoExists($video_key, table: __MYSQL_VIDEO_FILE__);
                 $updateData = 'importData';
             }
             if (! is_null($exists)) {
                 $updateData = 'importData';
             } else {
                 Mediatag::$output->write('update => ');
-                Mediatag::$output->writeln(Mediatag::$dbconn->getLastQuery());
+                Mediatag::$output->writeln(Storage::$DB->getLastQuery());
             }
             $this->$updateData($jsonArray, $video_key);
         }
@@ -56,7 +56,7 @@ trait ImportHelper
 
     public function updateData($data, $key)
     {
-        Mediatag::$dbconn->update($data, ['video_key' => $key], __MYSQL_VIDEO_METADATA__);
+        Storage::$DB->update($data, ['video_key' => $key], __MYSQL_VIDEO_METADATA__);
     }
 
     public function importData($data, $key)
@@ -69,7 +69,7 @@ trait ImportHelper
             $insertData[] = [$field => $value];
         }
 
-        Mediatag::$dbconn->insert($data, __MYSQL_VIDEO_METADATA__);
-        Mediatag::$output->writeln('import => ' . Mediatag::$dbconn->getLastQuery());
+        Storage::$DB->insert($data, __MYSQL_VIDEO_METADATA__);
+        Mediatag::$output->writeln('import => ' . Storage::$DB->getLastQuery());
     }
 }

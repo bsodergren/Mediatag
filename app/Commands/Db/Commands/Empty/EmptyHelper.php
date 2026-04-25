@@ -14,8 +14,8 @@ trait EmptyHelper
         // utminfo(func_get_args());
 
         self::$Class                  = __CLASS__;
-        Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
-        $videos                       = Mediatag::$dbconn->getVideoCount();
+        Storage::$DB->file_array = Mediatag::$SearchArray;
+        $videos                       = Storage::$DB->getVideoCount();
 
         if (Option::istrue('yes')) {
             $go     = true;
@@ -46,7 +46,7 @@ trait EmptyHelper
 
         if ($go == true) {
             Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
-            Mediatag::$dbconn->emptydatabase();
+            Storage::$DB->emptydatabase();
         }
     }
 }

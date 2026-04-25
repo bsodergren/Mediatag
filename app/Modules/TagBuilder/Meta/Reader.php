@@ -45,8 +45,8 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $this->expandArray($videoData);
-        // $this->videoData = $videoData;
-        // utmdd($videoData, $this->tag_array);
+        $this->tag_array = $this->getvideoData($videoData);
+
         // utmdd([__METHOD__,$this->tag_array,$videoData]);
     }
 
@@ -78,7 +78,6 @@ class Reader extends TagReader
     private function get($tag)
     {
         // utminfo(func_get_args());
-        // utmdd($this->tag_array);
         if (! array_key_exists($tag, $this->tag_array)) {
             $this->tag_array[$tag] = null;
         }

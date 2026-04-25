@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\Database;
+namespace Mediatag\Modules\Database\Traits;
 
 use const PHP_EOL;
 
@@ -25,54 +25,54 @@ use function array_key_exists;
 use function count;
 use function is_array;
 
-class StorageDB extends Storage
+trait StorageDB
 {
     public $DbFileArray = [];
 
-    public $input;
+    // public $input;
 
-    /**
-     * output.
-     */
-    public $output;
+    // /**
+    //  * output.
+    //  */
+    // public $output;
 
-    public $videoData;
+    // public $videoData;
 
-    public $file_array;
+    // public $file_array;
 
-    public $video_string = [];
+    // public $video_string = [];
 
-    public $video_file;
+    // public $video_file;
 
-    public $video_path;
+    // public $video_path;
 
-    public $video_key;
+    // public $video_key;
 
-    public $video_name;
+    // public $video_name;
 
-    public $FileNumber;
+    // public $FileNumber;
 
-    public $RowBlock;
+    // public $RowBlock;
 
-    public $headerBlock;
+    // public $headerBlock;
 
-    public $thumb;
+    // public $thumb;
 
-    public $vinfo;
+    // public $vinfo;
 
-    public $vtags;
+    // public $vtags;
 
-    public $preview;
+    // public $preview;
 
-    public $duration;
+    // public $duration;
 
-    public $dbConn;
+    // public $dbConn;
 
-    public $progressbar;
+    // public $progressbar;
 
-    public $progressbar1;
+    // public $progressbar1;
 
-    public $MultiIDX = 1;
+    // public $MultiIDX = 1;
 
     public function init($video_file)
     {
@@ -280,7 +280,7 @@ class StorageDB extends Storage
         ];
         // utmdump($data);
 
-        $data['added'] = $this->dbConn->now();
+        $data['added'] = $this->now();
 
         // utmdd($data);
         return $data;

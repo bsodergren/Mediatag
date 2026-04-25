@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\VideoInfo\helpers;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
 use UTM\Utilities\Option;
 
@@ -40,7 +41,7 @@ trait VideoQuery
         }
 
         Mediatag::info('Query', $query);
-        $result = Mediatag::$dbconn->query($query);
+        $result = Storage::$DB->query($query);
 
         foreach ($result as $_ => $row) {
             if ($this->thumbType == 'markers') {
@@ -92,7 +93,7 @@ trait VideoQuery
 
         $where = '';
         if ($key !== null) {
-            $exists = Mediatag::$dbconn->videoExists($key, null, $this->VideoDataTable);
+            $exists = Storage::$DB->videoExists($key, null, $this->VideoDataTable);
             if ($exists !== null) {
                 $where = "AND video_key = '" . $key . "'";
             }

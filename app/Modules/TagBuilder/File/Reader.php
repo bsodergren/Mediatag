@@ -8,6 +8,7 @@ namespace Mediatag\Modules\TagBuilder\File;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\TagBuilder\File\StudioReader;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\ScriptWriter;
@@ -136,7 +137,6 @@ class Reader extends TagReader
                 $rep                  = ucwords(str_replace('_', ' ', $rep));
                 $artist_matches[$key] = $rep;
             }
-
             $this->PatternObject->artist_match = $artist_matches;
         }
     }

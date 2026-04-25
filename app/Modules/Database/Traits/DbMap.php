@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Modules\Database;
+namespace Mediatag\Modules\Database\Traits;
 
 use Mediatag\Modules\Database\Maps\ArtistMap;
 use Mediatag\Modules\Database\Maps\StudioMap;
@@ -15,18 +15,11 @@ use UTM\Bundle\mysql\MysqliDb;
 use function count;
 use function is_array;
 
-class DbMap extends Storage
+trait  DbMap
 {
     use ArtistMap;
     use StudioMap;
     use TitleMap;
-
-    public function __construct()
-    {
-        // utminfo(func_get_args());
-
-        $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-    }
 
     public function getVideoCount()
     {
@@ -53,7 +46,7 @@ class DbMap extends Storage
         // utminfo(func_get_args());
 
         $table  = $this->getTagTable($tag);
-        $result = $this->dbConn->get($table, null, $tag);
+        $result = $this->get($table, null, $tag);
         if (is_array($result)) {
             if (count($result) > 1) {
                 foreach ($result as $k => $v) {
@@ -75,7 +68,7 @@ class DbMap extends Storage
         $key   = $this->makeKey($text);
         $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
 
-        $this->dbConn->rawQuery($query);
+        $this->query($query);
     }
 
     public function getTag($tag, $string, $bypass = false)
@@ -87,7 +80,7 @@ class DbMap extends Storage
         $where = $this->getTagWhere($tag, $string);
 
         $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
-        $result = $this->dbConn->rawQuery($query);
+        $result = $this->query($query);
 
         if (is_array($result)) {
             if (count($result) == 0) {
@@ -162,7 +155,7 @@ class DbMap extends Storage
         }
 
         $query  = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
-        $result = $this->dbConn->rawQueryOne($query);
+        $result = $this->queryOne($query);
     }
 
     private function getTagWhere($tag, $text)

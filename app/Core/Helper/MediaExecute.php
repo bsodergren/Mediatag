@@ -8,6 +8,7 @@ namespace Mediatag\Core\Helper;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Entities\MetaEntities;
+use Mediatag\Modules\Database\Storage;
 use UTM\Utilities\Option;
 
 use function define;
@@ -67,10 +68,10 @@ trait MediaExecute
         }
 
         if (! defined('TITLE_REPLACE_MAP')) {
-            $this->getTitleMap('TITLE_REPLACE_MAP', Mediatag::$Storage->getTitleMap());
+            $this->getTitleMap('TITLE_REPLACE_MAP', Storage::$DB->getTitleMap());
         }
         if (! defined('ARTIST_MAP')) {
-            $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
+            $this->mapArtist('ARTIST_MAP', Storage::$DB->getArtistMap());
         }
     }
 
@@ -79,11 +80,11 @@ trait MediaExecute
         Mediatag::notice('setupMap', __FILE__);
 
         if (! defined('ARTIST_MAP')) {
-            $this->mapArtist('ARTIST_MAP', Mediatag::$Storage->getArtistMap());
+            $this->mapArtist('ARTIST_MAP', Storage::$DB->getArtistMap());
         }
 
         if (! defined('IGNORE_NAME_MAP')) {
-            $this->mapArtist('IGNORE_NAME_MAP', Mediatag::$Storage->getIgnoredArists());
+            $this->mapArtist('IGNORE_NAME_MAP', Storage::$DB->getIgnoredArists());
         }
     }
 
@@ -129,7 +130,7 @@ trait MediaExecute
         } else {
             $artistMap = $file;
         }
-
+ $nameMap = [];
         foreach ($artistMap as $key => $nameArray) {
             if (is_array($nameArray)) {
                 $replacement = trim($nameArray[1]);

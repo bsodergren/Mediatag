@@ -14,7 +14,6 @@ use Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
@@ -106,10 +105,10 @@ class Process extends Mediatag
         if ($this->Search_Array === null || count($this->Search_Array) == 0) {
             $this->Search_Array = parent::$finder->Search(getcwd(), '.mp4', null, false);
         }
-        // $this->DbMap = new DbMap();
+        // $this->DbMap =Storage::$DB();
         //
 
-        $this->allDbFiles = parent::$dbconn->getAllDbFiles();
+        $this->allDbFiles =Storage::$DB->getAllDbFiles();
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
@@ -147,9 +146,9 @@ class Process extends Mediatag
                 $this->file_array[$key] = $file;
             }
         }
-        parent::$dbconn->file_array = $this->file_array;
+       Storage::$DB->file_array = $this->file_array;
 
-        $this->db_array = parent::$dbconn->getDbFileList();
+        $this->db_array =Storage::$DB->getDbFileList();
 
         // utmdd($this->db_array,$this->file_array);
         return $this;

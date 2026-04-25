@@ -45,7 +45,7 @@ class Mediatag extends Command
 
     public static $Display;
 
-    public static $dbconn;
+    // public static $dbconn;
 
     public $video_name;
 
@@ -70,7 +70,7 @@ class Mediatag extends Command
 
     public static $channelFile = __DATA_MAPS__ . '/Channels.txt';
 
-    public static $Storage;
+    // public static $Storage;
 
     public static $IoStyle;
 
@@ -82,6 +82,8 @@ class Mediatag extends Command
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
+        utmdd(get_class(Storage::$DB));
+
         self::boot($input, $output, $args);
     }
 
@@ -145,7 +147,8 @@ class Mediatag extends Command
         self::$Cursor  = new Cursor(self::$output);
         self::$Console = new ConsoleOutput(self::$output, self::$input);
         self::$Display = new Display(self::$output);
-        self::$dbconn  = new StorageDB;
+        //    self::$dbconn = new Storage;
+        // self::$dbconn  = Storage::$DB;
 
         self::$finder     = new Finder;
         self::$filesystem = new Filesystem;
@@ -163,7 +166,6 @@ class Mediatag extends Command
             }
         }
 
-        self::$Storage = new Storage;
         if (isset($this->useFuncs)) {
             foreach ($this->useFuncs as $method) {
                 if (method_exists($this, $method)) {

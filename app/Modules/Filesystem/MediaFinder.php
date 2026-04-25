@@ -8,6 +8,8 @@ namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\MediaCommand;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
@@ -461,7 +463,7 @@ class MediaFinder extends SFinder
             return $fileArray;
         }
 
-        $db_array = Mediatag::$dbconn->getDbFileList();
+        $db_array = Storage::$DB->getDbFileList();
 
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);

@@ -8,6 +8,7 @@ mediatag:
         - studios
         - genre
         - artists
+        - artist_ph
         - tags
         - keyword
         - title

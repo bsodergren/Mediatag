@@ -53,7 +53,7 @@ trait VideoCleaner
 
             foreach ($missing_file as $k => $file) {
                 $query  = 'update ' . $this->VideoDataTable . ' set ' . $this->getTableField() . ' = null WHERE id = ' . $k . '';
-                $result = Mediatag::$dbconn->query($query);
+                $result = Storage::$DB->query($query);
                 $file   = $this->thumbToVideo($file);
                 Mediatag::$output->writeln($this->printNo($fileCount--) . '<info>Changing ' . $this->setMessage($file) . ' to null </info>');
             }
@@ -74,7 +74,7 @@ trait VideoCleaner
             foreach ($missing as $k => $file) {
                 $query = 'update ' . $this->VideoDataTable . ' set ' . $this->getTableField() . ' = null WHERE id = ' . $k . '';
 
-                $result = Mediatag::$dbconn->query($query);
+                $result = Storage::$DB->query($query);
                 $file   = $this->thumbToVideo($file);
                 Mediatag::$output->writeln($this->printNo($fileCount--) . '<info>Changing ' . $this->setMessage($file) . ' to null </info>');
 
@@ -161,7 +161,7 @@ trait VideoCleaner
 
         //         $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  " . $this->getTableField() . " is not null  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%' ";
         $query  = $this->videoQuery();
-        $result = Mediatag::$dbconn->query($query);
+        $result = Storage::$DB->query($query);
 
         foreach ($result as $_ => $row) {
             $thumb = $this->videoToThumb($row['file_name']);

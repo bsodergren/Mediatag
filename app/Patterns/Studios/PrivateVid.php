@@ -25,7 +25,7 @@ class PrivateVid extends Patterns
                 'pattern'             => '/([a-zA-Z0-9_]*)-?([a-zA-Z0-9_]*)-?([A-Za-z]{3}[0-9]{3}_[sS0-9]{1,3}_.*.mp4)/i',
                 'delim'               => '_And_',
                 'match'               => 2,
-                'artistFirstNameOnly' => false,
+                'artistFirstNameOnly' => true,
             ],
             'title'  => [
                 'pattern' => '/([a-zA-Z0-9_]*)-?([a-zA-Z0-9_]*)-?([A-Za-z]{3}[0-9]{3}_[sS0-9]{1,3}_.*.mp4)/i',

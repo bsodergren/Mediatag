@@ -7,8 +7,7 @@
 namespace Mediatag\Commands\Map;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
-use Mediatag\Modules\Database\TagDB;
+use Mediatag\Modules\Database\Storage;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -58,8 +57,8 @@ class Process extends Mediatag
 
         // $this->output = $output;
         // $this->input  = $input;
-        $this->tagConn     = new TagDB;
-        $this->StorageConn = new DbMap;
+        $this->tagConn     = Storage::$DB;
+        $this->StorageConn =Storage::$DB;
     }
 
     public function exec($option = null) {}

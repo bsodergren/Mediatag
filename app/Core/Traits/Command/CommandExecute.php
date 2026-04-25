@@ -22,7 +22,7 @@ trait CommandExecute
         Mediatag::$ProcessHelper = $this->getHelper('process');
 
         if (Option::istrue('trunc')) {
-            Mediatag::$dbconn->truncate();
+            Storage::$DB->truncate();
 
             return Command::SUCCESS;
         }

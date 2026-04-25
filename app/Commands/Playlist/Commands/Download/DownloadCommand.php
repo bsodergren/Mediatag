@@ -34,14 +34,13 @@ final class DownloadCommand extends MediaCommand
 
     public $command = [
         'download' => [
-            'handler'            => [
-                'Helper' => 'ShellPathCompletion',
-                'Option' => 'file',
-                'Type'   => 'Completion::ALL_TYPES',
-            ],
+            // 'handler'            => [
+            //     'Helper' => 'ShellPathCompletion',
+            //     'Option' => 'file',
+            //     'Type'   => 'Completion::ALL_TYPES',
+            // ],
 
             'cleanBrkDownloads'  => null,
-
             'docompactPlaylist'  => null,
             'dodownloadPlaylist' => null,
         ],

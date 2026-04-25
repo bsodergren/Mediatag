@@ -24,25 +24,27 @@ trait YtdlpCallBacks
     public function watchlistCallback($type, $buffer)
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
-        VideoDownloader::LogBuffer('' . $type . '', $buffer, 'playlist.log');
+        // VideoDownloader::LogBuffer('' . $type . '', $buffer, 'playlist.log');
+        // MediaFile::file_append_file(__LOGFILE_DIR__ . '/playlist_download.log', $buffer . PHP_EOL);
 
-        return $buffer . PHP_EOL;
-        // if (str_contains($buffer, '[PLAYLIST]')) {
-        //     $this->Console->writeln($buffer);
-        // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
-        // //     if (\array_key_exists(2, $matches)) {
-        // //         if ('' != $matches[2]) {
-        // //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
-        // //             $this->Console->writeln($outputText);
+        // return $buffer . PHP_EOL;
+        if (! str_contains($buffer, '[')) {
+            $output = trim($buffer);
+            $this->Console->writeln('Savng Video ' . $output . ' To Playlist ');
+            // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
+            // //     if (\array_key_exists(2, $matches)) {
+            // //         if ('' != $matches[2]) {
+            // //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
+            // //             $this->Console->writeln($outputText);
 
-        // //         }
-        // //     }
-        // // }
-        // } else {
-        //     $this->key = $buffer;
-        //     $this->updatePlaylist($this->pltype);
-        // }
-        // $this->Console->writeln($this->key );
+            // //         }
+            // //     }
+            // // }
+        } else {
+            // $this->key = $buffer;
+            //     $this->updatePlaylist($this->pltype);
+        }
+        // $this->Console->writeln($this->key);
     }
 
     public function downloadJsonCallback($type, $buffer)
@@ -63,8 +65,9 @@ trait YtdlpCallBacks
 
         switch ($buffer) {
             case str_contains($buffer, 'ERROR:'):
-                $this->yt_json_string = null;
-                 $this->yt_error_string = $buffer;
+                $this->yt_json_string  = null;
+                $this->yt_error_string = $buffer;
+
                 // return $this->error($buffer,$this->num_of_lines,$matches[3]);
                 return null;
                 break;
@@ -72,7 +75,7 @@ trait YtdlpCallBacks
             case str_contains($buffer, '[info]'):
                 if (str_contains($buffer, 'as JSON')) {
                     $this->yt_json_string = $buffer;
-                   // Mediatag::$Console->writeln($buffer);
+                    // Mediatag::$Console->writeln($buffer);
                 }
                 break;
             case str_contains($buffer, 'Upgrade now'):

@@ -23,7 +23,7 @@ trait SubtitlesHelper
 {
     public function subtitlesMethod()
     {
-        $this->storagedb = new StorageDB;
+        $this->storagedb = Storage::$DB;
         if (Option::isTrue('update')) {
             $this->findMissing();
 
@@ -45,7 +45,7 @@ trait SubtitlesHelper
                     'studio'   => 'Porn World',
                 ];
                 $where = ['video_key' => $this->storagedb->video_key];
-                Mediatag::$dbconn->update($data, $where, __MYSQL_VIDEO_INFO__);
+                Storage::$DB->update($data, $where, __MYSQL_VIDEO_INFO__);
             }
         }
     }
@@ -73,7 +73,7 @@ trait SubtitlesHelper
             $data     = [
                 'video_key' => [$fileinfo->videokey(), '='],
             ];
-            $output = Mediatag::$dbconn->getValue($data, 'subtitle', __MYSQL_VIDEO_INFO__);
+            $output = Storage::$DB->getValue($data, 'subtitle', __MYSQL_VIDEO_INFO__);
 
             // Mediatag::$output->writeln($output);
             if ($output != 1) {

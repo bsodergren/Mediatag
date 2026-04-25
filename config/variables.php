@@ -3,6 +3,7 @@
 use Mediatag\Core\Settings\MediaSettings;
 use Mediatag\Modules\Database\Storage;
 use UTM\Bundle\mysql\dbObject;
+use UTM\Bundle\mysql\MysqliDb;
 
 /**
  * Command like Metatag writer for video files.
@@ -50,6 +51,8 @@ define('__MYSQL_GENRE__', Db_MEDIATAG_PREFIX . 'genre');
  * @global string __MYSQL_ARTISTS
  */
 define('__MYSQL_ARTISTS__', Db_MEDIATAG_PREFIX . 'artists');
+
+define('__MYSQL_ARTIST_PH__', Db_MEDIATAG_PREFIX . 'artist_ph');
 /*
  * @global string __MYSQL_TAGS
  */
@@ -120,9 +123,10 @@ define(
 
 define('__MAX_SQL_ITEMS__', 5000);
 
-$db    = new Storage;
+ $DbConnection = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+$db    = new Storage($DbConnection);
 $query = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
-$val   = $db->rawQuery($query);
+$val   = $db->query($query);
 
 foreach ($val as $row => $settingVal) {
     $value = json_decode($settingVal['value']);

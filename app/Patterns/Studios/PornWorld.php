@@ -12,10 +12,8 @@ use const JSON_PRETTY_PRINT;
 use const PREG_SPLIT_NO_EMPTY;
 
 use Mediatag\Core\MediaCache;
-use Mediatag\Modules\Executable\Javascript;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\MediaScraper;
 
 use function array_key_exists;
@@ -228,9 +226,9 @@ class PornWorld extends Patterns
                 }
                 // $url = 'https://pornbox.com/application/videos/search/'.$search.'/p1';
                 $url = 'https://pornbox.com/store/search?q=' . $search . '&skip=0&is_purchased=-1';
-                https:// pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
+                // https:// pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
 
-                                $content = MediaScraper::getUrl($url);
+                $content = MediaScraper::getUrl($url);
 
                 //   // utmdump($url);
                 // utmdd(array_keys($content['content']));

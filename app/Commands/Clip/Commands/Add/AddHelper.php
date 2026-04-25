@@ -7,6 +7,8 @@
 namespace Mediatag\Commands\Clip\Commands\Add;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use UTM\Utilities\Option;
@@ -57,7 +59,7 @@ trait AddHelper
                 'markerText' => $name . '_' . $suffix[$i],
             ];
 
-            $res = Mediatag::$dbconn->insert($data, __MYSQL_VIDEO_CHAPTER__);
+            $res = Storage::$DB->insert($data, __MYSQL_VIDEO_CHAPTER__);
             Mediatag::$output->writeln('<comment> Added tag ' . $name . '</> at <fg=green>' . $suffix[$i] . ' at ' . $seconds . '</>');
 
             //            Mediatag::$output->writeln('<comment> Added tag '.$name.'</> at <fg=green>'.$start_time.' and '.$end_time.'</>');
@@ -74,6 +76,6 @@ trait AddHelper
         //     'video_id'       => $this->data['videoId'],
         //     'markerText'     => $this->data['markerText'],
         // ];
-        // $res  = Mediatag::$dbconn->insert(__MYSQL_VIDEO_CHAPTER__, $data);
+        // $res  = Storage::$DB->insert(__MYSQL_VIDEO_CHAPTER__, $data);
     }
 }

@@ -3,7 +3,7 @@
 namespace Mediatag\Commands\Rename\Commands\Fix;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\DbMap;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;

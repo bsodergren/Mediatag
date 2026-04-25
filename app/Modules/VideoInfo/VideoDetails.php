@@ -53,7 +53,7 @@ class VideoDetails
 
     public static function getVideoKey($video_id)
     {
-        // Mediatag::$dbconn->where('id', $video_id)
+        // Storage::$DB->where('id', $video_id)
         // utmdd();
 
         Storage::$DB->where('id', $video_id);

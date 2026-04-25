@@ -102,7 +102,7 @@ trait FilterMethods
         preg_match('/(\[[a-zA-Z0-9]+\])(.*)"(.*)"/m', $buffer, $match);
         $text = $match[1];
         $file = $this->getShortName($match[3]);
-        $this->num_of_lines--;
+        // $this->num_of_lines--;
 
         return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>';
     }

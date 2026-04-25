@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\TagBuilder\DB;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\TagReader;
 
 use function array_key_exists;
@@ -101,7 +102,7 @@ class Reader extends TagReader
         // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
         // utmdd($query);
 
-        $result = Mediatag::$dbconn->query($query);
+        $result = Storage::$DB->query($query);
         $info   = null;
         if (count($result) != 1) {
             return null;

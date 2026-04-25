@@ -10,7 +10,7 @@ trait Playlist
     public function showPlaylist()
     {
         $sql     = ' SELECT id,name,genre,Library FROM ' . __MYSQL_PLAYLIST_DATA__ . ' WHERE hide =0';
-        $results = Mediatag::$dbconn->query($sql);
+        $results = Storage::$DB->query($sql);
 
         $table = new Table(Mediatag::$output);
         $table->setHeaderTitle('Playlist');
@@ -40,7 +40,7 @@ trait Playlist
         p.playlist_video_id = v.id and
          d.id = p.playlist_id ) ORDER BY v.filename ASC';
 
-        $results = Mediatag::$dbconn->query($sql);
+        $results = Storage::$DB->query($sql);
         utmdd($results);
 
         return $results;

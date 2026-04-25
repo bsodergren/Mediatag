@@ -7,7 +7,8 @@
 namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\TagDB;
+use Mediatag\Modules\Database\Storage;
+
 use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
 use Mediatag\Modules\Metatags\Title;
@@ -282,7 +283,7 @@ trait MetaTags
         //         $data[$tag] = self::clean($return, $tag);
         //     }
 
-        //     // Mediatag::$dbconn->insert(
+        //     // Storage::$DB->insert(
         //     //     $data,
         //     //     __MYSQL_VIDEO_CUSTOM__
         //     // );
@@ -338,7 +339,7 @@ trait MetaTags
             $delim = '/';
         }
 
-        $tagDB = new TagDB;
+        $tagDB =Storage::$DB;
 
         if ($tag == 'title') {
             $arr = explode(' ', $text);

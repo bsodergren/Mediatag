@@ -28,12 +28,12 @@ trait Helper
         // utminfo(func_get_args());
 
         $data = ['name' => __LIBRARY__ . '_last_updated',
-            'value'     => parent::$dbconn->dbConn->now(),
+            'value'     =>Storage::$DB->now(),
             'type'      => 'update'];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
-        parent::$dbconn->dbConn->onDuplicate($updateColumns, $lastInsertId);
-        $id = parent::$dbconn->dbConn->insert(__MYSQL_SETTINGS__, $data);
+       Storage::$DB->onDuplicate($updateColumns, $lastInsertId);
+        $id =Storage::$DB->insert(__MYSQL_SETTINGS__, $data);
     }
 
     public function getFileArray()
@@ -103,11 +103,11 @@ trait Helper
     {
         // utminfo(func_get_args());
         foreach ($this->Deleted_Array as $video_key => $video_file) {
-            parent::$dbconn->video_key = $video_key;
+           Storage::$DB->video_key = $video_key;
             parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
             if (! Option::istrue('preview')) {
-                parent::$dbconn->removeDBEntry();
-                //  parent::$dbconn->clearDBValues($video_key);
+               Storage::$DB->removeDBEntry();
+                // Storage::$DB->clearDBValues($video_key);
             }
         }
     }
@@ -116,15 +116,15 @@ trait Helper
     {
         // utminfo(func_get_args());
         foreach ($this->Changed_Array as $video_key => $video_file) {
-            parent::$dbconn->video_file = $video_file;
-            // parent::$dbconn->video_key  = $video_key;
+           Storage::$DB->video_file = $video_file;
+            //Storage::$DB->video_key  = $video_key;
             $video_name = basename($video_file);
             if (! Option::istrue('preview')) {
                 parent::$output->writeln('Updateing file from db ' . $video_name);
 
-                parent::$dbconn->UpdateFilePath($video_file);
+               Storage::$DB->UpdateFilePath($video_file);
             } else {
-                parent::$dbconn->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
+               Storage::$DB->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
             }
         }
     }
@@ -134,8 +134,8 @@ trait Helper
         // utminfo(func_get_args());
 
         self::$Class                  = __CLASS__;
-        Mediatag::$dbconn->file_array = Mediatag::$SearchArray;
-        $videos                       = Mediatag::$dbconn->getVideoCount();
+        Storage::$DB->file_array = Mediatag::$SearchArray;
+        $videos                       = Storage::$DB->getVideoCount();
         if (Option::istrue('yes')) {
             $go     = true;
             $answer = 'y';
@@ -166,7 +166,7 @@ trait Helper
 
         if ($go == true) {
             Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
-            Mediatag::$dbconn->emptydatabase();
+            Storage::$DB->emptydatabase();
         }
     }
 
@@ -180,7 +180,7 @@ trait Helper
         if ($total > 0) {
             $idx                          = 1;
             $progressbar                  = new MediaBar($total, 'three', $barWidth);
-            parent::$dbconn->progressbar1 = $progressbar;
+           Storage::$DB->progressbar1 = $progressbar;
             $progressbar->newbar();
             $progressbar->start();
 
@@ -198,13 +198,13 @@ trait Helper
 
             if ($total > $chunkSize) {
                 $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
-                parent::$dbconn->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
+               Storage::$DB->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
                 $progressbar2->newbar()->start();
             }
 
             foreach ($data_array as $data) {
                 if ($total > $chunkSize) {
-                    parent::$dbconn->progressbar->newbar()->start();
+                   Storage::$DB->progressbar->newbar()->start();
                     $progressbar2->advance();
                 }
 
@@ -215,9 +215,9 @@ trait Helper
                 //     }
 
                 //     $video_string[] = ' '.\PHP_EOL;
-                //     //    parent::$dbconn->RowBlock->overwrite($video_string);
+                //     //   Storage::$DB->RowBlock->overwrite($video_string);
                 // } else {
-                parent::$dbconn->addDBArray($data);
+               Storage::$DB->addDBArray($data);
 
                 // }
             }

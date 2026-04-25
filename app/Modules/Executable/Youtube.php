@@ -194,7 +194,7 @@ class Youtube extends MediatagExec
         return array_merge($options, $playlist_opt);
     }
 
-    public function createWatchList($url)
+    public function createPlaylistFromPH($url)
     {
         // utminfo(func_get_args());
 
@@ -203,8 +203,18 @@ class Youtube extends MediatagExec
         // if (str_contains($url, 'premium')) {
         //     $this->pltype = 'watchlaterPr';
         // }
+        $options = [
+            '--skip-download',
+            // '--print', 'before_dl:webpage_url',
+            '--print', 'before_dl:title',
+            '--print-to-file', 'before_dl:original_url',
+            $this->playlist,
+        ];
 
-        $command = array_merge($this->commonOptions, [$url]);
+        $this->LibraryClass->init($this);
+        $command = $this->youtubeCmdOptions();
+        $command = array_merge($command, $options);
+
         $this->exec($command, Callback::check([$this, 'watchlistCallback']));
     }
 

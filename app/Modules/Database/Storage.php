@@ -7,6 +7,9 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Traits\DbMap;
+use Mediatag\Modules\Database\Traits\StorageDB;
+use Mediatag\Modules\Database\Traits\TagDB;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Filesystem\Filesystem;
@@ -18,8 +21,12 @@ use function count;
 use function get_class;
 use function is_array;
 
-class Storage extends MysqliDb
+class Storage
 {
+    use DbMap;
+    use StorageDB;
+    use TagDB;
+
     public $DbFileArray = [];
 
     public $input;
@@ -55,30 +62,29 @@ class Storage extends MysqliDb
 
     public $headerBlock;
 
-    public $dbConn;
+    public $mysqllib = null;
 
     public object $mapClass;
 
-    public static $DB;
+    public static $DB = null;
 
-    private $MultiIDX = 1;
+    protected $DbConnection;
 
-    public function __construct()
+    public $MultiIDX = 1;
+
+    public function __construct(?MysqliDb $DbConnection = null)
     {
-        // utminfo();
-
-        $db = parent::getInstance();
-
-        if ($db === null) {
-            parent::__construct('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-            $db = parent::getInstance();
+        $db = MysqliDb::getInstance();
+        if ($DbConnection === null) {
+            $DbConnection = $db;
         }
-        $this->dbConn = $db;
-        // $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-        $this->dbConn->setTrace(true);
-        self::$DB = $this->dbConn;
 
-        $this->mapClass = new DbMap;
+        $this->mysqllib = $DbConnection; //->getInstance();
+        $this->mysqllib->setTrace(true);
+        self::$DB = $this;
+
+        //  utmdd($this->mysqllib,self::$DB);
+
         if (! is_null(Mediatag::$output)) {
             $this->output      = Mediatag::$output;
             $this->input       = Mediatag::$input;
@@ -90,7 +96,7 @@ class Storage extends MysqliDb
 
     public function trace()
     {
-        // utmdump($this->dbConn->trace);
+        // utmdump($this->mysqllib->trace);
     }
 
     public function truncate()
@@ -98,7 +104,7 @@ class Storage extends MysqliDb
         // utminfo(func_get_args());
 
         foreach (__MYSQL_TRUNC_TABLES__ as $table) {
-            $res[] = $this->dbConn->rawQuery('TRUNCATE ' . $table);
+            $res[] = $this->mysqllib->rawQuery('TRUNCATE ' . $table);
         }
 
         // utmdd([__METHOD__,$res]);
@@ -122,6 +128,9 @@ class Storage extends MysqliDb
         if (method_exists($this, $method)) {
             return $this->{$method}($tag, ...$arguments);
         }
+        // if (method_exists(get_class($this->mysqllib), $method)) {
+        //     return $this->mysqllib->{$method}(...$arguments);
+        // }
         if (isset($this->mapClass)) {
             if (method_exists(get_class($this->mapClass), $method)) {
                 return $this->mapClass->{$method}();
@@ -152,19 +161,19 @@ class Storage extends MysqliDb
         }
 
         if ($test === true) {
-            $this->dbConn->startTransaction();
+            $this->mysqllib->startTransaction();
         }
 
         foreach ($where as $row => $query) {
             if (str_contains($query['value'], 'null')) {
                 $condition = trim(str_replace('null', '', $query['value']));
-                $this->dbConn->where($query['field'], null, strtoupper($condition));
+                $this->mysqllib->where($query['field'], null, strtoupper($condition));
 
                 continue;
             }
             if (str_contains($query['value'], 'like')) {
                 $condition = trim(str_replace('like', '', $query['value']));
-                $this->dbConn->where($query['field'], null, $condition);
+                $this->mysqllib->where($query['field'], null, $condition);
 
                 continue;
             }
@@ -172,14 +181,14 @@ class Storage extends MysqliDb
 
         // utmdd($where);
 
-        $ret = $this->dbConn->delete($table);
+        $ret = $this->mysqllib->delete($table);
         if ($test === true) {
-            $this->dbConn->rollback();
+            $this->mysqllib->rollback();
 
             return $ret;
             //     utmdd($res);
         }
-        $this->dbConn->commit();
+        $this->mysqllib->commit();
 
         return $ret;
     }
@@ -187,8 +196,7 @@ class Storage extends MysqliDb
     public function query($sql, $numRows = null)
     {
         // utminfo(func_get_args());
-
-        $res = $this->dbConn->rawQuery($sql);
+        $res = $this->mysqllib->rawQuery($sql);
 
         return $res;
     }
@@ -196,23 +204,22 @@ class Storage extends MysqliDb
     public function queryOne($sql, $numRows = null)
     {
         // utminfo(func_get_args());
-
-        return $this->dbConn->rawQueryOne($sql);
+        return $this->mysqllib->rawQueryOne($sql);
     }
 
     public function videoExists($video_key, $where = null, $table = __MYSQL_VIDEO_FILE__)
     {
         // utminfo(func_get_args());
-        $this->dbConn->where('video_key', $video_key);
-        $this->dbConn->where('library', __LIBRARY__);
+        $this->mysqllib->where('video_key', $video_key);
+        $this->mysqllib->where('library', __LIBRARY__);
         if ($where !== null) {
-            $this->dbConn->where($where, null, 'IS');
+            $this->mysqllib->where($where, null, 'IS');
         }
 
-        $ret = $this->dbConn->getOne($table);
+        $ret = $this->mysqllib->getOne($table);
 
         // utmdd($ret);
-        // // utmdump([$this->dbConn->getLastQuery(),__LIBRARY__,$ret]);
+        // // utmdump([$this->mysqllib->getLastQuery(),__LIBRARY__,$ret]);
         return $ret;
     }
 
@@ -221,20 +228,20 @@ class Storage extends MysqliDb
         // utminfo(func_get_args());
 
         foreach ($data as $videokey => $rowData) {
-            $this->dbConn->startTransaction();
+            $this->mysqllib->startTransaction();
             $commit = true;
             foreach ($rowData as $tableName => $data) {
                 if ($commit === true) {
-                    if (! $this->dbConn->insert($tableName, $data)) {
-                        $this->video_string[] = ['insert failed: ' . $this->dbConn->getLastError()];
+                    if (! $this->mysqllib->insert($tableName, $data)) {
+                        $this->video_string[] = ['insert failed: ' . $this->mysqllib->getLastError()];
                         // Error while saving, cancel new record
-                        $this->dbConn->rollback();
+                        $this->mysqllib->rollback();
                         $commit = false;
                     }
                 }
             }
             if ($commit === true) {
-                $this->dbConn->commit();
+                $this->mysqllib->commit();
             }
         }
         $this->RowBlock->overwrite($this->video_string);
@@ -250,9 +257,9 @@ class Storage extends MysqliDb
             return false;
         }
 
-        $ids = $this->dbConn->insertMulti($table, $data);
+        $ids = $this->mysqllib->insertMulti($table, $data);
         if (! $ids) {
-            $this->video_string = ['insert failed: ' . $this->dbConn->getLastError()];
+            $this->video_string = ['insert failed: ' . $this->mysqllib->getLastError()];
         }
         if ($quiet === false) {
             $this->RowBlock->overwrite($this->video_string);
@@ -273,7 +280,7 @@ class Storage extends MysqliDb
         }
 
         foreach ($where as $field => $value) {
-            $this->dbConn->where($field, $value);
+            $this->mysqllib->where($field, $value);
         }
 
         // $data = array_merge($data, $where);
@@ -282,12 +289,12 @@ class Storage extends MysqliDb
         //  //   unset($fieldArray['video_key']);
         // }
 
-        // $this->dbConn->onDuplicate($data, 'id');
-        // $id = $this->dbConn->insert($table, $data);
-        $id = $this->dbConn->update($table, $data);
-        // UtmDump($this->dbConn->getLastQuery());
+        // $this->mysqllib->onDuplicate($data, 'id');
+        // $id = $this->mysqllib->insert($table, $data);
+        $id = $this->mysqllib->update($table, $data);
+        // UtmDump($this->mysqllib->getLastQuery());
         if (! $id) {
-            $this->video_string = ['insert failed: ' . $this->dbConn->getLastQuery()];
+            $this->video_string = ['insert failed: ' . $this->mysqllib->getLastQuery()];
 
             // return $r;
         }
@@ -299,13 +306,16 @@ class Storage extends MysqliDb
     public function getValue($where_clause, $column = 'count(*)', $table = __MYSQL_VIDEO_FILE__)
     {
         // utminfo(func_get_args());
-
+        utmdump($this->mysqllib->trace);
+        if(is_array($where_clause)) {
         foreach ($where_clause as $field => $where) {
-            $this->dbConn->where($field, $where[0], $where[1]);
+            $this->mysqllib->where($field, $where[0], $where[1]);
+        }
         }
 
-        return $this->dbConn->getValue($table, $column);
-        // // UTMlog::Logger('INSERT SQL', $this->dbConn->getLastQuery());
+
+        return $this->mysqllib->getValue($table, $column);
+        // // UTMlog::Logger('INSERT SQL', $this->mysqllib->getLastQuery());
     }
 
     public function insert($data, $table = __MYSQL_VIDEO_FILE__)
@@ -323,7 +333,7 @@ class Storage extends MysqliDb
         // try {
         $fieldArray = $data;
         if (array_key_exists('fullpath', $fieldArray)) {
-            $has = $this->dbConn->where('video_key', $fieldArray['video_key'])->getOne($table);
+            $has = $this->mysqllib->where('video_key', $fieldArray['video_key'])->getOne($table);
 
             if ($has !== null) {
                 $backup_path = str_replace('XXX/', 'XXX/Dupes/', $fieldArray['fullpath']);
@@ -345,10 +355,10 @@ class Storage extends MysqliDb
         //     unset();
         // }
 
-        $this->dbConn->onDuplicate($dupCols, 'id');
-        $id = $this->dbConn->insert($table, $data);
+        $this->mysqllib->onDuplicate($dupCols, 'id');
+        $id = $this->mysqllib->insert($table, $data);
 
-        // utmdump($this->dbConn->getLastQuery());
+        // utmdump($this->mysqllib->getLastQuery());
         // } catch (\Exception $e) {
 
         // }

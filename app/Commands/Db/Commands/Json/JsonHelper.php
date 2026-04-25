@@ -21,13 +21,13 @@ trait JsonHelper
 
     public function JsonExec()
     {
-        // $this->allDbFiles = parent::$dbconn->getAllDbFiles();
+        // $this->allDbFiles =Storage::$DB->getAllDbFiles();
 
         // $this->dbConn = Storage::$DB;
         // utmdd(get_class_methods(get_class(parent::$dbconn)));
 
         // utmdd($this->file_array);
-        // $query = parent::$dbconn->querybuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
+        // $query =Storage::$DB->querybuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
         // $results = $this->dbConn->query($query);
         // foreach ($results as $key => $arr) {
         //     if ($arr['fullpath'] === null) {
@@ -39,11 +39,11 @@ trait JsonHelper
 
         // $this->file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i');
         if (Option::istrue('update')) {
-            $this->file_array = parent::$dbconn->getDbFileList(' AND updatedJson = 1');
+            $this->file_array =Storage::$DB->getDbFileList(' AND updatedJson = 1');
             parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
-            $this->file_array = parent::$dbconn->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
+            $this->file_array =Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
         }
@@ -78,7 +78,7 @@ trait JsonHelper
                                 if (! is_null($actionTags['actiontags'])) {
                                     // parent::$output->writeln('<info> Found  actiontags, updating video </info>');
                                     $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
-                                    parent::$dbconn->updatedJson($json_key, 2);
+                                   Storage::$DB->updatedJson($json_key, 2);
 
                                     continue;
                                 }
@@ -148,7 +148,7 @@ trait JsonHelper
                 } else {
                     parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
                 }
-                parent::$dbconn->updatedJson($json_key, 1);
+               Storage::$DB->updatedJson($json_key, 1);
             } else {
                 parent::$output->writeln('<comment>' . $count . 'skipping ' . basename($file) . ' </comment>');
             }
