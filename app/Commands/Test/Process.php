@@ -25,6 +25,8 @@ class Process extends Mediatag
 
     public $VideoList = [];
 
+    public static $CmdList = [];
+
     public $videoFiles = [];
 
     public $method = null;
@@ -40,7 +42,7 @@ class Process extends Mediatag
         parent::boot($input, $output);
         $cmd = Option::getValue('cmd');
         if (\method_exists($this, $cmd)) {
-              Mediatag::$Console->writeln($cmd. ' found');
+            Mediatag::$Console->writeln($cmd . ' found');
             $this->displayTable = new MediaTable($output);
             $this->method       = $cmd;
         } else {

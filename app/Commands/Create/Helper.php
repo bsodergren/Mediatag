@@ -9,8 +9,6 @@ namespace Mediatag\Commands\Create;
 use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
-use Mediatag\Commands\Create\ClassMethods;
-use Mediatag\Commands\Create\Traits\CreateBaseCommandHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\FileSystem;
@@ -20,9 +18,6 @@ use function is_array;
 
 trait Helper
 {
-    use ClassMethods;
-    use CreateBaseCommandHelper;
-
     public $excludeFiles = [];
 
     private $functions = [

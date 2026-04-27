@@ -16,6 +16,7 @@ class Options extends MediaOptions
     use Lang;
     use Translate;
 
+    public $options = [];
     // public $options = ['Test'];
     // public $options = ['question'];
 
@@ -26,9 +27,9 @@ class Options extends MediaOptions
         self::$Class = __CLASS__;
 
         return [
-            ['userCommand', 'u', InputOption::VALUE_REQUIRED, self::text('L__DB_MARKERS_UPDATE')],
+            ['userCommand', 'u', InputOption::VALUE_REQUIRED, 'UserCommand'],
             ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__DB_MARKERS_UPDATE')],
-            ['name', 'n', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
+            ['name', 'N', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
             ['desc', 'd', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
             ['type', 't', InputOption::VALUE_REQUIRED, self::text('L__DB_MARKERS_UPDATE')],
             ['exclude', 'e',  InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_MARKERS_UPDATE')],
@@ -36,7 +37,6 @@ class Options extends MediaOptions
             ['CmdMethod', 'm', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
             ['params', 'P', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_FILE_UPDATE')],
             ['break'],
-            ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L__DB_FILE_UPDATE')],
         ];
     }
 

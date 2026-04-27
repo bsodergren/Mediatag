@@ -9,7 +9,7 @@ namespace Mediatag\Commands\Create\Commands\Add;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'add', description: 'add a new Command')]
+#[AsCommand(name: 'add', description: 'add a new subCommand to existing Command')]
 final class AddCommand extends MediaCommand
 {
     public const USE_LIBRARY = false;

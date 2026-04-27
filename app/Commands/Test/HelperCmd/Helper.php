@@ -29,6 +29,22 @@ trait Helper
 {
     public $videoFile;
 
+    public function list()
+    {
+        self::$CmdList = ['importThumb',
+            'splitMethod',
+            'searchPh',
+            'importActors',
+            'Actor',
+            'getVideoInfo',
+
+        ];
+
+        $cmds = get_class_methods(\get_class($this));
+
+        utmdd($cmds, self::$CmdList);
+    }
+
     public function importThumb()
     {
         $db = MysqliDb::getInstance();

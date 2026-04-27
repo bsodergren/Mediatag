@@ -12,10 +12,11 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\DynamicProperty;
 
 class Process extends Mediatag
 {
-    use Helper;
+    use DynamicProperty;
     use Lang;
     use MediaProcess;
     use Translate;

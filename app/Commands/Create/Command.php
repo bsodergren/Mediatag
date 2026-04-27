@@ -14,6 +14,8 @@ class Command extends MediaCommand
 {
     use Lang;
 
+    public static $DEFAULT_CMD = false;
+
     public const USE_LIBRARY = false;
 
     public const USE_SEARCH = false;
