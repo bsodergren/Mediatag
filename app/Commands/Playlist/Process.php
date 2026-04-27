@@ -106,7 +106,8 @@ class Process extends Mediatag
             $this->playlist = Option::getValue('file');
         }
 
-        $this->playlist = __PLEX_PL_DIR__ . \DIRECTORY_SEPARATOR . basename($this->playlist);
+        $this->playlist = realpath($this->playlist);
+
         // }
         if (Option::istrue('url')) {
             $this->playlist_url = Option::getValue('url');

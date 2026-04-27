@@ -19,12 +19,12 @@ trait TagDB
     //     $this->dbConn = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
     // }
 
-    public function __call($name, $arguments)
-    {
-        $tag = strtolower(\str_replace('get', '', $name));
+    // public function __call($name, $arguments)
+    // {
+    //     $tag = strtolower(\str_replace('get', '', $name));
 
-        return $this->getTag($tag, $arguments);
-    }
+    //     return $this->getTag($tag, $arguments);
+    // }
 
     // public function getGenre($arguments)
     // {

@@ -46,7 +46,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     private $backtrace = '';
 
     // private $log;
-    public static $logger;
+    public static $logger = '';
 
     public static $LOG_BUFFER = true;
 
@@ -93,12 +93,21 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         LogLevel::DEBUG    => OutputInterface::VERBOSITY_VERY_VERBOSE,
     ];
 
+    // 'blue'
+    // 'green'
+    // 'cyan'
+    // 'red'
+    // 'purple'
+    // 'brown'
+    // 'yellow'
+    // 'white'
     private array $ColorLevelMap = [
         LogLevel::DEBUG    => 'yellow',
         LogLevel::INFO     => 'green',
         LogLevel::NOTICE   => 'blue',
         LogLevel::ERROR    => 'red',
-        LogLevel::CRITICAL => 'orange',
+        LogLevel::CRITICAL => 'brown',
+        LogLevel::WARNING  => 'purple',
     ];
 
     private array $formatLevelMap = [
@@ -141,6 +150,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             $this->pruneLogFiles($this->debugLogFile(), 'debug');
         }
 
+        // utmdd($this);
         self::$logger = $this;
 
         // $this->backtrace =

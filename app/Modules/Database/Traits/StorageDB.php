@@ -280,9 +280,10 @@ trait StorageDB
         ];
         // utmdump($data);
 
-        $data['added'] = $this->now();
+        $data['added'] = $this->mysqllib->now();
 
         // utmdd($data);
+
         return $data;
     }
 

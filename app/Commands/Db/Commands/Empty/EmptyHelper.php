@@ -3,6 +3,7 @@
 namespace Mediatag\Commands\Db\Commands\Empty;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
@@ -13,9 +14,9 @@ trait EmptyHelper
     {
         // utminfo(func_get_args());
 
-        self::$Class                  = __CLASS__;
+        self::$Class             = __CLASS__;
         Storage::$DB->file_array = Mediatag::$SearchArray;
-        $videos                       = Storage::$DB->getVideoCount();
+        $videos                  = Storage::$DB->getVideoCount();
 
         if (Option::istrue('yes')) {
             $go     = true;

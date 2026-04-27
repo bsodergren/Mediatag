@@ -15,7 +15,7 @@ use UTM\Bundle\mysql\MysqliDb;
 use function count;
 use function is_array;
 
-trait  DbMap
+trait DbMap
 {
     use ArtistMap;
     use StudioMap;
@@ -86,11 +86,9 @@ trait  DbMap
             if (count($result) == 0) {
                 return false;
             }
-
             if (count($result) > 1) {
                 return $result;
             }
-
             if ($result[0]['keep'] == 0 && $bypass === false) {
                 return false;
             }

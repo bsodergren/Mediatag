@@ -12,6 +12,7 @@ use Mediatag\Modules\Database\Traits\StorageDB;
 use Mediatag\Modules\Database\Traits\TagDB;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Utilities\Strings;
+use PDO;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
@@ -110,15 +111,29 @@ class Storage
         // utmdd([__METHOD__,$res]);
     }
 
+    //   public function __call($name, $arguments)
+    //     {
+    //         $tag = strtolower(\str_replace('get', '', $name));
+
+    //     }
+
+    public function getGenre($arguments)
+    {
+        return $this->getTag('genre', $arguments);
+    }
+
     public function __call($name, $arguments)
     {
         // utminfo(func_get_args());
 
         $method = $name;
+        utmdump(['Name' => $name]);
+
         // Note: value of $name is case sensitive.
         if (str_contains($name, 'Genre')) {
             $tag    = 'genre';
             $method = str_replace('Genre', 'Tag', $name);
+            // return $this->getTag($tag, $arguments);
         }
         if (str_contains($name, 'Keyword')) {
             $tag    = 'keyword';
@@ -307,12 +322,11 @@ class Storage
     {
         // utminfo(func_get_args());
         utmdump($this->mysqllib->trace);
-        if(is_array($where_clause)) {
-        foreach ($where_clause as $field => $where) {
-            $this->mysqllib->where($field, $where[0], $where[1]);
+        if (is_array($where_clause)) {
+            foreach ($where_clause as $field => $where) {
+                $this->mysqllib->where($field, $where[0], $where[1]);
+            }
         }
-        }
-
 
         return $this->mysqllib->getValue($table, $column);
         // // UTMlog::Logger('INSERT SQL', $this->mysqllib->getLastQuery());

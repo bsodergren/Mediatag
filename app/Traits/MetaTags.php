@@ -8,7 +8,6 @@ namespace Mediatag\Traits;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
-
 use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
 use Mediatag\Modules\Metatags\Title;
@@ -228,8 +227,6 @@ trait MetaTags
             $delim = '';
         }
         if ($tag == 'genre') {
-            // utmdd($first . $delim . $second);
-
             return $first . $delim . $second;
         }
         if ($secondCmp != '') {
@@ -268,7 +265,9 @@ trait MetaTags
         $method = 'priority' . $priority;
         // utmdump([$tag, $first, $second]);
         $return = self::$method($first, $second, $tag);
-
+        if ($tag == 'genre') {
+            // utmdd($return);
+        }
         // if (null !== $firstCmp && $first != $second) {
         //     $data['video_key'] = self::$Videokey;
 
@@ -290,7 +289,6 @@ trait MetaTags
         // }
         $return = self::clean($return, $tag); // self::clean($return, $tag);
         if ($tag == 'genre') {
-            // utmdd($return);
         }
 
         return $return;
@@ -306,7 +304,6 @@ trait MetaTags
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
                 $value = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);
-
                 unset($tag_array2[$tag]);
             }
 
@@ -339,7 +336,7 @@ trait MetaTags
             $delim = '/';
         }
 
-        $tagDB =Storage::$DB;
+        $tagDB = Storage::$DB;
 
         if ($tag == 'title') {
             $arr = explode(' ', $text);
@@ -359,22 +356,18 @@ trait MetaTags
         $i         = 0;
         $total     = 0;
         $tag_array = explode($delim, $text);
-        if ($tag == 'genre') {
-        }
-        foreach ($tag_array as $tagValue) {
-            // $tagValue = str_replace("_"," ",$tagValue);
-            if (! method_exists($tagDB, $method)) {
-                //  $newList[] = str_replace(' ', '_', $tagValue);
 
+        foreach ($tag_array as $tagValue) {
+            if (! method_exists($tagDB, $method)) {
                 $newList[] = $tagValue;
 
                 continue;
             }
-
             $value = $tagDB->{$method}($tagValue);
+
             if ($tag == 'genre') {
                 $newList[] = $tagValue;
-                // utmdump(['1' => $newList]);
+                // $newList[] = $value;
             }
 
             if ($value !== false) {
@@ -400,55 +393,52 @@ trait MetaTags
         array_walk($arr, function (&$value) {
             $value = trim(ucwords($value));
         });
-        // utmdump($arr);
         $arr = array_unique($arr); // , \SORT_STRING);
-        // utmdump($arr);
         $arr = array_values($arr);
-        // utmdump($arr);
-        if ($tag == 'genre' || $tag == 'keyword') {
-            if (MediaArray::search($arr, 'Double') == true) {
-                foreach ($arr as $v) {
-                    if ($v == 'Double') {
-                        continue;
-                    }
-                    $narr[] = $v;
-                }
-                $arr = $narr;
-                unset($narr);
-            }
-            if (MediaArray::search($arr, 'MMF') == true) {
-                if (MediaArray::search($arr, 'MFF') == true) {
-                    foreach ($arr as $v) {
-                        if ($v == 'Group') {
-                            continue;
-                        }
-                        if ($v == 'Double Penetration') {
-                            continue;
-                        }
-                        if ($v == 'MMF') {
-                            // continue;
-                        }
+        // if ($tag == 'genre' || $tag == 'keyword') {
+        //     if (MediaArray::search($arr, 'Double') == true) {
+        //         foreach ($arr as $v) {
+        //             if ($v == 'Double') {
+        //                 continue;
+        //             }
+        //             $narr[] = $v;
+        //         }
+        //         $arr = $narr;
+        //         unset($narr);
+        //     }
+        //     if (MediaArray::search($arr, 'MMF') == true) {
+        //         if (MediaArray::search($arr, 'MFF') == true) {
+        //             foreach ($arr as $v) {
+        //                 if ($v == 'Group') {
+        //                     // continue;
+        //                 }
+        //                 if ($v == 'Double Penetration') {
+        //                     // continue;
+        //                 }
+        //                 if ($v == 'MMF') {
+        //                     // continue;
+        //                 }
 
-                        if ($v == 'MFF') {
-                            // continue;
-                        }
-                        $narr[] = $v;
-                    }
+        //                 if ($v == 'MFF') {
+        //                     // continue;
+        //                 }
+        //                 $narr[] = $v;
+        //             }
 
-                    $arr = $narr;
-                }
-            }
+        //             $arr = $narr;
+        //         }
+        //     }
 
-            // if (isset(fileReader::$PatternClass)) {
-            //     // utmdd($this);
-            //     $genre = fileReader::$PatternClassObj->getGenre();
+        //     // if (isset(fileReader::$PatternClass)) {
+        //     //     // utmdd($this);
+        //     //     $genre = fileReader::$PatternClassObj->getGenre();
 
-            //     if (MediaArray::search($arr, $genre) == false) {
-            //         $arr[] = $genre;
-            //     }
-            // }
-            sort($arr);
-        }
+        //     //     if (MediaArray::search($arr, $genre) == false) {
+        //     //         $arr[] = $genre;
+        //     //     }
+        //     // }
+        //     sort($arr);
+        // }
         // ;
         $max = count($arr);
 
@@ -470,7 +460,8 @@ trait MetaTags
             $string = null;
         }
 
-        // // utmdump([__METHOD__,$method,$string]);
+        utmdump([__METHOD__, $method, $string]);
+
         return $string;
     }
 

@@ -126,14 +126,14 @@ trait FilterMethods
 
     public function updateIdList($keyfile)
     {
-        // utminfo(func_get_args());
-
         $id = $this->KeyPrefix . ' ' . $this->key;
-        file_put_contents($keyfile, PHP_EOL . $id . PHP_EOL, FILE_APPEND);
+        $this->writeidList($keyfile, $id);
     }
 
     private function writeidList($file, $line)
     {
+        utmdump([$file, $line]);
+
         $archive_content = Filesystem::readLines($file);
         array_push($archive_content, $line);
         $archive_content = array_unique($archive_content);
@@ -156,6 +156,8 @@ trait FilterMethods
             $file = $this->playlist;
         }
 
+        utmdump(['type' => $type, 'file' => $file]);
+
         switch ($type) {
             case 'watchlaterPr':
                 $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
@@ -172,7 +174,8 @@ trait FilterMethods
                 $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
                 // $this->Console->writeln($url);
                 // if (! str_contains('premium', $file)) {
-                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                $this->writeidList($file, $url);
+                //                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
                 // }
 
                 break;

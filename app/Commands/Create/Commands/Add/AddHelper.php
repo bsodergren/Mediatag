@@ -7,12 +7,12 @@ use const PHP_EOL;
 
 use Mediatag\Commands\Create\ClassMethods;
 use Mediatag\Core\Mediatag;
-use UTM\Utilities\DynamicProperty;
 use Nette\PhpGenerator\ClassType;
 use Nette\PhpGenerator\PhpNamespace;
 use Nette\PhpGenerator\PsrPrinter;
 use Nette\PhpGenerator\TraitType;
 use Nette\Utils\FileSystem;
+use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function is_array;
@@ -38,7 +38,7 @@ trait AddHelper
         }
         $this->saveClass();
 
-        utmdd(get_class_vars(get_class($this)), Option::getOptions());
+        // utmdd(get_class_vars(get_class($this)), Option::getOptions());
     }
 
     public function addProcess()

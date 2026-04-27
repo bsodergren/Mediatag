@@ -33,6 +33,7 @@ class Options extends MediaOptions
             ['desc', 'd', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
             ['type', 't', InputOption::VALUE_REQUIRED, self::text('L__DB_MARKERS_UPDATE')],
             ['exclude', 'e',  InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_MARKERS_UPDATE')],
+            ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L__DB_FILE_UPDATE')],
 
             ['CmdMethod', 'm', InputOption::VALUE_REQUIRED, self::text('L__DB_FILE_UPDATE')],
             ['params', 'P', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DB_FILE_UPDATE')],

@@ -140,7 +140,9 @@ class Pornhub extends VideoDownloader
 
         PlaylistProcess::$current_key = false;
         if (str_contains($buffer, 'webpage')) {
-            // $this->num_of_lines--;
+            if (Option::istrue('skip')) {
+                $this->num_of_lines--;
+            }
             $line_id = '<id>' . $this->num_of_lines . '</id>';
 
             $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';

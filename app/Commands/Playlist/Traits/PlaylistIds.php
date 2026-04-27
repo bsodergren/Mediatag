@@ -33,7 +33,7 @@ trait PlaylistIds
     {
         $content         = [];
         $archive_content = Filesystem::readLines(self::$ARCHIVE);
-  // utmdump(count($archive_content));
+        // utmdump(count($archive_content));
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $CurrentId = Strings::after($line, ' ');
@@ -99,7 +99,7 @@ trait PlaylistIds
             1 => [self::MODELHUB, 1],
             2 => [self::IGNORED, 1],
             3 => [self::ERRORIDS, 1],
-            // 4 => [self::TRIMMED, 1],
+            4 => [self::NOTFOUND, 0],
         ];
 
         foreach ($fileidArray as $i => $fileId) {
@@ -125,7 +125,12 @@ trait PlaylistIds
 
         if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
+            if (! file_exists($this->premium)) {
+                $this->premium = 'premium_playlist.txt';
+            }
+
             if (file_exists($this->premium)) {
+                $this->premium    = 'premium_playlist.txt';
                 $this->premiumIds = Filesystem::readLines($this->premium, [$this, 'getpremiumListIds']);
             }
         }

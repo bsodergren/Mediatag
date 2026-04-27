@@ -8,9 +8,9 @@ namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
-use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\MetaTags;
 use UTM\Bundle\Monolog\UTMLog;
+use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -62,7 +62,8 @@ class TagBuilder
                 //
                 if ($updates !== null) {
                     // if (Option::isFalse("update")) {
-                    $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'combine');
+                    $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
+                    // utmdd($updates);
                     // }
                 } else {
                     $updates = $jsonupdates;

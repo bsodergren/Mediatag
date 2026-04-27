@@ -101,7 +101,7 @@ trait ClassMethods
             $this->CmdMethod = ucfirst($this->name) . 'Method';
         }
 
-        $this->processOptions(Option::getValue('params'));
+        //$this->processOptions(Option::getValue('params'));
 
         $this->className = ucfirst($this->name) . ucfirst($this->type);
 
@@ -130,6 +130,9 @@ trait ClassMethods
         if (is_array($options)) {
             if (count($options) > 0) {
                 foreach ($options as $x => $value) {
+                    if ($value === null) {
+                        return false;
+                    }
                     $parts         = explode('=', $value);
                     $name          = $parts[0];
                     $v             = $parts[1];
@@ -150,6 +153,7 @@ trait ClassMethods
 
     private function getClassBase()
     {
+        utmdd($this->type);
         switch ($this->type) {
             case 'Command':
             case 'Process':
