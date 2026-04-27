@@ -17,6 +17,7 @@ use UTM\Utilities\DynamicProperty;
 class Process extends Mediatag
 {
     use DynamicProperty;
+    use Helper;
     use Lang;
     use MediaProcess;
     use Translate;
