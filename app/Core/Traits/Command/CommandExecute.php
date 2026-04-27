@@ -3,6 +3,7 @@
 namespace Mediatag\Core\Traits\Command;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Executable\MediatagExec;
 use Nette\Utils\Callback;
 use Symfony\Component\Console\Command\Command;

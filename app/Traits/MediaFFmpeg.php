@@ -104,7 +104,7 @@ trait MediaFFmpeg
         //         // ... do something with the stdout
         //     }
         // });
-        // utmdd($process->getCommandLine());
+        utmdd($process->getCommandLine());
 
         if (Option::isTrue('output')) {
             $cmd      = $process->getCommandLine();

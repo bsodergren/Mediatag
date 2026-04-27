@@ -16,7 +16,9 @@ final class Command extends MediaCommand
 
     public const USE_SEARCH = true;
 
+    public static $DEFAULT_CMD = false;
+
     public $command = [
-        // 'rename'    => ['renameVids' => null],
+        'clip' => ['renameVids' => null],
     ];
 }

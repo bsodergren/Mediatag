@@ -94,7 +94,7 @@ trait FilterMethods
         VideoDownloader::LogBuffer('downloadError = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return ' <error>' . $buffer . '</error>';
+        return ' <error> yyy ' . $buffer . '</error>';
     }
 
     public function downloadFixupM3u8($buffer)
@@ -116,7 +116,9 @@ trait FilterMethods
 
         $outputText                   = '';
         PlaylistProcess::$current_key = false;
-        $outputText                   = $line_id . '  <error> ' . $this->key . ' ' . $error . ' </error>';
+        $outputText                   = $line_id . '  <error> xxx ' . $this->key . ' ' . $error . ' </error>';
+
+        $this->updateIdList(PlaylistProcess::DISABLED);
 
         // Mediatag::$Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
@@ -132,11 +134,14 @@ trait FilterMethods
 
     private function writeidList($file, $line)
     {
-        utmdump([$file, $line]);
-
         $archive_content = Filesystem::readLines($file);
-        array_push($archive_content, $line);
-        $archive_content = array_unique($archive_content);
+        if (! $archive_content === false) {
+            array_push($archive_content, $line);
+            $archive_content = array_unique($archive_content);
+        } else {
+            $archive_content = $line;
+        }
+
         Filesystem::writeFile($file, $archive_content, false);
         // utmdump($archive_content);
     }
@@ -189,13 +194,13 @@ trait FilterMethods
             case 'error':
                 $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
                 // $ret = file_put_contents(PlaylistProcess::NOTFOUND, $url . PHP_EOL, FILE_APPEND);
-                // $this->updateIdList(PlaylistProcess::DISABLED);
+                $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
             case '404':
                 $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
                 // Mediatag::$Console->writeln($url);
-                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                // file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
                 $this->writeidList($file, $url);
                 break;
             default:

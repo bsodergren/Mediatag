@@ -82,8 +82,6 @@ class Mediatag extends Command
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
-        utmdd(get_class(Storage::$DB));
-
         self::boot($input, $output, $args);
     }
 

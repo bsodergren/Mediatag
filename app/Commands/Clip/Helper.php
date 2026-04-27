@@ -6,10 +6,9 @@
 
 namespace Mediatag\Commands\Clip;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\Section\Markers;
@@ -24,6 +23,8 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 trait Helper
 {

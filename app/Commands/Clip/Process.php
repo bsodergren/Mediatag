@@ -6,40 +6,89 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Commands\Clip\Commands\Add\AddHelper;
-use Mediatag\Commands\Clip\Commands\Chapter\ChapterHelper;
 use Mediatag\Commands\Clip\Commands\Create\CreateHelper;
-use Mediatag\Commands\Clip\Commands\Delete\DeleteHelper;
-use Mediatag\Commands\Clip\Commands\Merge\MergeHelper;
-use Mediatag\Commands\Clip\Commands\Show\ShowHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UTM\Utilities\DynamicProperty;
 
 include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
-    use AddHelper;
-    use ChapterHelper;
     use CreateHelper;
-    use DeleteHelper;
+    use DynamicProperty;
+
+    // use AddHelper;
+    // use ChapterHelper;
+    // use CreateHelper;
+    // use DeleteHelper;
     use Helper;
     use Lang;
     use MediaExecute;
     use MediaProcess;
-    use MergeHelper;
-    use ShowHelper;
+    // use MergeHelper;
+    // use ShowHelper;
+
+    public $dbConn;
+
+    protected $useFuncs = ['addMeta'];
+
+    public $db_array = [];
+
+    public $file_array = [];
+
+    public $Search_Array = null;
+
+    public $read;
+
+    public $meta;
+
+    public $OutputText = [];
+
+    public $New_Array = [];
+
+    public $Deleted_Array = [];
+
+    public $Changed_Array = [];
+
+    public $allDbFiles = [];
+
+    public $defaultCommands = [
+        // 'init' => null,
+        // 'exec' => null,
+    ];
+
+    public $commandList = [
+
+    ];
+
+    private $count;
+
+    public object $DbMap;
+
+    private $thumb;
+
+    private $vinfo;
+
+    public function __construct(InputInterface $input, OutputInterface $output)
+    {
+        parent::boot($input, $output);
+        $this->dbConn = new Storage;
+        //
+        //parent::$SearchArray;
+    }
 
     public $VideoList = [];
 
-    protected $useFuncs = ['addMeta', 'setupMap'];
+    // protected $useFuncs = ['addMeta', 'setupMap'];
 
-    public $defaultCommands = [
-        // 'exec' => null,
-    ];
+    // public $defaultCommands = [
+    //     // 'exec' => null,
+    // ];
 
     // public $commandList = [
     //     'merge'           => [
@@ -61,11 +110,11 @@ class Process extends Mediatag
     //     ],
     // ];
 
-    public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
-    {
-        parent::boot($input, $output);
+    // public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
+    // {
+    //     parent::boot($input, $output);
 
-        // $this->setupFormat();
-        // $this->setupDb();
-    }
+    //     // $this->setupFormat();
+    //     // $this->setupDb();
+    // }
 }

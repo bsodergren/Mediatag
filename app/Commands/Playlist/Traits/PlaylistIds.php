@@ -97,8 +97,8 @@ trait PlaylistIds
         $fileidArray = [
             0 => [self::DISABLED, 0],
             1 => [self::MODELHUB, 1],
-            2 => [self::IGNORED, 1],
-            3 => [self::ERRORIDS, 1],
+            2 => [self::IGNORED, 0],
+            3 => [self::ERRORIDS, 0],
             4 => [self::NOTFOUND, 0],
         ];
 
@@ -126,11 +126,10 @@ trait PlaylistIds
         if (! str_contains('premium', $this->playlist)) {
             $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
             if (! file_exists($this->premium)) {
-                $this->premium = 'premium_playlist.txt';
+                $this->premium = self::PREMIUM_PLAYLIST;
             }
 
             if (file_exists($this->premium)) {
-                $this->premium    = 'premium_playlist.txt';
                 $this->premiumIds = Filesystem::readLines($this->premium, [$this, 'getpremiumListIds']);
             }
         }

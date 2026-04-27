@@ -17,13 +17,13 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
-use UTM\Utilities\DynamicProperty;
 use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
+use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -32,21 +32,10 @@ use function dirname;
 class Process extends Mediatag
 {
     use DynamicProperty;
-    // use ExportHelper;
-
-    // use CapHelper;s
-    // use EmptyHelper;
-    // use BackHelper;
     use Helper;
-    // use ImportHelper;
-
-    // use InfoHelper;
     use Lang;
     use MediaExecute;
     use MediaProcess;
-
-    // use PreviewHelper;
-    // use SubHelper;
     use Translate;
 
     public $dbConn;
@@ -108,7 +97,7 @@ class Process extends Mediatag
         // $this->DbMap =Storage::$DB();
         //
 
-        $this->allDbFiles =Storage::$DB->getAllDbFiles();
+        $this->allDbFiles = Storage::$DB->getAllDbFiles();
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
@@ -146,9 +135,9 @@ class Process extends Mediatag
                 $this->file_array[$key] = $file;
             }
         }
-       Storage::$DB->file_array = $this->file_array;
+        Storage::$DB->file_array = $this->file_array;
 
-        $this->db_array =Storage::$DB->getDbFileList();
+        $this->db_array = Storage::$DB->getDbFileList();
 
         // utmdd($this->db_array,$this->file_array);
         return $this;
