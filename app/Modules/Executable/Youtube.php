@@ -16,6 +16,7 @@ use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\Pornhub;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Traits\AutoWrapper;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
@@ -24,6 +25,7 @@ use function count;
 
 class Youtube extends MediatagExec
 {
+    use AutoWrapper;
     use YtdlpCallBacks;
 
     public $execMode = 'write';

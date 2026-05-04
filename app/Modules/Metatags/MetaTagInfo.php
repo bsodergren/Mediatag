@@ -24,31 +24,35 @@ class MetaTagInfo extends Mediatag
 
     public static function updateMetaTagMap($video_id, $tag, $tag_id)
     {
-        $table = 'mediatag_' . $tag . '_map';
-// utmdump([$video_id,$tag,$tag_id]);
+        $table   = 'mediatag_' . $tag . '_map';
         $results = Storage::$DB->mysqllib->where('video_id', $video_id)
             ->where($tag . '_id', $tag_id)
             ->get($table);
-        // utmdump(Storage::$DB->mysqllib->getLastQuery());
         if (count($results) < 1) {
             $data = ['video_id' => $video_id, $tag . '_id' => $tag_id];
             $id   = Storage::$DB->mysqllib->insert($table, $data);
         }
     }
 
-    public static function updateArtistMap($videoId, $tag, $tagValue)
+    public static function updateArtistMap($videoId, $tag, $tagValue, $return = false)
     {
         $res    = MetaTagInfo::getArtistByName($tag, $tagValue);
-        // utmdump($res);
         $output = 'Updated Video id <file>' . $videoId . '</> with <info>' . $tagValue . '</> info ';
+
+        if (\is_null($res)) {
+            return null;
+        }
+
         foreach ($res as $row) {
-            // utmdump($row);
             // if ($row['hide'] == 0) {
             //     //$output .= ' Value ' . $row['name'] . ' Id ' . $row['id'];
             $output .= PHP_EOL . "\t" . ' Name <comment>' . $row['star_name'] . '</> ';
             self::updateMetaTagMap($videoId, $tag, $row['id']);
             //     // $out[] = $output;
             // }
+        }
+        if ($return === true) {
+            return $output;
         }
         Mediatag::$Console->writeln($output);
         // utmdd("d");
@@ -74,7 +78,7 @@ class MetaTagInfo extends Mediatag
     {
         $results = null;
         $db      = MysqliDb::getInstance();
-                        // utmdump(["Name"=>$name]);
+        // utmdump(["Name"=>$name]);
 
         if (\str_contains($name, ',')) {
             $pcs = \explode(',', $name);
@@ -87,9 +91,9 @@ class MetaTagInfo extends Mediatag
             }
         } else {
             $r = self::getArtistfromDb($name);
-                if (! is_null($r)) {
-                    $results[] = $r;
-                }
+            if (! is_null($r)) {
+                $results[] = $r;
+            }
         }
 
         // utmdump([__METHOD__ => $results]);
@@ -111,7 +115,7 @@ class MetaTagInfo extends Mediatag
                 if ($res[0]['gender'] != 'male') {
                     $result = $res[0];
                 }
-            }else if(count($res) == 0) {
+            } elseif (count($res) == 0) {
                 // utmdd([$db->getLastQuery(),$artist,count($res)]);
             } else {
                 foreach ($res as $row) {
@@ -125,7 +129,8 @@ class MetaTagInfo extends Mediatag
                 $result = $oneRes;
             }
         }
-// utmdump([$result,$artist]);
+
+        // utmdump([$result,$artist]);
         return $result;
         //     $data = ['name' => \strtolower($v), 'replacement' => ''];
         //     $id   = $db->insert(__MYSQL_ARTISTS__, $data);

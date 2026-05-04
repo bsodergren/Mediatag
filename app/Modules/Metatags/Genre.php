@@ -40,7 +40,6 @@ class Genre extends TagBuilder
     public static function clean($text, $file = null)
     {
         // utminfo(func_get_args());
-        utmdump($text);
 
         return parent::clean($text, 'genre');
     }

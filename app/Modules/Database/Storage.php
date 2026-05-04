@@ -127,7 +127,7 @@ class Storage
         // utminfo(func_get_args());
 
         $method = $name;
-        utmdump(['Name' => $name]);
+        // utmdump(['Name' => $name]);
 
         // Note: value of $name is case sensitive.
         if (str_contains($name, 'Genre')) {
@@ -450,32 +450,26 @@ class Storage
 
             case 'cleandb':
 
-                $field = 'f';
-                if (Option::getValue('type') == 'meta') {
-                    $field = 'm';
-                }
-                if (Option::getValue('type') == 'info') {
-                    $field = 'i';
-                }
+                $query = 'delete f,mp,md,i,pl,fv FROM ' . __MYSQL_VIDEO_FILE__ . ' f ';
+                $query .= 'left join ' . __MYSQL_ARTIST_MAP__ . '  mp on f.id = mp.video_id  ';
+                $query .= 'left join ' . __MYSQL_VIDEO_METADATA__ . '  md on f.video_key = md.video_key  ';
+                $query .= 'left join ' . __MYSQL_VIDEO_INFO__ . '  i on f.video_key = i.video_key ';
+                $query .= 'left join ' . __MYSQL_PLAYLIST_VIDEOS__ . '  pl on f.id = pl.playlist_video_id  ';
+                $query .= 'left join  ' . __MYSQL_FAVORITE_VIDEOS__ . '  fv on f.id = fv.video_id ';
+                $query .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
+                $query .= " f.fullpath like '%" . $current_dir . "%'";
 
-                $cleanQuery = 'DELETE ' . $field . ' FROM ' . __MYSQL_VIDEO_FILE__ . ' as f  ';
-                if (Option::getValue('type') == 'meta') {
-                    $cleanQuery .= ', ' . __MYSQL_VIDEO_METADATA__ . ' as m  ';
-                }
-                if (Option::getValue('type') == 'info') {
-                    $cleanQuery .= ', ' . __MYSQL_VIDEO_INFO__ . ' as i  ';
-                }
-                $cleanQuery .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
-                $cleanQuery .= " f.fullpath like '%" . $current_dir . "%'";
-                if (Option::getValue('type') == 'meta') {
-                    $cleanQuery .= ' and ( m.video_key = f.video_key )';
-                }
-                if (Option::getValue('type') == 'info') {
-                    $cleanQuery .= ' and (i.video_key = f.video_key) ';
-                }
-                // utmdd($cleanQuery);
+                utmdump($query);
+                // DELETE f, map, m, i,pl FROM
+                // mediatag_video_file as f,
+                // mediatag_artist_map as map,
+                // mediatag_video_metadata as m,
+                // mediatag_video_info as i,
+                // plexweb_favorite_videos as fv
+                // WHERE f.Library = 'Studios' AND  f.fullpath like '%Studios/Adult Time/Adult Time/Single%'
+                // AND (m.video_key = f.video_key) and (i.video_key = f.video_key)  and (map.video_id = f.id) and (pl.playlist_video_id = f.id)"
 
-                return $cleanQuery;
+                return $query;
 
             default:
                 exit('No command added');

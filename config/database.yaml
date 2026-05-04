@@ -13,7 +13,7 @@ mediatag:
         - keyword
         - title
         - genre_map
-        - artists_map
+        - artist_map
 plexweb:
     prefix: "plexweb_"
     tables:

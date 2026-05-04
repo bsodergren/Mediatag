@@ -94,7 +94,7 @@ trait MediaFFmpeg
         $process->setTimeout(null);
         // MediaFile::file_append_file($this->ffmpeg_log, $process->getCommandLine() . PHP_EOL);
 
-        // utmdump($process->getCommandLine());
+        // utmdd($process->getCommandLine());
         // Mediatag::$ProcessHelper->run(Mediatag::$output,$process,'The process failed :(', function (string $type, string $data): void {
         //     if (Process::ERR === $type) {
         //         echo $data;
@@ -104,7 +104,7 @@ trait MediaFFmpeg
         //         // ... do something with the stdout
         //     }
         // });
-        utmdd($process->getCommandLine());
+        // utmdd($process->getCommandLine());
 
         if (Option::isTrue('output')) {
             $cmd      = $process->getCommandLine();
@@ -177,7 +177,7 @@ trait MediaFFmpeg
         FileSystem::rename($file, $dmg_dir . '/' . basename($file));
     }
 
-    public function repairVideo()
+    public function repairVideo($signal = 1)
     {
         // utminfo(func_get_args());
 
@@ -187,8 +187,23 @@ trait MediaFFmpeg
         $new_tmp_file = str_replace('.mp4', '_new.mp4', $this->video_file);
         // // UTMlog::logNotice('new file', [$orig_file, $new_file, $new_tmp_file]);
 
-        $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
-        $this->ffmpegExec($cmdOptions);
+        switch ($signal) {
+            case '6':
+                $cmdOptions = [
+                    '-y', '-loglevel', 'repeat+info', '-i',
+                    'file:' . $orig_file, '-map', '0', '-dn', '-ignore_unknown',
+                    '-c', 'copy', '-f', 'mp4', '-bsf:a', 'aac_adtstoasc',
+                    '-movflags', '+faststart',
+                    'file:' . $new_tmp_file,
+                ];
+                //$cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
+                break;
+            default:
+                $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
+                break;
+        }
+
+        $this->ffmpegExec($cmdOptions, Callback::check([$this, 'Outputdebug']));
 
         $dmg_dir = str_replace('/XXX', '/XXX/dmg', $this->video_path);
         FileSystem::createDir($dmg_dir);

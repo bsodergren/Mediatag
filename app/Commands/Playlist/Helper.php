@@ -316,7 +316,7 @@ trait Helper
                 $ph_id = Strings::before($ph_id, '/');
             }
         }
-
+        $ph_id = trim($ph_id);
         if (! in_array($ph_id, $this->ids)) {
             if (str_contains($line, 'view_video.php')) {
                 return $line;

@@ -213,10 +213,10 @@ trait Helper
 
         $video_name = Strings::cleanFileName($old_name);
 
-        $new_path = Strings::after($old_path, __PLEX_DOWNLOAD__ . '/');
+        $new_path = Strings::after($old_path, __PLEX_DOWNLOADED__ . '/');
         $new_path = Strings::after($new_path, '/');
 
-        $library = Strings::after($old_path, __PLEX_DOWNLOAD__ . '/');
+        $library = Strings::after($old_path, __PLEX_DOWNLOADED__ . '/');
         $library = Strings::before($library, '/');
 
         $video_path  = $videoInfo['video_path'];
@@ -310,7 +310,7 @@ trait Helper
             return null;
         }
         foreach ($file_array as $file) {
-            $library = Strings::before(Strings::after($file, __PLEX_DOWNLOAD__ . '/'), '/');
+            $library = Strings::before(Strings::after($file, __PLEX_DOWNLOADED__ . '/'), '/');
 
             $mp4_file = str_replace('.' . $search_params, '.mp4', $file);
             $key      = MediaFile::getVideoKey(basename($mp4_file), $library);

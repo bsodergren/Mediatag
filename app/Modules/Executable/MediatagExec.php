@@ -11,6 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Metatags\Artist;
+use Mediatag\Traits\AutoWrapper;
 use Mediatag\Traits\ExecArgs;
 use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
@@ -24,6 +25,7 @@ use function is_string;
 
 class MediatagExec
 {
+    use AutoWrapper;
     use DynamicProperty;
     use ExecArgs;
     // use MediaCommand;
@@ -141,7 +143,7 @@ class MediatagExec
         }
     }
 
-    protected function createOptionArg($meta_tag, $meta_value)
+    public function createOptionArg($meta_tag, $meta_value)
     {
         // utminfo(func_get_args());
 
@@ -168,7 +170,7 @@ class MediatagExec
         // }
     }
 
-    protected function testexec($command, $callback = null): mixed
+    public function testexec($command, $callback = null): mixed
     {
         $process = new Process($command);
         $process->setTimeout(60000);
@@ -192,13 +194,12 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-        // utmdd($this->runCommand);
+        // UtmDump($this->runCommand);
         // utmdd($callback);
         $process->start();
         try {
             // $process->mustRun($callback);
             $process->wait($callback);
-            // echo $process->getOutput();
         } catch (ProcessSignaledException $exception) {
             // echo $exception->getMessage();
             $this->errors = $exception->getMessage();

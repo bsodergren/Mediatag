@@ -38,11 +38,11 @@ trait VideoGetters
         $exists           = Storage::$DB->videoExists($key, null, $this->VideoFileTable);
         if ($exists === null) {
             $data_array = Storage::$DB->createDbEntry($file, $key);
+
             Storage::$DB->insert($data_array);
         }
 
         $this->VideoInfo = $this->getVideoDetails();
-        // utmdump($this->VideoInfo);
 
         return $this->saveVideoDetails();
     }

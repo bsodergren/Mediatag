@@ -112,6 +112,7 @@ trait PlaylistIds
                 }
             }
         }
+
         $this->getpremiumIds();
         $this->idList = array_merge($this->idList, $this->premiumIds);
         $this->idList = array_merge($this->idList, $this->DownloadableIds);

@@ -53,6 +53,7 @@ define('__MYSQL_GENRE__', Db_MEDIATAG_PREFIX . 'genre');
 define('__MYSQL_ARTISTS__', Db_MEDIATAG_PREFIX . 'artists');
 
 define('__MYSQL_ARTIST_PH__', Db_MEDIATAG_PREFIX . 'artist_ph');
+define('__MYSQL_ARTIST_MAP__', Db_MEDIATAG_PREFIX . 'artist_map');
 /*
  * @global string __MYSQL_TAGS
  */
@@ -123,10 +124,10 @@ define(
 
 define('__MAX_SQL_ITEMS__', 5000);
 
- $DbConnection = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-$db    = new Storage($DbConnection);
-$query = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
-$val   = $db->query($query);
+$DbConnection = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+$db           = new Storage($DbConnection);
+$query        = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
+$val          = $db->query($query);
 
 foreach ($val as $row => $settingVal) {
     $value = json_decode($settingVal['value']);

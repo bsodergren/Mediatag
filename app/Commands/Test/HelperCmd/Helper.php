@@ -13,6 +13,7 @@ use FFMpeg\FFMpeg;
 use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Metatags\MetaTagInfo;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\VideoInfo\VideoInfo;
@@ -23,35 +24,79 @@ use Paramako\Pornhub\Factory;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
 
+use UTMDbLib\Metatags\Artist;
+use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
+
 use function dirname;
 
 trait Helper
 {
     public $videoFile;
 
-    public function list()
+    public function hello()
     {
-        self::$CmdList = ['importThumb',
-            'splitMethod',
-            'searchPh',
-            'importActors',
-            'Actor',
-            'getVideoInfo',
+        Mediatag::$Console->writeln('<info>Hellow people</>');
+    }
 
+    public function testMove()
+    {
+        $keys = [
+            '68f80a6b8693f',
+            'ph598a38f3ec724',
+            'ph57224bb888c7b',
+            'ph62c72845145ab',
+            '66b6763928848',
+            '667b0676eca47',
+            '66422cd3897da',
+            '65de3833278d6',
+            '6678c1418b11f',
+            '6781418a09c7c',
+            '685b203d51d96',
+            '67546761d5896',
+            '68752bd20599a',
+            '68bb42fdace1f',
         ];
 
-        $cmds = get_class_methods(\get_class($this));
+        foreach ($keys as $key) {
+            Mediatag::$Console->writeln('searching for key ' . $key);
+            $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
+            if (count($file_array) > 0) {
+                foreach ($file_array as $file) {
+                    if (str_ends_with($file, '.mp4')) {
+                        $currentPath = dirname($file);
+                        $filename    = DIRECTORY_SEPARATOR . basename($file, '.mp4');
 
-        utmdd($cmds, self::$CmdList);
+                        $jsonFile  = $filename . '.info.json';
+                        $videoFile = $filename . '.mp4';
+
+                        $newPath = \str_replace(\__PLEX_DOWNLOAD__, \__PLEX_DOWNLOADED__, $currentPath);
+                        FileSystem::createDir($newPath);
+
+                        $newVideoFile = $newPath . $videoFile;
+                        $newJsonFile  = $newPath . $jsonFile;
+
+                        FileSystem::rename($currentPath . $videoFile, $newVideoFile);
+                        FileSystem::rename($currentPath . $jsonFile, $newJsonFile);
+                        Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+                    }
+                }
+            }
+        }
+    }
+
+    public function list()
+    {
+        utmdd($cmds);
     }
 
     public function importThumb()
     {
         $db = MysqliDb::getInstance();
 
+        $this->max = 2000;
         $db->where('gender', 'female');
         $db->where('star_thumb', '%media%', 'Not like');
-        $res = $db->map('star_name')->get('mediatag_artist_ph', 1000);
+        $res = $db->map('star_name')->get('mediatag_artist_ph', $this->max);
 
         foreach ($res as $i => $row) {
             $nameKey = \strtolower(str_replace(' ', '_', $row['star_name']));
@@ -66,11 +111,12 @@ trait Helper
                 $query = "UPDATE ignore `mediatag_artist_ph` SET `star_thumb` = '" . $thumbnail . "' WHERE `mediatag_artist_ph`.`nameKey` = '" . $newnameKey . "'  and `mediatag_artist_ph`.`star_thumb`  not like '%media%'";
                 // utmdd($query);
                 $db->rawQuery($query);
-                Mediatag::$Console->writeln(' Added ' . $row['star_name']);
-                utmdump($query);
+                Mediatag::$Console->writeln('<info>' . $this->max . '</> Added ' . $row['star_name']);
+                // utmdump($query);
             } else {
                 $thumbnail = $this->saveArtistThumbnail($newnameKey, $thumbnail);
             }
+            $this->max--;
             // utmdd($query);
         }
     }
@@ -201,6 +247,10 @@ trait Helper
 
     public function getVideoInfo()
     {
+          new Artist(__MYSQL_ARTIST_PH__, __MYSQL_ARTIST_MAP__);
+        $vInfo = new LibVinfo(__MYSQL_VIDEO_FILE__);
+        $vInfo->setLibrary(\__LIBRARY__);
+        //LibVinfo
         $filelist_array = $this->VideoList['file'];
         // Mediatag::$Display->LineBreaks = true;
         // Mediatag::$Display->DisplayTable($filelist_array);
@@ -213,13 +263,11 @@ trait Helper
             $data     = $info->getMetaValues();
             $tagValue = $data[$tag];
 
-            $videoId = VideoInfo::GetVideoIdByKey($key);
-            if ($tag == 'genre') {
-                // MetaTagInfo::updateGenreMap($videoId, $tag, $tagValue);
-            }
+            $videoId = $vInfo->getvideoId($key);
+
             if ($tag == 'artist') {
-                utmdump([$data]);
-                MetaTagInfo::updateArtistMap($videoId, $tag, $tagValue);
+                $r= Artist::updateArtistMap($videoId, $tagValue);
+                // MetaTagInfo::updateArtistMap($videoId, $tag, $tagValue);
             }
         }
         // utmdump($this->VideoList);
@@ -236,7 +284,7 @@ trait Helper
         // $saveDir  = __DIR__ . "/images"; // Ensure this folder exists and is writable
 
         if (str_contains($thumbnail, 'phncdn')) {
-            Mediatag::$Console->writeln('Changin PH Thumbnail for ' . $artist);
+            Mediatag::$Console->writeln('<info>' . $this->max . '</> Changin PH Thumbnail for ' . $artist);
             $img_file_path = '/home/bjorn/www/plex_web/html/images/thumbnails';
 
             $NewThumbnail = $this->saveImageFromUrl($thumbnail, $img_file_path);

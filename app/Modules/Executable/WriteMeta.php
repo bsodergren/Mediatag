@@ -187,19 +187,16 @@ class WriteMeta extends MediatagExec
             $this->output->write("\t Skipping " . basename($this->command[1]));
         }
         if ($results == true) {
-            // utmdump($results);
-
             if (str_contains($results, 'signal')
             || str_contains($results, 'error')) {
                 // // UTMlog::logError('results Metadata', $results);
                 if (str_contains($results, '11')
                 || str_contains($results, 'alignment')) {
-                    // $io->error([$this->video_file, $results]);
-                    // UTMlog::logError('process with FFMPEG');
-
-                    $this->Display->processOutput->overwrite('<info>Reparing Video</info>');
-
+                    $this->Display->processOutput->overwrite('<info>Reparing #11 Video</info>');
                     $this->repairVideo();
+                } elseif (str_contains($results, '6')) {
+                    $this->Display->processOutput->overwrite('<info>Reparing #6 Video</info>');
+                    $this->repairVideo(6);
                 } else {
                     $this->output->write("\t " . $results . PHP_EOL);
                     $this->output->write("\t -- Running " . $this->runCommand);

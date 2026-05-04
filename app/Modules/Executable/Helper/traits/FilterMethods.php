@@ -14,6 +14,7 @@ use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Utilities\Strings;
+use Nette\Utils\FileSystem as nFileSystem;
 
 use function array_key_exists;
 
@@ -86,7 +87,7 @@ trait FilterMethods
         VideoDownloader::LogBuffer('downloadExists = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return $this->line_id . ' <error>' . $this->key . ' Already been downloaded </error>' . PHP_EOL;
+        return $this->line_id . ' <error>' . $this->key . ' Already been  downloaded </error>' . PHP_EOL;
     }
 
     public function downloadError($buffer)
@@ -161,7 +162,7 @@ trait FilterMethods
             $file = $this->playlist;
         }
 
-        utmdump(['type' => $type, 'file' => $file]);
+        // utmdump(['type' => $type, 'file' => $file]);
 
         switch ($type) {
             case 'watchlaterPr':
@@ -224,6 +225,7 @@ trait FilterMethods
         // }
 
         if (str_contains($buffer, 'Destination')) {
+            // utmdump($buffer);
             $bufferMethod = 'Destination';
             $newLine      = false;
         }
@@ -252,6 +254,50 @@ trait FilterMethods
         $this->num_of_lines--;
 
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
+    }
+
+    public function moveDownloadedVideos($key)
+    {
+        Mediatag::$Console->writeln('searching for key ' . $key);
+        $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
+
+        if (count($file_array) > 0) {
+            foreach ($file_array as $file) {
+                if (! file_exists($file)) {
+                    continue;
+                }
+
+                $currentPath = dirname($file);
+                if (str_ends_with($file, 'mp4')) {
+                    $filename = DIRECTORY_SEPARATOR . basename($file, '.mp4');
+                } elseif (str_ends_with($file, 'json')) {
+                    $filename = DIRECTORY_SEPARATOR . basename($file, '.info.json');
+                } else {
+                    utmdump($file);
+
+                    continue;
+                }
+                // utmdump([$file, $filename]);
+                $jsonFile  = $filename . '.info.json';
+                $videoFile = $filename . '.mp4';
+
+                $newPath = \str_replace(\__PLEX_DOWNLOAD__, \__PLEX_DOWNLOADED__, $currentPath);
+                nFileSystem::createDir($newPath);
+
+                $newVideoFile = $newPath . $videoFile;
+                $newJsonFile  = $newPath . $jsonFile;
+
+                nFileSystem::rename($currentPath . $videoFile, $newVideoFile);
+                nFileSystem::rename($currentPath . $jsonFile, $newJsonFile);
+
+                Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+            }
+        }
+    }
+
+    public function setNumberLines($value)
+    {
+        $this->num_of_lines = $value;
     }
 
     public function downloadableIds($buffer, $line_id)

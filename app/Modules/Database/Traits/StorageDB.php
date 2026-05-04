@@ -169,6 +169,10 @@ trait StorageDB
         $query = 'delete from ' . __MYSQL_VIDEO_FILE__ . ' WHERE video_key = "' . $this->video_key . '" ';
         $this->query($query);
 
+        $query = 'delete from ' . __MYSQL_ARTIST_MAP__ . ' WHERE video_id = "' . $result['id'] . '" ';
+        utmdd($query);
+        $this->query($query);
+
         $query  = 'select playlist_id from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_video_id = "' . $result['id'] . '" ';
         $pl_res = $this->queryOne($query);
         if ($pl_res !== null) {

@@ -2,12 +2,12 @@
 
 PLEX_HOME=/media/Videos/Plex/XXX
 PLAYLIST_DIR="${PLEX_HOME}/Playlists/"
-DOWNLOAD_DIR="${PLEX_HOME}/Downloads/"
+DOWNLOAD_DIR="${PLEX_HOME}/Downloaded/"
 PORNHUB_DIR="${PLEX_HOME}/Pornhub/"
 PREMIUM_DIR="${PORNHUB_DIR}/Premium/"
 SORT_DIR="${PORNHUB_DIR}/Sort/"
 
-__FILE="list.txt"
+__FILE="PhClicked.txt"
 __MAX=5
 
 function print_usage() {
@@ -67,12 +67,13 @@ shopt -s nocasematch
 function DoPlaylist() {
    echo "The name of this function is: ${FUNCNAME[0]}"
    cd "${PLAYLIST_DIR}"
-   playlist pl -M${__MAX} ${__FILE}
+   playlist download -M${__MAX} -F ${__FILE}
 
 }
 
 function DoUpdate() {
    echo "The name of this function is: ${FUNCNAME[0]}"
+   cd "${PREMIUM_DIR}"
    pwd
    mediaupdate
    mediarename move -g
@@ -85,8 +86,7 @@ fi
 if [[ -n "${__MOVE}" ]]; then
    echo "Running Move CMD"
    cd "${DOWNLOAD_DIR}"
-   mediadownload
-   cd "${PREMIUM_DIR}"
+   mediadownload -o
    DoUpdate
 
 fi

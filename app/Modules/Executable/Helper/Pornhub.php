@@ -24,6 +24,7 @@ use function array_key_exists;
 class Pornhub extends VideoDownloader
 {
     public $options = [
+        '-v',
         '-o',
         __PLEX_DOWNLOAD__ . '/Pornhub/' . Youtube::__YT_DL_FORMAT__,
         '-u',
@@ -45,6 +46,7 @@ class Pornhub extends VideoDownloader
                 'search'       => [
                     'pattern' => "/.*PornHubPlaylist.*Downloading \d+ items of (\d+)/",
                     'match'   => 1,
+                    'command' => 'setNumberLines',
 
                 ],
                 'ConsoleCmd'   => 'writeln',
@@ -121,13 +123,21 @@ class Pornhub extends VideoDownloader
                 'ConsoleCmd'   => 'writeln',
                 'OutputMethod' => 'fixVideo',
             ],
+            '[debug]'             => [
+                'search'       => [
+                    'pattern' => "/.*archive:\s+pornhub\s+([\w\d]+)/",
+                    'match'   => 1,
+                    'command' => 'moveDownloadedVideos',
 
+                ],
+                'ConsoleCmd'   => 'writeln',
+                'OutputMethod' => null,
+            ],
             'info'                => [
                 'search'       => 'str_starts_with',
                 'ConsoleCmd'   => 'writeln',
                 'OutputMethod' => 'downloadableIds',
             ],
-
         ];
 
         // utmdd($this->registeredbufferFilters);

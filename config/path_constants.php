@@ -34,6 +34,8 @@ const __PLEX_PL_ID_DIR__   = __PLEX_PL_DIR__ . '/ids';
 const __PLEX_PL_LIST_DIR__ = __PLEX_PL_DIR__ . '/lists';
 
 const __PLEX_DOWNLOAD__    = __PLEX_HOME__ . '/Downloads';
+const __PLEX_DOWNLOADED__    = __PLEX_HOME__ . '/Downloaded';
+
 const __CACHE_DIR__        = __PLEX_HOME__ . '/.cache';
 const __JSON_CACHE_DIR__   = __CACHE_DIR__ . '/json';
 const __PH_CACHE_DIR__     = __CACHE_DIR__ . '/Pornhub';

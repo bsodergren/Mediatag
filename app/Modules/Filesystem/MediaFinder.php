@@ -11,6 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Traits\AutoWrapper;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
@@ -30,6 +31,8 @@ use function is_array;
  */
 class MediaFinder extends SFinder
 {
+    use AutoWrapper;
+
     /**
      * Summary of video_file.
      */
@@ -285,7 +288,7 @@ class MediaFinder extends SFinder
      */
     public function Search($path = null, $search = null, $date = null, $exit = true)
     {
-        // utmdd(func_get_args());
+        // utmdump(func_get_args());
         $FileArray = [];
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();

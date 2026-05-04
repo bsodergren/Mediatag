@@ -5,11 +5,13 @@ namespace Mediatag\Modules\VideoInfo\VideoInfoTraits;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Metatags\MetaTagInfo;
 use Mediatag\Modules\VideoInfo\helpers\VideoCleaner;
 use Mediatag\Modules\VideoInfo\helpers\VideoQuery;
 use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
-use UTM\Utilities\DynamicProperty;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use UTM\Bundle\mysql\MysqliDb;
+use UTM\Utilities\DynamicProperty;
 
 use function array_key_exists;
 use function count;
@@ -34,13 +36,29 @@ trait VideoSetters
                 return false;
             }
         }
-        // // utmdump($this->VideoInfo);
+
+        if ($this->VideoInfo['artist'] !== null) {
+            if ($this->saveArtist($this->VideoInfo['artist']) !== null) {
+                unset($this->VideoInfo['artist']);
+            }
+        }
+
+        // utmdd($this->VideoDataTable);
 
         if (Storage::$DB->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;
             // utmdd(["ffdssd",$this->getVideoText(),$this->returnText]);
             return $this->getVideoText();
         }
+    }
+
+    public function saveArtist($artistList)
+    {
+        $videoId = VideoInfo::GetVideoIdByKey($this->VideoInfo['video_key']);
+
+        // $this->actionText =
+        return MetaTagInfo::updateArtistMap($videoId, 'artist', $artistList, true);
+        // utmdump($this->actionText);
     }
 
     public function updateVideoData()

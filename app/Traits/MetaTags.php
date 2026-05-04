@@ -460,7 +460,6 @@ trait MetaTags
             $string = null;
         }
 
-        utmdump([__METHOD__, $method, $string]);
 
         return $string;
     }

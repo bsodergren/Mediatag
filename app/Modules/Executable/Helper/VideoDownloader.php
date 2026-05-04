@@ -77,7 +77,7 @@ class VideoDownloader
         // }
         // // UTMlog::Logger('Ph Download', $buffer);
 
-        // MediaFile::file_append_file(__LOGFILE_DIR__ . "/buffer/" . $this->key . ".log", $buffer . PHP_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/' . $this->key . '.log', $buffer);
         if (! isset($this->registeredbufferFilters)) {
             Mediatag::error('No Filters Set');
         }
@@ -91,12 +91,15 @@ class VideoDownloader
                 if (! is_array($properties['search'])) {
                     $searchCmd = $properties['search'];
                 } else {
-                    $pattern = $properties['search']['pattern'];
-                    $match   = $properties['search']['match'];
-                    $matched = preg_match($pattern, $buffer, $matches);
+                    $pattern      = $properties['search']['pattern'];
+                    $match        = $properties['search']['match'];
+                    $matchCommand = $properties['search']['command'];
+                    $matched      = preg_match($pattern, $buffer, $matches);
                     if ($matched) {
                         if (array_key_exists($match, $matches)) {
-                            $this->num_of_lines = $matches[$match];
+                            if (method_exists($this, $matchCommand)) {
+                                $this->$matchCommand($matches[$match]);
+                            }
                         }
                     }
                 }
