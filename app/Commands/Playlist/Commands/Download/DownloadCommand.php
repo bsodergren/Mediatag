@@ -41,7 +41,7 @@ final class DownloadCommand extends MediaCommand
             // ],
 
             'cleanBrkDownloads'  => null,
-            'docompactPlaylist'  => null,
+            // 'docompactPlaylist'  => null,
             'dodownloadPlaylist' => null,
         ],
 

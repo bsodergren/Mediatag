@@ -39,11 +39,13 @@ trait JsonHelper
 
         // $this->file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i');
         if (Option::istrue('update')) {
-            $this->file_array =Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            // utmdd($this->file_array);
             parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
-            $this->file_array =Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
+            $this->file_array = Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
+            // utmdd($this->file_array);
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
         }
@@ -76,15 +78,15 @@ trait JsonHelper
 
                             if (count($actionTags) > 0) {
                                 if (! is_null($actionTags['actiontags'])) {
-                                    // parent::$output->writeln('<info> Found  actiontags, updating video </info>');
+                                    parent::$output->writeln('<info> Found  actiontags, updating video </info>');
                                     $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
-                                   Storage::$DB->updatedJson($json_key, 2);
+                                    Storage::$DB->updatedJson($json_key, 2);
 
                                     continue;
                                 }
                             }
 
-                            parent::$output->writeln($id . '<error> No  actiontags in json file </>');
+                            // parent::$output->writeln($id . '<error> No  actiontags in json file </>');
                         }
                     }
                 }
@@ -128,6 +130,7 @@ trait JsonHelper
 
                         if ($jsondata['actionTags'] != '') {
                             parent::$output->writeln('<info>' . $jsondata['actionTags'] . ' ' . basename($json_file) . ' </info>');
+                            Storage::$DB->updatedJson($json_key, 1);
                         }
                     }
 
@@ -145,12 +148,11 @@ trait JsonHelper
                     //     parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
                     //     MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '", "error":"' . $ytdl->yt_error_string . '"}', false);
                     // }
-                } else {
-                    parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
+                    // } else {
+                    // parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
                 }
-               Storage::$DB->updatedJson($json_key, 1);
             } else {
-                parent::$output->writeln('<comment>' . $count . 'skipping ' . basename($file) . ' </comment>');
+                parent::$output->writeln('<comment> skipping ' . basename($file) . ' ' . $json_key . '</comment>');
             }
 
             $count--;
@@ -162,6 +164,9 @@ trait JsonHelper
         if (is_null($markerArray)) {
             return false;
         }
+
+        // utmdd($videoInfo['video_key'], $markerArray);
+
         $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
 
         $markers = explode(',', $markerArray);
@@ -172,18 +177,19 @@ trait JsonHelper
             $data  = [
                 'timeCode'   => round($parts[1], 0),
                 'video_id'   => $video_id,
-                'markerText' => $parts[0] . '_Start',
+                'markerText' => $parts[0],
             ];
             $dbConn->where('timeCode', round($parts[1], 0));
-            $dbConn->where('markerText', $parts[0] . '_Start');
+            $dbConn->where('markerText', $parts[0]);
             $dbConn->where('video_id', $video_id);
-            $res = $dbConn->getone(__MYSQL_VIDEO_CHAPTER__);
+            $res = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
 
-            // utmdump([$dbConn->getLastQuery(), $res]);
             if (is_null($res)) {
                 parent::$output->writeln($id . '<id>Updating markers  for ' . basename($videoInfo['video_file']) . '</id>');
-                $dbConn->insert(__MYSQL_VIDEO_CHAPTER__, $data);
+                $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
                 // utmdump($dbConn->getLastQuery());
+            // } else {
+                // utmdump([$dbConn->getLastQuery(), $res]);
             }
         }
 

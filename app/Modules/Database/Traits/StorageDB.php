@@ -9,6 +9,7 @@ namespace Mediatag\Modules\Database\Traits;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\preview\GifPreviewFiles;
 use Mediatag\Modules\VideoInfo\Section\Thumbnail;
@@ -20,6 +21,7 @@ use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem as nFilesystem;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Utilities\Option;
+use UTM\Utm;
 
 use function array_key_exists;
 use function count;
@@ -124,6 +126,7 @@ trait StorageDB
                 $query .= ' LIMIT  ' . Option::getValue('max');
             }
         }
+        // utmdump($query);
         $results = $this->query($query);
         if (Option::isTrue('numberofFiles') == true) {
             $count = count($results);
@@ -170,7 +173,7 @@ trait StorageDB
         $this->query($query);
 
         $query = 'delete from ' . __MYSQL_ARTIST_MAP__ . ' WHERE video_id = "' . $result['id'] . '" ';
-        utmdd($query);
+        // utmdd($query);
         $this->query($query);
 
         $query  = 'select playlist_id from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_video_id = "' . $result['id'] . '" ';
@@ -396,7 +399,8 @@ trait StorageDB
     public function updatedJson($key, $value)
     {
         $sql = "UPDATE `mediatag_video_file` SET `updatedJson` = '" . $value . "' WHERE `mediatag_video_file`.`video_key` = '" . $key . "'";
-        $ret = self::$DB->rawQuery($sql);
+        $ret = Storage::$DB->mysqllib->rawQuery($sql);
+        // Utmdump($sql);
     }
 
     public function updateDBEntry($key, $videoData, $all = true)

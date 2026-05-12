@@ -14,8 +14,10 @@ use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
+use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\Metatags\MetaTagInfo;
 use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder as NetteFinder;
@@ -23,7 +25,6 @@ use Nette\Utils\Strings;
 use Paramako\Pornhub\Factory;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
-
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
 
@@ -32,6 +33,75 @@ use function dirname;
 trait Helper
 {
     public $videoFile;
+
+    private function updateVideoMarkers($videoInfo, $markerArray, $id)
+    {
+        if (is_null($markerArray)) {
+            return false;
+        }
+
+        // utmdd($videoInfo['video_key'], $markerArray);
+
+        $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
+
+        $markers = explode(',', $markerArray);
+        $dbConn  = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+
+        foreach ($markers as $marker) {
+            $parts = explode(':', $marker);
+            $data  = [
+                'timeCode'   => round($parts[1], 0),
+                'video_id'   => $video_id,
+                'markerText' => $parts[0],
+            ];
+            $dbConn->where('timeCode', round($parts[1], 0));
+            $dbConn->where('markerText', $parts[0]);
+            $dbConn->where('video_id', $video_id);
+            $res = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
+            if (is_null($res)) {
+                parent::$output->writeln(' <id>Updating markers  for ' . basename($videoInfo['title']) . '</id>');
+                $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
+
+                // } else {
+                //
+            }
+        }
+
+        //
+        // utmdd($video_id, $markerArray);
+    }
+
+    public function loadVideoJson()
+    {
+        $db           = MysqliDb::getInstance();
+        $fileLocation = '/home/bjorn/scripts/Mediatag/config/data/';
+        $files        = MediaFinder::find('*.json', $fileLocation);
+        foreach ($files as $file) {
+            $videoName = basename($file, '.json');
+            $videoName = str_replace('_', '', $videoName);
+            $query     = "SELECT * FROM `mediatag_video_metadata` where LOWER(REPLACE(title,' ','')) = LOWER('" . $videoName . "')";
+            $result    = $db->query($query);
+            $video_id  = (new Markers)->getvideoId($result[0]['video_key']);
+            if (! is_null($video_id)) {
+                $jsonData = file_get_contents($file);
+                $jsonData = str_replace("\n", ',', $jsonData);
+                // $markerArray = implode(',', $jsonData);
+                // $json     = json_decode($jsonData, true);
+                // utmdd($jsonData);
+                // $markers = $json['markers'] ?? null;
+                $this->updateVideoMarkers($result[0], $jsonData, $video_id);
+                unlink($file);
+            } else {
+                parent::$output->writeln('<comment> skipping ' . basename($file) . ' ' . $videoName . '</comment>');
+            }
+        }
+
+        // $filelist_array = $this->VideoList['file'];
+        // foreach ($filelist_array as $key => $row) {
+        //     $videoId = VideoInfo::GetVideoIdByKey($key);
+        //     utmdump($videoId);
+        // }
+    }
 
     public function hello()
     {
@@ -247,7 +317,7 @@ trait Helper
 
     public function getVideoInfo()
     {
-          new Artist(__MYSQL_ARTIST_PH__, __MYSQL_ARTIST_MAP__);
+        new Artist(__MYSQL_ARTIST_PH__, __MYSQL_ARTIST_MAP__);
         $vInfo = new LibVinfo(__MYSQL_VIDEO_FILE__);
         $vInfo->setLibrary(\__LIBRARY__);
         //LibVinfo
@@ -266,7 +336,7 @@ trait Helper
             $videoId = $vInfo->getvideoId($key);
 
             if ($tag == 'artist') {
-                $r= Artist::updateArtistMap($videoId, $tagValue);
+                $r = Artist::updateArtistMap($videoId, $tagValue);
                 // MetaTagInfo::updateArtistMap($videoId, $tag, $tagValue);
             }
         }

@@ -71,6 +71,8 @@ define('__MYSQL_TITLE__', Db_MEDIATAG_PREFIX . 'title');
  */
 define('__MYSQL_GALLERY__', Db_MEDIATAG_PREFIX . 'gallery');
 
+define('__MYSQL_VIDEO_MARKERS__', Db_PLEXWEB_PREFIX . 'video_markers');
+
 /*
  * @global string __MYSQL_VIDEO_CHAPTER
  */

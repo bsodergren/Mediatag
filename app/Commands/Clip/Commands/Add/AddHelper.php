@@ -59,7 +59,7 @@ trait AddHelper
                 'markerText' => $name . '_' . $suffix[$i],
             ];
 
-            $res = Storage::$DB->insert($data, __MYSQL_VIDEO_CHAPTER__);
+            $res = Storage::$DB->insert($data, __MYSQL_VIDEO_MARKERS__);
             Mediatag::$output->writeln('<comment> Added tag ' . $name . '</> at <fg=green>' . $suffix[$i] . ' at ' . $seconds . '</>');
 
             //            Mediatag::$output->writeln('<comment> Added tag '.$name.'</> at <fg=green>'.$start_time.' and '.$end_time.'</>');
@@ -76,6 +76,6 @@ trait AddHelper
         //     'video_id'       => $this->data['videoId'],
         //     'markerText'     => $this->data['markerText'],
         // ];
-        // $res  = Storage::$DB->insert(__MYSQL_VIDEO_CHAPTER__, $data);
+        // $res  = Storage::$DB->insert(__MYSQL_VIDEO_MARKERS__, $data);
     }
 }

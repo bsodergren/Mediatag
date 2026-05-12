@@ -39,7 +39,7 @@ class Markers extends VideoInfo
 
     public $actionText = 'Thumbnail</> ';
 
-    public $VideoDataTable = __MYSQL_VIDEO_CHAPTER__;
+    public $VideoDataTable = __MYSQL_VIDEO_MARKERS__;
 
     public $thumbType = 'markers';
 

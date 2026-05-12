@@ -39,3 +39,4 @@ bin/*.log
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 app/Commands/Test/HelperCmd/output/*
+config/data/adulttimeJson.txt

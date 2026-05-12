@@ -42,7 +42,7 @@ trait MoveHelper
         // utmdd('fasdfsd', $this->VideoList);
 
         $file_array = [];
-        $tagConn    =Storage::$DB;
+        $tagConn    = Storage::$DB;
 
         if (Option::isTrue('filelist')) {
             $file       = Option::getValue('filelist', 1);
@@ -181,7 +181,7 @@ trait MoveHelper
                 }
             }
             if ($SortDir == true) {
-                foreach (__GENRE_LIST__ as $geneDir) {
+                foreach (['MMF', 'Single', 'MFF', 'Group'] as $geneDir) {
                     $gebrePath = $newPath . '/' . $geneDir;
                     if (! is_dir($gebrePath)) {
                         if (! Option::isTrue('test')) {
