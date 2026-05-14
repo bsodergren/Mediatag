@@ -32,7 +32,6 @@ trait VideoQuery
             //            utmdd( $file_array);
         }
         $query = $this->videoQuery();
-
         if (! Option::istrue('clean')) {
             if (Option::isTrue('max')) {
                 $total = (int) Option::getValue('max');

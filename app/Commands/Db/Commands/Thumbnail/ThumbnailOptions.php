@@ -20,7 +20,6 @@ class ThumbnailOptions extends Options
         self::$Class   = __CLASS__;
         $parentOptions = parent::Definitions();
         $options       = [
-            // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
             ['break'],
         ];
 

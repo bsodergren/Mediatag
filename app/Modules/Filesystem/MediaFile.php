@@ -12,6 +12,7 @@ use const PATHINFO_EXTENSION;
 use const PATHINFO_FILENAME;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\Arrays;
 use Nette\Utils\FileSystem as NetteFile;
@@ -25,6 +26,8 @@ class MediaFile
     public $video_file;
 
     public $video_key;
+
+    public $video_id = null;
 
     public $video_name;
 
@@ -76,6 +79,7 @@ class MediaFile
             'video_name'    => $this->filename(),
             'video_library' => $this->library(),
             'video_key'     => $this->videokey(),
+            // 'video_id'      => $this->videoid(),
         ];
 
         Mediatag::notice('Getting Video Data {video}', ['video' => $this->video]);
@@ -160,6 +164,16 @@ class MediaFile
         return $this->video_key;
 
         // return [$this->video_key,$success,$matches];
+    }
+
+    public function videoid()
+    {
+        $res = Storage::$DB->videoExists($this->videokey(), null, \__MYSQL_VIDEO_FILE__);
+        if ($res) {
+            $this->video_id = $res['id'];
+        }
+
+        return $this->video_id;
     }
 
     /**

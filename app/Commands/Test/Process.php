@@ -41,6 +41,10 @@ class Process extends Mediatag
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
         parent::boot($input, $output);
+        if (Option::isTrue('search')) {
+            parent::$SearchArray = parent::$finder->ExecuteSearch();
+        }
+
         $cmd = Option::getValue('cmd');
         if (\method_exists($this, $cmd)) {
             Mediatag::$Console->writeln($cmd . ' found');

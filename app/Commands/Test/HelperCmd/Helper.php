@@ -10,6 +10,7 @@ use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
 use FFMpeg\FFMpeg;
+use FFMpeg\FFProbe;
 use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -17,8 +18,10 @@ use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\Metatags\MetaTagInfo;
 use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\VideoInfo;
+use Mediatag\Traits\MediaFFmpeg;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder as NetteFinder;
 use Nette\Utils\Strings;
@@ -32,7 +35,17 @@ use function dirname;
 
 trait Helper
 {
+    use MediaFFmpeg;
+
     public $videoFile;
+
+    private function getMarkerThumbPath($file)
+    {
+        $img_web_path = (new MediaFilesystem)->makePathRelative($file, __PLEX_HOME__);
+        utmdump($img_web_path);
+    }
+
+
 
     private function updateVideoMarkers($videoInfo, $markerArray, $id)
     {

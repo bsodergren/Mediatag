@@ -213,7 +213,7 @@ trait MediaFFmpeg
         $this->write();
     }
 
-    public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00')
+    public function ffmegCreateThumb($video_file, $thumbnail, $time = '00:00:30.00', $scale = '320:240')
     {
         //         $ffmpeg = FFMpeg::create([], Mediatag::$log);
         //         $video = $ffmpeg->open($video_file);
@@ -230,7 +230,7 @@ trait MediaFFmpeg
 
         $cmdOptions = [
             '-ss', $time, '-i', $video_file, '-vf',
-            'scale=320:240:force_original_aspect_ratio=decrease',
+            'scale=' . $scale . ':force_original_aspect_ratio=decrease',
             '-vframes', '1', $thumbnail,
         ];
         $this->cmdline = $cmdOptions;

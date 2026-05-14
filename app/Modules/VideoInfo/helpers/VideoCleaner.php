@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\VideoInfo\helpers;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;

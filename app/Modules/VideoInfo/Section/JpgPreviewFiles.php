@@ -19,20 +19,21 @@ use Symfony\Component\Console\Helper\ProgressBar;
 
 use function count;
 
-class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
+class JpgPreviewFiles extends VideoPreview implements LoggerAwareInterface
 {
     use LoggerAwareTrait;
     use MediaFFmpeg;
 
-    public $videoRange = 80;
+    public $videoRange = 100;
 
-    public $videoSlides = 15;
+    public $videoSlides = 100;
 
     public function build_video_thumbnail()
     {
         // Create a temp directory for building.
-        $temp = __PLEX_VAR_DIR__ . '/build/' . md5($this->video_file);
-        utmdd($temp);
+
+        $temp = dirname(__INC_WEB_PREVIEW_DIR__ . str_replace(__PLEX_HOME__, '', $this->video_file)) . \DIRECTORY_SEPARATOR . $this->video_key;
+
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
@@ -73,36 +74,40 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
         foreach ($points as $point) {
             $time_secs = floor($duration * ($point / 100));
             $progressBar->advance();
-
+            $point      = str_pad($point, 3, '0', STR_PAD_LEFT);
             $point_file = "$temp/$point.jpg";
 
-            $this->ffmegCreateThumb($this->video_file, $point_file, $time_secs);
-
-            if (file_exists($point_file)) {
-                $frames[] = $point_file;
+            if (! file_exists($point_file)) {
+                $this->ffmegCreateThumb($this->video_file, $point_file, $time_secs);
             }
+
+            //
+            //     $frames[] = $point_file;
+            // }
         }
         $progressBar->finish();
         Mediatag::$output->writeln('');
 
-        if (! empty($frames)) {
-            $durations = array_fill(0, count($frames), 100);
+        // if (! empty($frames)) {
+        //     $durations = array_fill(0, count($frames), 100);
 
-            // Create a new GIF and save it.
-            $gc = new GifCreator;
-            $gc->create($frames, $durations, 0);
-            file_put_contents($this->previewName, $gc->getGif());
+        //     // Create a new GIF and save it.
+        //     $gc = new GifCreator;
+        //     $gc->create($frames, $durations, 0);
+        //     file_put_contents($this->previewName, $gc->getGif());
 
-            // Remove all the temporary frames.
-            foreach ($frames as $file) {
-                unlink($file);
-            }
-        }
+        //     // Remove all the temporary frames.
+        //     foreach ($frames as $file) {
+        //         unlink($file);
+        //     }
+        // }
 
-        (new Filesystem)->remove($temp);
+        // (new Filesystem)->remove($temp);
 
         $this->progressBar = true;
+        $return            = str_replace(__INC_WEB_THUMB_ROOT__, '', dirname($this->previewName)) . \DIRECTORY_SEPARATOR . $this->video_key;
+        // utmdd($return);
 
-        return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
+        return $return;
     }
 }
