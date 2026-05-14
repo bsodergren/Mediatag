@@ -4,14 +4,17 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace  Mediatag\Patterns\Studios\TeamSkeet ;
 
 use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Patterns\Studios\TeamSkeet;
+
 
 const EXXXTRASMALL_REGEX_COMMON = '//i';
 
-class ExxxtraSmall extends TeamSkeet
+
+use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
+class  ExxxtraSmall  extends  TeamSkeet
 {
     public $studio = 'Exxxtra Small';
+public $network = 'Team Skeet';
 }

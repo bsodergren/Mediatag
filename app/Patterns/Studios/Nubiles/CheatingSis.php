@@ -4,12 +4,12 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace Mediatag\Patterns\Studios\Nubiles;
 
 use Mediatag\Modules\TagBuilder\Patterns;
-use Mediatag\Patterns\Studios\Nubiles;
 
 const CHEATINGSIS_REGEX_COMMON = '//i';
+use Mediatag\Patterns\Studios\Nubiles\Nubiles;
 
 class CheatingSis extends Nubiles
 {

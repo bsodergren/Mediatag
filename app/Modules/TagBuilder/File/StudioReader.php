@@ -118,26 +118,31 @@ trait StudioReader
         $networkName = '';
         $studioName  = $this->getStudioClass($this->studio);
 
+        $this->getnetwork();
+        $networkName = trim($this->getStudioClass($this->network), '\\');
+
         $options = Option::getValue('addClass', 1);
         if ($options === null) {
             $options = $this->studio;
         }
 
-        if (Option::isTrue('addNetwork')) {
-            $networkName = Option::getValue('addNetwork', 1);
-            $options     = $options . '=' . $networkName;
+        if ($networkName != '') {
+            $options = $this->network . '=' . $options;
         }
 
         $classOption = [];
+        // utmdd($options);
         if ($options !== null) {
             $opt = explode('=', $options);
             if (count($opt) > 1) {
                 $classOption = [
                     'Studio'      => $opt[1],
-                    'ExtendClass' => $this->getStudioClass($opt[1]),
-                    'network'     => $networkName,
+                    'ExtendClass' => $this->getStudioClass($opt[0]),
+                    'network'     => $opt[0],
+                    'networkName' => $networkName,
                 ];
             }
+            // utmdd($classOption);
             ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
         }
     }

@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace Mediatag\Patterns\Studios\NewSensations;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 
@@ -26,14 +26,14 @@ class NewSensations extends Patterns
         'momdoesitbest'              => 'Moms Does it Best',
         'pleasefmywife'              => 'Please f My Wife',
         'whenthehusbandlikestowatch' => 'When the Husband Likes to Watch',
-        'whilehewatches'             => 'While he Watches',
+        // 'whilehewatches'             => 'While he Watches',
         'adventuresofahotwife'       => 'Adventures of a Hotwife',
         'MILFStoriesStillSexy'       => 'MILF Stories Still Sexy',
         'MyFirstHotwifeExperience'   => 'My First Hotwife Experience',
-        'ProudStagOfASexyVixen'      => 'Proud Stag Of A Sexy Vixen',
-        'StagsVixens'                => 'Proud Stag Of A Sexy Vixen',
+        // 'ProudStagOfASexyVixen'      => 'Proud Stag Of A Sexy Vixen',
+        // 'StagsVixens'                => 'Proud Stag Of A Sexy Vixen',
         'HotwifeTales'               => 'Hotwife Tales',
-        'sexyhotwifestories'         => 'sexy hotwife stories',
+        // 'sexyhotwifestories'         => 'sexy hotwife stories',
         'WatchingMyHotwife'          => 'Watching My Hotwife',
         'SharingMyGirlfriend'        => 'Sharing My Girlfriend',
         'ILoveMyHotWife'             => 'I Love My HotWife',
@@ -42,15 +42,15 @@ class NewSensations extends Patterns
         'marriedwithboyfriends'      => 'married with boyfriends',
         'mysexystepmom'              => 'my sexy stepmom',
         'myyounghotwife'             => 'my young hotwife',
-        'MySexyHotwife'              => 'My Sexy Hotwife',
+        // 'MySexyHotwife'              => 'My Sexy Hotwife',
         'AHotwifeIsAHappyWife'       => 'A Hotwife Is A Happy Wife',
-        'a-hotwife-blindfolded'      => 'a hotwife blindfolded',
+        // 'a-hotwife-blindfolded'      => 'a hotwife blindfolded',
         'frombothends'               => 'from both ends',
         '2headsrbetterthan1'         => '2 heads r better than 1',
         'MyWifesFirstBlowBang'       => 'My Wifes First BlowBang',
         'hotwiferubdown'             => 'hotwife rub down',
         'intheroomshesmyhotwife'     => 'in the room shes my hotwife',
-        'my-hotwifes-gangbang'       => 'my hotwifes gangbang',
+        // 'my-hotwifes-gangbang'       => 'my hotwifes gangbang',
     ];
 
     public function metaStudio()

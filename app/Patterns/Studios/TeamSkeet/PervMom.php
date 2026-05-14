@@ -4,14 +4,17 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace Mediatag\Patterns\Studios\TeamSkeet;
+
+use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
 
 class PervMom extends TeamSkeet
 {
     // public $studio = 'Perv Mom';
     public $studio = 'Perv Mom';
 
-    // public $studio = '';
+    // public $studio = 'Perv Mom';
+
     public $regex = [
         'pervmom' => [
             'artist' => [

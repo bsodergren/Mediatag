@@ -4,8 +4,9 @@
  *
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace Mediatag\Patterns\Studios\NewSensations;
 use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Patterns\Studios\NewSensations\NewSensations;
 
 
 

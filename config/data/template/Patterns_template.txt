@@ -4,9 +4,9 @@
  *
  */
 
-namespace Mediatag\Patterns\%%LIBRARY%%;
-use Mediatag\Modules\TagBuilder\Patterns;
+namespace %%NAMESPACE%%;
 
+use Mediatag\Modules\TagBuilder\Patterns;
 %%EXTEND_USE%%
 
 const %%CLASSNAME_UC%%_REGEX_COMMON = '//i';

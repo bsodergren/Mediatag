@@ -10,6 +10,7 @@ use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Traits\ExecArgs;
 use Symfony\Component\Filesystem\Filesystem as SymFs;
@@ -211,8 +212,13 @@ EOD;
         $class          = trim($class, '\\');
         $extended_class = 'Patterns';
         $studio         = "public \$studio = '" . $TitleStudio . "';";
-        $extended_use   = ' ';
-        $network        = ' ';
+
+        $networkName    = '';
+        $networkPath    = '';
+        $extended_use   = '';
+        $network        = '';
+        $OldNetworkFile = '';
+
         if ($options !== null) {
             if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
@@ -221,45 +227,98 @@ EOD;
                 $extended_use = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
             }
             if (array_key_exists('network', $options)) {
-                $network = "public \$network = '" . $options['network'] . "';";
+                $network        = "public \$network = '" . $options['network'] . "';";
+                $extended_use   = 'use Mediatag\\Patterns\\Studios\\' . $options['networkName'] . '\\' . $extended_class . ';';
+                $networkPath    = DIRECTORY_SEPARATOR . $options['networkName'];
+                $networkName    = '\\' . $options['networkName'];
+                $OldNetworkFile = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR . $options['networkName'] . '.php';
             }
         }
 
-        $Pattern_file = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR . $class . '.php';
+        $OldPatternFile = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR . $class . '.php';
+        $Pattern_file   = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . DIRECTORY_SEPARATOR . $class . '.php';
 
-        // if (! file_exists($Pattern_file)) {
+        $Namespace = 'Mediatag\\Patterns\\Studios' . $networkName;
 
-        $finder     = new Finder;
-        $filesystem = new SymFs;
+        if (file_exists($OldPatternFile)) {
+            if (\file_exists($OldNetworkFile)) {
+                //$Namespace = 'Mediatag\\Patterns\\Studios' . '\\' . $options['networkName'];
+                $php_file = file_get_contents($OldNetworkFile);
+                // $NewNamespace   = 'Mediatag\\Patterns\\Studios' . '\\' . $options['networkName'];
+                $php_file       = preg_replace('/(namespace )(.*)(;)/', '$1 ' . $Namespace . ' $3', $php_file);
+                $NewNetworkFile = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . DIRECTORY_SEPARATOR . $options['networkName'] . '.php';
+                \Nette\Utils\FileSystem::createDir(dirname($NewNetworkFile));
 
-        $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
-        foreach ($finder as $file) {
-            $name    = $file->getFilenameWithoutExtension();
-            ${$name} = $file->getContents();
-            // $output->writeln($$name );
-            // ...
-        }
-        $command_array = [
-            'EXTEND_USE'   => $extended_use,
-            'CLASS_EXTEND' => $extended_class,
-            'CLASSNAME'    => $class,
-            'STUDIO'       => $studio,
-            'NETWORK'      => $network,
-            'CLASSNAME_LC' => strtolower($class),
-            'CLASSNAME_UC' => strtoupper($class),
-            'LIBRARY'      => __LIBRARY__,
-        ];
-        foreach ($command_array as $key => $value) {
-            $key = '%%' . strtoupper($key) . '%%';
-            if ($value != null) {
-                $Patterns_template = str_replace($key, $value, $Patterns_template);
+                //utmdd('Network file exists', $OldNetworkFile, $NewNetworkFile);
+                file_put_contents($NewNetworkFile, $php_file);
+
+                \Nette\Utils\FileSystem::delete($OldNetworkFile);
+                if (! file_exists($OldPatternFile)) {
+                    return false;
+                }
             }
-        }
+            $php_file = file_get_contents($OldPatternFile);
+            $php_file = preg_replace('/(namespace )(.*)(;)/', '$1 ' . $Namespace . ' $3', $php_file);
+            $php_file = preg_replace('/(class )(.*)( extends )(.*)/', '$1 ' . $class . ' $3 ' . $extended_class, $php_file);
+            // if ($network != '') {
+            //     $php_file = preg_replace('/(public \$network = )(.*)(;)/', '', $php_file);
+            // }
 
-        Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
-        $filesystem->dumpFile($Pattern_file, $Patterns_template);
-        // utmdump($Pattern_file);
-        require_once $Pattern_file;
+            $php_file = preg_replace('/(public \$studio = )(.*)(;)/', '$1\'' . $TitleStudio . '\'$3', $php_file);
+
+            $php_file = preg_replace('/(use Mediatag\\\\Patterns\\\\Studios\\\\' . $extended_class . ';)/', '', $php_file);
+
+            $php_file = preg_replace('/(class .*)/', PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $options['networkName'] . '\\' . $extended_class . ';' . PHP_EOL . '$1', $php_file);
+            // utmdd($php_file);
+
+            file_put_contents($Pattern_file, $php_file);
+            \Nette\Utils\FileSystem::delete($OldPatternFile);
+            // utmdd('Old Pattern file deleted', $OldPatternFile);
+            require_once $Pattern_file;
+
+            return false;
+            // } elseif (file_exists($Pattern_file)) {
+            //     require_once $Pattern_file;
+            //     // utmdd('Pattern already exists');
+
+            //     return false;
+        } else {
+            // utmdd('Creating Pattern', $Pattern_file);
+            $finder     = new Finder;
+            $filesystem = new SymFs;
+
+            $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
+            foreach ($finder as $file) {
+                $name    = $file->getFilenameWithoutExtension();
+                ${$name} = $file->getContents();
+                // $output->writeln($$name );
+                // ...
+            }
+
+            $command_array = [
+                'EXTEND_USE'   => $extended_use,
+                'CLASS_EXTEND' => $extended_class,
+                'CLASSNAME'    => $class,
+                'STUDIO'       => $studio,
+                'NETWORK'      => $network,
+                'CLASSNAME_LC' => strtolower($class),
+                'CLASSNAME_UC' => strtoupper($class),
+                'NAMESPACE'    => $Namespace,
+            ];
+            foreach ($command_array as $key => $value) {
+                $key = '%%' . strtoupper($key) . '%%';
+                if ($value != null) {
+                    $Patterns_template = str_replace($key, $value, $Patterns_template);
+                }
+            }
+
+            Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
+            // utmdd(['PatternFile' => $Pattern_file, 'Patterns_template' => $Patterns_template]);
+
+            $filesystem->dumpFile($Pattern_file, $Patterns_template);
+            // utmdump($Pattern_file);
+            require_once $Pattern_file;
+        }
     }
     // }
 }

@@ -155,9 +155,8 @@ class Patterns extends TagBuilder
     public static function boot($obj)
     {
         $mainClass = $obj::class;
-        // utminfo($mainClass);
-        $classes = class_parents($obj);
-        $class   = reset($classes);
+        $classes   = class_parents($obj);
+        $class     = reset($classes);
         if (str_contains($class, 'Patterns')) {
             $class = $mainClass;
         }

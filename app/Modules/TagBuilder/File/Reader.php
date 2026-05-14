@@ -67,36 +67,39 @@ class Reader extends TagReader
 
         $networkName = '';
 
-        //        $this->getnetwork();
         $this->getStudio();
         $studioName = $this->getStudioClass($this->studio);
+        $this->getnetwork();
 
-        $studioClass = $classPath . $this->video_library . $studioName;
+        $networkName = $this->getStudioClass($this->network);
+        $studioClass = $classPath . $this->video_library . $networkName . $studioName;
 
-        // $networkName = $this->getStudioClass($this->network);
-        if (Option::isTrue('addNetwork')) {
-            $networkName      = Option::getValue('addNetwork', 1);
-            $networkClassName = $this->getStudioClass($networkName);
-            $networkClass     = $classPath . $this->video_library . $networkClassName;
+        // utmdump(['Studio Class' => $studioClass, 'Network Name' => $networkName, 'Studio Name' => $studioName]);
 
-            if (! class_exists($networkClass)) {
-                $classOption = [
-                    'Studio'  => $networkName,
-                    'network' => $networkName,
-                ];
-                ScriptWriter::addPattern($networkClassName, ucwords($networkName), $classOption);
-            }
-        }
+        // if (Option::isTrue('addNetwork')) {
+        //     $networkName      = Option::getValue('addNetwork', 1);
+        //     $networkClassName = $this->getStudioClass($networkName);
+        //     $networkClass     = $classPath . $this->video_library . $networkClassName;
+        //     if (! class_exists($networkClass)) {
+        //         $classOption = [
+        //             'Studio'  => $networkName,
+        //             'network' => $networkName,
+        //         ];
+        //         ScriptWriter::addPattern($networkClassName, ucwords($networkName), $classOption);
+        //     }
+        // }
 
         $classAttm[] = $studioClass;
         // // utmdump($this->video_key);
-        // utmdd($this->video_library);
         if (str_starts_with($this->video_key, 'x')) {
             if ((! class_exists($studioClass) || Option::isTrue('addClass'))
             && ($this->video_library == 'Studios')) {// || 'HomeVideos' == $this->video_library)) {
                 // UTMlog::Logger('File Studio className', $className);
                 //
                 // if (Option::isTrue('addClass')) {
+
+                // utmdump('Adding Studio Class', $studioClass, class_exists($studioClass));
+
                 $this->writeStudioClass();
                 // }
 
@@ -109,6 +112,7 @@ class Reader extends TagReader
             }
         }
 
+        // utmdd('Studio Class', $studioClass, class_exists($studioClass));
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
             // $this->PatternObject->video_file = $this->video_file;
@@ -200,9 +204,15 @@ class Reader extends TagReader
     public function getNetwork()
     {
         // utminfo(func_get_args());
-        // // utmdump(["Network",$this->network]);
         if ($this->network === null) {
             $this->network = $this->getFileTag('Network');
+        }
+        if ($this->network === null) {
+            $networkPath    = \str_replace(__LIBRARY_HOME__ . '/', '', dirname($this->video_path));
+            $networkPathPcs = explode('/', $networkPath);
+            if (count($networkPathPcs) > 1) {
+                $this->network = $networkPathPcs[0];
+            }
         }
 
         return $this->network;

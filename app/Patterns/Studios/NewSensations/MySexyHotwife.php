@@ -4,9 +4,10 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace Mediatag\Patterns\Studios\NewSensations;
 
 use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Patterns\Studios\NewSensations\NewSensations;
 
 const MYSEXYHOTWIFE_REGEX_COMMON = '//i';
 
