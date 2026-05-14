@@ -31,8 +31,6 @@ class TagBuilder
 
     public function __construct($key, $tagObj)
     {
-        // utminfo($key, get_class($tagObj));
-
         $this->video_key = $key;
         $this->ReaderObj = $tagObj;
     }
