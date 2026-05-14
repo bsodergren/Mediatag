@@ -252,7 +252,8 @@ EOD;
             file_put_contents($NewNetworkFile, $php_file);
 
             \Nette\Utils\FileSystem::delete($OldNetworkFile);
-            Mediatag::notice('Network file moved to new location', ['OldFile' => $OldNetworkFile, 'NewFile' => $NewNetworkFile]);
+            Mediatag::$Console->writeln('Network file moved to new location OldFile => ' . $OldNetworkFile);
+            Mediatag::$Console->writeln('NewFile => ' . $NewNetworkFile);
             exit;
 
             // utmdd('Network file exists',
@@ -283,6 +284,9 @@ EOD;
             // utmdd($php_file);
 
             file_put_contents($Pattern_file, $php_file);
+            Mediatag::$Console->writeln('Pattern file moved to new location OldFile => ' . $OldPatternFile);
+            Mediatag::$Console->writeln(' NewFile => ' . $Pattern_file);
+
             \Nette\Utils\FileSystem::delete($OldPatternFile);
             // utmdd('Old Pattern file deleted', $OldPatternFile);
             require_once $Pattern_file;

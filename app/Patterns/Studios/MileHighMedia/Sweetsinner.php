@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace  Mediatag\Patterns\Studios\MileHighMedia ;
 
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -14,7 +14,9 @@ use function array_key_exists;
 
 const SWEETSINNER_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
-class Sweetsinner extends MileHighMedia
+
+use Mediatag\Patterns\Studios\MileHighMedia\MileHighMedia;
+class  Sweetsinner  extends  MileHighMedia
 {
     public $studio = 'Sweetsinner';
 

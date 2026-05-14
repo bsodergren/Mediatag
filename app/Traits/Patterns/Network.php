@@ -17,12 +17,12 @@ trait Network
     {
         // utminfo(func_get_args());
 
-        if ($this->studio === null) {
-            return null;
-        }
+        // if ($this->studio === null) {
+        //     return null;
+        // }
         if ($this->network === null) {
             $class = get_parent_class($this);
-            $obj   = new $class($this->video_key, new TagReader);
+            $obj   = new $class;
 
             $this->network = $obj->network;
         }

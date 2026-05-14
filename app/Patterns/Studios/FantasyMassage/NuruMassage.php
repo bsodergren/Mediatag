@@ -4,11 +4,13 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace  Mediatag\Patterns\Studios\FantasyMassage ;
 
 const NURUMASSAGE_REGEX_COMMON = '//i';
 
-class NuruMassage extends FantasyMassage
+
+use Mediatag\Patterns\Studios\FantasyMassage\FantasyMassage;
+class  NuruMassage  extends  FantasyMassage
 {
     public $studio = 'Nuru Massage';
 

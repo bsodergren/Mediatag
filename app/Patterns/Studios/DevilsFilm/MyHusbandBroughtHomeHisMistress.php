@@ -4,15 +4,17 @@
  * Command like Metatag writer for video files.
  */
 
-namespace Mediatag\Patterns\Studios;
+namespace  Mediatag\Patterns\Studios\DevilsFilm ;
 
 use const DIRECTORY_SEPARATOR;
 
 const MHBHM_REGEX_COMMON = '/MHBHM[_se0-9]+?([a-zA-Z0-9]{4,})?-([_a-zA-Z]{1,})\_[0-9pkm\.]{1,}/i';
 
-class MyHusbandBroughtHomeHisMistress extends DevilsFilm
+
+use Mediatag\Patterns\Studios\DevilsFilm\DevilsFilm;
+class  MyHusbandBroughtHomeHisMistress  extends  DevilsFilm
 {
-    public $studio = 'My Husband Brought Home his Mistress';
+    public $studio = 'My Husband Brought Home His Mistress';
 
     public $network = 'Devils Film';
 
