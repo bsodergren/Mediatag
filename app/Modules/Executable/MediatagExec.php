@@ -130,7 +130,7 @@ class MediatagExec
         // utminfo(func_get_args());
         // utmdd("fadsf");
         if ($this->execMode !== null) {
-            $this->testTrait("\t Running " . $this->runCommand, true);
+            // $this->testTrait("\t Running " . $this->runCommand, true);
         }
     }
 
