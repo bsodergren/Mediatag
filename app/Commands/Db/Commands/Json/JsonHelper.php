@@ -163,7 +163,6 @@ trait JsonHelper
             } else {
                 parent::$output->writeln('<comment> skipping ' . basename($file) . ' ' . $json_key . '</comment>');
             }
-
             $count--;
         }
     }
