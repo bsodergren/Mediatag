@@ -19,6 +19,7 @@ use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\Process;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\DynamicProperty;
+use UTM\Utilities\Option;
 
 use function is_array;
 use function is_string;
@@ -194,7 +195,13 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-        // UtmDump($this->runCommand);
+        if (Option::isTrue('print')) {
+            if (\get_called_class() != 'Mediatag\Modules\Executable\Javascript') {
+                Mediatag::$Console->debug($this->runCommand);
+            }
+            // return true;
+        }
+        // utmdd($this->runCommand);
         // utmdd($callback);
         $process->start();
         try {

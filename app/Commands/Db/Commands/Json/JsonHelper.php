@@ -17,10 +17,18 @@ use UTM\Utilities\Option;
 
 trait JsonHelper
 {
+    use StudioJsonHelper;
+
     public $dbConn;
 
     public function JsonExec()
     {
+        if (__LIBRARY__ == 'Studios') {
+            $this->loadVideoJson();
+
+            return 1;
+        }
+
         // $this->allDbFiles =Storage::$DB->getAllDbFiles();
 
         // $this->dbConn = Storage::$DB;
@@ -38,6 +46,7 @@ trait JsonHelper
         // $this->file_array = $fileListArray;
 
         // $this->file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i');
+
         if (Option::istrue('update')) {
             $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
             // utmdd($this->file_array);
@@ -165,13 +174,10 @@ trait JsonHelper
             return false;
         }
 
-        // utmdd($videoInfo['video_key'], $markerArray);
-
         $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
 
         $markers = explode(',', $markerArray);
-        $dbConn  = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-
+        $dbConn  = MysqliDb::getInstance();
         foreach ($markers as $marker) {
             $parts = explode(':', $marker);
             $data  = [
@@ -188,7 +194,7 @@ trait JsonHelper
                 parent::$output->writeln($id . '<id>Updating markers  for ' . basename($videoInfo['video_file']) . '</id>');
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
                 // utmdump($dbConn->getLastQuery());
-            // } else {
+                // } else {
                 // utmdump([$dbConn->getLastQuery(), $res]);
             }
         }

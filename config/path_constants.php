@@ -23,6 +23,7 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 const __DATA_LIB__ = __CONFIG_LIB__ . '/data';
 
 const __PLEX_VAR_DIR__ = __APP_HOME__ . '/var';
+const __PLEX_STUDIO_JSON_DIR__ = __PLEX_VAR_DIR__ . '/json';
 
 const __LOGFILE_DIR__ = __PLEX_VAR_DIR__ . '/log';
 

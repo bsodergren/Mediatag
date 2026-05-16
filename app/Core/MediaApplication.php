@@ -45,6 +45,7 @@ class MediaApplication extends Application implements ResetInterface
             new InputArgument('command', InputArgument::REQUIRED, 'The command to execute'),
             new InputOption('--help', '-h', InputOption::VALUE_NONE, 'Display help for the given command. When no command is given display help for the <info>' . $this->getName() . '</info> command'),
             new InputOption('--path', '', InputOption::VALUE_REQUIRED, self::text('L__APP_DEFAULT_PATH')),
+            new InputOption('--print', 'p', InputOption::VALUE_NONE, self::text('L__APP_DEFAULT_PATH')),
             new InputOption('--silent', null, InputOption::VALUE_NONE, 'Do not output any message'),
             new InputOption('--quiet', '-q', InputOption::VALUE_NONE, 'Only errors are displayed. All other output is suppressed'),
             new InputOption('--verbose', '-v|vv|vvv', InputOption::VALUE_NONE, 'Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug'),

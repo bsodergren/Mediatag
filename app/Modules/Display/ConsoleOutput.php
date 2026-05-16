@@ -84,4 +84,15 @@ class ConsoleOutput
 
         $this->io->table([$header], $args);
     }
+
+    public function debug($args)
+    {
+        $args     = is_array($args) ? implode(' ', $args) : $args;
+        $argArray = explode(' ', $args);
+        $tab      = '';
+        foreach ($argArray as $k => $v) {
+            $this->writeln('<debug>' . $tab . $v . '</debug>');
+            $tab = str_repeat(' ', 4);
+        }
+    }
 }

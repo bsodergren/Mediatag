@@ -326,18 +326,19 @@ EOD;
             'CLASSNAME_UC' => strtoupper($class),
             'NAMESPACE'    => $Namespace,
         ];
+        utmdump($command_array);
         foreach ($command_array as $key => $value) {
             $key = '%%' . strtoupper($key) . '%%';
-            if ($value != null) {
-                $Patterns_template = str_replace($key, $value, $Patterns_template);
-            }
+            // if ($value != null) {
+            $Patterns_template = str_replace($key, $value, $Patterns_template);
+            // }
         }
 
         Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
         // utmdd(['PatternFile' => $Pattern_file, 'Patterns_template' => $Patterns_template]);
 
         $filesystem->dumpFile($Pattern_file, $Patterns_template);
-        // utmdump($Pattern_file);
+        utmdump($Patterns_template);
         require_once $Pattern_file;
     }
     // }
