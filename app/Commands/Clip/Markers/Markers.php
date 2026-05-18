@@ -35,19 +35,18 @@ trait Markers
         $markerIdx  = 0;
         $rowIdx     = 0;
         $rows       = count($videoInfo);
-//         $ChapStart  = $videoInfo[0];
-//         $ChapStart['duration']   = $this->videoDuration($ChapStart['timeCode'] - 1);
+        //         $ChapStart  = $videoInfo[0];
+        //         $ChapStart['duration']   = $this->videoDuration($ChapStart['timeCode'] - 1);
 
-//         $videoInfo               = \array_reverse($videoInfo);
+        //         $videoInfo               = \array_reverse($videoInfo);
 
-//         $ChapStart['timeCode']   = 0;
-//         $ChapStart['markerText'] = 'Opening';
-//         unset($ChapStart['id']);
-// //        unset($ChapStart['duration']);
+        //         $ChapStart['timeCode']   = 0;
+        //         $ChapStart['markerText'] = 'Opening';
+        //         unset($ChapStart['id']);
+        // //        unset($ChapStart['duration']);
 
-//         \array_push($videoInfo, $ChapStart);
-//         $videoInfo = \array_reverse($videoInfo);
-        // utmdd($videoInfo);
+        //         \array_push($videoInfo, $ChapStart);
+        //         $videoInfo = \array_reverse($videoInfo);
         foreach ($videoInfo as $k => $row) {
             if ($k == 0) {
                 // utmdd($row);
@@ -72,35 +71,35 @@ trait Markers
             // [$markerKey,$markerText] = explode('Chapter', $row['markerText']);
 
             // utmdd($markerKey);
-            if (str_contains(strtolower($row['markerText']), 'chapter')) {
-                if ($markerIdx == 0) {
-                    $chapterRow[] = [
-                        'start' => 0,
-                        'end'   => $videoInfo[$rowIdx + 1]['timeCode'] - 1,
-                        'text'  => $row['markerText'],
-                    ];
-                    $markerIdx++;
-                    $rowIdx++;
-
-                    continue;
-                }
-                $chapterRow[$markerIdx]['start'] = (int) $row['timeCode'];
-
-                if (array_key_exists($rowIdx + 1, $videoInfo)) {
-                    $chapterRow[$markerIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
-                } else {
-                    $chapterRow[$markerIdx]['end'] = $row['duration'] / 1000;
-                }
-
-                $chapterRow[$markerIdx]['text'] = $row['markerText'];
-
-                // } else {
-                //     $end = $videoInfo[$k-1]['timeCode'] - 1;
-                //     $start = $row['timeCode'];
-                // }
-                $markers[$row['video_key']]['markers'] = $chapterRow;
+            // if (str_contains(strtolower($row['markerText']), 'chapter')) {
+            if ($markerIdx == 0) {
+                $chapterRow[] = [
+                    'start' => 0,
+                    'end'   => $videoInfo[$rowIdx + 1]['timeCode'] - 1,
+                    'text'  => $row['markerText'],
+                ];
                 $markerIdx++;
+                $rowIdx++;
+
+                continue;
             }
+            $chapterRow[$markerIdx]['start'] = (int) $row['timeCode'];
+
+            if (array_key_exists($rowIdx + 1, $videoInfo)) {
+                $chapterRow[$markerIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
+            } else {
+                $chapterRow[$markerIdx]['end'] = $row['duration'] / 1000;
+            }
+
+            $chapterRow[$markerIdx]['text'] = $row['markerText'];
+
+            // } else {
+            //     $end = $videoInfo[$k-1]['timeCode'] - 1;
+            //     $start = $row['timeCode'];
+            // }
+            $markers[$row['video_key']]['markers'] = $chapterRow;
+            $markerIdx++;
+            // }
             $rowIdx++;
 
             // if (str_contains(strtolower($markerKey), 'end')) {
@@ -116,6 +115,7 @@ trait Markers
         }
 
         // utmdd("f");
+
         return $markers;
     }
 

@@ -36,34 +36,32 @@ trait ChapterHelper
         $markerArray   = [];
         $this->FileIdx = 0;
 
-        $search = 'chapter';
+        $search = '';
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-
-//             $mediaInfo          = new MediaInfo;
-//         $mediaInfoContainer = $mediaInfo->getInfo($vidArray['video_file']);
-//         $videos             = $mediaInfoContainer->getVideos();
-//         $general            = $mediaInfoContainer->getMenus();
-// $keys = [];
-// if(count($general)>0) {
-// foreach($general[1]->list() as $i => $key){
-//     if(\str_starts_with($key,"00")){
-//         $keys[] = $general[1]->get($key);
-//     }
-// }
-// }
-// // utmdd($general);
-//          utmdd($keys);//$general[1]->get('00_00_00000'));
+            //             $mediaInfo          = new MediaInfo;
+            //         $mediaInfoContainer = $mediaInfo->getInfo($vidArray['video_file']);
+            //         $videos             = $mediaInfoContainer->getVideos();
+            //         $general            = $mediaInfoContainer->getMenus();
+            // $keys = [];
+            // if(count($general)>0) {
+            // foreach($general[1]->list() as $i => $key){
+            //     if(\str_starts_with($key,"00")){
+            //         $keys[] = $general[1]->get($key);
+            //     }
+            // }
+            // }
+            // // utmdd($general);
+            //          utmdd($keys);//$general[1]->get('00_00_00000'));
 
             $this->Marker = new Markers;
             $this->Marker->getvideoId($key);
-
             if ($this->Marker->video_id !== null) {
                 $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
                 $result = Storage::$DB->query($query);
+
                 if (count($result) > 0) {
                     $markers = $this->getVideoChapters($result);
-
 
                     if ($markers !== null) {
                         if (count($markers) > 0) {
@@ -76,6 +74,7 @@ trait ChapterHelper
             }
         }
         $this->markerArray = $markerArray;
+
         return $this->markerArray;
     }
 
@@ -85,7 +84,6 @@ trait ChapterHelper
         foreach ($this->markerArray as $i => $fileRow) {
             foreach ($fileRow as $K => $FILE) {
                 $filename = $FILE['filename'];
-                // // utmdump($FILE);
                 if (! array_key_exists('markers', $FILE)) {
                     continue;
                 }
@@ -122,7 +120,6 @@ trait ChapterHelper
 
                     $fileContents = implode(PHP_EOL, $contents);
 
-
                     MediaFile::file_append_file($chapterFile, $fileContents . PHP_EOL);
 
                     $this->ffmpegCreateChapterVideo($filename, $chapterFile);
@@ -139,8 +136,8 @@ trait ChapterHelper
                     $backup_filename = $backup_filepath . '/' . basename($filename);
                     $outputFile      = str_replace('.mp4', '_chapters.mp4', $filename);
 
-// utmdd($filename, $backup_filename,$outputFile);
-                    Filesystem::renameFile($filename, $backup_filename,true);
+                    // utmdd($filename, $backup_filename,$outputFile);
+                    Filesystem::renameFile($filename, $backup_filename, true);
                     Filesystem::renameFile($outputFile, $filename);
                 }
                 // utmdd([$filename, $backup_filename, $outputFile]);

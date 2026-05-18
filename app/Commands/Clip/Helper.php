@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Clip;
 
+use const DIRECTORY_SEPARATOR;
+
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
@@ -23,8 +25,6 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 use function dirname;
-
-use const DIRECTORY_SEPARATOR;
 
 trait Helper
 {
@@ -139,8 +139,10 @@ trait Helper
             $this->Marker->getvideoId($key);
 
             if ($this->Marker->video_id !== null) {
-                $query  = $this->Marker->videoQuery($this->Marker->video_id, $search);
+                $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
+
                 $result = Storage::$DB->query($query);
+                utmdd($result);
 
                 $markers = $this->getVideoMarks($result);
 

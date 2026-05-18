@@ -23,38 +23,18 @@ trait JsonHelper
 
     public function JsonExec()
     {
-        // if (__LIBRARY__ == 'Studios') {
-        //     $this->loadVideoJson();
-
-        //     return 1;
-        // }
-
-        // $this->allDbFiles =Storage::$DB->getAllDbFiles();
-
-        // $this->dbConn = Storage::$DB;
-        // utmdd(get_class_methods(get_class(parent::$dbconn)));
-
-        // utmdd($this->file_array);
-        // $query =Storage::$DB->querybuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
-        // $results = $this->dbConn->query($query);
-        // foreach ($results as $key => $arr) {
-        //     if ($arr['fullpath'] === null) {
-        //         continue;
-        //     }
-        //     $fileListArray[$arr['video_key']] = $arr['file_name'];
-        // }
-        // $this->file_array = $fileListArray;
-
-        // $this->file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i');
-
         if (Option::istrue('update')) {
-            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
             parent::$output->writeln('<info> update Json</info>');
+
+            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
             $this->setJson();
         } else {
             $this->file_array = Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
+
+            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            $this->setJson();
         }
 
         return 1;
