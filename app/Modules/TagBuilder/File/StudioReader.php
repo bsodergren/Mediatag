@@ -109,7 +109,6 @@ trait StudioReader
                 }
             }
         }
-
         $this->studio = $studio;
     }
 

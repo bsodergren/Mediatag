@@ -56,8 +56,6 @@ class TagBuilder
             if (count($jsonupdates) > 0) {
                 Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
 
-                //
-                //
                 if ($updates !== null) {
                     // if (Option::isFalse("update")) {
                     $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'Combine');

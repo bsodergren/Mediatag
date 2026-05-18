@@ -126,7 +126,6 @@ trait StorageDB
                 $query .= ' LIMIT  ' . Option::getValue('max');
             }
         }
-        // utmdump($query);
         $results = $this->query($query);
         if (Option::isTrue('numberofFiles') == true) {
             $count = count($results);
@@ -249,13 +248,20 @@ trait StorageDB
         return $sublibrary;
     }
 
-    private function getStudioPath($video_path)
+    public function getStudioPath($video_path)
     {
-        if (File::isPornhubfile($this->video_file) == false) {
+        // if (File::isPornhubfile($this->video_file) == false) {
+
+            // utmdump($video_path);
+            // return $video_path;
+        // }
+        $video_path = __PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__. DIRECTORY_SEPARATOR . $video_path;
+        if(!file_exists($video_path)){
             return null;
         }
-        $filesystem = new Filesystem;
 
+
+        $filesystem = new Filesystem;
         $in_directory = $filesystem->makePathRelative(
             $video_path,
             __PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__,
@@ -263,8 +269,10 @@ trait StorageDB
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
         if (! array_key_exists(2, $match)) {
-            utmdd([$in_directory, $video_path, __PLEX_HOME__, __LIBRARY__, $match]);
+             return $match[1];
+            // utmdd([$in_directory, $video_path, __PLEX_HOME__, __LIBRARY__, $match]);
         }
+            // utmdump($match);
 
         return $match[2];
     }

@@ -170,43 +170,80 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
         // utmdump([$tag, $firstCmp, $secondCmp]);
+        if ($tag == 'artist') {
+            // utmdump([__LINE__, $first, $second]);
+        }
         $delim = ',';
         if ($tag == 'studio') {
             $delim = '/';
         }
         if ($tag == 'title') {
-            // $secondCmp = '';
-            $delim = '';
+            $secondCmp = '';
+            $delim     = '';
         }
         if ($tag == 'genre') {
             return $first . $delim . $second;
         }
         if ($secondCmp != '') {
+            if ($tag == 'artist') {
+                // utmdump([__LINE__, $firstCmp, $secondCmp]);
+            }
             if ($firstCmp == '') {
+                if ($tag == 'artist') {
+                    // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                }
                 $return = $second;
             } else {
+                if ($tag == 'artist') {
+                    // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                }
                 if ($firstCmp == $secondCmp) {
+                    if ($tag == 'artist') {
+                        // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                    }
                     $return = $first;
                 } else {
+                    if ($tag == 'artist') {
+                        // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                    }
                     if (str_replace($delim, '', strtoupper($firstCmp)) == $secondCmp) {
+                        if ($tag == 'artist') {
+                            // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                        }
                         $return = $first;
                         // utmdump(['return first', $return]);
                     } elseif (str_replace($delim, '', strtoupper($secondCmp)) == $firstCmp) {
+                        if ($tag == 'artist') {
+                            // utmdump([__LINE__, $firstCmp, $secondCmp]);
+                        }
                         $return = $second;
                     } else {
                         $a = str_replace($firstCmp, '', strtoupper($secondCmp));
                         $b = str_replace($secondCmp, '', strtoupper($firstCmp));
+                        // utmdump([__LINE__, $b, $a, $secondCmp]);
                         if ($b . $a == $secondCmp) {
+                            if ($tag == 'artist') {
+                                // utmdump([__LINE__, $firstCmp, $secondCmp, $a, $b]);
+                            }
                             $return = $second;
                         } else {
+                            if ($tag == 'artist') {
+                                // utmdump([__LINE__, $firstCmp, $secondCmp, $a, $b, $first]);
+                            }
                             $return = $first;
                         }
                     }
                 }
             }
         } else {
+            if ($tag == 'artist') {
+                // utmdump([__LINE__, $first]);
+            }
             $return = $first;
             // utmdump(['return first', $return]);
+        }
+        if ($tag == 'artist') {
+            // utmdump([__LINE__, $return]);
         }
 
         return $return;
@@ -217,13 +254,23 @@ trait MetaTags
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
-        // utmdump([$tag, $firstCmp, $secondCmp]);
+        if ($tag == 'artist') {
+            // utmdump([$tag, $firstCmp, $secondCmp]);
+        }
         $delim = ',';
         if ($tag == 'studio') {
             $delim = '/';
         }
         if ($tag == 'title') {
             // $secondCmp = '';
+            $firstCmp  = str_replace(',', '', strtoupper($firstCmp));
+            $secondCmp = str_replace(',', '', strtoupper($secondCmp));
+            $tmp       = $first;
+            $first     = $second;
+            $second    = $tmp;
+
+            // utmdump([$tag, $firstCmp, $secondCmp]);
+
             $delim = '';
         }
         if ($tag == 'genre') {
@@ -459,7 +506,6 @@ trait MetaTags
         if ($string == '') {
             $string = null;
         }
-
 
         return $string;
     }

@@ -22,7 +22,7 @@ define('__WEB_HOME__', CONFIG['WEB_HOME']);
 
 const __DATA_LIB__ = __CONFIG_LIB__ . '/data';
 
-const __PLEX_VAR_DIR__ = __APP_HOME__ . '/var';
+const __PLEX_VAR_DIR__         = __APP_HOME__ . '/var';
 const __PLEX_STUDIO_JSON_DIR__ = __PLEX_VAR_DIR__ . '/json';
 
 const __LOGFILE_DIR__ = __PLEX_VAR_DIR__ . '/log';
@@ -34,13 +34,14 @@ const __PLEX_PL_TMP_DIR__  = __PLEX_PL_DIR__ . '/.tmp';
 const __PLEX_PL_ID_DIR__   = __PLEX_PL_DIR__ . '/ids';
 const __PLEX_PL_LIST_DIR__ = __PLEX_PL_DIR__ . '/lists';
 
-const __PLEX_DOWNLOAD__    = __PLEX_HOME__ . '/Downloads';
-const __PLEX_DOWNLOADED__    = __PLEX_HOME__ . '/Downloaded';
+const __PLEX_DOWNLOAD__   = __PLEX_HOME__ . '/Downloads';
+const __PLEX_DOWNLOADED__ = __PLEX_HOME__ . '/Downloaded';
 
-const __CACHE_DIR__        = __PLEX_HOME__ . '/.cache';
-const __JSON_CACHE_DIR__   = __CACHE_DIR__ . '/json';
-const __PH_CACHE_DIR__     = __CACHE_DIR__ . '/Pornhub';
-const __STUDIO_CACHE_DIR__ = __CACHE_DIR__ . '/Studio';
+const __CACHE_DIR__             = __PLEX_HOME__ . '/.cache';
+const __JSON_CACHE_DIR__        = __CACHE_DIR__ . '/json';
+const __PH_CACHE_DIR__          = __CACHE_DIR__ . '/Pornhub';
+const __STUDIO_CACHE_DIR__      = __CACHE_DIR__ . '/Studio';
+const __STUDIO_JSON_CACHE_DIR__ = __STUDIO_CACHE_DIR__ . '/json';
 
 const __APP_CACHE_DIR__ = __CACHE_DIR__ . '/mediatag';
 
@@ -89,6 +90,7 @@ define(
         __INC_WEB_THUMB_DIR__,
         __INC_WEB_CHAPTER_DIR__,
         __INC_WEB_PREVIEW_DIR__,
+        __STUDIO_JSON_CACHE_DIR__,
     ],
 );
 

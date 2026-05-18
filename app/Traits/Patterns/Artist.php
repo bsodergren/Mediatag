@@ -83,10 +83,10 @@ trait Artist
         $namesArray = [];
         $names      = str_replace('_1080p', '', $names);
         $names      = str_replace($this->getArtistDelim(), $delim, $names);
-        $names          = str_replace('_', ' ', $names);
+        // $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
-
+        // utmdump($names_array);
         $prev_name = '';
         /*$total_names = count($names_array);
         $new_array = [];
@@ -102,10 +102,10 @@ trait Artist
             //  $aName = ucwords($aName);
             $aName = str_replace(' ', '', $aName);
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
-// utmdump($parts);
+
             $aName = implode(' ', $parts);
             //  $name_key = str_replace(' ', '', $name_key);
-            // // utmdump($aName);
+            // utmdump($aName);
 
             if ($this->ignoreArtist($aName) === true) {
                 continue;

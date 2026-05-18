@@ -23,11 +23,11 @@ trait JsonHelper
 
     public function JsonExec()
     {
-        if (__LIBRARY__ == 'Studios') {
-            $this->loadVideoJson();
+        // if (__LIBRARY__ == 'Studios') {
+        //     $this->loadVideoJson();
 
-            return 1;
-        }
+        //     return 1;
+        // }
 
         // $this->allDbFiles =Storage::$DB->getAllDbFiles();
 
@@ -49,12 +49,10 @@ trait JsonHelper
 
         if (Option::istrue('update')) {
             $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
-            // utmdd($this->file_array);
             parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
             $this->file_array = Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
-            // utmdd($this->file_array);
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
         }
@@ -62,107 +60,79 @@ trait JsonHelper
         return 1;
     }
 
+    private function getJsonFilelist()
+    {
+        // $filearray = [];
+        // utmdump($this->file_array);
+        foreach ($this->file_array as $json_key => $file) {
+            $backupFile = '';
+            if (str_starts_with($json_key, 'x')) {
+                $json_file = __STUDIO_JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+            } else {
+                $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+            }
+
+            if (\file_exists($json_file)) {
+                $json_file = Reader::checkJsonForUpdate($json_file, $json_key);
+
+                $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
+            }
+        }
+        // utmdump($filearray);
+
+        return $filearray;
+    }
+
     public function setJson()
     {
-        $this->file_keys = $this->searchDownloads('json');
+        $jsonFileList = $this->getJsonFilelist();
 
-        $count = count($this->file_keys);
-        // utmdump($count);
-        // utmdd($this->file_array);
-        foreach ($this->file_keys as $key) {
-            $id = '<info>' . $count . '</>';
+        $count = count($jsonFileList);
+        foreach ($jsonFileList as $json_key => $file) {
+            $json_file  = $file['json'];
+            $video_file = $file['file'];
+            $id         = '<info>' . $count . '</>';
             $count--;
-            if (array_key_exists($key, $this->file_array)) {
-                $file      = $this->file_array[$key];
-                $videoInfo = (new File($file))->get();
-                $json_key  = File::getVideoKey($file, 'Pornhub');
-                if (! str_starts_with($json_key, 'x')) {
-                    $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
-                    if (Mediatag::$filesystem->exists($json_file)) {
-                        if (filesize($json_file) > 1024) {
-                            $reader = new Reader($videoInfo);
 
-                            $actionTags = $reader->actionTags();
-                            // utmdump([$json_file, filesize($json_file), $actionTags]);
+            $videoInfo  = (new File($video_file))->get();
+            $reader     = new Reader($videoInfo);
+            $actionTags = $reader->actionTags();
+            // utmdump([$json_file, filesize($json_file), $actionTags]);
+            // utmdump($actionTags, $videoInfo);
 
-                            if (count($actionTags) > 0) {
-                                if (! is_null($actionTags['actiontags'])) {
-                                    parent::$output->writeln('<info> Found  actiontags, updating video </info>');
-                                    $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
-                                    Storage::$DB->updatedJson($json_key, 2);
+            if (count($actionTags) > 0) {
+                if (! is_null($actionTags['actiontags'])) {
+                    parent::$output->writeln('<info> Found  actiontags, updating video </info>');
+                    $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
+                    Storage::$DB->updatedJson($json_key, 2);
 
-                                    continue;
-                                }
-                            }
-
-                            // parent::$output->writeln($id . '<error> No  actiontags in json file </>');
-                        }
-                    }
+                    continue;
                 }
             }
+
+            // parent::$output->writeln($id . '<error> No  actiontags in json file </>');
         }
     }
 
     public function getJson()
     {
         // utminfo(func_get_args());
-
-        $count = count($this->file_array);
-        foreach ($this->file_array as $json_key => $file) {
+        $jsonFileList = $this->getJsonFilelist();
+        $count        = count($jsonFileList);
+        foreach ($jsonFileList as $json_key => $file) {
+            $json_file  = $file['json'];
+            $video_file = $file['file'];
             $backupFile = '';
-            //$json_key = File::getVideoKey($file, 'Pornhub');
 
-            // utmdump([$file, $json_key]);
-            if (! str_starts_with($json_key, 'x')) {
-                $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
-
-                // utmdd($json_file, Mediatag::$filesystem->exists($json_file));
-
-                // if (Mediatag::$filesystem->exists($json_file)) {
-                //     // utmdump(['json file exists' => $json_file]);
-                //     if (filesize($json_file) < 1024) {
-                //         // utmdump(['delete file file' => $json_file]);
-                //         MediaFilesystem::delete($json_file);
-                //     } else {
-                //         $backupFile = __JSON_CACHE_DIR__ . '/prev/' . $json_key . '.info.json';
-                //         if (! Mediatag::$filesystem->exists($backupFile)) {
-                //             MediaFilesystem::renameFile($json_file, $backupFile, false);
-                //         }
-                //         // utmdump(['backupFile file' => $backupFile]);
-                //     }
-                // }
-
-                if (Mediatag::$filesystem->exists($json_file)) {
-                    $data = file_get_contents($json_file);
-                    if (\str_contains($data, 'actionTags')) {
-                        $jsondata = \json_decode($data, true);
-
-                        if ($jsondata['actionTags'] != '') {
-                            parent::$output->writeln('<info>' . $jsondata['actionTags'] . ' ' . basename($json_file) . ' </info>');
-                            Storage::$DB->updatedJson($json_key, 1);
-                        }
-                    }
-
-                    // $ytdl   = (new Youtube)->run('');
-                    // $return = $ytdl->youtubeGetJson($json_key);
-
-                    // if (is_null($return)) {
-                    //     if (Mediatag::$filesystem->exists($backupFile)) {
-                    //         MediaFilesystem::renameFile($backupFile, $json_file);
-                    //     }
-                    //     parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
-                    // } elseif (Mediatag::$filesystem->exists($json_file)) {
-                    //     parent::$output->writeln('<info>' . $count . ' adding json ' . basename($json_file) . ' </info>');
-                    // } else {
-                    //     parent::$output->writeln('<error>' . $count . ' : ' . $ytdl->yt_error_string . ' </error>');
-                    //     MediaFilesystem::writeFile($json_file, '{"id": "' . $json_key . '", "error":"' . $ytdl->yt_error_string . '"}', false);
-                    // }
-                    // } else {
-                    // parent::$output->writeln('<id>json file for ' . basename($file) . ' exists</id>');
+            $data = file_get_contents($json_file);
+            if (\str_contains($data, 'actionTags')) {
+                $jsondata = \json_decode($data, true);
+                if ($jsondata['actionTags'] != '') {
+                    parent::$output->writeln('<info>' . $jsondata['actionTags'] . ' ' . basename($json_file) . ' </info>');
+                    Storage::$DB->updatedJson($json_key, 1);
                 }
-            } else {
-                parent::$output->writeln('<comment> skipping ' . basename($file) . ' ' . $json_key . '</comment>');
             }
+
             $count--;
         }
     }
@@ -177,6 +147,7 @@ trait JsonHelper
 
         $markers = explode(',', $markerArray);
         $dbConn  = MysqliDb::getInstance();
+        $total   = 0;
         foreach ($markers as $marker) {
             $parts = explode(':', $marker);
             $data  = [
@@ -190,13 +161,11 @@ trait JsonHelper
             $res = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
 
             if (is_null($res)) {
-                parent::$output->writeln($id . '<id>Updating markers  for ' . basename($videoInfo['video_file']) . '</id>');
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
-                // utmdump($dbConn->getLastQuery());
-                // } else {
-                // utmdump([$dbConn->getLastQuery(), $res]);
+                $total++;
             }
         }
+        parent::$output->writeln($id . ' <id>Added ' . $total . ' tags for ' . basename($videoInfo['video_file']) . '</id>');
 
         //
         // utmdd($video_id, $markerArray);

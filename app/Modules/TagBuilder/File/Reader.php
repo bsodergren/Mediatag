@@ -167,7 +167,6 @@ class Reader extends TagReader
     public function __call($method, $arg)
     {
         // utminfo(func_get_args());
-
         $getMethod = 'get' . ucfirst($method);
         Mediatag::notice("__call method =>'{method}' ", ['method' => $getMethod]);
         if (method_exists($this, $getMethod)) {
@@ -231,6 +230,7 @@ class Reader extends TagReader
                 $this->isPhFile();
             }
         }
+        // utmdump($this->studio);
 
         return $this->studio;
     }
@@ -276,6 +276,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $res = $this->getFileTag('artist');
+        // utmdump($res);
         if ($res === false) {
             return null;
         }

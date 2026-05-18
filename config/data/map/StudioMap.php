@@ -23,7 +23,7 @@ const STUDIO_MAP = [
     // 'mypervyfamily'                   => 'mypervyfamily',
 
     // 'thagson'                         => 'AdultTime',
-
+    'dpfanatics'  => 'DpFanatics',
     '21stsextury' => 'TwentyFirstSextury',
     '1000facials' => 'ThousandFacials',
     'private'     => 'PrivateVid',

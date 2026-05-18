@@ -149,21 +149,26 @@ trait MoveHelper
             } else {
                 $studios  = explode('/', $studio);
                 $Arraykey = array_key_first($studios);
+                //  utmdd($studio,$studios,$studios[$Arraykey]);
 
                 $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
-                // utmdd($studio_dir);
 
                 if ($studio_dir == false) {
-                    $Arraykey   = array_key_last($studios);
-                    $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
+                    $ArraykeyLast = array_key_last($studios);
+                    $studio_dir   = $tagConn->getStudioPath($studios[$ArraykeyLast]);
 
                     if ($studio_dir == false) {
                         // continue;
                         $studio_dir = 'New/' . $studios[$Arraykey];
+                    } else {
+                        $studio_dir = $studio_dir . '/' . $studios[$Arraykey];
                     }
+                } else {
+                    $ArraykeyLast = array_key_last($studios);
+                    $studio_dir   = $studio_dir . '/' . $studios[$ArraykeyLast];
                 }
             }
-            // utmdd($studio_dir);
+            // utmdump($studio_dir);
 
             $video_path = $studio_dir . $genrePath;
             if ($SortDir == true) {
@@ -173,7 +178,6 @@ trait MoveHelper
             $newPath = str_replace(__LIBRARY__ . '/' . __LIBRARY__ . '/', __LIBRARY__ . '/', $newPath);
 
             $newPath = nFileSystem::normalizePath($newPath);
-            // utmdd([$newPath]);
 
             if (! is_dir($newPath)) {
                 if (! Option::isTrue('test')) {
@@ -195,10 +199,12 @@ trait MoveHelper
             $newFile    = $newPath . '/' . $video_name;
 
             if ($newFile == $video_file) {
-                //  Mediatag::$output->writeln('Nothing to rename ');
-
+                // Mediatag::$output->writeln('Nothing to rename ');
                 continue;
             }
+
+            // utmdump($newPath);
+
             // /*
             if (! file_exists($newFile)) {
                 $text[] = 'Moving File';
