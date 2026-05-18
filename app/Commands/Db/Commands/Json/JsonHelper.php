@@ -33,8 +33,8 @@ trait JsonHelper
             parent::$output->writeln('<info> get new json file </info>');
             $this->getJson();
 
-            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
-            $this->setJson();
+            // $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            // $this->setJson();
         }
 
         return 1;
