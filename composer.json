@@ -9,7 +9,6 @@
             "url": "/home/bjorn/scripts/utm"
         }
     ],
-
     "autoload": {
         "exclude-from-classmap": [
             "vendor/symfony/console/Formatter/OutputFormatter.php"
@@ -19,7 +18,8 @@
             "Formatter\\": "app/Overrides/"
         },
         "classmap": [
-            "app"        ]
+            "app"
+        ]
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.95"
@@ -38,9 +38,8 @@
         "siteorigin/string-splitter": "^1.0",
         "intervention/image": "^3.3",
         "nesbot/carbon": "^3.6",
-      "bsodergren/utm": "@dev",
-              "bsodergren/utmdblib": "@dev",
-
+        "bsodergren/utm": "@dev",
+        "bsodergren/utmdblib": "@dev",
         "symfony/http-client": "^7.3",
         "psr/log": "^3.0",
         "evenement/evenement": "^3.0",
@@ -58,6 +57,10 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/migrations": "^3.9",
         "jbzoo/utils": "^7.3"
-
+    },
+    "scripts": {
+        "clean": [
+            "Mediatag\\Core\\OnUpdate::execute"
+        ]
     }
 }

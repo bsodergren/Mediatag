@@ -61,9 +61,11 @@ class VideoDownloader
     {
         // $buffer = MediatagExec::cleanBuffer($buffer);
 
+        MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/buffer.log', $buffer);
         $ConsoleCmd = 'writeln';
         $outputText = '';
         $line_id    = '<id>' . $this->num_of_lines . '</id>';
+
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
                 if ($matches[2] != '') {

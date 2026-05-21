@@ -29,10 +29,32 @@ trait PlaylistIds
 {
     public $idList = [];
 
+    public function fixArchive($line)
+    {
+        $key    = Strings::after($line, ' ');
+        $double = Strings::after($key, ' ');
+        if (! is_null($double)) {
+            $first  = Strings::before($key, 'pornhub ');
+            $second = Strings::after($key, ' ');
+            //utmdump([$line, $key, $double, [$first, $second]]);
+            $ret[] = 'pornhub ' . $first;
+            $ret[] = 'pornhub ' . $second;
+
+            return $ret;
+        }
+
+        return $line;
+    }
+
+    private function readFromArchive($file)
+    {
+        return Filesystem::readLines($file, [$this, 'fixArchive']);
+    }
+
     public function removeFromArchive($id)
     {
         $content         = [];
-        $archive_content = Filesystem::readLines(self::$ARCHIVE);
+        $archive_content = $this->readFromArchive(self::$ARCHIVE);
         // utmdump(count($archive_content));
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
@@ -60,7 +82,7 @@ trait PlaylistIds
     public function getUniqueIds($file)
     {
         $idList          = [];
-        $archive_content = Filesystem::readLines($file);
+        $archive_content = $this->readFromArchive($file);
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $idList[] = Strings::after($line, ' ');
@@ -74,7 +96,7 @@ trait PlaylistIds
 
     public function saveUniqueIds($file, $idList)
     {
-        $archive_content = Filesystem::readLines($file);
+        $archive_content = $this->readFromArchive($file);
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $idList[] = Strings::after($line, ' ');
@@ -145,4 +167,21 @@ trait PlaylistIds
 
         return false;
     }
+
+    // public function fixArchive($line)
+    // {
+    //     $key    = Strings::after($line, ' ');
+    //     $double = Strings::after($key, ' ');
+    //     if (! is_null($double)) {
+    //         $first  = Strings::before($key, 'pornhub ');
+    //         $second = Strings::after($key, ' ');
+    //         //utmdump([$line, $key, $double, [$first, $second]]);
+    //         $ret[] = 'pornhub ' . $first;
+    //         $ret[] = 'pornhub ' . $second;
+
+    //         return $ret;
+    //     }
+
+    //     return $line;
+    // }
 }

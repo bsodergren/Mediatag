@@ -153,6 +153,8 @@ class Reader extends TagReader
         $className = str_replace(' ', '', $className);
         $className = str_replace('&', '_', $className);
 
+        $className = str_replace("'", '', $className);
+        $className = str_replace('’', '', $className);
         $className = trim($className);
         if ($className == '') {
             return '';
@@ -167,10 +169,12 @@ class Reader extends TagReader
     public function __call($method, $arg)
     {
         // utminfo(func_get_args());
+
         $getMethod = 'get' . ucfirst($method);
         Mediatag::notice("__call method =>'{method}' ", ['method' => $getMethod]);
         if (method_exists($this, $getMethod)) {
             $this->tag_array[$method] = $this->{$getMethod}();
+            // utmdump([$this->tag_array, $method]);
         } else {
             if ($this->PatternObject !== null) {
                 if (method_exists($this->PatternObject, $getMethod)) {
@@ -276,7 +280,6 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $res = $this->getFileTag('artist');
-        // utmdump($res);
         if ($res === false) {
             return null;
         }

@@ -65,7 +65,7 @@ trait CommandHelper
     protected function loadDirs()
     {
         $filesystem = new Filesystem;
-        foreach (__CREATE_DIRS__ as $dir) {
+        foreach (__CREATE_DIRS__ as $i => $dir) {
             if (! is_dir($dir)) {
                 $filesystem->mkdir($dir);
             }

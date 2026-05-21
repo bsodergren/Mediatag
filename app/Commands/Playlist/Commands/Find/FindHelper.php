@@ -26,16 +26,68 @@ trait FindHelper
 
     public function findObjects()
     {
-        if (Option::isTrue('json')) {
+        if (Option::isTrue('existing')) {
+            $this->updateArchive();
+        } elseif (Option::isTrue('json')) {
             Mediatag::$output->writeln('<info> missing json data</info>');
             $this->findJson();
         } elseif (Option::isTrue('missing')) {
             Mediatag::$output->writeln('<info> missing videos from Yt Archive</info>');
             $this->findMissing();
+        } else {
+            Mediatag::$output->writeln('<info> What are you trying to find? </info>');
         }
-        Mediatag::$output->writeln('<info> What are you trying to find? </info>');
 
         return 0;
+    }
+
+    private function getArchiveIdArray()
+    {
+        $idList = [];
+
+        $archive_content = $this->readFromArchive(self::$ARCHIVE);
+        if (is_array($archive_content)) {
+            foreach ($archive_content as $lineNum => $line) {
+                $phKey = Strings::after($line, ' ');
+                if (! array_key_exists($phKey, $idList)) {
+                    $idList[$phKey] = true;
+                }
+            }
+        }
+
+        return $idList;
+    }
+
+    private function writeArchiveIdFile($array)
+    {
+        $archiveLine = [];
+        foreach ($array as $k => $v) {
+            $archiveLine[] = 'pornhub ' . $k;
+        }
+
+        Filesystem::writeFile(self::$ARCHIVE, $archiveLine);
+    }
+
+    private function writeNewPlaylist($content, $file) {}
+
+    private function updateArchive()
+    {
+        $idList = $this->getArchiveIdArray();
+        Mediatag::$output->writeln('<info>' . count($idList) . ' items in archive </info>');
+
+        // utmdump(count($idList));
+        Mediatag::$output->writeln('<info>' . count($this->VideoList['file']) . ' total files </info>');
+        foreach ($this->VideoList['file'] as $key => $file) {
+            if (! array_key_exists($key, $idList)) {
+                $missingArray[$key] = true;
+                $idList[$key]       = true;
+            }
+        }
+
+        Mediatag::$output->writeln('<info>Missing ' . count($missingArray) . ' previously downloaded items in archive </info>');
+        Mediatag::$output->writeln('<info>Now ' . count($idList) . ' items in archive </info>');
+
+        $this->writeArchiveIdFile($idList);
     }
 
     private function saveMissingPlaylist($content, $playlist_file)

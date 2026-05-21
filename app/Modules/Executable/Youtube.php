@@ -69,6 +69,8 @@ class Youtube extends MediatagExec
         'en',
         '--referer',
         'https://www.pornhub.com',
+        '--impersonate',
+        'chrome',
     ];
 
     // private $jsonoptions = [

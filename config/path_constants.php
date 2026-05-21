@@ -13,85 +13,86 @@ function DEFINE_DIR($definition, $value)
     define($definition, $value);
 }
 
-define('__HOME__', CONFIG['HOME']);
-define('__PLEX_HOME__', CONFIG['PLEX_HOME']);
-define('__APP_HOME__', CONFIG['APP_HOME']);
-define('__WEB_HOME__', CONFIG['WEB_HOME']);
+$CreateDirs = [];
+
+if (defined('CONFIG')) {
+    define('__HOME__', CONFIG['HOME']);
+    define('__PLEX_HOME__', CONFIG['PLEX_HOME']);
+    define('__APP_HOME__', CONFIG['APP_HOME']);
+    define('__WEB_HOME__', CONFIG['WEB_HOME']);
+}
+
+if (defined('__HOME__')) {
+    define('__PORNHUB_DIR__', __HOME__ . '/pornhub_db');
+    define('__DOWNLOAD_DIR__', __PORNHUB_DIR__ . '/download');
+    define('__RAW_FILES_DIR__', __PORNHUB_DIR__ . '/raw');
+    define('__FINISHED_FILES_DIR__', __PORNHUB_DIR__ . '/finished');
+    define('__IMPORT_DIFF_DIR__', __PORNHUB_DIR__ . '/import');
+    define('__JSON_DIR__', __PORNHUB_DIR__ . '/json');
+    define('__CSV_DIR__', __PORNHUB_DIR__ . '/CSV');
+    define('__NEW_CSV_DIR__', __CSV_DIR__ . '/new');
+    define('__PREVIOUS_CSV_DIR__', __CSV_DIR__ . '/old');
+    define('__FINISHED_CSV_DIR__', __CSV_DIR__ . '/done');
+}
+
+if (defined('__PLEX_HOME__')) {
+    define('__PLEX_PL_DIR__', __PLEX_HOME__ . '/Playlists');
+    define('__PLEX_PL_TMP_DIR__', __PLEX_PL_DIR__ . '/.tmp');
+    define('__PLEX_PL_ID_DIR__', __PLEX_PL_DIR__ . '/ids');
+    define('__PLEX_PL_LIST_DIR__', __PLEX_PL_DIR__ . '/lists');
+
+    define('__PLEX_DOWNLOAD__', __PLEX_HOME__ . '/Downloads');
+    define('__PLEX_DOWNLOADED__', __PLEX_HOME__ . '/Downloaded');
+
+    define('__CACHE_DIR__', __PLEX_HOME__ . '/.cache');
+    define('__JSON_CACHE_DIR__', __CACHE_DIR__ . '/json');
+    define('__PH_CACHE_DIR__', __CACHE_DIR__ . '/Pornhub');
+    define('__STUDIO_CACHE_DIR__', __CACHE_DIR__ . '/Studio');
+    define('__STUDIO_JSON_CACHE_DIR__', __STUDIO_CACHE_DIR__ . '/json');
+    define('__APP_CACHE_DIR__', __CACHE_DIR__ . '/mediatag');
+    $CreateDirs[] = __PLEX_PL_ID_DIR__;
+    $CreateDirs[] = __PLEX_PL_LIST_DIR__;
+
+    $CreateDirs[] = __STUDIO_JSON_CACHE_DIR__;
+    $CreateDirs[] = __PLEX_PL_DIR__;
+    $CreateDirs[] = __JSON_CACHE_DIR__;
+    $CreateDirs[] = __APP_CACHE_DIR__;
+    $CreateDirs[] = __PLEX_DOWNLOAD__;
+}
+
+if (defined('__APP_HOME__')) {
+    define('__PLEX_VAR_DIR__', __APP_HOME__ . '/var');
+    define('__PLEX_STUDIO_JSON_DIR__', __PLEX_VAR_DIR__ . '/json');
+    define('__LOGFILE_DIR__', __PLEX_VAR_DIR__ . '/log');
+    define('__DB_BACKUP_ROOT__', __PLEX_VAR_DIR__ . '/db');
+    define('__PATTERNS_LIB_DIR__', __APP_HOME__ . '/app/Patterns');
+    define('__COMMANDS_DIR__', __APP_HOME__ . '/app/Commands');
+
+    $CreateDirs[] = __LOGFILE_DIR__;
+}
+
+if (defined('__WEB_HOME__')) {
+    define('__INC_WEB_THUMB_ROOT__', __WEB_HOME__);
+    define('__INC_WEB_CAPTION_ROOT__', __WEB_HOME__ . '/videos/captions');
+    define('__INC_WEB_THUMB_URL__', '/images/plex/thumbnails');
+    define('__INC_WEB_THUMB_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_THUMB_URL__);
+    define('__INC_WEB_CHAPTER_URL__', '/images/plex/chapterImages');
+    define('__INC_WEB_CHAPTER_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_CHAPTER_URL__);
+    define('__INC_WEB_PREVIEW_URL__', '/images/plex/preivew');
+    define('__INC_WEB_PREVIEW_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_PREVIEW_URL__);
+
+    $CreateDirs[] = __INC_WEB_THUMB_DIR__;
+    $CreateDirs[] = __INC_WEB_CHAPTER_DIR__;
+    $CreateDirs[] = __INC_WEB_PREVIEW_DIR__;
+}
 // define('__PH_USERNAME__', CONFIG['PH_USERNAME']);
 // define('__PH_PASSWORD__', CONFIG['PH_PASSWORD']);
 
-const __DATA_LIB__ = __CONFIG_LIB__ . '/data';
+define('__DATA_LIB__', __CONFIG_LIB__ . '/data');
+define('__DATA_LISTS__', __CONFIG_LIB__ . '/data/list');
+define('__DATA_MAPS__', __CONFIG_LIB__ . '/data/map');
+define('__DATA_TEMPLATES__', __CONFIG_LIB__ . '/data/template');
 
-const __PLEX_VAR_DIR__         = __APP_HOME__ . '/var';
-const __PLEX_STUDIO_JSON_DIR__ = __PLEX_VAR_DIR__ . '/json';
-
-const __LOGFILE_DIR__ = __PLEX_VAR_DIR__ . '/log';
-
-const __DB_BACKUP_ROOT__ = __PLEX_VAR_DIR__ . '/db';
-
-const __PLEX_PL_DIR__      = __PLEX_HOME__ . '/Playlists';
-const __PLEX_PL_TMP_DIR__  = __PLEX_PL_DIR__ . '/.tmp';
-const __PLEX_PL_ID_DIR__   = __PLEX_PL_DIR__ . '/ids';
-const __PLEX_PL_LIST_DIR__ = __PLEX_PL_DIR__ . '/lists';
-
-const __PLEX_DOWNLOAD__   = __PLEX_HOME__ . '/Downloads';
-const __PLEX_DOWNLOADED__ = __PLEX_HOME__ . '/Downloaded';
-
-const __CACHE_DIR__             = __PLEX_HOME__ . '/.cache';
-const __JSON_CACHE_DIR__        = __CACHE_DIR__ . '/json';
-const __PH_CACHE_DIR__          = __CACHE_DIR__ . '/Pornhub';
-const __STUDIO_CACHE_DIR__      = __CACHE_DIR__ . '/Studio';
-const __STUDIO_JSON_CACHE_DIR__ = __STUDIO_CACHE_DIR__ . '/json';
-
-const __APP_CACHE_DIR__ = __CACHE_DIR__ . '/mediatag';
-
-const __PATTERNS_LIB_DIR__ = __APP_HOME__ . '/app/Patterns';
-const __COMMANDS_DIR__     = __APP_HOME__ . '/app/Commands';
-
-const __INC_WEB_THUMB_ROOT__ = __WEB_HOME__;
-
-const __INC_WEB_CAPTION_ROOT__ = __WEB_HOME__ . '/videos/captions';
-
-const __INC_WEB_THUMB_URL__ = '/images/plex/thumbnails';
-const __INC_WEB_THUMB_DIR__ = __INC_WEB_THUMB_ROOT__ . __INC_WEB_THUMB_URL__;
-
-const __INC_WEB_CHAPTER_URL__ = '/images/plex/chapterImages';
-const __INC_WEB_CHAPTER_DIR__ = __INC_WEB_THUMB_ROOT__ . __INC_WEB_CHAPTER_URL__;
-
-const __INC_WEB_PREVIEW_URL__ = '/images/plex/preivew';
-const __INC_WEB_PREVIEW_DIR__ = __INC_WEB_THUMB_ROOT__ . __INC_WEB_PREVIEW_URL__;
-
-const __DATA_LISTS__     = __CONFIG_LIB__ . '/data/list';
-const __DATA_MAPS__      = __CONFIG_LIB__ . '/data/map';
-const __DATA_TEMPLATES__ = __CONFIG_LIB__ . '/data/template';
-
-const __PORNHUB_DIR__        = __HOME__ . '/pornhub_db';
-const __DOWNLOAD_DIR__       = __PORNHUB_DIR__ . '/download';
-const __RAW_FILES_DIR__      = __PORNHUB_DIR__ . '/raw';
-const __FINISHED_FILES_DIR__ = __PORNHUB_DIR__ . '/finished';
-const __IMPORT_DIFF_DIR__    = __PORNHUB_DIR__ . '/import';
-const __JSON_DIR__           = __PORNHUB_DIR__ . '/json';
-
-const __CSV_DIR__ = __PORNHUB_DIR__ . '/CSV';
-
-const __NEW_CSV_DIR__      = __CSV_DIR__ . '/new';
-const __PREVIOUS_CSV_DIR__ = __CSV_DIR__ . '/old';
-const __FINISHED_CSV_DIR__ = __CSV_DIR__ . '/done';
-
-define(
-    '__CREATE_DIRS__',
-    [__JSON_CACHE_DIR__,
-        __LOGFILE_DIR__,
-        __APP_CACHE_DIR__,
-        __PLEX_PL_DIR__,
-        __PLEX_DOWNLOAD__,
-        __PLEX_PL_ID_DIR__,
-        __PLEX_PL_LIST_DIR__,
-        __INC_WEB_THUMB_DIR__,
-        __INC_WEB_CHAPTER_DIR__,
-        __INC_WEB_PREVIEW_DIR__,
-        __STUDIO_JSON_CACHE_DIR__,
-    ],
-);
+define('__CREATE_DIRS__', $CreateDirs);
 
 // dd(__INC_WEB_THUMB_DIR__);

@@ -24,7 +24,7 @@ use function array_key_exists;
 class Pornhub extends VideoDownloader
 {
     public $options = [
-        '-v',
+        // '-v',
         '-o',
         __PLEX_DOWNLOAD__ . '/Pornhub/' . Youtube::__YT_DL_FORMAT__,
         '-u',

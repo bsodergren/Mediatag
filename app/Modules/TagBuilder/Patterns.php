@@ -185,8 +185,10 @@ class Patterns extends TagBuilder
 
         $className = end($classparts);
         $className = Strings::StudioName($className, false);
+
         $parts     = preg_split('/(?=[A-Z])/', $className, -1, PREG_SPLIT_NO_EMPTY);
         $className = implode(' ', $parts);
+        // utmdd($classPath, $className);
 
         return [$classPath, $className];
     }

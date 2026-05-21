@@ -326,7 +326,7 @@ EOD;
             'CLASSNAME_UC' => strtoupper($class),
             'NAMESPACE'    => $Namespace,
         ];
-        utmdump($command_array);
+        // utmdump($command_array);
         foreach ($command_array as $key => $value) {
             $key = '%%' . strtoupper($key) . '%%';
             // if ($value != null) {
@@ -338,7 +338,7 @@ EOD;
         // utmdd(['PatternFile' => $Pattern_file, 'Patterns_template' => $Patterns_template]);
 
         $filesystem->dumpFile($Pattern_file, $Patterns_template);
-        utmdump($Patterns_template);
+        // utmdump($Patterns_template);
         require_once $Pattern_file;
     }
     // }

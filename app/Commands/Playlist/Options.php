@@ -26,7 +26,7 @@ class Options extends MediaOptions
 
         return [
             ['file', 'F', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_FILE')],
-            ['find', 'f', InputOption::VALUE_NONE, self::text('L__PLAYLIST_FIND')],
+            ['update', 'U', InputOption::VALUE_NONE, self::text('Update Archive')],
             ['watchlater', 'w', InputOption::VALUE_NONE, self::text('L__PLAYLIST_WATCHLATER')],
             ['url', 'u', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_URL')],
             ['download', null, InputOption::VALUE_NONE, self::text('L__PLAYLIST_DOWNLoAD')],

@@ -37,6 +37,36 @@ trait Helper
 {
     use MediaFFmpeg;
 
+    public function listMarkers()
+    {
+        $db = MysqliDb::getInstance();
+
+        $map = [
+            // 'plexweb_video_markers' => 'video_id',
+            'plexweb_playlist_videos' => 'playlist_video_id',
+            'plexweb_favorite_videos' => 'video_id',
+            'mediatag_artist_map'     => 'video_id',
+        ];
+
+        foreach ($map as $table => $column) {
+            $q     = 'SELECT DISTINCT ' . $column . ' FROM ' . $table . ' order by ' . $column . ' ';
+            $users = $db->rawQuery($q);
+            // utmdd($users, $db->getLastQuery());
+            foreach ($users as $user) {
+                $db->where('id', $user[$column]);
+                $res = $db->getOne('mediatag_video_file');
+
+                if (is_null($res)) {
+                    $db->where($column, $user[$column]);
+                    $db->delete($table);
+
+                    // } else {
+                    utmdump($db->getLastQuery());
+                }
+            }
+        }
+    }
+
     public $videoFile;
 
     private function getMarkerThumbPath($file)

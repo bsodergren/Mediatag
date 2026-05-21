@@ -9,12 +9,12 @@ namespace Mediatag\Patterns\Studios\AdultTime;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Patterns\Studios\AdultTime\AdultTime;
 
-const MOMMY’SBOY_REGEX_COMMON = '//i';
+const THEADULTTIMEPODCAST_REGEX_COMMON = '//i';
 
-class Mommy’sBoy extends AdultTime
+class TheAdultTimePodcast extends AdultTime
 {
 
-    public $studio = 'Mommy’s Boy';
+    public $studio = 'The Adult Time Podcast';
     public $network = 'Adult Time';
 
 }
