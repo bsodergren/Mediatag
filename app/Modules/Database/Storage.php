@@ -127,9 +127,10 @@ class Storage
         // utminfo(func_get_args());
 
         $method = $name;
-        // utmdump(['Name' => $name]);
+        utmdump(['Name' => $name]);
 
         // Note: value of $name is case sensitive.
+        $tag = $name;
         if (str_contains($name, 'Genre')) {
             $tag    = 'genre';
             $method = str_replace('Genre', 'Tag', $name);

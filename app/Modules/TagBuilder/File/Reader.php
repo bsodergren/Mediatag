@@ -218,6 +218,12 @@ class Reader extends TagReader
             }
         }
 
+        foreach (__SKIP_STUDIOS__ as $k) {
+            if ($this->network == $k) {
+                $this->network = null;
+            }
+        }
+
         return $this->network;
     }
 

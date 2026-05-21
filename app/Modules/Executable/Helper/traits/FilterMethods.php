@@ -26,6 +26,7 @@ trait FilterMethods
 
     public function getShortName($filename)
     {
+        // utmdump(__METHOD__);
         $file      = str_replace(__PLEX_DOWNLOAD__, '', $filename);
         $file_name = basename($file);
         $file_path = str_replace($file_name, '', $file);
@@ -37,6 +38,7 @@ trait FilterMethods
 
     public function ytlpDownloadBuffer($command, $buffer, $line_id = null, $newLine = false): string
     {
+        // utmdump(__METHOD__);
         if ($command != 'Progress') {
             $buffer = MediatagExec::cleanBuffer($buffer);
         }
@@ -56,6 +58,7 @@ trait FilterMethods
 
     public function downloadDestination($buffer)
     {
+        // utmdump(__METHOD__);
         preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
         //preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
         if (array_key_exists(4, $match) === true) {
@@ -72,6 +75,7 @@ trait FilterMethods
 
     public function downloadProgress($buffer)
     {
+        // utmdump(__METHOD__);
         $output = trim($buffer);
         $output = '<download>' . $buffer . '</>';
 
@@ -84,6 +88,7 @@ trait FilterMethods
 
     public function downloadExists($buffer)
     {
+        // utmdump(__METHOD__);
         VideoDownloader::LogBuffer('downloadExists = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
@@ -92,6 +97,7 @@ trait FilterMethods
 
     public function downloadError($buffer)
     {
+        // utmdump(__METHOD__);
         VideoDownloader::LogBuffer('downloadError = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
@@ -100,6 +106,7 @@ trait FilterMethods
 
     public function downloadFixupM3u8($buffer)
     {
+        // utmdump(__METHOD__);
         preg_match('/(\[[a-zA-Z0-9]+\])(.*)"(.*)"/m', $buffer, $match);
         $text = $match[1];
         $file = $this->getShortName($match[3]);
@@ -110,6 +117,7 @@ trait FilterMethods
 
     public function error($buffer, $line_id, $error)
     {
+        // utmdump(__METHOD__);
         $buffer = MediatagExec::cleanBuffer($buffer);
 
         VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = ' . $this->key . '', $buffer, 'download_error.log');
@@ -129,12 +137,14 @@ trait FilterMethods
 
     public function updateIdList($keyfile)
     {
+        // utmdump(__METHOD__);
         $id = $this->KeyPrefix . ' ' . $this->key;
         $this->writeidList($keyfile, $id);
     }
 
     private function writeidList($file, $line)
     {
+        // utmdump(__METHOD__);
         $archive_content = Filesystem::readLines($file);
         if (! $archive_content === false) {
             array_push($archive_content, $line);
@@ -144,11 +154,12 @@ trait FilterMethods
         }
 
         Filesystem::writeFile($file, $archive_content, false);
-        // utmdump($archive_content);
+        // // utmdump($archive_content);
     }
 
     public function updatePlaylist($type, $file = null)
     {
+        // utmdump(__METHOD__);
         // utmdd($type, $file);
         if ($file !== null) {
             $pcs = pathinfo($file);
@@ -162,7 +173,7 @@ trait FilterMethods
             $file = $this->playlist;
         }
 
-        // utmdump(['type' => $type, 'file' => $file]);
+        // // utmdump(['type' => $type, 'file' => $file]);
 
         switch ($type) {
             case 'watchlaterPr':
@@ -214,6 +225,7 @@ trait FilterMethods
 
     public function downloadVideo($buffer, $line_id)
     {
+        // utmdump(__METHOD__);
         // $buffer = MediatagExec::cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = $this->key;
@@ -225,7 +237,7 @@ trait FilterMethods
         // }
 
         if (str_contains($buffer, 'Destination')) {
-            // utmdump($buffer);
+            // // utmdump($buffer);
             $bufferMethod = 'Destination';
             $newLine      = false;
         }
@@ -248,6 +260,7 @@ trait FilterMethods
 
     public function fixVideo($buffer, $line_id, $key = 'FixupM3u8')
     {
+        // utmdump(__METHOD__);
         if ($key != 'FixupM3u8') {
             Mediatag::error('There was an error ' . $key);
         }
@@ -258,6 +271,7 @@ trait FilterMethods
 
     public function moveDownloadedVideos($key)
     {
+        // utmdump(__METHOD__);
         Mediatag::$Console->writeln('searching for key ' . $key);
         $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
 
@@ -273,11 +287,11 @@ trait FilterMethods
                 } elseif (str_ends_with($file, 'json')) {
                     $filename = DIRECTORY_SEPARATOR . basename($file, '.info.json');
                 } else {
-                    utmdump($file);
+                    // utmdump($file);
 
                     continue;
                 }
-                // utmdump([$file, $filename]);
+                // // utmdump([$file, $filename]);
                 $jsonFile  = $filename . '.info.json';
                 $videoFile = $filename . '.mp4';
 
@@ -297,11 +311,13 @@ trait FilterMethods
 
     public function setNumberLines($value)
     {
+        // utmdump(__METHOD__);
         $this->num_of_lines = $value;
     }
 
     public function downloadableIds($buffer, $line_id)
     {
+        // utmdump(__METHOD__);
         $buffer = MediatagExec::cleanBuffer($buffer);
 
         $outputText = '';
