@@ -119,9 +119,11 @@ trait FilterMethods
     {
         // utmdump(__METHOD__);
         $buffer = MediatagExec::cleanBuffer($buffer);
+        if (str_contains($buffer, 'Lazy loading')) {
+            return null;
+        }
 
         VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = ' . $this->key . '', $buffer, 'download_error.log');
-        // utmdd([$this->key, $buffer]);
 
         $outputText                   = '';
         PlaylistProcess::$current_key = false;
@@ -129,7 +131,7 @@ trait FilterMethods
 
         $this->updateIdList(PlaylistProcess::DISABLED);
 
-        // Mediatag::$Console->writeln($outputText);
+        Mediatag::$Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);
 
         return $outputText;
@@ -189,6 +191,8 @@ trait FilterMethods
                 break;
             case 'premium':
                 $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
+                Mediatag::$Console->writeln('Premium File => ' . $url);
+
                 // $this->Console->writeln($url);
                 // if (! str_contains('premium', $file)) {
                 $this->writeidList($file, $url);
@@ -205,15 +209,16 @@ trait FilterMethods
                 break;
             case 'error':
                 $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                Mediatag::$Console->writeln('Error  Not Found => ' . $url);
                 // $ret = file_put_contents(PlaylistProcess::NOTFOUND, $url . PHP_EOL, FILE_APPEND);
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
             case '404':
                 $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-                // Mediatag::$Console->writeln($url);
+                Mediatag::$Console->writeln('404 Not Found => ' . $url);
                 // file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
-                $this->writeidList($file, $url);
+                $this->updateIdList(PlaylistProcess::NOTFOUND);
                 break;
             default:
                 $url = $type . '=>' . 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;

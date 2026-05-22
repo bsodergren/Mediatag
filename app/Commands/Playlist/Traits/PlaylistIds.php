@@ -31,19 +31,21 @@ trait PlaylistIds
 
     public function fixArchive($line)
     {
-        $key    = Strings::after($line, ' ');
-        $double = Strings::after($key, ' ');
-        if (! is_null($double)) {
-            $first  = Strings::before($key, 'pornhub ');
-            $second = Strings::after($key, ' ');
-            //utmdump([$line, $key, $double, [$first, $second]]);
-            $ret[] = 'pornhub ' . $first;
-            $ret[] = 'pornhub ' . $second;
+        if (str_contains($line, ' ')) {
+            $key    = Strings::after($line, ' ');
+            $double = Strings::after($key, ' ');
+            if (! is_null($double)) {
+                $first  = Strings::before($key, 'pornhub ');
+                $second = Strings::after($key, ' ');
+                //utmdump([$line, $key, $double, [$first, $second]]);
+                $ret[] = 'pornhub ' . $first;
+                $ret[] = 'pornhub ' . $second;
 
-            return $ret;
+                return $ret;
+            }
+
+            return $line;
         }
-
-        return $line;
     }
 
     private function readFromArchive($file)
