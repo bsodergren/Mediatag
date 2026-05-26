@@ -83,6 +83,9 @@ class Display
         $this->processOutput    = Mediatag::$output->section();
         $this->VideoInfoSection = Mediatag::$output->section();
         $this->BarBottom        = Mediatag::$output->section();
+
+        // $methods = \get_class_methods(\get_class());
+        // utmdump($this->fileInfoSection->getFormatter()->getStyle('update'));
     }
 
     public function DisplayTable(array $filelist_array)
@@ -93,7 +96,7 @@ class Display
 
             return;
         }
-        $this->displayHeader(Mediatag::$output, ['count' => $count]);
+        $this->displayHeader(['count' => $count]);
         $idx = 1;
         foreach ($filelist_array as $key => $value) {
             $display = $this->displayFileInfo($value, $count, $idx);
@@ -114,7 +117,7 @@ class Display
         // UTMlog::logger('end File display');
     }
 
-    public function displayHeader(OutputInterface $output, array $options): void
+    public function displayHeader(array $options): void
     {
         // UTMlog::logger('start Display Header');
 
@@ -163,7 +166,7 @@ class Display
         $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
         $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
-        Mediatag::$tmpText = null;
+        // Mediatag::$tmpText = null;
         $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
         $this->MetaBlockSection->{$method}($this->blockDisplay);
         usleep($this->displayTimer);

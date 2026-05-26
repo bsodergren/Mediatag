@@ -32,7 +32,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
     {
         // Create a temp directory for building.
         $temp = __PLEX_VAR_DIR__ . '/build/' . md5($this->video_file);
-        utmdd($temp);
+        // utmdd($temp);
         $options = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',

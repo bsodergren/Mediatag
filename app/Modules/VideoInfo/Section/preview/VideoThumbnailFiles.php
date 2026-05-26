@@ -18,7 +18,7 @@ use Mediatag\Modules\VideoInfo\Section\VideoPreview;
 
 use function count;
 
-class VideoPreviewFiles extends VideoPreview
+class VideoThumbnailFiles extends VideoPreview
 {
     // public function getText()
     // {
