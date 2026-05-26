@@ -333,6 +333,7 @@ class Reader extends TagReader
                 }
             }
         }
+        // utmdump($this->json_file);
         if ($this->json_file === null) {
             $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, quiet: true);
             foreach ($files as $file) {
@@ -340,12 +341,14 @@ class Reader extends TagReader
                 $json_key         = basename($json_key, '.info');
                 $json_key         = \strtolower(str_replace('_', '', $json_key));
                 $this->video_name = strtolower($this->video_name);
+                // utmdump(['Video Key' => [$this->video_key, $json_key, $file]]);
                 if (str_contains($this->video_key, $json_key)) {
                     $this->json_file = $this->moveJsontoCache($file);
                     $video_key       = $json_key;
                     break;
                 }
 
+                // utmdump(['VideoName' => [$this->video_name, $json_key, $file]]);
                 if (\str_contains($this->video_name, $json_key)) {
                     $this->json_file = $this->moveJsontoCache($file);
                     $video_key       = $json_key;
@@ -357,6 +360,7 @@ class Reader extends TagReader
             }
         }
 
+        // utmdump(['Json exists' => $this->json_file]);
         $this->json_file = self::checkJsonForUpdate($this->json_file, $video_key);
 
         $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);

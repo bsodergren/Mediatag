@@ -26,7 +26,7 @@ use function is_string;
 
 class MediatagExec
 {
-    use AutoWrapper;
+    // use AutoWrapper;
     use DynamicProperty;
     use ExecArgs;
     // use MediaCommand;
@@ -195,12 +195,12 @@ class MediatagExec
         $this->preview();
         $this->test();
         $this->runCommand = $process->getCommandLine();
-        if (Option::isTrue('print')) {
-            if (\get_called_class() != 'Mediatag\Modules\Executable\Javascript') {
-                Mediatag::$Console->debug($this->runCommand);
-            }
-            // return true;
-        }
+        // if (Option::isTrue('print')) {
+        //     if (\get_called_class() != 'Mediatag\Modules\Executable\Javascript') {
+        //         Mediatag::$Console->debug($this->runCommand);
+        //     }
+        //     // return true;
+        // }
         // utmdd($this->runCommand);
         // utmdd($callback);
         $process->start();

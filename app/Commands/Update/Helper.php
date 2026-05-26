@@ -170,7 +170,7 @@ trait Helper
 
     public function writeMetaToVideo($videoArray, $count = null, $index = null)
     {
-        $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
+        $Command = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;
@@ -183,12 +183,14 @@ trait Helper
 
         $lines = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
+        // utmdd($videoArray);
+
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
             $value = trim($value);
 
             $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
         }
-        // // utmdump($videoBlockInfo);
+        // utmdd($videoBlockInfo);
 
         if (is_array($videoBlockInfo)) {
             $videoBlockInfo = Mediatag::$Display->sortBlocks($videoBlockInfo);
@@ -221,7 +223,7 @@ trait Helper
         // utmdd([$videoList, $count]);
         $idx = 1;
 
-        Mediatag::$Display->displayHeader(Mediatag::$output, ['count' => $count]);
+        Mediatag::$Display->displayHeader(['count' => $count]);
         // Mediatag::$Display->displayTimer = $this->displayTimer;
 
         foreach ($videoList as $key => $videoArray) {
@@ -235,7 +237,6 @@ trait Helper
                     // Mediatag::$output->writeln($count.' '.$n);
                 }
                 $line = implode(PHP_EOL, $line_array);
-                utmdump($line);
                 Mediatag::$output->writeln($line);
             }
 

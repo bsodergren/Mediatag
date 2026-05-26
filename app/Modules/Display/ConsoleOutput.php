@@ -62,11 +62,12 @@ class ConsoleOutput
                 $this->output->getFormatter()->setStyle($name, $obj);
             }
         }
+        // Mediatag::$output = $this->output;
 
         //    utmdd("something else");
         //
 
-        // Mediatag::$Io = $this->io;
+        Mediatag::$Io = $this->io;
     }
 
     public function __call($method, $args)

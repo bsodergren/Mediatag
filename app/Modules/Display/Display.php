@@ -181,7 +181,7 @@ class Display
         $returnArray = [];
         $array       = [];
         foreach ($block as $row) {
-            $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
+            $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>.*\>(.*)\<\/\>/i', $row, $matches);
 
             if ($success) {
                 $array[$matches[1]][$matches[2]] = $matches[3];
