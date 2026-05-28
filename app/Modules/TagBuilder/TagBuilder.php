@@ -68,7 +68,6 @@ class TagBuilder
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
-             utmdump(['DbUpdates Updates' => $DbUpdates]);
         }
 
         // if (null !== $FileUpdates) {

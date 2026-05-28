@@ -129,7 +129,7 @@ trait FilterMethods
         PlaylistProcess::$current_key = false;
         $outputText                   = $line_id . '  <error> xxx ' . $this->key . ' ' . $error . ' </error>';
 
-        $this->updateIdList(PlaylistProcess::DISABLED);
+        // $this->updateIdList(PlaylistProcess::DISABLED);
 
         Mediatag::$Console->writeln($outputText);
         // $this->updateIdList(PlaylistProcess::DISABLED);

@@ -127,7 +127,6 @@ class Storage
         // utminfo(func_get_args());
 
         $method = $name;
-        utmdump(['Name' => $name]);
 
         // Note: value of $name is case sensitive.
         $tag = $name;

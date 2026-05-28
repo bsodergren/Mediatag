@@ -126,7 +126,6 @@ trait StorageDB
                 $query .= ' LIMIT  ' . Option::getValue('max');
             }
         }
-        utmdump($query);
         $results = $this->query($query);
         if (Option::isTrue('numberofFiles') == true) {
             $count = count($results);
