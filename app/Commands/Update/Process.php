@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Update;
 
+use Mediatag\Commands\Update\Commands\Artist\ArtistHelper;
 use Mediatag\Commands\Update\Commands\NewF\Helper as NewHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
@@ -15,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Process extends Mediatag
 {
+    use ArtistHelper;
     use Helper;
     use MediaExecute;
     use MediaProcess;

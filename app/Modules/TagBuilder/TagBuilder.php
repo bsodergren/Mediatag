@@ -42,7 +42,6 @@ class TagBuilder
         $updates   = [];
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = [];
-        // utmdump(OptionIsTrue('add'));
         if (! defined('__UPDATE_SET_ONLY__') || OptionIsTrue('add')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
@@ -69,7 +68,7 @@ class TagBuilder
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
-            // utmdump(['DbUpdates Updates' => $DbUpdates]);
+             utmdump(['DbUpdates Updates' => $DbUpdates]);
         }
 
         // if (null !== $FileUpdates) {

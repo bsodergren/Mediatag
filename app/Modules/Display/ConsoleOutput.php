@@ -52,7 +52,7 @@ class ConsoleOutput
 
         $this->output->getFormatter()->setStyle('debug', new OutputFormatterStyle('bright-yellow'));
 
-        // Mediatag::$output = $this->output;
+        Mediatag::$output = $this->output;
 
         $styleArray = $this->output->getFormatter()->getStyles();
 

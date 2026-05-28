@@ -13,6 +13,10 @@ use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Command\CompleteCommand;
+use Symfony\Component\Console\Command\HelpCommand;
+use Symfony\Component\Console\Command\LazyCommand;
+use Symfony\Component\Console\Command\ListCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
@@ -28,14 +32,15 @@ class MediaApplication extends Application implements ResetInterface
      *
      * @return Command[]
      */
-    // protected function getDefaultCommands(): array
-    // {
-    //     return [
-    //         new HelpCommand,
-    //         new ListCommand,
-    //         new CompleteCommand,
-    //     ];
-    // }
+    protected function getDefaultCommands(): array
+    {
+        return [
+            new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand,
+            new HelpCommand,
+            new ListCommand,
+            new CompleteCommand,
+        ];
+    }
 
     protected function getDefaultInputDefinition(): InputDefinition
     {

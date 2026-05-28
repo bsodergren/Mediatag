@@ -56,7 +56,8 @@
         "mhor/php-mediainfo": "^5.8",
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/migrations": "^3.9",
-        "jbzoo/utils": "^7.3"
+        "jbzoo/utils": "^7.3",
+        "stecman/symfony-console-completion": "^0.15.0"
     },
     "scripts": {
         "clean": [
