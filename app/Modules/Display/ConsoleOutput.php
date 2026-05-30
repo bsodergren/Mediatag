@@ -20,6 +20,8 @@ class ConsoleOutput
 
     public $io;
 
+    public static $strip_ansi = true;
+
     public function __construct($output, $input)
     {
         // utminfo();
@@ -41,6 +43,7 @@ class ConsoleOutput
 
         $this->output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
         $this->output->getFormatter()->setStyle('current', new OutputFormatterStyle('magenta'));
+        $this->output->getFormatter()->setStyle('currentTag', new OutputFormatterStyle('magenta'));
         $this->output->getFormatter()->setStyle('update', new OutputFormatterStyle('bright-green'));
 
         $this->output->getFormatter()->setStyle('id', new OutputFormatterStyle('yellow'));
@@ -70,11 +73,37 @@ class ConsoleOutput
         Mediatag::$Io = $this->io;
     }
 
+    public static function formatOutput($text, $override = false)
+    {
+        // $debug = ['Before' => $text];
+        if (self::$strip_ansi === true) {
+            if ($override === false) {
+                $text           = strip_tags($text);
+                $debug['after'] = $text;
+            }
+        }
+        // utmdump($debug);
+
+        return $text;
+    }
+
     public function __call($method, $args)
     {
         // Mediatag::info("Called {0} in ConsoleOutput",[$method]);
         // utmdd([$method, $args]);
         $this->io->$method(...$args);
+    }
+
+    public function writeln($text)
+    {
+        $text = self::formatOutput($text);
+        Mediatag::$output->writeln($text);
+    }
+
+    public function write($text)
+    {
+        $text = self::formatOutput($text);
+        Mediatag::$output->write($text);
     }
 
     public function table($args)

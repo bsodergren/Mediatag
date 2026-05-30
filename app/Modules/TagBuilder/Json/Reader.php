@@ -45,6 +45,8 @@ class Reader extends TagReader
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
             $this->json_array = $this->convertJson($this->json_array);
+        } else {
+            // return [];
         }
 
         unset($this->json_array['formats']);
@@ -335,7 +337,7 @@ class Reader extends TagReader
         }
         // utmdump($this->json_file);
         if ($this->json_file === null) {
-            $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, quiet: true);
+            $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, false, true);
             foreach ($files as $file) {
                 $json_key = basename($file, '.json');
                 $json_key = basename($json_key, '.info');
@@ -361,7 +363,7 @@ class Reader extends TagReader
             }
         }
 
-        utmdump(['Json exists' => $this->json_file]);
+        // utmdump(['Json exists' => $this->json_file]);
         $this->json_file = self::checkJsonForUpdate($this->json_file, $video_key);
 
         $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);

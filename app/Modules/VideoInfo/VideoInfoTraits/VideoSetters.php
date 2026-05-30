@@ -37,9 +37,11 @@ trait VideoSetters
             }
         }
 
-        if ($this->VideoInfo['artist'] !== null) {
-            if ($this->saveArtist($this->VideoInfo['artist']) !== null) {
-                unset($this->VideoInfo['artist']);
+        if (array_key_exists('artist', $this->VideoInfo)) {
+            if ($this->VideoInfo['artist'] !== null) {
+                if ($this->saveArtist($this->VideoInfo['artist']) !== null) {
+                    unset($this->VideoInfo['artist']);
+                }
             }
         }
 

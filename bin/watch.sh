@@ -22,14 +22,14 @@ MovedFile="NO"
 TEST="NO"
 PreviousFilename=""
 DEBUG="NO"
+COLOR_OUTPUT="NO"
 if [[ "$TEST" == "YES" ]]; then
     DEBUG="YES"
 fi
 
 function watch.debug {
     local text="$1"
-
-    # echo $(string.cyan "$text")
+    echo $(string.cyan "$text")
 
 }
 
@@ -41,7 +41,7 @@ function update_media_file {
     main.log "Running update_media_file: " $FILE
 
     if [[ "$TEST" == "NO" ]]; then
-        $MEDIAUPDATE_CMD --silent --no-progress --path="$directory" -f="$FILE" $OPTIONS 
+        $MEDIAUPDATE_CMD --silent --no-progress --path="$directory" -f="$FILE" $OPTIONS
         # echo $(string.green "Video Metatags added: $filenameColored")
     fi
     # # echo "$MEDIAUPDATE_CMD --no-progress --path=$directory -f=$FILE $OPTIONS"
@@ -55,9 +55,9 @@ function update_media_db {
     main.log "Running update_media_db: " $FILE
     # Placeholder for actual media database update command
     if [[ "$TEST" == "NO" ]]; then
-        $MEDIADB_CMD --silent --path="$directory" -f="$FILE" 
-        $MEDIADB_CMD --silent --path="$directory" info 
-        $MEDIADB_CMD --silent --path="$directory" thumbnail 
+        $MEDIADB_CMD --silent --path="$directory" -f="$FILE"
+        $MEDIADB_CMD --silent --path="$directory" info
+        $MEDIADB_CMD --silent --path="$directory" thumbnail
         # mediadb $OPTIONS --path="$directory" preview
         # echo $(string.green "Finished updating database for $filenameColored")
     fi
@@ -72,9 +72,9 @@ function process_deleted_file {
             directory="$(dirname "$directory")"
         fi
 
-        $MEDIADB_CMD --silent --path="$directory" 
-        $MEDIADB_CMD --silent --path="$directory" -c thumbnail 
-        $MEDIADB_CMD --silent --path="$directory" -c preview 
+        $MEDIADB_CMD --silent --path="$directory"
+        $MEDIADB_CMD --silent --path="$directory" -c thumbnail
+        $MEDIADB_CMD --silent --path="$directory" -c preview
     fi
 }
 
@@ -150,7 +150,7 @@ function process_deleted_file {
                 fi
 
                 if [[ "$events" == "CREATE" ]]; then
-                
+
                     PrevEvent=$events
                 fi
                 if [[ "$PrevEvent" == "CREATE" ]]; then
@@ -195,14 +195,14 @@ function process_deleted_file {
 # }
 
 # while true; do
-# # 
+# #
 #     $(runWatch)
 #     exit_code=$?
 #     main.log "exit_code: " $exit_code
 #     # exiteak
 #     # fi_code=$?
 #     # if [ $exit_code -ne 0 ]; then
-    
+
 #     #     # echo "$exit_code exitted over "
 #     #     br
 # done

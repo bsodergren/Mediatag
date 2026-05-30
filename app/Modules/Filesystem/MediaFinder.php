@@ -286,7 +286,7 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    public function Search($path = null, $search = null, $date = null, $exit = true,$quiet = false)
+    public function Search($path = null, $search = null, $date = null, $exit = true, $quiet = false)
     {
         // utmdump(func_get_args());
         $FileArray = [];
@@ -298,7 +298,7 @@ class MediaFinder extends SFinder
             // utmdump($search);
             $search = self::FilterSearch($search);
             // utmdump($search);
-            $file_array = $this->searchFiles($search, $path, $date, $exit,$quiet);
+            $file_array = $this->searchFiles($search, $path, $date, $exit, $quiet);
         }
 
         if (is_array($file_array)) {
@@ -321,11 +321,11 @@ class MediaFinder extends SFinder
      *
      * @return array|null
      */
-    public static function find($file, $location, $exit = true,$quiet = false)
+    public static function find($file, $location, $exit = true, $quiet = false)
     {
         // utminfo(func_get_args());
 
-        return (new self)->searchFiles($file, $location, null, $exit,$quiet);
+        return (new self)->searchFiles($file, $location, null, $exit, $quiet);
     }
 
     private static function FilterSearch($pattern)
@@ -355,7 +355,7 @@ class MediaFinder extends SFinder
      * @param  mixed|null  $path
      * @return array|null
      */
-    protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true,$quiet = false)
+    protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true, $quiet = false)
     {
         // utminfo(func_get_args());
 
@@ -415,7 +415,7 @@ class MediaFinder extends SFinder
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);
                     if (self::$quiet === false) {
-                        if($quiet === false) {
+                        if ($quiet === false) {
                             Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
                         }
                     }
@@ -431,7 +431,7 @@ class MediaFinder extends SFinder
             }
         }
         if ($exit === true) {
-            Mediatag::$output->writeln('<info>No files found</info>');
+            Mediatag::$output->writeln('<info> xxxx No files found</info>');
             exit;
         }
 

@@ -85,6 +85,7 @@ class Mediatag extends Command
         self::boot($input, $output, $args);
     }
 
+
     public static function __callStatic($method, $args): string
     {
         // utminfo([self::$index++ => [__FILE__,__LINE__,__METHOD__]]);

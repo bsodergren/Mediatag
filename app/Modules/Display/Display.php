@@ -92,7 +92,7 @@ class Display
     {
         $count = count($filelist_array);
         if ($count == 0) {
-            Mediatag::$output->writeln('<error>No files found </error>');
+            Mediatag::$Console->writeln('<error>No files found </error>');
 
             return;
         }
@@ -123,8 +123,12 @@ class Display
 
         $count = $options['count'];
         if ($count > 0) {
-            $this->fileCountSection->writeln('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
-            $this->fileInfoSection->writeln('<info>   </info>');
+            $fileCount = ConsoleOutput::formatOutput('<comment>Found</comment> <info>' . $count . '</info> <comment> files</comment>');
+            $fileInfo  = ConsoleOutput::formatOutput('<info>   </info>');
+
+            $this->fileCountSection->writeln($fileCount);
+            $this->fileInfoSection->writeln($fileInfo);
+
             $this->processOutput->setMaxHeight(9);
         }
 
@@ -165,9 +169,13 @@ class Display
         ksort($this->blockDisplay);
         $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
-        $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
+
+        $fileCount = ConsoleOutput::formatOutput('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
+        $fileInfo  = ConsoleOutput::formatOutput('<info>' . $in_directory . $filename . '</info>');
+
+        $this->fileCountSection->{$method}($fileCount);
         // Mediatag::$tmpText = null;
-        $this->fileInfoSection->{$method}('<info>' . $in_directory . $filename . '</info>');
+        $this->fileInfoSection->{$method}($fileInfo);
         $this->MetaBlockSection->{$method}($this->blockDisplay);
         usleep($this->displayTimer);
 
@@ -184,12 +192,33 @@ class Display
         $returnArray = [];
         $array       = [];
         foreach ($block as $row) {
-            $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>.*\>(.*)\<\/\>/i', $row, $matches);
-
-            if ($success) {
-                $array[$matches[1]][$matches[2]] = $matches[3];
+            if ($row == '') {
+                continue;
+            }
+            $tagName   = '';
+            $tagMethod = 'update';
+            $tagValue  = '';
+            utmdump(['Row' => $row]);
+            if (preg_match('/\<(?P<method>[a-zA-Z=]+)\>\[(?P<tag>[a-zA-Z]+)\](\<\/[a-zA-Z]+\>)\s+\<[a-zA-Z]+\>(?P<value>.*)(\<\/>)/i', $row, $matches)) {
+                $tagName   = $matches['tag'];
+                $tagMethod = $matches['method'];
+                $tagValue  = $matches['value'];
+            } else {
+                if (preg_match('/\[(?P<tag>(.*))\]/', $row, $matches)) {
+                    $tagName = $matches['tag'];
+                    utmdump(['first' => $matches]);
+                }
+                if (preg_match('/\[(?P<tag>.*)\](?P<value>.*)/i', $row, $matches)) {
+                    $tagName  = $matches['tag'];
+                    $tagValue = $matches['value'];
+                    utmdump(['second' => $matches]);
+                }
+            }
+            if ($tagName != '') {
+                $array[$tagName][$tagMethod] = $tagValue;
             }
         }
+        // utmdd($array);
         $len = 0;
         foreach ($array as $tag => $row) {
             $tagLen = strlen($tag);
@@ -214,10 +243,12 @@ class Display
         // utminfo(func_get_args());
 
         if ($value !== null) {
-            // $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
-            $change_value = "\t<" . $this->text_style . '>' . $value . '</>';
+            $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
+            // $change_value = ConsoleOutput::formatOutput"\t<" . $this->text_style . '>' . $value . '</>', true);
+            $text = $this->formatter->formatSection($tag, $change_value, $style);
+            // utmdump(['FormatTagLine' => [$change_value, $text, $this->text_style, $style]]);
 
-            return $this->indent($this->formatter->formatSection($tag, $change_value, $style), $this->padbuffer);
+            return $this->indent($text, $this->padbuffer);
         }
 
         return '';
@@ -228,6 +259,8 @@ class Display
         // utminfo(func_get_args());
 
         if (is_string($string)) {
+            $string = ConsoleOutput::formatOutput($string);
+
             return str_pad($string, strlen($string) + $spaces, $this->padbufferChar, STR_PAD_LEFT);
         }
 
@@ -264,8 +297,8 @@ class Display
         $current[$tag] = '';
         if (array_key_exists('currentTags', $fileinfo)) {
             $current          = $fileinfo['currentTags'];
-            $this->text_style = 'current';
-            $style            = 'current';
+            $this->text_style = 'currentTag';
+            $style            = 'currentTag';
         }
         if (array_key_exists('metatags', $fileinfo)) {
             $current          = $fileinfo['metatags'];
@@ -274,7 +307,7 @@ class Display
         }
         if (array_key_exists('updateTags', $fileinfo)) {
             if (! array_key_exists($tag, $fileinfo['updateTags'])) {
-                return $string;
+                return ConsoleOutput::formatOutput($string, true);
             }
         }
 
@@ -285,7 +318,7 @@ class Display
             }
         }
 
-        return $string;
+        return ConsoleOutput::formatOutput($string, true);
     }
 
     private function UpdateTagBlockDisplay($tag, $fileinfo): ?string
@@ -303,6 +336,6 @@ class Display
             $string .= $this->formatTagLine($tag, $change_value, 'update');
         }
 
-        return $string;
+        return ConsoleOutput::formatOutput($string, true);
     }
 }

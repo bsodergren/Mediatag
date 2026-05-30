@@ -27,7 +27,7 @@ function main.log() {
 	fi
 
 	#echo  ${__txt}
-	logr "info" "${__func}:${__line}::${__txt} ${__vars}" 
+	logr "info" "${__func}:${__line}::${__txt} ${__vars}"
 
 	#logr "info" "${BASH_LINENO}::${__txt}"
 
@@ -68,50 +68,54 @@ function string.color() {
 	local __string=$1
 	local __background=$2
 	local __RAINBOWPALETTE=$3
+	if [[ "$COLOR_OUTPUT" == "NO" ]]; then
+		echo -e $1
+	else
 
-	__color=${FUNCNAME[1]##*.}
+		__color=${FUNCNAME[1]##*.}
 
-	case ${__background} in
-	"black") __background_code=";40" ;;
-	"red") __background_code=";41" ;;
-	"green") __background_code=";42" ;;
-	"yellow") __background_code=";43" ;;
-	"blue") __background_code=";44" ;;
-	"magenta") __background_code=";45" ;;
-	"cyan") __background_code=";46" ;;
-	"light gray") __background_code=";47" ;;
-	"dark gray") __background_code=";100" ;;
-	"light red") __background_code=";101" ;;
-	"light green") __background_code=";102" ;;
-	"light yellow") __background_code=";103" ;;
-	"light blue") __background_code=";104" ;;
-	"light magenta") __background_code=";105" ;;
-	"light cyan") __background_code=";106" ;;
-	"white") __background_code=";107" ;;
-	*) __background_code=";49" ;;
-	esac
+		case ${__background} in
+		"black") __background_code=";40" ;;
+		"red") __background_code=";41" ;;
+		"green") __background_code=";42" ;;
+		"yellow") __background_code=";43" ;;
+		"blue") __background_code=";44" ;;
+		"magenta") __background_code=";45" ;;
+		"cyan") __background_code=";46" ;;
+		"light gray") __background_code=";47" ;;
+		"dark gray") __background_code=";100" ;;
+		"light red") __background_code=";101" ;;
+		"light green") __background_code=";102" ;;
+		"light yellow") __background_code=";103" ;;
+		"light blue") __background_code=";104" ;;
+		"light magenta") __background_code=";105" ;;
+		"light cyan") __background_code=";106" ;;
+		"white") __background_code=";107" ;;
+		*) __background_code=";49" ;;
+		esac
 
-	case ${__color} in
-	"black") __color_code="$__RAINBOWPALETTE;30${__background_code}" ;;
-	"red") __color_code="$__RAINBOWPALETTE;31${__background_code}" ;;
-	"green") __color_code="$__RAINBOWPALETTE;32${__background_code}" ;;
-	"yellow") __color_code="$__RAINBOWPALETTE;33${__background_code}" ;;
-	"blue") __color_code="$__RAINBOWPALETTE;34${__background_code}" ;;
-	"purple") __color_code="$__RAINBOWPALETTE;35${__background_code}" ;;
-	"cyan") __color_code="$__RAINBOWPALETTE;36${__background_code}" ;;
-	"light_gray") __color_code="$__RAINBOWPALETTE;37${__background_code}" ;;
-	"dark_gray") __color_code="$__RAINBOWPALETTE;90${__background_code}" ;;
-	"light_red") __color_code="$__RAINBOWPALETTE;91${__background_code}" ;;
-	"light_green") __color_code="$__RAINBOWPALETTE;92${__background_code}" ;;
-	"light_yellow") __color_code="$__RAINBOWPALETTE;93${__background_code}" ;;
-	"light_blue") __color_code="$__RAINBOWPALETTE;94${__background_code}" ;;
-	"light_magenta") __color_code="$__RAINBOWPALETTE;95${__background_code}" ;;
-	"light_cyan") __color_code="$__RAINBOWPALETTE;96${__background_code}" ;;
-	"white") __color_code="$__RAINBOWPALETTE;97${__background_code}" ;;
-	*) __color_code="$__RAINBOWPALETTE;39${__background_code}" ;;
-	esac
+		case ${__color} in
+		"black") __color_code="$__RAINBOWPALETTE;30${__background_code}" ;;
+		"red") __color_code="$__RAINBOWPALETTE;31${__background_code}" ;;
+		"green") __color_code="$__RAINBOWPALETTE;32${__background_code}" ;;
+		"yellow") __color_code="$__RAINBOWPALETTE;33${__background_code}" ;;
+		"blue") __color_code="$__RAINBOWPALETTE;34${__background_code}" ;;
+		"purple") __color_code="$__RAINBOWPALETTE;35${__background_code}" ;;
+		"cyan") __color_code="$__RAINBOWPALETTE;36${__background_code}" ;;
+		"light_gray") __color_code="$__RAINBOWPALETTE;37${__background_code}" ;;
+		"dark_gray") __color_code="$__RAINBOWPALETTE;90${__background_code}" ;;
+		"light_red") __color_code="$__RAINBOWPALETTE;91${__background_code}" ;;
+		"light_green") __color_code="$__RAINBOWPALETTE;92${__background_code}" ;;
+		"light_yellow") __color_code="$__RAINBOWPALETTE;93${__background_code}" ;;
+		"light_blue") __color_code="$__RAINBOWPALETTE;94${__background_code}" ;;
+		"light_magenta") __color_code="$__RAINBOWPALETTE;95${__background_code}" ;;
+		"light_cyan") __color_code="$__RAINBOWPALETTE;96${__background_code}" ;;
+		"white") __color_code="$__RAINBOWPALETTE;97${__background_code}" ;;
+		*) __color_code="$__RAINBOWPALETTE;39${__background_code}" ;;
+		esac
 
-	echo -e "\e[${__color_code}m$1\e[0m"
+		echo -e "\e[${__color_code}m$1\e[0m"
+	fi
 }
 
 ## attr
