@@ -15,6 +15,7 @@ use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\FileSystem as nFileSystem;
+use UTM\Utilities\Option;
 
 use function array_key_exists;
 
@@ -310,6 +311,10 @@ trait FilterMethods
                 nFileSystem::rename($currentPath . $jsonFile, $newJsonFile);
 
                 Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+
+                if (! Option::istrue('test')) {
+                    Filesystem::prunedirs(__PLEX_DOWNLOAD__);
+                }
             }
         }
     }

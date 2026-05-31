@@ -270,7 +270,7 @@ class MediaFile
         }
 
         NetteFile::createDir($targetpath);
-        utmdump($targetpath);
+        // utmdump($targetpath);
 
         $handle = @fopen($source, 'r');
 

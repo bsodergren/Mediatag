@@ -321,7 +321,7 @@ class Storage
     public function getValue($where_clause, $column = 'count(*)', $table = __MYSQL_VIDEO_FILE__)
     {
         // utminfo(func_get_args());
-        utmdump($this->mysqllib->trace);
+        // utmdump($this->mysqllib->trace);
         if (is_array($where_clause)) {
             foreach ($where_clause as $field => $where) {
                 $this->mysqllib->where($field, $where[0], $where[1]);
@@ -459,7 +459,7 @@ class Storage
                 $query .= " WHERE f.Library = '" . __LIBRARY__ . "' AND ";
                 $query .= " f.fullpath like '%" . $current_dir . "%'";
 
-                utmdump($query);
+                // utmdump($query);
                 // DELETE f, map, m, i,pl FROM
                 // mediatag_video_file as f,
                 // mediatag_artist_map as map,

@@ -198,7 +198,7 @@ class Display
             $tagName   = '';
             $tagMethod = 'update';
             $tagValue  = '';
-            utmdump(['Row' => $row]);
+            // utmdump(['Row' => $row]);
             if (preg_match('/\<(?P<method>[a-zA-Z=]+)\>\[(?P<tag>[a-zA-Z]+)\](\<\/[a-zA-Z]+\>)\s+\<[a-zA-Z]+\>(?P<value>.*)(\<\/>)/i', $row, $matches)) {
                 $tagName   = $matches['tag'];
                 $tagMethod = $matches['method'];
@@ -206,12 +206,12 @@ class Display
             } else {
                 if (preg_match('/\[(?P<tag>(.*))\]/', $row, $matches)) {
                     $tagName = $matches['tag'];
-                    utmdump(['first' => $matches]);
+                    // utmdump(['first' => $matches]);
                 }
                 if (preg_match('/\[(?P<tag>.*)\](?P<value>.*)/i', $row, $matches)) {
                     $tagName  = $matches['tag'];
                     $tagValue = $matches['value'];
-                    utmdump(['second' => $matches]);
+                    // utmdump(['second' => $matches]);
                 }
             }
             if ($tagName != '') {

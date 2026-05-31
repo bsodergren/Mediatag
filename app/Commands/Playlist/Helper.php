@@ -248,25 +248,35 @@ trait Helper
                 exit;
             }
 
-            $f      = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $f = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
             $before = count($f);
 
             $idCnt = count($this->ids);
             // utmdd([$before, $idCnt]);
             if ($before > 0) {
-                $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array = array_unique($array);
-                $after = count($array);
-
-                Mediatag::$output->writeln(PHP_EOL . 'before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
+                $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+                $array        = array_unique($array);
+                $after        = count($array);
                 $trimmedLines = $before - $after;
+
+                $Video_Removed = 'Videos have';
+                if ($trimmedLines == 1) {
+                    $Video_Removed = 'Video has';
+                }
+                $Videos_left = 'Videos';
+                if ($after == 1) {
+                    $Videos_left = 'Video';
+                }
+
+                $text = '<comment> ' . $trimmedLines . '</comment>';
+                $text .= '<info> ' . $Video_Removed . ' been removed. There are now</info>';
+                $text .= ' <comment>' . $after . '</comment> <info>' . $Videos_left . ' left</info>';
+                Mediatag::$output->writeln($text);
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
-                Mediatag::$output->writeln('<info>' . $text . '</info>');
                 if ($after == 0) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
                     Filesystem::delete($this->playlist);
-
                     exit;
                 }
             }

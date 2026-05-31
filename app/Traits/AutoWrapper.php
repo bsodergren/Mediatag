@@ -10,14 +10,14 @@ trait AutoWrapper
     // Function to run before every method
     private function beforeEveryMethod($method, $args)
     {
-        utmdump($method, $args);
+        // utmdump($method, $args);
     }
 
     // Intercept calls to undefined/inaccessible methods
     public function __call($name, $arguments)
     {
         // Check if the method actually exists and is public
-        utmdump(['name' => $name]);
+        // utmdump(['name' => $name]);
         if (method_exists($this, $name)) {
             $refMethod = new ReflectionMethod($this, $name);
 

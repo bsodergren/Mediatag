@@ -30,7 +30,7 @@ trait StudioJsonHelper
             $result = $db->query($query);
 
             $video_id = (new Markers)->getvideoId($result[0]['video_key']);
-            utmdump([$result, $query]);
+            // utmdump([$result, $query]);
             if (! is_null($video_id)) {
                 $jsonData = file_get_contents($file);
                 $jsonData = str_replace("\n", ',', $jsonData);
@@ -60,8 +60,6 @@ trait StudioJsonHelper
         $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
 
         $markers = explode(',', $markerArray);
-
-
 
         foreach ($markers as $marker) {
             $parts = explode(':', $marker);

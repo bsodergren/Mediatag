@@ -1,4 +1,4 @@
-#!/usr/bin/php -e
+#!/usr/bin/env php
 <?php
 
 /**

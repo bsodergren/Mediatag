@@ -159,7 +159,7 @@ class MetaTagInfo extends Mediatag
         }
         $res = $db->get(\__MYSQL_GENRE__);
 
-        utmdump($res, $db->getLastQuery());
+        // utmdump($res, $db->getLastQuery());
 
         return $res;
     }

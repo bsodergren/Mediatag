@@ -226,7 +226,7 @@ class Youtube extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        Mediatag::$output->writeln('<info> Downloaded new Playlist </info>');
+        Mediatag::$output->writeln('<info> Downloading Playlist </info>');
 
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;

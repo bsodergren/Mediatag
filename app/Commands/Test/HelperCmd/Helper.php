@@ -61,7 +61,7 @@ trait Helper
                     $db->delete($table);
 
                     // } else {
-                    utmdump($db->getLastQuery());
+                    // utmdump($db->getLastQuery());
                 }
             }
         }
@@ -72,7 +72,7 @@ trait Helper
     private function getMarkerThumbPath($file)
     {
         $img_web_path = (new MediaFilesystem)->makePathRelative($file, __PLEX_HOME__);
-        utmdump($img_web_path);
+        // utmdump($img_web_path);
     }
 
     public function hello()
@@ -168,7 +168,7 @@ trait Helper
         $filename = __DIR__ . '/output.csv';
 
         $split = 3000;
-        utmdump($filename);
+        // utmdump($filename);
         MediaFile::splitFile($filename, __DIR__, $split, 'batch_', '.csv');
     }
 
@@ -264,7 +264,7 @@ trait Helper
         $filelist_array = $this->VideoList['file'];
         foreach ($filelist_array as $key => $row) {
             $videoId = VideoInfo::GetVideoIdByKey($key);
-            utmdump($videoId);
+            // utmdump($videoId);
         }
         MetaTagInfo::getTagIDbyValue('artist', 'Mick Blue');
     }
