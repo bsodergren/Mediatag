@@ -2,20 +2,14 @@
 
 namespace Mediatag\Commands\Playlist\Traits;
 
-use const DIRECTORY_SEPARATOR;
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_SKIP_EMPTY_LINES;
-use const PHP_EOL;
-// use Nette\Utils\FileSystem as NetteFile;
-use const SORT_STRING;
-
 use Illuminate\Contracts\Container\ContextualBindingBuilder;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Strings;
 use UTM\Utilities\Option;
 
@@ -24,6 +18,12 @@ use function array_slice;
 use function count;
 use function in_array;
 use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const FILE_IGNORE_NEW_LINES;
+use const FILE_SKIP_EMPTY_LINES;
+use const PHP_EOL;
+use const SORT_STRING;
 
 trait PlaylistIds
 {
@@ -77,7 +77,7 @@ trait PlaylistIds
         }
         // utmdd(count($content));
         \asort($content);
-        $content = array_unique($content);
+        $content = MediaArray::array_iunique($content);
         Filesystem::writeFile(self::$ARCHIVE, $content);
     }
 
@@ -90,7 +90,7 @@ trait PlaylistIds
                 $idList[] = Strings::after($line, ' ');
             }
 
-            return array_unique($idList);
+            return MediaArray::array_iunique($idList);
         }
 
         return [];
@@ -105,7 +105,7 @@ trait PlaylistIds
             }
         }
 
-        return array_unique($idList);
+        return MediaArray::array_iunique($idList);
     }
 
     public function getDownloadedIds()

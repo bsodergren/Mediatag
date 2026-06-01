@@ -12,6 +12,7 @@ use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
 use Mediatag\Modules\Metatags\Title;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\MediaArray;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\Monolog\UTMLog;
@@ -28,6 +29,11 @@ trait MetaTags
     public static $tagDB;
 
     public static $Videokey = '';
+
+    private static function dumpTag($tag, $source, ...$array)
+    {
+        TagBuilder::dumpTag($tag, $source, ...$array);
+    }
 
     public function CleanMetaValue(string $tag, string $text): string
     {
@@ -58,7 +64,6 @@ trait MetaTags
 
     public function cleanGenre($text)
     {
-        // utminfo(func_get_args());
         return Genre::clean($text);
     }
 
@@ -100,7 +105,7 @@ trait MetaTags
             $array = explode('/', $text);
         }
 
-        $array = array_unique($array);
+        $array = MediaArray::array_iunique($array);
         // sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
@@ -124,7 +129,7 @@ trait MetaTags
             $studio_str = fileReader::$PatternClassObj->getStudio();
             // $studio_str = trim($key_studio .'/'. $studio_str,"/");
             $arr = explode('/', $studio_str);
-            $arr = array_unique($arr);
+            $arr = MediaArray::array_iunique($arr);
         }
 
         return implode('/', $arr);
@@ -148,7 +153,7 @@ trait MetaTags
                 $array[] = $new;
             }
         }
-        $array = array_unique($array);
+        $array = MediaArray::array_iunique($array);
         sort($array);
 
         foreach ($array as $tagValue) {
@@ -169,19 +174,27 @@ trait MetaTags
 
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
+
         // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
+        $trim  = $delim;
         if ($tag == 'studio') {
             $delim = '/';
+            $trim  = $delim;
+
             // utmdump([$tag, $firstCmp, $secondCmp]);
         }
         if ($tag == 'title') {
             //  utmdump([$tag, $firstCmp, $secondCmp]);
             // $secondCmp = '';
             $delim = '';
+            $trim  = ' ';
         }
         if ($tag == 'genre') {
-            return $first . $delim . $second;
+            $return = trim($first . $delim . $second, $trim);
+            // self::dumpTag($tag, __FUNCTION__ . ':' . __LINE__, ['first' => $first, 'second' => $second, 'return' => $return]);
+
+            return $return;
         }
         if ($secondCmp != '') {
             if ($firstCmp == '') {
@@ -208,7 +221,7 @@ trait MetaTags
                         }
                         if ($b . $a == $secondCmp) {
                             $return = $second;
-                        }else  if ($a . $b == $secondCmp) {
+                        } elseif ($a . $b == $secondCmp) {
                             $return = $second;
                         } else {
                             $return = $first;
@@ -220,8 +233,9 @@ trait MetaTags
             $return = $first;
             // utmdump(['return first', $return]);
         }
-// utmdump(['return', $return]);
-        return $return;
+
+        // utmdump(['return', $return]);
+        return trim($return, $trim);
     }
 
     private static function priorityCombine($first, $second, $tag)
@@ -231,15 +245,18 @@ trait MetaTags
 
         // utmdump([$tag, $firstCmp, $secondCmp]);
         $delim = ',';
+        $trim  = $delim;
         if ($tag == 'studio') {
             $delim = '/';
+            $trim  = $delim;
         }
         if ($tag == 'title') {
             // $secondCmp = '';
             $delim = '';
+            $trim  = ' ';
         }
         if ($tag == 'genre') {
-            return $first . $delim . $second;
+            return trim($first . $delim . $second, $trim);
         }
         if ($secondCmp != '') {
             if ($firstCmp == '') {
@@ -267,7 +284,7 @@ trait MetaTags
             // utmdump(['return first', $return]);
         }
 
-        return $return;
+        return trim($return, $trim);
     }
 
     public static function mergeTag($tag, $first, $second, $priority = null)
@@ -275,32 +292,14 @@ trait MetaTags
         // utminfo(func_get_args());
 
         $method = 'priority' . $priority;
-        // utmdump([$tag, $first, $second, $method]);
+
         $return = self::$method($first, $second, $tag);
         if ($tag == 'genre') {
-            // utmdd($return);
+            // self::dumpTag($tag, $method . ':' . __LINE__, ['return' => $return]);
         }
-        // if (null !== $firstCmp && $first != $second) {
-        //     $data['video_key'] = self::$Videokey;
-
-        //     if ('studio' == $tag) {
-        //         if ($firstCmp == $secondCmp) {
-        //             $data['studio'] = self::clean($first, $tag);
-        //         } else {
-        //             $data['studio']  = self::clean($first, $tag);
-        //             $data['network'] = self::clean($second, $tag);
-        //         }
-        //     } else {
-        //         $data[$tag] = self::clean($return, $tag);
-        //     }
-
-        //     // Storage::$DB->insert(
-        //     //     $data,
-        //     //     __MYSQL_VIDEO_CUSTOM__
-        //     // );
-        // }
-        $return = self::clean($return, $tag); // self::clean($return, $tag);
+        // $return = self::clean($return, $tag); // self::clean($return, $tag);
         if ($tag == 'genre') {
+            // self::dumpTag($tag, __FUNCTION__ . ':' . __LINE__, ['return' => $return]);
         }
 
         return $return;
@@ -309,25 +308,29 @@ trait MetaTags
     public static function mergetags($tag_array, $tag_array2, $obj = null, $priority = null)
     {
         // utminfo(func_get_args());
-        // utmdd($tag_array, $tag_array2);
+
         if (is_object($obj)) {
             self::$Videokey = $obj;
         }
+
+        self::dumpTag('genre', __FUNCTION__, ['Tag' => $tag_array, 'Tag2' => $tag_array2, 'Priority' => $priority]);
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
-                $value = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);
+                $value2 = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);
+                $value  = $value2;
                 unset($tag_array2[$tag]);
             }
 
-            // $tagArray[$tag] = self::clean($value, $tag);
-            $tagArray[$tag] = $value;
+            $tagArray[$tag] = self::clean($value, $tag);
+            //$tagArray[$tag] = $value;
         }
+        //
         foreach ($tag_array2 as $tag => $value) {
             if (! is_null($value)) {
                 $tagArray[$tag] = self::clean($value, $tag);
             }
         }
-        // utmdump($tag_array);
+        // utmdump(['mergeTags' => $tagArray]);
 
         return $tagArray;
     }
@@ -336,7 +339,11 @@ trait MetaTags
     {
         // utmdump(func_get_args());
         if ($tag == 'genre') {
+            $text = Genre::clean($text);
+
+            return $text;
         }
+
         // UTMlog::Logger('Clean', [$tag, $text]);
         if ($tag == 'artist' && $text === null) {
             return null;
@@ -369,7 +376,6 @@ trait MetaTags
         $i         = 0;
         $total     = 0;
         $tag_array = explode($delim, $text);
-
         foreach ($tag_array as $tagValue) {
             if (! method_exists($tagDB, $method)) {
                 $newList[] = $tagValue;
@@ -388,6 +394,7 @@ trait MetaTags
                 // utmdump(['2' => $newList]);
             }
         }
+
         // if ($tag == 'studio') {
 
         //     $tmpList = $newList;
@@ -395,7 +402,7 @@ trait MetaTags
         //         $value = str_replace(" ", "", $value);
         //         // $value = trim(ucwords($value));
         //     });
-        //     $tmpList = array_unique($tmpList);
+        //     $tmpList = MediaArray::array_iunique($tmpList);
         //     $newList = array_diff($newList, $tmpList);
 
         // }
@@ -403,59 +410,41 @@ trait MetaTags
         $string = implode($delim, $newList);
         // utmdump(['4' => $string]);
         $arr = explode($delim, $string);
+
         array_walk($arr, function (&$value) {
             $value = trim(ucwords($value));
         });
-        $arr = array_unique($arr); // , \SORT_STRING);
+        if ($tag == 'genre') {
+            // utmdump($arr);
+        }
+        $arr = MediaArray::array_iunique($arr); // , \SORT_STRING);
+        if ($tag == 'genre') {
+            // utmdump($arr);
+        }
         $arr = array_values($arr);
-        // if ($tag == 'genre' || $tag == 'keyword') {
-        //     if (MediaArray::search($arr, 'Double') == true) {
-        //         foreach ($arr as $v) {
-        //             if ($v == 'Double') {
-        //                 continue;
-        //             }
-        //             $narr[] = $v;
-        //         }
-        //         $arr = $narr;
-        //         unset($narr);
-        //     }
-        //     if (MediaArray::search($arr, 'MMF') == true) {
-        //         if (MediaArray::search($arr, 'MFF') == true) {
-        //             foreach ($arr as $v) {
-        //                 if ($v == 'Group') {
-        //                     // continue;
-        //                 }
-        //                 if ($v == 'Double Penetration') {
-        //                     // continue;
-        //                 }
-        //                 if ($v == 'MMF') {
-        //                     // continue;
-        //                 }
+        if ($tag == 'genre') {
+            // utmdump($arr);
+        }
+        // $arr = array_filter($arr);
+        if ($tag == 'genre') {
+            // utmdump($arr);
+        }
 
-        //                 if ($v == 'MFF') {
-        //                     // continue;
-        //                 }
-        //                 $narr[] = $v;
-        //             }
+        // if ($tag == 'genre') {
+        //     // utmdump($arr);
+        //     $arr = self::fixGenres($arr);
+        //     // self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, $arr);
 
-        //             $arr = $narr;
-        //         }
-        //     }
-
-        //     // if (isset(fileReader::$PatternClass)) {
-        //     //     // utmdd($this);
-        //     //     $genre = fileReader::$PatternClassObj->getGenre();
-
-        //     //     if (MediaArray::search($arr, $genre) == false) {
-        //     //         $arr[] = $genre;
-        //     //     }
-        //     // }
-        //     sort($arr);
+        //     // self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, $arr);
         // }
-        // ;
+
         $max = count($arr);
 
         while ($total < 255) {
+            if (! array_key_exists($i, $arr)) {
+                break;
+            }
+
             $total = strlen($arr[$i]) + $total + 1;
             $i++;
             if ($i == $max) {
@@ -467,10 +456,18 @@ trait MetaTags
             $i--;
         }
         $new_arr = array_slice($arr, 0, $i);
+        self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, ['new' => $new_arr, 'old' => $arr]);
 
         $string = implode($delim, $new_arr);
         if ($string == '') {
             $string = null;
+        }
+        if ($tag == 'genre') {
+            // utmdd($arr);
+            // self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, $string);
+            // self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, $new_arr);
+
+            // utmdump($string);
         }
 
         return $string;
@@ -483,4 +480,47 @@ trait MetaTags
             $this->{$key} = $value;
         }
     }
+
+    // private static function fixGenres($array)
+    // {
+    //     $storage = new Storage;
+    //     // $array   = MediaArray::array_iunique($array);
+    //     // $array   = array_filter($array);
+    //     $genreArray = [];
+    //     foreach ($array as $i => $value) {
+    //         if ($value != '') {
+    //             $genreArray[] = self::caseGenre($storage->getTag('genre', $value));
+    //         }
+    //     }
+    //     // utmdump($genreArray);
+    //     // $genreArray = array_filter($genreArray);
+    //     $string     = implode(',', $genreArray);
+    //     $genreArray = explode(',', $string);
+    //     // utmdump($genreArray);
+    //     $genreArray = MediaArray::array_iunique($genreArray);
+    //     // utmdump($genreArray);
+
+    //     return $genreArray;
+    // }
+
+    // private static function caseGenre($text)
+    // {
+    //     $uppercase = ['mmf', 'mff', 'pov'];
+    //     $text      = trim($text);
+    //     if (str_contains($text, ',')) {
+    //         $pcs = explode(',', $text);
+    //         foreach ($pcs as $str) {
+    //             $arr[] = self::caseGenre($str);
+    //         }
+
+    //         return implode(',', $arr);
+    //     }
+
+    //     $found = MediaArray::search($uppercase, strtolower($text), exact: true);
+    //     if ($found) {
+    //         return strtoupper($text);
+    //     }
+
+    //     return ucwords($text);
+    // }
 }

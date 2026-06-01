@@ -45,7 +45,7 @@ trait Helper
         }
         $lines[] = $artist . ':' . $replacement;
 
-        $lines = array_unique($lines);
+        $lines = MediaArray::array_iunique($lines);
         sort($lines, SORT_REGULAR);
         $contents = implode("\n", $lines);
 

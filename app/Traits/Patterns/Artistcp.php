@@ -166,7 +166,7 @@ trait Artistcp
                 }
                 $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
             }
-            $namesArray = array_unique(array_merge($namesArray, $titleNames));
+            $namesArray = MediaArray::array_iunique(array_merge($namesArray, $titleNames));
         }
         if (count($namesArray) > 0) {
             $delim = ', ';

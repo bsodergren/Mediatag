@@ -502,7 +502,7 @@ class MonitorConfigurator
                 $path_levels_array[]                                     = $path_level;
 
                 $this->is_all_files_to_monitor_not_recursive &= $this->analyzed_files_to_monitor[$pattern]['is_not_recursive'];
-                $this->dirnames_from_files_to_monitor = array_unique(
+                $this->dirnames_from_files_to_monitor = MediaArray::array_iunique(
                     array_merge(
                         $this->dirnames_from_files_to_monitor,
                         $this->getDirnamesWithoutEmpty($pattern)

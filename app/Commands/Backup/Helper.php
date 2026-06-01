@@ -6,10 +6,8 @@
 
 namespace Mediatag\Commands\Backup;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
 use Symfony\Component\Process\Process as ExecProcess;
@@ -17,6 +15,9 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait Helper
 {
@@ -96,13 +97,13 @@ trait Helper
 
         $dir_array = [];
         $files     = 0;
-        // $arr= array_unique($this->video_array[$key]);
+        // $arr= MediaArray::array_iunique($this->video_array[$key]);
         if (Option::isTrue('backup')) {
             $key = Option::getValue('backup');
         }
 
         if (array_key_exists($key, $this->video_array)) {
-            $arr = array_unique($this->video_array[$key]);
+            $arr = MediaArray::array_iunique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 if (str_contains($video_path, $options)) {
                     $dir_array[] = $video_path;
@@ -133,7 +134,7 @@ trait Helper
 
             echo "Rsyncing {$files}" . PHP_EOL;
 
-            $arr = array_unique($this->video_array[$key]);
+            $arr = MediaArray::array_iunique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 $newPath = str_replace($home, $path, $video_path);
                 // $newFile = $newPath.DIRECTORY_SEPARATORvideo_pathvideo['video_name'];

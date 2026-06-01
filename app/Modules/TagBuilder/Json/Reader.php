@@ -287,7 +287,7 @@ class Reader extends TagReader
                     if (array_key_exists($key, $fileArray)) {
                         if (is_array($fileArray[$key]) && is_array($jsonArray[$key])) {
                             $array          = \array_merge($fileArray[$key], $jsonArray[$key]);
-                            $array          = \array_unique($array);
+                            $array          = \MediaArray::array_iunique($array);
                             $newArray[$key] = $array;
                         } else {
                             if (Strings::compare($fileArray[$key], $jsonArray[$key])) {

@@ -52,6 +52,7 @@ class WriteMeta extends MediatagExec
 
         if (Option::isFalse('clearFile')) {
             $var = Mediatag::$input->getArgument('clear');
+            // utmdump(['var' => $var]);
         }
         // utminfo(func_get_args());
         // foreach (__META_TAGS__ as $tag) {
@@ -127,8 +128,10 @@ class WriteMeta extends MediatagExec
                 $videoData[$this->video_key] = $this->videoData;
                 // $videoData[$this->video_key]['metatags'] =
                 //  array_merge($this->videoData['updateTags'], $this->videoData['currentTags']);
-                $videoData[$this->video_key]['metatags'] = TagReader::mergetags($videoData[$this->video_key]['currentTags'],
-                    $videoData[$this->video_key]['updateTags']);
+                $videoData[$this->video_key]['metatags'] = TagReader::mergetags(
+                    $videoData[$this->video_key]['currentTags'],
+                    $videoData[$this->video_key]['updateTags']
+                );
 
                 unset($videoData[$this->video_key]['currentTags']);
                 unset($videoData[$this->video_key]['updateTags']);
@@ -160,7 +163,6 @@ class WriteMeta extends MediatagExec
 
         $this->command = array_merge($this->command, $this->getOptionArgs());
         // // UTMlog::Logger('Writing Metadata', $run_cmd);
-        // utmdd($this->command);
         if (Option::isTrue('changes') == 1) {
             if (Chooser::$bypass === null) {
                 $go = Chooser::changes();
@@ -172,8 +174,8 @@ class WriteMeta extends MediatagExec
         if (Chooser::$bypass === true || $go === true) {
             if (Option::isTrue('no-progress')) {
                 $this->progressIndicator = new ProgressIndicator($this->output);
-
-                // starts and displays the progress indicator with a custom message
+                $this->progressIndicator->setMessage('wrting file');
+                // starts and displays the progres  $this->progressIndicator s indicator with a custom message
                 $this->progressIndicator->start('Processing...');
             }
 
@@ -191,11 +193,15 @@ class WriteMeta extends MediatagExec
             $this->output->write("\t Skipping " . basename($this->command[1]));
         }
         if ($results == true) {
-            if (str_contains($results, 'signal')
-            || str_contains($results, 'error')) {
+            if (
+                str_contains($results, 'signal')
+                || str_contains($results, 'error')
+            ) {
                 // // UTMlog::logError('results Metadata', $results);
-                if (str_contains($results, '11')
-                || str_contains($results, 'alignment')) {
+                if (
+                    str_contains($results, '11')
+                    || str_contains($results, 'alignment')
+                ) {
                     $this->Display->processOutput->overwrite('<info>Reparing #11 Video</info>');
                     $this->repairVideo();
                 } elseif (str_contains($results, '6')) {

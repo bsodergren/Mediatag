@@ -86,7 +86,7 @@ class TagReader
                 }
             }
 
-            $updatedArray = array_unique($updatedArray);
+            $updatedArray = MediaArray::array_iunique($updatedArray);
             $value        = implode(',', $updatedArray);
         }
 
@@ -179,14 +179,10 @@ class TagReader
         // utminfo(func_get_args());
         foreach ($this->taglist as $tag) {
             $this->{$tag}();
-
             if (array_key_exists($tag, $this->tag_array)) {
-                Mediatag::notice("Metatags {tag} => '{value}'", ['tag' => $tag, 'value' => $this->tag_array[$tag]]);
-
                 if ($this->tag_array[$tag] !== null) {
                     if ($clean === true) {
-                        // utmdd([__FILE__, __METHOD__, __LINE__]);
-                        $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
+                        // $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
                     }
                 }
             }

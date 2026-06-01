@@ -2,23 +2,24 @@
 
 namespace Mediatag\Commands\Playlist\Commands\Find;
 
+use Mediatag\Commands\Playlist\Traits\PlaylistIds;
+use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\Youtube;
+use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Mediatag\Utilities\MediaArray;
+use Nette\Utils\Strings;
+use UTM\Utilities\Option;
+
+use function array_key_exists;
+
 use const DIRECTORY_SEPARATOR;
 use const FILE_IGNORE_NEW_LINES;
 use const FILE_SKIP_EMPTY_LINES;
 use const PHP_EOL;
 use const SORT_STRING;
-
-use Mediatag\Commands\Playlist\Traits\PlaylistIds;
-use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile;
-use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Modules\Filesystem\MediaFinder as Finder;
-use Nette\Utils\Strings;
-use UTM\Utilities\Option;
-
-use function array_key_exists;
 
 trait FindHelper
 {
@@ -198,8 +199,8 @@ trait FindHelper
 
         // utmdd($file_string);
         // $archive_content = array_merge($archive_content, $archive_ids);
-        // $archive_array   = array_unique($archive_content);
-        $archive_array = array_unique($archive_ids);
+        // $archive_array   = MediaArray::array_iunique($archive_content);
+        $archive_array = MediaArray::array_iunique($archive_ids);
         // utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
@@ -209,7 +210,7 @@ trait FindHelper
             $before = count($f);
             if ($before > 0) {
                 $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array = array_unique($array);
+                $array = MediaArray::array_iunique($array);
                 $after = count($array);
 
                 Mediatag::$output->writeln(PHP_EOL . 'before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');

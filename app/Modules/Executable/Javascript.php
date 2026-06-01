@@ -9,6 +9,7 @@ namespace Mediatag\Modules\Executable;
 use Mediatag\Core\MediaCache;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 
 use function is_array;
@@ -39,7 +40,7 @@ class Javascript extends MediatagExec
         }
 
         $artistArray    = explode(',', implode(',', $artists));
-        $array          = array_unique($artistArray);
+        $array          = MediaArray::array_iunique($artistArray);
         $this->wordList = $this->wordList . ',' . implode(',', $array);
     }
 

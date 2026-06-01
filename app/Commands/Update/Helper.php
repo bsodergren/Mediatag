@@ -9,6 +9,7 @@ namespace Mediatag\Commands\Update;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Executable\WriteMeta;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -113,6 +114,7 @@ trait Helper
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
+            // utmdd($videoArray);
 
             $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             $message = $name;

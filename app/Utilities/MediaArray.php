@@ -137,6 +137,18 @@ class MediaArray
         return $namesArray;
     }
 
+    public static function array_iunique($array, $filter = null)
+    {
+        foreach ($array as $k => $v) {
+            $newarray[strtolower($v)] = $v;
+        }
+        foreach ($newarray as $k => $v) {
+            $newNewArray[] = $v;
+        }
+
+        return $newNewArray;
+    }
+
     /**
      * Summary of VideoFiles.
      */

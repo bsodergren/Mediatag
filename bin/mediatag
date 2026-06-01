@@ -7,6 +7,12 @@
 define('__ROOT_DIRECTORY__', dirname(realpath($_SERVER['SCRIPT_FILENAME']), 2));
 define('__CONFIG_LIB__', __ROOT_DIRECTORY__ . '/config');
 
+xdebug_set_filter(
+    XDEBUG_FILTER_TRACING,
+    XDEBUG_PATH_EXCLUDE,
+    [__ROOT_DIRECTORY__ . '/vendor/']
+);
+
 require __ROOT_DIRECTORY__ . '/bootstrap.php';
 
 if ($argv[0] == __FILE__) {

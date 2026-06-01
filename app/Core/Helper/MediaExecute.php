@@ -9,6 +9,7 @@ namespace Mediatag\Core\Helper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Entities\MetaEntities;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Utilities\MediaArray;
 use UTM\Utilities\Option;
 
 use function define;
@@ -109,7 +110,7 @@ trait MediaExecute
         }
 
         sort($nameArray);
-        array_unique($nameArray);
+        MediaArray::array_iunique($nameArray);
         if (! defined($constant)) {
             define($constant, $nameArray);
         }
@@ -130,7 +131,7 @@ trait MediaExecute
         } else {
             $artistMap = $file;
         }
- $nameMap = [];
+        $nameMap = [];
         foreach ($artistMap as $key => $nameArray) {
             if (is_array($nameArray)) {
                 $replacement = trim($nameArray[1]);

@@ -9,6 +9,7 @@ namespace Mediatag\Modules\TagBuilder;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Traits\MetaTags;
+use Mediatag\Utilities\MediaArray;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
@@ -46,7 +47,7 @@ class TagBuilder
             // if (str_starts_with($this->video_key, 'x')) {
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
-            // utmdd(['File Updates' => $updates]);
+
             // }
 
             // if (! str_starts_with($this->video_key, 'x')) {
@@ -55,31 +56,31 @@ class TagBuilder
             if (count($jsonupdates) > 0) {
                 Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
 
-                if ($updates !== null) {
-                    // if (Option::isFalse("update")) {
-                    $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
-                    // utmdd($updates);
-                    // }
-                } else {
-                    $updates = $jsonupdates;
-                }
-
-                Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
+                // if ($updates !== null) {
+                //     // if (Option::isFalse("update")) {
+                //     $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
+                //     // utmdd($updates);
+                //     // }
+                // } else {
+                //     $updates = $jsonupdates;
+                // }
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
+            // utmdump(['File Updates' => $updates,
+            //     'json Updates'      => $jsonupdates,
+            //     'Db Updates'        => $DbUpdates]);
         }
 
         // if (null !== $FileUpdates) {
         //     $updates = $FileUpdates;
         // }
-        // if (null !== $jsonupdates) {
-        //         $updates = $this->mergetags($updates, $jsonupdates, $this->video_key);
-        // }
-        if ($DbUpdates !== null) {
-            $updates = self::mergetags($updates, $DbUpdates, $this->video_key);
+        if ($jsonupdates !== null) {
+            $updates = $this->mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
         }
-        // utmdump(['All Updates' => $updates]);
+        if ($DbUpdates !== null) {
+            $updates = self::mergetags($updates, $DbUpdates, $this->video_key, 'Combine');
+        }
         if (isset($updates)) {
             // //
             // UTMlog::Logger('Reader', $updates);
@@ -109,6 +110,7 @@ class TagBuilder
             $updates = self::mergetags($updates, $OnlyUpdates, $this->video_key);
         }
         // UTMlog::Logger('updates', $updates);
+
         if (Option::isTrue('update')) {
             $updates['studio']       = $this->addNetwork($updates, $updates);
             $videoInfo['updateTags'] = $updates;
@@ -190,7 +192,7 @@ class TagBuilder
             return null;
         }
         $arr    = explode('/', $studio);
-        $arr    = array_unique($arr);
+        $arr    = MediaArray::array_iunique($arr);
         $studio = implode('/', $arr);
         // utmdd([$current, $updates, $studio]);
 
@@ -309,5 +311,36 @@ class TagBuilder
         }
 
         return $updates;
+    }
+
+    public static function dumpTag($tag, $source, ...$array)
+    {
+        // utmdump(['DumpTag' => $source, 'tag' => $tag, 'array' => $array[0]]);
+
+        $dump = [];
+
+        foreach ($array[0] as $k => $v) {
+            if (is_array($v)) {
+                $keys = array_keys($v);
+
+                // utmdump(['DumpTag' => $source, 'tag' => $tag, 'keys' => $keys]);
+                foreach ($keys as $key) {
+                    if (is_array($v[$key])) {
+                        $second_key                = array_keys($v[$key]);
+                        $dump[$source][$tag][$key] = $v[$key][$tag];
+                    } else {
+                        if ($key == $tag) {
+                            $dump[$source][$tag][] = $v[$key];
+                        }
+                    }
+                }
+            } else {
+                $dump[$source][$tag][$k] = $v;
+            }
+        }
+
+        if (count($dump) > 0) {
+            // utmdump($dump);
+        }
     }
 }

@@ -6,20 +6,14 @@
 
 namespace Mediatag\Commands\Playlist;
 
-use const DIRECTORY_SEPARATOR;
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_SKIP_EMPTY_LINES;
-use const PHP_EOL;
-use const SORT_STRING;
-
-// use Nette\Utils\FileSystem as NetteFile;
 use Mediatag\Commands\Playlist\Traits\PlaylistIds;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
+use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Strings;
 use UTM\Utilities\Option;
 
@@ -28,6 +22,12 @@ use function array_slice;
 use function count;
 use function in_array;
 use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const FILE_IGNORE_NEW_LINES;
+use const FILE_SKIP_EMPTY_LINES;
+use const PHP_EOL;
+use const SORT_STRING;
 
 trait Helper
 {
@@ -161,7 +161,7 @@ trait Helper
                 $orginalArray = Filesystem::readLines(self::$originalPlaylist);
 
                 $playlistArray = array_merge($trimmedArray, $orginalArray);
-                $playlistArray = array_unique($playlistArray, SORT_STRING);
+                $playlistArray = MediaArray::array_iunique($playlistArray, SORT_STRING);
                 Filesystem::writeFile(self::$originalPlaylist, $playlistArray);
             }
         }
@@ -256,7 +256,7 @@ trait Helper
             // utmdd([$before, $idCnt]);
             if ($before > 0) {
                 $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array        = array_unique($array);
+                $array        = MediaArray::array_iunique($array);
                 $after        = count($array);
                 $trimmedLines = $before - $after;
 

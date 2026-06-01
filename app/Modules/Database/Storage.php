@@ -388,18 +388,16 @@ class Storage
 
         $key = strtolower($text);
 
-        // /*
         $key = trim($key);
         $key = str_replace(' ', '_', $key);
         $key = str_replace('/', '', $key);
+        $key = str_replace('.', '', $key);
+
         $key = str_replace('+', '', $key);
         $key = str_replace('(', '', $key);
-
-        // */
         $txt = Strings::clean($key, true);
 
         return $txt;
-        //        return str_replace(')', '', $key)."--";
     }
 
     public function getTagTable($tag)

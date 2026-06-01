@@ -65,7 +65,7 @@ class Strings extends \Nette\Utils\Strings
             return $text;
         }
         $translate = self::translate($text);
-        $new_text  = trim(self::cleanSpecialChars($translate, $noSpaces));
+        $new_text  = trim(self::cleanSpecialChars($translate, $noSpaces, true));
         // if($new_text == "") {
 
         // // // utmdump([$text,$new_text,$translate]);

@@ -151,7 +151,7 @@ trait FilterMethods
         $archive_content = Filesystem::readLines($file);
         if (! $archive_content === false) {
             array_push($archive_content, $line);
-            $archive_content = array_unique($archive_content);
+            $archive_content = MediaArray::array_iunique($archive_content);
         } else {
             $archive_content = $line;
         }

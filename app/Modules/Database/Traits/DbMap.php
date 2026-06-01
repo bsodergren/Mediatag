@@ -66,7 +66,12 @@ trait DbMap
 
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement) VALUES ('" . $key . "','" . $text . "')";
+
+        if ($text == '') {
+            return;
+        }
+
+        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement, keep,new) VALUES ('" . $key . "','" . $text . "', 1,1)";
 
         $this->query($query);
     }
@@ -75,23 +80,28 @@ trait DbMap
     {
         // utminfo(func_get_args());
 
-        $text  = $string;
-        $table = $this->getTagTable($tag);
-        $where = $this->getTagWhere($tag, $string);
-
+        // $text   = $string;
+        $table  = $this->getTagTable($tag);
+        $where  = $this->getTagWhere($tag, $string);
         $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
         $result = $this->query($query);
 
         if (is_array($result)) {
             if (count($result) == 0) {
-                return false;
+                $this->addTag($tag, $string);
+
+                return $string;
             }
             if (count($result) > 1) {
+                utmdd($result);
+
                 return $result;
             }
             if ($result[0]['keep'] == 0 && $bypass === false) {
-                return false;
+                return '';
             }
+            utmdump(['getTag' => ['Query' => $query, 'Result' => $result]]);
+
             if ($result[0]['replacement'] != '') {
                 $text = $result[0]['replacement'];
             } else {
@@ -161,9 +171,9 @@ trait DbMap
         // utminfo(func_get_args());
 
         $key   = $this->makeKey($text);
-        $where = $tag . " = '" . $key . "';";
+        $where = $tag . " = '" . $key . "'";
         if (str_contains($text, '%')) {
-            $where = $tag . " like '%" . $key . "%';";
+            $where = $tag . " like '%" . $key . "%'";
         }
 
         return $where;
