@@ -9,6 +9,7 @@ namespace Mediatag\Commands\Update;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Executable\WriteMeta;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -91,6 +92,10 @@ trait Helper
             $this->exec();
         }
 
+        if (Option::isTrue('clearFile')) {
+            $this->clearMeta();
+        }
+
         $VideoList   = $this->VideoList['file'];
         $count       = count($VideoList);
         $idx         = 1;
@@ -170,7 +175,7 @@ trait Helper
 
     public function writeMetaToVideo($videoArray, $count = null, $index = null)
     {
-        $Command = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
+        $Command                      = new WriteMeta($videoArray, Mediatag::$input, Mediatag::$output);
         $Command->Display             = Mediatag::$Display;
         Mediatag::$Display->BlockInfo = [];
         $videoBlockInfo               = null;

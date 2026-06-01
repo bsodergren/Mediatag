@@ -27,11 +27,9 @@ class Options extends MediaOptions
         return [
             ['changes', 'c', InputOption::VALUE_NONE, self::text('L__UPDATE_APPROVE_CHANGES')],
             ['updates', 'U', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
-            ['clear', '', InputOption::VALUE_OPTIONAL, self::text('L__UPDATE_CLEAR')],
+            ['clearFile', 'C', InputOption::VALUE_NONE, self::text('L__UPDATE_CLEAR')],
 
             ['rename', 'R', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
-            ['addClass', 'C', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__UPDATE_ALL_TAGS')],
-            ['addNetwork', 'P', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__UPDATE_ALL_TAGS')],
             ['cache', '', InputOption::VALUE_NONE, self::text('L__UPDATE_NEWFILES_REPLACEMENT')],
             // ['cacheUpdate', 'u', InputOption::VALUE_NONE, self::text('L__UPDATE_ALL_TAGS')],
             ['break'],

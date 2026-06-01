@@ -48,8 +48,11 @@ class WriteMeta extends MediatagExec
     public function clearMeta($options = null)
     {
         $IsTrue = null;
+        $var    = null;
 
-        $var = Mediatag::$input->getArgument('clear');
+        if (Option::isFalse('clearFile')) {
+            $var = Mediatag::$input->getArgument('clear');
+        }
         // utminfo(func_get_args());
         // foreach (__META_TAGS__ as $tag) {
         //     utmdump([$tag, Option::isTrue($tag)]);
@@ -70,7 +73,8 @@ class WriteMeta extends MediatagExec
         }
 
         $this->addOptionArg('--overWrite');
-        //  MediaCache::forget($this->video_key);
+        MediaCache::forget($this->video_key);
+        Mediatag::$Console->writeln('Clearing metadata for ' . $this->video_file);
         $this->write();
     }
 
