@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\TagBuilder;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
 use Mediatag\Traits\MetaTags;
 use Mediatag\Utilities\MediaArray;
@@ -59,7 +60,7 @@ class TagBuilder
                 // if ($updates !== null) {
                 //     // if (Option::isFalse("update")) {
                 //     $updates = self::mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
-                //     // utmdd($updates);
+                //     //
                 //     // }
                 // } else {
                 //     $updates = $jsonupdates;
@@ -67,7 +68,7 @@ class TagBuilder
             }
 
             $DbUpdates = $this->ReaderObj->getDbValues();
-            // utmdump(['File Updates' => $updates,
+            // utmdd(['File Updates' => $updates,
             //     'json Updates'      => $jsonupdates,
             //     'Db Updates'        => $DbUpdates]);
         }
@@ -117,19 +118,19 @@ class TagBuilder
 
             $videoInfo['currentTags'] = [];
         } else {
-            $current                  = $this->ReaderObj->getMetaValues();
+            $current = $this->ReaderObj->getMetaValues();
+
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
                 }
             }
-            // utmdd([$current, $updates]);
             if (is_array($current) && is_array($updates)) {
                 $videoInfo['updateTags'] = self::compareTags($current, $updates);
             }
         }
-        // utmdd($videoInfo);
+// utmdump(['File Updates' => $videoInfo]);
 
         return $videoInfo;
     }
@@ -197,6 +198,12 @@ class TagBuilder
         // utmdd([$current, $updates, $studio]);
 
         $studio = trim($studio, '/');
+
+        if (! str_starts_with($this->video_key, 'x')) {
+            $storage = new Storage;
+
+            $storage->lookupStudio('studio', $studio);
+        }
 
         return $studio;
     }

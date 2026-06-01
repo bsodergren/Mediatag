@@ -8,9 +8,8 @@ namespace Mediatag\Modules\Database\Maps;
 
 trait StudioMap
 {
-    public function getStudioPathMap($text)
+    public function lookupStudio($tag, $text)
     {
-        // utminfo(func_get_args());
         $query  = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $text . "'";
         $result = $this->queryOne($query);
         if ($result !== null) {
@@ -31,22 +30,20 @@ trait StudioMap
 
             // return rtrim($result['path'], '/');
         }
-        $this->addStudioMap(__LIBRARY__, $text, $text, null);
+        $this->addStudioToMap($tag, ['library' => __LIBRARY__, 'name' => $text, 'studio' => $text, 'path' => null]);
         $this->getStudioPathMap($text);
 
         return false;
     }
 
-    public function addStudioMap($library, $name, $studio, $path) // $library,$name, $path, $studio)
+    public function addStudioToMap($tag, $array)
     {
-        // utminfo(func_get_args());
+        $library = "'" . $array['library'] . "'";
+        $name    = "'" . $array['name'] . "'";
+        $studio  = "'" . $array['studio'] . "'";
 
-        $library = "'" . $library . "'";
-        $name    = "'" . $name . "'";
-        $studio  = "'" . $studio . "'";
-
-        if ($path !== null) {
-            $path = "'" . $path . "'";
+        if ($array['path'] !== null) {
+            $path = "'" . $array['path'] . "'";
         } else {
             $path = 'NULL';
         }

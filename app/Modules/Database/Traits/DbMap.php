@@ -7,6 +7,7 @@
 namespace Mediatag\Modules\Database\Traits;
 
 use Mediatag\Modules\Database\Maps\ArtistMap;
+use Mediatag\Modules\Database\Maps\GenreMap;
 use Mediatag\Modules\Database\Maps\StudioMap;
 use Mediatag\Modules\Database\Maps\TitleMap;
 use Mediatag\Modules\VideoData\Data\Thumbnail;
@@ -18,6 +19,7 @@ use function is_array;
 trait DbMap
 {
     use ArtistMap;
+    use GenreMap;
     use StudioMap;
     use TitleMap;
 
@@ -63,53 +65,15 @@ trait DbMap
     public function addTag($tag, $text)
     {
         // utminfo(func_get_args());
-
-        $table = $this->getTagTable($tag);
-        $key   = $this->makeKey($text);
-
-        if ($text == '') {
-            return;
-        }
-
-        $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement, keep,new) VALUES ('" . $key . "','" . $text . "', 1,1)";
-
-        $this->query($query);
+        $method = 'add' . ucfirst($tag) . 'ToMap';
+        $this->{$method}($tag, $text);
     }
 
     public function getTag($tag, $string, $bypass = false)
     {
-        // utminfo(func_get_args());
+        $method = 'lookup' . ucfirst($tag);
 
-        // $text   = $string;
-        $table  = $this->getTagTable($tag);
-        $where  = $this->getTagWhere($tag, $string);
-        $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
-        $result = $this->query($query);
-
-        if (is_array($result)) {
-            if (count($result) == 0) {
-                $this->addTag($tag, $string);
-
-                return $string;
-            }
-            if (count($result) > 1) {
-                utmdd($result);
-
-                return $result;
-            }
-            if ($result[0]['keep'] == 0 && $bypass === false) {
-                return '';
-            }
-            utmdump(['getTag' => ['Query' => $query, 'Result' => $result]]);
-
-            if ($result[0]['replacement'] != '') {
-                $text = $result[0]['replacement'];
-            } else {
-                $text = $result[0]['genre'];
-            }
-        }
-
-        return $text;
+        return $this->{$method}($tag, $string, $bypass);
     }
 
     public function addNewTagReplacement($tag, $text, $addition, $show = null)

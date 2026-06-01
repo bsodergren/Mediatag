@@ -253,41 +253,41 @@ class Strings extends \Nette\Utils\Strings
 
     public static function translate($inputText, $sep = '_')
     {
-        if (CONFIG['USE_TRANSLATE'] == '') {
+        // if (CONFIG['USE_TRANSLATE'] == '') {
             return $inputText;
-        }
+        // }
 
         // utminfo(func_get_args());
-        $from_lan = 'RU';
-        $to_lan   = 'EN';
-        $cacheKey = md5($inputText);
+        // $from_lan = 'RU';
+        // $to_lan   = 'EN';
+        // $cacheKey = md5($inputText);
 
-        $text = MediaCache::get($cacheKey);
-        // utmdump($text);
-        if ($text === false) {
-            $source           = 'ru'; // English
-            $target           = 'en'; // Spanish
-            $encodedInputText = rawurlencode($inputText);
-            $googleApiKey     = 'AIzaSyCRPV9vIbHrd36HaWNornvU_48-eUDM9OI';
+        // $text = MediaCache::get($cacheKey);
+        // // utmdump($text);
+        // if ($text === false) {
+        //     $source           = 'ru'; // English
+        //     $target           = 'en'; // Spanish
+        //     $encodedInputText = rawurlencode($inputText);
+        //     $googleApiKey     = 'AIzaSyCRPV9vIbHrd36HaWNornvU_48-eUDM9OI';
 
-            $url = "https://www.googleapis.com/language/translate/v2?key=$googleApiKey&q=$encodedInputText&source=$source&target=$target";
+        //     $url = "https://www.googleapis.com/language/translate/v2?key=$googleApiKey&q=$encodedInputText&source=$source&target=$target";
 
-            $handle = curl_init($url);
-            curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
-            $response        = curl_exec($handle);
-            $responseDecoded = json_decode($response, true);
+        //     $handle = curl_init($url);
+        //     curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
+        //     curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, false);
+        //     curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        //     $response        = curl_exec($handle);
+        //     $responseDecoded = json_decode($response, true);
 
-            curl_close($handle);
+        //     curl_close($handle);
 
-            $text = $responseDecoded['data']['translations'][0]['translatedText'];
-            MediaCache::put($cacheKey, $text);
-            // utmdump(['Getting translation for', $inputText, $text]);
-        }
-        // // utmdump([$inputText,$text]);
+        //     $text = $responseDecoded['data']['translations'][0]['translatedText'];
+        //     MediaCache::put($cacheKey, $text);
+        //     // utmdump(['Getting translation for', $inputText, $text]);
+        // }
+        // // // utmdump([$inputText,$text]);
 
-        return $text;
+        // return $text;
 
         // return $text;
     }
@@ -393,14 +393,16 @@ class Strings extends \Nette\Utils\Strings
 
     public static function StudioName($name, $forward = true)
     {
+
+        $name = str_replace('DP', 'Dp', $name);
         if ($forward === true) {
+
             $name = str_replace('1000', 'Thousand', $name);
             $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
             $name = str_replace('TwentyFirst', '21st', $name);
             $name = str_replace('Thousand', '1000', $name);
         }
-
         return $name;
     }
 

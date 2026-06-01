@@ -119,18 +119,21 @@ trait MetaTags
         $studio_dir   = (new Filesystem)->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
-        // if(array_key_exists(3,$studio_array)){
-        //        $key_studio   = $studio_array[1];
-        // } else {
-        //     $key_studio   = $studio_array[0];
-        // }
+        if(array_key_exists(3,$studio_array)){
+               $key_studio   = $studio_array[1];
+        } else {
+            $key_studio   = $studio_array[0];
+        }
 
         if (isset(fileReader::$PatternClass)) {
             $studio_str = fileReader::$PatternClassObj->getStudio();
-            // $studio_str = trim($key_studio .'/'. $studio_str,"/");
+            // utmdump(['Studio from pattern' => $studio_str]);
+            $studio_str = trim($key_studio .'/'. $studio_str,"/");
             $arr = explode('/', $studio_str);
             $arr = MediaArray::array_iunique($arr);
         }
+        // utmdump(['Clean Studio' => ['Input' => $text, 'Studio Array' => $arr,
+            // 'Studio Dir'                    => $studio_dir, 'Studio Array 2' => $studio_array]]);
 
         return implode('/', $arr);
     }
@@ -293,15 +296,11 @@ trait MetaTags
 
         $method = 'priority' . $priority;
 
-        $return = self::$method($first, $second, $tag);
-        if ($tag == 'genre') {
+        if ($tag == 'title' || $tag == 'studio') {
+                    $method = 'priority';
             // self::dumpTag($tag, $method . ':' . __LINE__, ['return' => $return]);
         }
-        // $return = self::clean($return, $tag); // self::clean($return, $tag);
-        if ($tag == 'genre') {
-            // self::dumpTag($tag, __FUNCTION__ . ':' . __LINE__, ['return' => $return]);
-        }
-
+         $return = self::$method($first, $second, $tag);
         return $return;
     }
 

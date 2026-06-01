@@ -51,8 +51,8 @@ class WriteMeta extends MediatagExec
         $var    = null;
 
         if (Option::isFalse('clearFile')) {
-            $var = Mediatag::$input->getArgument('clear');
-            // utmdump(['var' => $var]);
+            $var = Option::getValue('clearMeta');
+            // utmdd(['var' => $var]);
         }
         // utminfo(func_get_args());
         // foreach (__META_TAGS__ as $tag) {

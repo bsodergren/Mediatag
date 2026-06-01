@@ -412,6 +412,8 @@ class Storage
                 return __MYSQL_KEYWORD__;
             case 'artist':
                 return __MYSQL_ARTISTS__;
+            case 'studio':
+                return __MYSQL_STUDIOS__;
         }
     }
 

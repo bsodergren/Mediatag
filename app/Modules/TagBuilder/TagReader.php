@@ -182,7 +182,7 @@ class TagReader
             if (array_key_exists($tag, $this->tag_array)) {
                 if ($this->tag_array[$tag] !== null) {
                     if ($clean === true) {
-                        // $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
+                        $this->tag_array[$tag] = $this->CleanMetaValue($tag, $this->tag_array[$tag]);
                     }
                 }
             }

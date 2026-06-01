@@ -13,6 +13,7 @@ use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
+use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\FileSystem as nFileSystem;
 use UTM\Utilities\Option;

@@ -13,6 +13,7 @@ use Mediatag\Modules\Filesystem\MediaFinder;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
+use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Nette\Utils\FileSystem as nFileSystem;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -149,10 +150,9 @@ trait MoveHelper
             } else {
                 $studios  = explode('/', $studio);
                 $Arraykey = array_key_first($studios);
-                //  utmdd($studio,$studios,$studios[$Arraykey]);
 
-                $studio_dir = $tagConn->getStudioPath($studios[$Arraykey]);
-
+                $studio_dir = $tagConn->lookupStudio('studio', $studios[$Arraykey]);
+                // utmdd($studio_dir);
                 if ($studio_dir == false) {
                     $ArraykeyLast = array_key_last($studios);
                     $studio_dir   = $tagConn->getStudioPath($studios[$ArraykeyLast]);
@@ -168,7 +168,10 @@ trait MoveHelper
                     $studio_dir   = $studio_dir . '/' . $studios[$ArraykeyLast];
                 }
             }
-            // utmdump($studio_dir);
+
+            $arr        = explode('/', $studio_dir);
+            $arr        = MediaArray::array_iunique($arr);
+            $studio_dir = implode('/', $arr);
 
             $video_path = $studio_dir . $genrePath;
             if ($SortDir == true) {
