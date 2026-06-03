@@ -9,6 +9,7 @@ namespace Mediatag\Traits\Patterns;
 use const CASE_LOWER;
 use const PREG_SPLIT_NO_EMPTY;
 
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Utilities\MediaArray;
 
 use function array_key_exists;
@@ -86,8 +87,7 @@ trait Artist
         // $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
-        // utmdump($names_array);
-        $prev_name = '';
+        $prev_name      = '';
         /*$total_names = count($names_array);
         $new_array = [];
         $key = 0;
@@ -112,8 +112,27 @@ trait Artist
             }
 
             if ($this->getArtistFullNames() === true) {
-                $name_key = strtolower($aName);
-                $name_key = str_replace(' ', '_', $name_key);
+                $name_key    = str_replace(' ', '_', strtolower($aName));
+                $matchedName = self::CheckArtist($name_key);
+                if ($matchedName === false) {
+                    foreach ($parts as $index => $PartName) {
+                        $matchedName = self::CheckArtist($PartName);
+                        if ($matchedName !== false) {
+                            if (count($matchedName) > 1) {
+                                $nameMatches = self::CheckArtist($PartName . $parts[$index + 1]);
+                                utmdump($nameMatches);
+                                if ($nameMatches !== false) {
+                                    $matchedNames[] = $PartName . ' ' . $parts[$index + 1];
+
+                                    continue;
+                                    //utmdd([$matchedName, $matchedNames]);
+                                }
+                            }
+                        }
+                    }
+                }
+                utmdd([$matchedNames]);
+
                 // // utmdump([$artist_matches[0] ,$name_key]);
                 if (array_key_exists($name_key, $artist_matches)) {
                     $aName = $artist_matches[$name_key];
@@ -178,6 +197,7 @@ trait Artist
     {
         // utminfo(func_get_args());
 
+        $names = [];
         $regex = $this->getArtistRegex();
         if ($regex) {
             // // utmdump($regex, $this->video_name);
@@ -193,18 +213,49 @@ trait Artist
                 } else {
                     $delim = ',';
                 }
-                if (! array_key_exists($this->getArtistMatch(), $output_array)) {
-                    return null;
+                // utmdd($this->getArtistMatch());
+                $matchKeys = $this->getArtistMatch();
+                if (! is_array($matchKeys)) {
+                    $tmp = $matchKeys;
+                    unset($matchKeys);
+                    $matchKeys = [$tmp];
                 }
-                if ($output_array[$this->getArtistMatch()] == '') {
-                    return null;
-                }
-                $names = $this->getArtistTextTransform($output_array[$this->getArtistMatch()]);
 
-                return $this->getArtistTransform($names, $delim);
+                foreach ($matchKeys as $keyMatch) {
+                    if (! array_key_exists($keyMatch, $output_array)) {
+                        continue;
+                    }
+                    if ($output_array[$keyMatch] == '') {
+                        continue;
+                    }
+                    $names[] = $this->getArtistTextTransform($output_array[$keyMatch]);
+                }
+                if (count($names) == 0) {
+                    return null;
+                }
+                $name = implode($delim, $names);
+                utmdump($name);
+
+                return $this->getArtistTransform($name, $delim);
             }
         }
 
         return null;
+    }
+
+    public static function CheckArtist($name)
+    {
+        $name = str_replace('_', '', strtolower($name));
+        $db   = Storage::$DB->mysqllib;
+        // WHERE `nameKey` LIKE '%giselle%'
+        $db->where('nameKey', $name . '%', 'LIKE');
+        $res = $db->get(__MYSQL_ARTIST_PH__, columns: ['star_name']);
+        utmdump($db->getLastQuery());
+        if (count($res) == 0) {
+            return false;
+        }
+        // utmdd([$res, $name]);
+
+        return $res;
     }
 }

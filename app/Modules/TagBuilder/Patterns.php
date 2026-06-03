@@ -122,18 +122,18 @@ class Patterns extends TagBuilder
     {
         // utminfo($object);
         if ($object !== null) {
-              // utmdump($this->studio);
+            // utmdump($this->studio);
 
             self::boot($this);
-              // utmdump($this->studio);
+            // utmdump($this->studio);
 
             $this->className  = $object->className;
             $this->video_name = $object->video_name;
             $this->video_key  = $object->video_key;
-  // utmdump($this->studio);
-            $studio           = strtolower($object->getStudio());
+            // utmdump($this->studio);
+            $studio = strtolower($object->getStudio());
 
-             $this->studio_key = str_replace(' ', '', $studio);
+            $this->studio_key = str_replace(' ', '', $studio);
 
             $this->studio_key = str_replace(' ', '', $studio);
             $this->studio_key = $this->mapStudio($this->studio_key);
@@ -176,7 +176,7 @@ class Patterns extends TagBuilder
 
                 [$classPath, $className] = self::classStudio(Reader::$PatternClass);
 
-                 $obj->studio             = $className;
+                $obj->studio = $className;
             }
 
             // $obj->network        = $className;
@@ -209,7 +209,7 @@ class Patterns extends TagBuilder
     /**
      * getKeyValue.
      */
-    private function getKeyValue($tag, $key)
+    public function getKeyValue($tag, $key)
     {
         // utminfo(func_get_args());
         $regex  = $this->regex;
