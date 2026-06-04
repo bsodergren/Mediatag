@@ -97,18 +97,22 @@ class MediaArray
         $str_array  = explode(' ', $string);
         $x          = 0;
         $namesArray = [];
-        foreach ($str_array as $i => $string) {
-            $string = strtolower($string);
-            if (strlen($string) < 3) {
+        foreach ($str_array as $i => $line) {
+            $line = strtolower($line);
+            if (strlen($line) < 3) {
                 continue;
             }
 
             foreach ($array as $key => $parts) {
-                if (str_starts_with($parts['name'], $string)) {
+                if (str_starts_with($line, $parts['name'])) {
+                    utmdump([$parts['name'], $line]);
+
                     if (! array_key_exists($i + 1, $str_array)) {
                         continue;
                     }
-                    if ($parts['name'] == $string . '_' . $str_array[$i + 1]) {
+
+                    utmdump(['Full Line' => $line . '_' . $str_array[$i + 1]]);
+                    if ($parts['name'] == $line . '_' . $str_array[$i + 1]) {
                         // continue;
                     }
                     if ($parts['replacement'] != '') {
@@ -133,6 +137,7 @@ class MediaArray
         if (count($namesArray) == 0) {
             return null;
         }
+        utmdump($namesArray);
 
         return $namesArray;
     }

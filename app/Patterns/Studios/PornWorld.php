@@ -50,98 +50,98 @@ class PornWorld extends Patterns
     //     parent::$StudioKey = $this->studio;
     // }
 
-    public function getArtistTextTransform($text)
-    {
-        // utminfo(func_get_args());
+    // public function getArtistTextTransform($text)
+    // {
+    //     // utminfo(func_get_args());
 
-        return str_replace(['La_', 'De_'], ['La', 'De'], $text);
-    }
+    //     return str_replace(['La_', 'De_'], ['La', 'De'], $text);
+    // }
 
-    public function getArtistTransform($names, $delim = ', ')
-    {
-        // utminfo(func_get_args());
+    // public function getArtistTransform($names, $delim = ', ')
+    // {
+    //     // utminfo(func_get_args());
 
-        $namesArray = [];
-        $names      = str_replace('_1080p', '', $names);
-        //        ;
-        $names = str_replace($this->getArtistDelim(), $delim, $names);
-        // $names          = str_replace('_', ' ', $names);
+    //     $namesArray = [];
+    //     $names      = str_replace('_1080p', '', $names);
+    //     //        ;
+    //     $names = str_replace($this->getArtistDelim(), $delim, $names);
+    //     // $names          = str_replace('_', ' ', $names);
 
-        $names_array    = explode($delim, $names);
-        $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
+    //     $names_array    = explode($delim, $names);
+    //     $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
 
-        $prev_name = '';
-        /*$total_names = count($names_array);
-        $new_array = [];
-        $key = 0;
-        $new_array[$key] = '';
-        for ($i = 0; $i < $total_names; ++$i) {$new_array[$key] = $new_array[$key] . $names_array[$i];
-        if (1 == $i % 2) {++$key;
-        $new_array[$key] = '';}}
-        unset($names_array);
-        $names_array = $new_array;
-        */
-        foreach ($names_array as $aName) {
-            //  $aName = ucwords($aName);
-            $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
+    //     $prev_name = '';
+    //     /*$total_names = count($names_array);
+    //     $new_array = [];
+    //     $key = 0;
+    //     $new_array[$key] = '';
+    //     for ($i = 0; $i < $total_names; ++$i) {$new_array[$key] = $new_array[$key] . $names_array[$i];
+    //     if (1 == $i % 2) {++$key;
+    //     $new_array[$key] = '';}}
+    //     unset($names_array);
+    //     $names_array = $new_array;
+    //     */
+    //     foreach ($names_array as $aName) {
+    //         //  $aName = ucwords($aName);
+    //         $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
 
-            $aName = implode(' ', $parts);
-            // // utmdump($aName);
+    //         $aName = implode(' ', $parts);
+    //         // // utmdump($aName);
 
-            if ($this->ignoreArtist($aName) === true) {
-                continue;
-            }
+    //         if ($this->ignoreArtist($aName) === true) {
+    //             continue;
+    //         }
 
-            if ($this->getArtistFullNames() === true) {
-                $name_key = strtolower($aName);
-                $name_key = str_replace(' ', '_', $name_key);
-                // // utmdump([$artist_matches[0] ,$name_key]);
-                if (array_key_exists($name_key, $artist_matches)) {
-                    $aName = $artist_matches[$name_key];
-                    if ($aName != '') {
-                        $prev_name    = $aName;
-                        $namesArray[] = $aName;
-                    }
-                } else {
-                    if (str_contains($prev_name, $aName) == false) {
-                        $namesArray[] = $aName;
-                    }
-                }
-            } else {
-                $namesArray[] = $aName;
-            }
-        }
-        // $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
-        // if (null !== $titleNames) {
-        //     $video = strtolower($this->video_name);
-        //     foreach ($titleNames as $k => $name) {
-        //         $tname = strtolower(str_replace('_', '', $name));
+    //         if ($this->getArtistFullNames() === true) {
+    //             $name_key = strtolower($aName);
+    //             $name_key = str_replace(' ', '_', $name_key);
+    //             // // utmdump([$artist_matches[0] ,$name_key]);
+    //             if (array_key_exists($name_key, $artist_matches)) {
+    //                 $aName = $artist_matches[$name_key];
+    //                 if ($aName != '') {
+    //                     $prev_name    = $aName;
+    //                     $namesArray[] = $aName;
+    //                 }
+    //             } else {
+    //                 if (str_contains($prev_name, $aName) == false) {
+    //                     $namesArray[] = $aName;
+    //                 }
+    //             }
+    //         } else {
+    //             $namesArray[] = $aName;
+    //         }
+    //     }
+    //     // $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
+    //     // if (null !== $titleNames) {
+    //     //     $video = strtolower($this->video_name);
+    //     //     foreach ($titleNames as $k => $name) {
+    //     //         $tname = strtolower(str_replace('_', '', $name));
 
-        //         if (!str_contains($video, $tname)) {
-        //             unset($titleNames[$k]);
-        //             continue;
-        //         }
-        //         $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
-        //     }
-        //     $namesArray = MediaArray::array_iunique(array_merge($namesArray, $titleNames));
-        // }
+    //     //         if (!str_contains($video, $tname)) {
+    //     //             unset($titleNames[$k]);
+    //     //             continue;
+    //     //         }
+    //     //         $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
+    //     //     }
+    //     //     $namesArray = MediaArray::array_iunique(array_merge($namesArray, $titleNames));
+    //     // }
 
-        if (count($namesArray) > 0) {
-            $delim = ' ';
-            $names = implode($delim, $namesArray);
+    //     if (count($namesArray) > 0) {
+    //         $delim = ' ';
+    //         $names = implode($delim, $namesArray);
 
-            $names = str_replace('_', ' ', $names);
-            $names = str_replace('  ', ' ', $names);
-            $names = ucwords($names);
-            // // utmdump($names, $this->getTitle());
+    //         $names = str_replace('_', ' ', $names);
+    //         $names = str_replace('  ', ' ', $names);
+    //         $names = ucwords($names);
+    //         // // utmdump($names, $this->getTitle());
 
-            $names = str_replace($this->getTitle(), '', $names);
+    //         $names = str_replace($this->getTitle(), '', $names);
 
-            return str_replace(', ', ',', $names);
-        }
+    //         return str_replace(', ', ',', $names);
+    //     }
 
-        return false;
-    }
+    //     return false;
+    // }
 
     //     public function getArtistTransform($names, $delim = ', ')
     //     {

@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\TeamSkeet ;
+namespace Mediatag\Patterns\Studios\TeamSkeet;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 
@@ -119,15 +119,4 @@ class TeamSkeet extends Patterns
 
         // 'freeusefantasy'              => 'Freeuse Fantasy',
     ];
-
-    public function getArtistTextTransform($text)
-    {
-        // utminfo(func_get_args());
-
-        // if ('Teamskeet Selects' == $this->getStudio()) {
-        //     return false;
-        // }
-
-        return $text;
-    }
 }

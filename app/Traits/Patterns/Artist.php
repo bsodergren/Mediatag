@@ -81,10 +81,10 @@ trait Artist
     {
         // utminfo(func_get_args());
 
-        $namesArray = [];
-        $names      = str_replace('_1080p', '', $names);
-        $names      = str_replace($this->getArtistDelim(), $delim, $names);
-        // $names          = str_replace('_', ' ', $names);
+        $namesArray     = [];
+        $names          = str_replace('_1080p', '', $names);
+        $names          = str_replace($this->getArtistDelim(), $delim, $names);
+        $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
         $prev_name      = '';
@@ -98,31 +98,52 @@ trait Artist
         unset($names_array);
         $names_array = $new_array;
         */
+
         foreach ($names_array as $aName) {
             //  $aName = ucwords($aName);
             $aName = str_replace(' ', '', $aName);
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
-
             $aName = implode(' ', $parts);
             //  $name_key = str_replace(' ', '', $name_key);
-            // utmdump($aName);
 
             if ($this->ignoreArtist($aName) === true) {
+                utmdump(['ignored' => $aName]);
+
                 continue;
             }
 
             if ($this->getArtistFullNames() === true) {
                 $name_key    = str_replace(' ', '_', strtolower($aName));
                 $matchedName = self::CheckArtist($name_key);
-                if ($matchedName === false) {
+                // if ($matchedName === true) {
+                if (count($matchedName) == 1) {
+                    $matchedNames[] = $matchedName[0]['star_name'];
+                    // }
+                } else {
                     foreach ($parts as $index => $PartName) {
                         $matchedName = self::CheckArtist($PartName);
                         if ($matchedName !== false) {
                             if (count($matchedName) > 1) {
                                 $nameMatches = self::CheckArtist($PartName . $parts[$index + 1]);
-                                utmdump($nameMatches);
+                                utmdump(['nameMatches Name' => $nameMatches]);
                                 if ($nameMatches !== false) {
-                                    $matchedNames[] = $PartName . ' ' . $parts[$index + 1];
+                                    if (count($nameMatches) > 1) {
+                                        $moreNameMatches = self::CheckArtist($PartName . $parts[$index + 1] . $parts[$index + 2]);
+                                        utmdump(['moreNameMatches Name' => $moreNameMatches]);
+                                        if ($moreNameMatches !== false) {
+                                            if (count($nameMatches) == 1) {
+                                                $matchedNames[] = $PartName . ' ' . $parts[$index + 1] . ' ' . $parts[$index + 2];
+
+                                                continue 2;
+                                            }
+                                        } else {
+                                            $matchedNames[] = $PartName . ' ' . $parts[$index + 1];
+
+                                            continue 2;
+                                        }
+                                    } else {
+                                        $matchedNames[] = $PartName . ' ' . $parts[$index + 1];
+                                    }
 
                                     continue;
                                     //utmdd([$matchedName, $matchedNames]);
@@ -131,50 +152,46 @@ trait Artist
                         }
                     }
                 }
-                utmdd([$matchedNames]);
-
-                // // utmdump([$artist_matches[0] ,$name_key]);
-                if (array_key_exists($name_key, $artist_matches)) {
-                    $aName = $artist_matches[$name_key];
-                    if ($aName != '') {
-                        $prev_name    = $aName;
-                        $namesArray[] = $aName;
-                    }
-                } else {
-                    if (str_contains($prev_name, $aName) == false) {
-                        $namesArray[] = $aName;
-                    }
-                }
             } else {
-                $namesArray[] = $aName;
+                $matchedNames[] = $aName;
             }
         }
 
-        $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
+        // $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
+        // utmdd(['titleNames' => $titleNames, 'title' => $this->getTitle()]);
+        // if ($titleNames !== null) {
+        //     $video = strtolower($this->video_name);
+        //     foreach ($titleNames as $k => $name) {
+        //         $tname = strtolower(str_replace('_', '', $name));
+        //         utmdump(['VideoName' => $video, 'ArtistKey' => $tname, 'Matched' => stripos($video, $tname)]);
+        //         if (! stripos($video, $tname)) {
+        //             unset($titleNames[$k]);
 
-        if ($titleNames !== null) {
-            $video = strtolower($this->video_name);
-            foreach ($titleNames as $k => $name) {
-                $tname = strtolower(str_replace('_', '', $name));
+        //             continue;
+        //         }
+        //         $matchedName = self::CheckArtist($tname, true);
+        //         utmdump(['matched' => $matchedName, 'name' => $tname]);
+        //         if ($matchedName) {
+        //             // utmdd($matchedName);
+        //             $titleNames[$k] = $matchedName;
+        //         }
+        //     }
 
-                if (! str_contains($video, $tname)) {
-                    unset($titleNames[$k]);
+        //     utmdd([$matchedNames, $titleNames]);
 
-                    continue;
-                }
-                $titleNames[$k] = $name = ucwords(str_replace('_', ' ', $name));
-            }
-            $namesArray = MediaArray::array_iunique(array_merge($namesArray, $titleNames));
-        }
-
-        if (count($namesArray) > 0) {
+        //     // $matchedNames = MediaArray::array_iunique(array_merge($matchedNames, $titleNames));
+        // }
+        if (count($matchedNames) > 0) {
             $delim = ', ';
-            $names = implode($delim, $namesArray);
+            $names = implode($delim, $matchedNames);
             $names = str_replace('_', ' ', $names);
             $names = str_replace('  ', ' ', $names);
             $names = ucwords($names);
 
-            return str_replace(', ', ',', $names);
+            $nameString = str_replace(', ', ',', $names);
+            utmdump(['Arist String' => [$nameString, $this->video_file]]);
+
+            return $nameString;
         }
 
         return false;
@@ -185,6 +202,10 @@ trait Artist
      */
     public function getArtistTextTransform($text)
     {
+        $text = str_replace($this->getArtistDelim(), ',', $text);
+
+        // utmdd($this->getArtistDelim(), $delim, $names);
+
         // utminfo(func_get_args());
 
         return $text;
@@ -200,7 +221,6 @@ trait Artist
         $names = [];
         $regex = $this->getArtistRegex();
         if ($regex) {
-            // // utmdump($regex, $this->video_name);
             $success = preg_match($regex, $this->video_name, $output_array);
             if ($success != 0) {
                 if ($this->getArtistFullNames() === true) {
@@ -208,7 +228,7 @@ trait Artist
                         $delim = ',';
                     } else {
                         $delim = ',';
-                        $delim = $this->getArtistDelim();
+                        // $delim = $this->getArtistDelim();
                     }
                 } else {
                     $delim = ',';
@@ -220,7 +240,6 @@ trait Artist
                     unset($matchKeys);
                     $matchKeys = [$tmp];
                 }
-
                 foreach ($matchKeys as $keyMatch) {
                     if (! array_key_exists($keyMatch, $output_array)) {
                         continue;
@@ -230,11 +249,11 @@ trait Artist
                     }
                     $names[] = $this->getArtistTextTransform($output_array[$keyMatch]);
                 }
+
                 if (count($names) == 0) {
                     return null;
                 }
                 $name = implode($delim, $names);
-                utmdump($name);
 
                 return $this->getArtistTransform($name, $delim);
             }
@@ -243,14 +262,31 @@ trait Artist
         return null;
     }
 
-    public static function CheckArtist($name)
+    public static function CheckArtist($name, $one = false)
     {
+        $getFunc = 'get';
+        if ($one === true) {
+            $getFunc = 'getOne';
+        }
+        utmdump([__FUNCTION__ => $name]);
         $name = str_replace('_', '', strtolower($name));
         $db   = Storage::$DB->mysqllib;
         // WHERE `nameKey` LIKE '%giselle%'
-        $db->where('nameKey', $name . '%', 'LIKE');
-        $res = $db->get(__MYSQL_ARTIST_PH__, columns: ['star_name']);
-        utmdump($db->getLastQuery());
+        if ($one === true) {
+            $db->where('nameKey', $name);
+        }
+        $res = $db->$getFunc(__MYSQL_ARTIST_PH__, columns: ['star_name']);
+        if ($one === true) {
+            if (is_null($res)) {
+                $res = [];
+            } else {
+                $t = $res;
+                unset($res);
+                $res = [$t];
+            }
+        }
+        utmdump($res, $db->getLastQuery());
+
         if (count($res) == 0) {
             return false;
         }

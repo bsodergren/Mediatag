@@ -41,6 +41,7 @@ trait ArtistMap
             // $namesArray[] = $val['name'];//,$val['replacement']];
             $namesArray[] = [$val['name'], $val['replacement']];
         }
+
         return $namesArray;
     }
 
