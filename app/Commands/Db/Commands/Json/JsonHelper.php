@@ -26,13 +26,14 @@ trait JsonHelper
     public function JsonExec()
     {
         if (Option::istrue('update')) {
-            parent::$output->writeln('<info> update Json</info>');
-
             $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
+
+            parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
-            $this->file_array = Storage::$DB->getDbFileList(' AND (updatedJson = 0 or updatedJson is null)');
-            parent::$output->writeln('<info> get new json file </info>');
+            $this->file_array = Storage::$DB->getDbFileList();
+            parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
             $this->getJson();
 
             // $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
@@ -110,7 +111,7 @@ trait JsonHelper
             if (\str_contains($data, 'actionTags')) {
                 $jsondata = \json_decode($data, true);
                 if ($jsondata['actionTags'] != '') {
-                    parent::$output->writeln('<info>' . $jsondata['actionTags'] . ' ' . basename($json_file) . ' </info>');
+                    parent::$output->writeln('<info>' . basename($json_file) . ' </info>');
                     Storage::$DB->updatedJson($json_key, 1);
                 }
             }
