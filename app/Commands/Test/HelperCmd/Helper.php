@@ -37,6 +37,32 @@ trait Helper
 {
     use MediaFFmpeg;
 
+    public function subtitlepath($file)
+    {
+        $fileInfo  = pathinfo($file);
+        $directory = $fileInfo['dirname'];
+        $filename  = $fileInfo['filename'];
+        $extension  = $fileInfo['extension'];
+        // 2 "/media/Videos/Plex/XXX/Studios/Adult Time/Watch You Cheat/MFF/Subtitles"
+        $directory    = str_replace('Subtitles', '', $directory);
+        $subtitlePath = str_replace('Plex/XXX', 'Plex/XXX' . DIRECTORY_SEPARATOR . 'Subtitles', $directory);
+        FileSystem::createDir($subtitlePath);
+
+        return $subtitlePath  . $filename .'.'.  $extension;
+    }
+
+    public function moveSubtitles()
+    {
+        $file_array = Mediatag::$finder->Search(\__PLEX_HOME__ . DIRECTORY_SEPARATOR . 'Studios', '*.srt*', exit: false);
+        foreach ($file_array as $file) {
+            $newFile = $this->subtitlepath($file);
+                        // utmdd($file, $newFile);
+
+                                    FileSystem::rename($file, $newFile);
+
+        }
+    }
+
     public function listMarkers()
     {
         $db = MysqliDb::getInstance();
@@ -124,11 +150,6 @@ trait Helper
                 }
             }
         }
-    }
-
-    public function list()
-    {
-        utmdd($cmds);
     }
 
     public function importThumb()
