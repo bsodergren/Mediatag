@@ -481,7 +481,6 @@ class MediaFinder extends SFinder
                 }
             }
         }
-        // utmdump($New_Array);
         if (count($New_Array) > 0) {
             return $New_Array;
         } else {
@@ -494,18 +493,76 @@ class MediaFinder extends SFinder
         // utminfo(func_get_args());
 
         if (count($file_array) > 0) {
-            $obj = new ScriptWriter('newfiles.sh', __CURRENT_DIRECTORY__);
-            $obj->addCmd('update', ['update', '-f'], true, true);
+            $this->NewFilesCommandScript($file_array,
+                [
+                    'filename' => 'UpdateNewFiles.sh',
+                    'command'  => 'update',
+                    'options'  => ['update', '-f'],
+                ]);
+            $this->NewFilesCommandScript($file_array,
+                [
+                    'filename' => 'ClearNewfiles.sh',
+                    'command'  => 'update',
+                    'options'  => ['clear', '-f'],
+                ]);
 
+            $this->NewFilesCommandScript($file_array,
+                ['filename'       => 'AddtoDb.sh',
+                    'commandList' => [[
+                        'command'  => 'mediadb',
+                        'options'  => [],
+                        'addfiles' => false,
+                    ],
+                    [
+                        'command'  => 'mediadb',
+                        'options'  => ['both'],
+                        'addfiles' => false,
+                    ],
+                      [
+                        'command'  => 'mediadb',
+                        'options'  => ['json'],
+                        'addfiles' => false,
+                    ],
+                      [
+                        'command'  => 'mediadb',
+                        'options'  => ['json', '-u'],
+                        'addfiles' => false,
+                    ],
+                    ],
+                ]
+                );
+        }
+    }
+
+    private function NewFilesCommandScript($file_array, $options)
+    {
+        utmdump($options);
+        $obj = new ScriptWriter($options['filename'], __CURRENT_DIRECTORY__);
+
+        if (array_key_exists('commandList', $options)) {
+            foreach($options['commandList'] as $newOption){
+                $obj = $this->addCmdBody($obj, $file_array, $newOption);
+            }
+        } else {
+             $obj = $this->addCmdBody($obj, $file_array, $options);
+        }
+
+        $obj->write();
+        Mediatag::$output->writeln('Wrote ' . $options['filename'] . ' script');
+    }
+
+    private function addCmdBody($obj, $file_array, $options)
+    {
+
+        $addFiles = $options['addfiles'] ?? true;
+        $obj->addCmd($options['command'], $options['options'], true, $addFiles);
+        if ($addFiles === true) {
             foreach ($file_array as $i => $missing_file) {
                 $obj->addFile($missing_file, false);
             }
             $obj->addFiles();
-            // $obj->addCmd('db', [], false, false);
-            // $obj->addCmd('db', ['all'], false, false);
-
-            $obj->write();
-            Mediatag::$output->writeln('Wrote new script');
         }
+
+        return $obj;
     }
 }

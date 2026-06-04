@@ -328,14 +328,16 @@ class Reader extends TagReader
         foreach ($locationMap as $location) {
             foreach ($extMap as $ext) {
                 $fileLocation = $location . DIRECTORY_SEPARATOR . $this->video_key . $ext;
+
                 if (file_exists($fileLocation)) {
+
                     $this->json_file = $fileLocation;
                     $video_key       = $this->video_key;
+
                     // return true;
                 }
             }
         }
-        // utmdump($this->json_file);
         if ($this->json_file === null) {
             $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, false, true);
             foreach ($files as $file) {

@@ -50,7 +50,6 @@ class Youtube extends MediatagExec
 
     public $commonOptions = [
         CONFIG['YOUTUBEDL_CMD'],
-        '-i',
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
@@ -61,12 +60,6 @@ class Youtube extends MediatagExec
         // '--no-part',
         '--no-warnings',
         '--ignore-config',
-        '--write-info-json',
-        '--write-subs',
-        '--sub-format',
-        'srt',
-        '--sub-langs',
-        'en',
         '--referer',
         'https://www.pornhub.com',
         '--impersonate',

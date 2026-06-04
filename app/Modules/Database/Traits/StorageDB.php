@@ -70,9 +70,9 @@ trait StorageDB
 
     // public $dbConn;
 
-    // public $progressbar;
+    public $progressbar;
 
-    // public $progressbar1;
+    public $progressbar1;
 
     // public $MultiIDX = 1;
 

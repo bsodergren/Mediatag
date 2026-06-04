@@ -44,6 +44,7 @@ class ScriptWriter
      */
     public $update = __APP_HOME__ . '/bin/mediaupdate';
 
+
     public $ffmpeg = CONFIG['FFMPEG_CMD'];
 
     /**
@@ -51,7 +52,7 @@ class ScriptWriter
      *
      * @var string
      */
-    public $db = __APP_HOME__ . '/bin/mediadb';
+    public $mediadb = __APP_HOME__ . '/bin/mediadb';
 
     public $map = __APP_HOME__ . '/bin/mediamap';
 
@@ -128,6 +129,8 @@ EOD;
 
         $cmd = $this->{$command};
 
+         $cmdOptions = array_merge( ['--path','"'.__CURRENT_DIRECTORY__.'"'],$cmdOptions);
+
         $run_cmd = $cmd . ' ' . implode($eol, $cmdOptions);
 
         if ($comment == true) {
@@ -166,7 +169,6 @@ EOD;
         }
 
         $this->script_filelist = str_replace("\"\n", '",\\' . PHP_EOL, $this->script_filelist);
-
         $this->script_text .= str_replace(__CURRENT_DIRECTORY__ . '/', '', $this->script_filelist) . PHP_EOL;
     }
 

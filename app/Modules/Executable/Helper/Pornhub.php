@@ -31,6 +31,10 @@ class Pornhub extends VideoDownloader
         CONFIG['PH_USERNAME'],
         '-p',
         CONFIG['PH_PASSWORD'],
+        '--write-auto-subs',
+        '--write-description',
+        '--write-comment',
+        '--clean-info-json',
     ];
 
     public $KeyPrefix = 'pornhub';

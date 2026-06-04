@@ -21,6 +21,8 @@ trait JsonHelper
 
     public $dbConn;
 
+    public $file_array = [];
+
     public function JsonExec()
     {
         if (Option::istrue('update')) {
@@ -42,7 +44,7 @@ trait JsonHelper
 
     private function getJsonFilelist()
     {
-        // $filearray = [];
+        $filearray = [];
         // utmdump($this->file_array);
         foreach ($this->file_array as $json_key => $file) {
             $backupFile = '';

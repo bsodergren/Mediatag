@@ -81,7 +81,7 @@ trait Artist
     {
         // utminfo(func_get_args());
 
-        $namesArray     = [];
+        $matchedNames   = [];
         $names          = str_replace('_1080p', '', $names);
         $names          = str_replace($this->getArtistDelim(), $delim, $names);
         $names          = str_replace('_', ' ', $names);
@@ -115,24 +115,44 @@ trait Artist
             if ($this->getArtistFullNames() === true) {
                 $name_key    = str_replace(' ', '_', strtolower($aName));
                 $matchedName = self::CheckArtist($name_key);
-                // if ($matchedName === true) {
-                if (count($matchedName) == 1) {
+                if ($matchedName !== false && count($matchedName) == 1) {
                     $matchedNames[] = $matchedName[0]['star_name'];
-                    // }
                 } else {
                     foreach ($parts as $index => $PartName) {
                         $matchedName = self::CheckArtist($PartName);
                         if ($matchedName !== false) {
                             if (count($matchedName) > 1) {
-                                $nameMatches = self::CheckArtist($PartName . $parts[$index + 1]);
-                                utmdump(['nameMatches Name' => $nameMatches]);
+                                $second = '';
+                                $third  = '';
+                                if (array_key_exists($index + 1, $parts)) {
+                                    $second = $parts[$index + 1];
+                                }
+                                $nameMatches = self::CheckArtist($PartName . $second);
+                                // utmdump(['nameMatches Name' => $nameMatches]);
                                 if ($nameMatches !== false) {
                                     if (count($nameMatches) > 1) {
-                                        $moreNameMatches = self::CheckArtist($PartName . $parts[$index + 1] . $parts[$index + 2]);
-                                        utmdump(['moreNameMatches Name' => $moreNameMatches]);
+                                        $second = '';
+                                        $third  = '';
+                                        if (array_key_exists($index + 1, $parts)) {
+                                            $second = $parts[$index + 1];
+                                        }
+                                        if (array_key_exists($index + 2, $parts)) {
+                                            $third = $parts[$index + 2];
+                                        }
+
+                                        $moreNameMatches = self::CheckArtist($PartName . $second . $third);
+                                        // utmdump(['moreNameMatches Name' => $moreNameMatches]);
                                         if ($moreNameMatches !== false) {
                                             if (count($nameMatches) == 1) {
-                                                $matchedNames[] = $PartName . ' ' . $parts[$index + 1] . ' ' . $parts[$index + 2];
+                                                $second = '';
+                                                $third  = '';
+                                                if (array_key_exists($index + 1, $parts)) {
+                                                    $second = $parts[$index + 1];
+                                                }
+                                                if (array_key_exists($index + 2, $parts)) {
+                                                    $third = $parts[$index + 2];
+                                                }
+                                                $matchedNames[] = $PartName . $second . $third;
 
                                                 continue 2;
                                             }
@@ -142,7 +162,11 @@ trait Artist
                                             continue 2;
                                         }
                                     } else {
-                                        $matchedNames[] = $PartName . ' ' . $parts[$index + 1];
+                                           $second = '';
+                                                if (array_key_exists($index + 1, $parts)) {
+                                                    $second = $parts[$index + 1];
+                                                }
+                                        $matchedNames[] = $PartName . ' ' . $second;
                                     }
 
                                     continue;
@@ -189,7 +213,7 @@ trait Artist
             $names = ucwords($names);
 
             $nameString = str_replace(', ', ',', $names);
-            utmdump(['Arist String' => [$nameString, $this->video_file]]);
+            // utmdump(['Arist String' => [$nameString, $this->video_file]]);
 
             return $nameString;
         }
@@ -268,12 +292,14 @@ trait Artist
         if ($one === true) {
             $getFunc = 'getOne';
         }
-        utmdump([__FUNCTION__ => $name]);
+        // utmdump([__FUNCTION__ => $name]);
         $name = str_replace('_', '', strtolower($name));
         $db   = Storage::$DB->mysqllib;
         // WHERE `nameKey` LIKE '%giselle%'
         if ($one === true) {
             $db->where('nameKey', $name);
+        } else {
+            $db->where('nameKey', $name . '%', 'LIKE');
         }
         $res = $db->$getFunc(__MYSQL_ARTIST_PH__, columns: ['star_name']);
         if ($one === true) {
@@ -285,7 +311,7 @@ trait Artist
                 $res = [$t];
             }
         }
-        utmdump($res, $db->getLastQuery());
+        // utmdump($res, $db->getLastQuery());
 
         if (count($res) == 0) {
             return false;
