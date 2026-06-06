@@ -279,7 +279,7 @@ trait FilterMethods
     public function moveDownloadedVideos($key)
     {
         // utmdump(__METHOD__);
-        Mediatag::$Console->writeln('searching for key ' . $key);
+        // Mediatag::$Console->writeln('searching for key ' . $key);
         $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
 
         if (count($file_array) > 0) {

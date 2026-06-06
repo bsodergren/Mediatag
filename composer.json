@@ -25,6 +25,7 @@
         "friendsofphp/php-cs-fixer": "^3.95"
     },
     "require": {
+        "php": ">=8.0",
         "symfony/console": "^8.0",
         "bhittani/download": "^0.3.0",
         "symfony/monolog-bundle": "^3.8",

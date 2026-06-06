@@ -278,7 +278,7 @@ class Reader extends TagReader
             $jsonArray = \json_decode($json_string, 1);
             $fileArray = \json_decode($file_string, 1);
 
-            $diff = \array_diff_assoc($fileArray, $jsonArray);
+            $diff = array_diff_assoc($fileArray, $jsonArray);
             if (count($diff) > 0) {
                 $newArray = [];
                 $jsonKeys = \array_keys($jsonArray);
@@ -287,7 +287,7 @@ class Reader extends TagReader
                     if (array_key_exists($key, $fileArray)) {
                         if (is_array($fileArray[$key]) && is_array($jsonArray[$key])) {
                             $array          = \array_merge($fileArray[$key], $jsonArray[$key]);
-                            $array          = \MediaArray::array_iunique($array);
+                            $array          = MediaArray::array_iunique($array);
                             $newArray[$key] = $array;
                         } else {
                             if (Strings::compare($fileArray[$key], $jsonArray[$key])) {
@@ -330,7 +330,6 @@ class Reader extends TagReader
                 $fileLocation = $location . DIRECTORY_SEPARATOR . $this->video_key . $ext;
 
                 if (file_exists($fileLocation)) {
-
                     $this->json_file = $fileLocation;
                     $video_key       = $this->video_key;
 
