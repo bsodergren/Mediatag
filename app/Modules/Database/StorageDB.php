@@ -299,9 +299,8 @@ class StorageDB extends Storage
             // 'filesize'    => filesize($video_file),
         ];
 
-        $data['added'] = self::$DB->now();
+        $data['added'] = self::$DB->mysqllib->now();
 
-        // utmdd($data);
         return $data;
     }
 
