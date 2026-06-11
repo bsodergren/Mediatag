@@ -296,7 +296,7 @@ class StorageDB extends Storage
             'studio_path' => $this->getStudioPath($this->video_path),
             'Library'     => __LIBRARY__,
             'subLibrary'  => self::getSubLibrary($this->video_path),
-            'filesize'    => filesize($video_file),
+            // 'filesize'    => filesize($video_file),
         ];
 
         $data['added'] = self::$DB->now();

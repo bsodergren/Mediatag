@@ -19,7 +19,7 @@ class VideoDetails
         'studio_path',
         'thumbnail',
         'preview',
-        'filesize',
+        // 'filesize',
         'rating',
         'last_updated',
         'added',

@@ -70,7 +70,7 @@ class Display
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
 
         $currentTagStyle = new OutputFormatterStyle('magenta');
-        Mediatag::$output->getFormatter()->setStyle('currentTag', $currentTagStyle);
+        Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
         $updateTagStyle = new OutputFormatterStyle('bright-green');
         Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
@@ -168,7 +168,7 @@ class Display
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
         $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
-        $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
+        $filename     = $this->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
         $fileCount = ConsoleOutput::formatOutput('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
         $fileInfo  = ConsoleOutput::formatOutput('<info>' . $in_directory . $filename . '</info>');
@@ -244,12 +244,17 @@ class Display
         return $returnArray;
     }
 
+    public function truncate($msg, $width = __CONSOLE_WIDTH__)
+    {
+        return $this->formatter->truncate($msg, $width);
+    }
+
     public function formatTagLine($tag, $value, $style = 'comment')
     {
         // utminfo(func_get_args());
 
         if ($value !== null) {
-            $change_value = "\t<" . $this->text_style . '>' . $this->formatter->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
+            $change_value = "\t<" . $this->text_style . '>' . $this->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
             // $change_value = ConsoleOutput::formatOutput"\t<" . $this->text_style . '>' . $value . '</>', true);
             $text = $this->formatter->formatSection($tag, $change_value, $style);
             // utmdump(['FormatTagLine' => [$change_value, $text, $this->text_style, $style]]);
@@ -303,8 +308,8 @@ class Display
         $current[$tag] = '';
         if (array_key_exists('currentTags', $fileinfo)) {
             $current          = $fileinfo['currentTags'];
-            $this->text_style = 'currentTag';
-            $style            = 'currentTag';
+            $this->text_style = 'current';
+            $style            = 'current';
         }
         if (array_key_exists('metatags', $fileinfo)) {
             $current          = $fileinfo['metatags'];

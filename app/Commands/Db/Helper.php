@@ -38,19 +38,22 @@ trait Helper
 
     private $video_custon_csv = 'custom.csv';
 
+    private $Updates_Array = [];
+
     public function updateNow()
     {
         // utminfo(func_get_args());
 
         $data = [
             'name'  => __LIBRARY__ . '_last_updated',
-            'value' => StorageDB::$DB->now(),
+            'value' => StorageDB::$DB->mysqllib->now(),
             'type'  => 'update',
         ];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
         StorageDB::$DB->mysqllib->onDuplicate($updateColumns, $lastInsertId);
         $id = StorageDB::$DB->mysqllib->insert(__MYSQL_SETTINGS__, $data);
+        // utmdump([StorageDB::$DB->mysqllib->getLastQuery(), $this->lastUpdated()]);
     }
 
     public function lastUpdated()
@@ -59,13 +62,12 @@ trait Helper
 
         $db = StorageDB::$DB;
         $db->mysqllib->where('name', __LIBRARY__ . '_last_updated');
-
         $res = $db->mysqllib->getValue(__MYSQL_SETTINGS__, 'value');
 
-        $q = $db->getLastQuery();
+        // utmdump([$db->mysqllib->getLastQuery(), $res]);
 
         return $res;
-        //        utmdd([__METHOD__,$res]);
+        //
     }
 
     public static function getNewFiles(array $array, InputInterface $input, OutputInterface $output): array
@@ -104,10 +106,24 @@ trait Helper
             }
         }
 
+        if (! Option::istrue('yes') && ! Option::istrue('paths')) {
+            $date                     = $this->lastUpdated();
+            MediaFinder::$TextMessage = '  Updated Files ';
+        }
+
+        $Updates_Array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i', $date, false);
+        foreach ($Updates_Array as $key => $file) {
+            if (array_key_exists($key, $this->New_Array)) {
+                continue;
+            }
+            $this->Updates_Array[$key] = $Updates_Array[$key];
+        }
+
         if (Option::istrue('test')) {
             parent::$output->writeln('Deleted files ' . print_r($this->Deleted_Array, 1));
             parent::$output->writeln('Changed files ' . print_r($this->Changed_Array, 1));
             parent::$output->writeln('New files ' . print_r($this->New_Array, 1));
+            parent::$output->writeln('Updates files ' . print_r($this->Updates_Array, 1));
         }
 
         $changed_string = 0;
@@ -125,11 +141,15 @@ trait Helper
             ['Deleted files' => count($this->Deleted_Array)],
             ['Changed files' => count($this->Changed_Array)],
             ['New files'     => count($this->New_Array)],
+            ['Updates files' => count($this->Updates_Array)],
+
         );
 
         // utmdd([__METHOD__,
         //     'files'   => \count($this->file_array),
         //     'new'     => $this->New_Array,
+        //     'updated' => $this->Updates_Array,
+
         //     'changed' => \count($this->Changed_Array),
         //     'deleted' => \count($this->Deleted_Array),
         // ]);
@@ -138,6 +158,8 @@ trait Helper
             'new'     => $this->New_Array,
             'changed' => $this->Changed_Array,
             'deleted' => $this->Deleted_Array,
+            'updates' => $this->Updates_Array,
+
         ];
     }
 
@@ -266,15 +288,8 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $date = null;
-        if (! Option::istrue('yes') && ! Option::istrue('paths')) {
-            $date = $this->lastUpdated();
-        }
-        $file_array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i', $date);
-        if (! is_array($file_array)) {
-            return 0;
-        }
-        $total = count($file_array);
+        $file_array = $this->Updates_Array;
+        $total      = count($file_array);
         if ($total > 0) {
             $storagedb           = StorageDB::$DB;
             $storagedb->MultiIDX = count($file_array);

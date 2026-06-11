@@ -151,8 +151,7 @@ class Process extends Mediatag
         $this->removeDBEntry();
         $this->changeDBEntry();
         $this->addDBEntry();
-
-        //  $this->execUpdate();
+        $this->execUpdate();
     }
 
     public function testExec($option) {}

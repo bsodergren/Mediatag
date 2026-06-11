@@ -105,9 +105,11 @@ trait Helper
         $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:16s%/%estimated:-16s% %memory:6s%');
         ProgressBar::setFormatDefinition('custom', '<text>%index%</text> <file>%videoname%</file>');
 
-        $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
-        $progressBar2->setFormat(' ');
-        $progressBar2->setOverwrite(false);
+        // $progressBar2 = new ProgressBar(Mediatag::$Display->BarSection2, $count);
+        // $progressBar2->setFormat(' ');
+        // $progressBar2->setOverwrite(false);
+        // $progressBar2->setFormat('custom');
+
         foreach ($VideoList as $key => $videoInfo) {
             $tagObj = new TagReader;
             $tagObj->loadVideo($videoInfo);
@@ -117,20 +119,21 @@ trait Helper
             $videoArray = $tagBuilder->getTags($videoInfo);
             // utmdd($videoArray);
 
-            $name    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
-            $message = $name;
+            $message = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             if (count($videoArray['updateTags']) > 0) {
-                $progressBar2->setFormat('custom');
                 $this->ChangesArray[] = $videoArray;
                 // $this->LogDifferences($videoArray);
-                $progressBar2->setMessage($idx, 'index');
-                $progressBar2->setMessage($message, 'videoname');
+                $message = Mediatag::$Display->truncate($message, __CONSOLE_WIDTH__ - 35);
+                Mediatag::$Display->BarBottom->overwrite('<text>' . $idx . '</text> <file>' . $message . '</file>');
+                // $progressBar2->setMessage($idx, 'index');
+                // $progressBar2->setMessage($message, 'videoname');
+                // $progressBar2->advance();
                 $idx++;
-                $progressBar2->advance();
             }
             $progressBar->advance();
         }
-        $progressBar2->finish();
+        // $progressBar2->finish();
+        $progressBar->finish();
     }
 
     // public function saveChanges($json_file = '')

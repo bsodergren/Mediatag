@@ -45,7 +45,7 @@ trait VideoSetters
             }
         }
 
-        // utmdd($this->VideoDataTable);
+        // utmdd($this->VideoInfo, $this->VideoDataTable);
 
         if (Storage::$DB->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;

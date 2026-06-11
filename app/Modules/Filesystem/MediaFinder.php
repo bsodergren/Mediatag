@@ -6,21 +6,15 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use Mediatag\Core\MediaCommand;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
-use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
 use Mediatag\Traits\AutoWrapper;
 use Mediatag\Utilities\MediaArray;
-use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
-use ParentClass;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use Symfony\Component\Finder\Finder as SFinder;
-use UTM\Bundle\Monolog\UTMLog;
-use UTM\Utilities\Debug\UtmStopWatch;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
@@ -70,6 +64,8 @@ class MediaFinder extends SFinder
     public $finder;
 
     public $excludeDir;
+
+    public static $TextMessage = '';
 
     /**
      * Summary of video_library.
@@ -296,7 +292,7 @@ class MediaFinder extends SFinder
             $file_array = $this->getFilelistOption();
             //
         } else {
-            // utmdump($search);
+            //
             $search = self::FilterSearch($search);
             // utmdump($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit, $quiet);
@@ -360,7 +356,6 @@ class MediaFinder extends SFinder
     protected function searchFiles($search = '/\.mp4$/i', $path = null, $date = null, $exit = true, $quiet = false)
     {
         // utminfo(func_get_args());
-
         if (is_null($search)) {
             $search = '*.mp4';
         }
@@ -390,14 +385,14 @@ class MediaFinder extends SFinder
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
             $finder->date('> ' . $date);
+            // utmdd($finder);
         }
-
         if ($finder->hasResults()) {
-            // utmdd(['search' => $search, 'path' => $path, 'files' => $finder]);
-
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
-
+                if ($date !== null) {
+                    // utmdump([$date, $file]);
+                }
                 if (str_contains($video_file, '-temp-')) {
                     $filesystem->remove($video_file);
 
@@ -418,7 +413,7 @@ class MediaFinder extends SFinder
                     $noFiles = count($file_array);
                     if (self::$quiet === false) {
                         if ($quiet === false) {
-                            Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info>');
+                            Mediatag::$output->writeln('<info>' . $noFiles . ' files found</info> ' . self::$TextMessage);
                         }
                     }
 
@@ -433,7 +428,7 @@ class MediaFinder extends SFinder
             }
         }
         if ($exit === true) {
-            Mediatag::$output->writeln('<info> xxxx No files found</info>');
+            Mediatag::$output->writeln('<info>No files found</info>' . self::$TextMessage);
             exit;
         }
 

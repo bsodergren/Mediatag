@@ -27,11 +27,7 @@ trait JsonHelper
     public function JsonExec()
     {
         if (Option::istrue('update')) {
-            $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
-            parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
-
-            parent::$output->writeln('<info> update Json</info>');
-            $this->setJson();
+            $this->jsonUpdates();
         } else {
             $this->file_array = StorageDB::$DB->getDbFileList();
             parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
@@ -42,6 +38,15 @@ trait JsonHelper
         }
 
         return 1;
+    }
+
+    public function jsonUpdates()
+    {
+        $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
+        parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
+
+        parent::$output->writeln('<info> update Json</info>');
+        $this->setJson();
     }
 
     private function getJsonFilelist()
@@ -62,7 +67,6 @@ trait JsonHelper
                 $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
             }
         }
-        // utmdump($filearray);
 
         return $filearray;
     }
@@ -70,8 +74,7 @@ trait JsonHelper
     public function setJson()
     {
         $jsonFileList = $this->getJsonFilelist();
-
-        $count = count($jsonFileList);
+        $count        = count($jsonFileList);
         foreach ($jsonFileList as $json_key => $file) {
             $json_file  = $file['json'];
             $video_file = $file['file'];
@@ -81,7 +84,6 @@ trait JsonHelper
             $videoInfo  = (new File($video_file))->get();
             $reader     = new Reader($videoInfo);
             $actionTags = $reader->actionTags();
-            // utmdump([$json_file, filesize($json_file), $actionTags]);
             // utmdump($actionTags, $videoInfo);
 
             if (count($actionTags) > 0) {
@@ -109,6 +111,7 @@ trait JsonHelper
             $backupFile = '';
 
             $data = file_get_contents($json_file);
+
             if (\str_contains($data, 'actionTags')) {
                 $jsondata = \json_decode($data, true);
                 if ($jsondata['actionTags'] != '') {
