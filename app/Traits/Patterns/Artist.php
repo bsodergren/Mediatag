@@ -107,7 +107,7 @@ trait Artist
             //  $name_key = str_replace(' ', '', $name_key);
 
             if ($this->ignoreArtist($aName) === true) {
-                utmdump(['ignored' => $aName]);
+                // utmdump(['ignored' => $aName]);
 
                 continue;
             }
@@ -162,10 +162,10 @@ trait Artist
                                             continue 2;
                                         }
                                     } else {
-                                           $second = '';
-                                                if (array_key_exists($index + 1, $parts)) {
-                                                    $second = $parts[$index + 1];
-                                                }
+                                        $second = '';
+                                        if (array_key_exists($index + 1, $parts)) {
+                                            $second = $parts[$index + 1];
+                                        }
                                         $matchedNames[] = $PartName . ' ' . $second;
                                     }
 

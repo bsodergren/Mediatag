@@ -54,7 +54,7 @@ class VideoTags extends VideoInfo
             }
         }
 
-        $tagList['subLibrary'] = Storage::getSubLibrary($vdata['video_path']);
+        $tagList['subLibrary'] = StorageDB::getSubLibrary($vdata['video_path']);
 
         $this->tagList = $tagList;
 

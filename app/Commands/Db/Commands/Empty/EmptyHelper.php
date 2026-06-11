@@ -4,6 +4,7 @@ namespace Mediatag\Commands\Db\Commands\Empty;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Question\Question;
 use UTM\Utilities\Option;
@@ -14,9 +15,9 @@ trait EmptyHelper
     {
         // utminfo(func_get_args());
 
-        self::$Class             = __CLASS__;
-        Storage::$DB->file_array = Mediatag::$SearchArray;
-        $videos                  = Storage::$DB->getVideoCount();
+        self::$Class               = __CLASS__;
+        StorageDB::$DB->file_array = Mediatag::$SearchArray;
+        $videos                    = StorageDB::$DB->getVideoCount();
 
         if (Option::istrue('yes')) {
             $go     = true;
@@ -47,7 +48,7 @@ trait EmptyHelper
 
         if ($go == true) {
             Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
-            Storage::$DB->emptydatabase();
+            StorageDB::$DB->emptydatabase();
         }
     }
 }

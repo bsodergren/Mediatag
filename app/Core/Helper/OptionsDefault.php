@@ -37,7 +37,7 @@ trait OptionsDefault
         self::$Class = __CLASS__;
 
         $options = [
-            ['filelist', 'f', InputOption::VALUE_REQUIRED, self::text('L__DEFAULT_FILELIST')],
+            ['filelist', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DEFAULT_FILELIST')],
             ['numberofFiles', 'N', InputOption::VALUE_NONE, self::text('L__DEFAULT_NUMBEROFFILES')],
             ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__DEFAULT_MAX')],
             ['range', 'r', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DEFAULT_RANGE')],
@@ -74,6 +74,7 @@ trait OptionsDefault
             ['preview', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_PREVIEW')],
             ['time', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_TIME')],
             ['dump', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_DUMP')],
+            ['append', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_APPEND')],
             ['flush', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_FLUSH')],
             ['nocache', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_FLUSH')],
             ['no-progress', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_NO_PROGRESS')],
@@ -108,18 +109,18 @@ trait OptionsDefault
         self::$Class = __CLASS__;
         $cmdName     = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
         $options     = [
-            ['no-progress', null, InputOption::VALUE_NONE, 'Disable progress bar animation for logs. It will be used only for <info>'.Text::getName().'</info> output format.'],
+            ['no-progress', null, InputOption::VALUE_NONE, 'Disable progress bar animation for logs. It will be used only for <info>' . Text::getName() . '</info> output format.'],
             ['mute-errors', null, InputOption::VALUE_NONE, "Mute any sort of errors. So exit code will be always \"0\" (if it's possible).\nIt has major priority then <info>--non-zero-on-error</info>. It's on your own risk!"],
             ['stdout-only', null, InputOption::VALUE_NONE, "For any errors messages application will use StdOut instead of StdErr. It's on your own risk!"],
             ['non-zero-on-error', null, InputOption::VALUE_NONE, 'None-zero exit code on any StdErr message.'],
-            ['timestamp', null, InputOption::VALUE_NONE, 'Show timestamp at the beginning of each message.It will be used only for <info>'.Text::getName().'</info> output format.'],
+            ['timestamp', null, InputOption::VALUE_NONE, 'Show timestamp at the beginning of each message.It will be used only for <info>' . Text::getName() . '</info> output format.'],
             ['profile', null, InputOption::VALUE_NONE, 'Display timing and memory usage information.'],
 
             [
                 'output-mode',
                 null,
                 InputOption::VALUE_REQUIRED,
-                "Output format. Available options:\n".
+                "Output format. Available options:\n" .
                 CliHelper::renderListForHelpDescription([
                     Text::getName()     => Text::getDescription(),
                     Cron::getName()     => Cron::getDescription(),
@@ -127,7 +128,7 @@ trait OptionsDefault
                 ]),
                 Text::getName(),
             ],
-            [Cron::getName(), null, InputOption::VALUE_NONE, 'Alias for <info>--output-mode='.Cron::getName().'</info>. <comment>Deprecated!</comment>'],
+            [Cron::getName(), null, InputOption::VALUE_NONE, 'Alias for <info>--output-mode=' . Cron::getName() . '</info>. <comment>Deprecated!</comment>'],
         ];
 
         return self::getOptions($options);

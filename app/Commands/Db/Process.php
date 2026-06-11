@@ -15,6 +15,7 @@ use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Mediatag\Traits\Translate;
@@ -82,7 +83,7 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-        $this->dbConn = new Storage;
+        $this->dbConn = new StorageDB;
         //
         //parent::$SearchArray;
     }
@@ -94,14 +95,16 @@ class Process extends Mediatag
         if ($this->Search_Array === null || count($this->Search_Array) == 0) {
             $this->Search_Array = parent::$finder->Search(getcwd(), '.mp4', null, false);
         }
-        // $this->DbMap =Storage::$DB();
+        // $this->DbMap =StorageDB::$DB();
         //
+        $this->allDbFiles = StorageDB::$DB->getAllDbFiles();
 
-        $this->allDbFiles = Storage::$DB->getAllDbFiles();
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
                 $key = File::getVideoKey($file);
                 // utmdump($key, $file);
+                // utmdd($key, $this->allDbFiles);
+
                 if (array_key_exists($key, $this->allDbFiles)) {
                     $existing_file = $this->allDbFiles[$key];
 
@@ -135,11 +138,10 @@ class Process extends Mediatag
                 $this->file_array[$key] = $file;
             }
         }
-        Storage::$DB->file_array = $this->file_array;
+        StorageDB::$DB->file_array = $this->file_array;
 
-        $this->db_array = Storage::$DB->getDbFileList();
+        $this->db_array = StorageDB::$DB->getDbFileList();
 
-        // utmdd($this->db_array,$this->file_array);
         return $this;
     }
 

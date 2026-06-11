@@ -63,7 +63,7 @@ trait ThumbnailHelper
 
     public function markerThumbnail()
     {
-        foreach (Storage::$DB->getDbFileList() as $key => $videoInfo) {
+        foreach (StorageDB::$DB->getDbFileList() as $key => $videoInfo) {
             $videoId = VideoInfo::GetVideoIdByKey($key);
             if (! is_null($videoId)) {
                 $this->createMarkerThumb($videoId);

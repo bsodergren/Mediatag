@@ -4,6 +4,7 @@ namespace Mediatag\Commands\Db\Commands\Json;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Executable\Youtube;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
@@ -26,17 +27,17 @@ trait JsonHelper
     public function JsonExec()
     {
         if (Option::istrue('update')) {
-            $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
             parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
 
             parent::$output->writeln('<info> update Json</info>');
             $this->setJson();
         } else {
-            $this->file_array = Storage::$DB->getDbFileList();
+            $this->file_array = StorageDB::$DB->getDbFileList();
             parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
             $this->getJson();
 
-            // $this->file_array = Storage::$DB->getDbFileList(' AND updatedJson = 1');
+            // $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
             // $this->setJson();
         }
 
@@ -87,7 +88,7 @@ trait JsonHelper
                 if (! is_null($actionTags['actiontags'])) {
                     parent::$output->writeln('<info> Found  actiontags, updating video </info>');
                     $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
-                    Storage::$DB->updatedJson($json_key, 2);
+                    StorageDB::$DB->updatedJson($json_key, 2);
 
                     continue;
                 }
@@ -112,7 +113,7 @@ trait JsonHelper
                 $jsondata = \json_decode($data, true);
                 if ($jsondata['actionTags'] != '') {
                     parent::$output->writeln('<info>' . basename($json_file) . ' </info>');
-                    Storage::$DB->updatedJson($json_key, 1);
+                    StorageDB::$DB->updatedJson($json_key, 1);
                 }
             }
 

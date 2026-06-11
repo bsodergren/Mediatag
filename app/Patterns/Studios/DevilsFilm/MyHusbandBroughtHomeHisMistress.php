@@ -8,7 +8,7 @@ namespace Mediatag\Patterns\Studios\DevilsFilm;
 
 use const DIRECTORY_SEPARATOR;
 
-const MHBHM_REGEX_COMMON = '/MHBHM[_se0-9]+?([a-zA-Z0-9]{4,})?-([_a-zA-Z]{1,})\_[0-9pkm\.]{1,}/i';
+const MHBHM_REGEX_COMMON = '/(?P<studio>MyHusbandBroughtHomehisMistress(?P<volume>[0-9]{2}))?(-|_)?(?P<title>[_a-zA-Z0-9]+)?(?P<scene>_[s0-9]{1,3})(?P<cast>[a-zA-Z_]+)\_[0-9pkm\.]{1,}/i';
 
 use Mediatag\Patterns\Studios\DevilsFilm\DevilsFilm;
 
@@ -25,13 +25,13 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
             'artist' => [
                 'delim'               => '_',
                 'pattern'             => MHBHM_REGEX_COMMON,
-                'match'               => 2,
+                'match'               => 6,
                 'artistFirstNameOnly' => true,
             ],
             //            'studioPattern' => '/.*\_-\_((.*))(\-[0-9]{3,5}?)\.mp4/i',
             'title'  => [
                 'pattern' => MHBHM_REGEX_COMMON,
-                'match'   => 1,
+                'match'   => 4,
                 'delim'   => '_',
             ],
         ],

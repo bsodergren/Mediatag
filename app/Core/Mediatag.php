@@ -6,14 +6,11 @@
 
 namespace Mediatag\Core;
 
-use JBZoo\Cli\CliCommand;
 use Mediatag\Modules\Database\Storage;
-use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Display\Display;
-use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\Filesystem\MediaFinder as Finder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,7 +42,7 @@ class Mediatag extends Command
 
     public static $Display;
 
-    // public static $dbconn;
+    public static $dbconn;
 
     public $video_name;
 
@@ -70,7 +67,7 @@ class Mediatag extends Command
 
     public static $channelFile = __DATA_MAPS__ . '/Channels.txt';
 
-    // public static $Storage;
+    public static $Storage;
 
     public static $IoStyle;
 
@@ -84,7 +81,6 @@ class Mediatag extends Command
     {
         self::boot($input, $output, $args);
     }
-
 
     public static function __callStatic($method, $args): string
     {
@@ -146,13 +142,13 @@ class Mediatag extends Command
         self::$Cursor  = new Cursor(self::$output);
         self::$Console = new ConsoleOutput(self::$output, self::$input);
         self::$Display = new Display(self::$output);
-        //    self::$dbconn = new Storage;
-        // self::$dbconn  = Storage::$DB;
+        self::$Storage = new Storage;
+        self::$dbconn  = self::$Storage; //Storage::$DB;
 
-        self::$finder     = new Finder;
+        self::$finder     = new MediaFinder;
         self::$filesystem = new Filesystem;
         // utmdump(__CURRENT_DIRECTORY__);
-        self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
+        // self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
 
         if (Option::isTrue('USE_SEARCH')) {
@@ -227,7 +223,7 @@ class Mediatag extends Command
             self::$output->writeln('<info>Getting Video array</info>');
         }
         foreach ($file_array as $__ => $file) {
-            $fs        = new File($file);
+            $fs        = new MediaFile($file);
             $videoData = $fs->get();
 
             if (! array_key_exists($videoData['video_key'], $this->videoArray['file'])) {

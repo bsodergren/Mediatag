@@ -4,6 +4,7 @@ namespace Mediatag\Commands\Db\Commands\Import;
 
 use Mediatag\Commands\Db\Commands\Export\ExportHelper;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
@@ -38,17 +39,17 @@ trait ImportHelper
             $jsonArray           = json_decode($fileContent[0], 1);
             $jsonArray['studio'] = trim(str_replace($jsonArray['network'], '', $jsonArray['studio']), '/');
 
-            $videoinfo  = Storage::$DB->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
+            $videoinfo  = StorageDB::$DB->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
             $updateData = 'updateData';
             if (is_null($videoinfo)) {
-                $exists     = Storage::$DB->videoExists($video_key, table: __MYSQL_VIDEO_FILE__);
+                $exists     = StorageDB::$DB->videoExists($video_key, table: __MYSQL_VIDEO_FILE__);
                 $updateData = 'importData';
             }
             if (! is_null($exists)) {
                 $updateData = 'importData';
             } else {
                 Mediatag::$output->write('update => ');
-                Mediatag::$output->writeln(Storage::$DB->getLastQuery());
+                Mediatag::$output->writeln(StorageDB::$DB->getLastQuery());
             }
             $this->$updateData($jsonArray, $video_key);
         }
@@ -56,7 +57,7 @@ trait ImportHelper
 
     public function updateData($data, $key)
     {
-        Storage::$DB->update($data, ['video_key' => $key], __MYSQL_VIDEO_METADATA__);
+        StorageDB::$DB->update($data, ['video_key' => $key], __MYSQL_VIDEO_METADATA__);
     }
 
     public function importData($data, $key)
@@ -69,7 +70,7 @@ trait ImportHelper
             $insertData[] = [$field => $value];
         }
 
-        Storage::$DB->insert($data, __MYSQL_VIDEO_METADATA__);
-        Mediatag::$output->writeln('import => ' . Storage::$DB->getLastQuery());
+        StorageDB::$DB->insert($data, __MYSQL_VIDEO_METADATA__);
+        Mediatag::$output->writeln('import => ' . StorageDB::$DB->getLastQuery());
     }
 }

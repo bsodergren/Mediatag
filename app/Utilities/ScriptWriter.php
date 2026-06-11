@@ -44,7 +44,6 @@ class ScriptWriter
      */
     public $update = __APP_HOME__ . '/bin/mediaupdate';
 
-
     public $ffmpeg = CONFIG['FFMPEG_CMD'];
 
     /**
@@ -118,6 +117,18 @@ DIR={$directory}
 EOD;
     }
 
+    public function appendCmd(string $command, array $cmdOptions = [], bool $comment = true, bool $singleLine = false)
+    {
+        if (file_exists($this->script)) {
+            $this->script_text = file_get_contents($this->script);
+            $this->script_text = trim($this->script_text);
+        } else {
+            $this->addCmd($command, $cmdOptions, $comment, $singleLine);
+        }
+
+        return $this;
+    }
+
     /**
      * addCmd.
      */
@@ -129,7 +140,7 @@ EOD;
 
         $cmd = $this->{$command};
 
-         $cmdOptions = array_merge( ['--path','"'.__CURRENT_DIRECTORY__.'"'],$cmdOptions);
+        $cmdOptions = array_merge(['--path', '"' . __CURRENT_DIRECTORY__ . '"'], $cmdOptions);
 
         $run_cmd = $cmd . ' ' . implode($eol, $cmdOptions);
 
@@ -142,6 +153,8 @@ EOD;
         }
 
         $this->script_text .= $run_cmd . $eol . PHP_EOL;
+
+        return $this;
 
         // utmdd($this->script_command);
     }
@@ -161,13 +174,35 @@ EOD;
         }
     }
 
+    public function appendFiles()
+    {
+        $scriptLineArray   = explode("\n", $this->script_text);
+        $this->script_text = '';
+        foreach ($scriptLineArray as $k => $line) {
+            if (str_contains($line, '.mp4')) {
+                $fileList[] = '"' . __CURRENT_DIRECTORY__ . '/' . trim($line, '",\\') . '"';
+                unset($scriptLineArray[$k]);
+            } else {
+                $this->script_text .= $line . PHP_EOL;
+            }
+        }
+        $newList = array_merge($fileList, $this->fileListAray);
+        $newList = array_unique($newList);
+
+        if (count($newList) > 0) {
+            $file_list = implode("\n", $newList);
+            $this->script_filelist .= $file_list;
+        }
+        $this->script_filelist = str_replace("\"\n", '",\\' . PHP_EOL, $this->script_filelist);
+        $this->script_text .= str_replace(__CURRENT_DIRECTORY__ . '/', '', $this->script_filelist) . PHP_EOL;
+    }
+
     public function addFiles()
     {
         if (count($this->fileListAray) > 0) {
             $file_list = implode("\n", $this->fileListAray);
             $this->script_filelist .= $file_list;
         }
-
         $this->script_filelist = str_replace("\"\n", '",\\' . PHP_EOL, $this->script_filelist);
         $this->script_text .= str_replace(__CURRENT_DIRECTORY__ . '/', '', $this->script_filelist) . PHP_EOL;
     }
@@ -193,10 +228,10 @@ EOD;
     public function write(bool $singleLine = true)
     {
         // utminfo(func_get_args());
-
         if (file_exists($this->script)) {
             Filesystem::delete($this->script);
         }
+        // utmdd($this->script_text);
 
         // $this->script_text = $this->script_header.\PHP_EOL.$this->script_command.$this->script_filelist;
 

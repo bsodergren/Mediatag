@@ -61,7 +61,7 @@ trait BackupHelper
 
     private function getResults($table)
     {
-        $db = parent::$Storage->dbConn;
+        $db = parent::$dbconn;
 
         if (Option::isTrue('library')) {
             if (! str_contains($table, 'mediatag_video_custom')) {

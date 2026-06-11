@@ -25,7 +25,6 @@ use function is_array;
 class Storage
 {
     use DbMap;
-    use StorageDB;
     use TagDB;
 
     public $DbFileArray = [];

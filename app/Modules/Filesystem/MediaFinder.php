@@ -11,6 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
 use Mediatag\Traits\AutoWrapper;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
@@ -32,6 +33,7 @@ use function is_array;
 class MediaFinder extends SFinder
 {
     use AutoWrapper;
+    use ScriptWriterHelper;
 
     /**
      * Summary of video_file.
@@ -292,7 +294,6 @@ class MediaFinder extends SFinder
         $FileArray = [];
         if (Option::isTrue('filelist')) {
             $file_array = $this->getFilelistOption();
-
             //
         } else {
             // utmdump($search);
@@ -300,6 +301,7 @@ class MediaFinder extends SFinder
             // utmdump($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit, $quiet);
         }
+        // utmdd($file_array);
 
         if (is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
@@ -486,83 +488,5 @@ class MediaFinder extends SFinder
         } else {
             return null;
         }
-    }
-
-    public function scriptNewFiles($file_array)
-    {
-        // utminfo(func_get_args());
-
-        if (count($file_array) > 0) {
-            $this->NewFilesCommandScript($file_array,
-                [
-                    'filename' => 'UpdateNewFiles.sh',
-                    'command'  => 'update',
-                    'options'  => ['update', '-f'],
-                ]);
-            $this->NewFilesCommandScript($file_array,
-                [
-                    'filename' => 'ClearNewfiles.sh',
-                    'command'  => 'update',
-                    'options'  => ['clear', '-f'],
-                ]);
-
-            $this->NewFilesCommandScript($file_array,
-                ['filename'       => 'AddtoDb.sh',
-                    'commandList' => [[
-                        'command'  => 'mediadb',
-                        'options'  => [],
-                        'addfiles' => false,
-                    ],
-                    [
-                        'command'  => 'mediadb',
-                        'options'  => ['both'],
-                        'addfiles' => false,
-                    ],
-                      [
-                        'command'  => 'mediadb',
-                        'options'  => ['json'],
-                        'addfiles' => false,
-                    ],
-                      [
-                        'command'  => 'mediadb',
-                        'options'  => ['json', '-u'],
-                        'addfiles' => false,
-                    ],
-                    ],
-                ]
-                );
-        }
-    }
-
-    private function NewFilesCommandScript($file_array, $options)
-    {
-        utmdump($options);
-        $obj = new ScriptWriter($options['filename'], __CURRENT_DIRECTORY__);
-
-        if (array_key_exists('commandList', $options)) {
-            foreach($options['commandList'] as $newOption){
-                $obj = $this->addCmdBody($obj, $file_array, $newOption);
-            }
-        } else {
-             $obj = $this->addCmdBody($obj, $file_array, $options);
-        }
-
-        $obj->write();
-        Mediatag::$output->writeln('Wrote ' . $options['filename'] . ' script');
-    }
-
-    private function addCmdBody($obj, $file_array, $options)
-    {
-
-        $addFiles = $options['addfiles'] ?? true;
-        $obj->addCmd($options['command'], $options['options'], true, $addFiles);
-        if ($addFiles === true) {
-            foreach ($file_array as $i => $missing_file) {
-                $obj->addFile($missing_file, false);
-            }
-            $obj->addFiles();
-        }
-
-        return $obj;
     }
 }

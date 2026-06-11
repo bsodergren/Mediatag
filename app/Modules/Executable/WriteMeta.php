@@ -75,7 +75,7 @@ class WriteMeta extends MediatagExec
 
         $this->addOptionArg('--overWrite');
         MediaCache::forget($this->video_key);
-        Mediatag::$Console->writeln('Clearing metadata for ' . $this->video_file);
+        // Mediatag::$Console->writeln('Clearing metadata for ' . $this->video_file);
         $this->write();
     }
 

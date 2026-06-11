@@ -66,14 +66,14 @@ class Display
 
         $this->formatter = new FormatterHelper;
 
-        // $outputStyle = new OutputFormatterStyle('red');
-        // Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
+        $outputStyle = new OutputFormatterStyle('red');
+        Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
 
-        // $currentTagStyle = new OutputFormatterStyle('magenta');
-        // Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
+        $currentTagStyle = new OutputFormatterStyle('magenta');
+        Mediatag::$output->getFormatter()->setStyle('currentTag', $currentTagStyle);
 
-        // $updateTagStyle = new OutputFormatterStyle('bright-green');
-        // Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
+        $updateTagStyle = new OutputFormatterStyle('bright-green');
+        Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
 
         $this->BarSection1      = Mediatag::$output->section();
         $this->BarSection2      = Mediatag::$output->section();
@@ -199,26 +199,32 @@ class Display
             $tagMethod = 'update';
             $tagValue  = '';
             // utmdump(['Row' => $row]);
-            if (preg_match('/\<(?P<method>[a-zA-Z=]+)\>\[(?P<tag>[a-zA-Z]+)\](\<\/[a-zA-Z]+\>)\s+\<[a-zA-Z]+\>(?P<value>.*)(\<\/>)/i', $row, $matches)) {
-                $tagName   = $matches['tag'];
-                $tagMethod = $matches['method'];
-                $tagValue  = $matches['value'];
+            // $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
+
+            $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
+            if ($success) {
+                $array[$matches[1]][$matches[2]] = $matches[3];
             } else {
-                if (preg_match('/\[(?P<tag>(.*))\]/', $row, $matches)) {
-                    $tagName = $matches['tag'];
-                    // utmdump(['first' => $matches]);
+                if (preg_match('/\<(?P<method>[a-zA-Z=]+)\>\[(?P<tag>[a-zA-Z]+)\](\<\/[a-zA-Z]+\>)\s+\<[a-zA-Z]+\>(?P<value>.*)(\<\/>)/i', $row, $matches)) {
+                    $tagName   = $matches['tag'];
+                    $tagMethod = $matches['method'];
+                    $tagValue  = $matches['value'];
+                } else {
+                    if (preg_match('/\[(?P<tag>(.*))\]/', $row, $matches)) {
+                        $tagName = $matches['tag'];
+                        // utmdump(['first' => $matches]);
+                    }
+                    if (preg_match('/\[(?P<tag>.*)\](?P<value>.*)/i', $row, $matches)) {
+                        $tagName  = $matches['tag'];
+                        $tagValue = $matches['value'];
+                        // utmdump(['second' => $matches]);
+                    }
                 }
-                if (preg_match('/\[(?P<tag>.*)\](?P<value>.*)/i', $row, $matches)) {
-                    $tagName  = $matches['tag'];
-                    $tagValue = $matches['value'];
-                    // utmdump(['second' => $matches]);
+                if ($tagName != '') {
+                    $array[$tagName][$tagMethod] = $tagValue;
                 }
-            }
-            if ($tagName != '') {
-                $array[$tagName][$tagMethod] = $tagValue;
             }
         }
-        // utmdd($array);
         $len = 0;
         foreach ($array as $tag => $row) {
             $tagLen = strlen($tag);

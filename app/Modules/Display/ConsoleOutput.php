@@ -20,7 +20,7 @@ class ConsoleOutput
 
     public $io;
 
-    public static $strip_ansi = true;
+    public static $strip_ansi = false;
 
     public function __construct($output, $input)
     {
