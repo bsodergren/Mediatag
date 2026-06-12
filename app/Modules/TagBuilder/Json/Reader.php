@@ -41,7 +41,7 @@ class Reader extends TagReader
         $this->db = Storage::$DB;
 
         $this->expandArray($videoData);
-
+        // utmdump($videoData);
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
             $this->json_array = $this->convertJson($this->json_array);

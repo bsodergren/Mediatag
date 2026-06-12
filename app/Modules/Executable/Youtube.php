@@ -53,7 +53,7 @@ class Youtube extends MediatagExec
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
-        '--restrict-filenames',
+        // '--restrict-filenames',
         // '-w',
         '-c',
         '--abort-on-unavailable-fragments',
@@ -162,12 +162,10 @@ class Youtube extends MediatagExec
             ]);
         }
         if (Option::isfalse('verbose')) {
-                $options = array_merge($options, ['--no-warnings']);
-        }else{
-                $options = array_merge($options, ['-v']);
+            $options = array_merge($options, ['--no-warnings']);
+        } else {
+            $options = array_merge($options, ['-v']);
         }
-
-
 
         if (Option::istrue('archive')) {
             // utmdump(['archive',                PlaylistProcess::$ARCHIVE]);
