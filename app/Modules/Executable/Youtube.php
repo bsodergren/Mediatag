@@ -58,7 +58,7 @@ class Youtube extends MediatagExec
         '-c',
         '--abort-on-unavailable-fragments',
         // '--no-part',
-        '--no-warnings',
+        // '--no-warnings',
         '--ignore-config',
         '--referer',
         'https://www.pornhub.com',
@@ -161,6 +161,13 @@ class Youtube extends MediatagExec
                 PlaylistProcess::$ARCHIVE,
             ]);
         }
+        if (Option::isfalse('verbose')) {
+                $options = array_merge($options, ['--no-warnings']);
+        }else{
+                $options = array_merge($options, ['-v']);
+        }
+
+
 
         if (Option::istrue('archive')) {
             // utmdump(['archive',                PlaylistProcess::$ARCHIVE]);

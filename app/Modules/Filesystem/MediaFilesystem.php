@@ -273,7 +273,6 @@ class MediaFilesystem extends SFilesystem
             $n        = new self;
             $callback = Callback::check([$n, $callback]);
         }
-
         if (is_array($callback)) {
             $callback = Callback::check($callback);
         }
@@ -281,9 +280,11 @@ class MediaFilesystem extends SFilesystem
 
         // }
 
+
         $text  = NetteFile::readLines($file);
         $array = [];
         foreach ($text as $lineNum => $line) {
+
             if ($line != '') {
                 if ($callback == true) {
                     $res = $callback($line);

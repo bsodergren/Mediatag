@@ -6,11 +6,17 @@
 
 namespace Mediatag\Commands\Playlist;
 
+use const DIRECTORY_SEPARATOR;
+use const FILE_IGNORE_NEW_LINES;
+use const FILE_SKIP_EMPTY_LINES;
+use const PHP_EOL;
+use const SORT_STRING;
+
 use Mediatag\Commands\Playlist\Traits\PlaylistIds;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Youtube;
-use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFinder as Finder;
 use Mediatag\Utilities\MediaArray;
@@ -22,12 +28,6 @@ use function array_slice;
 use function count;
 use function in_array;
 use function is_array;
-
-use const DIRECTORY_SEPARATOR;
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_SKIP_EMPTY_LINES;
-use const PHP_EOL;
-use const SORT_STRING;
 
 trait Helper
 {
@@ -253,10 +253,12 @@ trait Helper
             $before = count($f);
 
             $idCnt = count($this->ids);
-            // utmdd([$before, $idCnt]);
             if ($before > 0) {
-                $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array        = MediaArray::array_iunique($array);
+                $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+
+                if (count($array) > 0) {
+                    $array = MediaArray::array_iunique($array);
+                }
                 $after        = count($array);
                 $trimmedLines = $before - $after;
 
