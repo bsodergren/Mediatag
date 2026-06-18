@@ -88,7 +88,7 @@ trait JsonHelper
 
             if (count($actionTags) > 0) {
                 if (! is_null($actionTags['actiontags'])) {
-                    parent::$output->writeln('<info> Found  actiontags, updating video </info>');
+                    //  parent::$output->writeln('<info> Found  actiontags, updating video </info>');
                     $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
                     StorageDB::$DB->updatedJson($json_key, 2);
 
@@ -115,7 +115,7 @@ trait JsonHelper
             if (\str_contains($data, 'actionTags')) {
                 $jsondata = \json_decode($data, true);
                 if ($jsondata['actionTags'] != '') {
-                    parent::$output->writeln('<info>' . basename($json_file) . ' </info>');
+                    // parent::$output->writeln('<info>' . basename($json_file) . ' </info>');
                     StorageDB::$DB->updatedJson($json_key, 1);
                 }
             }
@@ -152,7 +152,9 @@ trait JsonHelper
                 $total++;
             }
         }
-        parent::$output->writeln($id . ' <id>Added ' . $total . ' tags for ' . basename($videoInfo['video_file']) . '</id>');
+        if ($total > 0) {
+            parent::$output->writeln($id . ' <id>Added ' . $total . ' tags for ' . basename($videoInfo['video_file']) . '</id>');
+        }
 
         //
         // utmdd($video_id, $markerArray);

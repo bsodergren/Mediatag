@@ -146,11 +146,10 @@ class StorageDB extends Storage
     {
         // utminfo(func_get_args());
 
-        $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
+        //        $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
         $fileListArray = [];
 
         $query = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
-        // utmdd($query);
 
         $results = $this->query($query);
         foreach ($results as $key => $arr) {

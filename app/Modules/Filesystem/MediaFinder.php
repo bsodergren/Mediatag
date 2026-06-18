@@ -8,6 +8,7 @@ namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
 use Mediatag\Traits\AutoWrapper;
@@ -357,7 +358,7 @@ class MediaFinder extends SFinder
     {
         // utminfo(func_get_args());
         if (is_null($search)) {
-            $search = '*.mp4';
+            $search = '/\.mp4$/i';
         }
 
         Mediatag::info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
@@ -381,12 +382,11 @@ class MediaFinder extends SFinder
         // else {
         //     $finder->files()->in($path)->name($search)->sortByCaseInsensitiveName();
         // }
-        // utmdd($path, $search);
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
             $finder->date('> ' . $date);
-            // utmdd($finder);
         }
+
         if ($finder->hasResults()) {
             foreach ($finder as $file) {
                 $video_file = $file->getRealPath();
@@ -404,8 +404,9 @@ class MediaFinder extends SFinder
             if (
                 Option::isTrue('new')
             ) {
+                // utmdd($file_array);
+
                 $file_array = $this->onlyNew($path, $file_array);
-                //  utmdd($file_array);
             }
 
             if (is_array($file_array)) {
@@ -428,7 +429,7 @@ class MediaFinder extends SFinder
             }
         }
         if ($exit === true) {
-            Mediatag::$output->writeln('<info>No files found</info>' . self::$TextMessage);
+            Mediatag::$output->writeln('<info>xxx No files found</info>' . self::$TextMessage);
             exit;
         }
 
@@ -465,8 +466,8 @@ class MediaFinder extends SFinder
             return $fileArray;
         }
 
-        $db_array = Storage::$DB->getDbFileList();
-
+        $db_array = (new StorageDB)->getDbFileList();
+        // utmdd($db_array);
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);
             $New_Array     = MediaArray::diff($fileArray, $db_array, false);
