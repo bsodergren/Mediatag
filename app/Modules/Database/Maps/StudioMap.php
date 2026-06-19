@@ -12,6 +12,7 @@ trait StudioMap
     {
         $query  = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $text . "'";
         $result = $this->queryOne($query);
+
         if ($result !== null) {
             if ($result['library'] == 'Pornhub') {
                 $result['library'] = 'New';
@@ -30,7 +31,7 @@ trait StudioMap
 
             // return rtrim($result['path'], '/');
         }
-        $this->addStudioToMap($tag, ['library' => __LIBRARY__, 'name' => $text, 'studio' => $text, 'path' => null]);
+        $this->addStudioToMap($tag, ['library' => 'New', 'name' => $text, 'studio' => $text, 'path' => null]);
         $this->getStudioPathMap($text);
 
         return false;
