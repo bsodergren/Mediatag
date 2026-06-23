@@ -69,7 +69,6 @@ trait Title
                 $title    = trim(str_replace($this->getTitleDelim(), ' ', $title));
                 $pretitle = $title;
                 $title    = (new Javascript($video_key))->read($title);
-                // utmdump(['Title Tag', ['before' => $pretitle, 'after' => $title]]);
 
                 if ($pretitle != $title) {
                     // utmdump(['Title Tag', ['before' => $pretitle, 'after' => $title]]);

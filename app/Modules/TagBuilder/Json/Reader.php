@@ -35,10 +35,14 @@ class Reader extends TagReader
 
     private $json_array = [];
 
+    public static $HasField = [];
+
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
         $this->db = Storage::$DB;
+
+        self::$HasField = [];
 
         $this->expandArray($videoData);
         // utmdump($videoData);
@@ -252,6 +256,11 @@ class Reader extends TagReader
                 if (! isset($this->tag_array['artist'])) {
                     $this->titleArtist();
                 }
+            }
+        }
+        if (array_key_exists($tag, $this->tag_array)) {
+            if (! is_null($this->tag_array[$tag])) {
+                self::$HasField[$tag] = 'true';
             }
         }
     }

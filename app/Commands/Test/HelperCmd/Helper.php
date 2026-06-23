@@ -10,22 +10,21 @@ use const DIRECTORY_SEPARATOR;
 use const PHP_EOL;
 
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
 use Mediatag\Bundle\Grephp\Grephp;
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
-use Mediatag\Modules\Filesystem\MediaFinder;
+use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
 use Mediatag\Modules\Metatags\MetaTagInfo;
+use Mediatag\Modules\TagBuilder\Json\Reader;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Modules\VideoData\VideoData;
-use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Traits\MediaFFmpeg;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder as NetteFinder;
 use Nette\Utils\Strings;
-use Paramako\Pornhub\Factory;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
 use UTMDbLib\Metatags\Artist;
@@ -36,6 +35,41 @@ use function dirname;
 trait Helper
 {
     use MediaFFmpeg;
+    use ScriptWriterHelper;
+
+    public function getJsonFilelist()
+    {
+        $conn = new StorageDB;
+
+        $file_array = $conn->getDbFileList();
+
+        $filearray    = [];
+        $jsonFileList = [];
+
+        // utmdump($this->file_array);
+        foreach ($file_array as $json_key => $file) {
+            $backupFile = '';
+            if (str_starts_with($json_key, 'x')) {
+                $json_file = __STUDIO_JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+            } else {
+                $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+            }
+
+            if (\file_exists($json_file)) {
+                $json_file = Reader::checkJsonForUpdate($json_file, $json_key);
+
+                $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
+                $jsonFileList[]       = $file;
+            }
+        }
+
+        $this->NewFilesCommandScript($jsonFileList,
+            [
+                'filename' => 'UpdateNewFiles.sh',
+                'command'  => 'update',
+                'options'  => ['update', '-f'],
+            ]);
+    }
 
     public function subtitlepath($file)
     {

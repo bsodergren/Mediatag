@@ -86,6 +86,12 @@ trait ScriptWriterHelper
     private function NewFilesCommandScript($file_array, $options)
     {
         // utmdump($options);
+        if (count($file_array) < 1) {
+            Mediatag::$output->writeln('No files found');
+
+            return false;
+        }
+
         $obj = new ScriptWriter($options['filename'], __CURRENT_DIRECTORY__);
 
         if (array_key_exists('commandList', $options)) {

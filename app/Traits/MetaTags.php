@@ -12,6 +12,7 @@ use Mediatag\Modules\Metatags\Genre;
 use Mediatag\Modules\Metatags\Keyword;
 use Mediatag\Modules\Metatags\Title;
 use Mediatag\Modules\TagBuilder\File\Reader as fileReader;
+use Mediatag\Modules\TagBuilder\Json\Reader as JsonReader;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\MediaArray;
 use Symfony\Component\Filesystem\Filesystem;
@@ -27,6 +28,8 @@ trait MetaTags
 {
     //  public $className;
     public static $tagDB;
+
+    private static $dontCombine = ['studio' => 1, 'network' => 1, 'title' => 1];
 
     public static $Videokey = '';
 
@@ -119,21 +122,21 @@ trait MetaTags
         $studio_dir   = (new Filesystem)->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
-        if(array_key_exists(3,$studio_array)){
-               $key_studio   = $studio_array[1];
+        if (array_key_exists(3, $studio_array)) {
+            $key_studio = $studio_array[1];
         } else {
-            $key_studio   = $studio_array[0];
+            $key_studio = $studio_array[0];
         }
 
         if (isset(fileReader::$PatternClass)) {
             $studio_str = fileReader::$PatternClassObj->getStudio();
             // utmdump(['Studio from pattern' => $studio_str]);
-            $studio_str = trim($key_studio .'/'. $studio_str,"/");
-            $arr = explode('/', $studio_str);
-            $arr = MediaArray::array_iunique($arr);
+            $studio_str = trim($key_studio . '/' . $studio_str, '/');
+            $arr        = explode('/', $studio_str);
+            $arr        = MediaArray::array_iunique($arr);
         }
         // utmdump(['Clean Studio' => ['Input' => $text, 'Studio Array' => $arr,
-            // 'Studio Dir'                    => $studio_dir, 'Studio Array 2' => $studio_array]]);
+        // 'Studio Dir'                    => $studio_dir, 'Studio Array 2' => $studio_array]]);
 
         return implode('/', $arr);
     }
@@ -175,6 +178,26 @@ trait MetaTags
             $second = '';
         }
 
+        if (count(JsonReader::$HasField) > 0) {
+            // utmdump(JsonReader::$HasField);
+            // utmdump('Tag ' . $tag . ' exist in json');
+            if (array_key_exists($tag, JsonReader::$HasField)) {
+                // utmdump('Tag ' . $tag . ' does exist');
+                // utmdump(self::$dontCombine);
+                // utmdump('Dont Combine Tag ' . $tag);
+
+                if (array_key_exists($tag, self::$dontCombine)) {
+                    // utmdump('Not Combining Tag ' . $tag);
+                    // utmdd([$tag, $first, $second]);
+                    if ($second != '') {
+                        return $second;
+                    }
+                    if ($first != '') {
+                        return $first;
+                    }
+                }
+            }
+        }
         $firstCmp  = str_replace(' ', '', strtoupper($first));
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
@@ -297,10 +320,11 @@ trait MetaTags
         $method = 'priority' . $priority;
 
         if ($tag == 'title' || $tag == 'studio') {
-                    $method = 'priority';
+            $method = 'priority';
             // self::dumpTag($tag, $method . ':' . __LINE__, ['return' => $return]);
         }
-         $return = self::$method($first, $second, $tag);
+        $return = self::$method($first, $second, $tag);
+
         return $return;
     }
 

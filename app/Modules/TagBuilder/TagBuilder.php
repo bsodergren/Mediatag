@@ -9,6 +9,7 @@ namespace Mediatag\Modules\TagBuilder;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\TagBuilder\File\Reader as FileReader;
+use Mediatag\Modules\TagBuilder\Json\Reader as JsonReader;
 use Mediatag\Traits\MetaTags;
 use Mediatag\Utilities\MediaArray;
 use UTM\Bundle\Monolog\UTMLog;
@@ -53,7 +54,6 @@ class TagBuilder
 
             // if (! str_starts_with($this->video_key, 'x')) {
             $jsonupdates = $this->ReaderObj->getJsonValues();
-            // utmdd($jsonupdates);
             if (count($jsonupdates) > 0) {
                 Mediatag::notice('jsonupdates {jsonupdates} ', ['jsonupdates' => $jsonupdates]);
 
@@ -78,10 +78,16 @@ class TagBuilder
         // }
         if ($jsonupdates !== null) {
             $updates = $this->mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
+            // utmdd($updates);
+
+            JsonReader::$HasField = [];
         }
+
         if ($DbUpdates !== null) {
             $updates = self::mergetags($updates, $DbUpdates, $this->video_key, 'Combine');
         }
+        // utmdd($updates);
+
         if (isset($updates)) {
             // //
             // UTMlog::Logger('Reader', $updates);
@@ -130,7 +136,7 @@ class TagBuilder
                 $videoInfo['updateTags'] = self::compareTags($current, $updates);
             }
         }
-// utmdump(['File Updates' => $videoInfo]);
+        // utmdump(['File Updates' => $videoInfo]);
 
         return $videoInfo;
     }
