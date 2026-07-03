@@ -4,13 +4,13 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\TwentyFirstSextury ;
+namespace Mediatag\Patterns\Studios\TwentyFirstSextury;
 
 const DEEPTHROATFRENZY_REGEX_COMMON = '//i';
 
-
 use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
-class  DeepthroatFrenzy  extends  TwentyFirstSextury
+
+class DeepthroatFrenzy extends TwentyFirstSextury
 {
     public $studio = 'Deepthroat Frenzy';
 

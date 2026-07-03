@@ -1,7 +1,7 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
- *
  */
 
 namespace Mediatag\Patterns\Studios\TwentyFirstSextury;
@@ -13,8 +13,7 @@ const BUSTYFEVER_REGEX_COMMON = '//i';
 
 class BustyFever extends TwentyFirstSextury
 {
-
     public $studio = 'Busty Fever';
-    public $network = '21st Sextury';
 
+    public $network = '21st Sextury';
 }

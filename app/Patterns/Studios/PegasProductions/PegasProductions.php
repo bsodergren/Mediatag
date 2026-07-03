@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\PegasProductions ;
+namespace Mediatag\Patterns\Studios\PegasProductions;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 

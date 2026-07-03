@@ -1,7 +1,7 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
- *
  */
 
 namespace Mediatag\Patterns\Studios\BlowPass;
@@ -13,8 +13,7 @@ const MOMMYBLOWSBEST_REGEX_COMMON = '//i';
 
 class MommyBlowsBest extends BlowPass
 {
-
     public $studio = 'Mommy Blows Best';
-    public $network = 'Blow Pass';
 
+    public $network = 'Blow Pass';
 }

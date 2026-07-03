@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\MileHighMedia ;
+namespace Mediatag\Patterns\Studios\MileHighMedia;
 
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\TagBuilder\TagBuilder;
@@ -14,9 +14,9 @@ use function array_key_exists;
 
 const REALITYJUNKIES_REGEX_COMMON = '/([a-z\-]+)-?([0-9]{1,2})?-scene-([0-9]+)([a-z-]+)?_?([a-zA-Z_]+)?_[0-9pk]{1,5}.mp4/i';
 
-
 use Mediatag\Patterns\Studios\MileHighMedia\MileHighMedia;
-class  RealityJunkies  extends  MileHighMedia
+
+class RealityJunkies extends MileHighMedia
 {
     public $studio = 'Reality Junkies';
 

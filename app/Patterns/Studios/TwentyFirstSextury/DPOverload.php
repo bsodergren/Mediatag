@@ -4,11 +4,11 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\TwentyFirstSextury ;
-
+namespace Mediatag\Patterns\Studios\TwentyFirstSextury;
 
 use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
-class  DPOverload  extends  TwentyFirstSextury
+
+class DPOverload extends TwentyFirstSextury
 {
     public $studio = 'Dp Overload';
 

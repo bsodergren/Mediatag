@@ -16,6 +16,4 @@ class GiveMeTeens extends DevilsFilm
     public $studio = 'Devils Film';
 
     public $network = 'Devils Film';
-
-
 }

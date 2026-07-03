@@ -66,7 +66,7 @@ trait StudioReader
 
     private function notPhFile()
     {
-        $json   = new jsonReader($this->videoData);
+        $json = new jsonReader($this->videoData);
 
         $return = $json->studio();
         if (count($return) > 0) {

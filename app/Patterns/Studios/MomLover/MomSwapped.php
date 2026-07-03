@@ -4,15 +4,16 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\MomLover ;
+namespace Mediatag\Patterns\Studios\MomLover;
 
 const MOMSWAPPED_REGEX_COMMON = '//i';
 
-
 use Mediatag\Patterns\Studios\MomLover\MomLover;
-class  MomSwapped  extends  MomLover
+
+class MomSwapped extends MomLover
 {
     public $studio = 'Mom Swapped';
+
     public $network = 'Mom Lover';
 
     public $regex = [

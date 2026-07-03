@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\MomLover ;
+namespace Mediatag\Patterns\Studios\MomLover;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 

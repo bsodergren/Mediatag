@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\NaughtyAmerica ;
+namespace Mediatag\Patterns\Studios\NaughtyAmerica;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 
@@ -15,6 +15,4 @@ class NaughtyAmerica extends Patterns
     public $studio = 'Naughty America';
 
     public $network = 'Naughty America';
-
-
 }

@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\BlowPass ;
+namespace Mediatag\Patterns\Studios\BlowPass;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 

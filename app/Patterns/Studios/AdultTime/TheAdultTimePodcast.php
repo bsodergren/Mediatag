@@ -1,7 +1,7 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
- *
  */
 
 namespace Mediatag\Patterns\Studios\AdultTime;
@@ -13,8 +13,7 @@ const THEADULTTIMEPODCAST_REGEX_COMMON = '//i';
 
 class TheAdultTimePodcast extends AdultTime
 {
-
     public $studio = 'The Adult Time Podcast';
-    public $network = 'Adult Time';
 
+    public $network = 'Adult Time';
 }

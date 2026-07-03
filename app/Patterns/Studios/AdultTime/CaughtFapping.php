@@ -1,7 +1,7 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
- *
  */
 
 namespace Mediatag\Patterns\Studios\AdultTime;
@@ -13,8 +13,7 @@ const CAUGHTFAPPING_REGEX_COMMON = '//i';
 
 class CaughtFapping extends AdultTime
 {
-
     public $studio = 'Caught Fapping';
-    public $network = 'Adult Time';
 
+    public $network = 'Adult Time';
 }

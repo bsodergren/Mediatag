@@ -4,16 +4,17 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\TeamSkeet ;
+namespace Mediatag\Patterns\Studios\TeamSkeet;
 
 const FAMILYSTROKES_REGEX_COMMON = '//i';
 
-
 use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
-class  FamilyStrokes  extends  TeamSkeet
+
+class FamilyStrokes extends TeamSkeet
 {
     public $studio = 'Family Strokes';
-public $network = 'Team Skeet';
+
+    public $network = 'Team Skeet';
     // public $regex     = [
     //     'familystrokes' => [
     //         'artist' => [

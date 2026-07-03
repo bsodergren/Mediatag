@@ -4,7 +4,7 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\FantasyMassage ;
+namespace Mediatag\Patterns\Studios\FantasyMassage;
 
 use Mediatag\Modules\TagBuilder\Patterns;
 

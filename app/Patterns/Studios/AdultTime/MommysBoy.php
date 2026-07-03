@@ -4,13 +4,13 @@
  * Command like Metatag writer for video files.
  */
 
-namespace  Mediatag\Patterns\Studios\AdultTime ;
+namespace Mediatag\Patterns\Studios\AdultTime;
 
 const MOMMYSBOY_REGEX_COMMON = '//i';
 
-
 use Mediatag\Patterns\Studios\AdultTime\AdultTime;
-class  MommysBoy  extends  AdultTime
+
+class MommysBoy extends AdultTime
 {
     public $studio = 'Mommys Boy';
 

@@ -5,9 +5,9 @@
  */
 
 namespace Mediatag\Patterns\Studios\NewSensations;
-use Mediatag\Patterns\Studios\NewSensations\NewSensations;
 
 use Mediatag\Modules\TagBuilder\Patterns;
+use Mediatag\Patterns\Studios\NewSensations\NewSensations;
 
 const PROUDSTAGOFASEXYVIXEN_REGEX_COMMON = '//i';
 
