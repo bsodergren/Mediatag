@@ -72,9 +72,9 @@ class Reader extends TagReader
         $this->getnetwork();
 
         $networkName = $this->getStudioClass($this->network);
+
         $studioClass = $classPath . $this->video_library . $networkName . $studioName;
 
-        // utmdump(['Studio Class' => $studioClass, 'Network Name' => $networkName, 'Studio Name' => $studioName]);
 
         // if (Option::isTrue('addNetwork')) {
         //     $networkName      = Option::getValue('addNetwork', 1);
@@ -159,7 +159,6 @@ class Reader extends TagReader
         if ($className == '') {
             return '';
         }
-
         return '\\' . $this->mapStudio($className);
     }
 
@@ -200,7 +199,6 @@ class Reader extends TagReader
         if (array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
         }
-
         return $studio;
     }
 
@@ -240,8 +238,6 @@ class Reader extends TagReader
                 $this->isPhFile();
             }
         }
-        // utmdump($this->studio);
-
         return $this->studio;
     }
 

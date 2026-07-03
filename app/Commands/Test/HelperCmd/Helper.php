@@ -37,6 +37,41 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    public function RenamePrivate()
+    {
+        $filelist_array = $this->VideoList['file'];
+        foreach ($filelist_array as $key => $fileInfo) {
+            $existing_json_file = null;
+            if (preg_match('/\-([a-zA-Z0-9]{0,6}_[a-zA-Z0-9]{3}_[0-9]{0,4}\.mp4)/', $fileInfo['video_name'], $output_array)) {
+                //find old jsonFile
+                // rename old file to new file
+
+                $video_file = $fileInfo['video_file'];
+                $new_file   = $fileInfo['video_path'] . DIRECTORY_SEPARATOR . $output_array[1];
+
+                Mediatag::$Console->writeln('<info>renaming</>');
+                Mediatag::$Console->writeln('<comment>' . $fileInfo['video_name'] . ' to </>');
+                Mediatag::$Console->writeln('<comment>' . $new_file . ' </>');
+
+                FileSystem::rename($video_file, $new_file,false);
+                $videoFile   = new MediaFile($new_file);
+                $newvideokey = $videoFile->videokey();
+
+                $json_file   = __STUDIO_JSON_CACHE_DIR__ . '/' . $fileInfo['video_key'] . '.info.json';
+                $newJsonFile = __STUDIO_JSON_CACHE_DIR__ . '/' . $newvideokey . '.info.json';
+                if (\file_exists($json_file)) {
+                    FileSystem::rename($json_file, $newJsonFile);
+                }
+
+
+                utmdump([$json_file, $newJsonFile, $video_file, $new_file]);
+            }
+            Mediatag::$Console->writeln('<info>' . $fileInfo['video_name'] . '</>');
+        }
+
+        //preg_match('/\-([a-zA-Z0-9]{0,6}_[a-zA-Z0-9]{3}_[0-9]{0,4}\.mp4)/', $input_line, $output_array);
+    }
+
     public function getJsonFilelist()
     {
         $conn = new StorageDB;
