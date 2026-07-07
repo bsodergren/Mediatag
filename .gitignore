@@ -21,10 +21,9 @@ bin/list.php
 app/Component/Filesystem/.php-cs-fixer.cache
 composer.lock
 composer.lock
-.vscode/settings.json
+
 config.ini
 composer.lock
-.vscode/
 app/Commands/mfiles.sh
 vendor
 .env-server
@@ -35,7 +34,6 @@ mediaphdb_tracefile.txt
 bin/*.log
 
 ###> friendsofphp/php-cs-fixer ###
-/.php-cs-fixer.php
 /.php-cs-fixer.cache
 ###< friendsofphp/php-cs-fixer ###
 app/Commands/Test/HelperCmd/output/*
