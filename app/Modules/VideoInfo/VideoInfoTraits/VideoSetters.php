@@ -45,7 +45,6 @@ trait VideoSetters
             }
         }
 
-        // utmdd($this->VideoInfo, $this->VideoDataTable);
 
         if (Storage::$DB->insert($this->VideoInfo, $this->VideoDataTable)) {
             // $this->returnText = '<comment>Updated</comment> ';//.$this->videoData;
@@ -77,6 +76,7 @@ trait VideoSetters
 
             foreach ($file_array as $key => $file) {
                 if (file_exists($file)) {
+
                     $res = $this->getVideoInfo($key, $file);
 
                     if ($res !== false) {

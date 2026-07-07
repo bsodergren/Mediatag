@@ -94,6 +94,11 @@ class Storage
         }
     }
 
+    public function escape($string)
+    {
+        return $this->mysqllib->escape($string);
+    }
+
     public function trace()
     {
         // utmdump($this->mysqllib->trace);
