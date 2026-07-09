@@ -12,6 +12,7 @@ use Mediatag\Modules\TagBuilder\File\StudioReader;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Mediatag\Utilities\ScriptWriter;
+use Nette\Utils\Strings;
 use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Option;
@@ -68,13 +69,14 @@ class Reader extends TagReader
         $networkName = '';
 
         $this->getStudio();
+
         $studioName = $this->getStudioClass($this->studio);
+
         $this->getnetwork();
 
         $networkName = $this->getStudioClass($this->network);
 
         $studioClass = $classPath . $this->video_library . $networkName . $studioName;
-
         // if (Option::isTrue('addNetwork')) {
         //     $networkName      = Option::getValue('addNetwork', 1);
         //     $networkClassName = $this->getStudioClass($networkName);
@@ -147,6 +149,11 @@ class Reader extends TagReader
     public function getStudioClass($studio)
     {
         // utminfo(func_get_args());
+
+        if(str_contains($studio,':')) {
+            $studio = Strings::before($studio,':');
+        }
+
 
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);

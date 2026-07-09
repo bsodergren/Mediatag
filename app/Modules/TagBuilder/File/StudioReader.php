@@ -69,6 +69,7 @@ trait StudioReader
         $json = new jsonReader($this->videoData);
 
         $return = $json->studio();
+
         if (count($return) > 0) {
             if (array_key_exists('studio', $return)) {
                 $this->studio = $return['studio'];
@@ -79,6 +80,7 @@ trait StudioReader
         }
 
         $studio_dir = $this->studioParse();
+
         $studio     = '';
         if ($studio_dir != '') {
             $studio_dir = '/' . $studio_dir;
