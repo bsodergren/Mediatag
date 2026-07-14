@@ -6,15 +6,12 @@
 
 namespace Mediatag\Utilities;
 
-use const CURLOPT_RETURNTRANSFER;
-use const CURLOPT_SSL_VERIFYHOST;
-use const CURLOPT_SSL_VERIFYPEER;
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
+use LanguageDetection\Language;
 use Mediatag\Core\MediaCache;
+use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
+use Symfony\Component\Process\Process;
 
 use function chr;
 use function count;
@@ -23,6 +20,12 @@ use function is_array;
 use function ord;
 use function sprintf;
 use function strlen;
+
+use const CURLOPT_RETURNTRANSFER;
+use const CURLOPT_SSL_VERIFYHOST;
+use const CURLOPT_SSL_VERIFYPEER;
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 class Strings extends \Nette\Utils\Strings
 {
@@ -57,15 +60,17 @@ class Strings extends \Nette\Utils\Strings
         return sprintf('%02d:%02d:%02d', $hours, $minutes, $sec);
     }
 
-    public static function clean($text, $noSpaces = false)
+    public static function clean($text, $noSpaces = false, $translate = false)
     {
         // utminfo(func_get_args());
 
         if ($text == '') {
             return $text;
         }
-        $translate = self::translate($text);
-        $new_text  = trim(self::cleanSpecialChars($translate, $noSpaces, true));
+        if($translate === true){
+            $text = self::translate($text);
+        }
+        $new_text  = trim(self::cleanSpecialChars($text, $noSpaces, true));
         // if($new_text == "") {
 
         // // // utmdump([$text,$new_text,$translate]);
@@ -253,8 +258,25 @@ class Strings extends \Nette\Utils\Strings
 
     public static function translate($inputText, $sep = '_')
     {
-        // if (CONFIG['USE_TRANSLATE'] == '') {
+
+    // 
+        $ld   = new Language(['en','ru']);
+        $lang = $ld->detect($inputText)->bestResults()->close();
+        if (array_key_exists('en', $lang)) {
+
             return $inputText;
+        }
+
+        $command = ['trans', '-b', $inputText];
+        $process = new Process($command);
+        $process->setTimeout(60000);
+        $process->run();
+        $out       = $process->getOutput();
+        $inputText = trim($out);
+
+        // utmdump($inputText);
+        // if (CONFIG['USE_TRANSLATE'] == '') {
+        return $inputText;
         // }
 
         // utminfo(func_get_args());
@@ -393,16 +415,15 @@ class Strings extends \Nette\Utils\Strings
 
     public static function StudioName($name, $forward = true)
     {
-
         $name = str_replace('DP', 'Dp', $name);
         if ($forward === true) {
-
             $name = str_replace('1000', 'Thousand', $name);
             $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
             $name = str_replace('TwentyFirst', '21st', $name);
             $name = str_replace('Thousand', '1000', $name);
         }
+
         return $name;
     }
 

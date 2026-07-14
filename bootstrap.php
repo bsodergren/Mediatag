@@ -10,6 +10,7 @@ use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
 use Mediatag\Core\MediaLogger;
 use Slim\Factory\AppFactory;
+use Symfony\Component\Finder\Finder;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\Debug\UtmStopWatch;
 use UTM\Utm;
@@ -54,6 +55,17 @@ MediaLogger::$pruneLogs = true;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
 new Utm(__LOGFILE_DIR__);
+
+$finder = new Finder();
+$finder->files()->in(__LOGFILE_DIR__)->date("before 1 days ago");
+foreach ($finder as $file) {
+    if($file->getFilename() != "phperror.log"){
+        unlink($file->getRealPath());
+    }
+
+}
+
+
 
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');

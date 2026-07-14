@@ -64,7 +64,7 @@ trait Helper
                 }
 
 
-                utmdump([$json_file, $newJsonFile, $video_file, $new_file]);
+                // utmdump([$json_file, $newJsonFile, $video_file, $new_file]);
             }
             Mediatag::$Console->writeln('<info>' . $fileInfo['video_name'] . '</>');
         }

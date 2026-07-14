@@ -53,7 +53,7 @@ class Youtube extends MediatagExec
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
-        '--restrict-filenames',
+        // '--restrict-filenames',
         // '-w',
         '-c',
         '--abort-on-unavailable-fragments',
@@ -254,7 +254,11 @@ class Youtube extends MediatagExec
         $this->LibraryClass->init($this);
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         $command  = $this->youtubeCmdOptions();
-        // utmdd($command);
+        //
+        if (Option::istrue('test')) {
+            $this->testexec($command, $callback);
+            utmdd($command);
+        }
         $this->exec($command, $callback);
     }
 

@@ -399,7 +399,7 @@ class Storage
 
         $key = str_replace('+', '', $key);
         $key = str_replace('(', '', $key);
-        $txt = Strings::clean($key, true);
+        $txt = Strings::clean($key, true,false);
 
         return $txt;
     }

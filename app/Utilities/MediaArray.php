@@ -105,13 +105,13 @@ class MediaArray
 
             foreach ($array as $key => $parts) {
                 if (str_starts_with($line, $parts['name'])) {
-                    utmdump([$parts['name'], $line]);
+                    // utmdump([$parts['name'], $line]);
 
                     if (! array_key_exists($i + 1, $str_array)) {
                         continue;
                     }
 
-                    utmdump(['Full Line' => $line . '_' . $str_array[$i + 1]]);
+                    // utmdump(['Full Line' => $line . '_' . $str_array[$i + 1]]);
                     if ($parts['name'] == $line . '_' . $str_array[$i + 1]) {
                         // continue;
                     }
@@ -137,7 +137,7 @@ class MediaArray
         if (count($namesArray) == 0) {
             return null;
         }
-        utmdump($namesArray);
+        // utmdump($namesArray);
 
         return $namesArray;
     }

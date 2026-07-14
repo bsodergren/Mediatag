@@ -47,7 +47,7 @@ class Title extends TagBuilder
         // $text      = strtolower($text);
         // UTMlog::Logger('before', $text);
 
-        $text = Strings::clean($clean_text);
+        $text = Strings::clean($clean_text,false,true);
 
         $text      = str_replace("\\'", "'", $text);
         $text      = str_replace('/', ' ', $text);

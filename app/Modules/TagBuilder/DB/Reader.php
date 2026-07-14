@@ -43,6 +43,7 @@ class Reader extends TagReader
 
         // $this->videoData = $videoData;
         $this->expandArray($videoData);
+
         $this->tag_array = $this->getvideoData($videoData);
     }
 
@@ -55,7 +56,11 @@ class Reader extends TagReader
 
     public function getvideoData(array $file_array)
     {
-        // utminfo(func_get_args());
+
+        $res = $this->videoExists($file_array['video_key']);
+        if ($res === null) {
+            return null;
+        }
 
         $video_info = $this->getVideoInfo($file_array['video_key']);
         if ($video_info === null) {
@@ -63,6 +68,12 @@ class Reader extends TagReader
         }
 
         return $video_info[$this->video_key]['metatags'];
+    }
+
+    private function videoExists($key)
+    {
+      return Storage::$DB->videoExists($key);
+        
     }
 
     private function get($tag)

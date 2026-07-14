@@ -20,9 +20,6 @@
             "type": "php",
             "request": "launch",
             "port": 9003,
-            "pathMappings": {
-                "/home/bjorn/www/public_html/plex_web": "${workspaceRoot}"
-            },
             "noDebug": true,
             "profile": true
         }

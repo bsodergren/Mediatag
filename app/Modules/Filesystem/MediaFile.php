@@ -125,6 +125,15 @@ class MediaFile
             }
         }
 
+        if ($library === null) {
+              $success = preg_match('/-?(p?h?P?H?[a-z0-9]{4,}).(mp4|info.*)/', $filename, $matches);
+                // $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
+                if ($success == 1) {
+                    $video_key = $matches[1];
+                    $library = "Pornhub";
+                }
+        }
+
         if ($library == 'Pornhub') {
             $isPhFile = self::isPornhubfile($filename);
             if ($ext == 'json') {

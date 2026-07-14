@@ -58,7 +58,8 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/migrations": "^3.9",
         "jbzoo/utils": "^7.3",
-        "stecman/symfony-console-completion": "^0.15.0"
+        "stecman/symfony-console-completion": "^0.15.0",
+        "patrickschur/language-detection": "^5.3"
     },
     "scripts": {
         "clean": [

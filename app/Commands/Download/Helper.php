@@ -89,7 +89,7 @@ trait Helper
         if ($file_array !== null) {
             foreach ($file_array as $key => $file) {
                 $videoInfo = File::file($file);
-                // utmdump($videoInfo);
+
                 $out       = '';
                 $ytdl_file = $videoInfo['video_file'] . '.ytdl';
                 $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);
@@ -137,10 +137,10 @@ trait Helper
 
         if ($fileArray !== null) {
             foreach ($fileArray as $row) {
+
                 $key          = $row['key'];
                 $json_file    = $row['src'];
                 $newJson_file = __JSON_CACHE_DIR__ . '/' . $key . '.info.json';
-
                 if (! Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
@@ -235,6 +235,7 @@ trait Helper
         $old_file = $old_path . '/' . $old_name;
         $new_file = $video_path . '/' . $video_name;
 
+        // utmdump([$old_file, $new_file]);
         if (! Mediatag::$filesystem->exists($new_file)) {
             if (Option::istrue('test')) {
                 return "<question>Video</question>\n\t<comment>Old:" . basename($old_file) . "</comment>\n\t<info>New:" . $new_file . "</info>\n";
@@ -321,4 +322,10 @@ trait Helper
         //
         return $fileArray;
     }
+
+
+    // private getFilename($videoInfo, $filetype="video"){
+
+
+    // }
 }
