@@ -6,9 +6,6 @@
 
 namespace Mediatag\Modules\Executable;
 
-use const FILE_APPEND;
-use const PHP_EOL;
-
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
@@ -20,8 +17,10 @@ use Mediatag\Traits\AutoWrapper;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
-use function array_key_exists;
 use function count;
+
+use const FILE_IGNORE_NEW_LINES;
+use const FILE_SKIP_EMPTY_LINES;
 
 class Youtube extends MediatagExec
 {
@@ -63,7 +62,8 @@ class Youtube extends MediatagExec
         '--referer',
         'https://www.pornhub.com',
         '--impersonate',
-        'chrome',
+        'Edge-101',
+        // '--list-impersonate-targets'
     ];
 
     // private $jsonoptions = [
@@ -87,7 +87,7 @@ class Youtube extends MediatagExec
 
     public const __YT_DL_FORMAT__ = '%(uploader)s/%(title)s-%(id)s.%(ext)s';
 
-    public $buffer_file = __APP_HOME__ . '/var/log/buffer.txt';
+    public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
 
     public $library;
 
@@ -126,7 +126,7 @@ class Youtube extends MediatagExec
         $this->library = $class;
         //        use Mediatag\Modules\Executable\Helper\Studio;
 
-        $Class = 'Mediatag\\Modules\\Executable\\Helper\\' . $class;
+        $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
         // utmdd($class);
         $this->LibraryClass = new $Class($this);
 
@@ -151,10 +151,10 @@ class Youtube extends MediatagExec
     {
         $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (
-            ! Option::istrue('ignore')
-            && ! Option::istrue('skip')
-            && $this->downloadFiles === true
-            && ! Option::istrue('archive')
+            !Option::istrue('ignore')
+            && !Option::istrue('skip')
+            && true === $this->downloadFiles
+            && !Option::istrue('archive')
         ) {
             $options = array_merge($options, [
                 '--download-archive',
@@ -172,12 +172,12 @@ class Youtube extends MediatagExec
             $options = array_merge($options, [
                 '--download-archive',
 
-                __PLEX_PL_DIR__ . '/ids/' . Option::getValue('archive') . '.txt',
+                __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
                 '--force-write-archive',
             ]);
         }
 
-        if (Option::istrue('skip') || $this->downloadFiles === false) {
+        if (Option::istrue('skip') || false === $this->downloadFiles) {
             $options = array_merge($options, ['--skip-download']);
         }
 
@@ -185,7 +185,6 @@ class Youtube extends MediatagExec
             $options = array_merge($options, ['--max-downloads', Option::getValue('max')]);
         }
 
-        // utmdd($options, Option::getOptions());
         $playlist_opt = ['-a', $this->playlist];
         // $playlist_opt = [$this->download_url];
 
@@ -193,7 +192,9 @@ class Youtube extends MediatagExec
             $playlist_opt = [Option::getValue('url')];
         }
 
-        return array_merge($options, $playlist_opt);
+        $options = array_merge($options, $playlist_opt);
+
+        return $options;
     }
 
     public function createPlaylistFromPH($url)
@@ -208,16 +209,15 @@ class Youtube extends MediatagExec
         $options = [
             '--skip-download',
             // '--print', 'before_dl:webpage_url',
-            '--print', 'before_dl:title',
-            '--print-to-file', 'before_dl:original_url',
+            // '--print', 'before_dl:title',
+            // '--print-to-file', 'before_dl:original_url',
             $this->playlist,
         ];
 
         $this->LibraryClass->init($this);
         $command = $this->youtubeCmdOptions();
         $command = array_merge($command, $options);
-
-        $this->exec($command, Callback::check([$this, 'watchlistCallback']));
+        $this->exec($command);
     }
 
     public function downloadPlaylist($downloadFiles = true)
@@ -229,7 +229,7 @@ class Youtube extends MediatagExec
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
 
-        if (! Option::istrue('url')) {
+        if (!Option::istrue('url')) {
             $names = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);
@@ -237,12 +237,12 @@ class Youtube extends MediatagExec
                 $this->num_of_lines = count($names); // + 1;
             }
 
-            if (! str_contains('premium', $this->playlist)) {
+            if (!str_contains('premium', $this->playlist)) {
                 $this->premium = str_replace('.txt', '_premium.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->premium);
             }
 
-            if (! str_contains('model_hub', $this->playlist)) {
+            if (!str_contains('model_hub', $this->playlist)) {
                 $this->model_hub = str_replace('.txt', '_model_hub.txt', $this->playlist);
                 Filesystem::backupPlaylist($this->model_hub);
             }
@@ -254,7 +254,7 @@ class Youtube extends MediatagExec
         $this->LibraryClass->init($this);
         $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         $command  = $this->youtubeCmdOptions();
-        //
+
         if (Option::istrue('test')) {
             $this->testexec($command, $callback);
             utmdd($command);
@@ -266,40 +266,38 @@ class Youtube extends MediatagExec
     {
         $json_file = null;
         // utminfo(func_get_args());
-        if ($this->library != 'Pornhub') {
+        if ('Pornhub' != $this->library) {
             return null;
         }
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
         $options   = array_merge($options, ['--skip-download']);
-        $video_url = strtolower('https://www.pornhub.com/view_video.php?viewkey=' . $video_key);
-        //648719015
+        $video_url = strtolower('https://www.pornhub.com/view_video.php?viewkey='.$video_key);
+        // 648719015
         $command = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
         $this->exec($command, $callback);
-
-        preg_match('/(\/[a-zA-Z0-9-\/_@.]+)/', $this->yt_json_string, $output_array);
-
-        if (array_key_exists(1, $output_array)) {
-            $json_file = $output_array[1];
-            $this->moveJson($json_file);
+        utmdump([__METHOD__, $this->yt_json_string]);
+        $json_file = trim($this->yt_json_string);
+        if (file_exists($json_file)) {
+            $this->moveJson($json_file, $video_key);
         }
 
         return $json_file;
     }
 
-    public function moveJson($json_file)
+    public function moveJson($json_file, $json_key)
     {
         // utminfo(func_get_args());
 
         // $old_name = $videoInfo['video_name'];
         // $old_path = $videoInfo['video_path'];
-        $json_key = '';
+        // $json_key = '';
         // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
         // utmdump([__METHOD__, $json_file]);
         if (Mediatag::$filesystem->exists($json_file)) {
-            $json_key = MediaFile::getVideoKey($json_file, 'Pornhub');
+            // $json_key = MediaFile::getVideoKey($json_file, 'Pornhub');
             //            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
 
             //     if ($success === 1) {
@@ -308,23 +306,28 @@ class Youtube extends MediatagExec
             //     }
         }
 
-        $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+        $newJson_file = __JSON_CACHE_DIR__.'/'.$json_key.'.info.json';
 
         // utmdd(['json'      => [$json_file, Mediatag::$filesystem->exists($json_file)],
         //     'newJson_file' => [$newJson_file, Mediatag::$filesystem->exists($newJson_file)]]);
+
         if (Mediatag::$filesystem->exists($json_file)) {
-            if (! Mediatag::$filesystem->exists($newJson_file)) {
-                if (Option::istrue('test')) {
-                    $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
-                    Mediatag::$output->writeln($out);
-                } else {
-                    // utmdump([$json_file, $newJson_file, true]);
-                    Filesystem::renameFile($json_file, $newJson_file, true);
+            // if (! Mediatag::$filesystem->exists($newJson_file)) {
+            if (Option::istrue('test')) {
+                $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
+                Mediatag::$output->writeln($out);
+            } else {
+                utmdump([$json_file, $newJson_file]);
+                Filesystem::renameFile($json_file, $newJson_file, true);
+                if (Option::istrue('print')) {
+                    echo 'finisihed';
                 }
             }
+            // }
 
             return true;
         }
+        echo 'duplicate';
 
         return false;
     }

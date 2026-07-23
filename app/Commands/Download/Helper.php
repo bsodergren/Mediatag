@@ -6,14 +6,11 @@
 
 namespace Mediatag\Commands\Download;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\Filesystem\MediaFinder;
-use Mediatag\Modules\TagBuilder\Json\Reader;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
@@ -24,6 +21,9 @@ use UTM\Utilities\Option;
 
 use function array_slice;
 use function count;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait Helper
 {
@@ -36,7 +36,7 @@ trait Helper
         $file_array = [];
         $file_array = Mediatag::$finder->Search(getcwd(), '*.mkv', exit: false);
 
-        if ($file_array === null) {
+        if (null === $file_array) {
             return 0;
         }
         if (Option::isTrue('max')) {
@@ -48,9 +48,9 @@ trait Helper
         if ($count > 0) {
             $this->textSection = Mediatag::$output->section();
             $this->barSection  = Mediatag::$output->section();
-            $this->textSection->writeln('<info> Found ' . $count . ' files to convert</info>');
+            $this->textSection->writeln('<info> Found '.$count.' files to convert</info>');
             foreach ($file_array as $k => $file) {
-                $this->textSection->write('<comment> Converting <info>' . basename($file, '.mkv') . '</info>... </comment>');
+                $this->textSection->write('<comment> Converting <info>'.basename($file, '.mkv').'</info>... </comment>');
                 $this->convertVideo($file, str_ireplace('.mkv', '.mp4', $file));
                 $this->textSection->overwrite('<comment> finished </comment>');
             }
@@ -67,7 +67,7 @@ trait Helper
             $videoInfo               = File::file($file);
             $videoInfo['video_file'] = str_replace('.info.json', '.mp4', $videoInfo['video_file']);
             $videoInfo['video_name'] = str_replace('.info.json', '.mp4', $videoInfo['video_name']);
-            if (! Mediatag::$filesystem->exists($videoInfo['video_file'])) {
+            if (!Mediatag::$filesystem->exists($videoInfo['video_file'])) {
                 $this->moveJson($videoInfo);
             }
             // utmdd($videoInfo);
@@ -81,17 +81,16 @@ trait Helper
     public function moveDownloads()
     {
         // utminfo(func_get_args());
-        $file_array = (new MediaFinder)->Search(getcwd(), '*.mp4', exit: false);
-        // utmdd($file_array, getcwd());
+        $file_array = (new MediaFinder())->Search(getcwd(), '*.mp4', exit: false);
         $this->moveJson();
         // $this->moveCaption();
 
-        if ($file_array !== null) {
+        if (null !== $file_array) {
             foreach ($file_array as $key => $file) {
                 $videoInfo = File::file($file);
 
                 $out       = '';
-                $ytdl_file = $videoInfo['video_file'] . '.ytdl';
+                $ytdl_file = $videoInfo['video_file'].'.ytdl';
                 $temp_file = str_replace('mp4', 'temp.mp4', $videoInfo['video_file']);
                 if (file_exists($ytdl_file)) {
                     Mediatag::$output->writeln($ytdl_file);
@@ -110,7 +109,7 @@ trait Helper
         }
         // utmdd('f');
         if (count($this->newFiles) > 0) {
-            $ScriptWriter = new ScriptWriter('addedFiles.sh', __PLEX_HOME__ . '/Pornhub');
+            $ScriptWriter = new ScriptWriter('addedFiles.sh', __PLEX_HOME__.'/Pornhub');
             $ScriptWriter->addCmd('update', ['-f']);
             $ScriptWriter->addFileList($this->newFiles);
             $ScriptWriter->addFiles();
@@ -122,7 +121,7 @@ trait Helper
             $this->cleanDupeFiles();
         }
 
-        if (! Option::istrue('test')) {
+        if (!Option::istrue('test')) {
             Filesystem::prunedirs();
         }
 
@@ -134,28 +133,26 @@ trait Helper
         // utminfo(func_get_args());
 
         $fileArray = $this->searchDownloads('json');
-
-        if ($fileArray !== null) {
+        if (null !== $fileArray) {
             foreach ($fileArray as $row) {
-
                 $key          = $row['key'];
                 $json_file    = $row['src'];
-                $newJson_file = __JSON_CACHE_DIR__ . '/' . $key . '.info.json';
-                if (! Mediatag::$filesystem->exists($newJson_file)) {
+                $newJson_file = __JSON_CACHE_DIR__.'/'.$key.'.info.json';
+                if (!Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
-                        $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
+                        $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
                         Mediatag::$output->writeln($out);
                     } else {
                         Mediatag::$filesystem->rename($json_file, $newJson_file, false);
                     }
                 } else {
                     if (Option::istrue('overwrite')) {
-                        $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
+                        $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
 
                         Mediatag::$filesystem->rename($json_file, $newJson_file, true);
                     } else {
                         $this->filesToRemove[] = $json_file;
-                        $out                   = '<question>' . basename($newJson_file) . ' already exists</question>';
+                        $out                   = '<question>'.basename($newJson_file).' already exists</question>';
                     }
                     Mediatag::$output->writeln($out);
                 }
@@ -167,35 +164,35 @@ trait Helper
     {
         // utminfo(func_get_args());
         $fileArray = $this->searchDownloads('srt');
-        if ($fileArray !== null) {
+        if (null !== $fileArray) {
             foreach ($fileArray as $row) {
                 $key             = $row['key'];
                 $caption_file    = $row['src'];
-                $newCaption_file = __INC_WEB_CAPTION_ROOT__ . '/' . $key . '.vtt';
+                $newCaption_file = __INC_WEB_CAPTION_ROOT__.'/'.$key.'.vtt';
 
                 // if (Mediatag::$filesystem->exists($caption_file)) {
-                if (! Mediatag::$filesystem->exists($newCaption_file)) {
+                if (!Mediatag::$filesystem->exists($newCaption_file)) {
                     if (Option::istrue('test')) {
-                        $out = "<question>jSon</question>\n\t<comment>Old:" . basename($caption_file) . "</comment>\n\t<info>New:" .
-                         basename($newCaption_file) . '</info>';
+                        $out = "<question>jSon</question>\n\t<comment>Old:".basename($caption_file)."</comment>\n\t<info>New:".
+                         basename($newCaption_file).'</info>';
                         Mediatag::$output->writeln($out);
                     } else {
                         $original = file_get_contents($caption_file);
-                        $vtt      = 'WEBVTT' . PHP_EOL . PHP_EOL . $original;
+                        $vtt      = 'WEBVTT'.PHP_EOL.PHP_EOL.$original;
                         // Replace microseconds separator: 00,000 -> 00.000
                         $vtt = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
 
                         // Write the .vtt file
                         file_put_contents($newCaption_file, $vtt);
                         unlink($caption_file);
-                        $out = '<info>' . basename($newCaption_file) . ' </info>';
+                        $out = '<info>'.basename($newCaption_file).' </info>';
                         Mediatag::$output->writeln($out);
                     }
                 } else {
                     // $this->filesToRemove[] = $caption_file;
                     unlink($caption_file);
 
-                    $out = '<question>' . basename($newCaption_file) . ' already exists</question>';
+                    $out = '<question>'.basename($newCaption_file).' already exists</question>';
                     Mediatag::$output->writeln($out);
                 }
             }
@@ -213,32 +210,32 @@ trait Helper
 
         $video_name = Strings::cleanFileName($old_name);
 
-        $new_path = Strings::after($old_path, __PLEX_DOWNLOADED__ . '/');
+        $new_path = Strings::after($old_path, __PLEX_DOWNLOADED__.'/');
         $new_path = Strings::after($new_path, '/');
 
-        $library = Strings::after($old_path, __PLEX_DOWNLOADED__ . '/');
+        $library = Strings::after($old_path, __PLEX_DOWNLOADED__.'/');
         $library = Strings::before($library, '/');
 
         $video_path  = $videoInfo['video_path'];
         $Destination = 'Premium';
-        if ($library == 'Pornhub') {
+        if ('Pornhub' == $library) {
             $Destination = 'Premium';
         }
-        $video_path = __PLEX_HOME__ . DIRECTORY_SEPARATOR . $library . DIRECTORY_SEPARATOR . $Destination . DIRECTORY_SEPARATOR . $new_path;
+        $video_path = __PLEX_HOME__.DIRECTORY_SEPARATOR.$library.DIRECTORY_SEPARATOR.$Destination.DIRECTORY_SEPARATOR.$new_path;
 
         // $video_path = str_replace('Downloads', $new_path . '/Premium', $videoInfo['video_path']);
         // $video_path = str_replace('Premium/' . $new_path, 'Premium', $video_path);
         // $video_path = str_replace('_', ' ', $video_path);
-        if (! Mediatag::$filesystem->exists($video_path)) {
+        if (!Mediatag::$filesystem->exists($video_path)) {
             Mediatag::$filesystem->mkdir($video_path);
         }
-        $old_file = $old_path . '/' . $old_name;
-        $new_file = $video_path . '/' . $video_name;
+        $old_file = $old_path.'/'.$old_name;
+        $new_file = $video_path.'/'.$video_name;
 
         // utmdump([$old_file, $new_file]);
-        if (! Mediatag::$filesystem->exists($new_file)) {
+        if (!Mediatag::$filesystem->exists($new_file)) {
             if (Option::istrue('test')) {
-                return "<question>Video</question>\n\t<comment>Old:" . basename($old_file) . "</comment>\n\t<info>New:" . $new_file . "</info>\n";
+                return "<question>Video</question>\n\t<comment>Old:".basename($old_file)."</comment>\n\t<info>New:".$new_file."</info>\n";
             }
 
             Mediatag::$filesystem->rename($old_file, $new_file, false);
@@ -249,7 +246,7 @@ trait Helper
         if (Mediatag::$filesystem->exists($new_file)) {
             $this->filesToRemove[] = $old_file;
 
-            return '<error>Video ' . $new_file . ' exists</error>';
+            return '<error>Video '.$new_file.' exists</error>';
         }
     }
 
@@ -258,14 +255,14 @@ trait Helper
         // utminfo(func_get_args());
 
         $go = Chooser::changes('Remove Duplicate files');
-        if ($go == 'overwrite') {
+        if ('overwrite' == $go) {
         }
 
-        if ($go === true) {
+        if (true === $go) {
             foreach ($this->filesToRemove as $file) {
-                Mediatag::$output->writeLn('<info> removing file ' . basename($file) . '</info>');
-                if (! file_exists($file)) {
-                    Mediatag::$output->writeLn('<info>  file ' . $file . ' doesnt exist?</info>');
+                Mediatag::$output->writeLn('<info> removing file '.basename($file).'</info>');
+                if (!file_exists($file)) {
+                    Mediatag::$output->writeLn('<info>  file '.$file.' doesnt exist?</info>');
                 }
                 // NetteFile::delete($file);
                 $ret = Mediatag::$filesystem->remove($file);
@@ -296,7 +293,7 @@ trait Helper
         $fileArray = [];
         switch ($type) {
             case 'json':
-                $search_params = 'info.json';
+                $search_params = 'info.*';
                 $desc          = 'Json ';
                 break;
             case 'srt':
@@ -304,28 +301,24 @@ trait Helper
                 $desc          = 'Caption ';
                 break;
         }
-        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.' . $search_params, exit: false);
+        $file_array = Mediatag::$finder->Search(__PLEX_DOWNLOADED__, '*.'.$search_params, exit: false);
 
-        //  utmdd($file_array);
-        if ($file_array === null) {
+        if (null === $file_array) {
             return null;
         }
         foreach ($file_array as $file) {
-            $library = Strings::before(Strings::after($file, __PLEX_DOWNLOADED__ . '/'), '/');
+            $library = Strings::before(Strings::after($file, __PLEX_DOWNLOADED__.'/'), '/');
 
-            $mp4_file = str_replace('.' . $search_params, '.mp4', $file);
+            $mp4_file = str_replace('.'.$search_params, '.mp4', $file);
             $key      = MediaFile::getVideoKey(basename($mp4_file), $library);
 
             $fileArray[] = ['src' => $file, 'key' => $key];
         }
 
-        //
         return $fileArray;
     }
 
-
     // private getFilename($videoInfo, $filetype="video"){
-
 
     // }
 }

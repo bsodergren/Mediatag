@@ -24,6 +24,8 @@ use UTM\Utilities\Option;
 use function is_array;
 use function is_string;
 
+use const __META_TAGS__;
+
 class MediatagExec
 {
     // use AutoWrapper;
@@ -69,12 +71,12 @@ class MediatagExec
 
     protected $optionArgs = [];
 
-    public $taglist = \__META_TAGS__;
+    public $taglist = __META_TAGS__;
 
     public function __construct($videoData = null, $input = null, $output = null)
     {
         // utmdump(Debug::tracePath());
-        if ($videoData !== null) {
+        if (null !== $videoData) {
             // utminfo($videoData);
             $this->videoData = $videoData;
             //        $this->getTags();
@@ -89,7 +91,7 @@ class MediatagExec
                 if (is_array($value)) {
                     foreach ($value as $key_a => $val_a) {
                         // utmdump(['key' => $key, 'class var' => $this->{$key}, 'value' => $value]);
-                        if (! is_null($this->{$key})) {
+                        if (null !== $this->{$key}) {
                             $this->{$key}[$key_a] = $val_a;
                         }
                     }
@@ -98,10 +100,10 @@ class MediatagExec
                 }
             }
         }
-        if ($input === null) {
+        if (null === $input) {
             $input = Mediatag::$input;
         }
-        if ($output === null) {
+        if (null === $output) {
             $output = Mediatag::$output;
         }
         $this->input  = $input;
@@ -121,8 +123,8 @@ class MediatagExec
     {
         // utminfo(func_get_args());
 
-        if ($this->execMode !== null) {
-            $this->previewTrait('Running ' . $this->runCommand, false);
+        if (null !== $this->execMode) {
+            $this->previewTrait('Running '.$this->runCommand, false);
         }
     }
 
@@ -131,7 +133,7 @@ class MediatagExec
         // utminfo(func_get_args());
         // utmdd("fadsf");
         // if ($this->execMode !== null) {
-            $this->testTrait("\t Running " . $this->runCommand, true);
+        $this->testTrait("\t Running ".$this->runCommand, true);
         // }
     }
 
@@ -203,6 +205,7 @@ class MediatagExec
         // }
         // utmdd($this->runCommand);
         // utmdd($callback);
+        // utmdump($this->runCommand);
         $process->start();
         try {
             // $process->mustRun($callback);

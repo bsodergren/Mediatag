@@ -6,15 +6,14 @@
 
 namespace Mediatag\Modules\Executable\Callbacks\traits;
 
-use const PHP_EOL;
-
-use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
 
 use function array_key_exists;
+
+use const PHP_EOL;
 
 trait YtdlpCallBacks
 {
@@ -28,18 +27,18 @@ trait YtdlpCallBacks
         // MediaFile::file_append_file(__LOGFILE_DIR__ . '/playlist_download.log', $buffer . PHP_EOL);
 
         // return $buffer . PHP_EOL;
-        if (! str_contains($buffer, '[')) {
+        if (!str_contains($buffer, '[')) {
             $output = trim($buffer);
-            $this->Console->writeln('Savng Video ' . $output . ' To Playlist ');
-            // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
-            // //     if (\array_key_exists(2, $matches)) {
-            // //         if ('' != $matches[2]) {
-            // //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
-            // //             $this->Console->writeln($outputText);
+            $this->Console->writeln('Savng Video '.$output.' To Playlist ');
+        // // if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):?\s?+(.*)?/', $buffer, $matches)) {
+        // //     if (\array_key_exists(2, $matches)) {
+        // //         if ('' != $matches[2]) {
+        // //             $outputText                   = '  <id> '.$matches[2].' cancelled </id>';
+        // //             $this->Console->writeln($outputText);
 
-            // //         }
-            // //     }
-            // // }
+        // //         }
+        // //     }
+        // // }
         } else {
             // $this->key = $buffer;
             //     $this->updatePlaylist($this->pltype);
@@ -50,19 +49,18 @@ trait YtdlpCallBacks
     public function downloadJsonCallback($type, $buffer)
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
-
-        MediaFile::file_append_file(__LOGFILE_DIR__ . '/metadata_' . $this->video_key . '.log', $buffer . PHP_EOL);
+        MediaFile::file_append_file(__LOGFILE_DIR__.'/metadata_'.$this->video_key.'.log', $buffer.PHP_EOL);
         // $outputText = '';
         // $line_id    = \PHP_EOL . '<id>' . $this->num_of_lines . '</id>';
         if (preg_match('/(ERROR|\[.*\]):?\s+([a-z0-9]+):\s+(.*)/', $buffer, $matches)) {
             if (array_key_exists(2, $matches)) {
-                if ($matches[2] != '') {
+                if ('' != $matches[2]) {
                     $this->key = $matches[2];
                 }
             }
         }
         // MediaFile::file_append_file(__LOGFILE_DIR__ . '/buffer/json_' . $this->key . '.log', $buffer . PHP_EOL);
-
+        // utmdump($buffer);
         switch ($buffer) {
             case str_contains($buffer, 'ERROR:'):
                 $this->yt_json_string  = null;
@@ -74,7 +72,9 @@ trait YtdlpCallBacks
 
             case str_contains($buffer, '[info]'):
                 if (str_contains($buffer, 'as JSON')) {
-                    $this->yt_json_string = $buffer;
+                    if (preg_match('/.*metadata as JSON to:(.*\.json)/', $buffer, $output_array)) {
+                        $this->yt_json_string = $output_array[1];
+                    }
                     // Mediatag::$Console->writeln($buffer);
                 }
                 break;

@@ -18,6 +18,7 @@ Command like Metatag writer for video files.
 EOF;
 
 $rules = [
+    // 'header_comment' => [$fileHeaderComment],
     'array_indentation'                                => true,
     'array_syntax'                                     => ['syntax' => 'short'],
     'binary_operator_spaces'                           => [
@@ -245,6 +246,7 @@ $rules = [
 ];
 
 $rules2 = [
+    // 'header_comment' => [$fileHeaderComment],
     // Each line of multi-line DocComments must have an asterisk [PSR-5] and must be aligned with the first one.
     'align_multiline_comment'                          => true,
     // Each element of an array must be indented exactly once.
@@ -623,9 +625,8 @@ $config = new Config;
 
 return $config
     ->setParallelConfig(ParallelConfigFactory::detect())
-
     ->setRiskyAllowed(true)
-    ->setRules($rules)
+    ->setRules($rules2)
     ->setFinder(PhpCsFixer\Finder::create()
         ->in(__DIR__)
         // ->exclude([

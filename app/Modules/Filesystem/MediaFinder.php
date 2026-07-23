@@ -295,10 +295,8 @@ class MediaFinder extends SFinder
         } else {
             //
             $search = self::FilterSearch($search);
-            // utmdump($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit, $quiet);
         }
-        // utmdd($file_array);
 
         if (is_array($file_array)) {
             if (Option::isTrue('filenumber')) {
@@ -361,7 +359,6 @@ class MediaFinder extends SFinder
             $search = '/\.mp4$/i';
         }
 
-        Mediatag::info('searchFiles vars {search}, {path}', ['search' => $search, 'path' => $path]);
         if ($path === null) {
             $path = getcwd();
         }
@@ -408,7 +405,6 @@ class MediaFinder extends SFinder
 
                 $file_array = $this->onlyNew($path, $file_array);
             }
-
             if (is_array($file_array)) {
                 if (count($file_array) > 0) {
                     $noFiles = count($file_array);

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Command like Metatag writer for video files.
+ */
+
 namespace Mediatag\Commands\Rename\Commands\Move;
 
 use Mediatag\Commands\Rename\Lang;
@@ -7,7 +11,7 @@ use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
 /**
- * Description for Move Command
+ * Description for Move Command.
  *
  * @version 2026-02-08 13:26:42
  */
@@ -21,8 +25,9 @@ class MoveCommand extends MediaCommand
     public const USE_SEARCH = true;
 
     public $command = [
-        'move' => ['moveStudios' => null,
-            'prunedirs'          => null,
+        'move' => [
+            'moveStudios' => null,
+            'prunedirs'   => null,
         ],
     ];
 }

@@ -111,6 +111,7 @@ class Process extends Mediatag
         // }
         if (Option::istrue('url')) {
             $this->playlist_url = Option::getValue('url');
+             $this->playlist = null;
         }
 
         if (Option::istrue('archive')) {

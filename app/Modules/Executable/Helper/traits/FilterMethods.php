@@ -1,14 +1,12 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\Executable\Helper\traits;
 
-use const PHP_EOL;
-
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Executable\Callbacks\traits\CallbackCommon;
-use Mediatag\Modules\Executable\Callbacks\traits\DownloadStrings;
-use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -19,12 +17,19 @@ use Nette\Utils\FileSystem as nFileSystem;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
+use function count;
+use function dirname;
+
+use const __PLEX_DOWNLOADED__;
+use const DIRECTORY_SEPARATOR;
+use const FILE_APPEND;
+use const PHP_EOL;
 
 trait FilterMethods
 {
-    public $line_id = null;
+    public $line_id;
 
-    public $command = null;
+    public $command;
 
     public function getShortName($filename)
     {
@@ -34,23 +39,23 @@ trait FilterMethods
         $file_name = Strings::truncateString($file_name, 60, true, true);
 
         // $file_name = Strings::truncateString($file_name, 30, true);
-        return $file_path . $file_name;
+        return $file_path.$file_name;
     }
 
     public function ytlpDownloadBuffer($command, $buffer, $line_id = null, $newLine = false): string
     {
-        if ($command != 'Progress') {
+        if ('Progress' != $command) {
             $buffer = MediatagExec::cleanBuffer($buffer);
         }
 
-        $this->line_id = $line_id . ' ';
+        $this->line_id = $line_id.' ';
         $this->command = $command;
-        $method        = 'download' . $command;
+        $method        = 'download'.$command;
 
         $output = $this->$method($buffer);
         // $output        = str_replace("\n", "", $output);
-        if ($newLine === true) {
-            $output = PHP_EOL . $output;
+        if (true === $newLine) {
+            $output = PHP_EOL.$output;
         }
 
         return $output;
@@ -59,26 +64,26 @@ trait FilterMethods
     public function downloadDestination($buffer)
     {
         preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
-        //preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
-        if (array_key_exists(4, $match) === true) {
+        // preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
+        if (true === array_key_exists(4, $match)) {
             $file = $this->getShortName($match[4]);
         }
-        if (array_key_exists(3, $match) === true) {
+        if (true === array_key_exists(3, $match)) {
             $text = $match[3];
         } else {
             $text = 'file downlaoding';
         }
 
-        return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>' . PHP_EOL;
+        return PHP_TAB.'<text>'.$text.'<text> <file>'.$file.'</file>'.PHP_EOL;
     }
 
     public function downloadProgress($buffer)
     {
         $output = trim($buffer);
-        $output = '<download>' . $buffer . '</>';
+        $output = '<download>'.$buffer.'</>';
 
         if (str_contains($buffer, '100%')) {
-            $output = $output . PHP_EOL;
+            $output .= PHP_EOL;
         }
 
         return $output;
@@ -86,18 +91,18 @@ trait FilterMethods
 
     public function downloadExists($buffer)
     {
-        VideoDownloader::LogBuffer('downloadExists = ' . $this->key . '', $buffer, 'download_error.log');
+        VideoDownloader::LogBuffer('downloadExists = '.$this->key.'', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return $this->line_id . ' <error>' . $this->key . ' Already been  downloaded </error>' . PHP_EOL;
+        return $this->line_id.' <error>'.$this->key.' Already been  downloaded </error>'.PHP_EOL;
     }
 
     public function downloadError($buffer)
     {
-        VideoDownloader::LogBuffer('downloadError = ' . $this->key . '', $buffer, 'download_error.log');
+        VideoDownloader::LogBuffer('downloadError = '.$this->key.'', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return ' <error> yyy ' . $buffer . '</error>';
+        return ' <error> yyy '.$buffer.'</error>';
     }
 
     public function downloadFixupM3u8($buffer)
@@ -107,7 +112,7 @@ trait FilterMethods
         $file = $this->getShortName($match[3]);
         // $this->num_of_lines--;
 
-        return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>';
+        return PHP_TAB.'<text>'.$text.'<text> <file>'.$file.'</file>';
     }
 
     public function error($buffer, $line_id, $error)
@@ -117,11 +122,11 @@ trait FilterMethods
             return null;
         }
 
-        VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = ' . $this->key . '', $buffer, 'download_error.log');
+        VideoDownloader::LogBuffer('PlaylistProcess::DISABLED Key = '.$this->key.'', $buffer, 'download_error.log');
 
         $outputText                   = '';
         PlaylistProcess::$current_key = false;
-        $outputText                   = $line_id . '  <error> xxx ' . $this->key . ' ' . $error . ' </error>';
+        $outputText                   = $line_id.'  <error> xxx '.$this->key.' '.$error.' </error>';
 
         // $this->updateIdList(PlaylistProcess::DISABLED);
 
@@ -133,16 +138,16 @@ trait FilterMethods
 
     public function updateIdList($keyfile)
     {
-        $id = $this->KeyPrefix . ' ' . $this->key;
+        $id = $this->KeyPrefix.' '.$this->key;
         $this->writeidList($keyfile, $id);
     }
 
     private function writeidList($file, $line)
     {
         $archive_content = Filesystem::readLines($file);
-        if (! $archive_content === false) {
-            array_push($archive_content, $line);
-            $archive_content = MediaArray::array_iunique($archive_content);
+        if (false === !$archive_content) {
+            $archive_content[] = $line;
+            $archive_content   = MediaArray::array_iunique($archive_content);
         } else {
             $archive_content = $line;
         }
@@ -153,33 +158,33 @@ trait FilterMethods
     public function updatePlaylist($type, $file = null)
     {
         // utmdd($type, $file);
-        if ($file !== null) {
+        if (null !== $file) {
             $pcs = pathinfo($file);
-            if ($pcs['dirname'] == '.') {
-                $file = __CURRENT_DIRECTORY__ . '/' . $file;
+            if ('.' == $pcs['dirname']) {
+                $file = __CURRENT_DIRECTORY__.'/'.$file;
             }
         }
 
         // utminfo(func_get_args());
-        if ($file === null) {
+        if (null === $file) {
             $file = $this->playlist;
         }
 
         switch ($type) {
             case 'watchlaterPr':
-                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
+                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
                 // $this->Console->writeln($url);
-                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
                 break;
             case 'watchlater':
-                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
                 // $this->Console->writeln($url);
-                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
 
                 break;
             case 'premium':
-                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey=' . $this->key;
-                Mediatag::$Console->writeln('Premium File => ' . $url);
+                $url = 'https://www.pornhubpremium.com/view_video.php?viewkey='.$this->key;
+                Mediatag::$Console->writeln('Premium File => '.$url);
 
                 // $this->Console->writeln($url);
                 // if (! str_contains('premium', $file)) {
@@ -189,29 +194,29 @@ trait FilterMethods
 
                 break;
             case 'modelhub':
-                $url = 'https://www.modelhub.com/video/' . $this->key;
-                if (! str_contains('model_hub', $file)) {
-                    file_put_contents($this->model_hub, $url . PHP_EOL, FILE_APPEND);
+                $url = 'https://www.modelhub.com/video/'.$this->key;
+                if (!str_contains('model_hub', $file)) {
+                    file_put_contents($this->model_hub, $url.PHP_EOL, FILE_APPEND);
                 }
 
                 break;
             case 'error':
-                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-                Mediatag::$Console->writeln('Error  Not Found => ' . $url);
+                $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
+                Mediatag::$Console->writeln('Error  Not Found => '.$url);
                 // $ret = file_put_contents(PlaylistProcess::NOTFOUND, $url . PHP_EOL, FILE_APPEND);
                 $this->updateIdList(PlaylistProcess::DISABLED);
 
                 break;
             case '404':
-                $url = 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
-                Mediatag::$Console->writeln('404 Not Found => ' . $url);
+                $url = 'https://www.pornhub.com/view_video.php?viewkey='.$this->key;
+                Mediatag::$Console->writeln('404 Not Found => '.$url);
                 // file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
                 $this->updateIdList(PlaylistProcess::NOTFOUND);
                 break;
             default:
-                $url = $type . '=>' . 'https://www.pornhub.com/view_video.php?viewkey=' . $this->key;
+                $url = $type.'=>https://www.pornhub.com/view_video.php?viewkey='.$this->key;
                 // Mediatag::$Console->writeln($url);
-                file_put_contents($file, $url . PHP_EOL, FILE_APPEND);
+                file_put_contents($file, $url.PHP_EOL, FILE_APPEND);
                 break;
         }
     }
@@ -251,49 +256,54 @@ trait FilterMethods
 
     public function fixVideo($buffer, $line_id, $key = 'FixupM3u8')
     {
-        if ($key != 'FixupM3u8') {
-            Mediatag::error('There was an error ' . $key);
+        if ('FixupM3u8' != $key) {
+            Mediatag::error('There was an error '.$key);
         }
-        $this->num_of_lines--;
+        --$this->num_of_lines;
 
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
+    }
+
+    public function moveNewJson($key)
+    {
+        utmdd($key);
     }
 
     public function moveDownloadedVideos($key)
     {
         // Mediatag::$Console->writeln('searching for key ' . $key);
-        $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
+        $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*'.$key.'*', exit: false);
 
         if (count($file_array) > 0) {
             foreach ($file_array as $file) {
-                if (! file_exists($file)) {
+                if (!file_exists($file)) {
                     continue;
                 }
 
                 $currentPath = dirname($file);
                 if (str_ends_with($file, 'mp4')) {
-                    $filename = DIRECTORY_SEPARATOR . basename($file, '.mp4');
+                    $filename = DIRECTORY_SEPARATOR.basename($file, '.mp4');
                 } elseif (str_ends_with($file, 'json')) {
-                    $filename = DIRECTORY_SEPARATOR . basename($file, '.info.json');
+                    $filename = DIRECTORY_SEPARATOR.basename($file, '.info.json');
                 } else {
                     continue;
                 }
 
-                $jsonFile  = $filename . '.info.json';
-                $videoFile = $filename . '.mp4';
+                $jsonFile  = $filename.'.info.json';
+                $videoFile = $filename.'.mp4';
 
-                $newPath = \str_replace(\__PLEX_DOWNLOAD__, \__PLEX_DOWNLOADED__, $currentPath);
+                $newPath = str_replace(\__PLEX_DOWNLOAD__, __PLEX_DOWNLOADED__, $currentPath);
                 nFileSystem::createDir($newPath);
 
-                $newVideoFile = $newPath . $videoFile;
-                $newJsonFile  = $newPath . $jsonFile;
+                $newVideoFile = $newPath.$videoFile;
+                $newJsonFile  = $newPath.$jsonFile;
 
-                nFileSystem::rename($currentPath . $videoFile, $newVideoFile);
-                nFileSystem::rename($currentPath . $jsonFile, $newJsonFile);
+                nFileSystem::rename($currentPath.$videoFile, $newVideoFile);
+                nFileSystem::rename($currentPath.$jsonFile, $newJsonFile);
 
-                Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+                Mediatag::$Console->writeln('Moved Completed file <file>'.$videoFile.' to downloaded </file>');
 
-                if (! Option::istrue('test')) {
+                if (!Option::istrue('test')) {
                     Filesystem::prunedirs(__PLEX_DOWNLOAD__);
                 }
             }
@@ -313,12 +323,12 @@ trait FilterMethods
 
         if (str_contains($buffer, 'Downloading')) {
             if (str_contains($buffer, $this->key)) {
-                $outputText = "\t" . ' <file>file ' . $this->key . ' is downloadable </file>';
+                $outputText = "\t".' <file>file '.$this->key.' is downloadable </file>';
                 $this->updatePlaylist('watchlater', 'trimmed_list.txt');
                 $this->DownloadableIds[] = $this->key;
             }
         }
 
-        return $outputText . PHP_EOL;
+        return $outputText.PHP_EOL;
     }
 }
