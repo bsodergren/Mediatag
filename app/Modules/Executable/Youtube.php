@@ -262,7 +262,7 @@ class Youtube extends MediatagExec
         $this->exec($command, $callback);
     }
 
-    public function youtubeGetJson($video_key)
+    public function youtubeGetJson($video_key, $url = 'https://www.pornhub.com')
     {
         $json_file = null;
         // utminfo(func_get_args());
@@ -272,13 +272,26 @@ class Youtube extends MediatagExec
         // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
         $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
         $options   = array_merge($options, ['--skip-download']);
-        $video_url = strtolower('https://www.pornhub.com/view_video.php?viewkey='.$video_key);
+        $video_url = strtolower($url.'/view_video.php?viewkey='.$video_key);
         // 648719015
         $command = array_merge($options, [$video_url]);
 
         $callback = Callback::check([$this, 'downloadJsonCallback']);
         $this->exec($command, $callback);
-        utmdump([__METHOD__, $this->yt_json_string]);
+        // utmdump(['First Run',$url, $this->yt_json_string]);
+        if (null === $this->yt_json_string) {
+            if ('https://www.pornhub.com' == $url) {
+                $url = 'http://www.pornhubpremium.com';
+            } else {
+                $url = 'https://www.pornhub.com';
+            }
+            // utmdump(['First URL didnt work',$url, $this->yt_json_string]);
+            $this->youtubeGetJson($video_key, $url);
+            if (null === $this->yt_json_string) {
+                return null;
+            }
+        }
+        // utmdump(['This worked',$url, $this->yt_json_string]);
         $json_file = trim($this->yt_json_string);
         if (file_exists($json_file)) {
             $this->moveJson($json_file, $video_key);
@@ -317,7 +330,7 @@ class Youtube extends MediatagExec
                 $out = "<question>jSon</question>\n\t<comment>Old:".basename($json_file)."</comment>\n\t<info>New:".basename($newJson_file).'</info>';
                 Mediatag::$output->writeln($out);
             } else {
-                utmdump([$json_file, $newJson_file]);
+                // utmdump([$json_file, $newJson_file]);
                 Filesystem::renameFile($json_file, $newJson_file, true);
                 if (Option::istrue('print')) {
                     echo 'finisihed';

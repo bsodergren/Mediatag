@@ -50,7 +50,7 @@ class TagBuilder
             $updates = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
 
-            // }
+           // }
 
             // if (! str_starts_with($this->video_key, 'x')) {
             $jsonupdates = $this->ReaderObj->getJsonValues();

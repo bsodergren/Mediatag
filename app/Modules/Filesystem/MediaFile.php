@@ -11,6 +11,8 @@ use const PATHINFO_DIRNAME;
 use const PATHINFO_EXTENSION;
 use const PATHINFO_FILENAME;
 
+use UTM\Utilities\Option;
+
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Utilities\Strings;
@@ -83,7 +85,6 @@ class MediaFile
         ];
 
         Mediatag::notice('Getting Video Data {video}', ['video' => $this->video]);
-        // utmdump($this->video);
 
         return $this->video;
     }
@@ -221,6 +222,7 @@ class MediaFile
     public function library(): string
     {
         // utminfo(func_get_args());
+        $directory = Option::getValue('path', true) ;
 
         if ($this->video_file) {
             $directory = $this->filepath();

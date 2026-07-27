@@ -14,6 +14,8 @@ trait CommandInit
         $className = static::class;
         Option::init($input);
 
+        
+
         if (Option::getValue('path', true) !== '') {
             $path = Option::getValue('path', true);
             if ($path !== null) {

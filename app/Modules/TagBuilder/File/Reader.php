@@ -243,10 +243,11 @@ class Reader extends TagReader
             }
 
             if (File::isPornhubfile($this->video_file) == true) {
+
                 $this->isPhFile();
+
             }
         }
-
         return $this->studio;
     }
 

@@ -132,13 +132,13 @@ class Pornhub extends VideoDownloader
                 'ConsoleCmd'   => 'writeln',
                 'OutputMethod' => 'downloadableIds',
             ],
-            'json'                => [
-                'search'=> [
-                    'pattern' => "/.*metadata as JSON to:(.*\.json)/",
-                    'match'   => 1,
-                    'command' => 'moveNewJson',
-                ],
-            ],
+            // 'json'                => [
+            //     'search'=> [
+            //         'pattern' => "/.*metadata as JSON to:(.*\.json)/",
+            //         'match'   => 1,
+            //         'command' => 'moveNewJson',
+            //     ],
+            // ],
         ];
 
         // utmdd($this->registeredbufferFilters);

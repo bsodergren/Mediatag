@@ -48,8 +48,9 @@ trait Helper
             $this->playlist_url = Option::getValue('url');
         }
         $videoKey = Strings::after($this->playlist_url, '=');
+        $videoURL = Strings::before($this->playlist_url, '/view_video');
 
-        $this->youtube->run($this->playlist)->youtubeGetJson($videoKey);
+        $this->youtube->run($this->playlist)->youtubeGetJson($videoKey, $videoURL);
     }
 
     public function youtubeWatchPlaylist()

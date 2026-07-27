@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -264,10 +265,10 @@ trait FilterMethods
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
     }
 
-    public function moveNewJson($key)
-    {
-        utmdd($key);
-    }
+    // public function moveNewJson($key)
+    // {
+    //     utmdd($key);
+    // }
 
     public function moveDownloadedVideos($key)
     {

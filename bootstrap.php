@@ -46,8 +46,8 @@ ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
 require_once __CONFIG_LIB__ . '/variables.php';
 require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
 
-// MediaLogger::$USE_DEBUG = false;
-MediaLogger::$pruneLogs = true;
+MediaLogger::$USE_DEBUG = false;
+// MediaLogger::$pruneLogs = true;
 // Tracy\Debugger::enable(Tracy\Debugger::DEVELOPMENT, __LOGFILE_DIR__);
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
@@ -60,7 +60,7 @@ $finder = new Finder();
 $finder->files()->in(__LOGFILE_DIR__)->date("before 1 days ago");
 foreach ($finder as $file) {
     if($file->getFilename() != "phperror.log"){
-        unlink($file->getRealPath());
+        // unlink($file->getRealPath());
     }
 
 }

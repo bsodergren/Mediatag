@@ -21,6 +21,7 @@ trait StudioReader
         $studio_dir   = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
         $arr          = explode('/', $studio_dir);
+        
         $studio_array = [];
         foreach ($arr as $idx => $studio_string) {
             foreach (__SKIP_STUDIOS__ as $k) {
@@ -32,29 +33,29 @@ trait StudioReader
                 $studio_array[$idx] = $studio_string;
             }
         }
-
         return implode('/', $studio_array);
     }
 
     private function isPhFile()
     {
-        $json   = new jsonReader($this->videoData);
-        $return = $json->studio();
+        // $json   = new jsonReader($this->videoData);
+        // $return = $json->studio();
 
-        if (count($return) > 0) {
-            if (array_key_exists('studio', $return)) {
-                $this->studio = $return['studio'];
-            }
-        }
+       
+        // if (count($return) > 0) {
+        //     if (array_key_exists('studio', $return)) {
+        //         $this->studio = $return['studio'];
+        //     }
+        // }
 
         if ($this->studio === null) {
             $string       = $this->studioParse();
             $studio_array = explode('/', $string);
-            // utmdd(["studio_array",$studio_array]);
 
             if ($studio_array[0] !== null) {
                 $this->studio = $studio_array[0];
                 if (array_key_exists('1', $studio_array)) {
+                    $this->network =  $this->studio;
                     $this->studio = $studio_array[1];
                 }
                 // $this->network = "Pornhub";

@@ -195,7 +195,7 @@ class Reader extends TagReader
                 $tag,
                 ['extractor'],
                 [
-                    'exclude' => ['PornHub'],
+                    'exclude' => ['Pornhub'],
                     'rename'  => ['NubilesPorn' => 'Nubiles'],
                 ]
             );
@@ -248,7 +248,9 @@ class Reader extends TagReader
                         $this->tag_array[$tag] = str_replace($key, $string, $this->tag_array[$tag]);
                     }
                 }
-
+    if ('network' == $tag) {
+//    utmdd($this->tag_array[$tag]);
+            }
                 if ($this->tag_array[$tag] == '') {
                     $this->tag_array[$tag] = null;
                 }
