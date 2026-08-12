@@ -3,6 +3,7 @@
 namespace Mediatag\Commands\Clip\Commands\Show\Trait;
 
 use Mediatag\Core\Mediatag;
+use Mediatag\Modules\Database\Storage;
 use Symfony\Component\Console\Helper\Table;
 
 trait Playlist
@@ -24,8 +25,8 @@ trait Playlist
         // $table->setStyle($tableStyle);
         $table->setStyle('borderless');
         $table->render();
-        utmdd($results);
-        $this->getPlaylistVideos(4);
+        // utmdd($results);
+        // $this->getPlaylistVideos(369);
         Mediatag::$output->writeLn('<info> show playlist name</info>');
     }
 

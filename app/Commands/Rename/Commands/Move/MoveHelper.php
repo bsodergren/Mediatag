@@ -123,18 +123,19 @@ trait MoveHelper
                 $SortDir   = true;
 
                 $genDir = $this->getGenres($metatags);
+
                 if (false !== $genDir) {
                     $SortDir   = false;
                     $genrePath = '/'.$genDir;
                 }
             }
-            foreach (__SKIP_STUDIOS__ as $k) {
-                $studio_dir = str_replace($k, '', $studio_dir);
-                //    $studio_dir_arry['aray'][] =$studio_dir;
-                // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
+            // foreach (__SKIP_STUDIOS__ as $k) {
+            //     $studio_dir = str_replace($k, '', $studio_dir);
+            //     //    $studio_dir_arry['aray'][] =$studio_dir;
+            //     // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
 
-                $studio = preg_replace('/\/?'.$k.'\b\/?/i', '', $studio);
-            }
+            //     $studio = preg_replace('/\/?'.$k.'\b\/?/i', '', $studio);
+            // }
             // Mediatag::$output->writeln('Studio List -> <info>'.$studio.'</info>');
 
             if (Option::isTrue('byStudio')) {
@@ -150,12 +151,11 @@ trait MoveHelper
                 $studios  = explode('/', $studio);
                 $Arraykey = array_key_first($studios);
 
-                $studio_dir = $tagConn->lookupStudio('studio', $studios[$Arraykey]);
-
+                $studio_dir = $tagConn->lookupStudio('studio', $studios[$Arraykey],true);
                 if (false == $studio_dir) {
                     $ArraykeyLast = array_key_last($studios);
                     $studio_dir   = $tagConn->getStudioPath($studios[$ArraykeyLast]);
-
+                    // utmdd($studio_dir);
                     if (false == $studio_dir) {
                         // continue;
                         $studio_dir = 'New/'.$studios[$Arraykey];
@@ -177,6 +177,7 @@ trait MoveHelper
             if (true == $SortDir) {
                 $video_path = 'Sort/'.$studio_dir;
             }
+            // utmdd($studio_dir);
 
             // utmdump($video_path);
             $newPath = __PLEX_HOME__.'/'.__LIBRARY__.'/'.$video_path;

@@ -27,16 +27,6 @@ trait ShowHelper
 
     public function filters()
     {
-        $showCmd = Option::getValue('show', 1);
-        if (array_key_exists($showCmd, $this->cmdOptions)) {
-            $method = $this->cmdOptions[$showCmd]['cmd'];
-            $this->$method();
-
-            return 1;
-        }
-
-        $this->defaultCmd($this->cmdOptions);
-
-        utmdd($showCmd);
+      $this->getCommandArgs('show');
     }
 }

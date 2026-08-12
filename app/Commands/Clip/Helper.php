@@ -36,33 +36,33 @@ trait Helper
 
     public $markerArray;
 
-    public function defaultCmd($options)
-    {
-        $table = new Table(Mediatag::$output);
+    // public function defaultCmd($options)
+    // {
+    //     $table = new Table(Mediatag::$output);
 
-        //utmdump(Mediatag::$input->getFirstArgument());
+    //     //utmdump(Mediatag::$input->getFirstArgument());
 
-        $table->setHeaders(
-            [
-                [
-                    new TableCell(Mediatag::$input->getFirstArgument(),
-                        ['colspan'  => 2,
-                            'style' => new TableCellStyle(
-                                ['align' => 'center', 'fg' => 'red']),
-                        ]),
-                ],
-                ['name', 'desc'], ], );
-        foreach ($options as $cmd => $info) {
-            // $table->setHeaderTitle($cmd);
-            $tableRows[] = [$cmd, $info['desc']];
-        }
+    //     $table->setHeaders(
+    //         [
+    //             [
+    //                 new TableCell(Mediatag::$input->getFirstArgument(),
+    //                     ['colspan'  => 2,
+    //                         'style' => new TableCellStyle(
+    //                             ['align' => 'center', 'fg' => 'red']),
+    //                     ]),
+    //             ],
+    //             ['name', 'desc'], ], );
+    //     foreach ($options as $cmd => $info) {
+    //         // $table->setHeaderTitle($cmd);
+    //         $tableRows[] = [$cmd, $info['desc']];
+    //     }
 
-        $table->setRows($tableRows);
-        // $table->setStyle($tableStyle);
-        $table->setStyle('box');
-        $table->render();
-        Mediatag::$output->writeLn('<info> No option found </info>');
-    }
+    //     $table->setRows($tableRows);
+    //     // $table->setStyle($tableStyle);
+    //     $table->setStyle('box');
+    //     $table->render();
+    //     Mediatag::$output->writeLn('<info> No option found </info>');
+    // }
 
     public function timeCodetoSec($time, $mod = 0)
     {

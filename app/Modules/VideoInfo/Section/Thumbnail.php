@@ -12,6 +12,7 @@ use Mediatag\Modules\VideoData\VideoData;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Traits\MediaFFmpeg;
 use Mediatag\Utilities\Strings;
+use Symfony\Component\Finder\Finder;
 
 use function dirname;
 
@@ -65,15 +66,31 @@ class Thumbnail extends VideoInfo
         // $img_name = basename($this->video_name, '.mp4').'.jpg';
         $img_name = basename($this->videoToThumb($this->video_file));
         // $img_name     = Strings::cleanFileName($img_name,true);
-        $img_web_path = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__);
-        $img_location = __INC_WEB_THUMB_DIR__ . '/' . $img_web_path;
-        $img_file     = $img_location . $img_name;
-        $img_url_path = __INC_WEB_THUMB_URL__ . '/' . $img_web_path . $img_name;
+        $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
+        $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
+        $img_file     = $img_location.$img_name;
+        $img_url_path = __INC_WEB_THUMB_URL__.'/'.$img_web_path.$img_name;
         $action       = $this->updatedText;
         // $type         = $this->actionText;
 
-        if (! file_exists($img_file)) {
-            (new Filesystem)->mkdir($img_location);
+        if (!file_exists($img_file)) {
+            $finder = new Finder();
+            $finder->files()->name($img_name)->in(__INC_WEB_THUMB_DIR__);
+            if ($finder->hasResults()) {
+                foreach ($finder as $file) {
+                     $action = "existing file found ";
+                    (new Filesystem())->mkdir($img_location);
+                    (new Filesystem())->rename($file->getRealPath(), $img_file);
+                    $this->actionText = $action.$this->thumbType;
+
+                    return $img_url_path;
+
+                    // ...
+                }
+                // ...
+            }
+
+            (new Filesystem())->mkdir($img_location);
             $ffprobe = FFProbe::create([
                 'ffmpeg.binaries'  => CONFIG['FFMPEG_CMD'],
                 'ffprobe.binaries' => CONFIG['FFPROBE_CMD'],
@@ -103,7 +120,7 @@ class Thumbnail extends VideoInfo
             $action = $this->newText;
         }
 
-        $this->actionText = $action . $this->thumbType;
+        $this->actionText = $action.$this->thumbType;
 
         return $img_url_path;
     }

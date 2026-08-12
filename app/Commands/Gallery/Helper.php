@@ -6,12 +6,9 @@
 
 namespace Mediatag\Commands\Gallery;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Display\MediaBar;
-use Mediatag\Traits\Translate;
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -21,19 +18,21 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 
+use const PHP_EOL;
+
 trait Helper
 {
     public function updateNow()
     {
         // utminfo(func_get_args());
 
-        $data = ['name' => __LIBRARY__ . '_last_updated',
-            'value'     =>Storage::$DB->now(),
+        $data = ['name' => __LIBRARY__.'_last_updated',
+            'value'     => GalleryStorageDB::$DB->now(),
             'type'      => 'update'];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
-       Storage::$DB->onDuplicate($updateColumns, $lastInsertId);
-        $id =Storage::$DB->insert(__MYSQL_SETTINGS__, $data);
+        GalleryStorageDB::$DB->onDuplicate($updateColumns, $lastInsertId);
+        $id = GalleryStorageDB::$DB->insert(__MYSQL_SETTINGS__, $data);
     }
 
     public function getFileArray()
@@ -41,8 +40,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
-
-        $this->New_Array = MediaArray::diff($this->file_array, $this->db_array);
+        $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
 
         // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
         // ,count($this->Deleted_Array), count($this->New_Array)]);
@@ -63,9 +61,9 @@ trait Helper
         }
 
         if (Option::istrue('test')) {
-            parent::$output->writeln('Deleted files ' . print_r($this->Deleted_Array, 1));
-            parent::$output->writeln('Changed files ' . print_r($this->Changed_Array, 1));
-            parent::$output->writeln('New files ' . print_r($this->New_Array, 1));
+            parent::$output->writeln('Deleted files '.print_r($this->Deleted_Array, 1));
+            parent::$output->writeln('Changed files '.print_r($this->Changed_Array, 1));
+            parent::$output->writeln('New files '.print_r($this->New_Array, 1));
         }
 
         $changed_string = 0;
@@ -103,11 +101,11 @@ trait Helper
     {
         // utminfo(func_get_args());
         foreach ($this->Deleted_Array as $video_key => $video_file) {
-           Storage::$DB->video_key = $video_key;
-            parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
-            if (! Option::istrue('preview')) {
-               Storage::$DB->removeDBEntry();
-                // Storage::$DB->clearDBValues($video_key);
+            GalleryStorageDB::$DB->video_key = $video_key;
+            parent::$output->writeln('deleting '.basename($video_file).' from db ');
+            if (!Option::istrue('preview')) {
+                // GalleryStorageDB::$DB->removeDBEntry();
+                // GalleryStorageDB::$DB->clearDBValues($video_key);
             }
         }
     }
@@ -116,15 +114,15 @@ trait Helper
     {
         // utminfo(func_get_args());
         foreach ($this->Changed_Array as $video_key => $video_file) {
-           Storage::$DB->video_file = $video_file;
-            //Storage::$DB->video_key  = $video_key;
+            GalleryStorageDB::$DB->video_file = $video_file;
+            // GalleryStorageDB::$DB->video_key  = $video_key;
             $video_name = basename($video_file);
-            if (! Option::istrue('preview')) {
-                parent::$output->writeln('Updateing file from db ' . $video_name);
+            if (!Option::istrue('preview')) {
+                parent::$output->writeln('Updateing file from db '.$video_name);
 
-               Storage::$DB->UpdateFilePath($video_file);
+            // GalleryStorageDB::$DB->UpdateFilePath($video_file);
             } else {
-               Storage::$DB->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
+                GalleryStorageDB::$DB->RowBlock->overwrite('Updateing file '.$video_name.PHP_EOL);
             }
         }
     }
@@ -133,15 +131,15 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        self::$Class                  = __CLASS__;
-        Storage::$DB->file_array = Mediatag::$SearchArray;
-        $videos                       = Storage::$DB->getVideoCount();
+        self::$Class                      = __CLASS__;
+        GalleryStorageDB::$DB->file_array = Mediatag::$SearchArray;
+        $videos                           = GalleryStorageDB::$DB->getVideoCount();
         if (Option::istrue('yes')) {
             $go     = true;
             $answer = 'y';
         } else {
             Mediatag::$output->writeln(self::text('L__GALLERY_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper;
+            $ask      = new QuestionHelper();
             $question = new Question(self::text('L__GALLERY_ASK_CONTINUE'));
 
             $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
@@ -164,9 +162,9 @@ trait Helper
                 break;
         }
 
-        if ($go == true) {
-            Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
-            Storage::$DB->emptydatabase();
+        if (true == $go) {
+            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
+            GalleryStorageDB::$DB->emptydatabase();
         }
     }
 
@@ -178,17 +176,17 @@ trait Helper
         $barWidth  = 50;
         $total     = count($this->New_Array);
         if ($total > 0) {
-            $idx                          = 1;
-            $progressbar                  = new MediaBar($total, 'three', $barWidth);
-           Storage::$DB->progressbar1 = $progressbar;
+            $idx                                = 1;
+            $progressbar                        = new MediaBar($total, 'three', $barWidth);
+            GalleryStorageDB::$DB->progressbar1 = $progressbar;
             $progressbar->newbar();
             $progressbar->start();
 
             foreach ($this->New_Array as $video_key => $video_file) {
                 // $progressbar->advance();
 
-                $videoDataArray[] = (new GalleryStorageDB)->createDbEntry($video_file, $video_key, $idx, $total);
-                $idx++;
+                $videoDataArray[] = (new GalleryStorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
+                ++$idx;
             }
             $idx = 1;
 
@@ -197,14 +195,14 @@ trait Helper
             // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {
-                $progressbar2                = new MediaBar($chunks, 'two', $barWidth);
-               Storage::$DB->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
+                $progressbar2                      = new MediaBar($chunks, 'two', $barWidth);
+                GalleryStorageDB::$DB->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
                 $progressbar2->newbar()->start();
             }
 
             foreach ($data_array as $data) {
                 if ($total > $chunkSize) {
-                   Storage::$DB->progressbar->newbar()->start();
+                    GalleryStorageDB::$DB->progressbar->newbar()->start();
                     $progressbar2->advance();
                 }
 
@@ -215,9 +213,9 @@ trait Helper
                 //     }
 
                 //     $video_string[] = ' '.\PHP_EOL;
-                //     //   Storage::$DB->RowBlock->overwrite($video_string);
+                //     //   GalleryStorageDB::$DB->RowBlock->overwrite($video_string);
                 // } else {
-               Storage::$DB->addDBArray($data);
+                GalleryStorageDB::$DB->addDBArray($data);
 
                 // }
             }

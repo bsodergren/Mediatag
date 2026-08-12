@@ -7,42 +7,48 @@
 namespace Mediatag\Commands\Clip\Commands\Merge;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Display\MediaIndicator;
+use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
 
+use const PHP_EOL;
+
 trait MergeHelper
 {
-    public $cmdOptionMerge = [
+    public $cmdOptions = [
         'clips'    => ['cmd' => 'mergeClips', 'desc' => 'Show all transition types'],
         'playlist' => ['cmd' => 'mergePlaylist', 'desc' => 'Show all playlist types'],
     ];
 
     public function mergeFiles()
     {
-        $showCmd = Option::getValue('merge', 1);
+
+          $this->getCommandArgs('merge');
+
+        // $showCmd = Option::getValue('merge', 1);
+
+        // if (array_key_exists($showCmd, $this->cmdOptionMerge)) {
+        //     $method = $this->cmdOptionMerge[$showCmd]['cmd'];
+        //     // utmdd($method);
+        //     $this->$method();
+
+        //     return 1;
+        // }
+
+        // $this->defaultCmd($this->cmdOptionMerge);
+
         // utmdd($showCmd);
-        if (array_key_exists($showCmd, $this->cmdOptionMerge)) {
-            $method = $this->cmdOptionMerge[$showCmd]['cmd'];
-            $this->$method();
-
-            return 1;
-        }
-
-        $this->defaultCmd($this->cmdOptionMerge);
-
-        utmdd($showCmd);
     }
 
     public function getPlaylistVideosfromId($playlist_id)
     {
         $sql = 'select d.name as name, CONCAT(v.fullpath,\'/\',v.filename) as file_name
-        from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
-        ' . __MYSQL_VIDEO_FILE__ . '  as v,
-        ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p
-        where (p.playlist_id = ' . $playlist_id . ' and
+        from   '.__MYSQL_PLAYLIST_DATA__.' as d,
+        '.__MYSQL_VIDEO_FILE__.'  as v,
+        '.__MYSQL_PLAYLIST_VIDEOS__.' as p
+        where (p.playlist_id = '.$playlist_id.' and
         p.playlist_video_id = v.id and
          d.id = p.playlist_id ) ORDER BY v.filename DESC';
         $sql     = str_replace(PHP_EOL, '', $sql);
@@ -56,9 +62,10 @@ trait MergeHelper
     {
         $playlist = Option::getValue('playlistid', true);
         $name     = Option::getValue('name', true);
-
+// utmdd($playlist,$name);
         $filelistArray = $this->getPlaylistVideosfromId($playlist);
-        if ($name === null) {
+
+        if (null === $name) {
             $name = $filelistArray[0]['name'];
         }
         $ClipName = $this->setClipFilename($name);
@@ -79,17 +86,17 @@ trait MergeHelper
 
         $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
 
-        if ($fileSearch != '') {
-            $search = '/.*_(' . $fileSearch . ')_\d+\.mp4/i';
+        if ('' != $fileSearch) {
+            $search = '/.*_('.$fileSearch.')_\d+\.mp4/i';
         } else {
             $search = '*.mp4';
         }
-        if ($name === null) {
+        if (null === $name) {
             $name = 'Compilation';
         }
         $file_array = Mediatag::$finder->Search($directory, $search);
 
-        if ($file_array == null) {
+        if (null == $file_array) {
             Mediatag::$output->writeln('<comment> No Files Found</>');
 
             return false;
@@ -107,7 +114,7 @@ trait MergeHelper
             $idx = $output_array[3] + $mod;
 
             $fileList[$idx] = $file;
-            $index++;
+            ++$index;
         }
         ksort($fileList);
 

@@ -120,6 +120,7 @@ trait Helper
         foreach ($genreArray as $genre) {
             $genre = str_replace(' ', '_', $genre);
             $genre = strtolower($genre);
+
             $res   = self::get($genre, $metadata['genre']);
 
             // $results[$genre] = $res;
@@ -148,7 +149,6 @@ trait Helper
         // utminfo(func_get_args());
 
         self::$selfClass = $object->genrePath;
-
         // $genreArray = [
         //     'mmf' => 1, 'mff' => 2, 'group' => 4,
         //        'orgy' => 8, 'Compilation' => 16, 'threesome' => 32, 'double_penetration' => 64, 'Single' => 128,
@@ -172,12 +172,16 @@ trait Helper
             return 'MFF';
         }
 
-        if (self::istrue('mff') && (self::istrue('mmf') || self::istrue('double_penetration')) && ! self::istrue('Compilation')) {
+        if (self::istrue('mff') && (self::istrue('mmf') && ! self::istrue('group') 
+            || self::istrue('double_penetration')) && ! self::istrue('Compilation')) {
+            utmdump("fasdfdsfd");
             return false;
             // return 'Threesome';
         }
         if (self::istrue('Threesome') && ! self::istrue('group') && ! self::istrue('Compilation') && ! self::istrue('Single')) {
-            return false;
+            utmdump("fasdfdsfdfdsfsdfsdfsdfsdsfd");
+
+        return false;
             // return 'Threesome';
         }
 
@@ -193,6 +197,7 @@ trait Helper
         if (self::istrue('Bisexual')) {
             return 'Bisexual';
         }
+            utmdump("nafdnafdndf");
 
         return false;
     }

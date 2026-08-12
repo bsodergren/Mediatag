@@ -381,7 +381,7 @@ class MediaFinder extends SFinder
         // }
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
-            $finder->date('> ' . $date);
+            $finder->date('< ' . $date);
         }
 
         if ($finder->hasResults()) {

@@ -292,6 +292,7 @@ trait MediaFFmpeg
         $this->MergedName = $name;
         $this->clipName   = $ClipName;
 
+        // utmdump($files, $ClipName, $name, $duration, $type);
         $fileCount = count($files);
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');

@@ -6,7 +6,6 @@
 
 namespace Mediatag\Commands\Clip;
 
-use Mediatag\Commands\Clip\Commands\Create\CreateHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
@@ -19,7 +18,6 @@ include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
-    use CreateHelper;
     use DynamicProperty;
 
     // use AddHelper;

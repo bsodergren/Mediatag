@@ -6,9 +6,6 @@
 
 namespace Mediatag\Commands\Db;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Display\MediaBar;
@@ -24,11 +21,13 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
-use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait Helper
 {
-    private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
+    private $dbBackupPath = __DB_BACKUP_ROOT__.DIRECTORY_SEPARATOR;
 
     private $video_file_csv = 'file.csv';
 
@@ -45,7 +44,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $data = [
-            'name'  => __LIBRARY__ . '_last_updated',
+            'name'  => __LIBRARY__.'_last_updated',
             'value' => StorageDB::$DB->mysqllib->now(),
             'type'  => 'update',
         ];
@@ -61,13 +60,12 @@ trait Helper
         // utminfo(func_get_args());
 
         $db = StorageDB::$DB;
-        $db->mysqllib->where('name', __LIBRARY__ . '_last_updated');
+        $db->mysqllib->where('name', __LIBRARY__.'_last_updated');
         $res = $db->mysqllib->getValue(__MYSQL_SETTINGS__, 'value');
 
         // utmdump([$db->mysqllib->getLastQuery(), $res]);
 
         return $res;
-        //
     }
 
     public static function getNewFiles(array $array, InputInterface $input, OutputInterface $output): array
@@ -106,12 +104,12 @@ trait Helper
             }
         }
 
-        if (! Option::istrue('yes') && ! Option::istrue('paths')) {
-            $date                     = $this->lastUpdated();
-            MediaFinder::$TextMessage = '  Updated Files ';
-        }
+        // if (! Option::istrue('yes') && ! Option::istrue('paths')) {
+        //     $date                     = $this->lastUpdated();
+        //     MediaFinder::$TextMessage = '  Updated Files ';
+        // }
 
-        $Updates_Array = (new MediaFinder)->search(getcwd(), '/\.mp4$/i', $date, false);
+        $Updates_Array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
         foreach ($Updates_Array as $key => $file) {
             if (array_key_exists($key, $this->New_Array)) {
                 continue;
@@ -120,10 +118,10 @@ trait Helper
         }
 
         if (Option::istrue('test')) {
-            parent::$output->writeln('Deleted files ' . print_r($this->Deleted_Array, 1));
-            parent::$output->writeln('Changed files ' . print_r($this->Changed_Array, 1));
-            parent::$output->writeln('New files ' . print_r($this->New_Array, 1));
-            parent::$output->writeln('Updates files ' . print_r($this->Updates_Array, 1));
+            parent::$output->writeln('Deleted files '.print_r($this->Deleted_Array, 1));
+            parent::$output->writeln('Changed files '.print_r($this->Changed_Array, 1));
+            parent::$output->writeln('New files '.print_r($this->New_Array, 1));
+            parent::$output->writeln('Updates files '.print_r($this->Updates_Array, 1));
         }
 
         $changed_string = 0;
@@ -142,7 +140,6 @@ trait Helper
             ['Changed files' => count($this->Changed_Array)],
             ['New files'     => count($this->New_Array)],
             ['Updates files' => count($this->Updates_Array)],
-
         );
 
         // utmdd([__METHOD__,
@@ -159,7 +156,6 @@ trait Helper
             'changed' => $this->Changed_Array,
             'deleted' => $this->Deleted_Array,
             'updates' => $this->Updates_Array,
-
         ];
     }
 
@@ -170,9 +166,9 @@ trait Helper
         if (Option::istrue('clean')) {
             $this->obj->clean();
             exit;
-            // } elseif (Option::istrue('clear')) {
-            //     $this->obj->clear();
-            //     exit;
+        // } elseif (Option::istrue('clear')) {
+        //     $this->obj->clear();
+        //     exit;
         } elseif (Option::istrue('delete')) {
             $this->obj->clearDBValues();
             exit;
@@ -182,7 +178,7 @@ trait Helper
     /**
      * Summary of updateEntry.
      *
-     * @param  mixed|null  $exists
+     * @param mixed|null $exists
      */
     public function updateEntry($key, $video_file, $exists = null)
     {
@@ -190,16 +186,16 @@ trait Helper
         utmdd('fdsa');
 
         $this->OutputText   = [];
-        $this->OutputText[] = '<info>' . $this->count . '</info>:<comment>' . basename($video_file) . '</comment> ';
+        $this->OutputText[] = '<info>'.$this->count.'</info>:<comment>'.basename($video_file).'</comment> ';
 
-        if (parent::$dbconn->videoExists($key, 'thumbnail') !== null) {
+        if (null !== parent::$dbconn->videoExists($key, 'thumbnail')) {
             $this->thumb->get($key, $video_file);
-            $this->OutputText[] = "\t<fg=bright-cyan>" . $this->thumb->getVideoText() . '</> ';
+            $this->OutputText[] = "\t<fg=bright-cyan>".$this->thumb->getVideoText().'</> ';
         }
 
         if ($exists == StorageDB::$DB->videoExists($key, null, __MYSQL_VIDEO_INFO__)) {
             $this->vinfo->get($key, $video_file);
-            $this->OutputText[] = "\t<fg=cyan>" . $this->vinfo->getVideoText() . '</> ';
+            $this->OutputText[] = "\t<fg=cyan>".$this->vinfo->getVideoText().'</> ';
         }
 
         Mediatag::$output->writeln($this->OutputText);
@@ -210,8 +206,8 @@ trait Helper
         // utminfo(func_get_args());
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             StorageDB::$DB->video_key = $video_key;
-            parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
-            if (! Option::istrue('preview')) {
+            parent::$output->writeln('deleting '.basename($video_file).' from db ');
+            if (!Option::istrue('preview')) {
                 StorageDB::$DB->removeDBEntry();
                 StorageDB::$DB->clearDBValues($video_key);
             }
@@ -236,7 +232,7 @@ trait Helper
             StorageDB::$DB->progressbar1 = $progressbar;
             foreach ($this->New_Array as $video_key => $video_file) {
                 $videoDataArray[] = StorageDB::$DB->createDbEntry($video_file, $video_key);
-                $idx--;
+                --$idx;
             }
             $idx                     = $total;
             StorageDB::$DB->MultiIDX = $total;
@@ -247,7 +243,7 @@ trait Helper
             if ($total > $chunkSize) {
                 $progressbar2               = new MediaBar($chunks, 'two', $barWidth);
                 StorageDB::$DB->progressbar = new MediaBar($chunkSize, 'one', $barWidth);
-                $progressbar2->setMsgFormat()->setMessage($chunks . ' Chunks', 'message')->newbar()->start();
+                $progressbar2->setMsgFormat()->setMessage($chunks.' Chunks', 'message')->newbar()->start();
             }
             // StorageDB::$DB->progressbar->setMessage('Chunk pcs', 'message')->newbar();
             foreach ($data_array as $data) {
@@ -271,18 +267,20 @@ trait Helper
 
         foreach ($this->Changed_Array as $video_key => $video_file) {
             StorageDB::$DB->video_file = $video_file;
-            //StorageDB::$DB->video_key  = $video_key;
+            // StorageDB::$DB->video_key  = $video_key;
             $video_name = basename($video_file);
-            if (! Option::istrue('preview')) {
-                parent::$output->writeln('Updateing file from db ' . $video_name);
+            if (!Option::istrue('preview')) {
+                parent::$output->writeln('Updateing file from db '.$video_name);
                 StorageDB::$DB->UpdateFilePath($video_file);
             } else {
-                StorageDB::$DB->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
+                StorageDB::$DB->RowBlock->overwrite('Updateing file '.$video_name.PHP_EOL);
             }
         }
     }
 
-    public function findRemoved() {}
+    public function findRemoved()
+    {
+    }
 
     public function execUpdate()
     {
@@ -300,7 +298,7 @@ trait Helper
                 } else {
                     $storagedb->updateDBEntry($key, ['video_file' => $file], Option::istrue('all'));
                 }
-                $storagedb->MultiIDX--;
+                --$storagedb->MultiIDX;
             }
 
             $this->updateNow();
@@ -338,7 +336,7 @@ trait Helper
             $answer = 'y';
         } else {
             Mediatag::$output->writeln(self::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper;
+            $ask      = new QuestionHelper();
             $question = new Question(self::text('L__DB_ASK_CONTINUE'));
 
             $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
@@ -360,8 +358,8 @@ trait Helper
                 break;
         }
 
-        if ($go == true) {
-            Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
+        if (true == $go) {
+            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
             StorageDB::$DB->emptydatabase();
         }
     }
@@ -370,7 +368,7 @@ trait Helper
     {
         // $this->dbBackupPath = __DB_BACKUP_ROOT__;
         if (Option::isTrue('library')) {
-            $this->dbBackupPath = $this->dbBackupPath . __LIBRARY__ . DIRECTORY_SEPARATOR;
+            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.DIRECTORY_SEPARATOR;
         }
 
         FileSystem::createDir($this->dbBackupPath);
@@ -383,7 +381,7 @@ trait Helper
 
     private function doBackup($table, $csv_file)
     {
-        $csv_file = $this->dbBackupPath . $csv_file;
+        $csv_file = $this->dbBackupPath.$csv_file;
 
         if (file_exists($csv_file)) {
             unlink($csv_file);
@@ -398,7 +396,7 @@ trait Helper
             unset($row['last_updated']);
             unset($row['new']);
 
-            if ($i == 0) {
+            if (0 == $i) {
                 $keys = array_keys($row);
                 fputcsv($fp, $keys, ',', '"', '');
             }
@@ -411,7 +409,7 @@ trait Helper
     {
         // $this->dbBackupPath = __DB_BACKUP_ROOT__;
         if (Option::isTrue('library')) {
-            $this->dbBackupPath = $this->dbBackupPath . __LIBRARY__ . DIRECTORY_SEPARATOR;
+            $this->dbBackupPath = $this->dbBackupPath.__LIBRARY__.DIRECTORY_SEPARATOR;
         }
 
         FileSystem::createDir($this->dbBackupPath);
@@ -424,7 +422,7 @@ trait Helper
 
     private function doImport($table, $csv_file)
     {
-        $csv_file = $this->dbBackupPath . $csv_file;
+        $csv_file = $this->dbBackupPath.$csv_file;
 
         if (file_exists($csv_file)) {
             unlink($csv_file);
@@ -439,7 +437,7 @@ trait Helper
             unset($row['last_updated']);
             unset($row['new']);
 
-            if ($i == 0) {
+            if (0 == $i) {
                 $keys = array_keys($row);
                 fputcsv($fp, $keys, ',', '"', '');
             }
@@ -453,10 +451,10 @@ trait Helper
         $db = parent::$dbconn;
 
         if (Option::isTrue('library')) {
-            if (! str_contains($table, 'mediatag_video_custom')) {
+            if (!str_contains($table, 'mediatag_video_custom')) {
                 $db->where('Library', __LIBRARY__);
             } else {
-                $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "' . __LIBRARY__ . '"';
+                $query = 'SELECT c.* FROM mediatag_video_file as f,mediatag_video_custom as c WHERE f.video_key = c.video_key and f.Library = "'.__LIBRARY__.'"';
 
                 return $db->rawQuery($query);
             }

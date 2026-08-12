@@ -126,11 +126,11 @@ class TagBuilder
             $videoInfo['currentTags'] = [];
         } else {
             $current = $this->ReaderObj->getMetaValues();
-
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
+                   
                 }
             }
             if (is_array($current) && is_array($updates)) {
@@ -148,6 +148,7 @@ class TagBuilder
         $tmpStudio  = null;
         $network    = null;
         $tmpNetwork = null;
+        // utmdd([$current, $updates, $studio]);
 
         foreach ($current as $tag => $value) {
             if ($value === null) {
@@ -202,14 +203,15 @@ class TagBuilder
         $arr    = explode('/', $studio);
         $arr    = MediaArray::array_iunique($arr);
         $studio = implode('/', $arr);
-        // utmdd([$current, $updates, $studio]);
 
         $studio = trim($studio, '/');
 
         if (! str_starts_with($this->video_key, 'x')) {
             $storage = new Storage;
 
-            $storage->lookupStudio('studio', $studio);
+            if($res = $storage->lookupStudio('studio', $studio)){
+                return $res;
+            }
         }
 
         return $studio;

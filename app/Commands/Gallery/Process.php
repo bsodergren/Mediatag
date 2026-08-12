@@ -6,12 +6,11 @@
 
 namespace Mediatag\Commands\Gallery;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
+use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Database\GalleryStorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\MediaFinder;
@@ -25,6 +24,8 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function define;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 class Process extends Mediatag
 {
@@ -78,7 +79,8 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         // define('USE_SEARCH', false);
         parent::boot($input, $output);
-       Storage::$DB = new GalleryStorageDB($input, $output);
+                $this->DbMap = new GalleryStorageDB;
+
     }
 
     public function exec($option = null)
@@ -99,37 +101,36 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         $path = getcwd();
 
-        $finder          = new MediaFinder;
+        $finder          = new MediaFinder();
         $this->VideoList = $finder->Search($path, '/\.jpg|\.png|\.gif$/i');
 
         parent::$SearchArray = $this->VideoList;
         $file_array          = parent::$SearchArray;
-        $this->DbMap         =Storage::$DB;
 
         foreach ($file_array as $k => $file) {
             $key = File::getVideoKey($file);
 
             if (array_key_exists($key, $this->file_array)) {
-                $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $file);
+                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
                 $dupePath  = dirname($movedFile);
                 $filename  = basename($file);
 
                 $dupePath = nFileSystem::normalizePath($dupePath);
-                if (! is_dir($dupePath)) {
+                if (!is_dir($dupePath)) {
                     //     if (!Option::isTrue('test')) {
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($file . ' is dup');
-                (new SfSystem)->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
+                Mediatag::$output->writeln($file.' is dup');
+                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
 
                 continue;
             }
             $this->file_array[$key] = $file;
         }
 
-       Storage::$DB->file_array = $this->file_array;
-        $this->db_array             =Storage::$DB->getDbFileList();
+        GalleryStorageDB::$DB->file_array = $this->file_array;
+        $this->db_array          =  GalleryStorageDB::$DB->getDbFileList();
 
         return $this;
     }

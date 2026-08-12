@@ -103,9 +103,10 @@ trait Helper
         // utmdd($download_url);
 
         if (Option::istrue('url')) {
-            $this->youtubeWatchPlaylist();
+            // $this->youtubeWatchPlaylist();
+            $this->playlist = Option::getValue('url');
 
-            return true;
+            // return true;
         }
 
         $this->youtube->run($this->playlist)->downloadPlaylist();
@@ -243,7 +244,7 @@ trait Helper
             return '';
         }
 
-        utmdd(__METHOD__);
+        // utmdd(__METHOD__);
 
         // utmdump($firstRun);
         // utminfo(func_get_args());

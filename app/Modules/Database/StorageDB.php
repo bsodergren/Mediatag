@@ -6,6 +6,7 @@
 
 namespace Mediatag\Modules\Database;
 
+use Mediatag\Modules\Database\Traits\GalleryStorageDB;
 use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
@@ -19,7 +20,6 @@ use Mediatag\Modules\VideoInfo\Section\VideoTags;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mhor\MediaInfo\Attribute\Duration;
 use Nette\Utils\Arrays;
-use Nette\Utils\FileSystem as nFilesystem;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
@@ -32,6 +32,7 @@ class StorageDB extends Storage
 {
     use DbMap;
     use TagDB;
+
 
     public $DbFileArray = [];
 

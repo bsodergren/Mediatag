@@ -13,6 +13,10 @@ use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFinder;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Cursor;
+
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableCellStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -57,6 +61,7 @@ class Mediatag extends Command
     public $helper;
 
     public $actions;
+    public $cmdOptions = [];
 
     public $default = [
         'exec'  => null,
@@ -252,6 +257,50 @@ class Mediatag extends Command
         $this->getVideoArray();
         $total = count($this->videoArray['file']);
         self::$output->writeLn('<info>MediaTag There are ' . $total . ' files found</info>');
+    }
+
+    
+    public function defaultCmd($options)
+    {
+        $table = new Table(Mediatag::$output);
+
+        //utmdump(Mediatag::$input->getFirstArgument());
+
+        utmdump($options);
+
+        $table->setHeaders(
+            [
+                [
+                    new TableCell(Mediatag::$input->getFirstArgument(),
+                        ['colspan'  => 2,
+                            'style' => new TableCellStyle(
+                                ['align' => 'center', 'fg' => 'red']),
+                        ]),
+                ],
+                ['name', 'desc'], ], );
+        foreach ($options as $cmd => $info) {
+            // $table->setHeaderTitle($cmd);
+            $tableRows[] = [$cmd, $info['desc']];
+        }
+
+        $table->setRows($tableRows);
+        // $table->setStyle($tableStyle);
+        $table->setStyle('box');
+        $table->render();
+        Mediatag::$output->writeLn('<info> No option found </info>');
+    }
+
+    public function getCommandArgs($commandName)
+    {
+          $showCmd = Option::getValue($commandName, 1);
+        if (array_key_exists($showCmd, $this->cmdOptions)) {
+            $method = $this->cmdOptions[$showCmd]['cmd'];
+            $this->$method();
+
+            return 1;
+        }
+
+        $this->defaultCmd($this->cmdOptions);
     }
 
     // public function runCommand()

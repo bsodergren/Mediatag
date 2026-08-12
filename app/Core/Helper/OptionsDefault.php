@@ -96,7 +96,7 @@ trait OptionsDefault
             ['genre', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_GENRE', ['TXT'     => $cmdName])],
             ['studio', 's', InputOption::VALUE_OPTIONAL, self::text('L__META_STUDIO', ['TXT'                                 => $cmdName])],
             ['network', '', InputOption::VALUE_OPTIONAL, self::text('L__META_NETWORK', ['TXT'                                => $cmdName])],
-
+            ['sublibrary', '', InputOption::VALUE_OPTIONAL, self::text('L__META_SUB_LIB', ['TXT'                                => $cmdName])],
             ['artist', 'a', InputOption::VALUE_OPTIONAL, self::text('L__META_ARTIST', ['TXT'                                 => $cmdName])],
             ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT' => $cmdName])],
         ];
