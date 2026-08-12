@@ -24,8 +24,7 @@ trait MergeHelper
 
     public function mergeFiles()
     {
-
-          $this->getCommandArgs('merge');
+        $this->getCommandArgs('merge');
 
         // $showCmd = Option::getValue('merge', 1);
 
@@ -50,7 +49,7 @@ trait MergeHelper
         '.__MYSQL_PLAYLIST_VIDEOS__.' as p
         where (p.playlist_id = '.$playlist_id.' and
         p.playlist_video_id = v.id and
-         d.id = p.playlist_id ) ORDER BY v.filename DESC';
+         d.id = p.playlist_id ) ORDER BY v.filename ASC';
         $sql     = str_replace(PHP_EOL, '', $sql);
         $sql     = str_replace('  ', ' ', $sql);
         $results = Storage::$DB->query($sql);
@@ -62,7 +61,7 @@ trait MergeHelper
     {
         $playlist = Option::getValue('playlistid', true);
         $name     = Option::getValue('name', true);
-// utmdd($playlist,$name);
+        // utmdd($playlist,$name);
         $filelistArray = $this->getPlaylistVideosfromId($playlist);
 
         if (null === $name) {

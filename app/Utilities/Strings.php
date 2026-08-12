@@ -8,11 +8,11 @@ namespace Mediatag\Utilities;
 
 use LanguageDetection\Language;
 use Mediatag\Core\MediaCache;
-use Mediatag\Core\MediaLogger;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Symfony\Component\Process\Process;
 
+use function array_key_exists;
 use function chr;
 use function count;
 use function gettype;
@@ -30,11 +30,12 @@ use const PHP_EOL;
 class Strings extends \Nette\Utils\Strings
 {
     private static $dumpString = '';
+    public static $Random;
 
     public static function map($value, $fromLow, $fromHigh, $toLow, $toHigh)
     {
         $fromRange   = $fromHigh - $fromLow;
-        $toRange     = $toHigh - $toLow;
+        $toRange     = $toHigh   - $toLow;
         $scaleFactor = $toRange / $fromRange;
 
         // Re-zero the value within the from range
@@ -64,13 +65,13 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if ($text == '') {
+        if ('' == $text) {
             return $text;
         }
-        if($translate === true){
+        if (true === $translate) {
             $text = self::translate($text);
         }
-        $new_text  = trim(self::cleanSpecialChars($text, $noSpaces, true));
+        $new_text = trim(self::cleanSpecialChars($text, $noSpaces, true));
         // if($new_text == "") {
 
         // // // utmdump([$text,$new_text,$translate]);
@@ -84,7 +85,7 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if ($filename == '') {
+        if ('' == $filename) {
             return $filename;
         }
 
@@ -100,8 +101,8 @@ class Strings extends \Nette\Utils\Strings
         $filename = $fileInfo['filename'];
 
         if (str_contains($filename, $video_key)) {
-            $filename  = str_replace('-' . $video_key, '', $fileInfo['filename']);
-            $video_key = '-' . $video_key;
+            $filename  = str_replace('-'.$video_key, '', $fileInfo['filename']);
+            $video_key = '-'.$video_key;
         } else {
             $video_key = '';
         }
@@ -110,13 +111,13 @@ class Strings extends \Nette\Utils\Strings
 
         $video_filename = self::cleanSpecialChars($filename, true, $case);
 
-        if (str_replace($video_key, '', $video_filename) == '') {
+        if ('' == str_replace($video_key, '', $video_filename)) {
             $video_filename = self::translate($filename);
             $video_filename = self::cleanSpecialChars($video_filename, true, $case);
         }
         // utmdd( $video_filename);
 
-        return $video_filename . $video_key . '.' . $fileExt;
+        return $video_filename.$video_key.'.'.$fileExt;
     }
 
     public static function truncateString($string, $maxlength, $ellipsis = false, $middle = false)
@@ -127,7 +128,7 @@ class Strings extends \Nette\Utils\Strings
             return $string;
         }
 
-        if ($middle === true) {
+        if (true === $middle) {
             $maxlength = floor($maxlength / 2);
         }
 
@@ -143,7 +144,7 @@ class Strings extends \Nette\Utils\Strings
             $ellipsis = '';
         }
 
-        if ($ellipsis === true) {
+        if (true === $ellipsis) {
             $ellipsis = '...';
         }
 
@@ -153,17 +154,17 @@ class Strings extends \Nette\Utils\Strings
 
         $start = 0;
 
-        $return = mb_substr($string, $start, $maxlength) . $ellipsis;
+        $return = mb_substr($string, $start, $maxlength).$ellipsis;
 
-        if ($middle === true) {
+        if (true === $middle) {
             $start     = mb_strlen($string) - $maxlength;
             $maxlength = mb_strlen($string);
             $end       = mb_substr($string, $start, $maxlength);
-            $return    = $return . $end;
+            $return .= $end;
         }
         $string = $return;
 
-        return trim($string) . $color_close;
+        return trim($string).$color_close;
     }
 
     public static function showStatus($done, $total, $size = 30, $label = '')
@@ -195,8 +196,8 @@ class Strings extends \Nette\Utils\Strings
 
         $bar = floor($perc * $size);
 
-        $status_bar = "\r[" . $label;
-        $status_bar .= ' ' . number_format($done) . '/' . number_format($total) . ' ';
+        $status_bar = "\r[".$label;
+        $status_bar .= ' '.number_format($done).'/'.number_format($total).' ';
 
         $str_len = strlen($status_bar);
         $size -= $str_len;
@@ -220,7 +221,7 @@ class Strings extends \Nette\Utils\Strings
         // flush();
 
         // when done, send a newline
-        if ($done == $total || $done == 0) {
+        if ($done == $total || 0 == $done) {
             echo PHP_EOL;
 
             return 0;
@@ -249,21 +250,18 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        if (! $array) {
+        if (!$array) {
             return '';
         }
 
-        return $before . implode("{$after}{$separator}{$before}", $array) . $after;
+        return $before.implode("{$after}{$separator}{$before}", $array).$after;
     }
 
     public static function translate($inputText, $sep = '_')
     {
-
-    // 
-        $ld   = new Language(['en','ru']);
+        $ld   = new Language(['en', 'ru']);
         $lang = $ld->detect($inputText)->bestResults()->close();
         if (array_key_exists('en', $lang)) {
-
             return $inputText;
         }
 
@@ -349,7 +347,7 @@ class Strings extends \Nette\Utils\Strings
             chr(0),
         ];
 
-        if ($file === true) {
+        if (true === $file) {
             $file_special_chars = ['.', ';', ','];
         } else {
             $file_special_chars = ['’', "'"];
@@ -357,8 +355,8 @@ class Strings extends \Nette\Utils\Strings
         $special_chars = array_merge($special_chars, $file_special_chars);
         $text          = str_replace('é', 'e', $text);
 
-        if ($file === true) {
-            if ($caseSensitive === false) {
+        if (true === $file) {
+            if (false === $caseSensitive) {
                 $text = strtolower($text);
             }
             $text = str_replace(['’', "'"], '', $text);
@@ -387,13 +385,13 @@ class Strings extends \Nette\Utils\Strings
         $text          = str_replace(['%20', '+'], '-', $text);
         $text          = preg_replace('/[\r\n\t ]+/', '_', $text);
         $text          = str_replace('_', ' ', $text);
-        if ($file === true) {
-            if ($caseSensitive === false) {
+        if (true === $file) {
+            if (false === $caseSensitive) {
                 $text = ucwords($text);
             }
             $text = str_replace(' ', '_', $text);
             $text = str_replace('-', ' ', $text);
-            if ($caseSensitive === false) {
+            if (false === $caseSensitive) {
                 $text = ucwords($text);
             }
             $text = str_replace(' ', '-', $text);
@@ -410,13 +408,13 @@ class Strings extends \Nette\Utils\Strings
     {
         // utminfo(func_get_args());
 
-        return str_replace(__PLEX_HOME__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR, '', $filename);
+        return str_replace(__PLEX_HOME__.DIRECTORY_SEPARATOR.__LIBRARY__.DIRECTORY_SEPARATOR, '', $filename);
     }
 
     public static function StudioName($name, $forward = true)
     {
         $name = str_replace('DP', 'Dp', $name);
-        if ($forward === true) {
+        if (true === $forward) {
             $name = str_replace('1000', 'Thousand', $name);
             $name = str_replace('21st', 'TwentyFirst', $name);
         } else {
@@ -439,7 +437,7 @@ class Strings extends \Nette\Utils\Strings
 
         $arraySize = count($workArray);     // Get size of array
 
-        for ($i = 0; $i < $arraySize; $i++) {
+        for ($i = 0; $i < $arraySize; ++$i) {
             // Nested array, process nest item
 
             if (is_array($workArray[$i])) {
@@ -453,7 +451,7 @@ class Strings extends \Nette\Utils\Strings
                         break;
 
                     case 'boolean':
-                        $_spFormat = ($workArray[$i] == true) ? 'true' : 'false';
+                        $_spFormat = (true == $workArray[$i]) ? 'true' : 'false';
                         break;
 
                         // Make sure sprintf has a good datatype to work with
@@ -479,7 +477,7 @@ class Strings extends \Nette\Utils\Strings
                         break;
                 }
 
-                $returnString .= sprintf('%2$s' . $_spFormat . '%2$s', $workArray[$i], $enclosure);
+                $returnString .= sprintf('%2$s'.$_spFormat.'%2$s', $workArray[$i], $enclosure);
 
                 $returnString .= ($i < ($arraySize - 1)) ? $delimiter : $terminator;
             }
@@ -488,5 +486,15 @@ class Strings extends \Nette\Utils\Strings
         // Done the workload, return the output information
 
         return $returnString;
+    }
+
+    public static function RandomId($prefix = '', $length = 10)
+    {
+        return $prefix.substr(str_shuffle(str_repeat($x = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', ceil($length / strlen($x)))), 1, $length);
+    }
+
+    public static function Random($length = 10)
+    {
+        self::$Random = self::RandomId('', $length);
     }
 }

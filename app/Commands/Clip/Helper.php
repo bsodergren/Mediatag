@@ -6,8 +6,6 @@
 
 namespace Mediatag\Commands\Clip;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Commands\Clip\Markers\Markers as MarkerHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
@@ -25,6 +23,8 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 trait Helper
 {
@@ -73,10 +73,10 @@ trait Helper
 
         rsort($pcs);
         $seconds = $pcs[0];
-        if (\array_key_exists(1, $pcs)) {
+        if (array_key_exists(1, $pcs)) {
             $minutes = $pcs[1] * 60;
         }
-        if (\array_key_exists(2, $pcs)) {
+        if (array_key_exists(2, $pcs)) {
             $hours = $pcs[2] * 60 * 60;
         }
 
@@ -90,30 +90,34 @@ trait Helper
         $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
 
         // Filesystem::createDir(dirname($outputFile));
-        if ($level == 0) {
+        if (0 == $level) {
             return $outputFile;
         }
 
-        return \dirname($outputFile, $level);
+        return dirname($outputFile, $level);
     }
 
     public function getClipFilename($filename)
     {
-        return $this->getClipDirectory($filename) . DIRECTORY_SEPARATOR . basename($filename);
+        return $this->getClipDirectory($filename).DIRECTORY_SEPARATOR.basename($filename);
     }
 
     public function setClipFilename($name)
     {
         $name = str_replace(' ', '_', $name);
 
-        $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
-        Filesystem::createDir(\dirname($filename));
-        //utmdump($filename);
+        $filename = __LIBRARY_HOME__.DIRECTORY_SEPARATOR.'Home Videos'.DIRECTORY_SEPARATOR.'Compilation'.DIRECTORY_SEPARATOR.$name.'.mp4';
+        Filesystem::createDir(dirname($filename));
+        // utmdump($filename);
         if (file_exists($filename)) {
-            if (Chooser::changes(' Overwrite File ' . __LINE__, 'overwrite', __LINE__)) {
+            if (!Option::istrue('yes')) {
+                if (Chooser::changes(' Overwrite File '.__LINE__, 'overwrite', __LINE__)) {
+                    unlink($filename);
+                }
+            // } else {
+            //     exit;
+            } else {
                 unlink($filename);
-                // } else {
-                //     exit;
             }
         }
 
@@ -124,7 +128,7 @@ trait Helper
 
     public function setffmpegFilename($name)
     {
-        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0) . DIRECTORY_SEPARATOR . $name . '.txt';
+        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).DIRECTORY_SEPARATOR.$name.'.txt';
     }
 
     public function getfileList()
@@ -134,20 +138,19 @@ trait Helper
 
         $search = Option::getValue('clip', true);
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-            $this->Marker = new Markers;
+            $this->Marker = new Markers();
 
             $this->Marker->getvideoId($key);
 
-            if ($this->Marker->video_id !== null) {
+            if (null !== $this->Marker->video_id) {
                 $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
 
                 $result = Storage::$DB->query($query);
-                utmdd($result);
 
                 $markers = $this->getVideoMarks($result);
 
-                if (\count($markers) > 0) {
-                    $this->FileIdx++;
+                if (count($markers) > 0) {
+                    ++$this->FileIdx;
 
                     $markerArray[] = $markers;
                 }
@@ -160,21 +163,21 @@ trait Helper
 
     public function backupOrigFile($OriginalName, $NewName, $directory)
     {
-        //utmdump(__METHOD__);
-        $file_path       = \dirname($OriginalName);
-        $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
+        // utmdump(__METHOD__);
+        $file_path       = dirname($OriginalName);
+        $backup_filepath = str_replace('XXX/', 'XXX/'.$directory.'/', $file_path);
 
-        //utmdump($backup_filepath);
+        // utmdump($backup_filepath);
 
-        if (! Mediatag::$filesystem->exists($backup_filepath)) {
+        if (!Mediatag::$filesystem->exists($backup_filepath)) {
             Mediatag::$filesystem->mkdir($backup_filepath);
         }
-        $backup_filename = $backup_filepath . '/' . basename($OriginalName);
-        //utmdump($backup_filename);
-        //$outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
+        $backup_filename = $backup_filepath.'/'.basename($OriginalName);
+        // utmdump($backup_filename);
+        // $outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
 
         Filesystem::renameFile($OriginalName, $backup_filename);
-        //utmdump($NewName);
+        // utmdump($NewName);
 
         Filesystem::renameFile($NewName, $OriginalName);
     }

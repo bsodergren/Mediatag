@@ -32,6 +32,8 @@ class Options extends MediaOptions
             ['playlistid', 'P', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],
             ['output', 'o', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_SCRIPT_OUTPUT')],
             ['dim', 'd', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_DIMENSION')],
+            ['yes', 'y', InputOption::VALUE_NONE, self::text('L__CLIP_MERGED_OVERWRITE')],
+
         ];
     }
 

@@ -6,12 +6,8 @@
 
 namespace Mediatag\Traits;
 
-use const PHP_EOL;
-
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
-use FFMpeg\FFProbe;
-use FFMpeg\Format\ProgressListener\VideoProgressListener;
 use FFMpeg\Format\Video\X264;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaBar;
@@ -33,6 +29,8 @@ use UTM\Utilities\Option;
 use function count;
 use function dirname;
 
+use const PHP_EOL;
+
 trait MediaFFmpeg
 {
     use ProcessCallbacks;
@@ -46,7 +44,7 @@ trait MediaFFmpeg
     // '-hide_banner', '-nostdin',
     public $ffmpegArgs = ['-y',  '-threads', '1']; // , '-loglevel', 'debug'];
 
-    public $ffmpeg_log = __LOGFILE_DIR__ . '/buffer/ffmpeg.log';
+    public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
 
     public $currentFrame = 0;
 
@@ -55,7 +53,7 @@ trait MediaFFmpeg
         $buffer = MediatagExec::cleanBuffer($buffer);
 
         // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
-        if ($this->progress !== null) {
+        if (null !== $this->progress) {
             if (preg_match('/frame=\s([0-9.]+)/', $buffer, $output_array)) {
                 $frame              = $output_array[1];
                 $adv                = $frame - $this->currentFrame;
@@ -69,7 +67,7 @@ trait MediaFFmpeg
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
 
-        if ($this->progress !== null) {
+        if (null !== $this->progress) {
             $this->progress->advance();
         }
     }
@@ -79,7 +77,7 @@ trait MediaFFmpeg
         $buffer = MediatagExec::cleanBuffer($buffer);
         // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
 
-        if ($this->progress !== null) {
+        if (null !== $this->progress) {
             $this->progress->advance();
         }
     }
@@ -112,10 +110,10 @@ trait MediaFFmpeg
             unset($cmdArray[0]);
             // $this->MergedName
             foreach ($cmdArray as $k => $value) {
-                $cmdArray[$k] = "'" . $value . "'";
+                $cmdArray[$k] = "'".$value."'";
             }
 
-            $obj = new ScriptWriter(str_replace(' ', '_', $this->MergedName) . '.sh', __CURRENT_DIRECTORY__);
+            $obj = new ScriptWriter(str_replace(' ', '_', $this->MergedName).'.sh', __CURRENT_DIRECTORY__);
             $obj->addCmd('ffmpeg', $cmdArray);
             // utmdd($obj);
             $obj->write();
@@ -130,7 +128,7 @@ trait MediaFFmpeg
 
         //  $process->start();
 
-        if (! $process->isSuccessful()) {
+        if (!$process->isSuccessful()) {
             return false;
             //     throw new ProcessFailedException($process);
             utmdd($process->getCommandLine(), $process->getExitCode(), $process->getErrorOutput());
@@ -148,7 +146,7 @@ trait MediaFFmpeg
 
     public function convertVideo($file, $output_file)
     {
-        $mediaInfo          = new MediaInfo;
+        $mediaInfo          = new MediaInfo();
         $mediaInfoContainer = $mediaInfo->getInfo($file);
         $videos             = $mediaInfoContainer->getVideos();
         $general            = $mediaInfoContainer->getGeneral();
@@ -174,7 +172,7 @@ trait MediaFFmpeg
 
         $dmg_dir = str_replace('/XXX', '/XXX/mkv', dirname($file));
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($file, $dmg_dir . '/' . basename($file));
+        FileSystem::rename($file, $dmg_dir.'/'.basename($file));
     }
 
     public function repairVideo($signal = 1)
@@ -191,12 +189,12 @@ trait MediaFFmpeg
             case '6':
                 $cmdOptions = [
                     '-y', '-loglevel', 'repeat+info', '-i',
-                    'file:' . $orig_file, '-map', '0', '-dn', '-ignore_unknown',
+                    'file:'.$orig_file, '-map', '0', '-dn', '-ignore_unknown',
                     '-c', 'copy', '-f', 'mp4', '-bsf:a', 'aac_adtstoasc',
                     '-movflags', '+faststart',
-                    'file:' . $new_tmp_file,
+                    'file:'.$new_tmp_file,
                 ];
-                //$cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
+                // $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
                 break;
             default:
                 $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
@@ -207,7 +205,7 @@ trait MediaFFmpeg
 
         $dmg_dir = str_replace('/XXX', '/XXX/dmg', $this->video_path);
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($orig_file, $dmg_dir . '/' . $this->video_name);
+        FileSystem::rename($orig_file, $dmg_dir.'/'.$this->video_name);
         FileSystem::rename($new_tmp_file, $new_file);
 
         $this->write();
@@ -230,7 +228,7 @@ trait MediaFFmpeg
 
         $cmdOptions = [
             '-ss', $time, '-i', $video_file, '-vf',
-            'scale=' . $scale . ':force_original_aspect_ratio=decrease',
+            'scale='.$scale.':force_original_aspect_ratio=decrease',
             '-vframes', '1', $thumbnail,
         ];
         $this->cmdline = $cmdOptions;
@@ -242,7 +240,7 @@ trait MediaFFmpeg
     public function ffmpegCreateClip($file, $marker, $idx)
     {
         $videoFile  = $this->getClipFilename($file);
-        $outputFile = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
+        $outputFile = str_replace('.mp4', '_clip-'.$marker['text'].'-'.$idx.'.mp4', $videoFile);
         FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
@@ -276,13 +274,13 @@ trait MediaFFmpeg
         $this->cmdline = $cmdOptions;
         // utmdump($cmdOptions);
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
-        $this->progress->startIndicator('Clipping ' . $marker['text'] . ' at ' . $marker['start'] . ' to ' . $marker['end']);
+        $this->progress->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
 
         $callback = Callback::check([$this, 'Outputdebug']);
 
         $this->ffmpegExec($cmdOptions, $callback);
         sleep(3);
-        $this->progress->finishIndicator('Finished ' . $marker['text']);
+        $this->progress->finishIndicator('Finished '.$marker['text']);
     }
 
     public function createCompilation($files, $ClipName, $name)
@@ -292,40 +290,39 @@ trait MediaFFmpeg
         $this->MergedName = $name;
         $this->clipName   = $ClipName;
 
-        // utmdump($files, $ClipName, $name, $duration, $type);
         $fileCount = count($files);
-        Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
-        Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
+        Mediatag::$output->writeln('<info>Merging '.$fileCount.' files</info>');
+        Mediatag::$output->writeln('<info>Info compilation called  '.$name.' </info>');
 
         $ffmpeg = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
 
-        // $advancedMedia = $ffmpeg->openAdvanced($files);
+        $advancedMedia = $ffmpeg->openAdvanced($files);
 
-        // $advancedMedia->filters()->pad()
-        // // //     ->custom('[0:v][1:v]', 'xfade=transition=radial', '[v]');
+        // $advancedMedia->filters()->pad();
+        // //     ->custom('[0:v][1:v]', 'xfade=transition=radial', '[v]');
 
-        // $format = new X264('aac', 'libx264');
-        // $format->on('progress', function ($advancedMedia, $format, $percentage) {
-        //     Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
-        //     // utmdump("$percentage % transcoded");
-        // });
-
-        // $advancedMedia
-        //     ->map([], $format, $ClipName)
-        //     ->save();
-        Mediatag::$Display->BarSection1->writeln('<file>Merging files</>');
-
-        $video  = $ffmpeg->open($files[0]);
-        $format = new X264;
-        // $format->setAudioCodec("libmp3lame");
-
-        $format->on('progress', function ($video, $format, $percentage) {
-            // Mediatag::$Display->BarSection2->overwrite('<info> ' . $percentage . ' </info>');
-            Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
+        $format = new X264('aac', 'libx264');
+        $format->on('progress', function ($advancedMedia, $format, $percentage) {
+            Mediatag::$output->writeln('<info>Info compilation called  '.$percentage.'%</info>');
+            // utmdump("$percentage % transcoded");
         });
 
+        $advancedMedia
+            ->map([], $format, $ClipName)
+            ->save();
+        Mediatag::$Display->BarSection1->writeln('<file>Merging files</>');
+
+        // $video  = $ffmpeg->open($files[0]);
+        // $format = new X264;
+        // $format->setAudioCodec("libmp3lame");
+
+        // $format->on('progress', function ($video, $format, $percentage) {
+        //     // Mediatag::$Display->BarSection2->overwrite('<info> ' . $percentage . ' </info>');
+        //     Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
+        // });
+
         // utmdd($files);
-        $video->concat($files)->saveFromDifferentCodecs($format, $ClipName);
+        // $video->concat($files)->saveFromDifferentCodecs($format, $ClipName);
         Mediatag::$Display->BarSection2->writeln('<comment>Finished</>');
 
         // $cmd = $this->generateFfmpegCommand($files, $type, $duration);
@@ -351,7 +348,7 @@ trait MediaFFmpeg
         $outputFile = str_replace('.mp4', '_chapters.mp4', $file);
 
         if (file_exists($outputFile)) {
-            if (! Chooser::changes(' Overwrite File' . __LINE__, 'overwrite', __LINE__)) {
+            if (!Chooser::changes(' Overwrite File'.__LINE__, 'overwrite', __LINE__)) {
                 return;
             }
         }
