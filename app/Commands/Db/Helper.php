@@ -86,8 +86,8 @@ trait Helper
         $this->Deleted_Array = MediaArray::diff($this->db_array, $this->file_array);
         $this->New_Array     = MediaArray::diff($this->file_array, $this->db_array);
 
-        // utmdd([__METHOD__,count($this->db_array), count($this->file_array)
-        // ,count($this->Deleted_Array), count($this->New_Array)]);
+        // utmdd([__METHODe__,count($this->db_array), count($this->file_array)
+        // ,count($this->Dleted_Array), count($this->New_Array)]);
         foreach ($this->file_array as $key => $file) {
             if (array_key_exists($key, $this->New_Array)) {
                 continue;
@@ -105,23 +105,24 @@ trait Helper
         }
 
         // if (! Option::istrue('yes') && ! Option::istrue('paths')) {
-        //     $date                     = $this->lastUpdated();
-        //     MediaFinder::$TextMessage = '  Updated Files ';
-        // }
+        // $date = '< '.$this->lastUpdated();
+        // //     MediaFinder::$TextMessage = '  Updated Files ';
+        // // }
 
-        $Updates_Array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
-        foreach ($Updates_Array as $key => $file) {
-            if (array_key_exists($key, $this->New_Array)) {
-                continue;
-            }
-            $this->Updates_Array[$key] = $Updates_Array[$key];
-        }
+        // $Updates_Array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
+        // // utmdd($Updates_Array,count($Updates_Array));
+        // foreach ($Updates_Array as $key => $file) {
+        //     if (array_key_exists($key, $this->New_Array)) {
+        //         continue;
+        //     }
+        //     $this->Updates_Array[$key] = $Updates_Array[$key];
+        // }
 
         if (Option::istrue('test')) {
             parent::$output->writeln('Deleted files '.print_r($this->Deleted_Array, 1));
             parent::$output->writeln('Changed files '.print_r($this->Changed_Array, 1));
             parent::$output->writeln('New files '.print_r($this->New_Array, 1));
-            parent::$output->writeln('Updates files '.print_r($this->Updates_Array, 1));
+            // parent::$output->writeln('Updates files '.print_r($this->Updates_Array, 1));
         }
 
         $changed_string = 0;
@@ -139,7 +140,7 @@ trait Helper
             ['Deleted files' => count($this->Deleted_Array)],
             ['Changed files' => count($this->Changed_Array)],
             ['New files'     => count($this->New_Array)],
-            ['Updates files' => count($this->Updates_Array)],
+            // ['Updates files' => count($this->Updates_Array)],
         );
 
         // utmdd([__METHOD__,
@@ -155,7 +156,7 @@ trait Helper
             'new'     => $this->New_Array,
             'changed' => $this->Changed_Array,
             'deleted' => $this->Deleted_Array,
-            'updates' => $this->Updates_Array,
+            // 'updates' => $this->Updates_Array,
         ];
     }
 
@@ -254,7 +255,7 @@ trait Helper
                     StorageDB::$DB->progressbar->setMsgFormat()->setMessage('Chunk pcs', 'message')->newbar()->start();
                     $progressbar2->advance();
                 }
-
+utmdump($data);
                 StorageDB::$DB->addDBArray($data);
             }
             $this->updateNow();

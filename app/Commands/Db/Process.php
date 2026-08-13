@@ -6,21 +6,14 @@
 
 namespace Mediatag\Commands\Db;
 
-use const DIRECTORY_SEPARATOR;
-
-use Mediatag\Commands\Db\Commands\Export\ExportHelper;
-use Mediatag\Commands\Db\Commands\Import\Helper as ImportHelper;
-use Mediatag\Commands\Db\Commands\Subtitles\Helper as SubHelper;
 use Mediatag\Core\Helper\MediaExecute;
 use Mediatag\Core\Helper\MediaProcess;
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\VideoInfo\Section\VideoFileInfo;
 use Mediatag\Traits\Translate;
 use Nette\Utils\FileSystem as nFileSystem;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem as SfSystem;
@@ -28,7 +21,10 @@ use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
+use function count;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 class Process extends Mediatag
 {
@@ -47,7 +43,7 @@ class Process extends Mediatag
 
     public $file_array = [];
 
-    public $Search_Array = null;
+    public $Search_Array;
 
     public $read;
 
@@ -69,7 +65,6 @@ class Process extends Mediatag
     ];
 
     public $commandList = [
-
     ];
 
     private $count;
@@ -83,16 +78,16 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-        $this->dbConn = new StorageDB;
+        $this->dbConn = new StorageDB();
         //
-        //parent::$SearchArray;
+        // parent::$SearchArray;
     }
 
     public function init()
     {
         // utminfo(func_get_args());
 
-        if ($this->Search_Array === null || count($this->Search_Array) == 0) {
+        if (null === $this->Search_Array || 0 == count($this->Search_Array)) {
             $this->Search_Array = parent::$finder->Search(getcwd(), '.mp4', null, false);
         }
         // $this->DbMap =StorageDB::$DB();
@@ -114,19 +109,19 @@ class Process extends Mediatag
                         // Mediatag::$Console->writeln('existi file ' . $existing_file . '');
                         // Mediatag::$Console->writeln('Keepin file ' . $keep . '');
                         if (file_exists($move)) {
-                            Mediatag::$Console->write('Moving file ' . $move . ' ');
-                            $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $move);
+                            Mediatag::$Console->write('Moving file '.$move.' ');
+                            $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
                             $dupePath  = dirname($movedFile);
                             $filename  = basename($file);
 
                             $dupePath = nFileSystem::normalizePath($dupePath);
-                            if (! is_dir($dupePath)) {
+                            if (!is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
                             }
                             Mediatag::$Console->writeln('to dupe folder');
-                            (new SfSystem)->rename($move, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
+                            (new SfSystem())->rename($move, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
                         }
 
                         unset($this->file_array[$key]);
@@ -151,8 +146,10 @@ class Process extends Mediatag
         $this->removeDBEntry();
         $this->changeDBEntry();
         $this->addDBEntry();
-        $this->execUpdate();
+        // $this->execUpdate();
     }
 
-    public function testExec($option) {}
+    public function testExec($option)
+    {
+    }
 }
