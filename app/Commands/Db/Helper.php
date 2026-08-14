@@ -105,18 +105,18 @@ trait Helper
         }
 
         // if (! Option::istrue('yes') && ! Option::istrue('paths')) {
-        // $date = '< '.$this->lastUpdated();
+        $date = '< '.$this->lastUpdated();
         // //     MediaFinder::$TextMessage = '  Updated Files ';
         // // }
 
-        // $Updates_Array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
-        // // utmdd($Updates_Array,count($Updates_Array));
-        // foreach ($Updates_Array as $key => $file) {
-        //     if (array_key_exists($key, $this->New_Array)) {
-        //         continue;
-        //     }
-        //     $this->Updates_Array[$key] = $Updates_Array[$key];
-        // }
+        $Updates_Array = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
+        // utmdd($Updates_Array,count($Updates_Array));
+        foreach ($Updates_Array as $key => $file) {
+            if (array_key_exists($key, $this->New_Array)) {
+                continue;
+            }
+            $this->Updates_Array[$key] = $Updates_Array[$key];
+        }
 
         if (Option::istrue('test')) {
             parent::$output->writeln('Deleted files '.print_r($this->Deleted_Array, 1));
@@ -140,7 +140,7 @@ trait Helper
             ['Deleted files' => count($this->Deleted_Array)],
             ['Changed files' => count($this->Changed_Array)],
             ['New files'     => count($this->New_Array)],
-            // ['Updates files' => count($this->Updates_Array)],
+            ['Updates files' => count($this->Updates_Array)],
         );
 
         // utmdd([__METHOD__,
@@ -156,7 +156,7 @@ trait Helper
             'new'     => $this->New_Array,
             'changed' => $this->Changed_Array,
             'deleted' => $this->Deleted_Array,
-            // 'updates' => $this->Updates_Array,
+            'updates' => $this->Updates_Array,
         ];
     }
 
@@ -184,7 +184,6 @@ trait Helper
     public function updateEntry($key, $video_file, $exists = null)
     {
         // utminfo(func_get_args());
-        utmdd('fdsa');
 
         $this->OutputText   = [];
         $this->OutputText[] = '<info>'.$this->count.'</info>:<comment>'.basename($video_file).'</comment> ';
@@ -255,7 +254,6 @@ trait Helper
                     StorageDB::$DB->progressbar->setMsgFormat()->setMessage('Chunk pcs', 'message')->newbar()->start();
                     $progressbar2->advance();
                 }
-utmdump($data);
                 StorageDB::$DB->addDBArray($data);
             }
             $this->updateNow();

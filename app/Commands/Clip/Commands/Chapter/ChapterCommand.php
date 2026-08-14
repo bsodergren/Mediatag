@@ -9,7 +9,7 @@ namespace Mediatag\Commands\Clip\Commands\Chapter;
 use Mediatag\Core\MediaCommand;
 use Symfony\Component\Console\Attribute\AsCommand;
 
-#[AsCommand(name: 'chapter', description: 'Chapter Markers to video file')]
+#[AsCommand(name: 'chapter', description: 'Chapter Chapters to video file')]
 final class ChapterCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
@@ -19,7 +19,7 @@ final class ChapterCommand extends MediaCommand
     public $command = [
         'chapter' => [
             'exec'              => null,
-            'getMarkerList'     => null,
+            'getChapterList'     => null,
             'createChapterFile' => null, ],
     ];
 }

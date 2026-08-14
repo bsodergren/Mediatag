@@ -361,7 +361,6 @@ class Reader extends TagReader
             __JSON_CACHE_DIR__,
             __STUDIO_JSON_CACHE_DIR__, ];
         $extMap = ['.info.json', '.json'];
-
         foreach ($locationMap as $location) {
             foreach ($extMap as $ext) {
                 $fileLocation = $location . DIRECTORY_SEPARATOR . $this->video_key . $ext;
@@ -374,6 +373,7 @@ class Reader extends TagReader
             }
         }
 
+
         if ($this->json_file === null) {
             $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, false, true);
             foreach ($files as $file) {
@@ -381,6 +381,8 @@ class Reader extends TagReader
                 $json_key = basename($json_key, '.info');
 
                 $json_key         = \strtolower(str_replace('_', '_', $json_key));
+                            // utmdump([$json_key,$this->video_name]);
+
                 $this->video_name = strtolower($this->video_name);
                 if (str_contains($this->video_key, $json_key)) {
                     $this->json_file = $this->moveJsontoCache($file);
@@ -395,6 +397,7 @@ class Reader extends TagReader
                     break;
                 }
             }
+            // utmdd($this->json_file);
             if (! file_exists($this->json_file)) {
                 return false;
             }
