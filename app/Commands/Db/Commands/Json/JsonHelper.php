@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Json;
 
@@ -62,7 +65,7 @@ trait JsonHelper
             }
 
             if (\file_exists($json_file)) {
-                $json_file = Reader::checkJsonForUpdate($json_file, $json_key);
+                $json_file            = Reader::checkJsonForUpdate($json_file, $json_key);
 
                 $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
             }
@@ -110,7 +113,7 @@ trait JsonHelper
             $video_file = $file['file'];
             $backupFile = '';
 
-            $data = file_get_contents($json_file);
+            $data       = file_get_contents($json_file);
 
             if (\str_contains($data, 'actionTags')) {
                 $jsondata = \json_decode($data, true);
@@ -130,11 +133,11 @@ trait JsonHelper
             return false;
         }
 
-        $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
+        $video_id = (new Markers())->getvideoId($videoInfo['video_key']);
 
-        $markers = explode(',', $markerArray);
-        $dbConn  = MysqliDb::getInstance();
-        $total   = 0;
+        $markers  = explode(',', $markerArray);
+        $dbConn   = MysqliDb::getInstance();
+        $total    = 0;
         foreach ($markers as $marker) {
             $parts = explode(':', $marker);
             $data  = [
@@ -145,7 +148,7 @@ trait JsonHelper
             $dbConn->where('timeCode', round($parts[1], 0));
             $dbConn->where('markerText', $parts[0]);
             $dbConn->where('video_id', $video_id);
-            $res = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
+            $res   = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
 
             if (is_null($res)) {
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
@@ -162,7 +165,7 @@ trait JsonHelper
 
     private function searchDownloads($type = 'json')
     {
-        $fileArray = [];
+        $fileArray          = [];
         switch ($type) {
             case 'json':
                 $search_params = 'info.json';
@@ -180,9 +183,9 @@ trait JsonHelper
             return null;
         }
         foreach ($file_array as $file) {
-            $first = Strings::after($file, __JSON_CACHE_DIR__ . '/');
+            $first       = Strings::after($file, __JSON_CACHE_DIR__ . '/');
 
-            $key = Strings::before($first, '.');
+            $key         = Strings::before($first, '.');
 
             $fileArray[] = $key;
         }

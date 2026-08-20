@@ -13,7 +13,7 @@ const SEXYHOTWIFESTORIES_REGEX_COMMON = '//i';
 
 class SexyHotwifeStories extends NewSensations
 {
-    public $studio = 'Sexy Hotwife Stories';
+    public $studio  = 'Sexy Hotwife Stories';
 
     public $network = 'New Sensations';
 }

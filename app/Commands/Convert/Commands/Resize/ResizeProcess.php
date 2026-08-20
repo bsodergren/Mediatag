@@ -37,7 +37,7 @@ class ResizeProcess extends Process
 
         ], Mediatag::$log);
 
-        $this->ffmpeg = FFMpeg::create([
+        $this->ffmpeg       = FFMpeg::create([
             'timeout' => 3600, // The timeout for the underlying process
         ], Mediatag::$log);
     }
@@ -54,8 +54,8 @@ class ResizeProcess extends Process
                 ->videos()                      // filters video streams
                 ->first();
 
-            $width = $videoInfo->getDimensions()->getWidth();
-            $ratio = $videoInfo->getDimensions()->getRatio()->getValue();
+            $width     = $videoInfo->getDimensions()->getWidth();
+            $ratio     = $videoInfo->getDimensions()->getRatio()->getValue();
             // utmdd($width, $ratio);
             if ($width > $maxWidth) {
                 $maxWidth = $width;
@@ -65,12 +65,12 @@ class ResizeProcess extends Process
         }
 
         foreach ($this->file_array as $k => $file) {
-            $videoInfo = $this->FFProbe
+            $videoInfo          = $this->FFProbe
                 ->streams($file) // extracts streams informations
                 ->videos()                      // filters video streams
                 ->first();
 
-            $height = $videoInfo->getDimensions()->getRatio()->calculateHeight($maxWidth);
+            $height             = $videoInfo->getDimensions()->getRatio()->calculateHeight($maxWidth);
 
             $this->fileDims[$k] = ['width' => $maxWidth, 'height' => $height];
         }
@@ -115,9 +115,9 @@ class ResizeProcess extends Process
         }
 
         Mediatag::$output->writeln('<comment>Transcoding file ' . basename($video_file) . ' </>');
-        $video = $this->ffmpeg->open($video_file);
+        $video      = $this->ffmpeg->open($video_file);
 
-        $format = new X264;
+        $format     = new X264();
         // $format->on('progress', function ($video, $format, $percentage) {
         //     echo "$percentage % transcoded";
         // });
@@ -131,8 +131,8 @@ class ResizeProcess extends Process
         //     ->setAudioChannels(2)
         //     ->setAudioKiloBitrate(256);
 
-        $height = $this->fileDims[$key]['height'];
-        $width  = $this->fileDims[$key]['width'];
+        $height     = $this->fileDims[$key]['height'];
+        $width      = $this->fileDims[$key]['width'];
 
         $video->filters()->resize(new Dimension($width, $height), ResizeFilter::RESIZEMODE_FIT, true);
         $video->save($format, $mp4_file);

@@ -14,7 +14,7 @@ class MariskaX extends Patterns
 {
     public $studio = 'Mariska X';
 
-    public $regex = [
+    public $regex  = [
         'mariskax' => [
             'artist' => [
                 'pattern'             => MARISKAX_REGEX_COMMON,

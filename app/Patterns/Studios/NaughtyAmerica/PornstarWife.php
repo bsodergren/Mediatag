@@ -16,5 +16,5 @@ class PornstarWife extends NaughtyAmerica
 {
     public $network = 'Naughty America';
 
-    public $studio = 'Pornstar Wife';
+    public $studio  = 'Pornstar Wife';
 }

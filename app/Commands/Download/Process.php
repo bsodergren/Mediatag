@@ -24,9 +24,9 @@ class Process extends Mediatag
      *
      * @var array
      */
-    public $file_array = [];
+    public $file_array     = [];
 
-    public $newFiles = [];
+    public $newFiles       = [];
 
     public $barSection;
 
@@ -47,7 +47,7 @@ class Process extends Mediatag
 
     private $filesToRemove = [];
 
-    protected $useFuncs = ['addMeta', 'setupMap'];
+    protected $useFuncs    = ['addMeta', 'setupMap'];
 
     public function __construct(InputInterface $input, OutputInterface $output, $file = null)
     {

@@ -7,8 +7,6 @@
 namespace Mediatag\Modules\Database;
 
 use Mediatag\Modules\Database\Traits\GalleryStorageDB;
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Traits\DbMap;
 use Mediatag\Modules\Database\Traits\TagDB;
@@ -28,13 +26,15 @@ use function array_key_exists;
 use function count;
 use function is_array;
 
+use const PHP_EOL;
+
 class StorageDB extends Storage
 {
     use DbMap;
     use TagDB;
 
 
-    public $DbFileArray = [];
+    public $DbFileArray  = [];
 
     public $input;
 
@@ -55,7 +55,7 @@ class StorageDB extends Storage
 
     public $video_key;
 
-    public static $DB = null;
+    public static $DB    = null;
 
     public $video_name;
 
@@ -81,19 +81,19 @@ class StorageDB extends Storage
 
     public $progressbar1;
 
-    public $MultiIDX = 1;
+    public $MultiIDX     = 1;
 
     public function __construct(?MysqliDb $DbConnection = null)
     {
         if ($DbConnection === null) {
-            $db = MysqliDb::getInstance();
+            $db           = MysqliDb::getInstance();
 
             $DbConnection = $db;
         }
 
         $this->mysqllib = $DbConnection; //->getInstance();
         $this->mysqllib->setTrace(true);
-        self::$DB = $this;
+        self::$DB       = $this;
 
         //  utmdd($this->mysqllib,self::$DB);
 
@@ -122,11 +122,11 @@ class StorageDB extends Storage
 
     public function getAllDbFiles()
     {
-        $query = $this->queryBuilder(
+        $query         = $this->queryBuilder(
             'select',
             "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key",
             false,
-            true
+            true,
         );
 
         $results       = $this->query($query);
@@ -148,11 +148,11 @@ class StorageDB extends Storage
         // utminfo(func_get_args());
 
         //        $this->delete(__MYSQL_VIDEO_FILE__, ['fullpath', 'is null']);
-        $fileListArray = [];
+        $fileListArray     = [];
 
-        $query = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
+        $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
 
-        $results = $this->query($query);
+        $results           = $this->query($query);
         foreach ($results as $key => $arr) {
             if ($arr['fullpath'] === null) {
                 continue;
@@ -174,7 +174,7 @@ class StorageDB extends Storage
     {
         // utminfo(func_get_args());
 
-        $thumb = $this->getThumbnailPath();
+        $thumb  = $this->getThumbnailPath();
 
         if ($thumb !== null) {
             $thumbnail = __INC_WEB_THUMB_ROOT__ . $thumb;
@@ -188,14 +188,14 @@ class StorageDB extends Storage
         $query  = 'select id from ' . __MYSQL_VIDEO_FILE__ . ' WHERE video_key = "' . $this->video_key . '" ';
         $result = $this->queryOne($query);
 
-        $query = 'delete from ' . __MYSQL_VIDEO_FILE__ . ' WHERE video_key = "' . $this->video_key . '" ';
+        $query  = 'delete from ' . __MYSQL_VIDEO_FILE__ . ' WHERE video_key = "' . $this->video_key . '" ';
         $this->query($query);
 
         $query  = 'select playlist_id from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_video_id = "' . $result['id'] . '" ';
         $pl_res = $this->queryOne($query);
         if ($pl_res !== null) {
             if (count($pl_res) > 0) {
-                $query = 'delete from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_video_id = "' . $result['id'] . '" ';
+                $query     = 'delete from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_video_id = "' . $result['id'] . '" ';
                 $this->query($query);
 
                 $query     = 'select * from ' . __MYSQL_PLAYLIST_VIDEOS__ . ' WHERE playlist_id = "' . $pl_res['playlist_id'] . '" ';
@@ -228,7 +228,7 @@ class StorageDB extends Storage
         $vdata                        = [];
         Mediatag::$Display->BlockInfo = [];
         // $this->MultiIDX               = 1;
-        $total = count($data);
+        $total                        = count($data);
         // utmdd($this->MultiIDX );
         foreach ($data as $k => $row) {
             // $VideoQuery[$row['video_key']][__MYSQL_VIDEO_FILE__] = $row;
@@ -243,7 +243,7 @@ class StorageDB extends Storage
             //            $this->video_string[] = '<info>'.$this->MultiIDX.'</info> : Video <comment>'.$row['filename'].'</comment> added to db ';
             $this->MultiIDX--;
         }
-        $this->video_string[] = ' ' . PHP_EOL;
+        $this->video_string[]         = ' ' . PHP_EOL;
         //   $this->RowBlock->overwrite($this->video_string);
     }
 
@@ -252,7 +252,7 @@ class StorageDB extends Storage
         // utminfo(func_get_args());
 
         $sublibrary   = null;
-        $filesystem   = new Filesystem;
+        $filesystem   = new Filesystem();
         $in_directory = $filesystem->makePathRelative($video_path, __PLEX_HOME__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
         if (array_key_exists(2, $match)) {
@@ -269,7 +269,7 @@ class StorageDB extends Storage
         if (File::isPornhubfile($this->video_file) == false) {
             return null;
         }
-        $filesystem = new Filesystem;
+        $filesystem   = new Filesystem();
 
         $in_directory = $filesystem->makePathRelative(
             $video_path,
@@ -288,7 +288,7 @@ class StorageDB extends Storage
 
         $this->init($video_file);
 
-        $data = [
+        $data          = [
             'video_key'   => $video_key,
             'filename'    => $this->video_name,
             // 'fullpath'   => $filesystem->makePathRelative($this->video_path, __PLEX_HOME__),
@@ -321,11 +321,11 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo = ['No' => '<info>' . $this->MultiIDX . '</info>'];
         $action                       = '<comment>No Changes</comment> ';
 
-        $data               = [];
-        $this->video_string = [];
+        $data                         = [];
+        $this->video_string           = [];
         $this->init($file);
 
-        $exists = $this->videoExists($this->video_key);
+        $exists                       = $this->videoExists($this->video_key);
         if ($exists !== null) {
             $video_path   = nFileSystem::normalizePath($this->video_path);
             $current_path = nFileSystem::normalizePath($exists['fullpath']);
@@ -338,23 +338,23 @@ class StorageDB extends Storage
                     'filename' => $this->video_name,
                 ];
 
-                $data['thumbnail'] = null;
-                $data['preview']   = null;
+                $data['thumbnail']     = null;
+                $data['preview']       = null;
 
                 if ($exists['thumbnail'] != null) {
                     $orig_thumb = __WEB_HOME__ . $exists['thumbnail'];
                     Mediatag::$output->writeln('fasdsfda' . file_exists($orig_thumb));
 
                     if (file_exists($orig_thumb)) {
-                        $img_name = (new thumbnail)->videoToThumb($this->video_file);
+                        $img_name          = (new thumbnail())->videoToThumb($this->video_file);
 
-                        $path = dirname($img_name);
+                        $path              = dirname($img_name);
 
                         if (! is_dir($path)) {
-                            (new Filesystem)->mkdir($path);
+                            (new Filesystem())->mkdir($path);
                         }
 
-                        (new Filesystem)->rename($orig_thumb, $img_name, true);
+                        (new Filesystem())->rename($orig_thumb, $img_name, true);
                         $img_name          = str_replace(__INC_WEB_THUMB_ROOT__, '', $img_name);
                         $data['thumbnail'] = $img_name;
                     }
@@ -363,13 +363,13 @@ class StorageDB extends Storage
                 if ($exists['preview'] != null) {
                     $orig_prev = __WEB_HOME__ . '/' . $exists['preview'];
                     if (file_exists($orig_prev)) {
-                        $img_name = (new VideoPreview)->videoToThumb($this->video_file);
-                        $path     = dirname($img_name);
+                        $img_name        = (new VideoPreview())->videoToThumb($this->video_file);
+                        $path            = dirname($img_name);
 
                         if (! is_dir($path)) {
-                            (new Filesystem)->mkdir($path);
+                            (new Filesystem())->mkdir($path);
                         }
-                        (new Filesystem)->rename($orig_prev, $img_name, true);
+                        (new Filesystem())->rename($orig_prev, $img_name, true);
                         $data['preview'] = str_replace(__INC_WEB_THUMB_ROOT__, '', $img_name);
                     }
                 }
@@ -383,13 +383,13 @@ class StorageDB extends Storage
                 $data['studio_path'] = $this->getStudioPath($video_path);
             }
             if (count($data) > 0) {
-                $where = ['video_key' => $this->video_key];
+                $where                                 = ['video_key' => $this->video_key];
                 $this->update($data, $where);
 
                 Mediatag::$Display->BlockInfo['Video'] = $action . basename($file) . ' ';
 
                 foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-                    $value = trim($value);
+                    $value            = trim($value);
 
                     $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=yellow');
                 }
@@ -410,14 +410,14 @@ class StorageDB extends Storage
     {
         // utminfo(func_get_args());
 
-        $video_file                   = $videoData['video_file'];
-        $video_id                     = true;
-        $exists                       = $this->videoExists($key);
-        Mediatag::$Display->BlockInfo = ['No' => '<info>' . $this->MultiIDX . '</info>'];
-        $videoBlockInfo               = null;
-        $action                       = '<comment>Updated</comment> ';
+        $video_file                            = $videoData['video_file'];
+        $video_id                              = true;
+        $exists                                = $this->videoExists($key);
+        Mediatag::$Display->BlockInfo          = ['No' => '<info>' . $this->MultiIDX . '</info>'];
+        $videoBlockInfo                        = null;
+        $action                                = '<comment>Updated</comment> ';
 
-        $ret = $this->queryOne('select name from sequence where name = "' . __LIBRARY__ . '" limit 1');
+        $ret                                   = $this->queryOne('select name from sequence where name = "' . __LIBRARY__ . '" limit 1');
 
         if ($exists === null) {
             // utminfo(func_get_args());
@@ -433,7 +433,7 @@ class StorageDB extends Storage
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);
             if ($video_id !== null) {
-                $query = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
+                $query  = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
                 $query .= " (nextseq('" . __LIBRARY__ . "')," . $video_id . ",'" . $key . "','" . __LIBRARY__ . "')";
                 $this->query($query);
 
@@ -446,26 +446,26 @@ class StorageDB extends Storage
         Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
         if ($video_id !== null) {
             // $this->vtags = new VideoTags();
-            Mediatag::$Display->BlockInfo['MetaTags'] = (new VideoTags)->getVideoInfo($key, $video_file);
+            Mediatag::$Display->BlockInfo['MetaTags'] = (new VideoTags())->getVideoInfo($key, $video_file);
 
             // $this->vinfo = new VideoInfo();
             //
             if ($all === true) {
                 // $this->thumb = new Thumbnail();
-                Mediatag::$Display->BlockInfo['thumbnail'] = (new Thumbnail)->getVideoInfo($key, $video_file);
+                Mediatag::$Display->BlockInfo['thumbnail'] = (new Thumbnail())->getVideoInfo($key, $video_file);
 
-                Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo)->getVideoInfo($key, $video_file);
+                Mediatag::$Display->BlockInfo['VideoInfo'] = (new VideoInfo())->getVideoInfo($key, $video_file);
 
                 // $this->duration = new Duration();
                 // Mediatag::$Display->BlockInfo['Duration']  = (new Duration())->getVideoInfo($key, $video_file);
 
                 // $this->preview = new GifPreviewFiles();
-                Mediatag::$Display->BlockInfo['Preview'] = (new GifPreviewFiles)->getVideoInfo($key, $video_file);
+                Mediatag::$Display->BlockInfo['Preview']   = (new GifPreviewFiles())->getVideoInfo($key, $video_file);
             }
         }
 
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-            $value = trim($value);
+            $value            = trim($value);
 
             $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=yellow');
         }

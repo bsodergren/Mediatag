@@ -23,9 +23,9 @@ class MergeCommand extends MediaCommand
     // use Helper;
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
-    public $command = [
+    public $command          = [
         'merge' => ['mergeFiles' => null],
     ];
     // public $command = [

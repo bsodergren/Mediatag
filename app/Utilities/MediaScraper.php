@@ -6,11 +6,11 @@
 
 namespace Mediatag\Utilities;
 
-use const PHP_EOL;
-
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Symfony\Component\HttpClient\HttpClient;
+
+use const PHP_EOL;
 
 class MediaScraper
 {
@@ -20,10 +20,10 @@ class MediaScraper
         $content = MediaCache::get($key);
         // // utmdump([$url,$content]);
         if ($content == false) {
-            $client   = HttpClient::create();
-            $response = $client->request(
+            $client     = HttpClient::create();
+            $response   = $client->request(
                 'GET',
-                $url
+                $url,
             );
             // // utmdump($response);
 
@@ -35,7 +35,7 @@ class MediaScraper
                 // $contentType = 'application/json'
                 // // utmdump([$url,$contentType]);
 
-                $content = $response->getContent();
+                $content     = $response->getContent();
 
                 // foreach ($client->stream($response) as $chunk) {
                 //    Mediatag::$Console->writeln($chunk->getContent());
@@ -44,7 +44,7 @@ class MediaScraper
                 // $content = '{"id":521583, "name":"symfony-docs", ...}'
                 if ($contentType == 'text/plain;charset=UTF-8') {
                     // $streamInfo = $response->toStream();
-                    $filename = $response->getHeaders()['content-disposition'][0];
+                    $filename            = $response->getHeaders()['content-disposition'][0];
                     preg_match('/filename="(.*)"/', $filename, $output_array);
                     $subtitleVTTFilename = __PLEX_HOME__ . '/Subtitles/' . $output_array[1];
 
@@ -69,7 +69,7 @@ class MediaScraper
                     return $content;
                 }
 
-                $content = $response->toArray();
+                $content     = $response->toArray();
                 // // utmdump($content);
             } else {
                 $content = '';

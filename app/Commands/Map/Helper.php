@@ -6,9 +6,6 @@
 
 namespace Mediatag\Commands\Map;
 
-use const PHP_EOL;
-use const SORT_REGULAR;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MapDisplay;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -19,9 +16,12 @@ use UTM\Utilities\Option;
 
 use function count;
 
+use const PHP_EOL;
+use const SORT_REGULAR;
+
 trait Helper
 {
-    public $wordMap = '/home/bjorn/scripts/Mediatag/config/data/map/Words.txt';
+    public $wordMap  = '/home/bjorn/scripts/Mediatag/config/data/map/Words.txt';
 
     public $phArtist = '/home/bjorn/scripts/Mediatag/config/data/map/Studio/PornWorld.txt';
 
@@ -31,7 +31,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $artistMap = Option::getValue('artistMap', 1);
+        $artistMap              = Option::getValue('artistMap', 1);
 
         [$artist, $replacement] = explode(':', $artistMap);
         $artist                 = strtolower($artist);
@@ -43,11 +43,11 @@ trait Helper
                 return null;
             }
         }
-        $lines[] = $artist . ':' . $replacement;
+        $lines[]                = $artist . ':' . $replacement;
 
-        $lines = MediaArray::array_iunique($lines);
+        $lines                  = MediaArray::array_iunique($lines);
         sort($lines, SORT_REGULAR);
-        $contents = implode("\n", $lines);
+        $contents               = implode("\n", $lines);
 
         file_put_contents($this->phArtist, $contents);
         Mediatag::$Console->info('Artist Dictionary', ['Added' => $artist . ':' . $replacement]);
@@ -57,7 +57,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $word = Option::getValue('word', 1);
+        $word  = Option::getValue('word', 1);
 
         $lines = file($this->wordDict, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         foreach ($lines as $line) {
@@ -139,7 +139,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $search = $this->SearchDB($value);
+        $search  = $this->SearchDB($value);
 
         $results = $this->tagConn->query($search);
         if (count($results) > 0) {
@@ -179,7 +179,7 @@ trait Helper
                 $addMethod    = 'addNewGenreReplacement';
                 $updateMethod = 'updateGenre';
 
-                $header[] = [
+                $header[]     = [
                     'id'          => 1,
                     'genre'       => 1,
                     'replacement' => 1,
@@ -266,7 +266,7 @@ trait Helper
             $studio = Strings::after($text, '=');
         }
 
-        $path = Option::getValue('dir');
+        $path   = Option::getValue('dir');
         if ($path !== null) {
             $t = $path;
             // $path = $studio;
@@ -406,10 +406,10 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $namesArr    = [];
-        $namesIgnore = [];
+        $namesArr     = [];
+        $namesIgnore  = [];
 
-        $list = Option::getValue('list');
+        $list         = Option::getValue('list');
         switch ($list) {
             case 'artist':
                 $res       = $this->getArtistMap();
@@ -436,7 +436,7 @@ trait Helper
             }
         }
         sort($namesIgnore);
-        $script = new ScriptWriter('map.sh', getcwd());
+        $script       = new ScriptWriter('map.sh', getcwd());
         $script->addheader();
 
         foreach ($namesArr as $name) {
@@ -447,7 +447,7 @@ trait Helper
         $script->addCmd('map', $OptionName, false);
 
         // $options = explode("-a",$OptionName);
-        $OptionName = [];
+        $OptionName   = [];
 
         foreach ($namesIgnore as $name) {
             $name         = trim($name);
@@ -467,13 +467,13 @@ trait Helper
         $lang        = Option::getValue('lang');
         $replacement = Option::getValue('replacement');
 
-        $file = Option::getValue('file');
+        $file        = Option::getValue('file');
         if ($file === null) {
             preg_match('/L__([A-Z]+)_.*/', $lang, $output_array);
             $file = strtolower($output_array[1]);
         }
 
-        $file = str_replace('%KEY%', ucfirst($file), $this->command_lang);
+        $file        = str_replace('%KEY%', ucfirst($file), $this->command_lang);
 
         if (! file_exists($file)) {
             $file = $this->global_lang;
@@ -489,7 +489,7 @@ trait Helper
 
         $contents = file_get_contents($file);
         // $contents = str_replace("\n\n","\n",$contents);
-        $lines = explode("\n", $contents);
+        $lines    = explode("\n", $contents);
         foreach ($lines as $idx => $line) {
             $lines[$idx] = trim($line);
             if (str_contains($line, $const)) {

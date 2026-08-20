@@ -13,7 +13,7 @@ const CAUGHTFAPPING_REGEX_COMMON = '//i';
 
 class CaughtFapping extends AdultTime
 {
-    public $studio = 'Caught Fapping';
+    public $studio  = 'Caught Fapping';
 
     public $network = 'Adult Time';
 }

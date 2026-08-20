@@ -12,11 +12,11 @@ use Mediatag\Patterns\Studios\MomLover\MomLover;
 
 class MomWantsToBreed extends MomLover
 {
-    public $studio = 'Mom Wants To Breed';
+    public $studio  = 'Mom Wants To Breed';
 
     public $network = 'Mom Lover';
 
-    public $regex = [
+    public $regex   = [
         'momwantstobreed' => [
 
             'title' => [

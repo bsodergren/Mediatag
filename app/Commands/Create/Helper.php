@@ -6,9 +6,6 @@
 
 namespace Mediatag\Commands\Create;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Utilities\Chooser;
 use Nette\Utils\FileSystem;
@@ -16,11 +13,14 @@ use UTM\Utilities\Option;
 
 use function is_array;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 trait Helper
 {
     public $excludeFiles = [];
 
-    private $functions = [
+    private $functions   = [
         'Command' => [
             'getClassBase',
             'setNameSpace',
@@ -58,7 +58,7 @@ trait Helper
     {
         $this->excludeFiles = Option::getValue('exclude', true, []);
         if (! is_array($this->excludeFiles)) {
-            $tmp[] = $this->excludeFiles;
+            $tmp[]              = $this->excludeFiles;
             unset($this->excludeFiles);
             $this->excludeFiles = $tmp;
         }
@@ -66,11 +66,11 @@ trait Helper
             $this->excludeFiles = array_map('ucfirst', $this->excludeFiles);
         }
 
-        $type = Option::getValue('type', true);
+        $type               = Option::getValue('type', true);
         if ($type) {
             $type = ucfirst($type);
         }
-        $userCommand = Option::getValue('userCommand', true);
+        $userCommand        = Option::getValue('userCommand', true);
         if ($userCommand !== null) {
             $parts = explode(':', $userCommand);
             if (count($parts) === 3) {

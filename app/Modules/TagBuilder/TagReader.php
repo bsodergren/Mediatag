@@ -26,7 +26,7 @@ class TagReader
 
     public $tag_array = [];
 
-    public $taglist = \__META_TAGS__;
+    public $taglist   = \__META_TAGS__;
 
     public $fileReader;
 
@@ -40,7 +40,7 @@ class TagReader
     {
         // utminfo(func_get_args());
         // utmdd(__META_TAGS__);
-        $this->dbConn = new Storage;
+        $this->dbConn = new Storage();
     }        // // UTMlog::Logger('data', $this->videoData);
 
     public function updateVideoTable($key, $tag, $value)

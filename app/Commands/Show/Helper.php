@@ -6,8 +6,6 @@
 
 namespace Mediatag\Commands\Show;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\Meta\Reader as metaReader;
@@ -18,6 +16,8 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -39,7 +39,7 @@ trait Helper
 
         Mediatag::$output->writeln('<info>Finding missing tags</info>');
         //        ProgressBar::setFormatDefinition('custom', '<info>%current%/%max%</info> -- <comment>%message%  (%filename%)</comment>');
-        $progressBar = new ProgressBar(Mediatag::$output, $count);
+        $progressBar    = new ProgressBar(Mediatag::$output, $count);
         $progressBar->setBarWidth(400);
         //      $progressBar->setFormat('custom');
         $progressBar->start();
@@ -108,7 +108,7 @@ trait Helper
                 $video_keys[] = $matches[1];
             }
         }
-        $file_string = '';
+        $file_string   = '';
         foreach ($video_keys as $v => $key) {
             $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
         }

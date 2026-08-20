@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Preview;
 
@@ -18,7 +21,7 @@ class PreviewCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['preview' => ['previewMethod' => null]];
+    public $command          = ['preview' => ['previewMethod' => null]];
 }

@@ -6,8 +6,6 @@
 
 namespace Mediatag\Commands\Sort;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Utilities\Chooser;
@@ -15,6 +13,8 @@ use UTM\Utilities\Option;
 
 use function count;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
 
 trait Helper
 {
@@ -29,10 +29,10 @@ trait Helper
         $idx = count($this->file_array);
 
         foreach ($this->file_array as $file) {
-            $basePath = dirname($file);
-            $nextDir  = basename($basePath);
+            $basePath    = dirname($file);
+            $nextDir     = basename($basePath);
             // // utmdump($nextDir);
-            $filename = basename($file);
+            $filename    = basename($file);
 
             // $success = preg_match('/.*(group|mmf|dp|mff|single|only girls|trans|blowjob|only blowjobs|compilation|bisexual|feature|hotwife).*/i', $filename, $matches);
             // if (true == $success) {
@@ -43,12 +43,12 @@ trait Helper
 
             Chooser::FormatQuestion('<info>%text%</info>');
 
-            $qText = [
+            $qText       = [
                 'text'     => '<comment>%idx%</comment>) Move <download>%filename%</download> to new Genre?',
                 'filename' => $filename,
                 'idx'      => $idx];
             $idx--;
-            $newGenre = Chooser::AskQuestion($qText, $this->genreDirs, 'Exit');
+            $newGenre    = Chooser::AskQuestion($qText, $this->genreDirs, 'Exit');
 
             // utmdd($newGenre);
             if ($newGenre === false) {

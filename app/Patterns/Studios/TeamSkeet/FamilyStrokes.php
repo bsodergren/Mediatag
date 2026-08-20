@@ -12,9 +12,9 @@ use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
 
 class FamilyStrokes extends TeamSkeet
 {
-    public $studio = 'Family Strokes';
+    public $studio          = 'Family Strokes';
 
-    public $network = 'Team Skeet';
+    public $network         = 'Team Skeet';
     // public $regex     = [
     //     'familystrokes' => [
     //         'artist' => [

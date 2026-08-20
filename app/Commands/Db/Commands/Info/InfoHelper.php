@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Info;
 
@@ -9,7 +12,7 @@ trait InfoHelper
 {
     public function infoMethod()
     {
-        $this->obj = new VideoFileInfo;
+        $this->obj = new VideoFileInfo();
         $this->checkClean();
         $this->obj->updateVideoData();
     }

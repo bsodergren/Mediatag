@@ -36,7 +36,7 @@ trait OptionsDefault
 
         self::$Class = __CLASS__;
 
-        $options = [
+        $options     = [
             ['filelist', 'f', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__DEFAULT_FILELIST')],
             ['numberofFiles', 'N', InputOption::VALUE_NONE, self::text('L__DEFAULT_NUMBEROFFILES')],
             ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__DEFAULT_MAX')],
@@ -54,7 +54,7 @@ trait OptionsDefault
 
         self::$Class = __CLASS__;
 
-        $options = [
+        $options     = [
             ['ask', '', InputOption::VALUE_NONE, self::text('L__DEFAULT_ASK_FILE')],
             ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L__DEFAULT_OVERWRITE_FILE')],
             ['yes', 'y', InputOption::VALUE_NONE, self::text('L__DEFAULT_QUESTION_YES')],
@@ -69,7 +69,7 @@ trait OptionsDefault
 
         self::$Class = __CLASS__;
 
-        $options = [
+        $options     = [
             ['test', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_CMD')],
             ['preview', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_PREVIEW')],
             ['time', null, InputOption::VALUE_NONE, self::text('L__DEFAULT_TEST_TIME')],
@@ -92,13 +92,13 @@ trait OptionsDefault
         $cmdName     = ucfirst(str_replace('media', '', __SCRIPT_NAME__));
         $options     = [
             ['only', 'o', InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, self::text('L__META_ONLY', ['TXT' => $cmdName]), [], ['Studio', 'Genre', 'Title', 'Artist', 'Keyword']],
-            ['title', 't', InputOption::VALUE_OPTIONAL, self::text('L__META_TITLE', ['TXT'                                   => $cmdName])],
-            ['genre', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_GENRE', ['TXT'     => $cmdName])],
-            ['studio', 's', InputOption::VALUE_OPTIONAL, self::text('L__META_STUDIO', ['TXT'                                 => $cmdName])],
-            ['network', '', InputOption::VALUE_OPTIONAL, self::text('L__META_NETWORK', ['TXT'                                => $cmdName])],
+            ['title', 't', InputOption::VALUE_OPTIONAL, self::text('L__META_TITLE', ['TXT'                                      => $cmdName])],
+            ['genre', 'g', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_GENRE', ['TXT'        => $cmdName])],
+            ['studio', 's', InputOption::VALUE_OPTIONAL, self::text('L__META_STUDIO', ['TXT'                                    => $cmdName])],
+            ['network', '', InputOption::VALUE_OPTIONAL, self::text('L__META_NETWORK', ['TXT'                                   => $cmdName])],
             ['sublibrary', '', InputOption::VALUE_OPTIONAL, self::text('L__META_SUB_LIB', ['TXT'                                => $cmdName])],
-            ['artist', 'a', InputOption::VALUE_OPTIONAL, self::text('L__META_ARTIST', ['TXT'                                 => $cmdName])],
-            ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT' => $cmdName])],
+            ['artist', 'a', InputOption::VALUE_OPTIONAL, self::text('L__META_ARTIST', ['TXT'                                    => $cmdName])],
+            ['keyword', 'k', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__META_KEYWORD', ['TXT'    => $cmdName])],
         ];
 
         return self::getOptions($options);

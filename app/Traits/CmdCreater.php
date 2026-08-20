@@ -6,25 +6,25 @@
 
 namespace Mediatag\Traits;
 
-use const PHP_EOL;
-
 use Nette\Utils\FileSystem;
 
 use function is_array;
 
+use const PHP_EOL;
+
 trait CmdCreater
 {
-    private $BIN_TEMPLATE = __DATA_TEMPLATES__ . '/App_template.txt';
+    private $BIN_TEMPLATE  = __DATA_TEMPLATES__ . '/App_template.txt';
 
-    private $CMD_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Command_template.txt';
+    private $CMD_TEMPLATE  = __DATA_TEMPLATES__ . '/Command/Command_template.txt';
 
     private $LANG_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Lang_template.txt';
 
-    private $OPT_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Options_template.txt';
+    private $OPT_TEMPLATE  = __DATA_TEMPLATES__ . '/Command/Options_template.txt';
 
     private $PROC_TEMPLATE = __DATA_TEMPLATES__ . '/Command/Process_template.txt';
 
-    public $APP_COMMAND = __APP_HOME__ . '/config/commands.php';
+    public $APP_COMMAND    = __APP_HOME__ . '/config/commands.php';
 
     public function template($template, $params = [])
     {
@@ -102,7 +102,7 @@ trait CmdCreater
     {
         // utminfo(func_get_args());
 
-        $cmd_template = file_get_contents($this->APP_COMMAND);
+        $cmd_template  = file_get_contents($this->APP_COMMAND);
 
         $command_name  = $params['COMMAND_CLASS'];
         $command_use   = $params['COMMAND_USE'];

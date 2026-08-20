@@ -35,17 +35,17 @@ class Process extends Mediatag
     use MediaProcess;
     use Translate;
 
-    public $db_array = [];
+    public $db_array      = [];
 
-    public $file_array = [];
+    public $file_array    = [];
 
     public $read;
 
     public $meta;
 
-    public $OutputText = [];
+    public $OutputText    = [];
 
-    public $New_Array = [];
+    public $New_Array     = [];
 
     public $Deleted_Array = [];
 
@@ -53,7 +53,7 @@ class Process extends Mediatag
 
     public $duration;
 
-    public $VideoList = [];
+    public $VideoList     = [];
 
     // public $defaultCommands = [
     //     'init' => null,
@@ -79,7 +79,7 @@ class Process extends Mediatag
         // utminfo(func_get_args());
         // define('USE_SEARCH', false);
         parent::boot($input, $output);
-                $this->DbMap = new GalleryStorageDB;
+        $this->DbMap = new GalleryStorageDB();
 
     }
 
@@ -99,30 +99,30 @@ class Process extends Mediatag
     public function init()
     {
         // utminfo(func_get_args());
-        $path = getcwd();
+        $path                             = getcwd();
 
-        $finder          = new MediaFinder();
-        $this->VideoList = $finder->Search($path, '/\.jpg|\.png|\.gif$/i');
+        $finder                           = new MediaFinder();
+        $this->VideoList                  = $finder->Search($path, '/\.jpg|\.png|\.gif$/i');
 
-        parent::$SearchArray = $this->VideoList;
-        $file_array          = parent::$SearchArray;
+        parent::$SearchArray              = $this->VideoList;
+        $file_array                       = parent::$SearchArray;
 
         foreach ($file_array as $k => $file) {
-            $key = File::getVideoKey($file);
+            $key                    = File::getVideoKey($file);
 
             if (array_key_exists($key, $this->file_array)) {
-                $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $file);
+                $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $file);
                 $dupePath  = dirname($movedFile);
                 $filename  = basename($file);
 
-                $dupePath = nFileSystem::normalizePath($dupePath);
+                $dupePath  = nFileSystem::normalizePath($dupePath);
                 if (!is_dir($dupePath)) {
                     //     if (!Option::isTrue('test')) {
                     nFileSystem::createDir($dupePath, 0755);
                     //     }
                 }
-                Mediatag::$output->writeln($file.' is dup');
-                (new SfSystem())->rename($file, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+                Mediatag::$output->writeln($file . ' is dup');
+                (new SfSystem())->rename($file, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
 
                 continue;
             }
@@ -130,7 +130,7 @@ class Process extends Mediatag
         }
 
         GalleryStorageDB::$DB->file_array = $this->file_array;
-        $this->db_array          =  GalleryStorageDB::$DB->getDbFileList();
+        $this->db_array                   =  GalleryStorageDB::$DB->getDbFileList();
 
         return $this;
     }

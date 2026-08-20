@@ -6,8 +6,6 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use const PHP_EOL;
-
 use Mediatag\Utilities\MediaArray;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem as NetteFile;
@@ -23,6 +21,8 @@ use function count;
 use function dirname;
 use function is_array;
 use function is_string;
+
+use const PHP_EOL;
 
 /**
  * Filesystem.
@@ -54,7 +54,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        $new_path = (new SFilesystem)->makePathRelative($path, __CURRENT_DIRECTORY__);
+        $new_path = (new SFilesystem())->makePathRelative($path, __CURRENT_DIRECTORY__);
 
         return rtrim($new_path, '/');
     }
@@ -121,8 +121,8 @@ class MediaFilesystem extends SFilesystem
         // utminfo(func_get_args());
 
         foreach ($content as $i => $line) {
-            $studio = $line;
-            $key    = $line;
+            $studio          = $line;
+            $key             = $line;
             if (str_contains($line, ':')) {
                 $key    = Strings::before($line, ':');
                 $studio = Strings::after($line, ':');
@@ -144,7 +144,7 @@ class MediaFilesystem extends SFilesystem
             return 0;
         }
 
-        $filesystem    = new SFilesystem;
+        $filesystem    = new SFilesystem();
         $file          = realpath($filename);
         $filename      = basename($file);
         $fileNameNoExt = Strings::before($filename, '.', 1);
@@ -158,9 +158,9 @@ class MediaFilesystem extends SFilesystem
             $filesystem->mkdir($directory);
         }
 
-        $backupFile = $directory . '/' . $filename;
+        $backupFile    = $directory . '/' . $filename;
 
-        $ext = '';
+        $ext           = '';
 
         if (Strings::after($backupFile, '.', -1) == 'old') {
             $fileNo = 1;
@@ -180,10 +180,10 @@ class MediaFilesystem extends SFilesystem
                     unlink($r[0]);
                     foreach ($r as $idx => $rfile) {
                         if (array_key_exists($idx + 1, $r)) {
-                            (new SFilesystem)->rename($r[$idx + 1], $r[$idx]);
+                            (new SFilesystem())->rename($r[$idx + 1], $r[$idx]);
                         }
                     }
-                    $fileNo = '';
+                    $fileNo             = '';
                 } else {
                     $ext = '.' . $fileNo;
                 }
@@ -192,18 +192,18 @@ class MediaFilesystem extends SFilesystem
             }
         }
 
-        $backup_name1 = $fileNameNoExt . '.old' . $ext;
+        $backup_name1  = $fileNameNoExt . '.old' . $ext;
 
-        $backup_name = $directory . '/' . basename($backup_name1);
+        $backup_name   = $directory . '/' . basename($backup_name1);
 
         if (file_exists($backup_name)) {
             self::backupPlaylist($backup_name, $directory, $move);
         }
 
         if ($move == true) {
-            (new SFilesystem)->rename($file, str_replace('.old', '.txt', $backup_name));
+            (new SFilesystem())->rename($file, str_replace('.old', '.txt', $backup_name));
         } else {
-            (new SFilesystem)->copy($file, $backup_name);
+            (new SFilesystem())->copy($file, $backup_name);
         }
 
         // return $backup_name;
@@ -217,8 +217,8 @@ class MediaFilesystem extends SFilesystem
         // utminfo(func_get_args());
 
         $file_array = [];
-        $finder     = new SFinder;
-        $filesystem = new SFilesystem;
+        $finder     = new SFinder();
+        $filesystem = new SFilesystem();
 
         if (is_dir($new)) {
             $finder->files()->in($old)->sortByName();
@@ -231,8 +231,8 @@ class MediaFilesystem extends SFilesystem
                     }
                     $new_file = $newpath . '/' . $file->getBasename();
 
-                    $oldFile = self::getRelative($old_file);
-                    $newFile = self::getRelative($new_file);
+                    $oldFile  = self::getRelative($old_file);
+                    $newFile  = self::getRelative($new_file);
 
                     echo "Renaming {$oldFile} to {$newFile}" . PHP_EOL;
                     NetteFile::rename($old_file, $new_file);
@@ -270,7 +270,7 @@ class MediaFilesystem extends SFilesystem
         }
 
         if (is_string($callback)) {
-            $n        = new self;
+            $n        = new self();
             $callback = Callback::check([$n, $callback]);
         }
         if (is_array($callback)) {
@@ -311,7 +311,7 @@ class MediaFilesystem extends SFilesystem
     {
         // utminfo(func_get_args());
 
-        $filesystem = new SFilesystem;
+        $filesystem = new SFilesystem();
         if (! is_dir(dirname($new))) {
             $filesystem->mkdir(dirname($new));
         }
@@ -326,7 +326,7 @@ class MediaFilesystem extends SFilesystem
             $path = __CURRENT_DIRECTORY__;
         }
 
-        $command = [
+        $command  = [
             '/usr/bin/find',
             $path,
             '-mindepth',

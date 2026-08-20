@@ -21,9 +21,9 @@ final class DownloadCommand extends MediaCommand
 {
     use Lang;
 
-    public const USE_LIBRARY = false;
+    public const USE_LIBRARY   = false;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH    = false;
 
     // public static $SingleCommand = true;
     public static $DEFAULT_CMD = true;
@@ -32,7 +32,7 @@ final class DownloadCommand extends MediaCommand
 
     protected $db;
 
-    public $command = [
+    public $command            = [
         'download' => [
             // 'handler'            => [
             //     'Helper' => 'ShellPathCompletion',

@@ -13,7 +13,7 @@ const THEADULTTIMEPODCAST_REGEX_COMMON = '//i';
 
 class TheAdultTimePodcast extends AdultTime
 {
-    public $studio = 'The Adult Time Podcast';
+    public $studio  = 'The Adult Time Podcast';
 
     public $network = 'Adult Time';
 }

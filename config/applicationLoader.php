@@ -41,25 +41,25 @@ class Factory
     }
 }
 
-$input  = new ArgvInput;
-$output = new ConsoleOutput;
+$input          = new ArgvInput();
+$output         = new ConsoleOutput();
 
-$cmdName = str_replace('media', '', __SCRIPT_NAME__);
+$cmdName        = str_replace('media', '', __SCRIPT_NAME__);
 
-$application = new MediaApplication(__SCRIPT_NAME__, '1.0.0');
+$application    = new MediaApplication(__SCRIPT_NAME__, '1.0.0');
 
 $commandClasses = [];
 $commandsDir    = implode(\DIRECTORY_SEPARATOR, [__APP_HOME__, 'app', 'Commands', ucfirst($cmdName)]);
 
-$default = false;
+$default        = false;
 
 if (file_exists($commandsDir)) {
-    $finder = new Finder;
+    $finder = new Finder();
     $finder->files()->in($commandsDir)->name('*Command.php');
     foreach ($finder as $file) {
-        $commandFile = $file->getPathname();
-        $files[]     = $commandFile;
-        $commandFile = str_replace(__COMMANDS_DIR__, '', $commandFile);
+        $commandFile      = $file->getPathname();
+        $files[]          = $commandFile;
+        $commandFile      = str_replace(__COMMANDS_DIR__, '', $commandFile);
 
         $commandFileName  = basename($commandFile);
         $CommandClassName = basename($commandFile, '.php');
@@ -73,18 +73,18 @@ if (file_exists($commandsDir)) {
         }
     }
 }
-$singleCommand = false;
+$singleCommand  = false;
 if (count($commandClasses) == 1) {
     // $singleCommand = true;
 }
 
-$defaultCmd = 'list';
+$defaultCmd     = 'list';
 
 foreach ($commandClasses as $className) {
     $Command = Factory::create($className);
     $application->addCommand($Command);
     if ($Command::$DEFAULT_CMD === true ||
-     $singleCommand === true) {
+     $singleCommand            === true) {
         $defaultCmd = $Command->getName();
     }
 }

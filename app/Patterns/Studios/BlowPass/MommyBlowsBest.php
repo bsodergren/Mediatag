@@ -13,7 +13,7 @@ const MOMMYBLOWSBEST_REGEX_COMMON = '//i';
 
 class MommyBlowsBest extends BlowPass
 {
-    public $studio = 'Mommy Blows Best';
+    public $studio  = 'Mommy Blows Best';
 
     public $network = 'Blow Pass';
 }

@@ -32,10 +32,10 @@ trait ChapterHelper
 
     public function getChapterList()
     {
-        $chapterArray   = [];
-        $this->FileIdx = 0;
+        $chapterArray       = [];
+        $this->FileIdx      = 0;
 
-        $search = '';
+        $search             = '';
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             //             $mediaInfo          = new MediaInfo;
@@ -91,7 +91,7 @@ trait ChapterHelper
                     $mediaInfoContainer = $mediaInfo->getInfo($filename);
                     $chapters           = $mediaInfoContainer->getMenus();
 
-                    $VideoChapters = 0;
+                    $VideoChapters      = 0;
 
                     if (array_key_exists(0, $chapters)) {
                         foreach ($chapters[0]->list() as $menu) {
@@ -104,35 +104,35 @@ trait ChapterHelper
                         }
                     }
 
-                    $tags        = (new VideoTags())->get($K, $filename);
-                    $chapterFile = str_replace('.mp4', '_chp.txt', $filename);
+                    $tags               = (new VideoTags())->get($K, $filename);
+                    $chapterFile        = str_replace('.mp4', '_chp.txt', $filename);
 
                     if (file_exists($chapterFile)) {
                         unlink($chapterFile);
                     }
-                    $contents = [$this->tagFileSection($tags)];
+                    $contents           = [$this->tagFileSection($tags)];
 
                     foreach ($FILE['chapters'] as $idx => $chapter) {
                         $contents[] = $this->chapterFileSection($chapter);
                     }
 
-                    $fileContents = implode(PHP_EOL, $contents);
+                    $fileContents       = implode(PHP_EOL, $contents);
 
-                    MediaFile::file_append_file($chapterFile, $fileContents.PHP_EOL);
+                    MediaFile::file_append_file($chapterFile, $fileContents . PHP_EOL);
 
                     $this->ffmpegCreateChapterVideo($filename, $chapterFile);
 
                     if (file_exists($chapterFile)) {
                         unlink($chapterFile);
                     }
-                    $file_path       = dirname($filename);
-                    $backup_filepath = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
+                    $file_path          = dirname($filename);
+                    $backup_filepath    = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
 
                     if (!Mediatag::$filesystem->exists($backup_filepath)) {
                         Mediatag::$filesystem->mkdir($backup_filepath);
                     }
-                    $backup_filename = $backup_filepath.'/'.basename($filename);
-                    $outputFile      = str_replace('.mp4', '_chapters.mp4', $filename);
+                    $backup_filename    = $backup_filepath . '/' . basename($filename);
+                    $outputFile         = str_replace('.mp4', '_chapters.mp4', $filename);
 
                     // utmdd($filename, $backup_filename,$outputFile);
                     Filesystem::renameFile($filename, $backup_filename, true);
@@ -145,14 +145,14 @@ trait ChapterHelper
 
     private function tagFileSection($tag)
     {
-        $text = ';FFMETADATA1'.PHP_EOL;
+        $text = ';FFMETADATA1' . PHP_EOL;
 
         foreach ($tag as $key => $value) {
             if (null !== $value) {
                 if ('studio' == $key) {
                     $key = 'album';
                 }
-                $text .= $key.'='.$value.PHP_EOL;
+                $text .= $key . '=' . $value . PHP_EOL;
             }
         }
 
@@ -161,11 +161,11 @@ trait ChapterHelper
 
     private function chapterFileSection($chapter)
     {
-        $text = '[CHAPTER]'.PHP_EOL;
-        $text .= 'TIMEBASE=1/1'.PHP_EOL;
-        $text .= 'START='.$chapter['start'].PHP_EOL;
-        $text .= 'END='.$chapter['end'].PHP_EOL;
-        $text .= 'title='.trim(str_replace('Chapter', '', str_replace('_', ' ', $chapter['text'])));
+        $text = '[CHAPTER]' . PHP_EOL;
+        $text .= 'TIMEBASE=1/1' . PHP_EOL;
+        $text .= 'START=' . $chapter['start'] . PHP_EOL;
+        $text .= 'END=' . $chapter['end'] . PHP_EOL;
+        $text .= 'title=' . trim(str_replace('Chapter', '', str_replace('_', ' ', $chapter['text'])));
 
         return $text;
     }

@@ -13,7 +13,7 @@ const HAIRYUNDIES_REGEX_COMMON = '//i';
 
 class HairyUndies extends DevilsFilm
 {
-    public $studio = 'Devils Film';
+    public $studio  = 'Devils Film';
 
     public $network = 'Devils Film';
 }

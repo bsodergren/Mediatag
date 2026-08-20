@@ -18,15 +18,15 @@ class Javascript extends MediatagExec
 {
     use ProcessCallbacks;
 
-    public $wordList = '';
+    public $wordList     = '';
 
     private $cacheUpdate = false;
 
     public $video_key;
 
-    public $wordMap = __CONFIG_LIB__ . '/data/map/Words.txt';
+    public $wordMap      = __CONFIG_LIB__ . '/data/map/Words.txt';
 
-    private $wordCache = 'JsDictWordMap';
+    private $wordCache   = 'JsDictWordMap';
 
     public function __construct($video_key = null, $input = null, $output = null)
     {
@@ -39,9 +39,9 @@ class Javascript extends MediatagExec
             $artists[] = str_replace('_', ',', $v['name']);
         }
 
-        $artistArray    = explode(',', implode(',', $artists));
-        $array          = MediaArray::array_iunique($artistArray);
-        $this->wordList = $this->wordList . ',' . implode(',', $array);
+        $artistArray     = explode(',', implode(',', $artists));
+        $array           = MediaArray::array_iunique($artistArray);
+        $this->wordList  = $this->wordList . ',' . implode(',', $array);
     }
 
     private function identical_values($arrayA, $arrayB)
@@ -65,7 +65,7 @@ class Javascript extends MediatagExec
         // $array = MediaCache::get($this->wordCache);
 
         // if ($array === false) {
-        $array = $archive_content;
+        $array           = $archive_content;
         // } else {
         // if ($this->identical_values($archive_content, $array) == false) {
         // $array = $archive_content;
@@ -85,7 +85,7 @@ class Javascript extends MediatagExec
 
         // return $string;
 
-        $command = [
+        $command        = [
             'node',
             '/home/bjorn/scripts/Mediatag/bin/wordSplit.js',
             $string,
@@ -117,7 +117,7 @@ class Javascript extends MediatagExec
             }
         }
 
-        $r = MediaCache::put($cacheFile, $title);
+        $r         = MediaCache::put($cacheFile, $title);
         //  $title = MediaCache::get($cacheFile);
 
         return $title;

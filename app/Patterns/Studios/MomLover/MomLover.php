@@ -14,7 +14,7 @@ class MomLover extends Patterns
 {
     public $studio = 'Mom Lover';
 
-    public $regex = [
+    public $regex  = [
         'momlover' => [
             'title' => [
                 'pattern' => '/([a-zA-Z]+)_([a-zA-Z_]{1,})\_[0-9]{0,10}/i',

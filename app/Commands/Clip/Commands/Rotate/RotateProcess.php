@@ -64,7 +64,7 @@ class RotateProcess extends Process
 
     private function rotateVideo($videoFile)
     {
-        $format = new X264;
+        $format       = new X264();
         // $format->
 
         $format->on('progress', function ($video, $format, $percentage) {

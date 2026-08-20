@@ -8,9 +8,9 @@ namespace Mediatag\Commands\Rename;
 
 trait Lang
 {
-    public const L__RENAME_LOWER = 'Rename files to all lower case';
+    public const L__RENAME_LOWER  = 'Rename files to all lower case';
 
     public const L__RENAME_RENAME = 'Rename wonky files';
 
-    public const L__RENAME_TRANS = 'Translate file names';
+    public const L__RENAME_TRANS  = 'Translate file names';
 }

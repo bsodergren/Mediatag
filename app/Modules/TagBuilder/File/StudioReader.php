@@ -18,10 +18,10 @@ trait StudioReader
 {
     private function studioParse()
     {
-        $studio_dir   = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
+        $studio_dir   = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
         $arr          = explode('/', $studio_dir);
-        
+
         $studio_array = [];
         foreach ($arr as $idx => $studio_string) {
             foreach (__SKIP_STUDIOS__ as $k) {
@@ -41,7 +41,7 @@ trait StudioReader
         // $json   = new jsonReader($this->videoData);
         // $return = $json->studio();
 
-       
+
         // if (count($return) > 0) {
         //     if (array_key_exists('studio', $return)) {
         //         $this->studio = $return['studio'];
@@ -56,7 +56,7 @@ trait StudioReader
                 $this->studio = $studio_array[0];
                 if (array_key_exists('1', $studio_array)) {
                     $this->network =  $this->studio;
-                    $this->studio = $studio_array[1];
+                    $this->studio  = $studio_array[1];
                 }
                 // $this->network = "Pornhub";
             }
@@ -67,9 +67,9 @@ trait StudioReader
 
     private function notPhFile()
     {
-        $json = new jsonReader($this->videoData);
+        $json         = new jsonReader($this->videoData);
 
-        $return = $json->studio();
+        $return       = $json->studio();
 
         if (count($return) > 0) {
             if (array_key_exists('studio', $return)) {
@@ -80,16 +80,16 @@ trait StudioReader
             return;
         }
 
-        $studio_dir = $this->studioParse();
+        $studio_dir   = $this->studioParse();
 
-        $studio     = '';
+        $studio       = '';
         if ($studio_dir != '') {
             $studio_dir = '/' . $studio_dir;
             $studio_dir = str_replace('//', '/', $studio_dir);
         }
         //        $studio_dir       = $this->studioParse();
 
-        $success = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
+        $success      = preg_match('/\/([\w& ]+)\/?([\w\W]+)?/i', $studio_dir, $matches);
 
         // UTMlog::Logger('File Studio Dir', $matches);
         if ($success == true) {
@@ -124,7 +124,7 @@ trait StudioReader
         $this->getnetwork();
         $networkName = trim($this->getStudioClass($this->network), '\\');
 
-        $options = Option::getValue('addClass', 1);
+        $options     = Option::getValue('addClass', 1);
         if ($options === null) {
             $options = $this->studio;
         }

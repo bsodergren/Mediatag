@@ -65,7 +65,7 @@ class Reader extends TagReader
         $read          = new ReadMeta($file_array, Mediatag::$input, Mediatag::$output);
         $read->taglist = $this->taglist;
 
-        $video_info = $read->read();
+        $video_info    = $read->read();
         // utmdd($video_info[$this->video_key]['metatags']);
         // if (count($video_info[$this->video_key]['metatags']) > 0) {
         //     MediaCache::put($key, $video_info);

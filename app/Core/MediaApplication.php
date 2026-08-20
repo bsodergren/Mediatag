@@ -6,8 +6,6 @@
 
 namespace Mediatag\Core;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Locales\Lang;
 use Mediatag\Traits\Translate;
@@ -22,6 +20,8 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Contracts\Service\ResetInterface;
 
+use const PHP_EOL;
+
 class MediaApplication extends Application implements ResetInterface
 {
     use Lang;
@@ -35,10 +35,10 @@ class MediaApplication extends Application implements ResetInterface
     protected function getDefaultCommands(): array
     {
         return [
-            new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand,
-            new HelpCommand,
-            new ListCommand,
-            new CompleteCommand,
+            new \Stecman\Component\Symfony\Console\BashCompletion\CompletionCommand(),
+            new HelpCommand(),
+            new ListCommand(),
+            new CompleteCommand(),
         ];
     }
 

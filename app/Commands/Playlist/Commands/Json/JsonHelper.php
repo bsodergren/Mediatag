@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Commands\Json;
 
@@ -13,9 +16,9 @@ trait JsonHelper
     public function JsonMethod()
     {
         $this->youtubeGetJsonFile();
-// $this->youtubeGetJson($videoKey);
-        
-    // utmdd( $videoKey);
+        // $this->youtubeGetJson($videoKey);
+
+        // utmdd( $videoKey);
 
         exit;
     }

@@ -41,7 +41,7 @@ class MediatagExec
         Test::test as testTrait;
     }
 
-    public $metatags = [];
+    public $metatags      = [];
 
     public $stdout;
 
@@ -65,13 +65,13 @@ class MediatagExec
 
     public $videoData;
 
-    public $updateTags = [];
+    public $updateTags    = [];
 
-    public $execMode = 'write';
+    public $execMode      = 'write';
 
     protected $optionArgs = [];
 
-    public $taglist = __META_TAGS__;
+    public $taglist       = __META_TAGS__;
 
     public function __construct($videoData = null, $input = null, $output = null)
     {
@@ -124,7 +124,7 @@ class MediatagExec
         // utminfo(func_get_args());
 
         if (null !== $this->execMode) {
-            $this->previewTrait('Running '.$this->runCommand, false);
+            $this->previewTrait('Running ' . $this->runCommand, false);
         }
     }
 
@@ -133,7 +133,7 @@ class MediatagExec
         // utminfo(func_get_args());
         // utmdd("fadsf");
         // if ($this->execMode !== null) {
-        $this->testTrait("\t Running ".$this->runCommand, true);
+        $this->testTrait("\t Running " . $this->runCommand, true);
         // }
     }
 
@@ -175,7 +175,7 @@ class MediatagExec
 
     public function testexec($command, $callback = null): mixed
     {
-        $process = new Process($command);
+        $process          = new Process($command);
         $process->setTimeout(60000);
 
         $this->runCommand = $process->getCommandLine();
@@ -188,7 +188,7 @@ class MediatagExec
     {
         // utminfo(func_get_args());
 
-        $process = new Process($command);
+        $process          = new Process($command);
         $process->setTimeout(60000);
         $process->setTty($tty);
         $this->runCommand = $process->getCommandLine();

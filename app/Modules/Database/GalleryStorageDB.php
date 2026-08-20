@@ -26,14 +26,14 @@ class GalleryStorageDB extends StorageDB
     public function __construct(?MysqliDb $DbConnection = null)
     {
         if (null === $DbConnection) {
-            $db = MysqliDb::getInstance();
+            $db           = MysqliDb::getInstance();
 
             $DbConnection = $db;
         }
 
         $this->mysqllib = $DbConnection; // ->getInstance();
         $this->mysqllib->setTrace(true);
-        self::$DB = $this;
+        self::$DB       = $this;
 
         //  utmdd($this->mysqllib,self::$DB);
 
@@ -52,7 +52,7 @@ class GalleryStorageDB extends StorageDB
 
         $this->init($video_file);
 
-        $data = [
+        $data          = [
             'video_key' => $video_key,
             'filename'  => $this->video_name,
             'fullpath'  => $this->video_path,
@@ -69,19 +69,19 @@ class GalleryStorageDB extends StorageDB
     {
         // utminfo(func_get_args());
 
-        $video_file                   = $videoData['video_file'];
-        $video_id                     = true;
-        $exists                       = $this->videoExists($key);
-        Mediatag::$Display->BlockInfo = ['No' => '<info>'.$this->MultiIDX.'</info>'];
-        $videoBlockInfo               = null;
-        $action                       = '<comment>Updated</comment> ';
+        $video_file                            = $videoData['video_file'];
+        $video_id                              = true;
+        $exists                                = $this->videoExists($key);
+        Mediatag::$Display->BlockInfo          = ['No' => '<info>' . $this->MultiIDX . '</info>'];
+        $videoBlockInfo                        = null;
+        $action                                = '<comment>Updated</comment> ';
 
         if (null === $exists) {
             $data_array = $this->createDbEntry($video_file, $key);
             $video_id   = $this->insert($data_array);
             if (null !== $video_id) {
-                $query = 'insert into '.__MYSQL_VIDEO_SEQUENCE__.' (seq_id,video_id,video_key,Library) values ';
-                $query .= " (nextseq('".__LIBRARY__."'),".$video_id.",'".$key."','".__LIBRARY__."')";
+                $query  = 'insert into ' . __MYSQL_VIDEO_SEQUENCE__ . ' (seq_id,video_id,video_key,Library) values ';
+                $query .= " (nextseq('" . __LIBRARY__ . "')," . $video_id . ",'" . $key . "','" . __LIBRARY__ . "')";
                 $this->query($query);
 
                 $action = '<comment>Added</comment> ';
@@ -90,7 +90,7 @@ class GalleryStorageDB extends StorageDB
             }
         }
 
-        Mediatag::$Display->BlockInfo['Video'] = $action.basename($video_file).' ';
+        Mediatag::$Display->BlockInfo['Video'] = $action . basename($video_file) . ' ';
         if (null !== $video_id) {
             // $this->vtags = new VideoTags();
             Mediatag::$Display->BlockInfo['MetaTags'] = (new Gallery())->getVideoInfo($key, $video_file);
@@ -113,7 +113,7 @@ class GalleryStorageDB extends StorageDB
         }
 
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-            $value = trim($value);
+            $value            = trim($value);
 
             $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=yellow');
         }
@@ -132,24 +132,24 @@ class GalleryStorageDB extends StorageDB
         $vdata                        = [];
         Mediatag::$Display->BlockInfo = [];
         // $this->MultiIDX               = 1;
-        $total = count($data);
+        $total                        = count($data);
         // utmdd($this->MultiIDX );
         foreach ($data as $k => $row) {
             // $VideoQuery[$row['video_key']][__MYSQL_VIDEO_FILE__] = $row;
-            $vdata = ['video_file' => $row['fullpath'].'/'.$row['filename']];
+            $vdata = ['video_file' => $row['fullpath'] . '/' . $row['filename']];
 
             $this->updateDBEntry($row['video_key'], $vdata, Option::istrue('all'));
             if (null !== $this->progressbar) {
                 $this->progressbar->advance();
             }
-               if (null !== $this->progressbar1) {
-            $this->progressbar1->advance();
-               }
+            if (null !== $this->progressbar1) {
+                $this->progressbar1->advance();
+            }
 
             //            $this->video_string[] = '<info>'.$this->MultiIDX.'</info> : Video <comment>'.$row['filename'].'</comment> added to db ';
             --$this->MultiIDX;
         }
-        $this->video_string[] = ' '.PHP_EOL;
+        $this->video_string[]         = ' ' . PHP_EOL;
         //   $this->RowBlock->overwrite($this->video_string);
     }
 }

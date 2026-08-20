@@ -27,7 +27,7 @@ class Storage
     use DbMap;
     use TagDB;
 
-    public $DbFileArray = [];
+    public $DbFileArray  = [];
 
     public $input;
 
@@ -62,26 +62,26 @@ class Storage
 
     public $headerBlock;
 
-    public $mysqllib = null;
+    public $mysqllib     = null;
 
     public object $mapClass;
 
-    public static $DB = null;
+    public static $DB    = null;
 
     protected $DbConnection;
 
-    public $MultiIDX = 1;
+    public $MultiIDX     = 1;
 
     public function __construct(?MysqliDb $DbConnection = null)
     {
-        $db = MysqliDb::getInstance();
+        $db             = MysqliDb::getInstance();
         if ($DbConnection === null) {
             $DbConnection = $db;
         }
 
         $this->mysqllib = $DbConnection; //->getInstance();
         $this->mysqllib->setTrace(true);
-        self::$DB = $this;
+        self::$DB       = $this;
 
         //  utmdd($this->mysqllib,self::$DB);
 
@@ -133,7 +133,7 @@ class Storage
         $method = $name;
 
         // Note: value of $name is case sensitive.
-        $tag = $name;
+        $tag    = $name;
         if (str_contains($name, 'Genre')) {
             $tag    = 'genre';
             $method = str_replace('Genre', 'Tag', $name);
@@ -255,7 +255,7 @@ class Storage
                         $this->video_string[] = ['insert failed: ' . $this->mysqllib->getLastError()];
                         // Error while saving, cancel new record
                         $this->mysqllib->rollback();
-                        $commit = false;
+                        $commit               = false;
                     }
                 }
             }
@@ -340,7 +340,7 @@ class Storage
     {
         // utminfo(func_get_args());
 
-        $id = null;
+        $id         = null;
         if (Option::Istrue('test')) {
             $array_string = var_export($data, 1);
             $this->output->writeln(__METHOD__ . ' -> ' . $array_string);
@@ -358,8 +358,8 @@ class Storage
                 if (! Mediatag::$filesystem->exists($backup_path)) {
                     Mediatag::$filesystem->mkdir($backup_path);
                 }
-                $old_file = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
-                $new_file = $backup_path . '/' . $fieldArray['filename'];
+                $old_file    = $fieldArray['fullpath'] . '/' . $fieldArray['filename'];
+                $new_file    = $backup_path . '/' . $fieldArray['filename'];
 
                 // // utmdump($old_file, $new_file);
                 Mediatag::$filesystem->rename($old_file, $new_file);
@@ -368,13 +368,13 @@ class Storage
             }
         }
 
-        $dupCols = array_keys($fieldArray);
+        $dupCols    = array_keys($fieldArray);
         // utmdd($dupCols);
         //     unset();
         // }
 
         $this->mysqllib->onDuplicate($dupCols, 'id');
-        $id = $this->mysqllib->insert($table, $data);
+        $id         = $this->mysqllib->insert($table, $data);
 
         // utmdump($this->mysqllib->getLastQuery());
         // } catch (\Exception $e) {
@@ -399,7 +399,7 @@ class Storage
 
         $key = str_replace('+', '', $key);
         $key = str_replace('(', '', $key);
-        $txt = Strings::clean($key, true,false);
+        $txt = Strings::clean($key, true, false);
 
         return $txt;
     }
@@ -430,20 +430,20 @@ class Storage
         $where        = null;
         $where_clause = [];
 
-        $current_dir = (new Filesystem)->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
-        $current_dir = rtrim($current_dir, '/');
+        $current_dir  = (new Filesystem())->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
+        $current_dir  = rtrim($current_dir, '/');
         // utmdump($current_dir);
         switch ($query_cmd) {
             case 'select':
                 if ($search === null) {
                     $search = '*';
                 }
-                $query = 'SELECT ' . $search . ' FROM ';
+                $query    = 'SELECT ' . $search . ' FROM ';
 
                 break;
 
             case 'delete':
-                $query = 'delete from ';
+                $query    = 'delete from ';
                 if (is_array($search)) {
                     $search = ' ' . $search[0] . " = '" . $search[1] . "'";
                 }
@@ -454,7 +454,7 @@ class Storage
 
             case 'cleandb':
 
-                $query = 'delete f,mp,md,i,pl,fv FROM ' . __MYSQL_VIDEO_FILE__ . ' f ';
+                $query    = 'delete f,mp,md,i,pl,fv FROM ' . __MYSQL_VIDEO_FILE__ . ' f ';
                 $query .= 'left join ' . __MYSQL_ARTIST_MAP__ . '  mp on f.id = mp.video_id  ';
                 $query .= 'left join ' . __MYSQL_VIDEO_METADATA__ . '  md on f.video_key = md.video_key  ';
                 $query .= 'left join ' . __MYSQL_VIDEO_INFO__ . '  i on f.video_key = i.video_key ';
@@ -511,7 +511,7 @@ class Storage
         if ($where !== null) {
             $where = ' AND ' . $where;
         }
-        $sql = $query . $where . $limit;
+        $sql          = $query . $where . $limit;
 
         if (Option::Istrue('test')) {
             Mediatag::$output->writeln($sql);

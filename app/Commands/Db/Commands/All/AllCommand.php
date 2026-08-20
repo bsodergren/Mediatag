@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\All;
 
@@ -18,9 +21,9 @@ class AllCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['all' => [
+    public $command          = ['all' => [
         'init'        => null,
         'exec'        => null,
         'execThumb'   => null,

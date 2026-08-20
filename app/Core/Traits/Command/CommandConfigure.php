@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Core\Traits\Command;
 
@@ -13,18 +16,18 @@ trait CommandConfigure
         MediaOptions::$callingClass = $child;
 
         $this->setDefinition(MediaOptions::getDefinition($this->getName()));
-        $arguments = MediaOptions::getArguments(
+        $arguments                  = MediaOptions::getArguments(
             $this->getName(),
             $this->getDescription(),
             function (CompletionInput $input) {
                 return call_user_func([MediaOptions::$CmdClass, 'ArgumentClosure'], $input, $this->getName());
-            }
+            },
         );
         if (is_array($arguments)) {
             $this->addArgument(...$arguments);
         }
 
-        $arguments = MediaOptions::getArgument($this->getName());
+        $arguments                  = MediaOptions::getArgument($this->getName());
 
         if (is_array($arguments)) {
             foreach ($arguments as $arg) {

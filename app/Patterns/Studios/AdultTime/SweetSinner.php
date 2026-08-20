@@ -1,7 +1,6 @@
 <?php
 /**
  * Command like Metatag writer for video files.
- *
  */
 
 namespace Mediatag\Patterns\Studios\AdultTime;
@@ -13,8 +12,7 @@ const SWEETSINNER_REGEX_COMMON = '//i';
 
 class SweetSinner extends AdultTime
 {
-
-    public $studio = 'Sweet Sinner';
+    public $studio  = 'Sweet Sinner';
     public $network = 'Adult Time';
 
 }

@@ -57,7 +57,7 @@ class Reader extends TagReader
     public function getvideoData(array $file_array)
     {
 
-        $res = $this->videoExists($file_array['video_key']);
+        $res        = $this->videoExists($file_array['video_key']);
         if ($res === null) {
             return null;
         }
@@ -72,8 +72,8 @@ class Reader extends TagReader
 
     private function videoExists($key)
     {
-      return Storage::$DB->videoExists($key);
-        
+        return Storage::$DB->videoExists($key);
+
     }
 
     private function get($tag)
@@ -99,7 +99,7 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        $query = "SELECT m.title as title ,
+        $query      = "SELECT m.title as title ,
   m.artist as artist ,
   m.genre as genre ,
   m.studio as studio ,
@@ -113,8 +113,8 @@ class Reader extends TagReader
         // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";
         // utmdd($query);
 
-        $result = Storage::$DB->query($query);
-        $info   = null;
+        $result     = Storage::$DB->query($query);
+        $info       = null;
         if (count($result) != 1) {
             return null;
         }

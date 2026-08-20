@@ -21,9 +21,9 @@ final class Command extends MediaCommand
 
     // public static $SingleCommand = true;
 
-    public const USE_LIBRARY = true;
+    public const USE_LIBRARY   = true;
 
-    public $command = [
+    public $command            = [
         'show' => [
             'exec'  => null,
             'print' => null,

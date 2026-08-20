@@ -24,7 +24,7 @@ class JpgPreviewFiles extends VideoPreview implements LoggerAwareInterface
     use LoggerAwareTrait;
     use MediaFFmpeg;
 
-    public $videoRange = 100;
+    public $videoRange  = 100;
 
     public $videoSlides = 100;
 
@@ -32,20 +32,20 @@ class JpgPreviewFiles extends VideoPreview implements LoggerAwareInterface
     {
         // Create a temp directory for building.
 
-        $temp = dirname(__INC_WEB_PREVIEW_DIR__ . str_replace(__PLEX_HOME__, '', $this->video_file)) . \DIRECTORY_SEPARATOR . $this->video_key;
+        $temp              = dirname(__INC_WEB_PREVIEW_DIR__ . str_replace(__PLEX_HOME__, '', $this->video_file)) . \DIRECTORY_SEPARATOR . $this->video_key;
 
-        $options = [
+        $options           = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
             'ffmpeg.binaries'     => CONFIG['FFMPEG_CMD'],
             'ffprobe.binaries'    => CONFIG['FFPROBE_CMD'],
         ];
-        (new Filesystem)->mkdir($temp);
+        (new Filesystem())->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
-        $ffprobe = FFProbe::create($options, $this->logger);
+        $ffprobe           = FFProbe::create($options, $this->logger);
 
-        $duration = floor($ffprobe
+        $duration          = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
 
@@ -54,25 +54,25 @@ class JpgPreviewFiles extends VideoPreview implements LoggerAwareInterface
             return null;
         }
 
-        $videoRange  = $this->videoRange;
-        $videoSlides = $this->videoSlides;
-        $points      = array_map(function ($n) {
+        $videoRange        = $this->videoRange;
+        $videoSlides       = $this->videoSlides;
+        $points            = array_map(function ($n) {
             return round($n, 0);
         }, range(1, $videoRange, $videoRange / $videoSlides));
 
-        $frames      = [];
-        $progressBar = new ProgressBar(Mediatag::$output, count($points));
+        $frames            = [];
+        $progressBar       = new ProgressBar(Mediatag::$output, count($points));
 
         $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing Preview</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
         $progressBar->setMessage($this->fileCount--, 'no');
 
-        $message = $this->setMessage($this->video_file);
+        $message           = $this->setMessage($this->video_file);
 
         $progressBar->setMessage($message, 'message');        // $progressBar->setBarWidth("100");
 
         $progressBar->start();
         foreach ($points as $point) {
-            $time_secs = floor($duration * ($point / 100));
+            $time_secs  = floor($duration * ($point / 100));
             $progressBar->advance();
             $point      = str_pad($point, 3, '0', STR_PAD_LEFT);
             $point_file = "$temp/$point.jpg";

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Captions;
 
@@ -18,7 +21,7 @@ class CaptionsCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
-    public $command = ['captions' => ['captionsMethod' => null]];
+    public $command          = ['captions' => ['captionsMethod' => null]];
 }

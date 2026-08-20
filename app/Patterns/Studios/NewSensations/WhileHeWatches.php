@@ -13,7 +13,7 @@ const WHILEHEWATCHES_REGEX_COMMON = '//i';
 
 class WhileHeWatches extends NewSensations
 {
-    public $studio = 'While He Watches';
+    public $studio  = 'While He Watches';
 
     public $network = 'New Sensations';
 }

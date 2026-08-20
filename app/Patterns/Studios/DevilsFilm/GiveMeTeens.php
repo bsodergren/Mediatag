@@ -13,7 +13,7 @@ const GIVEMETEENS_REGEX_COMMON = '//i';
 
 class GiveMeTeens extends DevilsFilm
 {
-    public $studio = 'Devils Film';
+    public $studio  = 'Devils Film';
 
     public $network = 'Devils Film';
 }

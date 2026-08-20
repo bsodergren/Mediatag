@@ -1,9 +1,9 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Remove;
-
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
 
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
@@ -30,6 +30,9 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait RemoveHelper
 {

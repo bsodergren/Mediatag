@@ -13,7 +13,7 @@ const THEYESLIST_REGEX_COMMON = '//i';
 
 class TheYesList extends AdultTime
 {
-    public $studio = 'The Yes List';
+    public $studio  = 'The Yes List';
 
     public $network = 'Adult Time';
 }

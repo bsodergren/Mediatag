@@ -6,14 +6,14 @@
 
 namespace Mediatag\Traits\Patterns;
 
-use const ARRAY_FILTER_USE_KEY;
-use const CASE_LOWER;
-use const PREG_SPLIT_NO_EMPTY;
-
 use Mediatag\Utilities\MediaArray;
 
 use function array_key_exists;
 use function count;
+
+use const ARRAY_FILTER_USE_KEY;
+use const CASE_LOWER;
+use const PREG_SPLIT_NO_EMPTY;
 
 trait Artistcp
 {
@@ -82,15 +82,15 @@ trait Artistcp
     {
         // utminfo(func_get_args());
 
-        $namesArray = [];
-        $names      = str_replace('_1080p', '', $names);
+        $namesArray     = [];
+        $names          = str_replace('_1080p', '', $names);
         if (str_contains($names, '_and_')) {
             $matched_delim = $this->getArtistDelim();
         } else {
             $matched_delim = '_';
         }
-        $names       = str_replace($matched_delim, $delim, $names);
-        $names_array = explode($delim, $names);
+        $names          = str_replace($matched_delim, $delim, $names);
+        $names_array    = explode($delim, $names);
 
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
         $prev_name      = '';
@@ -127,7 +127,7 @@ trait Artistcp
 
                     return false;
                 }, ARRAY_FILTER_USE_KEY);
-                $key = array_key_first($matched);
+                $key      = array_key_first($matched);
 
                 if ($matched !== false) {
                     // utmdd([$matched[$key] ,$name_key,$aName]);
@@ -152,12 +152,12 @@ trait Artistcp
                 $namesArray[] = $aName;
             }
         }
-        $titleNames = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
+        $titleNames     = MediaArray::matchArtist(ARTIST_MAP, $this->getTitle());
 
         if ($titleNames !== null) {
-            $video = strtolower($this->video_name);
+            $video      = strtolower($this->video_name);
             foreach ($titleNames as $k => $name) {
-                $tname = strtolower(str_replace('_', '', $name));
+                $tname          = strtolower(str_replace('_', '', $name));
 
                 if (! str_contains($video, $tname)) {
                     unset($titleNames[$k]);

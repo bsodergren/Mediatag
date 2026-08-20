@@ -55,13 +55,13 @@ class ResizeProcess extends Process
 
     public function resizeFile()
     {
-        $dimensions = Option::getValue('dim', 1);
+        $dimensions       = Option::getValue('dim', 1);
 
         [$width, $height] = explode('X', strtoupper($dimensions));
         $resizeVideos     = [];
 
         foreach ($this->fileArray as $video_file) {
-            $dims = $this->getVideoDimensions($video_file);
+            $dims           = $this->getVideoDimensions($video_file);
             if ($dims['width'] == $width
             && $dims['height'] == $height) {
                 Mediatag::$Display->BarSection1->writeln('<file>No resize ' . basename($video_file) . '</>');
@@ -71,7 +71,7 @@ class ResizeProcess extends Process
             $resizeVideos[] = $video_file;
         }
 
-        $nVideos = count($resizeVideos);
+        $nVideos          = count($resizeVideos);
         if ($nVideos > 0) {
             foreach ($resizeVideos as $video_file) {
                 Mediatag::$Display->BarSection1->writeln($nVideos . '<file>Resize file ' . basename($video_file) . '</>');
@@ -101,7 +101,7 @@ class ResizeProcess extends Process
 
     private function resizeVideo($videoFile, $width, $height)
     {
-        $format = new X264;
+        $format       = new X264();
         // $format->
 
         $format->on('progress', function ($video, $format, $percentage) {

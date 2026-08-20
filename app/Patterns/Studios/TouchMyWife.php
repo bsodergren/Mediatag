@@ -14,7 +14,7 @@ class TouchMyWife extends Patterns
 {
     public $studio = 'Touch My Wife';
 
-    public $regex = [
+    public $regex  = [
         'touchmywife' => [
             'artist' => [
                 'pattern'             => TOUCHMYWIFE_REGEX_COMMON,

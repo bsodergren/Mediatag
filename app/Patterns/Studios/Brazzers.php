@@ -10,9 +10,9 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class Brazzers extends Patterns
 {
-    public $studio = 'Brazzers';
+    public $studio          = 'Brazzers';
 
-    public $regex = [
+    public $regex           = [
         'brazzers' => [
             'artist' => [
                 'pattern'             => '/([a-zA-Z]{1,4})\_([a-zA-Z\_]*)\_[a-z]{2}[0-9]{1,10}/i',
@@ -54,7 +54,7 @@ class Brazzers extends Patterns
         'zzs'   => 'ZZ Series',
     ];
 
-    public $artist_match = [
+    public $artist_match    = [
         'ada'       => 'ada sanchez',
         'adriana'   => 'adriana checkic',
         'anya'      => 'anya ivy',
@@ -134,8 +134,8 @@ class Brazzers extends Patterns
                     $titleArray[] = trim($output_array[2], '-');
                 }
 
-                $title = implode(' ', $titleArray);
-                $title = trim($title);
+                $title      = implode(' ', $titleArray);
+                $title      = trim($title);
 
                 return ucwords($title);
             }

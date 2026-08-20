@@ -21,7 +21,7 @@ use function is_array;
  */
 class Chooser
 {
-    public static $bypass = [];
+    public static $bypass         = [];
 
     public static $QuestionFormat = '<fg=bright-yellow;options=reverse>%text%</>';
 
@@ -54,7 +54,7 @@ class Chooser
     public static function changes(
         string $questionText = 'Continue with this action?',
         $optionName = 'yes',
-        $bypass_id = 25
+        $bypass_id = 25,
     ): bool {
         $bypass_id = $optionName . '_' . $bypass_id;
 
@@ -76,9 +76,9 @@ class Chooser
             return true;
         }
 
-        $ask      = new QuestionHelper;
-        $question = new Question(self::getQuestion($questionText) . ' yY|nN|A|N|O: ');
-        $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+        $ask       = new QuestionHelper();
+        $question  = new Question(self::getQuestion($questionText) . ' yY|nN|A|N|O: ');
+        $answer    = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
 
         switch ($answer) {
             case 'N':
@@ -113,10 +113,10 @@ class Chooser
         // $text = Mediatag::$output->writeln($questionFormatedText );
 
         // utmdd( $text,"ex");
-        $ask = new QuestionHelper;
+        $ask        = new QuestionHelper();
         // $question = new ConfirmationQuestion($questionFormatedText, false);
         // $question = new ConfirmationQuestion('Continue with this action?', false);
-        $question = new Question('Please enter the name of the bundle', 'AcmeDemoBundle');
+        $question   = new Question('Please enter the name of the bundle', 'AcmeDemoBundle');
 
         $bundleName = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         // $question->setAutocompleterValues($Answers);

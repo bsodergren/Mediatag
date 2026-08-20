@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -34,8 +35,8 @@ trait CommandExecute
             return Command::SUCCESS;
         }
 
-        $class     = static::class;
-        $arguments = $input->getArguments();
+        $class                   = static::class;
+        $arguments               = $input->getArguments();
         // utmdd($arguments);
         if (count($arguments) > 0) {
             $cmdArgument = $input->getArgument($this->getName());
@@ -55,15 +56,15 @@ trait CommandExecute
             }
         }
 
-        $class = self::getProcessClass();
+        $class                   = self::getProcessClass();
         // utmdd(self::$optionArg);
-        $Process = new $class($input, $output, self::$optionArg);
+        $Process                 = new $class($input, $output, self::$optionArg);
 
         // $this->Handlers = $Process->Handlers;
 
         // $Process->completionHandlers = $this->setCompletionHandler();
-        $Process->commandList = array_merge($Process->commandList, $this->command);
-        $method               = 'process';
+        $Process->commandList    = array_merge($Process->commandList, $this->command);
+        $method                  = 'process';
         // utmdd( );
 
         if (array_key_exists('command', $arguments)) {
@@ -72,7 +73,7 @@ trait CommandExecute
         $Process->$method();
 
         if (null !== $originalCommand) {
-            $args = [__SCRIPT_NAME__, $arguments[$arguments['command']]];
+            $args   = [__SCRIPT_NAME__, $arguments[$arguments['command']]];
 
             // utmdump([array_key_exists($arguments[$arguments['command']], $Process->commandList),
             //  $arguments[$arguments['command']],
@@ -83,7 +84,7 @@ trait CommandExecute
 
             $method = $arguments['command'];
 
-            $exec = new MediatagExec(null, $input, $output);
+            $exec   = new MediatagExec(null, $input, $output);
             $exec->exec($args, Callback::check([$exec, 'Output']), true);
         }
         // if (!is_null($arguments[$arguments['command']])) {

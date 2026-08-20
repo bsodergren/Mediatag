@@ -20,7 +20,7 @@ class VideoPreview extends VideoInfo
 
     public $video_name;
 
-    public $progressBar = false;
+    public $progressBar    = false;
 
     public $preview_path;
 
@@ -28,15 +28,15 @@ class VideoPreview extends VideoInfo
 
     public $returnText;
 
-    public $thumbType = 'preview';
+    public $thumbType      = 'preview';
 
-    public $thumbExt = '.gif';
+    public $thumbExt       = '.gif';
 
-    public $thumbDir = __INC_WEB_PREVIEW_DIR__;
+    public $thumbDir       = __INC_WEB_PREVIEW_DIR__;
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
-    public $actionText = '';
+    public $actionText     = '';
 
     public function get($key, $file)
     {
@@ -46,7 +46,7 @@ class VideoPreview extends VideoInfo
         $this->video_key  = (string) $key;
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;
-        $preview = $this->BuildPreview();
+        $preview          = $this->BuildPreview();
 
         return ['preview' => $preview, 'video_key' => $this->video_key];
     }
@@ -55,11 +55,11 @@ class VideoPreview extends VideoInfo
     {
         // utminfo(func_get_args());
 
-        $this->previewName = $this->videoToThumb($this->video_file);
-        $this->video_name  = basename($this->video_file);
+        $this->previewName  = $this->videoToThumb($this->video_file);
+        $this->video_name   = basename($this->video_file);
         // $type             = $this->actionText;
-        $action           = $this->updatedText;
-        $this->returnText = $this->updatedText . $this->actionText;
+        $action             = $this->updatedText;
+        $this->returnText   = $this->updatedText . $this->actionText;
 
         if (file_exists($this->previewName)) {
             // --$this->fileCount;
@@ -69,7 +69,7 @@ class VideoPreview extends VideoInfo
         }
 
         $this->preview_path = dirname($this->previewName);
-        (new Filesystem)->mkdir($this->preview_path);
+        (new Filesystem())->mkdir($this->preview_path);
 
         return $this->build_video_thumbnail();
     }

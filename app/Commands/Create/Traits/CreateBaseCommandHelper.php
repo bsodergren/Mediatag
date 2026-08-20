@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Create\Traits;
 
@@ -60,12 +63,12 @@ EOT;
 
     private function addToCommandsConfig()
     {
-        $configFile = __CONFIG_LIB__ . '/commands.php';
-        $configText = file_get_contents($configFile);
+        $configFile             = __CONFIG_LIB__ . '/commands.php';
+        $configText             = file_get_contents($configFile);
 
-        $className = ucfirst($this->cmd) . 'Command';
+        $className              = ucfirst($this->cmd) . 'Command';
 
-        $newCommandText = "    '" . $this->cmd . "'   => function () {\n        return new " . $className . ";\n    },\n";
+        $newCommandText         = "    '" . $this->cmd . "'   => function () {\n        return new " . $className . ";\n    },\n";
 
         $this->CommandNameSpace = 'Mediatag\\Commands\\' . ucfirst($this->cmd);
 
@@ -78,7 +81,7 @@ EOT;
 
     private function createCmdFiles()
     {
-        $this->CmdDir = __COMMANDS_DIR__ . DIRECTORY_SEPARATOR . ucfirst($this->cmd);
+        $this->CmdDir      = __COMMANDS_DIR__ . DIRECTORY_SEPARATOR . ucfirst($this->cmd);
         if (! is_dir($this->CmdDir)) {
             mkdir($this->CmdDir, 0777, true);
         }
@@ -97,14 +100,14 @@ EOT;
 
     private function saveCmdFiles($path)
     {
-        $printer = new PsrPrinter;
+        $printer    = new PsrPrinter();
 
         $fileString = $printer->printNamespace($this->newCmdNamespace);
         $fileString = "<?php\n\n" . $fileString;
 
-        $filename = str_replace(__COMMANDS_DIR__, '', $path);
+        $filename   = str_replace(__COMMANDS_DIR__, '', $path);
 
-        $overwrite = true;
+        $overwrite  = true;
         if (file_exists($path)) {
             if (Option::isFalse('overwrite')) {
                 Mediatag::$output->writeln('File already exists: ' . $filename);
@@ -157,7 +160,7 @@ EOT;
 
         if (is_array($params)) {
             foreach ($params as $key => $value) {
-                $key = '%%' . strtoupper($key) . '%%';
+                $key  = '%%' . strtoupper($key) . '%%';
                 // // utmdump([$text,$value,$key]);
                 $text = str_replace($key, $value, $text);
             }

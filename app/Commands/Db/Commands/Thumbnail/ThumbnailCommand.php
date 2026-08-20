@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Thumbnail;
 
@@ -18,7 +21,7 @@ class ThumbnailCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['thumbnail' => ['thumbnailMethod' => null]];
+    public $command          = ['thumbnail' => ['thumbnailMethod' => null]];
 }

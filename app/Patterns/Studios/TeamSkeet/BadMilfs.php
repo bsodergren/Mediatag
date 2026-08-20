@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
 
 class BadMilfs extends TeamSkeet
 {
-    public $studio = 'Bad Milfs';
+    public $studio  = 'Bad Milfs';
 
     public $network = 'Team Skeet';
 }

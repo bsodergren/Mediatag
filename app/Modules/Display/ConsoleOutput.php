@@ -37,9 +37,9 @@ class ConsoleOutput
         bold, underscore, blink, reverse
         */
 
-        $this->output    = $output;
-        $this->io        = new SymfonyStyle($input, $this->output);
-        $this->formatter = new FormatterHelper;
+        $this->output     = $output;
+        $this->io         = new SymfonyStyle($input, $this->output);
+        $this->formatter  = new FormatterHelper();
 
         $this->output->getFormatter()->setStyle('indent', new OutputFormatterStyle('red'));
         $this->output->getFormatter()->setStyle('current', new OutputFormatterStyle('magenta'));
@@ -57,7 +57,7 @@ class ConsoleOutput
 
         Mediatag::$output = $this->output;
 
-        $styleArray = $this->output->getFormatter()->getStyles();
+        $styleArray       = $this->output->getFormatter()->getStyles();
 
         if ($this->output instanceof ConsoleOutputInterface) {
             $this->output = $output->getErrorOutput();
@@ -70,7 +70,7 @@ class ConsoleOutput
         //    utmdd("something else");
         //
 
-        Mediatag::$Io = $this->io;
+        Mediatag::$Io     = $this->io;
     }
 
     public static function formatOutput($text, $override = false)

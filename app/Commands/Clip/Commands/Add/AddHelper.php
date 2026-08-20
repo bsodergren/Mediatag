@@ -33,18 +33,18 @@ trait AddHelper
         $name      = Option::getValue('name', true);
         $duration  = (VideoFileInfo::getVidInfo($Video['video_file'])['duration'] / 1000);
 
-        $video_id = (new Markers)->getvideoId($Video['video_key']);
+        $video_id  = (new Markers())->getvideoId($Video['video_key']);
         // utmdd($this->VideoList);
 
-        $suffix = ['Start', 'End'];
+        $suffix    = ['Start', 'End'];
         foreach ($time as $i => $t) {
-            $mod = 0;
+            $mod       = 0;
             if (str_contains($t, '+')) {
                 $t   = ltrim($t, '+');
                 $mod = $t;
                 $t   = $prev_time;
             }
-            $seconds = $this->timeCodetoSec($t, $mod);
+            $seconds   = $this->timeCodetoSec($t, $mod);
 
             if ($duration < $seconds) {
                 if ($suffix[$i] == 'Start') {
@@ -53,13 +53,13 @@ trait AddHelper
                     $seconds = $duration - 1;
                 }
             }
-            $data = [
+            $data      = [
                 'timeCode'   => round($seconds, 0),
                 'video_id'   => $video_id,
                 'markerText' => $name . '_' . $suffix[$i],
             ];
 
-            $res = Storage::$DB->insert($data, __MYSQL_VIDEO_MARKERS__);
+            $res       = Storage::$DB->insert($data, __MYSQL_VIDEO_MARKERS__);
             Mediatag::$output->writeln('<comment> Added tag ' . $name . '</> at <fg=green>' . $suffix[$i] . ' at ' . $seconds . '</>');
 
             //            Mediatag::$output->writeln('<comment> Added tag '.$name.'</> at <fg=green>'.$start_time.' and '.$end_time.'</>');

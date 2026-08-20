@@ -21,7 +21,7 @@ class MileHighMedia extends Patterns
 
     public $network = 'Mile High Media';
 
-    public $regex = [
+    public $regex   = [
         'milehighmedia' => [
             'artist' => [
                 'pattern'             => MILEHIGHMEDIA_REGEX_COMMON,
@@ -54,8 +54,8 @@ class MileHighMedia extends Patterns
                 if ($output_array[2] == '') {
                     $output_array[2] = '01';
                 }
-                $vid = 'E' . $output_array[2];
-                $epi = 'Scene ' . $output_array[3];
+                $vid   = 'E' . $output_array[2];
+                $epi   = 'Scene ' . $output_array[3];
 
                 return ucwords($title) . ' ' . $vid . ' ' . $epi;
             }

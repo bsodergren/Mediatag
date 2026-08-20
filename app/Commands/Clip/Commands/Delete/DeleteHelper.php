@@ -19,14 +19,14 @@ trait DeleteHelper
     {
         self::$Class = __CLASS__;
 
-        $directory  = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
-        $file_array = Mediatag::$finder->Search($directory, '*.mp4');
+        $directory   = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
+        $file_array  = Mediatag::$finder->Search($directory, '*.mp4');
 
-        $videos = count($file_array);
+        $videos      = count($file_array);
         // $question = new Question(self::text('L__CLIP_ASK_CONTINUE'));
         // Mediatag::$output->writeln();
 
-        $go = Chooser::changes(self::text('L__CLIP_VIDEO_COUNT', ['VID' => $videos]), 'yes', __LINE__);
+        $go          = Chooser::changes(self::text('L__CLIP_VIDEO_COUNT', ['VID' => $videos]), 'yes', __LINE__);
 
         if ($go === true) {
             Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');

@@ -18,11 +18,11 @@ use Mediatag\Patterns\Studios\MileHighMedia\MileHighMedia;
 
 class SweetSinner extends MileHighMedia
 {
-    public $studio = 'Sweet Sinner';
+    public $studio  = 'Sweet Sinner';
 
     public $network = 'Mile High Media';
 
-    public $regex = [
+    public $regex   = [
         'Sweetsinner' => [
             'artist' => [
                 'pattern'             => SWEETSINNER_REGEX_COMMON,

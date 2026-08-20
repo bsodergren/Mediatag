@@ -33,21 +33,21 @@ class Markers extends VideoInfo
 
     public $returnText;
 
-    public $updatedText = '<comment>Updated ';
+    public $updatedText    = '<comment>Updated ';
 
-    public $newText = '<fg=red>Wrote ';
+    public $newText        = '<fg=red>Wrote ';
 
-    public $actionText = 'Thumbnail</> ';
+    public $actionText     = 'Thumbnail</> ';
 
     public $VideoDataTable = __MYSQL_VIDEO_MARKERS__;
 
-    public $thumbType = 'markers';
+    public $thumbType      = 'markers';
 
-    public $maxLen = 75;
+    public $maxLen         = 75;
 
-    public $thumbExt = '.jpg';
+    public $thumbExt       = '.jpg';
 
-    public $thumbDir = __INC_WEB_CHAPTER_DIR__;
+    public $thumbDir       = __INC_WEB_CHAPTER_DIR__;
 
     public $video_markers;
 
@@ -119,7 +119,7 @@ class Markers extends VideoInfo
         // utmdd($this->video_file,$this->video_key,$this->video_markers);
         //        $VideoData             = new VideoData();
         //        $VideoData->video_file = $this->video_file;
-        $thumbnail = $this->getMarkerImg();
+        $thumbnail        = $this->getMarkerImg();
 
         return $thumbnail;
     }
@@ -148,16 +148,16 @@ class Markers extends VideoInfo
         $this->video_path = dirname($this->video_file);
         foreach ($this->video_markers as $timeCode) {
             foreach ($timeCode as $id => $time) {
-                $img_name     = basename($this->video_name, '.mp4') . '_' . $time . '.jpg';
-                $img_name     = Strings::cleanFileName($img_name);
-                $img_web_path = (new Filesystem)->makePathRelative($this->video_path, __PLEX_HOME__);
-                $img_location = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path;
-                $img_file     = $img_location . $img_name;
-                $img_url_path = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path . $img_name;
+                $img_name          = basename($this->video_name, '.mp4') . '_' . $time . '.jpg';
+                $img_name          = Strings::cleanFileName($img_name);
+                $img_web_path      = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
+                $img_location      = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path;
+                $img_file          = $img_location . $img_name;
+                $img_url_path      = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path . $img_name;
 
                 if (! file_exists($img_file)) {
                     $timeStamp = self::videoDuration($time);
-                    (new Filesystem)->mkdir($img_location);
+                    (new Filesystem())->mkdir($img_location);
                     $this->ffmegCreateThumb($this->video_file, $img_file, $timeStamp);
                 }
 
@@ -176,7 +176,7 @@ class Markers extends VideoInfo
         $this->video_markers[] = $row['timeCode'];
         $this->video_key       = $key;
 
-        $this->VideoInfo = $this->getVideoDetails();
+        $this->VideoInfo       = $this->getVideoDetails();
 
         // utmdd($this->VideoInfo);
         return $this->saveVideoDetails();

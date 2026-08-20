@@ -37,14 +37,14 @@ trait MediaFFmpeg
 
     public $progress;
 
-    public $ffmpeg = [];
+    public $ffmpeg       = [];
 
-    public $barAdvance = 50;
+    public $barAdvance   = 50;
 
     // '-hide_banner', '-nostdin',
-    public $ffmpegArgs = ['-y',  '-threads', '1']; // , '-loglevel', 'debug'];
+    public $ffmpegArgs   = ['-y',  '-threads', '1']; // , '-loglevel', 'debug'];
 
-    public $ffmpeg_log = __LOGFILE_DIR__.'/buffer/ffmpeg.log';
+    public $ffmpeg_log   = __LOGFILE_DIR__ . '/buffer/ffmpeg.log';
 
     public $currentFrame = 0;
 
@@ -110,10 +110,10 @@ trait MediaFFmpeg
             unset($cmdArray[0]);
             // $this->MergedName
             foreach ($cmdArray as $k => $value) {
-                $cmdArray[$k] = "'".$value."'";
+                $cmdArray[$k] = "'" . $value . "'";
             }
 
-            $obj = new ScriptWriter(str_replace(' ', '_', $this->MergedName).'.sh', __CURRENT_DIRECTORY__);
+            $obj      = new ScriptWriter(str_replace(' ', '_', $this->MergedName) . '.sh', __CURRENT_DIRECTORY__);
             $obj->addCmd('ffmpeg', $cmdArray);
             // utmdd($obj);
             $obj->write();
@@ -154,7 +154,7 @@ trait MediaFFmpeg
 
         // utminfo(func_get_args());
         // $new_file       = str_ireplace('.mov', '.mp4', $file);
-        $this->progress = new ProgressBar(Mediatag::$Display->BarSection1, $this->frame_count);
+        $this->progress     = new ProgressBar(Mediatag::$Display->BarSection1, $this->frame_count);
         // $this->progress->setFormat('%bar%');
         $this->progress->setFormat(' %current%/%max% ,, [%bar%] ,, %percent:3s%%');
         $this->progress->setBarWidth(100);
@@ -162,17 +162,17 @@ trait MediaFFmpeg
         $this->progress->start();
 
         // $cmdOptions = ['-i', $file, '-map', '0', '-c:v', 'copy', '-c:a', 'aac', $new_file];
-        $cmdOptions = ['-i', $file, '-qscale', '0', $output_file];
-        $callback   = Callback::check([$this, 'ProgressbarOutput']);
+        $cmdOptions         = ['-i', $file, '-qscale', '0', $output_file];
+        $callback           = Callback::check([$this, 'ProgressbarOutput']);
 
         $this->ffmpegExec($cmdOptions, $callback);
 
         $this->progress->clear();
         // Mediatag::$output->writeln('<comment>Transcoding Video '.$file.'</comment>');
 
-        $dmg_dir = str_replace('/XXX', '/XXX/mkv', dirname($file));
+        $dmg_dir            = str_replace('/XXX', '/XXX/mkv', dirname($file));
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($file, $dmg_dir.'/'.basename($file));
+        FileSystem::rename($file, $dmg_dir . '/' . basename($file));
     }
 
     public function repairVideo($signal = 1)
@@ -189,10 +189,10 @@ trait MediaFFmpeg
             case '6':
                 $cmdOptions = [
                     '-y', '-loglevel', 'repeat+info', '-i',
-                    'file:'.$orig_file, '-map', '0', '-dn', '-ignore_unknown',
+                    'file:' . $orig_file, '-map', '0', '-dn', '-ignore_unknown',
                     '-c', 'copy', '-f', 'mp4', '-bsf:a', 'aac_adtstoasc',
                     '-movflags', '+faststart',
-                    'file:'.$new_tmp_file,
+                    'file:' . $new_tmp_file,
                 ];
                 // $cmdOptions = ['-i', $orig_file, '-codec', 'copy', $new_tmp_file];
                 break;
@@ -203,9 +203,9 @@ trait MediaFFmpeg
 
         $this->ffmpegExec($cmdOptions, Callback::check([$this, 'Outputdebug']));
 
-        $dmg_dir = str_replace('/XXX', '/XXX/dmg', $this->video_path);
+        $dmg_dir      = str_replace('/XXX', '/XXX/dmg', $this->video_path);
         FileSystem::createDir($dmg_dir);
-        FileSystem::rename($orig_file, $dmg_dir.'/'.$this->video_name);
+        FileSystem::rename($orig_file, $dmg_dir . '/' . $this->video_name);
         FileSystem::rename($new_tmp_file, $new_file);
 
         $this->write();
@@ -226,9 +226,9 @@ trait MediaFFmpeg
 
         //     $video  = $ffmpeg->open($videoFiles[0]);
 
-        $cmdOptions = [
+        $cmdOptions    = [
             '-ss', $time, '-i', $video_file, '-vf',
-            'scale='.$scale.':force_original_aspect_ratio=decrease',
+            'scale=' . $scale . ':force_original_aspect_ratio=decrease',
             '-vframes', '1', $thumbnail,
         ];
         $this->cmdline = $cmdOptions;
@@ -239,8 +239,8 @@ trait MediaFFmpeg
 
     public function ffmpegCreateClip($file, $marker, $idx)
     {
-        $videoFile  = $this->getClipFilename($file);
-        $outputFile = str_replace('.mp4', '_clip-'.$marker['text'].'-'.$idx.'.mp4', $videoFile);
+        $videoFile     = $this->getClipFilename($file);
+        $outputFile    = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
         FileSystem::createDir(dirname($outputFile));
 
         if (file_exists($outputFile)) {
@@ -261,7 +261,7 @@ trait MediaFFmpeg
         //     // }
         // }
 
-        $cmdOptions = [
+        $cmdOptions    = [
             '-v', 'debug',
             '-ss', $marker['start'],
             '-to', $marker['end'],
@@ -274,13 +274,13 @@ trait MediaFFmpeg
         $this->cmdline = $cmdOptions;
         // utmdump($cmdOptions);
         // $callback = Callback::check([$this, 'ProgressbarOutput']);
-        $this->progress->startIndicator('Clipping '.$marker['text'].' at '.$marker['start'].' to '.$marker['end']);
+        $this->progress->startIndicator('Clipping ' . $marker['text'] . ' at ' . $marker['start'] . ' to ' . $marker['end']);
 
-        $callback = Callback::check([$this, 'Outputdebug']);
+        $callback      = Callback::check([$this, 'Outputdebug']);
 
         $this->ffmpegExec($cmdOptions, $callback);
         sleep(3);
-        $this->progress->finishIndicator('Finished '.$marker['text']);
+        $this->progress->finishIndicator('Finished ' . $marker['text']);
     }
 
     public function createCompilation($files, $ClipName, $name)
@@ -290,20 +290,20 @@ trait MediaFFmpeg
         $this->MergedName = $name;
         $this->clipName   = $ClipName;
 
-        $fileCount = count($files);
-        Mediatag::$output->writeln('<info>Merging '.$fileCount.' files</info>');
-        Mediatag::$output->writeln('<info>Info compilation called  '.$name.' </info>');
+        $fileCount        = count($files);
+        Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
+        Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
-        $ffmpeg = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
+        $ffmpeg           = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
 
-        $advancedMedia = $ffmpeg->openAdvanced($files);
+        $advancedMedia    = $ffmpeg->openAdvanced($files);
 
         // $advancedMedia->filters()->pad();
         // //     ->custom('[0:v][1:v]', 'xfade=transition=radial', '[v]');
 
-        $format = new X264('aac', 'libx264');
+        $format           = new X264('aac', 'libx264');
         $format->on('progress', function ($advancedMedia, $format, $percentage) {
-            Mediatag::$output->writeln('<info>Info compilation called  '.$percentage.'%</info>');
+            Mediatag::$output->writeln('<info>Info compilation called  ' . $percentage . '%</info>');
             // utmdump("$percentage % transcoded");
         });
 
@@ -345,15 +345,15 @@ trait MediaFFmpeg
 
     public function ffmpegCreateChapterVideo($file, $markerFile)
     {
-        $outputFile = str_replace('.mp4', '_chapters.mp4', $file);
+        $outputFile     = str_replace('.mp4', '_chapters.mp4', $file);
 
         if (file_exists($outputFile)) {
-            if (!Chooser::changes(' Overwrite File'.__LINE__, 'overwrite', __LINE__)) {
+            if (!Chooser::changes(' Overwrite File' . __LINE__, 'overwrite', __LINE__)) {
                 return;
             }
         }
 
-        $cmdOptions = [
+        $cmdOptions     = [
             '-y',
             '-i', $file,
             '-i', $markerFile,
@@ -367,7 +367,7 @@ trait MediaFFmpeg
         $this->progress = new MediaBar(200, 'one', 120);
         MediaBar::addFormat('%current:4s%,%max:4s%,[%bar%],%percent:3s%%', 'ChapterVideos');
         $this->progress->setMsgFormat('ChapterVideos');
-        $callback = Callback::check([$this, 'Outputdebug']);
+        $callback       = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
     }
 }

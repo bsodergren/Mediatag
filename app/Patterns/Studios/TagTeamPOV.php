@@ -14,7 +14,7 @@ class TagTeamPOV extends Patterns
 {
     public $studio = 'Tag Team POV';
 
-    public $regex = [
+    public $regex  = [
         'tagteampov' => [
 
             'title' => [

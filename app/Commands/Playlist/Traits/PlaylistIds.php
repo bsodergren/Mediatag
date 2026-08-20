@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Traits;
 
@@ -38,8 +41,8 @@ trait PlaylistIds
                 $first  = Strings::before($key, 'pornhub ');
                 $second = Strings::after($key, ' ');
                 //utmdump([$line, $key, $double, [$first, $second]]);
-                $ret[] = 'pornhub ' . $first;
-                $ret[] = 'pornhub ' . $second;
+                $ret[]  = 'pornhub ' . $first;
+                $ret[]  = 'pornhub ' . $second;
 
                 return $ret;
             }
@@ -77,7 +80,7 @@ trait PlaylistIds
         }
         // utmdd(count($content));
         \asort($content);
-        $content = MediaArray::array_iunique($content);
+        $content         = MediaArray::array_iunique($content);
         Filesystem::writeFile(self::$ARCHIVE, $content);
     }
 
@@ -118,7 +121,7 @@ trait PlaylistIds
 
         $this->idList = $this->getUniqueIds(self::$ARCHIVE);
 
-        $fileidArray = [
+        $fileidArray  = [
             0 => [self::DISABLED, 0],
             1 => [self::MODELHUB, 1],
             2 => [self::IGNORED, 0],

@@ -6,14 +6,14 @@
 
 namespace Mediatag\Traits\Patterns;
 
-use const CASE_LOWER;
-use const PREG_SPLIT_NO_EMPTY;
-
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Utilities\MediaArray;
 
 use function array_key_exists;
 use function count;
+
+use const CASE_LOWER;
+use const PREG_SPLIT_NO_EMPTY;
 
 trait Artist
 {
@@ -122,8 +122,8 @@ trait Artist
                         $matchedName = self::CheckArtist($PartName);
                         if ($matchedName !== false) {
                             if (count($matchedName) > 1) {
-                                $second = '';
-                                $third  = '';
+                                $second      = '';
+                                $third       = '';
                                 if (array_key_exists($index + 1, $parts)) {
                                     $second = $parts[$index + 1];
                                 }
@@ -131,8 +131,8 @@ trait Artist
                                 // utmdump(['nameMatches Name' => $nameMatches]);
                                 if ($nameMatches !== false) {
                                     if (count($nameMatches) > 1) {
-                                        $second = '';
-                                        $third  = '';
+                                        $second          = '';
+                                        $third           = '';
                                         if (array_key_exists($index + 1, $parts)) {
                                             $second = $parts[$index + 1];
                                         }
@@ -144,8 +144,8 @@ trait Artist
                                         // utmdump(['moreNameMatches Name' => $moreNameMatches]);
                                         if ($moreNameMatches !== false) {
                                             if (count($nameMatches) == 1) {
-                                                $second = '';
-                                                $third  = '';
+                                                $second         = '';
+                                                $third          = '';
                                                 if (array_key_exists($index + 1, $parts)) {
                                                     $second = $parts[$index + 1];
                                                 }
@@ -162,7 +162,7 @@ trait Artist
                                             continue 2;
                                         }
                                     } else {
-                                        $second = '';
+                                        $second         = '';
                                         if (array_key_exists($index + 1, $parts)) {
                                             $second = $parts[$index + 1];
                                         }
@@ -206,11 +206,11 @@ trait Artist
         //     // $matchedNames = MediaArray::array_iunique(array_merge($matchedNames, $titleNames));
         // }
         if (count($matchedNames) > 0) {
-            $delim = ', ';
-            $names = implode($delim, $matchedNames);
-            $names = str_replace('_', ' ', $names);
-            $names = str_replace('  ', ' ', $names);
-            $names = ucwords($names);
+            $delim      = ', ';
+            $names      = implode($delim, $matchedNames);
+            $names      = str_replace('_', ' ', $names);
+            $names      = str_replace('  ', ' ', $names);
+            $names      = ucwords($names);
 
             $nameString = str_replace(', ', ',', $names);
             // utmdump(['Arist String' => [$nameString, $this->video_file]]);
@@ -260,7 +260,7 @@ trait Artist
                 // utmdd($this->getArtistMatch());
                 $matchKeys = $this->getArtistMatch();
                 if (! is_array($matchKeys)) {
-                    $tmp = $matchKeys;
+                    $tmp       = $matchKeys;
                     unset($matchKeys);
                     $matchKeys = [$tmp];
                 }
@@ -277,7 +277,7 @@ trait Artist
                 if (count($names) == 0) {
                     return null;
                 }
-                $name = implode($delim, $names);
+                $name      = implode($delim, $names);
 
                 return $this->getArtistTransform($name, $delim);
             }
@@ -293,20 +293,20 @@ trait Artist
             $getFunc = 'getOne';
         }
         // utmdump([__FUNCTION__ => $name]);
-        $name = str_replace('_', '', strtolower($name));
-        $db   = Storage::$DB->mysqllib;
+        $name    = str_replace('_', '', strtolower($name));
+        $db      = Storage::$DB->mysqllib;
         // WHERE `nameKey` LIKE '%giselle%'
         if ($one === true) {
             $db->where('nameKey', $name);
         } else {
             $db->where('nameKey', $name . '%', 'LIKE');
         }
-        $res = $db->$getFunc(__MYSQL_ARTIST_PH__, columns: ['star_name']);
+        $res     = $db->$getFunc(__MYSQL_ARTIST_PH__, columns: ['star_name']);
         if ($one === true) {
             if (is_null($res)) {
                 $res = [];
             } else {
-                $t = $res;
+                $t   = $res;
                 unset($res);
                 $res = [$t];
             }

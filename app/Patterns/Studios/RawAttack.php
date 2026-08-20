@@ -12,7 +12,7 @@ class RawAttack extends Patterns
 {
     public $studio = 'Raw Attack';
 
-    public $regex = [
+    public $regex  = [
         'rawattack' => [
             'artist' => [
                 'pattern'             => '/[a-z-]{1,}\_([a-zA-Z_]{1,})[0-9]?\_full.*[0-9]{1,4}.*\.mp4/i',

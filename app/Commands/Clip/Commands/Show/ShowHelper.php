@@ -27,6 +27,6 @@ trait ShowHelper
 
     public function filters()
     {
-      $this->getCommandArgs('show');
+        $this->getCommandArgs('show');
     }
 }

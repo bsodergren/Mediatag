@@ -7,7 +7,6 @@
 namespace Mediatag\Modules\Metatags;
 
 use Mediatag\Modules\Database\Storage;
-
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Mediatag\Utilities\MediaArray;
 
@@ -29,7 +28,7 @@ class Keyword extends TagBuilder
         // utminfo(func_get_args());
 
         if (parent::$dbConn === null) {
-           Storage::$DB =Storage::$DB;
+            Storage::$DB =Storage::$DB;
         }
 
         self::$keywordArray =Storage::$DB->listKeyword();
@@ -38,7 +37,7 @@ class Keyword extends TagBuilder
             $keyword =Storage::$DB->makeKey($keyword);
 
             if (MediaArray::search(self::$keywordArray, $keyword) === null) {
-               Storage::$DB->addKeyword($keyword);
+                Storage::$DB->addKeyword($keyword);
             }
         }
     }

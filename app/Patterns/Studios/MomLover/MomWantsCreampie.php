@@ -12,11 +12,11 @@ use Mediatag\Patterns\Studios\MomLover\MomLover;
 
 class MomWantsCreampie extends MomLover
 {
-    public $studio = 'Mom Wants Creampie';
+    public $studio  = 'Mom Wants Creampie';
 
     public $network = 'Mom Lover';
 
-    public $regex = [
+    public $regex   = [
         'momwantscreampie' => [
             'title' => [
                 'pattern' => '/([a-zA-Z]+)_([a-zA-Z_]{1,})\_[0-9]{0,10}/i',

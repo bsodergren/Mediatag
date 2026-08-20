@@ -1,8 +1,9 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\Executable\Helper;
-
-use const PHP_EOL;
 
 use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
@@ -15,25 +16,27 @@ use Mediatag\Modules\Filesystem\MediaFile;
 
 use function array_key_exists;
 
+use const PHP_EOL;
+
 class VideoDownloader
 {
     use FilterMethods;
 
     public $obj;
 
-    public $DownloadableIds = [];
+    public $DownloadableIds         = [];
 
-    public $model_hub = '';
+    public $model_hub               = '';
 
-    public $premium = '';
+    public $premium                 = '';
 
-    public $key = '';
+    public $key                     = '';
 
-    public $KeyPrefix = '';
+    public $KeyPrefix               = '';
 
-    public $num_of_lines = 0;
+    public $num_of_lines            = 0;
 
-    public static $VideoLogFile = 'video_download.log';
+    public static $VideoLogFile     = 'video_download.log';
 
     public $registeredbufferFilters = [];
 
@@ -118,7 +121,7 @@ class VideoDownloader
                     continue;
                 }
 
-                $success = $searchCmd($buffer, $filter);
+                $success      = $searchCmd($buffer, $filter);
 
                 if ($success) {
                     // utmdump([$searchCmd, $buffer, $filter, $OutputMethod]);

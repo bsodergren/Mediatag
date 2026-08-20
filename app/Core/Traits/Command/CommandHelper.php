@@ -19,11 +19,11 @@ use function array_slice;
 
 trait CommandHelper
 {
-    public $compCommand = [];
+    public $compCommand               = [];
 
-    private $defaultValues = [];
+    private $defaultValues            = [];
 
-    private $completionCmd = [];
+    private $completionCmd            = [];
 
     public static $CompletionHandlers = [];
 
@@ -64,7 +64,7 @@ trait CommandHelper
 
     protected function loadDirs()
     {
-        $filesystem = new Filesystem;
+        $filesystem = new Filesystem();
         foreach (__CREATE_DIRS__ as $i => $dir) {
             if (! is_dir($dir)) {
                 $filesystem->mkdir($dir);
@@ -80,8 +80,8 @@ trait CommandHelper
         // utmdump($className);
         $class = preg_replace('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)$/', '$1Process', $className);
 
-        $file = __COMMANDS_DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
-        $file = str_replace('Mediatag/Commands', '', $file);
+        $file  = __COMMANDS_DIR__ . str_replace('\\', DIRECTORY_SEPARATOR, $class) . '.php';
+        $file  = str_replace('Mediatag/Commands', '', $file);
 
         // utmdd([$className, $file, file_exists($file)]);
         // preg_match('/([a-zA-Z\]+.*)\\([a-zA-Z]+)?(Command)/', $className, $output_array);
@@ -152,14 +152,14 @@ trait CommandHelper
 
         $cmdClass = self::findClass($cmdClass);
 
-        $command = [$cmdClass, $cmdMethod];
+        $command  = [$cmdClass, $cmdMethod];
 
         if (! method_exists($cmdClass, $cmdMethod)) {
             //            $command = (new ReflectionClass($cmdClass))->getConstant($cmdMethod);
 
             $command = $cmdClass . '::' . $cmdMethod;
 
-            $parse = false;
+            $parse   = false;
         }
 
         // utmdump($command);
@@ -179,17 +179,17 @@ trait CommandHelper
             $Helper = 'Completion\\' . $Helper;
         }
 
-        $Class = 'Mediatag\\Bundle\\BashCompletion\\' . $Helper;
+        $Class                      = 'Mediatag\\Bundle\\BashCompletion\\' . $Helper;
 
-        $type        = self::call_user_class($type, true);
-        $commandName = self::call_user_class($commandName, true);
+        $type                       = self::call_user_class($type, true);
+        $commandName                = self::call_user_class($commandName, true);
 
-        $args = [$commandName, $targetName, $type];
+        $args                       = [$commandName, $targetName, $type];
 
         if ($completion !== null) {
             $completion = self::call_user_class($completion);
 
-            $args[] = $completion;
+            $args[]     = $completion;
         }
         // utmdump($args);
         self::$CompletionHandlers[] = new $Class(...$args);
@@ -201,13 +201,13 @@ trait CommandHelper
         $Handlers    = [];
 
         foreach ($commandKeys as $i => $command) {
-            $Handlers[$command] = [];
+            $Handlers[$command]   = [];
 
             foreach ($this->Handlers['handler'] as $handlerRow) {
                 $Handlers[$command][] = $handlerRow;
             }
 
-            $handler = array_key_first($this->command[$command]);
+            $handler              = array_key_first($this->command[$command]);
 
             if ($handler != 'handler') {
                 continue;
@@ -222,9 +222,9 @@ trait CommandHelper
                 $HelperName  = isset($HandlerArray['Helper']) ? $HandlerArray['Helper'] : null;
                 $commandName = isset($HandlerArray['commandName']) ? $HandlerArray['commandName'] : $command;
 
-                $targetName = isset($HandlerArray['targetName']) ? $HandlerArray['targetName'] : null;
-                $type       = isset($HandlerArray['type']) ? $HandlerArray['type'] : null;
-                $completion = isset($HandlerArray['completion']) ? $HandlerArray['completion'] : null;
+                $targetName  = isset($HandlerArray['targetName']) ? $HandlerArray['targetName'] : null;
+                $type        = isset($HandlerArray['type']) ? $HandlerArray['type'] : null;
+                $completion  = isset($HandlerArray['completion']) ? $HandlerArray['completion'] : null;
                 if ($HelperName === null || $type === null || $targetName === null) {
                     continue;
                 }

@@ -13,7 +13,7 @@ const DPFANATICS_REGEX_COMMON = '//i';
 
 class DpFanatics extends TwentyFirstSextury
 {
-    public $studio = 'DP Fanatics';
+    public $studio  = 'DP Fanatics';
 
     public $network = '21st Sextury';
 }

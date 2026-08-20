@@ -45,14 +45,14 @@ class MediaFinder extends SFinder
      *
      * @var array
      */
-    public $duplicateFiles = [];
+    public $duplicateFiles     = [];
 
     /**
      * Summary of video.
      *
      * @var array
      */
-    public $video = [];
+    public $video              = [];
 
     /**
      * Summary of output.
@@ -102,7 +102,7 @@ class MediaFinder extends SFinder
 
     public static $depth;
 
-    public static $quiet = false;
+    public static $quiet       = false;
 
     /**
      * renameCommaFiles.
@@ -122,8 +122,8 @@ class MediaFinder extends SFinder
                 $rename_file = true;
             } else {
                 if (str_contains($fileRow, '.mp4')) {
-                    $oldName = $fileRow;
-                    $newName = $first_part . $fileRow;
+                    $oldName    = $fileRow;
+                    $newName    = $first_part . $fileRow;
 
                     if ($rename_file === true) {
                         $oldName = $first_part . ',' . $fileRow;
@@ -141,9 +141,9 @@ class MediaFinder extends SFinder
                 $pathInfo = pathinfo($newName);
                 $newName  = $pathInfo['basename'];
 
-                $newName = UtilitiesStrings::cleanFileName($newName);
-                $newName = str_replace('__', '_', $newName);
-                $newName = str_replace('_.', '.', $newName);
+                $newName  = UtilitiesStrings::cleanFileName($newName);
+                $newName  = str_replace('__', '_', $newName);
+                $newName  = str_replace('_.', '.', $newName);
 
                 if ($pathInfo['dirname'] != '.') {
                     $newName = $pathInfo['dirname'] . '/' . $newName;
@@ -172,8 +172,8 @@ class MediaFinder extends SFinder
 
             $newFileArray[] = $newName;
 
-            $first_part  = '';
-            $rename_file = false;
+            $first_part     = '';
+            $rename_file    = false;
         }
 
         return $newFileArray;
@@ -219,17 +219,17 @@ class MediaFinder extends SFinder
     public function getRangeArray($file_array): array
     {
         // utminfo(func_get_args());
-        $FileArray = [];
+        $FileArray       = [];
 
-        $start  = 0;
-        $ftotal = count($file_array);
+        $start           = 0;
+        $ftotal          = count($file_array);
 
         [$total, $start] = $this->getRangeIds($ftotal);
         if ($total > $ftotal) {
             $total = $ftotal;
         }
         for ($q = $start; $q < $total; $q++) {
-            $file_name = $file_array[$q];
+            $file_name             = $file_array[$q];
 
             $video_key             = File::file($file_name, 'videokey');
             $video_file            = File::file($file_name, 'fullname');
@@ -294,7 +294,7 @@ class MediaFinder extends SFinder
             //
         } else {
             //
-            $search = self::FilterSearch($search);
+            $search     = self::FilterSearch($search);
             $file_array = $this->searchFiles($search, $path, $date, $exit, $quiet);
         }
 
@@ -322,7 +322,7 @@ class MediaFinder extends SFinder
     {
         // utminfo(func_get_args());
 
-        return (new self)->searchFiles($file, $location, null, $exit, $quiet);
+        return (new self())->searchFiles($file, $location, null, $exit, $quiet);
     }
 
     private static function FilterSearch($pattern)
@@ -365,8 +365,8 @@ class MediaFinder extends SFinder
 
         // UTMlog::logger('Search Directory', $path);
 
-        $finder     = new SFinder;
-        $filesystem = new SFilesystem;
+        $finder     = new SFinder();
+        $filesystem = new SFilesystem();
 
         $finder->files()->in($path);
         if (self::$depth != null) {
@@ -381,12 +381,12 @@ class MediaFinder extends SFinder
         // }
         $finder->name($search)->sortByCaseInsensitiveName();
         if ($date !== null) {
-            $finder->date( $date);
+            $finder->date($date);
         }
 
         if ($finder->hasResults()) {
             foreach ($finder as $file) {
-                $video_file = $file->getRealPath();
+                $video_file   = $file->getRealPath();
                 if ($date !== null) {
                     // utmdump([$date, $file]);
                 }
@@ -462,7 +462,7 @@ class MediaFinder extends SFinder
             return $fileArray;
         }
 
-        $db_array = (new StorageDB)->getDbFileList();
+        $db_array  = (new StorageDB())->getDbFileList();
         // utmdd($db_array);
         if (is_array($db_array)) {
             $Deleted_Array = MediaArray::diff($db_array, $fileArray, false);

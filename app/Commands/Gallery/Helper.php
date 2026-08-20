@@ -26,13 +26,13 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $data = ['name' => __LIBRARY__.'_last_updated',
-            'value'     => GalleryStorageDB::$DB->now(),
-            'type'      => 'update'];
+        $data          = ['name' => __LIBRARY__ . '_last_updated',
+            'value'              => GalleryStorageDB::$DB->now(),
+            'type'               => 'update'];
         $updateColumns = ['value'];
         $lastInsertId  = 'id';
         GalleryStorageDB::$DB->onDuplicate($updateColumns, $lastInsertId);
-        $id = GalleryStorageDB::$DB->insert(__MYSQL_SETTINGS__, $data);
+        $id            = GalleryStorageDB::$DB->insert(__MYSQL_SETTINGS__, $data);
     }
 
     public function getFileArray()
@@ -61,12 +61,12 @@ trait Helper
         }
 
         if (Option::istrue('test')) {
-            parent::$output->writeln('Deleted files '.print_r($this->Deleted_Array, 1));
-            parent::$output->writeln('Changed files '.print_r($this->Changed_Array, 1));
-            parent::$output->writeln('New files '.print_r($this->New_Array, 1));
+            parent::$output->writeln('Deleted files ' . print_r($this->Deleted_Array, 1));
+            parent::$output->writeln('Changed files ' . print_r($this->Changed_Array, 1));
+            parent::$output->writeln('New files ' . print_r($this->New_Array, 1));
         }
 
-        $changed_string = 0;
+        $changed_string      = 0;
         if (count($this->Changed_Array) > 0) {
             foreach ($this->Changed_Array as $k => $file) {
                 $changed_files[] = Strings::getFilePath($file);
@@ -102,7 +102,7 @@ trait Helper
         // utminfo(func_get_args());
         foreach ($this->Deleted_Array as $video_key => $video_file) {
             GalleryStorageDB::$DB->video_key = $video_key;
-            parent::$output->writeln('deleting '.basename($video_file).' from db ');
+            parent::$output->writeln('deleting ' . basename($video_file) . ' from db ');
             if (!Option::istrue('preview')) {
                 // GalleryStorageDB::$DB->removeDBEntry();
                 // GalleryStorageDB::$DB->clearDBValues($video_key);
@@ -116,13 +116,13 @@ trait Helper
         foreach ($this->Changed_Array as $video_key => $video_file) {
             GalleryStorageDB::$DB->video_file = $video_file;
             // GalleryStorageDB::$DB->video_key  = $video_key;
-            $video_name = basename($video_file);
+            $video_name                       = basename($video_file);
             if (!Option::istrue('preview')) {
-                parent::$output->writeln('Updateing file from db '.$video_name);
+                parent::$output->writeln('Updateing file from db ' . $video_name);
 
-            // GalleryStorageDB::$DB->UpdateFilePath($video_file);
+                // GalleryStorageDB::$DB->UpdateFilePath($video_file);
             } else {
-                GalleryStorageDB::$DB->RowBlock->overwrite('Updateing file '.$video_name.PHP_EOL);
+                GalleryStorageDB::$DB->RowBlock->overwrite('Updateing file ' . $video_name . PHP_EOL);
             }
         }
     }
@@ -142,7 +142,7 @@ trait Helper
             $ask      = new QuestionHelper();
             $question = new Question(self::text('L__GALLERY_ASK_CONTINUE'));
 
-            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+            $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         }
         // $answer            = 'y';
         switch ($answer) {
@@ -163,7 +163,7 @@ trait Helper
         }
 
         if (true == $go) {
-            Mediatag::$output->writeln('Deleting '.$videos.' entrys in the DB');
+            Mediatag::$output->writeln('Deleting ' . $videos . ' entrys in the DB');
             GalleryStorageDB::$DB->emptydatabase();
         }
     }
@@ -188,10 +188,10 @@ trait Helper
                 $videoDataArray[] = (new GalleryStorageDB())->createDbEntry($video_file, $video_key, $idx, $total);
                 ++$idx;
             }
-            $idx = 1;
+            $idx                                = 1;
 
-            $data_array = array_chunk($videoDataArray, $chunkSize);
-            $chunks     = count($data_array);
+            $data_array                         = array_chunk($videoDataArray, $chunkSize);
+            $chunks                             = count($data_array);
             // utmdd($data_array,$videoDataArray);
 
             if ($total > $chunkSize) {

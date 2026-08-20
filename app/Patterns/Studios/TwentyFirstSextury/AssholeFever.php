@@ -13,7 +13,7 @@ const ASSHOLEFEVER_REGEX_COMMON = '//i';
 
 class AssholeFever extends TwentyFirstSextury
 {
-    public $studio = 'Asshole Fever';
+    public $studio  = 'Asshole Fever';
 
     public $network = '21st Sextury';
 }

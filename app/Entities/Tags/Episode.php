@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Entities\Tags;
 
@@ -9,12 +12,12 @@ use Mediatag\Entities\MetaEntities;
  */
 class Episode extends MetaEntities
 {
-    private static $ApOption = '-U';
+    private static $ApOption   = '-U';
 
     // ([a-zA-Z_-]+)(-|_)((e|episode)?([0-9]+))(-|_)((s|scene)?(-|_)?([0-9]+))
-    private static $tvRegex = '/^([a-zA-Z]+(?P<epi2>[\d]+))|(?:[-_])(?:(?:e|episode)(?P<epi>[0-9]+))(?:-|_)(?:(?:s|scene)?(?:-|_?[0-9]+))|^([a-zA-Z-]+(?P<epi3>[\d]+)(-scene))|(?P<epi4>[\d]+)\.mp4/i';
+    private static $tvRegex    = '/^([a-zA-Z]+(?P<epi2>[\d]+))|(?:[-_])(?:(?:e|episode)(?P<epi>[0-9]+))(?:-|_)(?:(?:s|scene)?(?:-|_?[0-9]+))|^([a-zA-Z-]+(?P<epi3>[\d]+)(-scene))|(?P<epi4>[\d]+)\.mp4/i';
 
-    private static $regexkey = 5;
+    private static $regexkey   = 5;
 
     public static $MetatagName = 'episode'; //also the DB column
 

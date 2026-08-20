@@ -63,12 +63,12 @@ trait Title
                 }
                 $video_key = MediaFile::getVideoKey($this->video_name);
 
-                $title = $output_array[$this->gettitleMatch()];
+                $title     = $output_array[$this->gettitleMatch()];
 
-                $title    = str_replace('_s_', 's_', $title);
-                $title    = trim(str_replace($this->getTitleDelim(), ' ', $title));
-                $pretitle = $title;
-                $title    = (new Javascript($video_key))->read($title);
+                $title     = str_replace('_s_', 's_', $title);
+                $title     = trim(str_replace($this->getTitleDelim(), ' ', $title));
+                $pretitle  = $title;
+                $title     = (new Javascript($video_key))->read($title);
 
                 if ($pretitle != $title) {
                     // utmdump(['Title Tag', ['before' => $pretitle, 'after' => $title]]);

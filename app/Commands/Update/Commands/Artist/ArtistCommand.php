@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Update\Commands\Artist;
 
@@ -17,9 +20,9 @@ final class ArtistCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = [
+    public $command          = [
         'artist' => [
 
             'exec'           => null,

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Preview;
 
@@ -10,7 +13,7 @@ trait PreviewHelper
 {
     public function previewMethod()
     {
-        $this->obj = new GifPreviewFiles;
+        $this->obj = new GifPreviewFiles();
         $this->checkClean();
         $this->obj->updateVideoData();
     }

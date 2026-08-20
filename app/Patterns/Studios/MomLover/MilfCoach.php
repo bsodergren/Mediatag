@@ -14,7 +14,7 @@ use Mediatag\Patterns\Studios\MomLover\MomLover;
 
 class MilfCoach extends MomLover
 {
-    public $studio = 'Milf Coach';
+    public $studio  = 'Milf Coach';
 
     public $network = 'Mom Lover';
 }

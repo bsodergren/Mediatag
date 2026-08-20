@@ -16,5 +16,5 @@ class NaughtyOffice extends NaughtyAmerica
 {
     public $network = 'Naughty America';
 
-    public $studio = 'Naughty Office';
+    public $studio  = 'Naughty Office';
 }

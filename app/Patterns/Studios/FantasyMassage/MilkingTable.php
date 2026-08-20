@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\FantasyMassage\FantasyMassage;
 
 class MilkingTable extends FantasyMassage
 {
-    public $studio = 'Milking Table';
+    public $studio  = 'Milking Table';
 
     public $network = 'Fantasy Massage';
 }

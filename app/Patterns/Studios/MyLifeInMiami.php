@@ -14,7 +14,7 @@ class MyLifeInMiami extends Patterns
 {
     public $studio = 'My Life In Miami';
 
-    public $regex = [
+    public $regex  = [
         'mylifeinmiami' => [
             'artist' => [
                 'pattern'             => MYLIFEINMIAMI_REGEX_COMMON,

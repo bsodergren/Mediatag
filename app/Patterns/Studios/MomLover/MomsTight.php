@@ -14,7 +14,7 @@ use Mediatag\Patterns\Studios\MomLover\MomLover;
 
 class MomsTight extends MomLover
 {
-    public $studio = 'Moms Tight';
+    public $studio  = 'Moms Tight';
 
     public $network = 'Mom Lover';
 }

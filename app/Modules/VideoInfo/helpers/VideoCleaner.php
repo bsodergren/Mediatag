@@ -73,7 +73,7 @@ trait VideoCleaner
             // Mediatag::$output->writeln($this->printNo($fileCount) .' Files in ' . __METHOD__);
 
             foreach ($missing as $k => $file) {
-                $query = 'update ' . $this->VideoDataTable . ' set ' . $this->getTableField() . ' = null WHERE id = ' . $k . '';
+                $query  = 'update ' . $this->VideoDataTable . ' set ' . $this->getTableField() . ' = null WHERE id = ' . $k . '';
 
                 $result = Storage::$DB->query($query);
                 $file   = $this->thumbToVideo($file);
@@ -115,8 +115,8 @@ trait VideoCleaner
         [
             $dbList,
             $missing_file,
-            $missing_thumb
-        ] = $this->getExistingList();
+            $missing_thumb,
+        ]           = $this->getExistingList();
 
         // utmdd([
         //     $dbList,
@@ -135,9 +135,9 @@ trait VideoCleaner
         $curDir     = str_replace(__PLEX_HOME__ . '/' . __LIBRARY__, '', __CURRENT_DIRECTORY__);
         $previewDir = $this->thumbDir . '/' . __LIBRARY__ . $curDir;
 
-        (new Filesystem)->mkdir($previewDir);
+        (new Filesystem())->mkdir($previewDir);
 
-        $res = Mediatag::$finder->Search($previewDir, '*' . $this->thumbExt);
+        $res        = Mediatag::$finder->Search($previewDir, '*' . $this->thumbExt);
 
         if ($res === null) {
             $res = [];
@@ -161,11 +161,11 @@ trait VideoCleaner
         //  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%'";
 
         //         $query = "SELECT  CONCAT(fullpath,'/',filename) as file_name,id FROM " . $this->VideoDataTable . " WHERE Library = '" . __LIBRARY__ . "' AND  " . $this->getTableField() . " is not null  AND fullpath like '" . __CURRENT_DIRECTORY__ . "%' ";
-        $query  = $this->videoQuery();
-        $result = Storage::$DB->query($query);
+        $query         = $this->videoQuery();
+        $result        = Storage::$DB->query($query);
 
         foreach ($result as $_ => $row) {
-            $thumb = $this->videoToThumb($row['file_name']);
+            $thumb              = $this->videoToThumb($row['file_name']);
 
             // // utmdump(['video'=> $row['file_name'], 'thumb'=>file_exists($thumb)]);
             // utmdump('missing mp4 ' . $row['file_name']);
@@ -226,8 +226,8 @@ trait VideoCleaner
         $path    = dirname($newFile);
 
         if (! is_dir($path)) {
-            (new SFilesystem)->mkdir($path);
+            (new SFilesystem())->mkdir($path);
         }
-        (new SFilesystem)->rename($file, $newFile, true);
+        (new SFilesystem())->rename($file, $newFile, true);
     }
 }

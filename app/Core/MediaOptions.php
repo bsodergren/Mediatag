@@ -6,8 +6,6 @@
 
 namespace Mediatag\Core;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Helper\OptionCompletion;
 use Mediatag\Core\Helper\OptionsDefault;
 use Mediatag\Core\Traits\ArgOptions;
@@ -25,6 +23,8 @@ use function count;
 use function is_array;
 use function is_object;
 use function is_string;
+
+use const PHP_EOL;
 
 /**
  * MediaOptions.
@@ -62,7 +62,7 @@ class MediaOptions
 
     public static function getProcessClass()
     {
-        $className = static::class;
+        $className  = static::class;
 
         // utmdump($className);
         $pathInfo   = explode('\\', $className);
@@ -75,14 +75,14 @@ class MediaOptions
 
     private static function getCommandOptions()
     {
-        $className = self::$callingClass;
-  // utmdump([__LINE__ => ['ClassName' => $className]]);
+        $className      = self::$callingClass;
+        // utmdump([__LINE__ => ['ClassName' => $className]]);
         if ($pos = strrpos($className, '\\')) {
             $class = substr($className, $pos + 1);
         }
 
-        $tmpClass  = str_replace('Command', '', $class);
-        $classPath = rtrim($className, $class);
+        $tmpClass       = str_replace('Command', '', $class);
+        $classPath      = rtrim($className, $class);
 
         // $classPath = str_replace($tmpClass,"",$classPath);
 
@@ -90,13 +90,13 @@ class MediaOptions
 
         $classPath .= $tmpClass . 'Options';
 
-  // utmdump([__LINE__ => ['classPath' => $classPath]]);
+        // utmdump([__LINE__ => ['classPath' => $classPath]]);
 
         if (class_exists($classPath)) {
             return $classPath;
         }
 
-        $classPath = str_replace('Commands', 'Options', $classPath);
+        $classPath      = str_replace('Commands', 'Options', $classPath);
         // $OptionClassPath = Strings::after($className, 'Controller\\', 1);
         // // $OptionClassName = Strings::before($className, 'Commands\\', 1);
 
@@ -105,7 +105,7 @@ class MediaOptions
 
         // $OptionClassName = Strings::before($className, $CommandName, 1);
         // utmdump(['classname' => $className, 'OptionClassPath' => $OptionClassPath, 'CommandName' => $CommandName, 'OptionClassName' => $OptionClassName]);
-  // utmdump([__LINE__ => ['className' => $classPath]]);
+        // utmdump([__LINE__ => ['className' => $classPath]]);
 
         if (\class_exists($classPath)) {
             return $classPath;
@@ -119,9 +119,9 @@ class MediaOptions
     {
         // utminfo(func_get_args());
 
-        $command = ucfirst(strtolower($command));
+        $command   = ucfirst(strtolower($command));
         // utmdump($command);
-        $command = str_replace('Db', 'DB', $command);
+        $command   = str_replace('Db', 'DB', $command);
         // $command = str_replace("Ph","PH",$command);
 
         // $className = $command.'\\Options';
@@ -138,7 +138,7 @@ class MediaOptions
                 $class = substr($className, $pos + 1);
             }
 
-            $tmpClass = str_replace('Command', '', $class);
+            $tmpClass  = str_replace('Command', '', $class);
 
             $className = rtrim($className, $class);
             $className = str_replace($tmpClass, '', $className);
@@ -148,7 +148,7 @@ class MediaOptions
         }
 
         if (class_exists($className)) {
-            self::$classObj = new $className;
+            self::$classObj = new $className();
         }
     }
 
@@ -191,7 +191,7 @@ class MediaOptions
             }
             if (is_array($definitions)) {
                 $cmdOptions = self::getOptions(
-                    $definitions
+                    $definitions,
                 );
             }
         }
@@ -218,9 +218,9 @@ class MediaOptions
 
         foreach ($optionArray as $idx => $optionName) {
             $i++;
-            $breakText = '';
+            $breakText   = '';
             if ($optionName[0] == 'break') {
-                $key = $idx - 1;
+                $key                  = $idx - 1;
                 $prev[3] .= PHP_EOL . PHP_EOL . PHP_EOL . PHP_EOL; // .str_pad('',__CONSOLE_WIDTH__ - 50,"-").PHP_EOL;
                 $commandOptions[$key] = new InputOption(...$prev);
 
@@ -230,7 +230,7 @@ class MediaOptions
             if ($i == $cnt) {
                 $optionName[3] .= PHP_EOL;
             }
-            $prev = $optionName;
+            $prev        = $optionName;
 
             $name        = null;
             $shortcut    = null;
@@ -240,19 +240,19 @@ class MediaOptions
             foreach ($optionName as $id => $v) {
                 switch ($id) {
                     case 0:
-                        $name = $optionName[$id];
+                        $name        = $optionName[$id];
                         break;
                     case 1:
-                        $shortcut = $optionName[$id];
+                        $shortcut    = $optionName[$id];
                         break;
                     case 2:
-                        $mode = $optionName[$id];
+                        $mode        = $optionName[$id];
                         break;
                     case 3:
                         $description = $optionName[$id];
                         break;
                     case 4:
-                        $default = $optionName[$id];
+                        $default     = $optionName[$id];
                         break;
                 }
             }
@@ -274,7 +274,7 @@ class MediaOptions
 
                             return $this->optionClosure($input, $name);
                         }
-                    }
+                    },
                 );
             } else {
                 $commandOptions[] = new InputOption($name, $shortcut, $mode, $description, $default);
@@ -286,8 +286,8 @@ class MediaOptions
 
     public function optionClosure($input, $option)
     {
-        $returnValue = null;
-        $cmd         = 'list' . ucfirst($option);
+        $returnValue  = null;
+        $cmd          = 'list' . ucfirst($option);
 
         // utmdump([$cmd, method_exists($this, $cmd)]);
         $currentValue = $input->getCompletionValue();

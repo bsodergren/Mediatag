@@ -13,7 +13,7 @@ const NUBILESPORNNETWORK_REGEX_COMMON = '//i';
 
 class NubilesPornNetwork extends Nubiles
 {
-    public $studio = 'Nubiles Porn Network';
+    public $studio  = 'Nubiles Porn Network';
 
     public $network = 'Nubiles';
 }

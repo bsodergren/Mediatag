@@ -13,7 +13,7 @@ const BURNINGANGEL_REGEX_COMMON = '//i';
 
 class BurningAngel extends AdultTime
 {
-    public $studio = 'Burning Angel';
+    public $studio  = 'Burning Angel';
 
     public $network = 'Adult Time';
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Core\Traits\Command;
 
@@ -15,10 +18,12 @@ trait SignalEvents
     {
         $class = get_class($this);
 
-        $this->output->writeln(PHP_EOL . sprintf('Command <info>%s</info> interupted with code <error>%s</error>',
-            $class . ':' . $this->getName(),
-            SignalMap::getSignalName($this->signal)
-        )
+        $this->output->writeln(
+            PHP_EOL . sprintf(
+                'Command <info>%s</info> interupted with code <error>%s</error>',
+                $class . ':' . $this->getName(),
+                SignalMap::getSignalName($this->signal),
+            ),
         );
     }
 

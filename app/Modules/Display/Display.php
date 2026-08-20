@@ -6,9 +6,6 @@
 
 namespace Mediatag\Modules\Display;
 
-use const PHP_EOL;
-use const STR_PAD_LEFT;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -22,13 +19,16 @@ use function count;
 use function is_string;
 use function strlen;
 
+use const PHP_EOL;
+use const STR_PAD_LEFT;
+
 class Display
 {
     public $BarSection1;
 
     public $BarBottom;
 
-    public $LineBreaks = true;
+    public $LineBreaks    = true;
 
     public $BarSection2;
 
@@ -47,16 +47,16 @@ class Display
 
     public $processOutput;
 
-    public $padbuffer = 3;
+    public $padbuffer     = 3;
 
-    public $text_style = 'current';
+    public $text_style    = 'current';
 
     public $padbufferChar = ' ';
 
     /**
      * @var int
      */
-    public $displayTimer = 100000;
+    public $displayTimer  = 100000;
 
     protected $formatter;
 
@@ -64,15 +64,15 @@ class Display
     {
         // utminfo();
 
-        $this->formatter = new FormatterHelper;
+        $this->formatter        = new FormatterHelper();
 
-        $outputStyle = new OutputFormatterStyle('red');
+        $outputStyle            = new OutputFormatterStyle('red');
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
 
-        $currentTagStyle = new OutputFormatterStyle('magenta');
+        $currentTagStyle        = new OutputFormatterStyle('magenta');
         Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
-        $updateTagStyle = new OutputFormatterStyle('bright-green');
+        $updateTagStyle         = new OutputFormatterStyle('bright-green');
         Mediatag::$output->getFormatter()->setStyle('update', $updateTagStyle);
 
         $this->BarSection1      = Mediatag::$output->section();
@@ -97,7 +97,7 @@ class Display
             return;
         }
         $this->displayHeader(['count' => $count]);
-        $idx = 1;
+        $idx   = 1;
         foreach ($filelist_array as $key => $value) {
             $display = $this->displayFileInfo($value, $count, $idx);
             if ($display === true) {
@@ -107,7 +107,7 @@ class Display
                         for ($n = 0; $n < 7; $n++) {
                             $line_array[] = '';
                         }
-                        $line = implode(PHP_EOL, $line_array);
+                        $line       = implode(PHP_EOL, $line_array);
                         Mediatag::$output->writeln($line);
                     }
                 }
@@ -139,13 +139,13 @@ class Display
     {
         // utminfo(func_get_args());
 
-        $method   = 'overwrite';
-        $tagCount = 0;
+        $method             = 'overwrite';
+        $tagCount           = 0;
         if (! array_key_exists('currentTags', $fileinfo)) {
-            $fileinfo['metatags'] = (new TagReader)->loadVideo($fileinfo)->getMetaValues();
+            $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
             // utmdd([__METHOD__,$fileinfo]);
 
-            $tagCount = count($fileinfo['metatags']);
+            $tagCount             = count($fileinfo['metatags']);
         } else {
             $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
         }
@@ -167,11 +167,11 @@ class Display
         $this->blockDisplay = $this->DisplayMetaBlock($fileinfo);
         $this->blockDisplay = array_filter($this->blockDisplay);
         ksort($this->blockDisplay);
-        $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
-        $filename     = $this->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
+        $in_directory       = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
+        $filename           = $this->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
-        $fileCount = ConsoleOutput::formatOutput('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
-        $fileInfo  = ConsoleOutput::formatOutput('<info>' . $in_directory . $filename . '</info>');
+        $fileCount          = ConsoleOutput::formatOutput('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files ' . Mediatag::$tmpText);
+        $fileInfo           = ConsoleOutput::formatOutput('<info>' . $in_directory . $filename . '</info>');
 
         $this->fileCountSection->{$method}($fileCount);
         // Mediatag::$tmpText = null;
@@ -201,7 +201,7 @@ class Display
             // utmdump(['Row' => $row]);
             // $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
 
-            $success = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
+            $success   = preg_match('/\[(.*)\]\<\/([a-z=]+)>(.*)/i', $row, $matches);
             if ($success) {
                 $array[$matches[1]][$matches[2]] = $matches[3];
             } else {
@@ -225,7 +225,7 @@ class Display
                 }
             }
         }
-        $len = 0;
+        $len         = 0;
         foreach ($array as $tag => $row) {
             $tagLen = strlen($tag);
             if ($tagLen > $len) {
@@ -256,7 +256,7 @@ class Display
         if ($value !== null) {
             $change_value = "\t<" . $this->text_style . '>' . $this->truncate($value, __CONSOLE_WIDTH__ - 35) . '</>';
             // $change_value = ConsoleOutput::formatOutput"\t<" . $this->text_style . '>' . $value . '</>', true);
-            $text = $this->formatter->formatSection($tag, $change_value, $style);
+            $text         = $this->formatter->formatSection($tag, $change_value, $style);
             // utmdump(['FormatTagLine' => [$change_value, $text, $this->text_style, $style]]);
 
             return $this->indent($text, $this->padbuffer);
@@ -304,8 +304,8 @@ class Display
         $style            = 'update';
         $this->text_style = 'fg=white';
 
-        $string        = '';
-        $current[$tag] = '';
+        $string           = '';
+        $current[$tag]    = '';
         if (array_key_exists('currentTags', $fileinfo)) {
             $current          = $fileinfo['currentTags'];
             $this->text_style = 'current';

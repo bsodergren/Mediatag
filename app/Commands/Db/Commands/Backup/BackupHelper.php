@@ -1,23 +1,26 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Backup;
-
-use const DIRECTORY_SEPARATOR;
 
 use Nette\Utils\FileSystem;
 use UTM\Utilities\Option;
 
+use const DIRECTORY_SEPARATOR;
+
 trait BackupHelper
 {
-    private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
+    private $dbBackupPath       = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
 
-    private $video_file_csv = 'file.csv';
+    private $video_file_csv     = 'file.csv';
 
     private $video_metadata_csv = 'meta.csv';
 
-    private $video_info_csv = 'info.csv';
+    private $video_info_csv     = 'info.csv';
 
-    private $video_custon_csv = 'custom.csv';
+    private $video_custon_csv   = 'custom.csv';
 
     public function backupMethod()
     {
@@ -40,9 +43,9 @@ trait BackupHelper
         if (file_exists($csv_file)) {
             unlink($csv_file);
         }
-        $fp = fopen($csv_file, 'w');
+        $fp       = fopen($csv_file, 'w');
 
-        $results = $this->getResults($table);
+        $results  = $this->getResults($table);
         foreach ($results as $i => $row) {
             // utmdd($row);
             unset($row['id']);

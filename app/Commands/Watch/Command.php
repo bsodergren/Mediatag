@@ -21,7 +21,7 @@ final class Command extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
     //     protected function execute(InputInterface $input, OutputInterface $output): int
     //     {

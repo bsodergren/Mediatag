@@ -18,9 +18,9 @@ final class ShowCommand extends MediaCommand
 {
     public const USE_LIBRARY = false;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
-    public $command = [
+    public $command          = [
         'show' => ['filters' => null],
     ];
 }

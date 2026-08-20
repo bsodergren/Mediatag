@@ -25,22 +25,22 @@ use function is_array;
 
 class Reader extends TagReader
 {
-    public $tag_array = [];
+    public $tag_array       = [];
 
     public $db;
 
     private $json_file;
 
-    private $json_string = '{}';
+    private $json_string    = '{}';
 
-    public $json_array = [];
+    public $json_array      = [];
 
     public static $HasField = [];
 
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
-        $this->db = Storage::$DB;
+        $this->db       = Storage::$DB;
 
         self::$HasField = [];
 
@@ -134,41 +134,41 @@ class Reader extends TagReader
         return null;
     }
 
-/*
-    private function getPageDetails($webpage_url)
-    {
-        // utminfo(func_get_args());
+    /*
+        private function getPageDetails($webpage_url)
+        {
+            // utminfo(func_get_args());
 
-        $key          = 'ph_webpage__' . ltrim(strrchr($webpage_url, '='), '=');
-        $artist_array = MediaCache::get($key);
+            $key          = 'ph_webpage__' . ltrim(strrchr($webpage_url, '='), '=');
+            $artist_array = MediaCache::get($key);
 
-        if ($artist_array === false) {
-            $client = Client::createChromeClient();
+            if ($artist_array === false) {
+                $client = Client::createChromeClient();
 
-            $webpage_url = str_replace('pornhubpremium.com', 'pornhub.com', $webpage_url);
+                $webpage_url = str_replace('pornhubpremium.com', 'pornhub.com', $webpage_url);
 
-            $client->request('GET', $webpage_url);
+                $client->request('GET', $webpage_url);
 
-            //  $crawler     = $client->waitFor('.pornstarsWrapper');
-            // Alternatively, wait for an element to be visible
-            try {
-                $crawler = $client->waitFor('.pornstarsWrapper', 3, 100);
-            } catch (WebDriverException $e) {
-                MediaCache::put($key, []);
+                //  $crawler     = $client->waitFor('.pornstarsWrapper');
+                // Alternatively, wait for an element to be visible
+                try {
+                    $crawler = $client->waitFor('.pornstarsWrapper', 3, 100);
+                } catch (WebDriverException $e) {
+                    MediaCache::put($key, []);
 
-                return null;
+                    return null;
+                }
+
+                $artist_array = $crawler->filter('.pstar-list-btn')->each(function ($node, $i) {
+                    return $node->text();
+                });
+
+                $r = MediaCache::put($key, $artist_array);
             }
 
-            $artist_array = $crawler->filter('.pstar-list-btn')->each(function ($node, $i) {
-                return $node->text();
-            });
-
-            $r = MediaCache::put($key, $artist_array);
+            return $artist_array;
         }
-
-        return $artist_array;
-    }
-*/
+    */
 
     private function get($tag)
     {
@@ -197,7 +197,7 @@ class Reader extends TagReader
                 [
                     'exclude' => ['Pornhub'],
                     'rename'  => ['NubilesPorn' => 'Nubiles'],
-                ]
+                ],
             );
         }
         if ($tag == 'actiontags') {
@@ -217,7 +217,7 @@ class Reader extends TagReader
             }
             //
             if (array_key_exists($json_key, $this->json_array)) {
-                $value = $this->json_array[$json_key];
+                $value                 = $this->json_array[$json_key];
                 if ($tag == 'studio') {
                     $value = ucwords(strtolower($value));
                 }
@@ -248,9 +248,9 @@ class Reader extends TagReader
                         $this->tag_array[$tag] = str_replace($key, $string, $this->tag_array[$tag]);
                     }
                 }
-    if ('network' == $tag) {
-//    utmdd($this->tag_array[$tag]);
-            }
+                if ('network' == $tag) {
+                    //    utmdd($this->tag_array[$tag]);
+                }
                 if ($this->tag_array[$tag] == '') {
                     $this->tag_array[$tag] = null;
                 }
@@ -312,10 +312,10 @@ class Reader extends TagReader
             $json_string = MediaFilesystem::readLineNo($json_file, 1);
             $file_string = MediaFilesystem::readLineNo($fileLocation, 1);
 
-            $jsonArray = \json_decode($json_string, 1);
-            $fileArray = \json_decode($file_string, 1);
+            $jsonArray   = \json_decode($json_string, 1);
+            $fileArray   = \json_decode($file_string, 1);
 
-            $diff = self::array_diff_assoc_recursive($fileArray, $jsonArray);
+            $diff        = self::array_diff_assoc_recursive($fileArray, $jsonArray);
             if (count($diff) > 0) {
                 $newArray = [];
                 $jsonKeys = \array_keys($jsonArray);
@@ -354,13 +354,13 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // if (! str_starts_with($this->video_key, 'x')) {
-        $this->json_file = null;
-        $video_key       = null;
+        $this->json_file   = null;
+        $video_key         = null;
 
-        $locationMap = [
+        $locationMap       = [
             __JSON_CACHE_DIR__,
             __STUDIO_JSON_CACHE_DIR__, ];
-        $extMap = ['.info.json', '.json'];
+        $extMap            = ['.info.json', '.json'];
         foreach ($locationMap as $location) {
             foreach ($extMap as $ext) {
                 $fileLocation = $location . DIRECTORY_SEPARATOR . $this->video_key . $ext;
@@ -377,11 +377,11 @@ class Reader extends TagReader
         if ($this->json_file === null) {
             $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, false, true);
             foreach ($files as $file) {
-                $json_key = basename($file, '.json');
-                $json_key = basename($json_key, '.info');
+                $json_key         = basename($file, '.json');
+                $json_key         = basename($json_key, '.info');
 
                 $json_key         = \strtolower(str_replace('_', '_', $json_key));
-                            // utmdump([$json_key,$this->video_name]);
+                // utmdump([$json_key,$this->video_name]);
 
                 $this->video_name = strtolower($this->video_name);
                 if (str_contains($this->video_key, $json_key)) {
@@ -403,7 +403,7 @@ class Reader extends TagReader
             }
         }
 
-        $this->json_file = self::checkJsonForUpdate($this->json_file, $video_key);
+        $this->json_file   = self::checkJsonForUpdate($this->json_file, $video_key);
 
         $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);
         // if ($this->video_key == 'ph5e8649773f814') {
@@ -426,7 +426,7 @@ class Reader extends TagReader
         $string = str_replace(' ', '_', $string);
         // //   $name_key = str_replace('.', '', $name_key);
 
-        $res = MediaArray::matchArtist(ARTIST_MAP, $string);
+        $res    = MediaArray::matchArtist(ARTIST_MAP, $string);
         if ($res === null) {
             // // utmdump($string);
         }

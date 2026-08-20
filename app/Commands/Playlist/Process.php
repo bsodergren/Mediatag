@@ -27,46 +27,46 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
 
-    public static $ARCHIVE = __PLEX_PL_ID_DIR__ . '/archive.txt';
+    public static $ARCHIVE          = __PLEX_PL_ID_DIR__ . '/archive.txt';
 
-    public const IGNORED = __PLEX_PL_ID_DIR__ . '/ignored_ids.txt';
+    public const IGNORED            = __PLEX_PL_ID_DIR__ . '/ignored_ids.txt';
 
-    public const DISABLED = __PLEX_PL_ID_DIR__ . '/disabled.txt';
+    public const DISABLED           = __PLEX_PL_ID_DIR__ . '/disabled.txt';
 
-    public const MODELHUB = __PLEX_PL_ID_DIR__ . '/modelhub.txt';
+    public const MODELHUB           = __PLEX_PL_ID_DIR__ . '/modelhub.txt';
 
-    public const ERRORIDS = __PLEX_PL_ID_DIR__ . '/error.txt';
+    public const ERRORIDS           = __PLEX_PL_ID_DIR__ . '/error.txt';
 
-    public const NOTFOUND = __PLEX_PL_ID_DIR__ . '/notfound.txt';
+    public const NOTFOUND           = __PLEX_PL_ID_DIR__ . '/notfound.txt';
 
-    public const FILELIST = __PLEX_PL_LIST_DIR__ . '/filelist.txt';
+    public const FILELIST           = __PLEX_PL_LIST_DIR__ . '/filelist.txt';
 
-    public const DOWNLOADED = __PLEX_PL_LIST_DIR__ . '/downloaded.txt';
+    public const DOWNLOADED         = __PLEX_PL_LIST_DIR__ . '/downloaded.txt';
 
-    public const TRIMMED = __PLEX_PL_LIST_DIR__ . '/trimmed_list.txt';
+    public const TRIMMED            = __PLEX_PL_LIST_DIR__ . '/trimmed_list.txt';
 
-    public const FILEMAP = __PLEX_PL_LIST_DIR__ . '/all_files_list.txt';
+    public const FILEMAP            = __PLEX_PL_LIST_DIR__ . '/all_files_list.txt';
 
-    public const PLAYLIST = __PLEX_PL_DIR__ . '/all_playlist.txt';
+    public const PLAYLIST           = __PLEX_PL_DIR__ . '/all_playlist.txt';
 
-    public const JSONPLAYLIST = __PLEX_PL_DIR__ . '/json_playlist.txt';
+    public const JSONPLAYLIST       = __PLEX_PL_DIR__ . '/json_playlist.txt';
 
-    public const ERRORPLAYLIST = __PLEX_PL_DIR__ . '/error_playlist.txt';
+    public const ERRORPLAYLIST      = __PLEX_PL_DIR__ . '/error_playlist.txt';
 
-    public const MISSING_PLAYLIST = __PLEX_PL_DIR__ . '/missing_playlist.txt';
+    public const MISSING_PLAYLIST   = __PLEX_PL_DIR__ . '/missing_playlist.txt';
 
-    public const PREMIUM_PLAYLIST = __PLEX_PL_DIR__ . '/premium_playlist.txt';
+    public const PREMIUM_PLAYLIST   = __PLEX_PL_DIR__ . '/premium_playlist.txt';
 
-    public $defaultCommands = [
+    public $defaultCommands         = [
     ];
 
-    public $commandList = [
+    public $commandList             = [
 
     ];
 
-    public static $current_key = false;
+    public static $current_key      = false;
 
-    public static $trimmedPlaylist = false;
+    public static $trimmedPlaylist  = false;
 
     public static $originalPlaylist = false;
 
@@ -74,9 +74,9 @@ class Process extends Mediatag
 
     public $OrigPlaylist;
 
-    public $idList = [];
+    public $idList                  = [];
 
-    public $premiumIds = [];
+    public $premiumIds              = [];
 
     public $json_Array;
 
@@ -91,7 +91,7 @@ class Process extends Mediatag
     public $VideoList;
 
     // protected $useFuncs = ['addMeta', 'setupMap'];
-    protected $useFuncs = ['setupMap', 'setupDb', 'addMeta'];
+    protected $useFuncs             = ['setupMap', 'setupDb', 'addMeta'];
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
@@ -106,12 +106,12 @@ class Process extends Mediatag
             $this->playlist = Option::getValue('file');
         }
 
-        $this->playlist = realpath($this->playlist);
+        $this->playlist          = realpath($this->playlist);
 
         // }
         if (Option::istrue('url')) {
             $this->playlist_url = Option::getValue('url');
-             $this->playlist = null;
+            $this->playlist     = null;
         }
 
         if (Option::istrue('archive')) {

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Commands\Find;
 
@@ -44,7 +47,7 @@ trait FindHelper
 
     private function getArchiveIdArray()
     {
-        $idList = [];
+        $idList          = [];
 
         $archive_content = $this->readFromArchive(self::$ARCHIVE);
         if (is_array($archive_content)) {
@@ -118,7 +121,7 @@ trait FindHelper
         $playlist_file = 'missing_playlist.txt';
         $ids           = $this->getDownloadedIds();
 
-        $missing = $this->searchVideoList($ids);
+        $missing       = $this->searchVideoList($ids);
         $this->removeFromArchive($missing);
 
         $this->saveMissingPlaylist($missing, $playlist_file);
@@ -138,7 +141,7 @@ trait FindHelper
                 $ph_keys[] = $ph_key;
             }
         }
-        $missing = $this->searchVideoList($ph_keys);
+        $missing       = $this->searchVideoList($ph_keys);
         $this->saveMissingPlaylist($missing, self::JSONPLAYLIST);
     }
     // foreach ($this->VideoList['file'] as $key => $val) {
@@ -164,10 +167,10 @@ trait FindHelper
     {
         // utminfo(func_get_args());
         Mediatag::$output->writeln('<info> Looking for  missing files</info>');
-        $files = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub', exit: false);
+        $files           = Finder::Find('*.mp4', __PLEX_HOME__ . '/Pornhub', exit: false);
 
         foreach ($files as $file) {
-            $key = File::getVideoKey(basename($file));
+            $key            = File::getVideoKey(basename($file));
             if (str_starts_with($key, 'x')) {
                 continue;
             }
@@ -177,7 +180,7 @@ trait FindHelper
         }
 
         Mediatag::$output->writeln('<info> found ' . count($archive_ids) . ' files</info>');
-        $this->ids = $existing_ids;
+        $this->ids       = $existing_ids;
 
         $archive_content = Filesystem::readLines(self::$ARCHIVE);
         $diff            = array_diff($archive_content, $archive_ids);
@@ -200,7 +203,7 @@ trait FindHelper
         // utmdd($file_string);
         // $archive_content = array_merge($archive_content, $archive_ids);
         // $archive_array   = MediaArray::array_iunique($archive_content);
-        $archive_array = MediaArray::array_iunique($archive_ids);
+        $archive_array   = MediaArray::array_iunique($archive_ids);
         // utmdump(__METHOD__);
         Filesystem::writeFile(self::$ARCHIVE, $archive_array);
 
@@ -209,14 +212,14 @@ trait FindHelper
             $f      = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
             $before = count($f);
             if ($before > 0) {
-                $array = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-                $array = MediaArray::array_iunique($array);
-                $after = count($array);
+                $array        = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+                $array        = MediaArray::array_iunique($array);
+                $after        = count($array);
 
                 Mediatag::$output->writeln(PHP_EOL . 'before, <info>' . $before . '</info> and now after, <info>' . $after . ' </info>');
                 $trimmedLines = $before - $after;
                 Filesystem::writePlaylist($this->playlist, $array);
-                $text = 'trimmed ' . $trimmedLines . ' from the playlist';
+                $text         = 'trimmed ' . $trimmedLines . ' from the playlist';
                 Mediatag::$output->writeln('<info>' . $text . '</info>');
                 if ($after == 0) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');

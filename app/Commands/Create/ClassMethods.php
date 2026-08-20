@@ -1,9 +1,9 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Create;
-
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
 
 use Mediatag\Commands\Create\Traits\BaseCommand;
 use Mediatag\Core\MediaCommand;
@@ -21,27 +21,30 @@ use UTM\Utilities\Option;
 
 use function is_array;
 
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
+
 trait ClassMethods
 {
     use DynamicProperty;
 
-    public $cmd = null;
+    public $cmd             = null;
 
-    public $type = null;
+    public $type            = null;
 
-    public $name = null;
+    public $name            = null;
 
-    public $desc = null;
+    public $desc            = null;
 
-    public $CmdMethod = null;
+    public $CmdMethod       = null;
 
-    public $params = [];
+    public $params          = [];
 
-    public $className = null;
+    public $className       = null;
 
-    public $userCommand = null;
+    public $userCommand     = null;
 
-    public $NewNamespace = null;
+    public $NewNamespace    = null;
 
     private $GeneratedClass = null;
 
@@ -64,7 +67,7 @@ trait ClassMethods
         }
         $this->userCommand = Option::getValue('userCommand', true);
         if ($this->userCommand === null) {
-            $this->cmd = Option::getValue('cmd', true);
+            $this->cmd  = Option::getValue('cmd', true);
             if ($this->cmd === null) {
                 Mediatag::$output->writeln('No cmd provided, exiting.');
                 exit;
@@ -75,7 +78,7 @@ trait ClassMethods
                 exit;
             }
         } else {
-            $parts = explode(':', $this->userCommand);
+            $parts      = explode(':', $this->userCommand);
 
             // utmdd(['userCommand' => $this->userCommand, 'parts' => $parts]);
             // if (count($parts) !== 2 && count($parts) !== 3) {
@@ -92,18 +95,18 @@ trait ClassMethods
                 $this->type = ucfirst($parts[2]);
             }
         }
-        $this->desc = Option::getValue('desc', true);
+        $this->desc        = Option::getValue('desc', true);
         if ($this->desc === null) {
             $this->desc = 'Description for ' . ucfirst($this->name) . ' ' . $this->type;
         }
-        $this->CmdMethod = Option::getValue('CmdMethod', true);
+        $this->CmdMethod   = Option::getValue('CmdMethod', true);
         if ($this->CmdMethod === null) {
             $this->CmdMethod = ucfirst($this->name) . 'Method';
         }
 
         //$this->processOptions(Option::getValue('params'));
 
-        $this->className = ucfirst($this->name) . ucfirst($this->type);
+        $this->className   = ucfirst($this->name) . ucfirst($this->type);
 
         if ($this->cmd) {
             $DefaultCommandFile = __COMMANDS_DIR__ . DIRECTORY_SEPARATOR . $this->cmd . DIRECTORY_SEPARATOR . 'Command' . '.php';
@@ -321,7 +324,7 @@ EOT;
             ->setPublic()
             ->setValue(['Test']);
 
-        $method = $this->GeneratedClass->addMethod('Definitions');
+        $method         = $this->GeneratedClass->addMethod('Definitions');
 
         $method->setPublic()->setBody($DefinitionBody);
 
@@ -330,15 +333,15 @@ EOT;
 
     private function saveClass()
     {
-        $printer = new PsrPrinter;
+        $printer    = new PsrPrinter();
 
         $fileString = $printer->printNamespace($this->NewNamespace);
         $fileString = "<?php\n\n" . $fileString;
 
-        $path     = $this->getFilePath();
-        $filename = str_replace(__COMMANDS_DIR__, '', $path);
+        $path       = $this->getFilePath();
+        $filename   = str_replace(__COMMANDS_DIR__, '', $path);
 
-        $overwrite = true;
+        $overwrite  = true;
 
         if (file_exists($path)) {
             if (Option::isFalse('overwrite')) {

@@ -20,11 +20,11 @@ class Process extends Mediatag
 
     public $VideoData;
 
-    public $missing = [];
+    public $missing     = [];
 
     public $meta;
 
-    public $VideoList = [];
+    public $VideoList   = [];
 
     protected $useFuncs = ['addMeta'];
 

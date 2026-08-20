@@ -12,9 +12,9 @@ use Mediatag\Patterns\Studios\TeamSkeet\TeamSkeet;
 
 class TeamskeetLabs extends TeamSkeet
 {
-    public $studio = 'Teamskeet Labs';
+    public $studio          = 'Teamskeet Labs';
 
-    public $network = 'Team Skeet';
+    public $network         = 'Team Skeet';
 
     public $replace_studios = [
         'mylfxsinematica' => 'sinematica',

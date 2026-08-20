@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\VideoInfo;
 
@@ -11,7 +14,7 @@ class VideoDetails
 {
     use DynamicProperty;
 
-    public static $videoFields = [
+    public static $videoFields    = [
         'VideoKey',
         'Library',
         'filename',
@@ -28,7 +31,7 @@ class VideoDetails
         'FavoriteVideo',
     ];
 
-    public static $metaFields = ['Library', 'subLibrary', 'title', 'genre', 'studio', 'network', 'artist', 'keyword'];
+    public static $metaFields     = ['Library', 'subLibrary', 'title', 'genre', 'studio', 'network', 'artist', 'keyword'];
 
     public static $fileInfoFields = ['format', 'bit_rate', 'width', 'height', 'filesize', 'duration'];
 
@@ -69,7 +72,7 @@ class VideoDetails
     {
         $videoKey = self::getVideoKey($video_id);
 
-        $tables = self::getTableFromField($field);
+        $tables   = self::getTableFromField($field);
 
         foreach ($tables as $table) {
             $tableAlias = explode(' as ', $table)[1] ?? $table;
@@ -83,11 +86,11 @@ class VideoDetails
     {
         $videoKey = self::getVideoKey($video_id);
 
-        $tables = self::getTableFromField($field);
+        $tables   = self::getTableFromField($field);
         foreach ($tables as $table) {
             $tableAlias = explode(' as ', $table)[1] ?? $table;
             Storage::$DB->where($tableAlias . '.video_key', $videoKey);
-            $result = Storage::$DB->getOne($table, $tableAlias . '.' . $field);
+            $result     = Storage::$DB->getOne($table, $tableAlias . '.' . $field);
             if ($result) {
                 return $result[$field];
             }

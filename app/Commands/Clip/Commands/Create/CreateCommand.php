@@ -18,7 +18,7 @@ class CreateCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
-    public $command = [
+    public $command          = [
         'create' => [
             'exec'        => null,
             'getfileList' => null,

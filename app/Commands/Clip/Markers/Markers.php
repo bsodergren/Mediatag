@@ -20,7 +20,7 @@ trait Markers
         $secs    = $seconds % 60;
         $hrs     = $seconds / 60;
         $hrs     = floor($hrs);
-        $mins    = $hrs % 60;
+        $mins    = $hrs     % 60;
         $hrs /= 60;
 
         return sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
@@ -28,13 +28,13 @@ trait Markers
 
     public function getVideoChapters($videoInfo)
     {
-        $videoKey   = 0;
-        $chapterRow = [];
+        $videoKey    = 0;
+        $chapterRow  = [];
         $chapters    = [];
         $chapterPos  = [];
         $chapterIdx  = 0;
-        $rowIdx     = 0;
-        $rows       = count($videoInfo);
+        $rowIdx      = 0;
+        $rows        = count($videoInfo);
         //         $ChapStart  = $videoInfo[0];
         //         $ChapStart['duration']   = $this->videoDuration($ChapStart['timeCode'] - 1);
 
@@ -60,11 +60,11 @@ trait Markers
             }
 
             if ($row['video_key'] != $videoKey) {
-                $videoKey  = $row['video_key'];
+                $videoKey   = $row['video_key'];
                 $chapterIdx = 0;
             }
 
-            $chapters[$row['video_key']] = [
+            $chapters[$row['video_key']]             = [
                 'filename' => $row['filename'],
             ];
 
@@ -83,7 +83,7 @@ trait Markers
 
                 continue;
             }
-            $chapterRow[$chapterIdx]['start'] = (int) $row['timeCode'];
+            $chapterRow[$chapterIdx]['start']        = (int) $row['timeCode'];
 
             if (array_key_exists($rowIdx + 1, $videoInfo)) {
                 $chapterRow[$chapterIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
@@ -91,7 +91,7 @@ trait Markers
                 $chapterRow[$chapterIdx]['end'] = $row['duration'] / 1000;
             }
 
-            $chapterRow[$chapterIdx]['text'] = $row['text'];
+            $chapterRow[$chapterIdx]['text']         = $row['text'];
 
             // } else {
             //     $end = $videoInfo[$k-1]['timeCode'] - 1;
@@ -135,11 +135,11 @@ trait Markers
                 $markerIdx = 0;
             }
 
-            $markers[$row['video_key']] = [
+            $markers[$row['video_key']]            = [
                 'filename' => $row['filename'],
             ];
 
-            [$markerText,$markerKey] = explode('_', $row['markerText']);
+            [$markerText,$markerKey]               = explode('_', $row['markerText']);
 
             if (str_contains(strtolower($markerKey), 'start')) {
                 $start   = $row['timeCode'];

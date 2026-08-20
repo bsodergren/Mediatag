@@ -6,9 +6,6 @@
 
 namespace Mediatag\Utilities;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
@@ -18,6 +15,9 @@ use Symfony\Component\Finder\Finder;
 
 use function array_key_exists;
 use function count;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 /**
  * ScriptWriter.
@@ -42,20 +42,20 @@ class ScriptWriter
      *
      * @var string
      */
-    public $update = __APP_HOME__ . '/bin/mediaupdate';
+    public $update       = __APP_HOME__ . '/bin/mediaupdate';
 
-    public $ffmpeg = CONFIG['FFMPEG_CMD'];
+    public $ffmpeg       = CONFIG['FFMPEG_CMD'];
 
     /**
      * db.
      *
      * @var string
      */
-    public $mediadb = __APP_HOME__ . '/bin/mediadb';
+    public $mediadb      = __APP_HOME__ . '/bin/mediadb';
 
-    public $map = __APP_HOME__ . '/bin/mediamap';
+    public $map          = __APP_HOME__ . '/bin/mediamap';
 
-    public $clip = __APP_HOME__ . '/bin/mediaclip';
+    public $clip         = __APP_HOME__ . '/bin/mediaclip';
 
     /**
      * script.
@@ -71,7 +71,7 @@ class ScriptWriter
      */
     public $fileListAray = [];
 
-    public $optionArgs = [];
+    public $optionArgs   = [];
 
     /**
      * __construct.
@@ -136,13 +136,13 @@ EOD;
     {
         // utminfo(func_get_args());
 
-        $eol = ' ';
+        $eol        = ' ';
 
-        $cmd = $this->{$command};
+        $cmd        = $this->{$command};
 
         $cmdOptions = array_merge(['--path', '"' . __CURRENT_DIRECTORY__ . '"'], $cmdOptions);
 
-        $run_cmd = $cmd . ' ' . implode($eol, $cmdOptions);
+        $run_cmd    = $cmd . ' ' . implode($eol, $cmdOptions);
 
         if ($comment == true) {
             $this->script_header .= '## CMD=' . $run_cmd . PHP_EOL;
@@ -176,8 +176,8 @@ EOD;
 
     public function appendFiles()
     {
-        $scriptLineArray   = explode("\n", $this->script_text);
-        $this->script_text = '';
+        $scriptLineArray       = explode("\n", $this->script_text);
+        $this->script_text     = '';
         foreach ($scriptLineArray as $k => $line) {
             if (str_contains($line, '.mp4')) {
                 $fileList[] = '"' . __CURRENT_DIRECTORY__ . '/' . trim($line, '",\\') . '"';
@@ -186,8 +186,8 @@ EOD;
                 $this->script_text .= $line . PHP_EOL;
             }
         }
-        $newList = array_merge($fileList, $this->fileListAray);
-        $newList = array_unique($newList);
+        $newList               = array_merge($fileList, $this->fileListAray);
+        $newList               = array_unique($newList);
 
         if (count($newList) > 0) {
             $file_list = implode("\n", $newList);
@@ -214,7 +214,7 @@ EOD;
     {
         // utminfo(func_get_args());
 
-        $fileArray = MediaArray::VideoFiles($file_array, 'video_file');
+        $fileArray          = MediaArray::VideoFiles($file_array, 'video_file');
         array_walk($fileArray, function (&$value, $key) {
             $value = '"' . $value . '"';
         });
@@ -251,18 +251,18 @@ EOD;
         $extended_class        = 'Patterns';
         $studio                = "public \$studio = '" . $TitleStudio . "';";
 
-        $networkName    = '';
-        $networkPath    = '';
-        $extended_use   = '';
-        $network        = '';
-        $OldNetworkFile = '';
+        $networkName           = '';
+        $networkPath           = '';
+        $extended_use          = '';
+        $network               = '';
+        $OldNetworkFile        = '';
 
         if ($options !== null) {
             if (array_key_exists('ExtendClass', $options)) {
                 $extended_class = trim($options['ExtendClass'], '\\');
                 // $studio         = "public \$studio = '" . $TitleStudio . "';";
 
-                $extended_use = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
+                $extended_use   = PHP_EOL . 'use Mediatag\\Patterns\\Studios\\' . $extended_class . ';';
             }
             if (array_key_exists('network', $options)) {
                 $network        = "public \$network = '" . $options['network'] . "';";
@@ -273,14 +273,14 @@ EOD;
             }
         }
 
-        $OldPatternFile = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR . $class . '.php';
-        $Pattern_file   = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . DIRECTORY_SEPARATOR . $class . '.php';
+        $OldPatternFile        = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . DIRECTORY_SEPARATOR . $class . '.php';
+        $Pattern_file          = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . DIRECTORY_SEPARATOR . $class . '.php';
 
-        $Namespace = 'Mediatag\\Patterns\\Studios' . $networkName;
+        $Namespace             = 'Mediatag\\Patterns\\Studios' . $networkName;
 
         if (\file_exists($OldNetworkFile)) {
             //$Namespace = 'Mediatag\\Patterns\\Studios' . '\\' . $options['networkName'];
-            $php_file = file_get_contents($OldNetworkFile);
+            $php_file       = file_get_contents($OldNetworkFile);
             // $NewNamespace   = 'Mediatag\\Patterns\\Studios' . '\\' . $options['networkName'];
             $php_file       = preg_replace('/(namespace )(.*)(;)/', '$1 ' . $Namespace . ' $3', $php_file);
             $NewNetworkFile = __PATTERNS_LIB_DIR__ . DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . DIRECTORY_SEPARATOR . $options['networkName'] . '.php';
@@ -342,8 +342,8 @@ EOD;
             //     }
         }
         // utmdd('Creating Pattern', $Pattern_file);
-        $finder     = new Finder;
-        $filesystem = new SymFs;
+        $finder                = new Finder();
+        $filesystem            = new SymFs();
 
         $finder->files()->in(__DATA_TEMPLATES__)->name('*template.txt');
         foreach ($finder as $file) {
@@ -353,7 +353,7 @@ EOD;
             // ...
         }
 
-        $command_array = [
+        $command_array         = [
             'EXTEND_USE'   => $extended_use,
             'CLASS_EXTEND' => $extended_class,
             'CLASSNAME'    => $class,
@@ -365,13 +365,13 @@ EOD;
         ];
         // utmdump($command_array);
         foreach ($command_array as $key => $value) {
-            $key = '%%' . strtoupper($key) . '%%';
+            $key               = '%%' . strtoupper($key) . '%%';
             // if ($value != null) {
             $Patterns_template = str_replace($key, $value, $Patterns_template);
             // }
         }
 
-        Mediatag::$tmpText = '<comment> New Pattern ' . $class . '</comment>';
+        Mediatag::$tmpText     = '<comment> New Pattern ' . $class . '</comment>';
         // utmdd(['PatternFile' => $Pattern_file, 'Patterns_template' => $Patterns_template]);
 
         $filesystem->dumpFile($Pattern_file, $Patterns_template);

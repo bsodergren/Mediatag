@@ -13,7 +13,7 @@ const PROUDSTAGOFASEXYVIXEN_REGEX_COMMON = '//i';
 
 class ProudStagOfASexyVixen extends NewSensations
 {
-    public $studio = 'Proud Stag Of A Sexy Vixen';
+    public $studio  = 'Proud Stag Of A Sexy Vixen';
 
     public $network = 'New Sensations';
 }

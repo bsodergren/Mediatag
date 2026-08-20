@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Update\Commands\Artist;
 
@@ -16,12 +19,12 @@ trait ArtistHelper
         $fileArray = $this->VideoList['file'];
 
         foreach ($fileArray as $key => $videoInfo) {
-            $video_id = $tagObj = new TagReader;
+            $video_id       = $tagObj = new TagReader();
             $tagObj->loadVideo($videoInfo);
 
             $tagBuilder     = new TagBuilder($key, $tagObj);
             $videoArray     = $tagBuilder->getTags($videoInfo);
-            $video_id       = (new VideoInfo)->getvideoId($key);
+            $video_id       = (new VideoInfo())->getvideoId($key);
             $this->video_id = $video_id;
             $artistString   = $videoArray['currentTags']['artist'];
             $artistArray    = explode(',', $artistString);
@@ -42,10 +45,10 @@ trait ArtistHelper
             $artistid = $artistRow['id'];
             $db->where('video_id', $video_id);
             $db->where('artist_id', $artistid);
-            $res = $db->delete(__MYSQL_ARTIST_MAP__);
+            $res      = $db->delete(__MYSQL_ARTIST_MAP__);
 
-                $data = ['video_id' => $video_id,  'artist_id' => $artistid];
-                $id[] = $db->insert(__MYSQL_ARTIST_MAP__, $data);
+            $data     = ['video_id' => $video_id,  'artist_id' => $artistid];
+            $id[]     = $db->insert(__MYSQL_ARTIST_MAP__, $data);
 
         }
 
@@ -57,10 +60,10 @@ trait ArtistHelper
         $db     = MysqliDb::getInstance();
         $result = [];
         foreach ($array as $artist) {
-            $v = \strtolower(str_replace(' ', '', $artist));
-             $v = \strtolower(str_replace('.', '', $v));
+            $v      = \strtolower(str_replace(' ', '', $artist));
+            $v      = \strtolower(str_replace('.', '', $v));
 
-            if($artist == "") {
+            if ($artist == "") {
                 continue;
             }
 
@@ -72,7 +75,7 @@ trait ArtistHelper
                 $res = $db->get(\__MYSQL_ARTIST_PH__);
                 if (count($res) == 1) {
 
-                   Mediatag::$Console->writeln("match found for " . $this->video_id ."  ".  $res[0]['star_name']);
+                    Mediatag::$Console->writeln("match found for " . $this->video_id . "  " . $res[0]['star_name']);
 
                     // utmdump(['Found possible Match for ' . $this->video_id => [$res[0]['star_name'], $artist]]);
                     // if ($res[0]['gender'] != 'male') {
@@ -80,24 +83,24 @@ trait ArtistHelper
                     // $result = $res[0];
                     // }
                 } elseif (count($res) == 0) {
-                    Mediatag::$Console->writeln('No match found for ' . $this->video_id ." '". $artist. "'");
+                    Mediatag::$Console->writeln('No match found for ' . $this->video_id . " '" . $artist . "'");
                 } else {
                     $res = array_slice($res, 0, 5);
                     foreach ($res as $row) {
                         $matches[] = [$row['star_name'], $artist];
                         // if ($row['gender'] != 'male') {
-                        $result[] = ['id' => $row['id'], 'Artist' => $row['star_name']];
+                        $result[]  = ['id' => $row['id'], 'Artist' => $row['star_name']];
                         // utmdump([$artist, $row['star_name']]);
                         // }
                     }
 
- Mediatag::$Console->writeln("ound multiple Matches for  " . $this->video_id ."  ".  $$artist );
+                    Mediatag::$Console->writeln("ound multiple Matches for  " . $this->video_id . "  " . $$artist);
                     // utmdump(['Found multiple Matches for ' . $artist => $matches]);
                 }
             } else {
                 // utmdump(['Found Match for ' . $this->video_id => $oneRes['star_name']]);
                 // if ($oneRes['gender'] != 'male') {
-                Mediatag::$Console->writeln("match found for " . $this->video_id ."  ".  $oneRes['star_name']);
+                Mediatag::$Console->writeln("match found for " . $this->video_id . "  " . $oneRes['star_name']);
 
                 $result[] = ['id' => $oneRes['id'], 'Artist' => $oneRes['star_name']];
                 // }

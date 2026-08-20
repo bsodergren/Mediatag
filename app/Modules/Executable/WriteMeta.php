@@ -6,8 +6,6 @@
 
 namespace Mediatag\Modules\Executable;
 
-use const PHP_EOL;
-
 use Mediatag\Core\MediaCache;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
@@ -24,6 +22,8 @@ use UTM\Utilities\Option;
 use function array_key_exists;
 use function count;
 
+use const PHP_EOL;
+
 class WriteMeta extends MediatagExec
 {
     use MediaFFmpeg;
@@ -33,7 +33,7 @@ class WriteMeta extends MediatagExec
 
     public $Display;
 
-    public $command = [];
+    public $command  = [];
 
     public $cursor;
 
@@ -81,7 +81,7 @@ class WriteMeta extends MediatagExec
 
     public function dbUpdate()
     {
-        $dbFunc = new MediatagExec;
+        $dbFunc  = new MediatagExec();
 
         $video   = MediaFilesystem::getRelativeVideoFile($this->command[1]);
         $command = [
@@ -100,10 +100,10 @@ class WriteMeta extends MediatagExec
 
     public function renameFile()
     {
-        $renameFunc = new MediatagExec;
+        $renameFunc = new MediatagExec();
 
-        $video   = MediaFilesystem::getRelativeVideoFile($this->command[1]);
-        $command = [
+        $video      = MediaFilesystem::getRelativeVideoFile($this->command[1]);
+        $command    = [
             Mediatag::App('rename'),
             'rename',
             '-f',
@@ -125,12 +125,12 @@ class WriteMeta extends MediatagExec
                 }
             }
             if ($update === true) {
-                $videoData[$this->video_key] = $this->videoData;
+                $videoData[$this->video_key]             = $this->videoData;
                 // $videoData[$this->video_key]['metatags'] =
                 //  array_merge($this->videoData['updateTags'], $this->videoData['currentTags']);
                 $videoData[$this->video_key]['metatags'] = TagReader::mergetags(
                     $videoData[$this->video_key]['currentTags'],
-                    $videoData[$this->video_key]['updateTags']
+                    $videoData[$this->video_key]['updateTags'],
                 );
 
                 unset($videoData[$this->video_key]['currentTags']);
@@ -154,7 +154,7 @@ class WriteMeta extends MediatagExec
     {
         // utminfo(func_get_args());
 
-        $this->errors = null;
+        $this->errors  = null;
 
         $this->command = [
             Mediatag::App(),
@@ -187,7 +187,7 @@ class WriteMeta extends MediatagExec
             }
             MediaCache::forget($this->video_key);
 
-            $results = ($this->errors != '') ? $this->errors : $this->stdout;
+            $results  = ($this->errors != '') ? $this->errors : $this->stdout;
         } else {
             $results = false;
             $this->output->write("\t Skipping " . basename($this->command[1]));

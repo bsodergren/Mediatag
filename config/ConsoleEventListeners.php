@@ -11,12 +11,12 @@ use Symfony\Component\Console\Event\ConsoleSignalEvent;
 use Symfony\Component\Console\Event\ConsoleTerminateEvent;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
-$dispatcher = new EventDispatcher;
+$dispatcher = new EventDispatcher();
 
 $dispatcher->addListener(ConsoleEvents::SIGNAL, function (ConsoleSignalEvent $event): void {
     // gets the signal number
 
-    $signal = $event->getHandlingSignal();
+    $signal          = $event->getHandlingSignal();
 
     $command         = $event->getCommand();
     $command->output = $event->getOutput();
@@ -55,10 +55,10 @@ $dispatcher->addListener(ConsoleEvents::TERMINATE, function (ConsoleTerminateEve
 
 $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $event): void {
     // gets the input instance
-    $input = $event->getInput();
+    $input   = $event->getInput();
 
     // gets the output instance
-    $output = $event->getOutput();
+    $output  = $event->getOutput();
 
     // gets the command to be executed
     $command = $event->getCommand();
@@ -71,9 +71,9 @@ $dispatcher->addListener(ConsoleEvents::COMMAND, function (ConsoleCommandEvent $
 });
 
 $dispatcher->addListener(ConsoleEvents::ERROR, function (ConsoleErrorEvent $event): void {
-    $output = $event->getOutput();
+    $output   = $event->getOutput();
 
-    $command = $event->getCommand();
+    $command  = $event->getCommand();
 
     $output->writeln(sprintf('Oops, exception thrown while running command <info>%s</info>', $command->getName()));
 

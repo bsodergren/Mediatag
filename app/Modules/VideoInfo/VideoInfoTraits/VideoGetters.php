@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\VideoInfo\VideoInfoTraits;
 
@@ -41,7 +44,7 @@ trait VideoGetters
             Storage::$DB->insert($data_array);
         }
 
-        $this->VideoInfo = $this->getVideoDetails();
+        $this->VideoInfo  = $this->getVideoDetails();
 
         return $this->saveVideoDetails();
     }
@@ -53,7 +56,7 @@ trait VideoGetters
         if ($this->VideoInfo === null) {
             return null;
         }
-        $this->video_id = $this->VideoInfo['id'];
+        $this->video_id  = $this->VideoInfo['id'];
 
         return $this->video_id;
         // utmdd($exists);

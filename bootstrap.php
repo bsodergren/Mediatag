@@ -1,10 +1,9 @@
 <?php
-
-declare(strict_types=1);
-
 /**
  * Command like Metatag writer for video files.
  */
+
+declare(strict_types=1);
 
 use Camoo\Config\Config;
 use Mediatag\Core\EnvLoader;
@@ -52,14 +51,14 @@ MediaLogger::$USE_DEBUG = false;
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;
-Debug::$PrettyLogs  = false;
-Debug::$RealTimeLog = false;
+Debug::$PrettyLogs      = false;
+Debug::$RealTimeLog     = false;
 new Utm(__LOGFILE_DIR__);
 
-$finder = new Finder();
+$finder                 = new Finder();
 $finder->files()->in(__LOGFILE_DIR__)->date("before 1 days ago");
 foreach ($finder as $file) {
-    if($file->getFilename() != "phperror.log"){
+    if ($file->getFilename() != "phperror.log") {
         // unlink($file->getRealPath());
     }
 

@@ -24,15 +24,15 @@ class Process extends Mediatag
     use MediaExecute;
     use MediaProcess;
 
-    public $VideoList = [];
+    public $VideoList      = [];
 
     public static $CmdList = [];
 
-    public $videoFiles = [];
+    public $videoFiles     = [];
 
-    public $method = null;
+    public $method         = null;
 
-    protected $useFuncs = ['addMeta'];
+    protected $useFuncs    = ['addMeta'];
 
     public $displayTable;
 
@@ -62,7 +62,7 @@ class Process extends Mediatag
             foreach ($fileList as $key => $file) {
                 $this->videoFiles[] = $file['video_file'];
             }
-            $cmd = $this->method;
+            $cmd      = $this->method;
             $this->$cmd();
         }
     }

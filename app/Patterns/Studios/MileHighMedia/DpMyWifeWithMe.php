@@ -16,7 +16,7 @@ class DpMyWifeWithMe extends MileHighMedia
 
     // public $network = 'Mile High Media';
 
-    public $regex = [
+    public $regex  = [
         'dpmywifewithme' => [
             'artist' => [
                 'pattern'             => DPMYWIFE_REGEX_COMMON,

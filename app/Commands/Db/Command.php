@@ -12,13 +12,13 @@ use Symfony\Component\Console\Attribute\AsCommand;
 #[AsCommand(name: 'db', description: 'Add files to Database', aliases: ['update'])]
 final class Command extends MediaCommand
 {
-    public const USE_LIBRARY = true;
+    public const USE_LIBRARY   = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH    = false;
 
     public static $DEFAULT_CMD = true;
 
-    public $command = [
+    public $command            = [
         'db'     => [
             'init' => null,
             'exec' => null,

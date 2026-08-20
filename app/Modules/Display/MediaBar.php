@@ -25,7 +25,7 @@ class MediaBar
 
     public $sectionName;
 
-    public $format = '%current:4s%/%max:4s% ,[%bar%], %percent:3s%%';
+    public $format         = '%current:4s%/%max:4s% ,[%bar%], %percent:3s%%';
 
     public function __construct($count, $section = null, $width = 50)
     {

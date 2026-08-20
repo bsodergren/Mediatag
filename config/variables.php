@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 use Mediatag\Core\Settings\MediaSettings;
 use Mediatag\Modules\Database\Storage;
@@ -126,10 +129,10 @@ define(
 
 define('__MAX_SQL_ITEMS__', 5000);
 
-$DbConnection = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
-$db           = new Storage($DbConnection);
-$query        = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
-$val          = $db->query($query);
+$DbConnection       = new MysqliDb('localhost', __SQL_USER__, __SQL_PASSWD__, __MYSQL_DATABASE__);
+$db                 = new Storage($DbConnection);
+$query              = 'SELECT name,value FROM `' . __MYSQL_SETTINGS__ . '` WHERE `name` REGEXP "__(.*)__";';
+$val                = $db->query($query);
 
 foreach ($val as $row => $settingVal) {
     $value = json_decode($settingVal['value']);
@@ -146,7 +149,7 @@ define(
 
 // $console_width = (int) @exec('tput cols');
 // if($console_width == 0) {
-$console_width = 120;
+$console_width      = 120;
 // }
 
 define('__CONSOLE_WIDTH__', $console_width);
@@ -160,5 +163,5 @@ define('__CACHE_TIMEOUT__', 240);
 define('__TIMER_LOG__', false);
 define('__TIMER_DISPLAY__', false);
 
-const PHP_DBL = \PHP_EOL . \PHP_EOL;
-const PHP_TAB = "\t";
+const PHP_DBL       = \PHP_EOL . \PHP_EOL;
+const PHP_TAB       = "\t";

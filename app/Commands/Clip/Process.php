@@ -33,34 +33,34 @@ class Process extends Mediatag
 
     public $dbConn;
 
-    protected $useFuncs = ['addMeta'];
+    protected $useFuncs     = ['addMeta'];
 
-    public $db_array = [];
+    public $db_array        = [];
 
-    public $file_array = [];
+    public $file_array      = [];
 
-    public $Search_Array = null;
+    public $Search_Array    = null;
 
     public $read;
 
     public $meta;
 
-    public $OutputText = [];
+    public $OutputText      = [];
 
-    public $New_Array = [];
+    public $New_Array       = [];
 
-    public $Deleted_Array = [];
+    public $Deleted_Array   = [];
 
-    public $Changed_Array = [];
+    public $Changed_Array   = [];
 
-    public $allDbFiles = [];
+    public $allDbFiles      = [];
 
     public $defaultCommands = [
         // 'init' => null,
         // 'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
 
     ];
 
@@ -75,12 +75,12 @@ class Process extends Mediatag
     public function __construct(InputInterface $input, OutputInterface $output)
     {
         parent::boot($input, $output);
-        $this->dbConn = new Storage;
+        $this->dbConn = new Storage();
         //
         //parent::$SearchArray;
     }
 
-    public $VideoList = [];
+    public $VideoList       = [];
 
     // protected $useFuncs = ['addMeta', 'setupMap'];
 

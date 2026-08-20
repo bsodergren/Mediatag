@@ -14,7 +14,7 @@ use Mediatag\Patterns\Studios\NaughtyAmerica\NaughtyAmerica;
 
 class MyFriendsHotMom extends NaughtyAmerica
 {
-    public $studio = 'My Friends Hot Mom';
+    public $studio  = 'My Friends Hot Mom';
 
     public $network = 'Naughty America';
 }

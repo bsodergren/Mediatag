@@ -28,13 +28,13 @@ class Process extends Mediatag
      */
     public $formatter;
 
-    public $displayTimer = 0;
+    public $displayTimer    = 0;
 
-    public $ChangesArray = [];
+    public $ChangesArray    = [];
 
     public $VideoList;
 
-    public $commandList = [
+    public $commandList     = [
         // 'empty'     => [
         //     'exec'      => null,
         //     'clearMeta' => null,
@@ -60,7 +60,7 @@ class Process extends Mediatag
         'writeChanges' => null,
     ];
 
-    protected $useFuncs = ['addMeta', 'setupMap'];
+    protected $useFuncs     = ['addMeta', 'setupMap'];
 
     protected $json_file;
 

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\Metatags;
 
@@ -147,7 +150,7 @@ class MetaTagInfo extends Mediatag
 
     public static function getGenreByName($tag, $name)
     {
-        $db = MysqliDb::getInstance();
+        $db  = MysqliDb::getInstance();
         if (\str_contains($name, ',')) {
             $pcs = \explode(',', $name);
             foreach ($pcs as $k => $v) {

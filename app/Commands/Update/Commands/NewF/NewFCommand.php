@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Update\Commands\NewF;
 
@@ -16,10 +19,10 @@ final class NewFCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
     // public const new = true;
 
-    public $command = [
+    public $command          = [
         'new' => [
             'exec'         => null,
             'getChanges'   => null,

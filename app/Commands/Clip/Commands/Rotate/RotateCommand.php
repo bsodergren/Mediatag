@@ -25,7 +25,7 @@ class RotateCommand extends MediaCommand
 
     // public const USE_SEARCH = false;
 
-    public $command = [
+    public $command          = [
         'rotate' => [
             'exec'       => null,
             'init'       => null,

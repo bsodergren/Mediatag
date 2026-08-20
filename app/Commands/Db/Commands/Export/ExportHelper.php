@@ -30,11 +30,11 @@ trait ExportHelper
     {
         $FileArray = [];
         foreach ($this->VideoList['file'] as $key => $VideoFile) {
-            $tagList = (new TagReader)->loadVideo($VideoFile);
+            $tagList           = (new TagReader())->loadVideo($VideoFile);
 
             $VideoFile['Meta'] = $tagList;
 
-            $FileArray[$key] = $VideoFile;
+            $FileArray[$key]   = $VideoFile;
         }
 
         return $FileArray;
@@ -46,8 +46,8 @@ trait ExportHelper
         foreach ($fileArray as $key => $data) {
             $this->console->overwrite('Reading file ' . basename($data['video_file']));
 
-            $json_path = self::$EXPORT_DIR; //. MediaFile::videoPath($data['video_path']);
-            $json_file = $json_path . DIRECTORY_SEPARATOR . $key . '.info.json';
+            $json_path   = self::$EXPORT_DIR; //. MediaFile::videoPath($data['video_path']);
+            $json_file   = $json_path . DIRECTORY_SEPARATOR . $key . '.info.json';
 
             if (! is_dir($json_path)) {
                 FileSystem::createDir($json_path);
@@ -67,9 +67,9 @@ trait ExportHelper
 
     private function createJsonData($tagBuilder)
     {
-        $meta = $tagBuilder->getMetaValues();
-        $db   = $tagBuilder->getDbValues();
-        $json = $tagBuilder->getJsonValues();
+        $meta    = $tagBuilder->getMetaValues();
+        $db      = $tagBuilder->getDbValues();
+        $json    = $tagBuilder->getJsonValues();
 
         $newTags = TagBuilder::mergetags($meta, $db);
 
@@ -90,7 +90,7 @@ trait ExportHelper
         $jsonArray   = json_decode($fileContent[0], 1);
         $newArray    = json_decode($content, 1);
 
-        $tags = TagBuilder::compareTags($jsonArray, $newArray);
+        $tags        = TagBuilder::compareTags($jsonArray, $newArray);
         if (count($tags) > 0) {
             $newTags = TagBuilder::mergetags($jsonArray, $tags);
 

@@ -6,9 +6,6 @@
 
 namespace Mediatag\Commands\Db\Commands\Subtitles;
 
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -18,6 +15,9 @@ use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function dirname;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait SubtitlesHelper
 {
@@ -30,7 +30,7 @@ trait SubtitlesHelper
             return false;
         }
 
-        $file_array = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.vtt', exit: false);
+        $file_array      = Mediatag::$finder->Search(__CURRENT_DIRECTORY__, '*.vtt', exit: false);
 
         if (! empty($file_array)) {
             // utminfo(func_get_args());
@@ -40,11 +40,11 @@ trait SubtitlesHelper
                     continue;
                 }
                 $this->storagedb->init($videoFile);
-                $data = [
+                $data      = [
                     'subtitle' => 1,
                     'studio'   => 'Porn World',
                 ];
-                $where = ['video_key' => $this->storagedb->video_key];
+                $where     = ['video_key' => $this->storagedb->video_key];
                 StorageDB::$DB->update($data, $where, __MYSQL_VIDEO_INFO__);
             }
         }
@@ -73,7 +73,7 @@ trait SubtitlesHelper
             $data     = [
                 'video_key' => [$fileinfo->videokey(), '='],
             ];
-            $output = StorageDB::$DB->getValue($data, 'subtitle', __MYSQL_VIDEO_INFO__);
+            $output   = StorageDB::$DB->getValue($data, 'subtitle', __MYSQL_VIDEO_INFO__);
 
             // Mediatag::$output->writeln($output);
             if ($output != 1) {
@@ -86,10 +86,10 @@ trait SubtitlesHelper
                 $matched = MediaArray::search($captions, $video_base);
                 if ($matched == true) {
                     foreach ($matched as $capFile) {
-                        $capfileInfo = pathinfo($capFile);
-                        $extension   = '.en.' . $capfileInfo['extension'];
+                        $capfileInfo      = pathinfo($capFile);
+                        $extension        = '.en.' . $capfileInfo['extension'];
 
-                        $subtitlePath = $fileinfo->filepath() . DIRECTORY_SEPARATOR . 'Subtitles';
+                        $subtitlePath     = $fileinfo->filepath() . DIRECTORY_SEPARATOR . 'Subtitles';
 
                         $SubtitleFileName = str_replace(
                             '.mp4',
@@ -100,10 +100,10 @@ trait SubtitlesHelper
                         if ($capfileInfo['extension'] == 'srt') {
                             $subtitleVTTFilename = str_replace('srt', 'vtt', $SubtitleFileName);
                             if (! file_exists($SubtitleFileName)) {
-                                $original = file_get_contents($SubtitleFileName);
-                                $vtt      = 'WEBVTT' . PHP_EOL . PHP_EOL . $original;
+                                $original         = file_get_contents($SubtitleFileName);
+                                $vtt              = 'WEBVTT' . PHP_EOL . PHP_EOL . $original;
                                 // Replace microseconds separator: 00,000 -> 00.000
-                                $vtt = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
+                                $vtt              = preg_replace('#(\d{2}),(\d{3})#', '${1}.${2}', $vtt);
 
                                 // Write the .vtt file
 
@@ -116,7 +116,7 @@ trait SubtitlesHelper
                         }
                         if (! file_exists($SubtitleFileName)) {
                             Mediatag::$output->writeln($SubtitleFileName);
-                            (new SfSystem)->rename($capFile, $SubtitleFileName, true);
+                            (new SfSystem())->rename($capFile, $SubtitleFileName, true);
                             // utmdd($SubtitleFileName);
 
                             // $captionFile = basename($capFile);

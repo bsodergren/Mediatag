@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Entities;
 
@@ -14,21 +17,21 @@ class MetaEntities
 
     public static $value;
 
-    private static $ClassObj = null;
+    private static $ClassObj     = null;
 
     private static $ClassUsePath = '\\Mediatag\\Entities\\Tags\\';
 
-    private $ClassFiles = [];
+    private $ClassFiles          = [];
 
-    public $meta_tags = [];
+    public $meta_tags            = [];
 
-    private static $ApOption = null;
+    private static $ApOption     = null;
 
     public function __construct($tagName = null, $value = null)
     {
         if ($tagName === null) {
             $classDir = __APP_HOME__ . '/app/Entities/Tags/';
-            $finder   = new Finder;
+            $finder   = new Finder();
             $finder->files()->in($classDir)->name('*.php');
             foreach ($finder as $file) {
                 $this->ClassFiles[] = basename($file->getFilename(), '.php');
@@ -93,8 +96,8 @@ class MetaEntities
                 if (count($episode) < 1) {
                     $episode = ['episode' => 1];
                 }
-                $Movie  = Movie::isMovie($file);
-                $params = array_merge($scene, $episode, $Movie);
+                $Movie   = Movie::isMovie($file);
+                $params  = array_merge($scene, $episode, $Movie);
             }
 
             // utmdump([$params, Arrays::get($params, 'episode', '264')]);

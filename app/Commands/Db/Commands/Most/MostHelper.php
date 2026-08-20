@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Most;
 
@@ -17,7 +20,7 @@ trait MostHelper
         // utminfo(func_get_args());
         // utmdd($this->video_file);
         //
-        $this->obj = new Thumbnail;
+        $this->obj = new Thumbnail();
         $this->checkClean();
         // $this->obj = new Thumbnail(parent::$input, parent::$output);
         $this->obj->updateVideoData();
@@ -26,7 +29,7 @@ trait MostHelper
     public function execInfo()
     {
         // utminfo(func_get_args());
-        $this->obj = new VideoFileInfo;
+        $this->obj = new VideoFileInfo();
         // $this->checkClean();
         $this->obj->updateVideoData();
     }

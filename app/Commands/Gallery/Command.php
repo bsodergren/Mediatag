@@ -14,9 +14,9 @@ class Command extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
-    public $command = [
+    public $command          = [
         'gallery' => [
             'init' => null,
             'exec' => null,

@@ -16,5 +16,5 @@ class DirtyWivesClub extends NaughtyAmerica
 {
     public $network = 'Naughty America';
 
-    public $studio = 'Dirty Wives Club';
+    public $studio  = 'Dirty Wives Club';
 }

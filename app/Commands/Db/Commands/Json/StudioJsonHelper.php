@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Json;
 
@@ -27,9 +30,9 @@ trait StudioJsonHelper
             $query .= "LOWER(REPLACE(title,' ','')) = LOWER('" . $videoName . "') OR ";
             $query .= " video_key = '" . $videoName . "'";
 
-            $result = $db->query($query);
+            $result    = $db->query($query);
 
-            $video_id = (new Markers)->getvideoId($result[0]['video_key']);
+            $video_id  = (new Markers())->getvideoId($result[0]['video_key']);
             // utmdump([$result, $query]);
             if (! is_null($video_id)) {
                 $jsonData = file_get_contents($file);
@@ -57,9 +60,9 @@ trait StudioJsonHelper
             return false;
         }
         $dbConn   = MysqliDb::getInstance();
-        $video_id = (new Markers)->getvideoId($videoInfo['video_key']);
+        $video_id = (new Markers())->getvideoId($videoInfo['video_key']);
 
-        $markers = explode(',', $markerArray);
+        $markers  = explode(',', $markerArray);
 
         foreach ($markers as $marker) {
             $parts = explode(':', $marker);
@@ -71,7 +74,7 @@ trait StudioJsonHelper
             $dbConn->where('timeCode', round($parts[1], 0));
             $dbConn->where('markerText', $parts[0]);
             $dbConn->where('video_id', $video_id);
-            $res = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
+            $res   = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
             if (is_null($res)) {
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
                 parent::$output->writeln(' <id>Updating markers for ' . basename($videoInfo['title']) . '</id>');

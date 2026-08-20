@@ -31,7 +31,7 @@ trait MetaTags
 
     private static $dontCombine = ['studio' => 1, 'network' => 1, 'title' => 1];
 
-    public static $Videokey = '';
+    public static $Videokey     = '';
 
     private static function dumpTag($tag, $source, ...$array)
     {
@@ -45,7 +45,7 @@ trait MetaTags
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
 
-        $out = trim($this->{$method}($text));
+        $out    = trim($this->{$method}($text));
 
         return $out;
     }
@@ -108,7 +108,7 @@ trait MetaTags
             $array = explode('/', $text);
         }
 
-        $array = MediaArray::array_iunique($array);
+        $array        = MediaArray::array_iunique($array);
         // sort($array);
         foreach ($array as $tagValue) {
             // $arr[] = trim(str_replace("  "," ",str_replace("&"," & ",$tagValue)));
@@ -119,7 +119,7 @@ trait MetaTags
             $this->videoData['video_path'] = $this->video_path;
         }
 
-        $studio_dir   = (new Filesystem)->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
+        $studio_dir   = (new Filesystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
 
         if (array_key_exists(3, $studio_array)) {
@@ -202,8 +202,8 @@ trait MetaTags
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
         // utmdump([$tag, $firstCmp, $secondCmp]);
-        $delim = ',';
-        $trim  = $delim;
+        $delim     = ',';
+        $trim      = $delim;
         if ($tag == 'studio') {
             $delim = '/';
             $trim  = $delim;
@@ -270,8 +270,8 @@ trait MetaTags
         $secondCmp = str_replace(' ', '', strtoupper($second));
 
         // utmdump([$tag, $firstCmp, $secondCmp]);
-        $delim = ',';
-        $trim  = $delim;
+        $delim     = ',';
+        $trim      = $delim;
         if ($tag == 'studio') {
             $delim = '/';
             $trim  = $delim;
@@ -374,15 +374,15 @@ trait MetaTags
         if ($text === null) {
             return null;
         }
-        $delim = ',';
+        $delim     = ',';
         if ($tag == 'studio') {
             $delim = '/';
         }
 
-        $tagDB = Storage::$DB;
+        $tagDB     = Storage::$DB;
 
         if ($tag == 'title') {
-            $arr = explode(' ', $text);
+            $arr      = explode(' ', $text);
 
             array_walk($arr, function (&$value) {
                 $value = trim(ucwords(strtolower($value)));
@@ -393,7 +393,7 @@ trait MetaTags
             return $newTitle;
         }
 
-        $method = 'get' . ucfirst($tag);
+        $method    = 'get' . ucfirst($tag);
 
         $newList   = [];
         $i         = 0;
@@ -430,9 +430,9 @@ trait MetaTags
 
         // }
         // utmdump(['3' => $newList]);
-        $string = implode($delim, $newList);
+        $string    = implode($delim, $newList);
         // utmdump(['4' => $string]);
-        $arr = explode($delim, $string);
+        $arr       = explode($delim, $string);
 
         array_walk($arr, function (&$value) {
             $value = trim(ucwords($value));
@@ -440,11 +440,11 @@ trait MetaTags
         if ($tag == 'genre') {
             // utmdump($arr);
         }
-        $arr = MediaArray::array_iunique($arr); // , \SORT_STRING);
+        $arr       = MediaArray::array_iunique($arr); // , \SORT_STRING);
         if ($tag == 'genre') {
             // utmdump($arr);
         }
-        $arr = array_values($arr);
+        $arr       = array_values($arr);
         if ($tag == 'genre') {
             // utmdump($arr);
         }
@@ -461,7 +461,7 @@ trait MetaTags
         //     // self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, $arr);
         // }
 
-        $max = count($arr);
+        $max       = count($arr);
 
         while ($total < 255) {
             if (! array_key_exists($i, $arr)) {
@@ -478,10 +478,10 @@ trait MetaTags
         if ($total > 255) {
             $i--;
         }
-        $new_arr = array_slice($arr, 0, $i);
+        $new_arr   = array_slice($arr, 0, $i);
         self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, ['new' => $new_arr, 'old' => $arr]);
 
-        $string = implode($delim, $new_arr);
+        $string    = implode($delim, $new_arr);
         if ($string == '') {
             $string = null;
         }

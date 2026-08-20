@@ -19,24 +19,24 @@ class Gallery extends VideoInfo
 
     public $video_name;
 
-    public $actionText = '<comment>Updated Gallery Info</comment>';
+    public $actionText     = '<comment>Updated Gallery Info</comment>';
 
     public function get($key, $file)
     {
         // utminfo(func_get_args());
 
-        $parts = pathinfo($this->video_file);
+        $parts         = pathinfo($this->video_file);
 
-        $vdata = [
+        $vdata         = [
             'video_file' => $this->video_file,
             'video_path' => $parts['dirname'],
             'video_name' => $parts['basename'],
             'video_key'  => $this->video_key,
         ];
 
-        $studio_dir = (new Filesystem)->makePathRelative($vdata['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
-        $studio_dir = trim($studio_dir, '/');
-        $arr        = explode('/', $studio_dir);
+        $studio_dir    = (new Filesystem())->makePathRelative($vdata['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
+        $studio_dir    = trim($studio_dir, '/');
+        $arr           = explode('/', $studio_dir);
         if (array_key_exists(0, $arr)) {
             $tagList['network'] = Strings::clean($arr[0]);
         }

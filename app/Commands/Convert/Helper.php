@@ -6,13 +6,11 @@
 
 namespace Mediatag\Commands\Convert;
 
-use const PHP_EOL;
-
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\FFMpeg;
 use FFMpeg\Filters\Video\ResizeFilter;
-// use Mediatag\Traits\CaseHelper;
 use FFMpeg\Format\Video\X264;
+// use Mediatag\Traits\CaseHelper;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\WriteMeta;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
@@ -30,6 +28,8 @@ use UTM\Utilities\Option;
 use function count;
 use function is_array;
 
+use const PHP_EOL;
+
 trait Helper
 {
     public function ConvertFiles()
@@ -42,9 +42,9 @@ trait Helper
 
     public function convertMedia($video_file)
     {
-        $mp4_file = basename($video_file, '.' . strtoupper($this->fileExtension));
-        $mp4_file = basename($mp4_file, '.' . $this->fileExtension) . '.mp4';
-        $mp4_dir  = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'mp4' . DIRECTORY_SEPARATOR;
+        $mp4_file   = basename($video_file, '.' . strtoupper($this->fileExtension));
+        $mp4_file   = basename($mp4_file, '.' . $this->fileExtension) . '.mp4';
+        $mp4_dir    = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'mp4' . DIRECTORY_SEPARATOR;
 
         $moved_file = dirname($video_file, 1) . DIRECTORY_SEPARATOR . 'moved' . DIRECTORY_SEPARATOR;
 
@@ -75,9 +75,9 @@ trait Helper
         }
 
         Mediatag::$output->writeln('<comment>Transcoding file ' . basename($video_file) . ' </>');
-        $video = $this->ffmpeg->open($video_file);
+        $video      = $this->ffmpeg->open($video_file);
 
-        $format = new X264;
+        $format     = new X264();
         // $format->on('progress', function ($video, $format, $percentage) {
         //     echo "$percentage % transcoded";
         // });

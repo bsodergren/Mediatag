@@ -3,6 +3,7 @@
 /**
  * Command like Metatag writer for video files.
  */
+
 define('__SCRIPT_NAME__', basename($_SERVER['SCRIPT_NAME'], '.php'));
 
 function DEFINE_DIR($definition, $value)

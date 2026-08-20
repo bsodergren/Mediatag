@@ -3,6 +3,7 @@
 /**
  * Command like Metatag writer for video files.
  */
+
 const BASIC__WORD_MAP = [
     'MVPDP'                       => 'MvpDp',
     'aand'                        => 'aAnd',
@@ -47,7 +48,7 @@ const BASIC__WORD_MAP = [
     '_s'                          => 's',
 ];
 
-const WORD__MAP = [
+const WORD__MAP       = [
     'SO'                    => 'So',
     'and'                   => 'And',
     'Rocketis'              => 'RocketIs',

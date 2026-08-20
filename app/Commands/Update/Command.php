@@ -16,13 +16,13 @@ final class Command extends MediaCommand
 {
     use Lang;
 
-    public const USE_LIBRARY = true;
+    public const USE_LIBRARY   = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH    = true;
 
     public static $DEFAULT_CMD = true;
 
-    public $command = [
+    public $command            = [
         'update' => [
             'exec'         => null,
             'getChanges'   => null,

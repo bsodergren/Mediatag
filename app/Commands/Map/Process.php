@@ -25,7 +25,7 @@ class Process extends Mediatag
     //     'exec' => null,
     // ];
 
-    public $commandList = [
+    public $commandList   = [
         'search'    => ['searchDBEntry' => true],
         'channel'   => ['addStudioChannelEntry' => true],
         'artist'    => ['addartistentry' => true],
@@ -39,7 +39,7 @@ class Process extends Mediatag
         'artistMap' => ['artistMap' => null],
     ];
 
-    private $global_lang = __APP_HOME__ . '/app/Locales/Lang.php';
+    private $global_lang  = __APP_HOME__ . '/app/Locales/Lang.php';
 
     private $command_lang = __APP_HOME__ . '/app/Commands/%KEY%/Lang.php';
 

@@ -6,11 +6,11 @@
 
 namespace Mediatag\Core\Helper;
 
-use const PHP_EOL;
-
 use function array_key_exists;
 use function count;
 use function is_array;
+
+use const PHP_EOL;
 
 trait LogFormat
 {
@@ -18,7 +18,7 @@ trait LogFormat
 
     public static function tracePath($only_caller = false)
     {
-        $trace = debug_backtrace();
+        $trace      = debug_backtrace();
 
         $classArray = [];
         $calledFile = null;
@@ -50,7 +50,7 @@ trait LogFormat
                 } else {
                     $line = $i;
                 }
-                $calledLine = self::returnTrace('line', $trace[$line]);
+                $calledLine        = self::returnTrace('line', $trace[$line]);
                 // $calledFile = self::returnTrace('file', $trace[$line]);
 
                 $arguments         = $calledLine;
@@ -74,7 +74,7 @@ trait LogFormat
             }
 
             foreach ($path as $classPath => $methods) {
-                $classPath = str_replace('_', '\\', $classPath);
+                $classPath  = str_replace('_', '\\', $classPath);
                 if (is_array($methods)) {
                     $level      = 4;
                     $spaces     = str_repeat(' ', $level * 4);
@@ -82,10 +82,10 @@ trait LogFormat
                 }
                 $fullPath[] = $classPath . ':' . $methodPath;
             }
-            $level  = 1;
-            $spaces = str_repeat(' ', $level * 4);
+            $level      = 1;
+            $spaces     = str_repeat(' ', $level * 4);
 
-            $string = implode(PHP_EOL . $spaces . '->', $fullPath);
+            $string     = implode(PHP_EOL . $spaces . '->', $fullPath);
 
             return $string;
         }

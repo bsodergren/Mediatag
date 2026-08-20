@@ -32,7 +32,7 @@ trait MediaExecute
     {
         Mediatag::notice('addMeta', __FILE__);
 
-        $ent                   = new MetaEntities;
+        $ent                   = new MetaEntities();
         $this->meta_tag_arrary = $ent->meta_tags;
 
         foreach (Option::getOptions() as $option => $v) {
@@ -98,7 +98,7 @@ trait MediaExecute
             if (is_file($file)) {
                 $artistList = file_get_contents($file);
 
-                $artistMap = explode("\n", $artistList);
+                $artistMap  = explode("\n", $artistList);
             }
         } else {
             $artistMap = $file;
@@ -126,20 +126,20 @@ trait MediaExecute
             if (is_file($file)) {
                 $artistList = file_get_contents($file);
 
-                $artistMap = explode("\n", $artistList);
+                $artistMap  = explode("\n", $artistList);
             }
         } else {
             $artistMap = $file;
         }
-        $nameMap = [];
+        $nameMap     = [];
         foreach ($artistMap as $key => $nameArray) {
             if (is_array($nameArray)) {
                 $replacement = trim($nameArray[1]);
                 $replacement = str_replace(' ', '_', $replacement);
 
-                $name      = trim($nameArray[0]);
-                $name      = str_replace(' ', '_', $name);
-                $nameMap[] = ['name' => strtolower($name), 'replacement' => $replacement];
+                $name        = trim($nameArray[0]);
+                $name        = str_replace(' ', '_', $name);
+                $nameMap[]   = ['name' => strtolower($name), 'replacement' => $replacement];
             } else {
                 $nameMap[] = strtolower(str_replace(' ', '_', $nameArray));
             }

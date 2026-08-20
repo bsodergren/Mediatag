@@ -34,13 +34,13 @@ class Thumbnail extends VideoInfo
 
     public $VideoDataTable = __MYSQL_VIDEO_FILE__;
 
-    public $thumbType = 'thumbnail';
+    public $thumbType      = 'thumbnail';
 
-    public $maxLen = 75;
+    public $maxLen         = 75;
 
-    public $thumbExt = '.jpg';
+    public $thumbExt       = '.jpg';
 
-    public $thumbDir = __INC_WEB_THUMB_DIR__;
+    public $thumbDir       = __INC_WEB_THUMB_DIR__;
 
     public function get($key, $file)
     {
@@ -48,10 +48,10 @@ class Thumbnail extends VideoInfo
 
         $this->video_file = $file;
         // utmdump($file);
-        $this->video_key = (string) $key;
+        $this->video_key  = (string) $key;
         //    $VideoData             = new VideoData();
         //    $VideoData->video_file = $this->video_file;
-        $thumbnail = $this->getThumbImg();
+        $thumbnail        = $this->getThumbImg();
 
         return ['thumbnail' => $thumbnail, 'video_key' => $this->video_key];
     }
@@ -64,24 +64,24 @@ class Thumbnail extends VideoInfo
         $this->video_path = dirname($this->video_file);
 
         // $img_name = basename($this->video_name, '.mp4').'.jpg';
-        $img_name = basename($this->videoToThumb($this->video_file));
+        $img_name         = basename($this->videoToThumb($this->video_file));
         // $img_name     = Strings::cleanFileName($img_name,true);
-        $img_web_path = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
-        $img_location = __INC_WEB_THUMB_DIR__.'/'.$img_web_path;
-        $img_file     = $img_location.$img_name;
-        $img_url_path = __INC_WEB_THUMB_URL__.'/'.$img_web_path.$img_name;
-        $action       = $this->updatedText;
+        $img_web_path     = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__);
+        $img_location     = __INC_WEB_THUMB_DIR__ . '/' . $img_web_path;
+        $img_file         = $img_location . $img_name;
+        $img_url_path     = __INC_WEB_THUMB_URL__ . '/' . $img_web_path . $img_name;
+        $action           = $this->updatedText;
         // $type         = $this->actionText;
 
         if (!file_exists($img_file)) {
-            $finder = new Finder();
+            $finder   = new Finder();
             $finder->files()->name($img_name)->in(__INC_WEB_THUMB_DIR__);
             if ($finder->hasResults()) {
                 foreach ($finder as $file) {
-                     $action = "existing file found ";
+                    $action           = "existing file found ";
                     (new Filesystem())->mkdir($img_location);
                     (new Filesystem())->rename($file->getRealPath(), $img_file);
-                    $this->actionText = $action.$this->thumbType;
+                    $this->actionText = $action . $this->thumbType;
 
                     return $img_url_path;
 
@@ -91,7 +91,7 @@ class Thumbnail extends VideoInfo
             }
 
             (new Filesystem())->mkdir($img_location);
-            $ffprobe = FFProbe::create([
+            $ffprobe  = FFProbe::create([
                 'ffmpeg.binaries'  => CONFIG['FFMPEG_CMD'],
                 'ffprobe.binaries' => CONFIG['FFPROBE_CMD'],
             ]);
@@ -99,7 +99,7 @@ class Thumbnail extends VideoInfo
 
             // utmdump($this->video_file, $ffprobe->streams($this->video_file)->videos()->first()->get('codec_name'));
 
-            $time = '00:01:00.00';
+            $time     = '00:01:00.00';
 
             if ((int) $duration < 7000) {
                 $time = '00:00:15.00';
@@ -111,16 +111,16 @@ class Thumbnail extends VideoInfo
             if ((int) $duration < 500) {
                 $time = '00:00:01.00';
             }
-            $time = self::videoDuration($duration, 10);
+            $time     = self::videoDuration($duration, 10);
 
             // utmdump([$this->video_file, $img_file, $time]);
             // utmdd($duration,$time);
             $this->ffmegCreateThumb($this->video_file, $img_file, $time);
 
-            $action = $this->newText;
+            $action   = $this->newText;
         }
 
-        $this->actionText = $action.$this->thumbType;
+        $this->actionText = $action . $this->thumbType;
 
         return $img_url_path;
     }

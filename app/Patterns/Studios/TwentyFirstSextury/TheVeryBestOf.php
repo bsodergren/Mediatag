@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
 
 class TheVeryBestOf extends TwentyFirstSextury
 {
-    public $studio = 'The Very Best Of';
+    public $studio  = 'The Very Best Of';
 
     public $network = '21st Sextury';
 }

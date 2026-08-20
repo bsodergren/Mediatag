@@ -6,11 +6,11 @@
 
 namespace Mediatag\Modules\VideoInfo\helpers;
 
-use const STR_PAD_LEFT;
-
 use Mediatag\Utilities\Strings;
 
 use function strlen;
+
+use const STR_PAD_LEFT;
 
 trait VideoStrings
 {

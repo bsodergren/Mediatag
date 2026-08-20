@@ -32,7 +32,7 @@ use const DIRECTORY_SEPARATOR;
 
 class Mediatag extends Command
 {
-    public $commandList = [];
+    public $commandList        = [];
 
     public static $SearchArray = [];
 
@@ -63,16 +63,16 @@ class Mediatag extends Command
     public $helper;
 
     public $actions;
-    public $cmdOptions = [];
+    public $cmdOptions         = [];
 
-    public $default = [
+    public $default            = [
         'exec'  => null,
         'print' => null,
     ];
 
-    public static $amateurFile = __DATA_MAPS__.'/Amateur.txt';
+    public static $amateurFile = __DATA_MAPS__ . '/Amateur.txt';
 
-    public static $channelFile = __DATA_MAPS__.'/Channels.txt';
+    public static $channelFile = __DATA_MAPS__ . '/Channels.txt';
 
     public static $Storage;
 
@@ -98,14 +98,14 @@ class Mediatag extends Command
                 return CONFIG['ATOMICPARSLEY'];
             }
 
-            exit(CONFIG['ATOMICPARSLEY'].' does not exist');
+            exit(CONFIG['ATOMICPARSLEY'] . ' does not exist');
         }
 
         if (method_exists(self::$log, $method)) {
             if ('file' == $method) {
                 if (array_key_exists(2, $args)) {
                     if (!is_array($args[2])) {
-                        $tmp = [$args[2]];
+                        $tmp     = [$args[2]];
                         unset($args[2]);
                         $args[2] = $tmp;
                     }
@@ -121,9 +121,9 @@ class Mediatag extends Command
 
             self::$log->$method(...$args);
 
-        // return '';
+            // return '';
         } else {
-            self::error($method.' in '.get_class(self::$log).' does not exist');
+            self::error($method . ' in ' . get_class(self::$log) . ' does not exist');
         }
 
         return '';
@@ -135,8 +135,8 @@ class Mediatag extends Command
             define('__CURRENT_DIRECTORY__', getcwd());
         }
 
-        self::$input  = $input;
-        self::$output = $output;
+        self::$input              = $input;
+        self::$output             = $output;
 
         // $this->loadStyles($input, $output);
         // utmdump($this->getName(),\get_class_vars($this::class)) ;
@@ -146,14 +146,14 @@ class Mediatag extends Command
         MediaCache::init(self::$input, self::$output);
         Option::init(self::$input, $options);
 
-        self::$Cursor  = new Cursor(self::$output);
-        self::$Console = new ConsoleOutput(self::$output, self::$input);
-        self::$Display = new Display(self::$output);
-        self::$Storage = new Storage();
-        self::$dbconn  = self::$Storage; // Storage::$DB;
+        self::$Cursor             = new Cursor(self::$output);
+        self::$Console            = new ConsoleOutput(self::$output, self::$input);
+        self::$Display            = new Display(self::$output);
+        self::$Storage            = new Storage();
+        self::$dbconn             = self::$Storage; // Storage::$DB;
 
-        self::$finder     = new MediaFinder();
-        self::$filesystem = new Filesystem();
+        self::$finder             = new MediaFinder();
+        self::$filesystem         = new Filesystem();
         // utmdump(__CURRENT_DIRECTORY__);
         // self::notice('Current Directory {0}', [__CURRENT_DIRECTORY__]);
         self::$finder->defaultCmd = $this->command;
@@ -211,7 +211,7 @@ class Mediatag extends Command
 
     public static function getApplicationPath($application)
     {
-        $command = CONFIG['mediatag'].DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'media'.$application;
+        $command = CONFIG['mediatag'] . DIRECTORY_SEPARATOR . 'bin' . DIRECTORY_SEPARATOR . 'media' . $application;
         // utmdd('CommandHelper GetApplicationPath => ' . $command);
 
         return $command;
@@ -230,8 +230,8 @@ class Mediatag extends Command
             self::$output->writeln('<info>Getting Video array</info>');
         }
         foreach ($file_array as $__ => $file) {
-            $fs        = new MediaFile($file);
-            $videoData = $fs->get();
+            $fs                                                   = new MediaFile($file);
+            $videoData                                            = $fs->get();
 
             if (!array_key_exists($videoData['video_key'], $this->videoArray['file'])) {
                 $meta_key = 'file';
@@ -250,9 +250,7 @@ class Mediatag extends Command
     //     utmdd($this->VideoList);
     // }
 
-    public function print()
-    {
-    }
+    public function print() {}
 
     public function getNumberofFiles()
     {
@@ -260,7 +258,7 @@ class Mediatag extends Command
 
         $this->getVideoArray();
         $total = count($this->videoArray['file']);
-        self::$output->writeLn('<info>MediaTag There are '.$total.' files found</info>');
+        self::$output->writeLn('<info>MediaTag There are ' . $total . ' files found</info>');
     }
 
     public function defaultCmd($options)
@@ -274,13 +272,17 @@ class Mediatag extends Command
         $table->setHeaders(
             [
                 [
-                    new TableCell(self::$input->getFirstArgument(),
+                    new TableCell(
+                        self::$input->getFirstArgument(),
                         ['colspan'  => 2,
                             'style' => new TableCellStyle(
-                                ['align' => 'center', 'fg' => 'red']),
-                        ]),
+                                ['align' => 'center', 'fg' => 'red'],
+                            ),
+                        ],
+                    ),
                 ],
-                ['name', 'desc'], ], );
+                ['name', 'desc'], ],
+        );
         foreach ($options as $cmd => $info) {
             // $table->setHeaderTitle($cmd);
             $tableRows[] = [$cmd, $info['desc']];

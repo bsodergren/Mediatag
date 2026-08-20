@@ -6,8 +6,6 @@
 
 namespace Mediatag\Modules\TagBuilder;
 
-use const PREG_SPLIT_NO_EMPTY;
-
 use Mediatag\Modules\TagBuilder\File\Reader;
 use Mediatag\Traits\Patterns\Artist;
 use Mediatag\Traits\Patterns\Genre;
@@ -19,6 +17,8 @@ use Mediatag\Utilities\Strings;
 use function array_key_exists;
 use function count;
 use function is_array;
+
+use const PREG_SPLIT_NO_EMPTY;
 
 // include_once __DATA_LISTS__.'/NamesList.php';
 
@@ -74,7 +74,7 @@ class Patterns extends TagBuilder
      *
      * @var array
      */
-    public $artist_match = [];
+    public $artist_match     = [];
 
     /**
      * regex.
@@ -86,7 +86,7 @@ class Patterns extends TagBuilder
      *
      * @var array
      */
-    public $default_regex = [
+    public $default_regex    = [
         'default' => [
             'artist' => [
                 'name'                => 'default',
@@ -113,7 +113,7 @@ class Patterns extends TagBuilder
      *
      * @var array
      */
-    public $replace_studios = [];
+    public $replace_studios  = [];
 
     /**
      * __construct.
@@ -131,7 +131,7 @@ class Patterns extends TagBuilder
             $this->video_name = $object->video_name;
             $this->video_key  = $object->video_key;
             // utmdump($this->studio);
-            $studio = strtolower($object->getStudio());
+            $studio           = strtolower($object->getStudio());
 
             $this->studio_key = str_replace(' ', '', $studio);
 
@@ -149,7 +149,7 @@ class Patterns extends TagBuilder
             if ($this->regex === null) {
                 $this->regex = [];
             }
-            $this->regex = array_merge($this->default_regex, $this->regex);
+            $this->regex      = array_merge($this->default_regex, $this->regex);
             if ($this->network !== null) {
                 if ($this->studio !== null) {
                     self::$StudioKey = $this->studio;
@@ -161,9 +161,9 @@ class Patterns extends TagBuilder
 
     public static function boot($obj)
     {
-        $mainClass = $obj::class;
-        $classes   = class_parents($obj);
-        $class     = reset($classes);
+        $mainClass               = $obj::class;
+        $classes                 = class_parents($obj);
+        $class                   = reset($classes);
         if (str_contains($class, 'Patterns')) {
             $class = $mainClass;
         }
@@ -176,7 +176,7 @@ class Patterns extends TagBuilder
 
                 [$classPath, $className] = self::classStudio(Reader::$PatternClass);
 
-                $obj->studio = $className;
+                $obj->studio             = $className;
             }
 
             // $obj->network        = $className;
@@ -191,18 +191,18 @@ class Patterns extends TagBuilder
         $classparts = explode('\\', $class);
         $classPath  = $classparts[count($classparts) - 2];
 
-        $className = end($classparts);
-        $className = Strings::StudioName($className, false);
+        $className  = end($classparts);
+        $className  = Strings::StudioName($className, false);
 
-        $parts     = preg_split('/(?=[A-Z])/', $className, -1, PREG_SPLIT_NO_EMPTY);
-        $className = implode(' ', $parts);
+        $parts      = preg_split('/(?=[A-Z])/', $className, -1, PREG_SPLIT_NO_EMPTY);
+        $className  = implode(' ', $parts);
 
         return [$classPath, $className];
     }
 
     public static function getClassObject($className, $obj)
     {
-        return new class($obj) extends Patterns {};
+        return new class ($obj) extends Patterns {};
     }
 
     /**
@@ -229,14 +229,14 @@ class Patterns extends TagBuilder
             }
         }
 
-        $array = $regex[$studio];
+        $array  = $regex[$studio];
 
         if (! array_key_exists($tag, $array)) {
             $array = $regex['default'];
 
             return false;
         }
-        $array = $array[$tag];
+        $array  = $array[$tag];
         if (! array_key_exists($key, $array)) {
             $array = $regex['default'];
             $array = $array[$tag];

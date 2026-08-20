@@ -12,9 +12,9 @@ class DevilsFilm extends Patterns
 {
     public $network = 'Devils Film';
 
-    public $studio = 'Devils Film';
+    public $studio  = 'Devils Film';
 
-    public $regex = [
+    public $regex   = [
         'devilsfilm' => [
             'artist' => [
                 'pattern'             => '/([a-zA-Z\-0-9]+)?\_s([0-9]{2,3})\_([a-zA-Z_]{1,})\_[0-9]{0,10}/i',

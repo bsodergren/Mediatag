@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Commands\Find;
 
@@ -17,6 +20,6 @@ class FindProcess extends Process
     {
         MediaFinder::$quiet = true;
         parent::boot($input, $output);
-        $this->VideoList = parent::getVideoArray();
+        $this->VideoList    = parent::getVideoArray();
     }
 }

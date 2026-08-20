@@ -36,29 +36,29 @@ class VideoInfo
 
     public $returnText;
 
-    public $updatedText = '<fg=green>Updated ';
+    public $updatedText    = '<fg=green>Updated ';
 
-    public $newText = '<fg=red>Wrote ';
+    public $newText        = '<fg=red>Wrote ';
 
     public $resultCount;
 
-    public $actionText = '';
+    public $actionText     = '';
 
     public $VideoInfo;
 
     public $fileCount;
 
-    public $maxLen = 40;
+    public $maxLen         = 40;
 
-    public $fileLen = 0;
+    public $fileLen        = 0;
 
-    public $thumbExt = '.jpg';
+    public $thumbExt       = '.jpg';
 
-    public $thumbDir = __INC_WEB_THUMB_DIR__;
+    public $thumbDir       = __INC_WEB_THUMB_DIR__;
 
-    public $thumbType = 'preview';
+    public $thumbType      = 'preview';
 
-    public $progressBar = false;
+    public $progressBar    = false;
 
     public $VideoDataTable;
 
@@ -94,7 +94,7 @@ class VideoInfo
         $secs    = $seconds % 60;
         $hrs     = $seconds / 60;
         $hrs     = floor($hrs);
-        $mins    = $hrs % 60;
+        $mins    = $hrs     % 60;
         $hrs /= 60;
 
         return sprintf('%02d:%02d:%02d.00', $hrs, $mins, $secs);

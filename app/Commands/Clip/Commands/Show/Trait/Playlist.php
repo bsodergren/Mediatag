@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Clip\Commands\Show\Trait;
 
@@ -13,7 +16,7 @@ trait Playlist
         $sql     = ' SELECT id,name,genre,Library FROM ' . __MYSQL_PLAYLIST_DATA__ . ' WHERE hide =0';
         $results = Storage::$DB->query($sql);
 
-        $table = new Table(Mediatag::$output);
+        $table   = new Table(Mediatag::$output);
         $table->setHeaderTitle('Playlist');
         $table->setHeaders(['id', 'name', 'genre', 'library']);
         foreach ($results as $cmd => $info) {
@@ -32,7 +35,7 @@ trait Playlist
 
     public function getPlaylistVideos($playlist_id)
     {
-        $sql = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
+        $sql     = '        select CONCAT(v.fullpath,\'/\',v.filename) as file_name
         from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
         ' . __MYSQL_VIDEO_FILE__ . '  as v,
         ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p

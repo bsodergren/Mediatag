@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Commands\Find;
 
@@ -19,7 +22,7 @@ class FindOptions extends Options
     {
         self::$Class = __CLASS__;
         // $parentOptions = parent::Definitions();
-        $options = [
+        $options     = [
 
             ['existing', 'e', InputOption::VALUE_NONE, self::text('L__PLAYLIST_FIND')],
             ['missing', 'm', InputOption::VALUE_NONE, self::text('L__PLAYLIST_MISSING')],

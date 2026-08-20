@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\AdultTime\AdultTime;
 
 class WatchYouCheat extends AdultTime
 {
-    public $studio = 'Watch You Cheat';
+    public $studio  = 'Watch You Cheat';
 
     public $network = 'Adult Time';
 }

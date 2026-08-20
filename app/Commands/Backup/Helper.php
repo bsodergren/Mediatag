@@ -25,7 +25,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $baseCommand = [
+        $baseCommand   = [
             'mysqldump',
             '-h',
             'localhost',
@@ -40,12 +40,12 @@ trait Helper
             $backupFile,
         ];
 
-        $command = array_merge($baseCommand, $options, $fileoutputCmd);
+        $command       = array_merge($baseCommand, $options, $fileoutputCmd);
 
-        $process = new ExecProcess($command);
+        $process       = new ExecProcess($command);
         $process->setTimeout(60000);
         $process->run();
-        $res = $process->getOutput();
+        $res           = $process->getOutput();
 
         unset($process);
     }
@@ -63,7 +63,7 @@ trait Helper
         $this->mysqlDump(['-d', __MYSQL_DATABASE__], $backupDbFile);
         $this->backupFuncDb();
 
-        $defines = get_defined_constants(true);
+        $defines      = get_defined_constants(true);
         foreach ($defines['user'] as $key => $value) {
             if (str_contains($key, 'TABLE__')) {
                 $tables[] = $value;
@@ -103,7 +103,7 @@ trait Helper
         }
 
         if (array_key_exists($key, $this->video_array)) {
-            $arr = MediaArray::array_iunique($this->video_array[$key]);
+            $arr                     = MediaArray::array_iunique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 if (str_contains($video_path, $options)) {
                     $dir_array[] = $video_path;
@@ -134,7 +134,7 @@ trait Helper
 
             echo "Rsyncing {$files}" . PHP_EOL;
 
-            $arr = MediaArray::array_iunique($this->video_array[$key]);
+            $arr   = MediaArray::array_iunique($this->video_array[$key]);
             foreach ($arr as $n => $video_path) {
                 $newPath = str_replace($home, $path, $video_path);
                 // $newFile = $newPath.DIRECTORY_SEPARATORvideo_pathvideo['video_name'];
@@ -173,7 +173,7 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $command = [
+        $command  = [
             'rsync',
             '--progress',
             '--update',
@@ -186,7 +186,7 @@ trait Helper
 
         $callback = Callback::check([$this, 'Output']);
 
-        $process = new ExecProcess($command);
+        $process  = new ExecProcess($command);
         $process->setTimeout(60000);
         //  utmdd([__METHOD__,$process->getcommandline()]);
         $process->start();

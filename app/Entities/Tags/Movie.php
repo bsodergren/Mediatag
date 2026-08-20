@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Entities\Tags;
 
@@ -8,13 +11,13 @@ use Mediatag\Modules\Metatags\Title;
 
 class Movie extends MetaEntities
 {
-    private static $ApOption = '-H';
+    private static $ApOption   = '-H';
 
-    private static $regexkey = 1;
+    private static $regexkey   = 1;
 
     // ([a-zA-Z_-]+)(?:[\d]+)?(-|_)?(?:(e|episode)(?:[0-9]+)(?:-|_))?(?:(s|scene)?(-|_)?(?:[0-9]+))
     // private static $tvRegex = '/([a-zA-Z_-]+)([\d]+)?(-|_)?((e|episode)([0-9]+)(-|_))?((s|scene)?(-|_)?([0-9]+))/i';
-    private static $tvRegex = '/^(?P<movie1>[a-zA-Z_\-]+)(?:(?:-|_)(?:(?:s|scene)|(?:e)(?:[\d]+))).*|(?:(?:[a-zA-Z0-9\-_]+)_(?:(?P<movie2>[a-zA-Z]{3,})(?:[\d]+))\.mp4)|^(?P<movie3>[a-zA-Z_\-]+)/i';
+    private static $tvRegex    = '/^(?P<movie1>[a-zA-Z_\-]+)(?:(?:-|_)(?:(?:s|scene)|(?:e)(?:[\d]+))).*|(?:(?:[a-zA-Z0-9\-_]+)_(?:(?P<movie2>[a-zA-Z]{3,})(?:[\d]+))\.mp4)|^(?P<movie3>[a-zA-Z_\-]+)/i';
 
     public static $MetatagName = 'movie'; //also the DB column
 
@@ -45,10 +48,10 @@ class Movie extends MetaEntities
 
     public static function clean($name)
     {
-        $name = trim($name, '-_');
-        $name = str_replace(['_e', '-Scene'], '', $name);
+        $name  = trim($name, '-_');
+        $name  = str_replace(['_e', '-Scene'], '', $name);
 
-        $name = str_replace(['_', '-'], ' ', $name);
+        $name  = str_replace(['_', '-'], ' ', $name);
 
         if ($name == 'MHBHM') {
             $name = 'My Husband Brought Home His Mistress';
@@ -59,7 +62,7 @@ class Movie extends MetaEntities
         $aName = str_replace('  ', ' ', $aName);
         $aName = str_replace('P O V', 'POV', $aName);
         // utmdump($aName);
-        $aName = (new Javascript)->read($aName);
+        $aName = (new Javascript())->read($aName);
 
         return $aName;
     }

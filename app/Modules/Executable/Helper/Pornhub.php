@@ -17,10 +17,10 @@ use const PHP_EOL;
 
 class Pornhub extends VideoDownloader
 {
-    public $options = [
+    public $options   = [
         '-v',
         '-o',
-        __PLEX_DOWNLOAD__.'/Pornhub/'.Youtube::__YT_DL_FORMAT__,
+        __PLEX_DOWNLOAD__ . '/Pornhub/' . Youtube::__YT_DL_FORMAT__,
         '-u',
         CONFIG['PH_USERNAME'],
         '-p',
@@ -35,7 +35,7 @@ class Pornhub extends VideoDownloader
 
     public function init($object)
     {
-        $this->num_of_lines = $object->num_of_lines;
+        $this->num_of_lines            = $object->num_of_lines;
         // utmdd(get_class_vars(get_class($object)), Option::getValue('max'), $object->num_of_lines);
 
         $this->registeredbufferFilters = [
@@ -146,17 +146,17 @@ class Pornhub extends VideoDownloader
 
     public function Pornhub($buffer, $line_id)
     {
-        $outputText = '';
-        $buffer     = MediatagExec::cleanBuffer($buffer);
+        $outputText                   = '';
+        $buffer                       = MediatagExec::cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = false;
         if (str_contains($buffer, 'webpage')) {
             if (Option::istrue('skip')) {
                 --$this->num_of_lines;
             }
-            $line_id = '<id>'.$this->num_of_lines.'</id>';
+            $line_id    = '<id>' . $this->num_of_lines . '</id>';
 
-            $outputText = $line_id.' <text>Trying to download  '.$this->key.'  </text>';
+            $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
         }
 
         return $outputText;

@@ -14,12 +14,12 @@ final class ChapterCommand extends MediaCommand
 {
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = [
+    public $command          = [
         'chapter' => [
-            'exec'              => null,
+            'exec'               => null,
             'getChapterList'     => null,
-            'createChapterFile' => null, ],
+            'createChapterFile'  => null, ],
     ];
 }

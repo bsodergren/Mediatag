@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Most;
 
@@ -18,9 +21,9 @@ class MostCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['most' => [
+    public $command          = ['most' => [
         'init'      => null,
         'exec'      => null,
         'execInfo'  => null,

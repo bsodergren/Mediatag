@@ -12,11 +12,11 @@ const TWENTYFIRSTSEXTURY_REGEX_COMMON = '/([a-zA-Z0-9\-]+)\_s[0-9]{2,3}\_(.*)\_[
 
 class TwentyFirstSextury extends Patterns
 {
-    public $studio = '21st Sextury';
+    public $studio  = '21st Sextury';
 
     public $network = '21st Sextury';
 
-    public $regex = [
+    public $regex   = [
         'twentyfirstsextury' => [
             'artist' => [
                 'pattern'             => TWENTYFIRSTSEXTURY_REGEX_COMMON,

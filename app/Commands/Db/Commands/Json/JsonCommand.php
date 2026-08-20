@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Json;
 
@@ -18,7 +21,7 @@ class JsonCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = false;
+    public const USE_SEARCH  = false;
 
-    public $command = ['json' => ['JsonExec' => null]];
+    public $command          = ['json' => ['JsonExec' => null]];
 }

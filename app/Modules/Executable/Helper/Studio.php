@@ -19,7 +19,7 @@ use function array_key_exists;
 
 class Studio extends VideoDownloader
 {
-    public $options = [
+    public $options   = [
         '-o',
         __PLEX_DOWNLOAD__ . '/Nubiles/' . Youtube::__YT_DL_FORMAT__,
         '-u',
@@ -32,7 +32,7 @@ class Studio extends VideoDownloader
 
     public function init($object)
     {
-        $this->num_of_lines = $object->num_of_lines;
+        $this->num_of_lines            = $object->num_of_lines;
         //utmdd(get_class_vars(get_class($object)), Option::getValue('max'), $object->num_of_lines);
 
         $this->registeredbufferFilters = [
@@ -113,13 +113,13 @@ class Studio extends VideoDownloader
 
     public function NubilesPorn($buffer, $line_id)
     {
-        $outputText = '';
-        $buffer     = MediatagExec::cleanBuffer($buffer);
+        $outputText                   = '';
+        $buffer                       = MediatagExec::cleanBuffer($buffer);
 
         PlaylistProcess::$current_key = false;
         if (str_contains($buffer, $this->key . ': Downloading')) {
             // $this->num_of_lines--;
-            $line_id = '<id>' . $this->num_of_lines . '</id>';
+            $line_id    = '<id>' . $this->num_of_lines . '</id>';
 
             $outputText = $line_id . ' <text>Trying to download  ' . $this->key . '  </text>';
         }

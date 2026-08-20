@@ -39,7 +39,7 @@ class Genre extends TagBuilder
 
     public static function clean($text, $file = null)
     {
-        $tag = 'genre';
+        $tag       = 'genre';
         if ($text === '') {
             return null;
         }
@@ -56,7 +56,7 @@ class Genre extends TagBuilder
             return null;
         }
 
-        $delim = ',';
+        $delim     = ',';
 
         $tag_array = explode($delim, $text);
         $arr       = self::fixGenres($tag_array);
@@ -66,7 +66,7 @@ class Genre extends TagBuilder
 
     private static function fixGenres($array)
     {
-        $storage = new Storage;
+        $storage    = new Storage();
         // $array   = MediaArray::array_iunique($array);
         // $array   = array_filter($array);
         $genreArray = [];
@@ -96,7 +96,7 @@ class Genre extends TagBuilder
             return implode(',', $arr);
         }
 
-        $found = MediaArray::search($uppercase, strtolower($text), exact: true);
+        $found     = MediaArray::search($uppercase, strtolower($text), exact: true);
         if ($found) {
             return strtoupper($text);
         }

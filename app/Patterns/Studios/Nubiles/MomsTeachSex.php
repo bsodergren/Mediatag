@@ -16,7 +16,7 @@ class MomsTeachSex extends Nubiles
 {
     public $studio = 'Moms Teach Sex';
 
-    public $regex = [
+    public $regex  = [
         'momsteachsex' => [
             'title' => [
                 'pattern' => '/(momsteachsex_)?([a-zA-Z_\-0-9]{1,})\_[0-9]{0,10}/i',

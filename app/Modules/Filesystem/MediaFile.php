@@ -6,13 +6,7 @@
 
 namespace Mediatag\Modules\Filesystem;
 
-use const DIRECTORY_SEPARATOR;
-use const PATHINFO_DIRNAME;
-use const PATHINFO_EXTENSION;
-use const PATHINFO_FILENAME;
-
 use UTM\Utilities\Option;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Utilities\Strings;
@@ -23,17 +17,22 @@ use Symfony\Component\Filesystem\Filesystem as SFilesystem;
 use function dirname;
 use function sprintf;
 
+use const DIRECTORY_SEPARATOR;
+use const PATHINFO_DIRNAME;
+use const PATHINFO_EXTENSION;
+use const PATHINFO_FILENAME;
+
 class MediaFile
 {
     public $video_file;
 
     public $video_key;
 
-    public $video_id = null;
+    public $video_id        = null;
 
     public $video_name;
 
-    public $video = [];
+    public $video           = [];
 
     public $output;
 
@@ -97,11 +96,11 @@ class MediaFile
         $numeric = [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 6, 1, 2, 3, 4, 5];
         // $text = basename($text);
         //  $text    = strtolower($text);
-        $key = md5($text);
+        $key     = md5($text);
         // $key = str_replace($alpha, $numeric, $text);
         // $key = str_replace(['_', '-', '.', '/', ' '], '', $key);
         // $len = \strlen($key);
-        $xkey = 'x' . substr($key, 0, 31);
+        $xkey    = 'x' . substr($key, 0, 31);
 
         return $xkey;
     }
@@ -112,11 +111,11 @@ class MediaFile
         $video_key = null;
         $pcs       = pathinfo($file);
 
-        $filename = $pcs['basename'];
-        $ext      = $pcs['extension'];
+        $filename  = $pcs['basename'];
+        $ext       = $pcs['extension'];
 
         if ($library === null) {
-            $filesystem   = new SFilesystem;
+            $filesystem   = new SFilesystem();
             $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
 
             preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
@@ -127,12 +126,12 @@ class MediaFile
         }
 
         if ($library === null) {
-              $success = preg_match('/-?(p?h?P?H?[a-z0-9]{4,}).(mp4|info.*)/', $filename, $matches);
-                // $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
-                if ($success == 1) {
-                    $video_key = $matches[1];
-                    $library = "Pornhub";
-                }
+            $success = preg_match('/-?(p?h?P?H?[a-z0-9]{4,}).(mp4|info.*)/', $filename, $matches);
+            // $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
+            if ($success == 1) {
+                $video_key = $matches[1];
+                $library   = "Pornhub";
+            }
         }
 
         if ($library == 'Pornhub') {
@@ -222,13 +221,13 @@ class MediaFile
     public function library(): string
     {
         // utminfo(func_get_args());
-        $directory = Option::getValue('path', true) ;
+        $directory    = Option::getValue('path', true) ;
 
         if ($this->video_file) {
             $directory = $this->filepath();
         }
 
-        $filesystem   = new SFilesystem;
+        $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative($directory, __PLEX_HOME__);
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
@@ -334,7 +333,7 @@ class MediaFile
             NetteFile::createDir($dirname);
         }
 
-        $fp = fopen($file, 'a+');
+        $fp  = fopen($file, 'a+');
         fwrite($fp, $string);
         fclose($fp);
     }
@@ -359,9 +358,9 @@ class MediaFile
     public static function isPornhubfile($filename)
     {
         // utminfo(func_get_args());
-        $library = '';
+        $library      = '';
 
-        $filesystem   = new SFilesystem;
+        $filesystem   = new SFilesystem();
         $in_directory = $filesystem->makePathRelative(__CURRENT_DIRECTORY__, __PLEX_HOME__);
 
         preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
@@ -370,7 +369,7 @@ class MediaFile
             $library = $match[1];
         }
 
-        $success = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
+        $success      = preg_match('/(-p?h?[a-z0-9]{4,})/i', $filename, $matches);
 
         if ($success == 1) {
             if ($library == 'Studios') {
@@ -401,8 +400,8 @@ class MediaFile
         $fileExtension = pathinfo($fileName, PATHINFO_EXTENSION);
         $fileBaseName  = pathinfo($fileName, PATHINFO_FILENAME);
 
-        $newFileName = $fileBaseName;
-        $counter     = 1;
+        $newFileName   = $fileBaseName;
+        $counter       = 1;
 
         // Check if file exists and generate a new name if it does
         while (file_exists($fileDirectory . DIRECTORY_SEPARATOR . $newFileName . '.' . $fileExtension)) {

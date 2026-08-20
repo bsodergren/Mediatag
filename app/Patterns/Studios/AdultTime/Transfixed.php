@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\AdultTime\AdultTime;
 
 class Transfixed extends AdultTime
 {
-    public $studio = 'Transfixed';
+    public $studio  = 'Transfixed';
 
     public $network = 'Adult Time';
 }

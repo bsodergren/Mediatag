@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
 
 class DeepthroatFrenzy extends TwentyFirstSextury
 {
-    public $studio = 'Deepthroat Frenzy';
+    public $studio  = 'Deepthroat Frenzy';
 
     public $network = '21st Sextury';
 }

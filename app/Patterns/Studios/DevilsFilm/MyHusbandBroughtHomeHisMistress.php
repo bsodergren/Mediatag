@@ -14,13 +14,13 @@ use Mediatag\Patterns\Studios\DevilsFilm\DevilsFilm;
 
 class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 {
-    public $studio = 'My Husband Brought Home His Mistress';
+    public $studio  = 'My Husband Brought Home His Mistress';
 
     public $network = 'Devils Film';
 
     // public $artistNames;
 
-    public $regex = [
+    public $regex   = [
         'myhusbandbroughthomehismistress' => [
             'artist' => [
                 'delim'               => '_',
@@ -116,7 +116,7 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
         $filename = basename($file);
         if (! str_starts_with($filename, 'MHBHM')) {
-            $path = str_replace('/' . $filename, '', $file);
+            $path     = str_replace('/' . $filename, '', $file);
 
             // $new = preg_replace('/([a-zA-Z]+([0-9]+))?-?(.*)?_([s0-9]+)_(.*)/i', 'MHBHM_e$2_$4_$3-$5', $filename);
             preg_match('/([a-zA-Z]+([0-9]+))?-?(.*)?_([s0-9]+)_(.*)/', $filename, $output_array);
@@ -130,10 +130,10 @@ class MyHusbandBroughtHomeHisMistress extends DevilsFilm
 
             $nArray[] = '-' . $output_array[5];
 
-            $name = implode('_', $nArray);
-            $name = str_replace('__', '_', $name);
+            $name     = implode('_', $nArray);
+            $name     = str_replace('__', '_', $name);
 
-            $name = str_replace('_-', '-', $name);
+            $name     = str_replace('_-', '-', $name);
             if ($name != $filename) {
                 return $path . DIRECTORY_SEPARATOR . $name;
             }

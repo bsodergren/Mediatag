@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\FantasyMassage\FantasyMassage;
 
 class NuruMassage extends FantasyMassage
 {
-    public $studio = 'Nuru Massage';
+    public $studio  = 'Nuru Massage';
 
     public $network = 'Fantasy Massage';
 }

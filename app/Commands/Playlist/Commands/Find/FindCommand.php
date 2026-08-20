@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Playlist\Commands\Find;
 
@@ -18,7 +21,7 @@ class FindCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['find' => ['findObjects' => null]];
+    public $command          = ['find' => ['findObjects' => null]];
 }

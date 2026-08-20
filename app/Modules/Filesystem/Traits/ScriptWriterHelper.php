@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Modules\Filesystem\Traits;
 
@@ -29,20 +32,25 @@ trait ScriptWriterHelper
         // utminfo(func_get_args());
 
         if (count($file_array) > 0) {
-            $this->NewFilesCommandScript($file_array,
+            $this->NewFilesCommandScript(
+                $file_array,
                 [
                     'filename' => 'UpdateNewFiles.sh',
                     'command'  => 'update',
                     'options'  => ['update', '-f'],
-                ]);
-            $this->NewFilesCommandScript($file_array,
+                ],
+            );
+            $this->NewFilesCommandScript(
+                $file_array,
                 [
                     'filename' => 'ClearNewfiles.sh',
                     'command'  => 'update',
                     'options'  => ['clear', '-f'],
-                ]);
+                ],
+            );
 
-            $this->NewFilesCommandScript($file_array,
+            $this->NewFilesCommandScript(
+                $file_array,
                 ['filename'       => 'AddtoDb.sh',
                     'commandList' => [
                         [
@@ -56,15 +64,18 @@ trait ScriptWriterHelper
                             'addfiles' => false,
                         ],
                     ],
-                ]
+                ],
             );
-            $this->NewFilesCommandScript($file_array,
+            $this->NewFilesCommandScript(
+                $file_array,
                 [
                     'filename' => 'RemoveFromDb.sh',
                     'command'  => 'mediadb',
                     'options'  => ['remove', '-f'],
-                ]);
-            $this->NewFilesCommandScript($file_array,
+                ],
+            );
+            $this->NewFilesCommandScript(
+                $file_array,
                 ['filename'       => 'jsonDB.sh',
                     'commandList' => [
                         [
@@ -78,7 +89,7 @@ trait ScriptWriterHelper
                             'addfiles' => false,
                         ],
                     ],
-                ]
+                ],
             );
         }
     }

@@ -22,13 +22,13 @@ class Process extends Mediatag
 {
     use Helper;
 
-    public $VideoList = [];
+    public $VideoList       = [];
 
     public $defaultCommands = [
         'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
         'colors' => [
             'colors' => null,
         ],
@@ -50,14 +50,14 @@ class Process extends Mediatag
     {
         parent::boot($input, $output);
 
-        $display = new Display(Mediatag::$output);
+        $display                  = new Display(Mediatag::$output);
         //    self::$outCmd = $display->BarBottom;
 
         self::$progressIndicator  = new MediaIndicator('Top');
         self::$progressIndicator3 = new MediaIndicator('second');
         self::$progressIndicator->startIndicator('watching folder ' . __CURRENT_DIRECTORY__);
-        self::$outLn  = $display->MetaBlockSection;
-        self::$outCmd = $display->VideoInfoSection;
+        self::$outLn              = $display->MetaBlockSection;
+        self::$outCmd             = $display->VideoInfoSection;
     }
 
     public function exec($option = null)
@@ -73,7 +73,7 @@ class Process extends Mediatag
                 '*.mp4',
             ]));
 
-        $loop = Loop::get();
+        $loop    = Loop::get();
         $loop->addPeriodicTimer(0.5, function () {
             self::$progressIndicator->advance();
         });
@@ -122,8 +122,8 @@ class Process extends Mediatag
 
     private function update($file)
     {
-        $command = ['mediaupdate', '--nocache', '-f', $file];
-        $process = new execProcess($command);
+        $command          = ['mediaupdate', '--nocache', '-f', $file];
+        $process          = new execProcess($command);
         $process->setTimeout(60000);
         $this->runCommand = $process->getCommandLine();
         // utmdump($this->runCommand);
@@ -144,8 +144,8 @@ class Process extends Mediatag
 
     private function dbupdate()
     {
-        $command = ['mediadb'];
-        $process = new execProcess($command);
+        $command          = ['mediadb'];
+        $process          = new execProcess($command);
         $process->setTimeout(60000);
         $this->runCommand = $process->getCommandLine();
         // utmdd($this->runCommand);
@@ -156,8 +156,8 @@ class Process extends Mediatag
 
     private function dbupdateAll()
     {
-        $command = ['mediadb', 'all'];
-        $process = new execProcess($command);
+        $command          = ['mediadb', 'all'];
+        $process          = new execProcess($command);
         $process->setTimeout(60000);
         $this->runCommand = $process->getCommandLine();
         // utmdd($this->runCommand);

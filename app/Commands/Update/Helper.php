@@ -6,8 +6,6 @@
 
 namespace Mediatag\Commands\Update;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Executable\MediatagExec;
@@ -24,6 +22,8 @@ use UTM\Utilities\Option;
 
 use function count;
 use function is_array;
+
+use const PHP_EOL;
 
 trait Helper
 {
@@ -72,8 +72,8 @@ trait Helper
     public function clearMeta($options = [])
     {
         // utminfo(func_get_args());
-        $VideoList = $this->VideoList['file'];
-        $count     = count($VideoList);
+        $VideoList   = $this->VideoList['file'];
+        $count       = count($VideoList);
 
         $progressBar = new ProgressBar(Mediatag::$Display->BarSection1, $count);
         $progressBar->setBarWidth(__CONSOLE_WIDTH__ - 50);
@@ -111,7 +111,7 @@ trait Helper
         // $progressBar2->setFormat('custom');
 
         foreach ($VideoList as $key => $videoInfo) {
-            $tagObj = new TagReader;
+            $tagObj     = new TagReader();
             $tagObj->loadVideo($videoInfo);
 
             $tagBuilder = new TagBuilder($key, $tagObj);
@@ -119,11 +119,11 @@ trait Helper
             $videoArray = $tagBuilder->getTags($videoInfo);
             // utmdd($videoArray);
 
-            $message = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
+            $message    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             if (count($videoArray['updateTags']) > 0) {
                 $this->ChangesArray[] = $videoArray;
                 // $this->LogDifferences($videoArray);
-                $message = Mediatag::$Display->truncate($message, __CONSOLE_WIDTH__ - 35);
+                $message              = Mediatag::$Display->truncate($message, __CONSOLE_WIDTH__ - 35);
                 Mediatag::$Display->BarBottom->overwrite('<text>' . $idx . '</text> <file>' . $message . '</file>');
                 // $progressBar2->setMessage($idx, 'index');
                 // $progressBar2->setMessage($message, 'videoname');
@@ -192,12 +192,12 @@ trait Helper
             $index = 1;
         }
 
-        $lines = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
+        $lines                        = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
         // utmdd($videoArray);
 
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
-            $value = trim($value);
+            $value            = trim($value);
 
             $videoBlockInfo[] = Mediatag::$Display->formatTagLine($tag, $value, 'fg=blue');
         }
@@ -232,7 +232,7 @@ trait Helper
         $videoList = $this->ChangesArray;
         $count     = count($videoList);
         // utmdd([$videoList, $count]);
-        $idx = 1;
+        $idx       = 1;
 
         Mediatag::$Display->displayHeader(['count' => $count]);
         // Mediatag::$Display->displayTimer = $this->displayTimer;
@@ -247,7 +247,7 @@ trait Helper
                     $line_array[] = ' ';
                     // Mediatag::$output->writeln($count.' '.$n);
                 }
-                $line = implode(PHP_EOL, $line_array);
+                $line       = implode(PHP_EOL, $line_array);
                 Mediatag::$output->writeln($line);
             }
 
@@ -273,7 +273,7 @@ trait Helper
         foreach ($this->VideoList['file'] as $videoInfo) {
             $video_filename = $videoInfo['video_name'];
 
-            $match = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
+            $match          = preg_match('/.*_?[0-9]{3,5}[pP]?\_[0-9\.]{2,6}[kK]?\_([0-9]{3,15})/', $video_filename, $output_array);
             if ($match == 1) {
                 $number = $output_array[1];
                 $file   = $this->getphdbUrl($number);
@@ -294,8 +294,8 @@ trait Helper
     {
         // utminfo(func_get_args());
 
-        $client   = HttpClient::create();
-        $response = $client->request(
+        $client     = HttpClient::create();
+        $response   = $client->request(
             'GET',
             $url,
         );
@@ -326,12 +326,12 @@ trait Helper
         $this->lineOut = false;
         $callback      = Callback::check([$this, 'urlCallback']);
 
-        $command = [
+        $command       = [
             '/usr/bin/grep',
             $number,
             $file,
         ];
-        $proccess = new Process($command);
+        $proccess      = new Process($command);
         // utmdd($proccess->getCommandLine());
         $proccess->run($callback);
 

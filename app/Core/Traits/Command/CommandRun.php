@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Core\Traits\Command;
 
@@ -63,7 +66,7 @@ trait CommandRun
 
         $input->validate();
 
-        $statusCode = 0;
+        $statusCode    = 0;
         if ($this->code) {
             //
             $statusCode = ($this->code)($input, $output);
@@ -79,8 +82,8 @@ trait CommandRun
                          * unnamed
                          */
                         static::class,
-                        get_debug_type($statusCode)
-                    )
+                        get_debug_type($statusCode),
+                    ),
                 );
             }
         }

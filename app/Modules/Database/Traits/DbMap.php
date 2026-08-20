@@ -97,7 +97,7 @@ trait DbMap
 
         $existing = $this->getTag($tag, $text, true);
 
-        $string = $this->sortTagList($existing, $addition);
+        $string   = $this->sortTagList($existing, $addition);
 
         $this->updateTag($tag, $text, $string, $show);
     }
@@ -110,24 +110,24 @@ trait DbMap
         $where    = $this->getTagWhere($tag, $text);
         $existing = $this->getTag($tag, $text, true);
 
-        $updates = [];
+        $updates  = [];
 
         if ($replacement !== null) {
             $replacement = $this->sortTagList($replacement);
 
-            $updates[] = " replacement = '" . $replacement . "' ";
+            $updates[]   = " replacement = '" . $replacement . "' ";
         }
         if ($show !== null) {
             $updates[] = ' keep = ' . $show . ' ';
         }
 
-        $replace = implode(',', $updates);
+        $replace  = implode(',', $updates);
         if ($existing === false) {
             $this->addTag($tag, $text);
         }
 
-        $query  = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
-        $result = $this->queryOne($query);
+        $query    = 'UPDATE ' . $table . ' SET ' . $replace . ' WHERE  ' . $where;
+        $result   = $this->queryOne($query);
     }
 
     private function getTagWhere($tag, $text)

@@ -10,10 +10,10 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class TeamSkeet extends Patterns
 {
-    public $network = 'Team Skeet';
+    public $network         = 'Team Skeet';
     //  public $studio = 'Team Skeet';
 
-    public $regex = [
+    public $regex           = [
         'teamskeet' => [
             'artist' => [
                 'pattern'             => '/[a-z-]{1,}\_([a-zA-Z_]{1,})[0-9]?\_full.*[0-9]{1,4}.*\.mp4/i',

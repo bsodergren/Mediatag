@@ -37,11 +37,11 @@ class Process extends Mediatag
 
     public $dbConn;
 
-    protected $useFuncs = ['addMeta'];
+    protected $useFuncs     = ['addMeta'];
 
-    public $db_array = [];
+    public $db_array        = [];
 
-    public $file_array = [];
+    public $file_array      = [];
 
     public $Search_Array;
 
@@ -49,22 +49,22 @@ class Process extends Mediatag
 
     public $meta;
 
-    public $OutputText = [];
+    public $OutputText      = [];
 
-    public $New_Array = [];
+    public $New_Array       = [];
 
-    public $Deleted_Array = [];
+    public $Deleted_Array   = [];
 
-    public $Changed_Array = [];
+    public $Changed_Array   = [];
 
-    public $allDbFiles = [];
+    public $allDbFiles      = [];
 
     public $defaultCommands = [
         // 'init' => null,
         // 'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
     ];
 
     private $count;
@@ -92,11 +92,11 @@ class Process extends Mediatag
         }
         // $this->DbMap =StorageDB::$DB();
         //
-        $this->allDbFiles = StorageDB::$DB->getAllDbFiles();
+        $this->allDbFiles          = StorageDB::$DB->getAllDbFiles();
 
         if (count($this->Search_Array) > 0) {
             foreach ($this->Search_Array as $k => $file) {
-                $key = File::getVideoKey($file);
+                $key                    = File::getVideoKey($file);
                 // utmdump($key, $file);
                 // utmdd($key, $this->allDbFiles);
 
@@ -104,24 +104,24 @@ class Process extends Mediatag
                     $existing_file = $this->allDbFiles[$key];
 
                     if ($existing_file != $file) {
-                        [$keep, $move] = VideoFileInfo::compareDupes($existing_file, $file);
+                        [$keep, $move]          = VideoFileInfo::compareDupes($existing_file, $file);
 
                         // Mediatag::$Console->writeln('existi file ' . $existing_file . '');
                         // Mediatag::$Console->writeln('Keepin file ' . $keep . '');
                         if (file_exists($move)) {
-                            Mediatag::$Console->write('Moving file '.$move.' ');
-                            $movedFile = str_replace('/'.__LIBRARY__, '/Dupes/'.__LIBRARY__, $move);
+                            Mediatag::$Console->write('Moving file ' . $move . ' ');
+                            $movedFile = str_replace('/' . __LIBRARY__, '/Dupes/' . __LIBRARY__, $move);
                             $dupePath  = dirname($movedFile);
                             $filename  = basename($file);
 
-                            $dupePath = nFileSystem::normalizePath($dupePath);
+                            $dupePath  = nFileSystem::normalizePath($dupePath);
                             if (!is_dir($dupePath)) {
                                 //     if (!Option::isTrue('test')) {
                                 nFileSystem::createDir($dupePath, 0755);
                                 //     }
                             }
                             Mediatag::$Console->writeln('to dupe folder');
-                            (new SfSystem())->rename($move, $dupePath.DIRECTORY_SEPARATOR.$filename, true);
+                            (new SfSystem())->rename($move, $dupePath . DIRECTORY_SEPARATOR . $filename, true);
                         }
 
                         unset($this->file_array[$key]);
@@ -135,7 +135,7 @@ class Process extends Mediatag
         }
         StorageDB::$DB->file_array = $this->file_array;
 
-        $this->db_array = StorageDB::$DB->getDbFileList();
+        $this->db_array            = StorageDB::$DB->getDbFileList();
 
         return $this;
     }
@@ -149,7 +149,5 @@ class Process extends Mediatag
         $this->execUpdate();
     }
 
-    public function testExec($option)
-    {
-    }
+    public function testExec($option) {}
 }

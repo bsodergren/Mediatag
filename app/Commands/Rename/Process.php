@@ -25,7 +25,7 @@ class Process extends Mediatag
         'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
         'lowercase' => [
             'lowercase' => null,
         ],
@@ -34,13 +34,13 @@ class Process extends Mediatag
         ],
     ];
 
-    protected $useFuncs = ['addMeta', 'setupMap'];
+    protected $useFuncs     = ['addMeta', 'setupMap'];
 
-    public $genrePath = [];
+    public $genrePath       = [];
 
-    private $searchChars = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
+    private $searchChars    = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
 
-    private $replaceChars = ['_', '-', '-', 'AM', 'PM', '.', 'mp4'];
+    private $replaceChars   = ['_', '-', '-', 'AM', 'PM', '.', 'mp4'];
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {

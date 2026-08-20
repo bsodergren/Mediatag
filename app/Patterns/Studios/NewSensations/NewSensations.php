@@ -12,14 +12,14 @@ const NEWSENSATIONS_REGEX_COMMON = '//i';
 
 class NewSensations extends Patterns
 {
-    public $regex = [
+    public $regex           = [
         'newsensations' => [
             'studio' => [
                 'pattern' => '/^([a-zA-Z0-9-]+)_.*/i', ],
         ],
     ];
 
-    public $network = 'New Sensations';
+    public $network         = 'New Sensations';
 
     public $replace_studios = [
         'ILoveMyMomsBigTits'         => 'I Love My Moms Big Tits',

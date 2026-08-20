@@ -16,5 +16,5 @@ class MyWifesHotFriend extends NaughtyAmerica
 {
     public $network = 'Naughty America';
 
-    public $studio = 'My Wifes Hot Friend';
+    public $studio  = 'My Wifes Hot Friend';
 }

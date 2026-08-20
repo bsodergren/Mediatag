@@ -16,7 +16,7 @@ class DigitalPlayground extends Patterns
 {
     public $studio = 'Digital Playground';
 
-    public $regex = [
+    public $regex  = [
         'digitalplayground' => [
             'title' => [
                 'pattern' => '/([a-zA-Z-]+)(-(episode|scene)?([-0-9]{1,}))?\_[0-9]{0,10}/i',
@@ -66,8 +66,8 @@ class DigitalPlayground extends Patterns
                     $titleArray[] = trim($output_array[2], '-');
                 }
 
-                $title = implode(' ', $titleArray);
-                $title = trim($title);
+                $title      = implode(' ', $titleArray);
+                $title      = trim($title);
 
                 return ucwords($title);
             }

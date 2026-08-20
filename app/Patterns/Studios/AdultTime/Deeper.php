@@ -13,7 +13,7 @@ const DEEPER_REGEX_COMMON = '//i';
 
 class Deeper extends AdultTime
 {
-    public $studio = 'Deeper';
+    public $studio  = 'Deeper';
 
     public $network = 'Adult Time';
 }

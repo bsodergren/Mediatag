@@ -80,7 +80,7 @@ trait Helper
             $hours = $pcs[2] * 60 * 60;
         }
 
-        $time = ($seconds + $minutes + $hours);
+        $time    = ($seconds + $minutes + $hours);
 
         return $time + $mod;
     }
@@ -99,23 +99,23 @@ trait Helper
 
     public function getClipFilename($filename)
     {
-        return $this->getClipDirectory($filename).DIRECTORY_SEPARATOR.basename($filename);
+        return $this->getClipDirectory($filename) . DIRECTORY_SEPARATOR . basename($filename);
     }
 
     public function setClipFilename($name)
     {
-        $name = str_replace(' ', '_', $name);
+        $name     = str_replace(' ', '_', $name);
 
-        $filename = __LIBRARY_HOME__.DIRECTORY_SEPARATOR.'Home Videos'.DIRECTORY_SEPARATOR.'Compilation'.DIRECTORY_SEPARATOR.$name.'.mp4';
+        $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
         Filesystem::createDir(dirname($filename));
         // utmdump($filename);
         if (file_exists($filename)) {
             if (!Option::istrue('yes')) {
-                if (Chooser::changes(' Overwrite File '.__LINE__, 'overwrite', __LINE__)) {
+                if (Chooser::changes(' Overwrite File ' . __LINE__, 'overwrite', __LINE__)) {
                     unlink($filename);
                 }
-            // } else {
-            //     exit;
+                // } else {
+                //     exit;
             } else {
                 unlink($filename);
             }
@@ -128,24 +128,24 @@ trait Helper
 
     public function setffmpegFilename($name)
     {
-        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0).DIRECTORY_SEPARATOR.$name.'.txt';
+        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0) . DIRECTORY_SEPARATOR . $name . '.txt';
     }
 
     public function getfileList()
     {
-        $markerArray   = [];
-        $this->FileIdx = 0;
+        $markerArray       = [];
+        $this->FileIdx     = 0;
 
-        $search = Option::getValue('clip', true);
+        $search            = Option::getValue('clip', true);
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers();
 
             $this->Marker->getvideoId($key);
 
             if (null !== $this->Marker->video_id) {
-                $query = $this->Marker->videoQuery($this->Marker->video_id, $search);
+                $query   = $this->Marker->videoQuery($this->Marker->video_id, $search);
 
-                $result = Storage::$DB->query($query);
+                $result  = Storage::$DB->query($query);
 
                 $markers = $this->getVideoMarks($result);
 
@@ -165,14 +165,14 @@ trait Helper
     {
         // utmdump(__METHOD__);
         $file_path       = dirname($OriginalName);
-        $backup_filepath = str_replace('XXX/', 'XXX/'.$directory.'/', $file_path);
+        $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
 
         // utmdump($backup_filepath);
 
         if (!Mediatag::$filesystem->exists($backup_filepath)) {
             Mediatag::$filesystem->mkdir($backup_filepath);
         }
-        $backup_filename = $backup_filepath.'/'.basename($OriginalName);
+        $backup_filename = $backup_filepath . '/' . basename($OriginalName);
         // utmdump($backup_filename);
         // $outputFile      = str_replace('.mp4', '_chapters.mp4', $OriginalName);
 

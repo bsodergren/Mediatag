@@ -6,9 +6,6 @@
 
 namespace Mediatag\Core;
 
-use const FILE_APPEND;
-use const PHP_EOL;
-
 use DateTimeInterface;
 use Mediatag\Core\Helper\LogFormat;
 use Nette\Utils\FileSystem as NetteFile;
@@ -29,32 +26,35 @@ use function is_object;
 use function is_scalar;
 use function sprintf;
 
+use const FILE_APPEND;
+use const PHP_EOL;
+
 class MediaLogger extends ConsoleLogger implements LoggerInterface
 {
     use LogFormat;
 
-    public const INFO = 'info';
+    public const INFO                   = 'info';
 
-    public const ERROR = 'error';
+    public const ERROR                  = 'error';
 
-    public const DEBUG = 'debug';
+    public const DEBUG                  = 'debug';
 
-    public const NOTICE = 'playlist';
+    public const NOTICE                 = 'playlist';
 
-    public const WARNING = 'playlist';
+    public const WARNING                = 'playlist';
 
-    private $backtrace = '';
+    private $backtrace                  = '';
 
     // private $log;
-    public static $logger = '';
+    public static $logger               = '';
 
-    public static $LOG_BUFFER = true;
+    public static $LOG_BUFFER           = true;
 
-    public static $USE_DEBUG = true;
+    public static $USE_DEBUG            = true;
 
-    public static $pruneLogs = true;
+    public static $pruneLogs            = true;
 
-    private bool $errored = false;
+    private bool $errored               = false;
 
     private $colors;
 
@@ -64,12 +64,12 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
 
     private $cloner;
 
-    private $channel = 'default';
+    private $channel                    = 'default';
 
     private $logfile;
 
     // private $logfile;
-    private array $verbosityLevelMap = [
+    private array $verbosityLevelMap    = [
         LogLevel::EMERGENCY => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::ALERT     => OutputInterface::VERBOSITY_NORMAL,
         LogLevel::CRITICAL  => OutputInterface::VERBOSITY_NORMAL,
@@ -101,7 +101,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     // 'brown'
     // 'yellow'
     // 'white'
-    private array $ColorLevelMap = [
+    private array $ColorLevelMap        = [
         LogLevel::DEBUG    => 'yellow',
         LogLevel::INFO     => 'green',
         LogLevel::NOTICE   => 'blue',
@@ -110,7 +110,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         LogLevel::WARNING  => 'purple',
     ];
 
-    private array $formatLevelMap = [
+    private array $formatLevelMap       = [
         LogLevel::EMERGENCY => self::ERROR,
         LogLevel::ALERT     => self::ERROR,
         LogLevel::CRITICAL  => self::ERROR,
@@ -125,7 +125,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     {
         $this->channel = $channel;
 
-        $this->colors = new Colors;
+        $this->colors  = new Colors();
         // $this->verbosityLevelMap = $verbosityLevelMap + $this->verbosityLevelMap;
         // $this->formatLevelMap    = $formatLevelMap    + $this->formatLevelMap;
 
@@ -136,9 +136,9 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         // utmdd($output->getVerbosity(), $this->verbosityLevelMap);
 
         // utmdd($output->getVerbosity(),$verbosityLevelMap);
-        $this->dumper = new CliDumper;
-        $this->cloner = new VarCloner;
-        $this->output = $output;
+        $this->dumper  = new CliDumper();
+        $this->cloner  = new VarCloner();
+        $this->output  = $output;
 
         $this->logfile = $this->getLogFile();
 
@@ -151,7 +151,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         }
 
         // utmdd($this);
-        self::$logger = $this;
+        self::$logger  = $this;
 
         // $this->backtrace =
         // $i   = 1;
@@ -167,7 +167,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             $filename = 'media_' . $this->channel;
         }
 
-        $filename = basename($filename, '.log');
+        $filename  = basename($filename, '.log');
 
         if ($directory === null) {
             $directory = str_replace('.', '', dirname($filename));
@@ -183,7 +183,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         //     $filename = $filename.'_'.$level;
         // }
 
-        $logfile = NetteFile::normalizePath($directory . '/' . $filename . '.log');
+        $logfile   = NetteFile::normalizePath($directory . '/' . $filename . '.log');
 
         return $logfile;
     }
@@ -198,7 +198,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         $msg = $this->interpolate(PHP_EOL . '===================================' . PHP_EOL . ' Running application {0}', [__SCRIPT_NAME__]);
         $this->writeFile(
             $level,
-            $msg
+            $msg,
         );
     }
 
@@ -247,7 +247,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
             Colors::colorstring($level, $this->ColorLevelMap[$level]),
             $command,
             $this->formatLevelMap[$level],
-            $this->interpolate($message, $context)
+            $this->interpolate($message, $context),
         );
     }
 
@@ -302,7 +302,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
     private function interpolate(string $message, array $context): string
     {
         if (! str_contains($message, '{')) {
-            $class   = new PrettyArray;
+            $class   = new PrettyArray();
             $context = $class->print($context);
 
             return $message . $context;
@@ -339,7 +339,7 @@ class MediaLogger extends ConsoleLogger implements LoggerInterface
         }
         $error[] = '===================================';
 
-        $text = implode("\n", $error);
+        $text    = implode("\n", $error);
 
         $logfile = $this->logfile;
         if ($level == 'debug') {

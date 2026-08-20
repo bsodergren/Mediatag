@@ -10,5 +10,5 @@ trait Lang
 {
     public const CMD_DESCRIPTION = DESCRIPTION;
 
-    public const CMD_NAME = NAME;
+    public const CMD_NAME        = NAME;
 }

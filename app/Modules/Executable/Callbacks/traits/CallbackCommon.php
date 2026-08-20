@@ -6,8 +6,6 @@
 
 namespace Mediatag\Modules\Executable\Callbacks\traits;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Helper\VideoDownloader;
 use Mediatag\Modules\Executable\MediatagExec;
@@ -16,6 +14,8 @@ use Symfony\Component\Process\Process;
 use UTM\Utilities\Option;
 
 use function array_key_exists;
+
+use const PHP_EOL;
 
 /**
  * Command like Metatag writer for video files.
@@ -32,7 +32,7 @@ trait CallbackCommon
 
     public function LogOutput($type, $buffer)
     {
-        $buffer = MediatagExec::cleanBuffer($buffer);
+        $buffer  = MediatagExec::cleanBuffer($buffer);
         // Mediatag::$output->writeln($buffer);
         $opt     = Option::getOptions();
         $command = null;

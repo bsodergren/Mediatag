@@ -1,9 +1,9 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Create\Commands\Add;
-
-use const DIRECTORY_SEPARATOR;
-use const PHP_EOL;
 
 use Mediatag\Commands\Create\ClassMethods;
 use Mediatag\Core\Mediatag;
@@ -16,6 +16,9 @@ use UTM\Utilities\DynamicProperty;
 use UTM\Utilities\Option;
 
 use function is_array;
+
+use const DIRECTORY_SEPARATOR;
+use const PHP_EOL;
 
 trait AddHelper
 {

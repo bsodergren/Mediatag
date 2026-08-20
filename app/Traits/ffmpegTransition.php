@@ -16,7 +16,7 @@ use function is_array;
 
 trait ffmpegTransition
 {
-    public $transition_types = [
+    public $transition_types    = [
         'circleclose', 'circlecrop', 'circleopen', 'coverdown', 'coverleft', 'coverright', 'coverup',
         'diagbl', 'diagbr', 'diagtl', 'diagtr', 'dissolve', 'distance', 'fade', 'fadeblack', 'fadegrays',
         'fadewhite', 'hblur', 'hlslice', 'hlwind', 'horzclose', 'horzopen', 'hrslice', 'hrwind', 'pixelize',
@@ -52,7 +52,7 @@ trait ffmpegTransition
 
     public function generateFfmpegCommand($videoFiles, $transition_type, $transition_duration)
     {
-        $files_input = [];
+        $files_input            = [];
 
         // if ('none' == $transition_type[0]) {
         //     $ffmpeg = FFMpeg::create();
@@ -68,7 +68,7 @@ trait ffmpegTransition
 
         //     return true;
         // }
-        $frame_count = 0;
+        $frame_count            = 0;
         foreach ($videoFiles as $index => $video) {
             $file_info[$index]    = VideoFileInfo::getVidInfo($video);
             $file_lengths[$index] = ($file_info[$index]['duration'] / 1000);
@@ -84,23 +84,23 @@ trait ffmpegTransition
         $offset                 = 0;
         $normalizer             = '';
 
-        $width  = (int) $file_info[0]['width'];
-        $height = (int) $file_info[0]['height'];
+        $width                  = (int) $file_info[0]['width'];
+        $height                 = (int) $file_info[0]['height'];
 
-        $scaler_default = ",scale=w={$width}:h={$height}:force_original_aspect_ratio=1,pad={$width}:{$height}:(ow-iw)/2:(oh-ih)/2";
+        $scaler_default         = ",scale=w={$width}:h={$height}:force_original_aspect_ratio=1,pad={$width}:{$height}:(ow-iw)/2:(oh-ih)/2";
 
         foreach ($videoFiles as $i => $video) {
-            $transition = $this->getTransition($transition_type);
+            $transition             = $this->getTransition($transition_type);
             // $scaler     = $i > 0 ? ',scale=w='.$file_info[$i]['width'].':h='.$file_info[$i]['height'].':force_original_aspect_ratio=1,pad='.$file_info[$i]['width'].':'.$file_info[$i]['height'].':(ow-iw)/2:(oh-ih)/2' : '';
 
-            $scaler = $i > 0 ? $scaler_default : '';
-            $normalizer .= "[{$i}:v]settb=AVTB,setsar=sar=1,fps=30{$scaler}[{$i}v];";
+            $scaler                 = $i > 0 ? $scaler_default : '';
+            $normalizer        .= "[{$i}:v]settb=AVTB,setsar=sar=1,fps=30{$scaler}[{$i}v];";
 
             if ($i == 0) {
                 continue;
             }
 
-            $video_length = $file_lengths[$i - 1] - $transition_duration / 2;
+            $video_length           = $file_lengths[$i - 1] - $transition_duration / 2;
             $offset += $video_length;
             $next_transition_output = 'v' . ($i - 1) . $i;
             $video_transitions .= "[{$last_transition_output}][{$i}v]xfade=transition={$transition}:duration={$transition_duration}:offset=" . ($offset - $transition_duration / 2) . "[{$next_transition_output}];";
@@ -114,17 +114,19 @@ trait ffmpegTransition
                 $last_audio_output = "{$i}:a";
             }
         }
-        $this->clipLength = $frame_count;
+        $this->clipLength       = $frame_count;
         // utmdd($this->clipLength, $file_lengths[$i]);
         $video_transitions .= "[{$last_transition_output}]format=pix_fmts=yuvj420p[final];";
         // $normalizer        = str_replace(';', ';'.\PHP_EOL, $normalizer);
         // $video_transitions = str_replace(';', ';'.\PHP_EOL, $video_transitions);
         // $audio_transitions = str_replace(';', ';'.\PHP_EOL, $audio_transitions);
-        $ffmpeg_args = array_merge($files_input,
+        $ffmpeg_args            = array_merge(
+            $files_input,
             ['-filter_complex', $normalizer . $video_transitions
-            . substr($audio_transitions, 0, -1), '-map', '[final]']);
+            . substr($audio_transitions, 0, -1), '-map', '[final]'],
+        );
 
-        $ffmpeg_args = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
+        $ffmpeg_args            = array_merge($ffmpeg_args, ['-map', "[$last_audio_output]"]);
 
         // // utmdump($ffmpeg_args);
         return $ffmpeg_args;

@@ -43,11 +43,11 @@ trait MergeHelper
 
     public function getPlaylistVideosfromId($playlist_id)
     {
-        $sql = 'select d.name as name, CONCAT(v.fullpath,\'/\',v.filename) as file_name
-        from   '.__MYSQL_PLAYLIST_DATA__.' as d,
-        '.__MYSQL_VIDEO_FILE__.'  as v,
-        '.__MYSQL_PLAYLIST_VIDEOS__.' as p
-        where (p.playlist_id = '.$playlist_id.' and
+        $sql     = 'select d.name as name, CONCAT(v.fullpath,\'/\',v.filename) as file_name
+        from   ' . __MYSQL_PLAYLIST_DATA__ . ' as d,
+        ' . __MYSQL_VIDEO_FILE__ . '  as v,
+        ' . __MYSQL_PLAYLIST_VIDEOS__ . ' as p
+        where (p.playlist_id = ' . $playlist_id . ' and
         p.playlist_video_id = v.id and
          d.id = p.playlist_id ) ORDER BY v.filename ASC';
         $sql     = str_replace(PHP_EOL, '', $sql);
@@ -59,15 +59,15 @@ trait MergeHelper
 
     public function mergePlaylist()
     {
-        $playlist = Option::getValue('playlistid', true);
-        $name     = Option::getValue('name', true);
+        $playlist      = Option::getValue('playlistid', true);
+        $name          = Option::getValue('name', true);
         // utmdd($playlist,$name);
         $filelistArray = $this->getPlaylistVideosfromId($playlist);
 
         if (null === $name) {
             $name = $filelistArray[0]['name'];
         }
-        $ClipName = $this->setClipFilename($name);
+        $ClipName      = $this->setClipFilename($name);
         // $this->progress = new MediaIndicator('one');
         foreach ($filelistArray as $file) {
             $filelist[] = $file['file_name'];
@@ -80,20 +80,20 @@ trait MergeHelper
     {
         $this->exec();
 
-        $fileSearch = Option::getValue('search', true);
-        $name       = Option::getValue('name', true);
+        $fileSearch   = Option::getValue('search', true);
+        $name         = Option::getValue('name', true);
 
-        $directory = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
+        $directory    = $this->getClipDirectory(__CURRENT_DIRECTORY__, 0);
 
         if ('' != $fileSearch) {
-            $search = '/.*_('.$fileSearch.')_\d+\.mp4/i';
+            $search = '/.*_(' . $fileSearch . ')_\d+\.mp4/i';
         } else {
             $search = '*.mp4';
         }
         if (null === $name) {
             $name = 'Compilation';
         }
-        $file_array = Mediatag::$finder->Search($directory, $search);
+        $file_array   = Mediatag::$finder->Search($directory, $search);
 
         if (null == $file_array) {
             Mediatag::$output->writeln('<comment> No Files Found</>');
@@ -108,9 +108,9 @@ trait MergeHelper
             if ($current_file != $output_array[1]) {
                 $current_file = $output_array[1];
                 $mod += $index;
-                $index = 0;
+                $index        = 0;
             }
-            $idx = $output_array[3] + $mod;
+            $idx            = $output_array[3] + $mod;
 
             $fileList[$idx] = $file;
             ++$index;
@@ -123,7 +123,7 @@ trait MergeHelper
         // $string   = implode("\n", $strArray);
         // $listFile = $this->setffmpegFilename($name);
         // Filesystem::write($listFile, $string, 0755);
-        $ClipName = $this->setClipFilename($name);
+        $ClipName     = $this->setClipFilename($name);
         // $this->progress = new MediaIndicator('one');
 
         $this->createCompilation($fileList, $ClipName, $name);

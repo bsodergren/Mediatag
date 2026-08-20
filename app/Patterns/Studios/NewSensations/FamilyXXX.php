@@ -13,7 +13,7 @@ const FAMILYXXX_REGEX_COMMON = '//i';
 
 class FamilyXXX extends NewSensations
 {
-    public $studio = 'Family XXX';
+    public $studio  = 'Family XXX';
 
     public $network = 'New Sensations';
 }

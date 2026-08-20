@@ -26,7 +26,7 @@ class Process extends Mediatag
      */
     public $ffmpeg;
 
-    public $commandList = [
+    public $commandList     = [
         // 'empty'     => [
         //     'exec'      => null,
         //     'clearMeta' => null,
@@ -51,11 +51,11 @@ class Process extends Mediatag
 
     ];
 
-    protected $useFuncs = [];
+    protected $useFuncs     = [];
 
     protected $json_file;
 
-    public $fileExtension = 'mov';
+    public $fileExtension   = 'mov';
 
     /**
      * __construct.

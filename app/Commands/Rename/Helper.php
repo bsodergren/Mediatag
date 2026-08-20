@@ -6,8 +6,6 @@
 
 namespace Mediatag\Commands\Rename;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -30,6 +28,8 @@ use function count;
 use function dirname;
 use function is_array;
 
+use const PHP_EOL;
+
 trait Helper
 {
     public static $selfClass;
@@ -39,7 +39,7 @@ trait Helper
         // utminfo(func_get_args());
         // utmdd([__METHOD__, Mediatag::$SearchArray]);
 
-        $file_array = (new MediaFinder)->search(__CURRENT_DIRECTORY__, '/\.mp4$/');
+        $file_array = (new MediaFinder())->search(__CURRENT_DIRECTORY__, '/\.mp4$/');
         // utmdd($file_array);
 
         // foreach ($file_array as $key => $file) {
@@ -54,12 +54,12 @@ trait Helper
         // exit;
 
         foreach ($file_array as $key => $file) {
-            $oldName = $file;
+            $oldName    = $file;
 
-            $fs        = new File($file);
-            $videoData = $fs->get();
-            $fileObj   = new fileReader($videoData);
-            $filename  = $fileObj->getFilename($file);
+            $fs         = new File($file);
+            $videoData  = $fs->get();
+            $fileObj    = new fileReader($videoData);
+            $filename   = $fileObj->getFilename($file);
             // utmdd($file);
 
             if ($filename !== null) {
@@ -118,10 +118,10 @@ trait Helper
         $genreArray      = explode(',', $metadata['genre']);
         $this->genrePath = [];
         foreach ($genreArray as $genre) {
-            $genre = str_replace(' ', '_', $genre);
-            $genre = strtolower($genre);
+            $genre                   = str_replace(' ', '_', $genre);
+            $genre                   = strtolower($genre);
 
-            $res   = self::get($genre, $metadata['genre']);
+            $res                     = self::get($genre, $metadata['genre']);
 
             // $results[$genre] = $res;
             $this->genrePath[$genre] = $res;
@@ -172,7 +172,7 @@ trait Helper
             return 'MFF';
         }
 
-        if (self::istrue('mff') && (self::istrue('mmf') && ! self::istrue('group') 
+        if (self::istrue('mff') && (self::istrue('mmf') && ! self::istrue('group')
             || self::istrue('double_penetration')) && ! self::istrue('Compilation')) {
             utmdump("fasdfdsfd");
             return false;
@@ -181,7 +181,7 @@ trait Helper
         if (self::istrue('Threesome') && ! self::istrue('group') && ! self::istrue('Compilation') && ! self::istrue('Single')) {
             utmdump("fasdfdsfdfdsfsdfsdfsdfsdsfd");
 
-        return false;
+            return false;
             // return 'Threesome';
         }
 
@@ -197,7 +197,7 @@ trait Helper
         if (self::istrue('Bisexual')) {
             return 'Bisexual';
         }
-            utmdump("nafdnafdndf");
+        utmdump("nafdnafdndf");
 
         return false;
     }

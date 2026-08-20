@@ -36,7 +36,7 @@ class ReadMeta extends MediatagExec
         // }
 
         // if ($array === false) {
-        $command = [
+        $command  = [
             Mediatag::App(),
             $this->video_file,
             '-t',
@@ -46,7 +46,7 @@ class ReadMeta extends MediatagExec
 
         $this->exec($command, $callback);
 
-        $array = [
+        $array    = [
             $this->video_key => [
                 'video_file'    => $this->video_file,
                 'video_path'    => $this->video_path,
@@ -66,18 +66,20 @@ class ReadMeta extends MediatagExec
 
     public function getMetaValueFromBuffer($text)
     {
-        $callbackPatterns = (new MetaEntities)->init()->getCallbackArray();
+        $callbackPatterns = (new MetaEntities())->init()->getCallbackArray();
         // utmdump($callbackPatterns);
         foreach ($callbackPatterns as $class => $pattern) {
             $class   = strtolower($class);
-            $matched = preg_replace_callback($pattern,
+            $matched = preg_replace_callback(
+                $pattern,
                 function ($matches) use ($class) {
                     if (\in_array($class, $this->taglist)) {
                         return $this->metatags[$class] = $matches[2];
                     }
                     // return $this->metatags;
                 },
-                $text);
+                $text,
+            );
             // utmdump($matched);
         }
     }

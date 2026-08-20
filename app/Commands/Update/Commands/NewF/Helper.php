@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Update\Commands\NewF;
 
@@ -14,7 +17,7 @@ trait Helper
 {
     public function dbUpdate()
     {
-        $MediaExec = new ShellExec;
+        $MediaExec = new ShellExec();
         $MediaExec->mediaDb(false);
 
         return true;

@@ -24,13 +24,13 @@ class VideoFileInfo extends VideoInfo
 
     public $VideoInfo;
 
-    public $thumbType = 'info';
+    public $thumbType      = 'info';
 
-    public $maxLen = 75;
+    public $maxLen         = 75;
 
     public $VideoDataTable = __MYSQL_VIDEO_INFO__;
 
-    public $actionText = '<info>Updated Video Data</info>';
+    public $actionText     = '<info>Updated Video Data</info>';
 
     // public function getText()
     // {
@@ -60,18 +60,18 @@ class VideoFileInfo extends VideoInfo
             return [$file, $sfile];
         }
 
-        $return    = 'A';
-        $file1     = new MediaFile($file);
-        $file1Info = $file1->get();
-        $tag1      = (new VideoTags)->get($file1Info['video_key'], $file);
-        $f1        = new FileReader($file1Info);
-        $genre1Dir = $f1->getGenre();
+        $return             = 'A';
+        $file1              = new MediaFile($file);
+        $file1Info          = $file1->get();
+        $tag1               = (new VideoTags())->get($file1Info['video_key'], $file);
+        $f1                 = new FileReader($file1Info);
+        $genre1Dir          = $f1->getGenre();
 
-        $file2     = new MediaFile($sfile);
-        $file2Info = $file2->get();
-        $tag2      = (new VideoTags)->get($file2Info['video_key'], $sfile);
-        $f2        = new FileReader($file2Info);
-        $genre2Dir = $f2->getGenre();
+        $file2              = new MediaFile($sfile);
+        $file2Info          = $file2->get();
+        $tag2               = (new VideoTags())->get($file2Info['video_key'], $sfile);
+        $f2                 = new FileReader($file2Info);
+        $genre2Dir          = $f2->getGenre();
 
         // // utmdump([$tag1['genre'],$genre1Dir]);
         // // utmdump([$tag2['genre'],$genre2Dir]);
@@ -89,7 +89,7 @@ class VideoFileInfo extends VideoInfo
         $video2Info         = self::getVidInfo($sfile);
         $video2Info['file'] = $sfile;
 
-        $keys = ['duration', 'bit_rate', 'filesize'];
+        $keys               = ['duration', 'bit_rate', 'filesize'];
         foreach ($keys as $key) {
             if ($video1Info[$key] > $video2Info[$key]) {
                 $return = 'A';
@@ -112,11 +112,11 @@ class VideoFileInfo extends VideoInfo
 
         // if (false === $videoInfo) {
         //   utmdd(self::getVideoDetails());
-        $mediaInfo          = new MediaInfo;
-        $mediaInfoContainer = $mediaInfo->getInfo($file);
-        $videos             = $mediaInfoContainer->getVideos();
-        $general            = $mediaInfoContainer->getGeneral();
-        $audios             = $mediaInfoContainer->getAudios();
+        $mediaInfo             = new MediaInfo();
+        $mediaInfoContainer    = $mediaInfo->getInfo($file);
+        $videos                = $mediaInfoContainer->getVideos();
+        $general               = $mediaInfoContainer->getGeneral();
+        $audios                = $mediaInfoContainer->getAudios();
         //
         // $videoInfo['file']     = $file;
         $videoInfo['filesize'] = filesize($file);
@@ -124,12 +124,12 @@ class VideoFileInfo extends VideoInfo
             $videoInfo['codec_type'] = (string) $audio->get('kind_of_stream');
         }
         foreach ($videos as $video) {
-            $videoInfo['format'] = (string) $general->get('format');
+            $videoInfo['format']      = (string) $general->get('format');
             if ($video->get('format')->getshortname() == 'JPEG') {
                 continue;
             }
 
-            $bit_rate = $video->get('bit_rate');
+            $bit_rate                 = $video->get('bit_rate');
             if ($bit_rate === null) {
                 $bit_rate = $video->get('maximum_bit_rate');
             }

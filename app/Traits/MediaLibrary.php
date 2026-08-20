@@ -6,8 +6,6 @@
 
 namespace Mediatag\Traits;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Core\Mediatag;
 use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,13 +15,15 @@ use function count;
 use function define;
 use function defined;
 
+use const DIRECTORY_SEPARATOR;
+
 trait MediaLibrary
 {
     public function getLibrary($exit = true): void
     {
         // utminfo(func_get_args());
 
-        $curent_dir = getcwd();
+        $curent_dir   = getcwd();
         // UTMlog::logger('Current Directory', $curent_dir);
         if ($exit === false) {
             if (! defined('__LIBRARY__')) {
@@ -32,9 +32,9 @@ trait MediaLibrary
 
             return;
         }
-        $in_directory = (new Filesystem)->makePathRelative($curent_dir, __PLEX_HOME__);
+        $in_directory = (new Filesystem())->makePathRelative($curent_dir, __PLEX_HOME__);
 
-        $success = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
+        $success      = preg_match('/([^\/]*)\/([^\/]+)?/', $in_directory, $match);
 
         if (count($match) == 0) {
             exit('your in a wrong spot ' . $curent_dir . '  error' . PHP_EOL);

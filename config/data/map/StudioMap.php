@@ -3,6 +3,7 @@
 /**
  * Command like Metatag writer for video files.
  */
+
 const STUDIO_MAP = [
     // 'myhusbandbroughthomehismistress' => 'MyHusband',
     // 'harmonyfilms'                       => 'Harmony Films',

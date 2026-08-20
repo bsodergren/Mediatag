@@ -6,13 +6,13 @@
 
 namespace Mediatag\Modules\Metatags;
 
-use const SORT_STRING;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\TagBuilder\TagBuilder;
 use Nette\Utils\Callback;
 use Nette\Utils\Strings;
+
+use const SORT_STRING;
 
 class Studio extends TagBuilder
 {
@@ -86,7 +86,7 @@ class Studio extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        $type = strtoupper($type);
+        $type     = strtoupper($type);
 
         if ($type == 'A') {
             $fileName = Mediatag::$amateurFile;

@@ -6,8 +6,6 @@
 
 namespace Mediatag\Patterns\Studios;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\TagBuilder\Patterns;
 use Mediatag\Modules\TagBuilder\TagReader;
@@ -15,11 +13,13 @@ use Mediatag\Modules\TagBuilder\TagReader;
 use function array_key_exists;
 use function dirname;
 
+use const DIRECTORY_SEPARATOR;
+
 class PrivateVid extends Patterns
 {
     public $studio = 'Private';
 
-    public $regex = [
+    public $regex  = [
         'privatevid' => [
             'artist' => [
                 'pattern'             => '/([a-zA-Z0-9_]*)-?([a-zA-Z0-9_]*)-?([A-Za-z]{3}[0-9]{3}_[sS0-9]{1,3}_.*.mp4)/i',
@@ -46,13 +46,13 @@ class PrivateVid extends Patterns
         $path      = dirname($file);
         $filename  = basename($file);
 
-        $dbData = new TagReader;
-        $tags   = $dbData->loadVideo($videoData->get())->getDbValues();
+        $dbData    = new TagReader();
+        $tags      = $dbData->loadVideo($videoData->get())->getDbValues();
         // utmdd(__LINE__,$tags ,$videoData->get());
         if ($tags !== null) {
             if (array_key_exists('title', $tags)) {
-                $artist = '';
-                $title  = $tags['title'];
+                $artist   = '';
+                $title    = $tags['title'];
                 if (array_key_exists('artist', $tags)) {
                     $artist = $tags['artist'];
                     $artist = str_replace(' ', '_', $artist);
@@ -60,7 +60,7 @@ class PrivateVid extends Patterns
                     $artist = str_replace(',', '_AND_', $artist) . '-';
                     $artist = str_replace('__', '_', $artist);
                 }
-                $title = str_replace(' ', '_', $title);
+                $title    = str_replace(' ', '_', $title);
                 // utmdump([__LINE__, $filename, $title]);
 
                 if (str_contains($filename, $title)) {
@@ -73,7 +73,7 @@ class PrivateVid extends Patterns
 
                 $filename = $title . '-' . $artist . $output_array[3];
 
-                $file = $path . DIRECTORY_SEPARATOR . $filename;
+                $file     = $path . DIRECTORY_SEPARATOR . $filename;
             }
         }
 

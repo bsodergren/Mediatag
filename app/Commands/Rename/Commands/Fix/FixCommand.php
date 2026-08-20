@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Rename\Commands\Fix;
 
@@ -18,7 +21,7 @@ class FixCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['fix' => ['renameVids' => null]];
+    public $command          = ['fix' => ['renameVids' => null]];
 }

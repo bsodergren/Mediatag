@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Import;
 
@@ -13,20 +16,20 @@ use UTM\Utilities\Option;
 
 trait ImportHelper
 {
-    private $dbBackupPath = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
+    private $dbBackupPath       = __DB_BACKUP_ROOT__ . DIRECTORY_SEPARATOR;
 
-    private $video_file_csv = 'file.csv';
+    private $video_file_csv     = 'file.csv';
 
     private $video_metadata_csv = 'meta.csv';
 
-    private $video_info_csv = 'info.csv';
+    private $video_info_csv     = 'info.csv';
 
-    private $video_custon_csv = 'custom.csv';
+    private $video_custon_csv   = 'custom.csv';
 
     public function importMethod()
     {
         $jsonCacheDir = ExportHelper::$EXPORT_DIR . MediaFile::videoPath(__CURRENT_DIRECTORY__);
-        $file_array   = (new MediaFinder)->search($jsonCacheDir, '/\.json$/i');
+        $file_array   = (new MediaFinder())->search($jsonCacheDir, '/\.json$/i');
         $this->getJsonInfo($file_array);
         utmdd($file_array);
     }
@@ -39,8 +42,8 @@ trait ImportHelper
             $jsonArray           = json_decode($fileContent[0], 1);
             $jsonArray['studio'] = trim(str_replace($jsonArray['network'], '', $jsonArray['studio']), '/');
 
-            $videoinfo  = StorageDB::$DB->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
-            $updateData = 'updateData';
+            $videoinfo           = StorageDB::$DB->videoExists($video_key, table: __MYSQL_VIDEO_METADATA__);
+            $updateData          = 'updateData';
             if (is_null($videoinfo)) {
                 $exists     = StorageDB::$DB->videoExists($video_key, table: __MYSQL_VIDEO_FILE__);
                 $updateData = 'importData';

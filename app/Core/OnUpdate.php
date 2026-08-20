@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Core;
 
@@ -17,9 +20,9 @@ class OnUpdate
         require __CONFIG_LIB__ . '/path_constants.php';
 
         $files = self::get_filelist(\__LOGFILE_DIR__, daysOld: 0);
-        foreach($files as $file){
-            unlink( $file );
-                    }
+        foreach ($files as $file) {
+            unlink($file);
+        }
 
     }
 
@@ -27,7 +30,7 @@ class OnUpdate
     {
         $directoryPath = $path; // Change to your target directory
 
-        $files_array = [];
+        $files_array   = [];
         try {
             // Validate directory
             if (! is_dir($directoryPath)) {

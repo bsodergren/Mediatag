@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Export;
 
@@ -18,7 +21,7 @@ class ExportCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['export' => ['exportMethod' => null]];
+    public $command          = ['export' => ['exportMethod' => null]];
 }

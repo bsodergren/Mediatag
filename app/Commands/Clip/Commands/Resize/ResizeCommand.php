@@ -25,7 +25,7 @@ class ResizeCommand extends MediaCommand
 
     // public const USE_SEARCH = false;
 
-    public $command = [
+    public $command          = [
         'resize' => [
             'exec'       => null,
             'init'       => null,

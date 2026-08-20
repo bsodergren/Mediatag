@@ -6,8 +6,6 @@
 
 namespace Mediatag\Modules\Display;
 
-use const PHP_EOL;
-
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\TagBuilder\TagReader;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
@@ -20,11 +18,13 @@ use UTM\Bundle\Monolog\UTMLog;
 use function array_key_exists;
 use function count;
 
+use const PHP_EOL;
+
 class ShowDisplay
 {
     public $BarSection1;
 
-    public $LineBreaks = false;
+    public $LineBreaks    = false;
 
     public $BarSection2;
 
@@ -44,14 +44,14 @@ class ShowDisplay
 
     public $processOutput;
 
-    public $padbuffer = 2;
+    public $padbuffer     = 2;
 
     public $padbufferChar = ' ';
 
     /**
      * @var int
      */
-    public $displayTimer = 500000;
+    public $displayTimer  = 500000;
 
     protected $formatter;
 
@@ -59,10 +59,10 @@ class ShowDisplay
     {
         // utminfo(func_get_args());
 
-        $this->formatter = new FormatterHelper;
-        $outputStyle     = new OutputFormatterStyle('red');
+        $this->formatter        = new FormatterHelper();
+        $outputStyle            = new OutputFormatterStyle('red');
         Mediatag::$output->getFormatter()->setStyle('indent', $outputStyle);
-        $currentTagStyle = new OutputFormatterStyle('gray');
+        $currentTagStyle        = new OutputFormatterStyle('gray');
         Mediatag::$output->getFormatter()->setStyle('current', $currentTagStyle);
 
         $this->BarSection1      = Mediatag::$output->section();
@@ -85,7 +85,7 @@ class ShowDisplay
             return;
         }
         $this->displayHeader(Mediatag::$output, ['count' => $count]);
-        $idx = 1;
+        $idx   = 1;
         // UTMlog::logger('start File display');
         // UTMlog::startLap();
         foreach ($filelist_array as $key => $value) {
@@ -99,7 +99,7 @@ class ShowDisplay
                         for ($n = 0; $n < 7; $n++) {
                             $line_array[] = '';
                         }
-                        $line = implode(PHP_EOL, $line_array);
+                        $line       = implode(PHP_EOL, $line_array);
                         Mediatag::$output->write($line);
                     }
                 }
@@ -130,10 +130,10 @@ class ShowDisplay
     {
         // utminfo(func_get_args());
 
-        $method = 'overwrite';
+        $method       = 'overwrite';
 
         if (! array_key_exists('currentTags', $fileinfo)) {
-            $fileinfo['metatags'] = (new TagReader)->loadVideo($fileinfo)->getMetaValues();
+            $fileinfo['metatags'] = (new TagReader())->loadVideo($fileinfo)->getMetaValues();
             $tagCount             = count($fileinfo['metatags']);
         } else {
             $tagCount = count($fileinfo['currentTags']) + count($fileinfo['updateTags']);
@@ -149,7 +149,7 @@ class ShowDisplay
         foreach ($MetatagBlock as $tag => $row) {
             $this->table->appendRow([$tag, $row]);
         }
-        $in_directory = (new Filesystem)->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
+        $in_directory = (new Filesystem())->makePathRelative($fileinfo['video_path'], __CURRENT_DIRECTORY__);
         $filename     = $this->formatter->truncate($fileinfo['video_name'], __CONSOLE_WIDTH__);
 
         $this->fileCountSection->{$method}('<comment>Video </comment> <info>' . $idx . '</info> of <info>' . $count . '</info> files');

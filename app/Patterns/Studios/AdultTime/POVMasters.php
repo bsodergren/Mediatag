@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\AdultTime\AdultTime;
 
 class POVMasters extends AdultTime
 {
-    public $studio = 'POV Masters';
+    public $studio  = 'POV Masters';
 
     public $network = 'Adult Time';
 }

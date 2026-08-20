@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
 
 class ClubSandy extends TwentyFirstSextury
 {
-    public $studio = 'Club Sandy';
+    public $studio  = 'Club Sandy';
 
     public $network = '21st Sextury';
 }

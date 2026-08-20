@@ -12,7 +12,7 @@ use Mediatag\Patterns\Studios\AdultTime\AdultTime;
 
 class DareWeShare extends AdultTime
 {
-    public $studio = 'Dare We Share';
+    public $studio  = 'Dare We Share';
 
     public $network = 'Adult Time';
 }

@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Create\Traits;
 
@@ -18,7 +21,7 @@ trait CommandHelper
     public function createCommandFile()
     {
         //$className         = $this->CommandNameSpace . '\\Command';
-        $this->newCmdClass = new ClassType('Command');
+        $this->newCmdClass     = new ClassType('Command');
 
         $this->newCmdClass
             ->setExtends('Mediatag\Core\MediaCommand');
@@ -45,7 +48,7 @@ trait CommandHelper
     public function createHelperFile()
     {
         //$className         = $this->CommandNameSpace . '\\Command';
-        $this->newCmdClass = new TraitType('Helper');
+        $this->newCmdClass     = new TraitType('Helper');
 
         // $this->newCmdClass
         //     ->setExtends('Mediatag\Core\Mediatag');
@@ -53,7 +56,7 @@ trait CommandHelper
         $this->newCmdNamespace = new \Nette\PhpGenerator\PhpNamespace($this->CommandNameSpace);
         $this->newCmdNamespace->addUse('Mediatag\Core\Mediatag');
 
-        $method = $this->newCmdClass->addMethod('exec' . $this->cmd);
+        $method                = $this->newCmdClass->addMethod('exec' . $this->cmd);
 
         $method->setPublic()->setBody(' Mediatag::$Console->writeln("Hello ". __METHOD__);' . PHP_EOL . 'exit;');
 
@@ -65,7 +68,7 @@ trait CommandHelper
     public function createProcessFile()
     {
         //$className         = $this->CommandNameSpace . '\\Command';
-        $this->newCmdClass = new ClassType('Process');
+        $this->newCmdClass     = new ClassType('Process');
 
         $this->newCmdClass
             ->setExtends('Mediatag\Core\Mediatag');
@@ -86,7 +89,7 @@ trait CommandHelper
             ->setProtected()
             ->setValue(['addMeta', 'setupMap']);
 
-        $method = $this->newCmdClass->addMethod('__construct');
+        $method                = $this->newCmdClass->addMethod('__construct');
 
         $method->setPublic()->setBody('parent::boot($input, $output);');
         $method->addParameter('input')->setType('Symfony\Component\Console\Input\InputInterface');
@@ -99,7 +102,7 @@ trait CommandHelper
 
     public function createLangFile()
     {
-        $this->newCmdClass = new TraitType('Lang');
+        $this->newCmdClass     = new TraitType('Lang');
 
         // $this->newCmdClass
         //     ->setExtends('Mediatag\Core\Mediatag');
@@ -115,7 +118,7 @@ trait CommandHelper
 
     public function createOptionsFile()
     {
-        $DefinitionBody = <<<'EOT'
+        $DefinitionBody        = <<<'EOT'
     self::$Class = __CLASS__;
 
     return [
@@ -132,7 +135,7 @@ trait CommandHelper
 EOT;
 
         //$className         = $this->CommandNameSpace . '\\Command';
-        $this->newCmdClass = new ClassType('Options');
+        $this->newCmdClass     = new ClassType('Options');
 
         $this->newCmdClass
             ->setExtends('Mediatag\Core\MediaOptions');
@@ -152,7 +155,7 @@ EOT;
             ->setPublic()
             ->setValue(['Test']);
 
-        $method = $this->newCmdClass->addMethod('Definitions');
+        $method                = $this->newCmdClass->addMethod('Definitions');
 
         $method->setPublic()->setBody($DefinitionBody);
 

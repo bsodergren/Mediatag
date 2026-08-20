@@ -26,10 +26,10 @@ class Process extends Mediatag
         'exec' => null,
     ];
 
-    public $commandList = [
+    public $commandList     = [
     ];
 
-    public $genreDirs = [
+    public $genreDirs       = [
         'Bisexual',
         'Compilation',
         'Group',
@@ -39,13 +39,13 @@ class Process extends Mediatag
         'Trans',
     ];
 
-    protected $useFuncs = ['addMeta'];
+    protected $useFuncs     = ['addMeta'];
 
-    public $file_array = [];
+    public $file_array      = [];
 
-    private $searchChars = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
+    private $searchChars    = ['__', '-_', '_-', 'Am', 'Pm', '_.', 'MP4'];
 
-    private $replaceChars = ['_', '-', '-', 'AM', 'PM', '.', 'mp4'];
+    private $replaceChars   = ['_', '-', '-', 'AM', 'PM', '.', 'mp4'];
 
     public function __construct(InputInterface $input, OutputInterface $output)
     {
@@ -56,7 +56,7 @@ class Process extends Mediatag
 
     public function exec($option = null)
     {
-        $finder             = new MediaFinder;
+        $finder             = new MediaFinder();
         $finder->excludeDir = $this->genreDirs;
         $this->file_array   = $finder->search(__PLEX_HOME__ . '/Pornhub/Sort/', '/\.mp4$/i');
 

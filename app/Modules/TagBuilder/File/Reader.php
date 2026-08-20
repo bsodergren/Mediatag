@@ -63,20 +63,20 @@ class Reader extends TagReader
         $this->videoData = $videoData;
         $this->expandArray($videoData);
 
-        $className = $this->video_library;
-        $classPath = 'Mediatag\\Patterns\\';
+        $className       = $this->video_library;
+        $classPath       = 'Mediatag\\Patterns\\';
 
-        $networkName = '';
+        $networkName     = '';
 
         $this->getStudio();
 
-        $studioName = $this->getStudioClass($this->studio);
+        $studioName      = $this->getStudioClass($this->studio);
 
         $this->getnetwork();
 
-        $networkName = $this->getStudioClass($this->network);
+        $networkName     = $this->getStudioClass($this->network);
 
-        $studioClass = $classPath . $this->video_library . $networkName . $studioName;
+        $studioClass     = $classPath . $this->video_library . $networkName . $studioName;
         // if (Option::isTrue('addNetwork')) {
         //     $networkName      = Option::getValue('addNetwork', 1);
         //     $networkClassName = $this->getStudioClass($networkName);
@@ -90,7 +90,7 @@ class Reader extends TagReader
         //     }
         // }
 
-        $classAttm[] = $studioClass;
+        $classAttm[]     = $studioClass;
         // // utmdump($this->video_key);
         if (str_starts_with($this->video_key, 'x')) {
             if ((! class_exists($studioClass) || Option::isTrue('addClass'))
@@ -117,17 +117,17 @@ class Reader extends TagReader
         if (class_exists($studioClass)) {
             //  $this->PatternObject             = Patterns::getClassObject($studioClass, $this);
             // $this->PatternObject->video_file = $this->video_file;
-            self::$PatternClass = $studioClass;
+            self::$PatternClass                = $studioClass;
 
-            $this->PatternObject = new $studioClass($this);
+            $this->PatternObject               = new $studioClass($this);
 
             // utmdd($this->PatternObject->network);
-            $this->PatternObject->video_file = $this->video_file;
-            self::$PatternClassObj           = $this->PatternObject;
+            $this->PatternObject->video_file   = $this->video_file;
+            self::$PatternClassObj             = $this->PatternObject;
 
             foreach (ARTIST_MAP as $k => $v) {
-                $key = $v['name'];
-                $rep = $v['replacement'];
+                $key                  = $v['name'];
+                $rep                  = $v['replacement'];
                 if ($rep == '') {
                     $rep = $key;
                 }
@@ -150,8 +150,8 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
 
-        if(str_contains($studio,':')) {
-            $studio = Strings::before($studio,':');
+        if (str_contains($studio, ':')) {
+            $studio = Strings::before($studio, ':');
         }
 
 
@@ -260,7 +260,7 @@ class Reader extends TagReader
             $res      = $this->getFileTag('genre');
             $filename = dirname($this->video_file);
 
-            $success = preg_match(__GENRE_REGEX__, $filename, $matches);
+            $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             // utmdump([$success, $filename, $matches]);
             if ($success == true) {
                 $this->genre = $matches[1];

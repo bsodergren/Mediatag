@@ -6,11 +6,11 @@
 
 namespace Mediatag\Commands\Backup;
 
-use const DIRECTORY_SEPARATOR;
-
 use Mediatag\Core\Mediatag;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+
+use const DIRECTORY_SEPARATOR;
 
 class Process extends Mediatag
 {
@@ -20,7 +20,7 @@ class Process extends Mediatag
 
     public $backupDirectory;
 
-    public $commandList = [
+    public $commandList     = [
         'db'        => [
             'backupDb' => null,
         ],

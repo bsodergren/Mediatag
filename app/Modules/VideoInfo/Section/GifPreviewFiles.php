@@ -24,27 +24,27 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
     use LoggerAwareTrait;
     use MediaFFmpeg;
 
-    public $videoRange = 80;
+    public $videoRange  = 80;
 
     public $videoSlides = 15;
 
     public function build_video_thumbnail()
     {
         // Create a temp directory for building.
-        $temp = __PLEX_VAR_DIR__ . '/build/' . md5($this->video_file);
+        $temp              = __PLEX_VAR_DIR__ . '/build/' . md5($this->video_file);
         // utmdd($temp);
-        $options = [
+        $options           = [
             'temporary_directory' => $temp,
             'loglevel'            => 'quiet',
             'ffmpeg.binaries'     => CONFIG['FFMPEG_CMD'],
             'ffprobe.binaries'    => CONFIG['FFPROBE_CMD'],
         ];
-        (new Filesystem)->mkdir($temp);
+        (new Filesystem())->mkdir($temp);
 
         // Use FFProbe to get the duration of the video.
-        $ffprobe = FFProbe::create($options, $this->logger);
+        $ffprobe           = FFProbe::create($options, $this->logger);
 
-        $duration = floor($ffprobe
+        $duration          = floor($ffprobe
             ->format($this->video_file)
             ->get('duration'));
 
@@ -53,25 +53,25 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
             return null;
         }
 
-        $videoRange  = $this->videoRange;
-        $videoSlides = $this->videoSlides;
-        $points      = array_map(function ($n) {
+        $videoRange        = $this->videoRange;
+        $videoSlides       = $this->videoSlides;
+        $points            = array_map(function ($n) {
             return round($n, 0);
         }, range(1, $videoRange, $videoRange / $videoSlides));
 
-        $frames      = [];
-        $progressBar = new ProgressBar(Mediatag::$output, count($points));
+        $frames            = [];
+        $progressBar       = new ProgressBar(Mediatag::$output, count($points));
 
         $progressBar->setFormat('<comment>%no:4s%</comment> <fg=red>Writing Preview</>  <info>%message%</info> <fg=cyan;options=bold>[%bar%]</> %percent:3s%%');
         $progressBar->setMessage($this->fileCount--, 'no');
 
-        $message = $this->setMessage($this->video_file);
+        $message           = $this->setMessage($this->video_file);
 
         $progressBar->setMessage($message, 'message');        // $progressBar->setBarWidth("100");
 
         $progressBar->start();
         foreach ($points as $point) {
-            $time_secs = floor($duration * ($point / 100));
+            $time_secs  = floor($duration * ($point / 100));
             $progressBar->advance();
 
             $point_file = "$temp/$point.jpg";
@@ -89,7 +89,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
             $durations = array_fill(0, count($frames), 100);
 
             // Create a new GIF and save it.
-            $gc = new GifCreator;
+            $gc        = new GifCreator();
             $gc->create($frames, $durations, 0);
             file_put_contents($this->previewName, $gc->getGif());
 
@@ -99,7 +99,7 @@ class GifPreviewFiles extends VideoPreview implements LoggerAwareInterface
             }
         }
 
-        (new Filesystem)->remove($temp);
+        (new Filesystem())->remove($temp);
 
         $this->progressBar = true;
 

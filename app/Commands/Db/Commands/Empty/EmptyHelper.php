@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Empty;
 
@@ -24,10 +27,10 @@ trait EmptyHelper
             $answer = 'y';
         } else {
             Mediatag::$output->writeln(self::text('L__DB_VIDEO_COUNT', ['VID' => $videos]));
-            $ask      = new QuestionHelper;
+            $ask      = new QuestionHelper();
             $question = new Question(self::text('L__DB_ASK_CONTINUE'));
 
-            $answer = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
+            $answer   = $ask->ask(Mediatag::$input, Mediatag::$output, $question);
         }
         switch ($answer) {
             case 'y':

@@ -6,8 +6,6 @@
 
 namespace Mediatag\Utilities;
 
-use const FILTER_VALIDATE_URL;
-
 use Exception;
 
 use function chr;
@@ -17,6 +15,8 @@ use function is_resource;
 use function is_string;
 use function ord;
 use function strlen;
+
+use const FILTER_VALIDATE_URL;
 
 /**
  * Create an animated GIF from multiple images.
@@ -114,7 +114,7 @@ class GifCreator
 
         for ($i = 0; $i < count($frames); $i++) {
             if (is_resource($frames[$i])) { // Resource var
-                $resourceImg = $frames[$i];
+                $resourceImg          = $frames[$i];
 
                 ob_start();
                 imagegif($frames[$i]);
@@ -125,7 +125,7 @@ class GifCreator
                     $frames[$i] = file_get_contents($frames[$i]);
                 }
 
-                $resourceImg = imagecreatefromstring($frames[$i]);
+                $resourceImg          = imagecreatefromstring($frames[$i]);
 
                 ob_start();
                 imagegif($resourceImg);
@@ -210,22 +210,22 @@ class GifCreator
     {
         // utminfo(func_get_args());
 
-        $Locals_str = 13 + 3 * (2 << (ord($this->frameSources[$i][10]) & 0x07));
+        $Locals_str     = 13 + 3 * (2 << (ord($this->frameSources[$i][10]) & 0x07));
 
-        $Locals_end = strlen($this->frameSources[$i]) - $Locals_str - 1;
-        $Locals_tmp = substr($this->frameSources[$i], $Locals_str, $Locals_end);
+        $Locals_end     = strlen($this->frameSources[$i]) - $Locals_str - 1;
+        $Locals_tmp     = substr($this->frameSources[$i], $Locals_str, $Locals_end);
 
-        $Global_len = 2 << (ord($this->frameSources[0][10]) & 0x07);
-        $Locals_len = 2 << (ord($this->frameSources[$i][10]) & 0x07);
+        $Global_len     = 2 << (ord($this->frameSources[0][10]) & 0x07);
+        $Locals_len     = 2 << (ord($this->frameSources[$i][10]) & 0x07);
 
-        $Global_rgb = substr($this->frameSources[0], 13, 3 * (2 << (ord($this->frameSources[0][10]) & 0x07)));
-        $Locals_rgb = substr($this->frameSources[$i], 13, 3 * (2 << (ord($this->frameSources[$i][10]) & 0x07)));
+        $Global_rgb     = substr($this->frameSources[0], 13, 3 * (2 << (ord($this->frameSources[0][10]) & 0x07)));
+        $Locals_rgb     = substr($this->frameSources[$i], 13, 3 * (2 << (ord($this->frameSources[$i][10]) & 0x07)));
 
-        $Locals_ext = "!\xF9\x04" . chr(($this->dis << 2) + 0) . chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . "\x0\x0";
+        $Locals_ext     = "!\xF9\x04" . chr(($this->dis << 2) + 0) . chr(($d >> 0) & 0xFF) . chr(($d >> 8) & 0xFF) . "\x0\x0";
 
         if ($this->colour > -1 && ord($this->frameSources[$i][10]) & 0x80) {
             for ($j = 0; $j < (2 << (ord($this->frameSources[$i][10]) & 0x07)); $j++) {
-                if (ord($Locals_rgb[3 * $j + 0]) == (($this->colour >> 16) & 0xFF)
+                if (ord($Locals_rgb[3 * $j + 0])    == (($this->colour >> 16) & 0xFF)
                     && ord($Locals_rgb[3 * $j + 1]) == (($this->colour >> 8) & 0xFF)
                     && ord($Locals_rgb[3 * $j + 2]) == (($this->colour >> 0) & 0xFF)
                 ) {
@@ -254,7 +254,7 @@ class GifCreator
                 if ($this->gifBlockCompare($Global_rgb, $Locals_rgb, $Global_len)) {
                     $this->gif .= $Locals_ext . $Locals_img . $Locals_tmp;
                 } else {
-                    $byte = ord($Locals_img[9]);
+                    $byte          = ord($Locals_img[9]);
                     $byte |= 0x80;
                     $byte &= 0xF8;
                     $byte |= (ord($this->frameSources[0][10]) & 0x07);
@@ -262,7 +262,7 @@ class GifCreator
                     $this->gif .= $Locals_ext . $Locals_img . $Locals_rgb . $Locals_tmp;
                 }
             } else {
-                $byte = ord($Locals_img[9]);
+                $byte          = ord($Locals_img[9]);
                 $byte |= 0x80;
                 $byte &= 0xF8;
                 $byte |= (ord($this->frameSources[$i][10]) & 0x07);
@@ -299,7 +299,7 @@ class GifCreator
         // utminfo(func_get_args());
 
         for ($i = 0; $i < $length; $i++) {
-            if ($globalBlock[3 * $i + 0] != $localBlock[3 * $i + 0]
+            if ($globalBlock[3 * $i + 0]    != $localBlock[3 * $i + 0]
                 || $globalBlock[3 * $i + 1] != $localBlock[3 * $i + 1]
                 || $globalBlock[3 * $i + 2] != $localBlock[3 * $i + 2]) {
                 return 0;

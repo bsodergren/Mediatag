@@ -10,10 +10,10 @@ use Mediatag\Modules\TagBuilder\Patterns;
 
 class PurgatoryX extends Patterns
 {
-    public $studio = 'Purgatory X';
+    public $studio       = 'Purgatory X';
 
     // public $network       = 'Purgatory X';
-    public $regex = [
+    public $regex        = [
         'purgatoryx' => [
             'artist' => [
                 'name'                => 'purgatoryx',

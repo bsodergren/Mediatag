@@ -65,23 +65,23 @@ class MediaCommand extends DoctrineCommand
 
     // public static $CompletionHandlers = [];
 
-    public const USE_LIBRARY = false;
+    public const USE_LIBRARY             = false;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH              = true;
 
-    public static $SingleCommand = false;
+    public static $SingleCommand         = false;
 
-    public static $DEFAULT_CMD = false;
+    public static $DEFAULT_CMD           = false;
 
-    public $defaultCmd = 'list';
+    public $defaultCmd                   = 'list';
 
-    public $command = [];
+    public $command                      = [];
 
-    private ?string $processTitle = null;
+    private ?string $processTitle        = null;
 
     private bool $ignoreValidationErrors = false;
 
-    private ?Closure $code = null;
+    private ?Closure $code               = null;
 
     protected function executeAction(): int
     {

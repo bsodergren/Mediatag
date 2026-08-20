@@ -41,16 +41,16 @@ class TagBuilder
     public function getTags($videoInfo)
     {
         // utminfo(func_get_args());
-        $DbUpdates = [];
-        $updates   = [];
+        $DbUpdates   = [];
+        $updates     = [];
         // UTMlog::Logger('ReaderObj', $this->ReaderObj);
         $jsonupdates = [];
         if (! defined('__UPDATE_SET_ONLY__') || OptionIsTrue('add')) {
             // if (str_starts_with($this->video_key, 'x')) {
-            $updates = $this->ReaderObj->getFileValues();
+            $updates     = $this->ReaderObj->getFileValues();
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
 
-           // }
+            // }
 
             // if (! str_starts_with($this->video_key, 'x')) {
             $jsonupdates = $this->ReaderObj->getJsonValues();
@@ -68,7 +68,7 @@ class TagBuilder
                 // }
             }
 
-            $DbUpdates = $this->ReaderObj->getDbValues();
+            $DbUpdates   = $this->ReaderObj->getDbValues();
             // utmdd(['File Updates' => $updates,
             //     'json Updates'      => $jsonupdates,
             //     'Db Updates'        => $DbUpdates]);
@@ -78,7 +78,7 @@ class TagBuilder
         //     $updates = $FileUpdates;
         // }
         if ($jsonupdates !== null) {
-            $updates = $this->mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
+            $updates              = $this->mergetags($updates, $jsonupdates, $this->video_key, 'Combine');
             // utmdd($updates);
 
             JsonReader::$HasField = [];
@@ -120,17 +120,17 @@ class TagBuilder
         // UTMlog::Logger('updates', $updates);
 
         if (Option::isTrue('update')) {
-            $updates['studio']       = $this->addNetwork($updates, $updates);
-            $videoInfo['updateTags'] = $updates;
+            $updates['studio']        = $this->addNetwork($updates, $updates);
+            $videoInfo['updateTags']  = $updates;
 
             $videoInfo['currentTags'] = [];
         } else {
-            $current = $this->ReaderObj->getMetaValues();
+            $current                  = $this->ReaderObj->getMetaValues();
             $videoInfo['currentTags'] = $current;
             foreach ($updates as $tag => $value) {
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
-                   
+
                 }
             }
             if (is_array($current) && is_array($updates)) {
@@ -200,16 +200,16 @@ class TagBuilder
 
             return null;
         }
-        $arr    = explode('/', $studio);
-        $arr    = MediaArray::array_iunique($arr);
-        $studio = implode('/', $arr);
+        $arr        = explode('/', $studio);
+        $arr        = MediaArray::array_iunique($arr);
+        $studio     = implode('/', $arr);
 
-        $studio = trim($studio, '/');
+        $studio     = trim($studio, '/');
 
         if (! str_starts_with($this->video_key, 'x')) {
-            $storage = new Storage;
+            $storage = new Storage();
 
-            if($res = $storage->lookupStudio('studio', $studio)){
+            if ($res = $storage->lookupStudio('studio', $studio)) {
                 return $res;
             }
         }

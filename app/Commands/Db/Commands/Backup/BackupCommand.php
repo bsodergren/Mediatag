@@ -1,4 +1,7 @@
 <?php
+/**
+ * Command like Metatag writer for video files.
+ */
 
 namespace Mediatag\Commands\Db\Commands\Backup;
 
@@ -18,7 +21,7 @@ class BackupCommand extends MediaCommand
 
     public const USE_LIBRARY = true;
 
-    public const USE_SEARCH = true;
+    public const USE_SEARCH  = true;
 
-    public $command = ['backup' => ['backupMethod' => null]];
+    public $command          = ['backup' => ['backupMethod' => null]];
 }
