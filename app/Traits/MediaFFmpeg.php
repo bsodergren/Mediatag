@@ -283,8 +283,72 @@ trait MediaFFmpeg
         $this->progress->finishIndicator('Finished ' . $marker['text']);
     }
 
-    public function createCompilation($files, $ClipName, $name)
+ 
+
+  public function createCompilation($files, $ClipName, $name)
     {
+        $duration         = Option::getValue('dur', true, 3);
+        $type             = Option::getValue('type');
+        $this->MergedName = $name;
+        $this->clipName   = $ClipName;
+
+        // utmdump($files, $ClipName, $name, $duration, $type);
+        $fileCount = count($files);
+        Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
+        Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
+
+        $ffmpeg = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
+
+        // $advancedMedia = $ffmpeg->openAdvanced($files);
+
+        // $advancedMedia->filters()->pad()
+        // // //     ->custom('[0:v][1:v]', 'xfade=transition=radial', '[v]');
+
+        // $format = new X264('aac', 'libx264');
+        // $format->on('progress', function ($advancedMedia, $format, $percentage) {
+        //     Mediatag::$output->write('<info>Info compilation called  ' . $percentage . ' </info>');
+        //     // utmdump("$percentage % transcoded");
+        // });
+
+        // $advancedMedia
+        //     ->map([], $format, $ClipName)
+        //     ->save();
+        Mediatag::$Display->BarSection1->writeln('<file>Merging files</>');
+
+        $video  = $ffmpeg->open($files[0]);
+        $format = new X264;
+        // $format->setAudioCodec("libmp3lame");
+
+        $format->on('progress', function ($video, $format, $percentage) {
+            // Mediatag::$Display->BarSection2->overwrite('<info> ' . $percentage . ' </info>');
+            Mediatag::$Display->BarSection2->overwrite("<info>$percentage % transcoded</info>");
+        });
+
+        // utmdd($files);
+        $video->concat($files)->saveFromDifferentCodecs($format, $ClipName);
+        Mediatag::$Display->BarSection2->writeln('<comment>Finished</>');
+
+        // $cmd = $this->generateFfmpegCommand($files, $type, $duration);
+
+        // if ($cmd === true) {
+        //     return true;
+        // }
+        // $cmdArray      = array_merge($cmd, [$ClipName]);
+        // $this->cmdline = $cmdArray;
+
+        // $this->progress = new MediaBar($this->clipLength, 'one', 120);
+        // MediaBar::addFormat('%current:4s%/%max:4s% -- [%bar%] -- %percent:3s%%');
+        // // $this->progress->setMsgFormat()->setMessage("All Files",'message')->newbar();
+        // $this->progress->start();
+        // // $this->progress->startIndicator('Creating Compilation '.$name);
+        // $callback = Callback::check([$this, 'FrameCountCallback']);
+
+        // $this->ffmpegExec($cmdArray, $callback);
+    }
+
+   public function _createCompilation($files, $ClipName, $name)
+    {
+
         $duration         = Option::getValue('dur', true, 3);
         $type             = Option::getValue('type');
         $this->MergedName = $name;

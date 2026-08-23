@@ -67,7 +67,7 @@ class VideoPreview extends VideoInfo
 
             return str_replace(__INC_WEB_THUMB_ROOT__, '', $this->previewName);
         }
-
+        // return null;
         $this->preview_path = dirname($this->previewName);
         (new Filesystem())->mkdir($this->preview_path);
 

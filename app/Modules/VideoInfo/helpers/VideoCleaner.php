@@ -104,13 +104,13 @@ trait VideoCleaner
             $delete = true;
         }
         // utmdd($fileSearch );
-        if ($delete === true) {
-            foreach ($fileSearch as $k => $file) {
-                // utmdump($file);
-                unlink($file);
-                unset($fileSearch[$k]);
-            }
-        }
+        // if ($delete === true) {
+        //     foreach ($fileSearch as $k => $file) {
+        //         // utmdump($file);
+        //         // unlink($file);
+        //         unset($fileSearch[$k]);
+        //     }
+        // }
 
         [
             $dbList,

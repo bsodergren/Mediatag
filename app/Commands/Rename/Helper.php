@@ -174,12 +174,10 @@ trait Helper
 
         if (self::istrue('mff') && (self::istrue('mmf') && ! self::istrue('group')
             || self::istrue('double_penetration')) && ! self::istrue('Compilation')) {
-            utmdump("fasdfdsfd");
             return false;
             // return 'Threesome';
         }
         if (self::istrue('Threesome') && ! self::istrue('group') && ! self::istrue('Compilation') && ! self::istrue('Single')) {
-            utmdump("fasdfdsfdfdsfsdfsdfsdfsdsfd");
 
             return false;
             // return 'Threesome';
@@ -197,8 +195,6 @@ trait Helper
         if (self::istrue('Bisexual')) {
             return 'Bisexual';
         }
-        utmdump("nafdnafdndf");
-
         return false;
     }
 

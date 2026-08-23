@@ -105,18 +105,19 @@ trait Helper
         }
 
         // if (! Option::istrue('yes') && ! Option::istrue('paths')) {
-        $date                = '< ' . $this->lastUpdated();
+        $date                = '> ' . $this->lastUpdated();
         // //     MediaFinder::$TextMessage = '  Updated Files ';
         // // }
 
         $Updates_Array       = (new MediaFinder())->search(getcwd(), '/\.mp4$/i', $date, false);
-        // utmdd($Updates_Array,count($Updates_Array));
-        foreach ($Updates_Array as $key => $file) {
+        foreach ($Updates_Array as $i => $file) {
+            $key                       = MediaFile::getVideoKey($file);
             if (array_key_exists($key, $this->New_Array)) {
                 continue;
             }
-            $this->Updates_Array[$key] = $Updates_Array[$key];
+            $this->Updates_Array[$key] = $file;
         }
+
 
         if (Option::istrue('test')) {
             parent::$output->writeln('Deleted files ' . print_r($this->Deleted_Array, 1));
@@ -145,8 +146,8 @@ trait Helper
 
         // utmdd([__METHOD__,
         //     'files'   => \count($this->file_array),
-        //     'new'     => $this->New_Array,
-        //     'updated' => $this->Updates_Array,
+        //     'new'     => count($this->New_Array),
+        //     'updated' =>  count($this->Updates_Array),
 
         //     'changed' => \count($this->Changed_Array),
         //     'deleted' => \count($this->Deleted_Array),

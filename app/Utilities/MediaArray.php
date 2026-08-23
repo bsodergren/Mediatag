@@ -144,10 +144,15 @@ class MediaArray
 
     public static function array_iunique($array, $filter = null)
     {
+        $newNewArray =[];
         foreach ($array as $k => $v) {
             $newarray[strtolower($v)] = $v;
         }
         foreach ($newarray as $k => $v) {
+            
+            if($v == ""){
+                continue;
+            }
             $newNewArray[] = $v;
         }
 

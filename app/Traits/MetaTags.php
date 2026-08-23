@@ -101,6 +101,8 @@ trait MetaTags
     public function cleanStudio($text): string
     {
         // utminfo(func_get_args());
+        $arr          = [];
+
         Mediatag::notice('Clean Studio {studio}', ['studio' => $text]);
         if (is_array($text)) {
             $array = $text;
@@ -144,7 +146,7 @@ trait MetaTags
     public function sortTagList($genre, $new = null)
     {
         // utminfo(func_get_args());
-
+        $arr   = [];
         if (is_array($genre)) {
             $array = $genre;
         } else {

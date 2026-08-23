@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -30,13 +31,13 @@ trait FindHelper
 
     public function findObjects()
     {
-        if (Option::isTrue('existing')) {
+        if (Option::isTrue('update existing download archive')) {
             $this->updateArchive();
         } elseif (Option::isTrue('json')) {
             Mediatag::$output->writeln('<info> missing json data</info>');
             $this->findJson();
         } elseif (Option::isTrue('missing')) {
-            Mediatag::$output->writeln('<info> missing videos from Yt Archive</info>');
+            Mediatag::$output->writeln('<info> Finding missing videos from Archive</info>');
             $this->findMissing();
         } else {
             Mediatag::$output->writeln('<info> What are you trying to find? </info>');
@@ -65,24 +66,30 @@ trait FindHelper
     private function writeArchiveIdFile($array)
     {
         $archiveLine = [];
+        // $array = array_slice($array,0,10);
         foreach ($array as $k => $v) {
             $archiveLine[] = 'pornhub ' . $k;
         }
+        //
+        $uniqueIds   = array_unique($archiveLine);
 
-        Filesystem::writeFile(self::$ARCHIVE, $archiveLine);
+        Filesystem::writeFile(self::$ARCHIVE, $uniqueIds);
     }
 
     private function writeNewPlaylist($content, $file) {}
 
     private function updateArchive()
     {
-        $idList = $this->getArchiveIdArray();
+        $missingArray = [];
+        $idList       = [];
+
+        $idList       = $this->getArchiveIdArray();
         Mediatag::$output->writeln('<info>' . count($idList) . ' items in archive </info>');
 
-        // utmdump(count($idList));
         Mediatag::$output->writeln('<info>' . count($this->VideoList['file']) . ' total files </info>');
         foreach ($this->VideoList['file'] as $key => $file) {
-            if (! array_key_exists($key, $idList)) {
+
+            if (array_key_exists($key, $idList) === false) {
                 $missingArray[$key] = true;
                 $idList[$key]       = true;
             }
@@ -106,9 +113,16 @@ trait FindHelper
 
     private function searchVideoList($searchArray)
     {
+
+        $missing = null;
         foreach ($searchArray as $id) {
+            if ($id == "") {
+                continue;
+            }
+            if (str_starts_with($id, "x")) {
+                continue;
+            }
             if (! array_key_exists($id, $this->VideoList['file'])) {
-                // utmdd($id, $this->VideoList['file'][$id]);
                 $missing[] = $id;
             }
         }
@@ -122,8 +136,10 @@ trait FindHelper
         $ids           = $this->getDownloadedIds();
 
         $missing       = $this->searchVideoList($ids);
+        if ($missing === null) {
+            return false;
+        }
         $this->removeFromArchive($missing);
-
         $this->saveMissingPlaylist($missing, $playlist_file);
     }
 

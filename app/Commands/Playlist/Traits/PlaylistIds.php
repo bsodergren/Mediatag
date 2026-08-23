@@ -60,7 +60,6 @@ trait PlaylistIds
     {
         $content         = [];
         $archive_content = $this->readFromArchive(self::$ARCHIVE);
-        // utmdump(count($archive_content));
         if (is_array($archive_content)) {
             foreach ($archive_content as $lineNum => $line) {
                 $CurrentId = Strings::after($line, ' ');
@@ -89,14 +88,13 @@ trait PlaylistIds
         $idList          = [];
         $archive_content = $this->readFromArchive($file);
         if (is_array($archive_content)) {
-            foreach ($archive_content as $lineNum => $line) {
-                $idList[] = Strings::after($line, ' ');
+            foreach ($archive_content as $lineNum => $line) {                
+                $idList[] = Strings::after($line, 'pornhub ');
             }
-
             return MediaArray::array_iunique($idList);
         }
 
-        return [];
+        return null;
     }
 
     public function saveUniqueIds($file, $idList)
@@ -122,7 +120,7 @@ trait PlaylistIds
         $this->idList = $this->getUniqueIds(self::$ARCHIVE);
 
         $fileidArray  = [
-            0 => [self::DISABLED, 0],
+            0 => [self::DISABLED, 1],
             1 => [self::MODELHUB, 1],
             2 => [self::IGNORED, 0],
             3 => [self::ERRORIDS, 0],
@@ -131,9 +129,8 @@ trait PlaylistIds
 
         foreach ($fileidArray as $i => $fileId) {
             $file = $fileId[0];
-            if ($fileId[1] == 0) {
+            if ($fileId[1] == 1) {
                 $idArray = $this->getUniqueIds($file);
-
                 if (is_array($idArray)) {
                     $this->idList = array_merge($this->idList, $idArray);
                 }
@@ -143,6 +140,7 @@ trait PlaylistIds
         $this->getpremiumIds();
         $this->idList = array_merge($this->idList, $this->premiumIds);
         $this->idList = array_merge($this->idList, $this->DownloadableIds);
+        // utmdd( $this->idList);
 
         return $this->idList;
     }

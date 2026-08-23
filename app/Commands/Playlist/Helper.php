@@ -33,6 +33,7 @@ trait Helper
     public $url             = 'https://www.pornhub.com/playlist/watchlater';
 
     public $idList          = [];
+    public $playlist_url;
 
     public $DownloadableIds = [];
 
@@ -267,9 +268,13 @@ trait Helper
             $before    = count($f);
 
             $idCnt     = count($this->ids);
+
+
+            // utmdd(["Running Compact on " . $this->playlist, "playlist has " . $before . " videos",
+            //     "kid List has " . $idCnt . " videos"]);
+
             if ($before > 0) {
                 $array         = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
-
                 if (count($array) > 0) {
                     $array = MediaArray::array_iunique($array);
                 }
@@ -285,11 +290,13 @@ trait Helper
                     $Videos_left = 'Video';
                 }
 
-                $text          = '<comment> ' . $trimmedLines . '</comment>';
+                $text          = '<comment> Before, ' . $before . ', trimmeed ' . $trimmedLines . '</comment>';
                 $text .= '<info> ' . $Video_Removed . ' been removed. There are now</info>';
                 $text .= ' <comment>' . $after . '</comment> <info>' . $Videos_left . ' left</info>';
+
                 Mediatag::$output->writeln($text);
                 Filesystem::writePlaylist($this->playlist, $array);
+
                 if (0 == $after) {
                     Mediatag::$output->writeln('<info> All files downloaded</info>');
                     Filesystem::delete($this->playlist);
@@ -297,6 +304,7 @@ trait Helper
                 }
             }
         }
+
         if (Option::istrue('download')) {
             $this->dodownloadPlaylist();
         }
@@ -332,10 +340,14 @@ trait Helper
 
     public function compactPlaylist($line)
     {
-        $ph_id = Strings::after($line, '=');
-        if (str_contains($ph_id, '&')) {
-            $ph_id = Strings::before($ph_id, '&');
+        // $line .= "f";
+        if (str_contains($line, '&')) {
+            $line = Strings::before($line, '&');
+
         }
+        $ph_id = Strings::after($line, '=') ;
+
+
         if (null === $ph_id) {
             $ph_id = Strings::after($line, 'watch/');
             if (null !== $ph_id) {
@@ -343,7 +355,9 @@ trait Helper
             }
         }
         $ph_id = trim($ph_id);
-        if (!in_array($ph_id, $this->ids)) {
+
+        if (!in_array($ph_id, $this->ids, true)) {
+
             if (str_contains($line, 'view_video.php')) {
                 return $line;
             }

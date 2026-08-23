@@ -230,7 +230,6 @@ class Youtube extends MediatagExec
         $this->num_of_lines  = 100;
         if (!Option::istrue('url')) {
             $names = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            utmdump($names);
 
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);

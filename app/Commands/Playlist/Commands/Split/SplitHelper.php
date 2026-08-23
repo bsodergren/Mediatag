@@ -18,8 +18,9 @@ trait SplitHelper
     {
         (int) $split = Option::getValue('splitlines');
         $splitName   = basename($this->playlist, '.txt');
-
-        MediaFile::splitFile($this->playlist, './batch/', $split, $splitName . '_', '.txt');
+        $splitPath = './batch/'. $splitName .'/';
+        
+        MediaFile::splitFile($this->playlist,$splitPath , $split, $splitName . '_', '.txt');
 
         exit;
     }

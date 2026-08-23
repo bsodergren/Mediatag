@@ -1,9 +1,6 @@
 {
     "repositories": [
-        {
-            "type": "path",
-            "url": "/home/bjorn/scripts/MediatagDbLib"
-        },
+    
         {
             "type": "path",
             "url": "/home/bjorn/scripts/utm"
@@ -40,7 +37,6 @@
         "intervention/image": "^3.3",
         "nesbot/carbon": "^3.6",
         "bsodergren/utm": "@dev",
-        "bsodergren/utmdblib": "@dev",
         "symfony/http-client": "^7.3",
         "psr/log": "^3.0",
         "evenement/evenement": "^3.0",

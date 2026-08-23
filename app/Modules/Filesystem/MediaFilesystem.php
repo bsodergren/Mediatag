@@ -76,7 +76,6 @@ class MediaFilesystem extends SFilesystem
     public static function writeFile($file, $content, $backup = true)
     {
         // utminfo(func_get_args());S
-
         if (! file_exists($file)) {
             touch($file);
         }

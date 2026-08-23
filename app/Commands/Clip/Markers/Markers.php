@@ -124,6 +124,7 @@ trait Markers
         $videoKey  = 0;
         $markers   = [];
         $markerPos = [];
+        
         $total     = count($videoInfo);
         foreach ($videoInfo as $k => $row) {
             if (! array_key_exists('timeCode', $row)) {
@@ -139,32 +140,48 @@ trait Markers
                 'filename' => $row['filename'],
             ];
 
-            [$markerText,$markerKey]               = explode('_', $row['markerText']);
+            if(str_contains( $row['markerText'],'_')){
+                [$markerText,$markerKey]               = explode('_', $row['markerText']);
+                if (str_contains(strtolower($markerKey), 'start')) {
+                    $start   = $row['timeCode'];
+                    $start   = $this->videoDuration($start);
+                    $endMark = true;
+                }
 
-            if (str_contains(strtolower($markerKey), 'start')) {
-                $start   = $row['timeCode'];
+                if (str_contains(strtolower($markerKey), 'end')) {
+                    $end                   = $row['timeCode'];
+                    $end                   = $this->videoDuration($end);
+                    $endMark               = false;
+                    $markerPos[$markerIdx] = [
+                        'text'  => $markerText,
+                        'start' => $start,
+                        'end'   => $end];
+                    $markerIdx++;
+                }
+
+                if ($k + 1 == $total && $endMark === true) {
+                    $end                   = $row['timeCode'] + 100;
+                    $end                   = $this->videoDuration($end);
+                    $markerPos[$markerIdx] = [
+                        'text'  => $markerText,
+                        'start' => $start,
+                        'end'   => $end];
+                }
+            } else {
+                 $start   = $row['timeCode'];
+                    
+                $end    = $row['timeCode'] + 100;
+                if(array_key_exists($k+1,$videoInfo)){
+                    $end = $videoInfo[$k+1]['timeCode'];
+                }
+                $end    = $this->videoDuration($end);
                 $start   = $this->videoDuration($start);
-                $endMark = true;
-            }
 
-            if (str_contains(strtolower($markerKey), 'end')) {
-                $end                   = $row['timeCode'];
-                $end                   = $this->videoDuration($end);
-                $endMark               = false;
-                $markerPos[$markerIdx] = [
-                    'text'  => $markerText,
-                    'start' => $start,
-                    'end'   => $end];
-                $markerIdx++;
-            }
+                $markerPos[$k] = [
+                        'text'  => $row['markerText'],
+                        'start' => $start,
+                        'end'   => $end];
 
-            if ($k + 1 == $total && $endMark === true) {
-                $end                   = $row['timeCode'] + 100;
-                $end                   = $this->videoDuration($end);
-                $markerPos[$markerIdx] = [
-                    'text'  => $markerText,
-                    'start' => $start,
-                    'end'   => $end];
             }
 
             $markers[$row['video_key']]['markers'] = $markerPos;

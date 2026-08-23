@@ -271,35 +271,55 @@ class MediaFile
     {
         // utminfo(func_get_args());
 
-        $i      = 0;
-        $j      = 1;
-        $buffer = '';
-
+        $i         = 0;
+        $j         = 1;
+        $buffer    = '';
+        $lines     = $lines - 0;
+        $lineCount = $lines;
         if (! str_ends_with($targetpath, '/')) {
             $targetpath .= '/';
         }
 
-        NetteFile::createDir($targetpath);
-        // utmdump($targetpath);
+        if (file_exists($targetpath)) {
+            NetteFile::delete($targetpath);
 
-        $handle = @fopen($source, 'r');
+        }
+
+
+
+        NetteFile::createDir($targetpath);
+
+
+        $handle    = @fopen($source, 'r');
 
         while (! feof($handle)) {
+            $lineCount--;
             $buffer .= @fgets($handle, 4096);
             $i++;
 
-            $file_name = sprintf('%s%02d%s', $filename, $j, $ext);
+            $file_name = sprintf('%s%03d%s', $filename, $j, $ext);
             $fname     = $targetpath . $file_name;
-            Strings::showstatus($i, $lines, 80, $file_name);
-            if ($i >= $lines) {
-                self::saveToFile($buffer, $fname);
-                $j++;
-                $i = 0;
-            }
-        }
-        Strings::showstatus($i, $i, 80, $file_name);
 
-        self::saveToFile($buffer, $fname);
+            if ($buffer != "") {
+                Strings::showstatus($i, $lines, 80, $file_name);
+
+                if ($i >= $lines) {
+
+                    self::saveToFile($buffer, $fname);
+                    $j++;
+                    $i = 0;
+                }
+            }
+
+        }
+
+
+        if ($buffer != "") {
+
+            Strings::showstatus($i, $i, 80, $file_name);
+            self::saveToFile($buffer, $fname);
+        }
+
         fclose($handle);
 
         return 1;

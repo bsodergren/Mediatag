@@ -136,7 +136,7 @@ trait Helper
         $markerArray       = [];
         $this->FileIdx     = 0;
 
-        $search            = Option::getValue('clip', true);
+        $search            = Option::getValue('search', true);
         foreach ($this->VideoList['file'] as $key => $vidArray) {
             $this->Marker = new Markers();
 
@@ -157,7 +157,6 @@ trait Helper
             }
         }
         $this->markerArray = $markerArray;
-
         return $this->markerArray;
     }
 
