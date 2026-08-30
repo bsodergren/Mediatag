@@ -54,11 +54,11 @@ trait Helper
 
 
             if (file_exists($newFile)) {
-                  Mediatag::$Console->writeln('<info> deleting ' . $dir->getRealPath() . ' </>');
-                unlink( $dir->getRealPath());
+                Mediatag::$Console->writeln('<info> deleting ' . $dir->getRealPath() . ' </>');
+                unlink($dir->getRealPath());
                 continue;
             }
-            FileSystem::rename( $dir->getRealPath() , $newFile,false);
+            FileSystem::rename($dir->getRealPath(), $newFile, false);
             Mediatag::$Console->writeln('<info>' . $newFile . ' </>');
             //exit;
         }

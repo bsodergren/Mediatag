@@ -149,8 +149,8 @@ class MediaArray
             $newarray[strtolower($v)] = $v;
         }
         foreach ($newarray as $k => $v) {
-            
-            if($v == ""){
+
+            if ($v == "") {
                 continue;
             }
             $newNewArray[] = $v;

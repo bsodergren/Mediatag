@@ -283,9 +283,9 @@ trait MediaFFmpeg
         $this->progress->finishIndicator('Finished ' . $marker['text']);
     }
 
- 
 
-  public function createCompilation($files, $ClipName, $name)
+
+    public function createCompilation($files, $ClipName, $name)
     {
         $duration         = Option::getValue('dur', true, 3);
         $type             = Option::getValue('type');
@@ -293,11 +293,11 @@ trait MediaFFmpeg
         $this->clipName   = $ClipName;
 
         // utmdump($files, $ClipName, $name, $duration, $type);
-        $fileCount = count($files);
+        $fileCount        = count($files);
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
-        $ffmpeg = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
+        $ffmpeg           = FFMpeg::create(['timeout' => 3600], Mediatag::$log);
 
         // $advancedMedia = $ffmpeg->openAdvanced($files);
 
@@ -315,8 +315,8 @@ trait MediaFFmpeg
         //     ->save();
         Mediatag::$Display->BarSection1->writeln('<file>Merging files</>');
 
-        $video  = $ffmpeg->open($files[0]);
-        $format = new X264;
+        $video            = $ffmpeg->open($files[0]);
+        $format           = new X264();
         // $format->setAudioCodec("libmp3lame");
 
         $format->on('progress', function ($video, $format, $percentage) {
@@ -346,7 +346,7 @@ trait MediaFFmpeg
         // $this->ffmpegExec($cmdArray, $callback);
     }
 
-   public function _createCompilation($files, $ClipName, $name)
+    public function _createCompilation($files, $ClipName, $name)
     {
 
         $duration         = Option::getValue('dur', true, 3);

@@ -1,16 +1,6 @@
 <?php
-
 /**
- * JBZoo Toolbox - Cli.
- *
- * This file is part of the JBZoo Toolbox project.
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- *
- * @license    MIT
- * @copyright  Copyright (C) JBZoo.com, All rights reserved.
- *
- * @see        https://github.com/JBZoo/Cli
+ * Command like Metatag writer for video files.
  */
 
 declare(strict_types=1);
@@ -37,11 +27,11 @@ class CliApplication extends MediaApplication
 {
     use CommandRun;
 
-    public $defaultCmd = 'list';
+    public $defaultCmd                      = 'list';
 
-    private ?EventManager $eventManager = null;
+    private ?EventManager $eventManager     = null;
 
-    private ?string $logo = null;
+    private ?string $logo                   = null;
 
     private ?AbstractOutputMode $outputMode = null;
 
@@ -51,7 +41,7 @@ class CliApplication extends MediaApplication
     public function registerCommandsByPath(
         string $commandsDir,
         string $globalNamespace,
-        bool $strictMode = true
+        bool $strictMode = true,
     ): self {
         if ($strictMode && ! \is_dir($commandsDir)) {
             throw new Exception('First argument is not directory!');
@@ -59,7 +49,7 @@ class CliApplication extends MediaApplication
 
         /** @var string[] $files */
         $files = FS::ls($commandsDir);
-        $files = \array_filter($files, static fn (string $file) => \str_ends_with($file, '.php'));
+        $files = \array_filter($files, static fn(string $file) => \str_ends_with($file, '.php'));
         if (\count($files) === 0) {
             return $this;
         }
@@ -70,14 +60,14 @@ class CliApplication extends MediaApplication
             }
             require_once $file;
 
-            $dir         = \dirname($file);
-            $commandsPos = \strpos($dir, 'Controller');
+            $dir              = \dirname($file);
+            $commandsPos      = \strpos($dir, 'Controller');
 
             if ($commandsPos !== false) {
                 $taskNamespace = \trim(\str_replace(
                     '/',
                     '\\',
-                    \substr($dir, $commandsPos + \strlen('Controller'))
+                    \substr($dir, $commandsPos + \strlen('Controller')),
                 ), '\\');
             } else {
                 $taskNamespace = '';

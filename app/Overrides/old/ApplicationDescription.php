@@ -32,7 +32,7 @@ class ApplicationDescription
     /**
      * @var array<string, Command>
      */
-    private array $aliases = [];
+    private array $aliases        = [];
 
     public function __construct(
         private Application $application,
@@ -78,9 +78,9 @@ class ApplicationDescription
         $this->commands   = [];
         $this->namespaces = [];
 
-        $all = $this->application->all($this->namespace ? $this->application->findNamespace($this->namespace) : null);
+        $all              = $this->application->all($this->namespace ? $this->application->findNamespace($this->namespace) : null);
         foreach ($this->sortCommands($all) as $namespace => $commands) {
-            $names = [];
+            $names                        = [];
 
             /** @var Command $command */
             foreach ($commands as $name => $command) {

@@ -1,12 +1,6 @@
 <?php
-
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Command like Metatag writer for video files.
  */
 
 namespace Symfony\Component\Console\Formatter;
@@ -81,7 +75,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
             $this->setStyle($name, $style);
         }
 
-        $this->styleStack = new OutputFormatterStyleStack;
+        $this->styleStack = new OutputFormatterStyleStack();
     }
 
     public function setDecorated(bool $decorated): void
@@ -136,15 +130,15 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         $currentLineLength = 0;
         preg_match_all("#<(($openTagRegex) | /($closeTagRegex)?)>#ix", $message, $matches, \PREG_OFFSET_CAPTURE);
         foreach ($matches[0] as $i => $match) {
-            $pos  = $match[1];
-            $text = $match[0];
+            $pos    = $match[1];
+            $text   = $match[0];
 
             if ($pos != 0 && $message[$pos - 1] == '\\') {
                 continue;
             }
 
             // convert byte position to character position.
-            $pos = Helper::length(substr($message, 0, $pos));
+            $pos    = Helper::length(substr($message, 0, $pos));
             // add the text up to the next tag
             $output .= $this->applyCurrentStyle(Helper::substr($message, $offset, $pos - $offset), $output, $width, $currentLineLength);
             $offset = $pos + Helper::length($text);
@@ -191,7 +185,7 @@ class OutputFormatter implements WrappableOutputFormatterInterface
             return null;
         }
 
-        $style = new OutputFormatterStyle;
+        $style = new OutputFormatterStyle();
         foreach ($matches as $match) {
             array_shift($match);
             $match[0] = strtolower($match[0]);
@@ -252,8 +246,8 @@ class OutputFormatter implements WrappableOutputFormatterInterface
         }
 
         preg_match('~(\\n)$~', $text, $matches);
-        $text = $prefix . $this->addLineBreaks($text, $width);
-        $text = rtrim($text, "\n") . ($matches[1] ?? '');
+        $text  = $prefix . $this->addLineBreaks($text, $width);
+        $text  = rtrim($text, "\n") . ($matches[1] ?? '');
 
         if (! $currentLineLength && $current !== '' && ! str_ends_with($current, "\n")) {
             $text = "\n" . $text;

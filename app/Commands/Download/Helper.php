@@ -138,9 +138,9 @@ trait Helper
                 $key          = $row['key'];
                 $json_file    = $row['src'];
                 // $newJson_file = __JSON_CACHE_DIR__ . '/' . $key . '.info.json';
-                        $newJson_file = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $key );
+                $newJson_file = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $key);
 
-                        
+
                 if (!Mediatag::$filesystem->exists($newJson_file)) {
                     if (Option::istrue('test')) {
                         $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';

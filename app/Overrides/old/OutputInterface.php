@@ -1,12 +1,6 @@
 <?php
-
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
+/**
+ * Command like Metatag writer for video files.
  */
 
 namespace Symfony\Component\Console\Output;
@@ -22,27 +16,27 @@ use Symfony\Component\Console\Formatter\OutputFormatterInterface;
  */
 interface OutputInterface
 {
-    public const VERBOSITY_VERY_QUIET = 512;
+    public const VERBOSITY_VERY_QUIET      = 512;
 
     public const VERBOSITY_VERY_VERY_QUIET = 1024;
 
-    public const VERBOSITY_SILENT = 8;
+    public const VERBOSITY_SILENT          = 8;
 
-    public const VERBOSITY_QUIET = 16;
+    public const VERBOSITY_QUIET           = 16;
 
-    public const VERBOSITY_NORMAL = 32;
+    public const VERBOSITY_NORMAL          = 32;
 
-    public const VERBOSITY_VERBOSE = 64;
+    public const VERBOSITY_VERBOSE         = 64;
 
-    public const VERBOSITY_VERY_VERBOSE = 128;
+    public const VERBOSITY_VERY_VERBOSE    = 128;
 
-    public const VERBOSITY_DEBUG = 256;
+    public const VERBOSITY_DEBUG           = 256;
 
-    public const OUTPUT_NORMAL = 1;
+    public const OUTPUT_NORMAL             = 1;
 
-    public const OUTPUT_RAW = 2;
+    public const OUTPUT_RAW                = 2;
 
-    public const OUTPUT_PLAIN = 4;
+    public const OUTPUT_PLAIN              = 4;
 
     /**
      * Writes a message to the output.
