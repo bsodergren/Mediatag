@@ -127,11 +127,20 @@ class Pornhub extends VideoDownloader
                 'ConsoleCmd'   => 'writeln',
                 'OutputMethod' => null,
             ],
-            'info'                => [
-                'search'       => 'str_starts_with',
+            '[info]'              => [
+                'search'       => [
+                    'pattern' => "/.*metadata as JSON to:(.*\.json)/",
+                    'match'   => 1,
+                    'command' => 'moveNewJson',
+                ],
                 'ConsoleCmd'   => 'writeln',
-                'OutputMethod' => 'downloadableIds',
+                'OutputMethod' => null,
             ],
+            // 'info'                => [
+            //     'search'       => 'str_starts_with',
+            //     'ConsoleCmd'   => 'writeln',
+            //     'OutputMethod' => 'downloadableIds',
+            // ],
             // 'json'                => [
             //     'search'=> [
             //         'pattern' => "/.*metadata as JSON to:(.*\.json)/",

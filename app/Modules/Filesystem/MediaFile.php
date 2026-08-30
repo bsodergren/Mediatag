@@ -441,4 +441,21 @@ class MediaFile
 
         return $file;
     }
+
+    public static function getjsonFilename(string $jsonDir, string $jsonKey, mixed $prefix = null): string
+    {
+
+        $output_array    = [];
+        //        preg_match('/([a-zA-Z0-9]{2})([a-zA-Z0-9]{2})([a-zA-Z0-9]{2})/', $jsonKey, $output_array);
+
+        if (!is_null($prefix)) {
+            // $jsonDir .= '/' . $prefix;
+        }
+
+        $output_array[0] =  $jsonDir;
+        $partDir         = implode("/", $output_array);
+        $newFile         = $partDir . DIRECTORY_SEPARATOR . $jsonKey . ".info.json";
+        NetteFile::createDir($partDir);
+        return $newFile;
+    }
 }

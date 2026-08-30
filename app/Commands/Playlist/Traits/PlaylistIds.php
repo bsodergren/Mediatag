@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -88,7 +89,7 @@ trait PlaylistIds
         $idList          = [];
         $archive_content = $this->readFromArchive($file);
         if (is_array($archive_content)) {
-            foreach ($archive_content as $lineNum => $line) {                
+            foreach ($archive_content as $lineNum => $line) {
                 $idList[] = Strings::after($line, 'pornhub ');
             }
             return MediaArray::array_iunique($idList);

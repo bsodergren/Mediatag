@@ -59,7 +59,9 @@ class Genre extends TagBuilder
         $delim     = ',';
 
         $tag_array = explode($delim, $text);
+
         $arr       = self::fixGenres($tag_array);
+
 
         return implode($delim, $arr);
     }

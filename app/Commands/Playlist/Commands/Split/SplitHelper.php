@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -18,9 +19,9 @@ trait SplitHelper
     {
         (int) $split = Option::getValue('splitlines');
         $splitName   = basename($this->playlist, '.txt');
-        $splitPath = './batch/'. $splitName .'/';
-        
-        MediaFile::splitFile($this->playlist,$splitPath , $split, $splitName . '_', '.txt');
+        $splitPath   = './batch/' . $splitName . '/';
+
+        MediaFile::splitFile($this->playlist, $splitPath, $split, $splitName . '_', '.txt');
 
         exit;
     }

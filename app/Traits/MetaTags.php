@@ -44,9 +44,7 @@ trait MetaTags
 
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
-
         $out    = trim($this->{$method}($text));
-
         return $out;
     }
 
@@ -338,7 +336,8 @@ trait MetaTags
             self::$Videokey = $obj;
         }
 
-        self::dumpTag('genre', __FUNCTION__, ['Tag' => $tag_array, 'Tag2' => $tag_array2, 'Priority' => $priority]);
+        // utmdd('genre', __FUNCTION__, ['Tag' => $tag_array, 'Tag2' => $tag_array2, 'Priority' => $priority]);
+
         foreach ($tag_array as $tag => $value) {
             if (array_key_exists($tag, $tag_array2)) {
                 $value2 = self::mergeTag($tag, $value, $tag_array2[$tag], $priority);

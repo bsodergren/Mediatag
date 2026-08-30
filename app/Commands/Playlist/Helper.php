@@ -39,20 +39,26 @@ trait Helper
 
     private $secondRun      = false;
 
-    public function youtubeGetJsonFile()
-    {
-        // utminfo(func_get_args());
+    // public function youtubeGetJsonFile()
+    // {
+    //     // utminfo(func_get_args());
 
-        // Mediatag::$output->writeln('<info> getting new json file </info>');
+    //     // Mediatag::$output->writeln('<info> getting new json file </info>');
+    //     $videoKey = null;
+    //     $videoURL = null;
 
-        if (Option::istrue('url')) {
-            $this->playlist_url = Option::getValue('url');
-        }
-        $videoKey = Strings::after($this->playlist_url, '=');
-        $videoURL = Strings::before($this->playlist_url, '/view_video');
+    //     if (Option::istrue('url')) {
+    //         $this->playlist_url = Option::getValue('url');
+    //         $videoKey = Strings::after($this->playlist_url, '=');
+    //         $videoURL = Strings::before($this->playlist_url, '/view_video');
+    //                 $this->youtube->run($this->playlist)->youtubeGetJson($videoKey, $videoURL);
+    //                 return true;
+    //     }
 
-        $this->youtube->run($this->playlist)->youtubeGetJson($videoKey, $videoURL);
-    }
+    //             $this->youtube->run($this->playlist)->downloadPlaylist();
+
+
+    // }
 
     public function youtubeWatchPlaylist()
     {
@@ -111,6 +117,7 @@ trait Helper
         }
 
         $this->youtube->run($this->playlist)->downloadPlaylist();
+
         $this->premiumIds = $this->youtube->premiumIds;
         $this->secondRun  = true;
 
@@ -290,7 +297,7 @@ trait Helper
                     $Videos_left = 'Video';
                 }
 
-                $text          = '<comment> Before, ' . $before . ', trimmeed ' . $trimmedLines . '</comment>';
+                $text          = '<comment> Before ' . $before . ', trimmeed ' . $trimmedLines . '</comment>';
                 $text .= '<info> ' . $Video_Removed . ' been removed. There are now</info>';
                 $text .= ' <comment>' . $after . '</comment> <info>' . $Videos_left . ' left</info>';
 

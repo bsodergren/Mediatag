@@ -21,6 +21,7 @@ use Nette\Utils\Arrays;
 use Symfony\Component\Filesystem\Filesystem;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
+use Nette\Utils\FileSystem as nFileSystem;
 
 use function array_key_exists;
 use function count;
@@ -151,8 +152,8 @@ class StorageDB extends Storage
         $fileListArray     = [];
 
         $query             = $this->queryBuilder('select', "CONCAT(fullpath,'/',filename) as file_name,fullpath, video_key");
-
         $results           = $this->query($query);
+
         foreach ($results as $key => $arr) {
             if ($arr['fullpath'] === null) {
                 continue;

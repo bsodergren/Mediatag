@@ -63,6 +63,7 @@ class Youtube extends MediatagExec
         'https://www.pornhub.com',
         '--impersonate',
         'Edge-101',
+        // '--write-pages',
         // '--list-impersonate-targets'
     ];
 
@@ -252,95 +253,131 @@ class Youtube extends MediatagExec
         }
 
         $this->LibraryClass->init($this);
+        // if (Option::isTrue('json')) {
+        //     $callback  = Callback::check([$this, 'downloadJsonCallback']);
+        // } else {
         $callback            = Callback::check([$this->LibraryClass, 'downloadCallback']);
+        // }
         $command             = $this->youtubeCmdOptions();
 
         if (Option::istrue('test')) {
             $this->testexec($command, $callback);
         }
         $this->exec($command, $callback);
+
+        $this->trimPlaylist();
+        // if (Option::isTrue('json')) {
+
+        //  if (null === $this->yt_json_string) {
+        //     // if ('https://www.pornhub.com' == $url) {
+        //     //     $url = 'http://www.pornhubpremium.com';
+        //     // } else {
+        //     //     $url = 'https://www.pornhub.com';
+        //     // }
+        //     // // utmdump(['First URL didnt work',$url, $this->yt_json_string]);
+        //     // $this->youtubeGetJson($video_key, $url);
+        //     // if (null === $this->yt_json_string) {
+        //         return null;
+        //     // }
+        // }
+        // // utmdump(['This worked',$url, $this->yt_json_string]);
+        // $json_file = trim($this->yt_json_string);
+        //  $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
+        //   $video_key = $matches[1];
+
+        // if (file_exists($json_file)) {
+        //    $this->moveJson($json_file, $video_key);
+        // }
+        // }
     }
-
-    public function youtubeGetJson($video_key, $url = 'https://www.pornhub.com')
-    {
-        $json_file = null;
-        // utminfo(func_get_args());
-        if ('Pornhub' != $this->library) {
-            return null;
-        }
-        // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
-        $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
-        $options   = array_merge($options, ['--skip-download']);
-        $video_url = strtolower($url . '/view_video.php?viewkey=' . $video_key);
-        // 648719015
-        $command   = array_merge($options, [$video_url]);
-
-        $callback  = Callback::check([$this, 'downloadJsonCallback']);
-        $this->exec($command, $callback);
-        // utmdump(['First Run',$url, $this->yt_json_string]);
-        if (null === $this->yt_json_string) {
-            if ('https://www.pornhub.com' == $url) {
-                $url = 'http://www.pornhubpremium.com';
-            } else {
-                $url = 'https://www.pornhub.com';
-            }
-            // utmdump(['First URL didnt work',$url, $this->yt_json_string]);
-            $this->youtubeGetJson($video_key, $url);
-            if (null === $this->yt_json_string) {
-                return null;
-            }
-        }
-        // utmdump(['This worked',$url, $this->yt_json_string]);
-        $json_file = trim($this->yt_json_string);
-        if (file_exists($json_file)) {
-            $this->moveJson($json_file, $video_key);
-        }
-
-        return $json_file;
-    }
-
-    public function moveJson($json_file, $json_key)
+    public function trimPlaylist()
     {
         // utminfo(func_get_args());
 
-        // $old_name = $videoInfo['video_name'];
-        // $old_path = $videoInfo['video_path'];
-        // $json_key = '';
-        // $json_file = $old_path.'/'.basename($old_name, 'mp4').'info.json';
-        // utmdump([__METHOD__, $json_file]);
-        if (Mediatag::$filesystem->exists($json_file)) {
-            // $json_key = MediaFile::getVideoKey($json_file, 'Pornhub');
-            //            $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
+        $playlist_array         = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-            //     if ($success === 1) {
-            //         $json_key = $matches[1];
-            //     } else {
-            //     }
-        }
+        (int) $max              = Option::getValue('max');
+        $trimed_playlist        = array_slice($playlist_array, 0, $max);
 
-        $newJson_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
+        $remaining_playlist     = array_slice($playlist_array, $max);
 
-        // utmdd(['json'      => [$json_file, Mediatag::$filesystem->exists($json_file)],
-        //     'newJson_file' => [$newJson_file, Mediatag::$filesystem->exists($newJson_file)]]);
+        $this->OrigPlaylist     = $this->playlist;
+        $this->playlist         = Mediatag::$filesystem->tempnam(__PLEX_PL_TMP_DIR__, 'playlist_', '.txt');
 
-        if (Mediatag::$filesystem->exists($json_file)) {
-            // if (! Mediatag::$filesystem->exists($newJson_file)) {
-            if (Option::istrue('test')) {
-                $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
-                Mediatag::$output->writeln($out);
-            } else {
-                // utmdump([$json_file, $newJson_file]);
-                Filesystem::renameFile($json_file, $newJson_file, true);
-                if (Option::istrue('print')) {
-                    echo 'finisihed';
-                }
-            }
-            // }
+        // utmdd
+        // (   ["orginal",count($playlist_array)],
+        //     [$this->playlist, count($trimed_playlist)],
 
-            return true;
-        }
-        echo 'duplicate';
-
-        return false;
+        //     [$this->OrigPlaylist, count($remaining_playlist)],
+        // );
+        Filesystem::writePlaylist($this->playlist, $trimed_playlist);
+        Filesystem::writePlaylist($this->OrigPlaylist, $remaining_playlist);
     }
+
+    // public function youtubeGetJson($video_key, $url = 'https://www.pornhub.com')
+    // {
+    //     $json_file = null;
+    //     // utminfo(func_get_args());
+    //     if ('Pornhub' != $this->library) {
+    //         return null;
+    //     }
+    //     // https://www.pornhub.com/view_video.php?viewkey=ph63403d856ceac
+    //     $options   = array_merge($this->commonOptions, $this->LibraryClass->options);
+    //     $options   = array_merge($options, ['--skip-download']);
+
+    //     $video_url = strtolower($url . '/view_video.php?viewkey=' . $video_key);
+
+    //     // 648719015
+    //     $command   = array_merge($options, [$video_url]);
+
+    //     $callback  = Callback::check([$this, 'downloadJsonCallback']);
+    //     $this->exec($command, $callback);
+    //     // utmdump(['First Run',$url, $this->yt_json_string]);
+    //     if (null === $this->yt_json_string) {
+    //         // if ('https://www.pornhub.com' == $url) {
+    //         //     $url = 'http://www.pornhubpremium.com';
+    //         // } else {
+    //         //     $url = 'https://www.pornhub.com';
+    //         // }
+    //         // // utmdump(['First URL didnt work',$url, $this->yt_json_string]);
+    //         // $this->youtubeGetJson($video_key, $url);
+    //         // if (null === $this->yt_json_string) {
+    //         return null;
+    //         // }
+    //     }
+    //     // utmdump(['This worked',$url, $this->yt_json_string]);
+    //     $json_file = trim($this->yt_json_string);
+
+    //     if (file_exists($json_file)) {
+    //         $this->moveJson($json_file, $video_key);
+    //     }
+
+    //     return $json_file;
+    // }
+
+    // public function moveJson($json_file, $json_key)
+    // {
+       
+       
+    //     $newJson_file = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $json_key, 'Update');
+    //     if (Mediatag::$filesystem->exists($json_file)) {
+    //         // if (! Mediatag::$filesystem->exists($newJson_file)) {
+    //         if (Option::istrue('test')) {
+    //             $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
+    //             Mediatag::$output->writeln($out);
+    //         } else {
+    //             utmdump([$json_file, $newJson_file]);
+    //             Filesystem::renameFile($json_file, $newJson_file, true);
+    //             if (Option::istrue('print')) {
+    //                 echo 'finisihed';
+    //             }
+    //         }
+    //         // }
+
+    //         return true;
+    //     }
+    //     echo 'duplicate';
+
+    //     return false;
+    // }
 }

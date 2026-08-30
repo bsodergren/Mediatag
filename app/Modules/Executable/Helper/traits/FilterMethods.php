@@ -64,18 +64,25 @@ trait FilterMethods
 
     public function downloadDestination($buffer)
     {
+        $text       = "No text";
+        $file       = "No File";
         preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
         // preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
-        if (true === array_key_exists(4, $match)) {
+
+        if (true === array_key_exists(4, $match) && $match[4] != "") {
+
             $file = $this->getShortName($match[4]);
         }
-        if (true === array_key_exists(3, $match)) {
+        if (true === array_key_exists(3, $match) && $match[3] != "") {
             $text = $match[3];
         } else {
             $text = 'file downlaoding';
         }
+        $outputText = PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>' . PHP_EOL;
 
-        return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>' . PHP_EOL;
+
+        // utmdump(["In Method " . __METHOD__ => $outputText,[$buffer, $match],]);
+        return $outputText;
     }
 
     public function downloadProgress($buffer)
@@ -95,7 +102,9 @@ trait FilterMethods
         VideoDownloader::LogBuffer('downloadExists = ' . $this->key . '', $buffer, 'download_error.log');
         // $this->num_of_lines--;
 
-        return $this->line_id . ' <error>' . $this->key . ' Already been  downloaded </error>' . PHP_EOL;
+        $outputText =  $this->line_id . ' <error>' . $this->key . ' Already been  downloaded </error>' . PHP_EOL;
+        // utmdump(["In Method " . __METHOD__ => $outputText ]);
+        return $outputText;
     }
 
     public function downloadError($buffer)
@@ -109,11 +118,13 @@ trait FilterMethods
     public function downloadFixupM3u8($buffer)
     {
         preg_match('/(\[[a-zA-Z0-9]+\])(.*)"(.*)"/m', $buffer, $match);
-        $text = $match[1];
-        $file = $this->getShortName($match[3]);
+        $text       = $match[1];
+        $file       = $this->getShortName($match[3]);
         // $this->num_of_lines--;
 
-        return PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>';
+        $outputText =  PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>';
+        // utmdump(["In Method " . __METHOD__ => $outputText ]);
+        return $outputText;
     }
 
     public function error($buffer, $line_id, $error)
@@ -127,13 +138,16 @@ trait FilterMethods
 
         $outputText                   = '';
         PlaylistProcess::$current_key = false;
+
+
         $outputText                   = $line_id . '  <error> xxx ' . $this->key . ' ' . $error . ' </error>';
 
-        // $this->updateIdList(PlaylistProcess::DISABLED);
 
-        Mediatag::$Console->writeln($outputText);
-        // $this->updateIdList(PlaylistProcess::DISABLED);
+        $this->updateIdList(PlaylistProcess::PREMIUM_PLAYLIST);
 
+        // Mediatag::$Console->writeln($outputText);
+        // $this->updateIdList(PlaylistProcess::DISABLED);
+        // utmdump(["In Method " . __METHOD__ => $outputText ]);
         return $outputText;
     }
 
@@ -265,56 +279,98 @@ trait FilterMethods
         return $this->ytlpDownloadBuffer($key, $buffer, $line_id, false);
     }
 
-    // public function moveNewJson($key)
+    public function downloadJson($buffer, $line_id)
+    {
+        $buffer                       = MediatagExec::cleanBuffer($buffer);
+
+        $outputText                   = '';
+        PlaylistProcess::$current_key = false;
+
+
+        $outputText                   = $line_id . '  <comment> loading json  ' . $this->key . '</comment>';
+
+
+        // $this->updateIdList(PlaylistProcess::DISABLED);
+
+        // Mediatag::$Console->writeln($outputText);
+        // $this->updateIdList(PlaylistProcess::DISABLED);
+        // utmdump(["In Method " . __METHOD__ => $outputText ]);
+        return $outputText;
+
+    }
+
+    // public function moveNewJson($json_file)
     // {
-    //     utmdd($key);
+    //     $json_file = trim($json_file);
+    //      $success = preg_match('/-(p?h?[a-z0-9]+).info.json/', basename($json_file), $matches);
+
+    //      $json_key =$matches[1];
+
+    //       if (Mediatag::$filesystem->exists($json_file)) {
+
+    //     $newJson_file = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $json_key,'Update' );
+
+    //         if (Option::istrue('test')) {
+    //             $out = "<question>jSon</question>\n\t<comment>Old:" . basename($json_file) . "</comment>\n\t<info>New:" . basename($newJson_file) . '</info>';
+    //             Mediatag::$output->writeln($out);
+    //         } else {
+    //              utmdump([$json_file, $newJson_file]);
+    //            Filesystem::renameFile($json_file, $newJson_file, true);
+    //             if (Option::istrue('print')) {
+    //                 echo 'finisihed';
+    //             }
+    //         }
+    //         // }
+
+    //         return true;
+    //     }
+
     // }
 
-    public function moveDownloadedVideos($key)
-    {
-        // Mediatag::$Console->writeln('searching for key ' . $key);
-        $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
 
-        if (count($file_array) > 0) {
-            foreach ($file_array as $file) {
-                if (!file_exists($file)) {
-                    continue;
-                }
 
-                $currentPath  = dirname($file);
-                if (str_ends_with($file, 'mp4')) {
-                    $filename = DIRECTORY_SEPARATOR . basename($file, '.mp4');
-                } elseif (str_ends_with($file, 'json')) {
-                    $filename = DIRECTORY_SEPARATOR . basename($file, '.info.json');
-                } else {
-                    continue;
-                }
+    // public function moveDownloadedVideos($key)
+    // {
+    //     // Mediatag::$Console->writeln('searching for key ' . $key);
+    //     $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
 
-                $jsonFile     = $filename . '.info.json';
-                $videoFile    = $filename . '.mp4';
+    //     if (count($file_array) > 0) {
+    //         foreach ($file_array as $file) {
+    //             if (!file_exists($file)) {
+    //                 continue;
+    //             }
 
-                $newPath      = str_replace(\__PLEX_DOWNLOAD__, __PLEX_DOWNLOADED__, $currentPath);
-                nFileSystem::createDir($newPath);
+    //             $currentPath  = dirname($file);
+    //             if (str_ends_with($file, 'mp4')) {
+    //                 $filename = DIRECTORY_SEPARATOR . basename($file, '.mp4');
+    //             } elseif (str_ends_with($file, 'json')) {
+    //                 $filename = DIRECTORY_SEPARATOR . basename($file, '.info.json');
+    //             } else {
+    //                 continue;
+    //             }
 
-                $newVideoFile = $newPath . $videoFile;
-                $newJsonFile  = $newPath . $jsonFile;
+    //             $jsonFile     = $filename . '.info.json';
+    //             $videoFile    = $filename . '.mp4';
 
-                nFileSystem::rename($currentPath . $videoFile, $newVideoFile);
-                nFileSystem::rename($currentPath . $jsonFile, $newJsonFile);
+    //             $newPath      = str_replace(\__PLEX_DOWNLOAD__, __PLEX_DOWNLOADED__, $currentPath);
+    //             nFileSystem::createDir($newPath);
 
-                Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+    //             $newVideoFile = $newPath . $videoFile;
+    //             $newJsonFile  = $newPath . $jsonFile;
 
-                if (!Option::istrue('test')) {
-                    Filesystem::prunedirs(__PLEX_DOWNLOAD__);
-                }
-            }
-        }
-    }
+    //             nFileSystem::rename($currentPath . $videoFile, $newVideoFile);
+    //             nFileSystem::rename($currentPath . $jsonFile, $newJsonFile);
 
-    public function setNumberLines($value)
-    {
-        $this->num_of_lines = $value;
-    }
+    //             Mediatag::$Console->writeln('Moved Completed file <file>' . $videoFile . ' to downloaded </file>');
+
+    //             if (!Option::istrue('test')) {
+    //                 Filesystem::prunedirs(__PLEX_DOWNLOAD__);
+    //             }
+    //         }
+    //     }
+    // }
+
+
 
     public function downloadableIds($buffer, $line_id)
     {

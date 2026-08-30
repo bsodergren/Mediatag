@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Test\HelperCmd;
 
+use Mediatag\Commands\Playlist\Process;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -38,6 +39,33 @@ trait Helper
 {
     use MediaFFmpeg;
     use ScriptWriterHelper;
+
+    public function moveJsonCache()
+    {
+        $file_string = '';
+
+        $finder      = new Finder();
+        $dirs        = $finder->files()->in(__PLEX_DOWNLOAD__)->name("*.json");//->depth(0);
+        foreach ($dirs as $dir) {
+            // $key = basename( ".info.json");
+            $video_key = MediaFile::getVideoKey($dir->getRealPath());
+            $newFile   = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $video_key);
+            //  $file_string .= 'https://www.pornhub.com/view_video.php?viewkey=' . $key . PHP_EOL;
+
+
+            if (file_exists($newFile)) {
+                  Mediatag::$Console->writeln('<info> deleting ' . $dir->getRealPath() . ' </>');
+                unlink( $dir->getRealPath());
+                continue;
+            }
+            FileSystem::rename( $dir->getRealPath() , $newFile,false);
+            Mediatag::$Console->writeln('<info>' . $newFile . ' </>');
+            //exit;
+        }
+
+        // MediaFilesystem::writeFile(Process::JSONPLAYLIST, $file_string);
+
+    }
 
     public function fixPhVideos()
     {

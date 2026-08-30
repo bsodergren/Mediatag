@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
@@ -13,6 +14,7 @@ use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
 use Mediatag\Modules\Executable\Helper\traits\FilterMethods;
 use Mediatag\Modules\Executable\MediatagExec;
 use Mediatag\Modules\Filesystem\MediaFile;
+use Mediatag\Modules\Executable\Helper\traits\PatternMethods;
 
 use function array_key_exists;
 
@@ -21,6 +23,8 @@ use const PHP_EOL;
 class VideoDownloader
 {
     use FilterMethods;
+    use PatternMethods;
+
 
     public $obj;
 
@@ -161,91 +165,9 @@ class VideoDownloader
             // utmdd([$filter, $properties, $searchCmd, $OutputMethod, $ConsoleCmd, $outputText]);
         }
 
-        // switch ($buffer) {
-        //     case str_starts_with($buffer, '[PornHubPlaylist]'):
-        //         $match = preg_match(, $buffer, $output_array);
-        //         if ($match == true) {
-        //             $this->num_of_lines = $output_array[1];
-        //         }
-        //         $ConsoleCmd = 'writeln';
-        //         // utmdump($output_array);
-        //         break;
-
-        //     case str_starts_with($buffer, '[PornHub]'):
-        //         $outputText = $this->Pornhub($buffer, $line_id);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'Interrupted by user'):
-        //         $this->error($buffer, $line_id, 'cancelled');
-        //         $ConsoleCmd = 'writeln';
-
-        //         return 0;
-
-        //     case str_contains($buffer, 'private.'):
-        //         $outputText = $this->error($buffer, $line_id, 'private');
-        //         $this->updateIdList(PlaylistProcess::DISABLED);
-
-        //         break;
-
-        //     case str_contains($buffer, 'restriction'):
-        //         $outputText = $this->error($buffer, $line_id, 'is restricted ');
-        //         $this->updateIdList(PlaylistProcess::DISABLED);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'disabled'):
-        //         $outputText = $this->error($buffer, $line_id, ' has been disabled ');
-        //         $this->updateIdList(PlaylistProcess::DISABLED);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'HTTPError'):
-        //         $outputText = $this->error($buffer, $line_id, 'NOT FOUND');
-
-        //         // $this->premiumIds[] = $this->key;
-
-        //         $this->updateIdList(PlaylistProcess::DISABLED);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'Upgrade now'):
-        //         $outputText = $this->error($buffer, $line_id, ' Premium Video');
-        //         $this->updatePlaylist('premium');
-        //         $this->premiumIds[] = $this->key;
-        //         $ConsoleCmd         = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'encoded url'):
-        //         $outputText = $this->error($buffer, $line_id, 'ModelHub Video');
-        //         // $this->updatePlaylist('modelhub');
-        //         // $this->updateIdList(PlaylistProcess::MODELHUB);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_starts_with($buffer, '[info]'):
-        //         if ($this->downloadFiles === false) {
-        //             $outputText = $this->downloadableIds($buffer);
-        //         }
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, '[download]'):
-        //         $outputText = $this->downloadVideo($buffer, $line_id);
-        //         $ConsoleCmd = 'write';
-        //         break;
-
-        //     case str_contains($buffer, '[FixupM3u8]'):
-        //         $outputText = $this->fixVideo($buffer, $line_id);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-
-        //     case str_contains($buffer, 'ERROR'):
-        //         $outputText = $this->error($buffer, $line_id, 'Uncaught Error </>  <comment>' . $buffer . '</comment><error>');
-        //         // $this->updatePlaylist('error');
-        //         // $this->updateIdList(PlaylistProcess::ERRORIDS);
-        //         $ConsoleCmd = 'writeln';
-        //         break;
-        // }
+       
     }
+
+
+
 }

@@ -140,7 +140,6 @@ foreach ($val as $row => $settingVal) {
 }
 
 $genre_regex_string = strtolower(implode('|', __GENRE_LIST__));
-
 define(
     '__GENRE_REGEX__',
     '/[a-zA-Z _0-9\.\/]*\/(' . $genre_regex_string . ')(.*)?(\/*.mp4)?/i',

@@ -192,7 +192,6 @@ class Reader extends TagReader
                 // } else {
             }
         }
-        // utmdump([$method, $this->tag_array]);
 
         return null;
         // //
@@ -261,12 +260,10 @@ class Reader extends TagReader
             $filename = dirname($this->video_file);
 
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
-            // utmdump([$success, $filename, $matches]);
             if ($success == true) {
                 $this->genre = $matches[1];
                 //  $genre = $matches[1];
             }
-            // utmdd([__METHOD__,$this->genre ]);
         }
 
         return $this->genre;
