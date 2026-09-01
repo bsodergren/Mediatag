@@ -12,9 +12,11 @@ use Mediatag\Modules\Display\MediaIndicator;
 use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\Section\Chapters;
+use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\Section\VideoTags;
 use Mediatag\Traits\MediaFFmpeg;
 use Mhor\MediaInfo\MediaInfo;
+use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
@@ -26,61 +28,72 @@ trait ChapterHelper
 {
     use MediaFFmpeg;
 
-    public $Chapter;
-
+    public $videoInfo;
     public $chapterArray;
+
+    private $FileIdx = 0;
 
     public function getChapterList()
     {
-        $chapterArray       = [];
-        $this->FileIdx      = 0;
+        $chapterArray         = [];
 
-        $search             = '';
 
         foreach ($this->VideoList['file'] as $key => $vidArray) {
-            //             $mediaInfo          = new MediaInfo;
-            //         $mediaInfoContainer = $mediaInfo->getInfo($vidArray['video_file']);
-            //         $videos             = $mediaInfoContainer->getVideos();
-            //         $general            = $mediaInfoContainer->getMenus();
-            // $keys = [];
-            // if(count($general)>0) {
-            // foreach($general[1]->list() as $i => $key){
-            //     if(\str_starts_with($key,"00")){
-            //         $keys[] = $general[1]->get($key);
-            //     }
-            // }
-            // }
-            // // utmdd($general);
-            //          utmdd($keys);//$general[1]->get('00_00_00000'));
-
-            $this->Chapter = new Chapters();
-            $this->Chapter->getvideoId($key);
-            if (null !== $this->Chapter->video_id) {
-                $query  = $this->Chapter->videoQuery($this->Chapter->video_id, $search);
-                $result = Storage::$DB->query($query);
-                if (count($result) > 0) {
-                    $chapters = $this->getVideoChapters($result);
-
-                    if (null !== $chapters) {
-                        if (count($chapters) > 0) {
-                            ++$this->FileIdx;
-
-                            $chapterArray[] = $chapters;
-                        }
-                    }
-                }
-            }
+            $chapterArray[] = $this->getVideoChapter($vidArray);
         }
-        $this->chapterArray = $chapterArray;
+
+        $this->chapterArray   = $chapterArray;
 
         return $this->chapterArray;
+    }
+
+    private function getVideoChapter($videoInfo)
+    {
+        $search             = '';
+        $key                = $videoInfo['video_key'];
+
+        if (Option::isTrue('markers')) {
+            $this->videoInfo        = new Markers();
+            $textField              = 'markerText';
+        } else {
+            $this->videoInfo        = new Chapters();
+            $textField              = 'chapterText';
+        }
+
+        $video_id           = $this->videoInfo->getvideoId($key);
+
+        if (null !== $video_id) {
+            $query    = $this->videoInfo->videoQuery($video_id, $search);
+            $result   = Storage::$DB->query($query);
+            if (count($result) > 0) {
+                $chapters = $this->getVideoChapters($result, $textField);
+                if (null !== $chapters) {
+                    if (count($chapters) > 0) {
+                        ++$this->FileIdx;
+                        return $chapters;
+                    }
+                }
+
+            }
+        }
+        Mediatag::$output->writeln('<comment>' . basename($videoInfo['video_name']) . '</comment> <info>has no markers or chapters</info>');
+
+        return null;
+
     }
 
     public function createChapterFile()
     {
         $this->progress = new MediaIndicator('one');
         foreach ($this->chapterArray as $i => $fileRow) {
+
+            if (is_null($fileRow)) {
+
+                continue;
+            }
+
             foreach ($fileRow as $K => $FILE) {
+
                 $filename = $FILE['filename'];
                 if (!array_key_exists('chapters', $FILE)) {
                     continue;
@@ -99,7 +112,9 @@ trait ChapterHelper
                                 ++$VideoChapters;
                             }
                         }
+
                         if (count($FILE['chapters']) == $VideoChapters) {
+                            Mediatag::$output->writeln('<comment>' . basename($filename) . '</comment> <info>Already has chapters</info>');
                             continue;
                         }
                     }
@@ -119,24 +134,9 @@ trait ChapterHelper
                     $fileContents       = implode(PHP_EOL, $contents);
 
                     MediaFile::file_append_file($chapterFile, $fileContents . PHP_EOL);
+                    // Mediatag::$output->writeln('<comment>' . basename($filename) . '</comment> <info>Adding Chapters</info>');
 
-                    $this->ffmpegCreateChapterVideo($filename, $chapterFile);
-
-                    if (file_exists($chapterFile)) {
-                        unlink($chapterFile);
-                    }
-                    $file_path          = dirname($filename);
-                    $backup_filepath    = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
-
-                    if (!Mediatag::$filesystem->exists($backup_filepath)) {
-                        Mediatag::$filesystem->mkdir($backup_filepath);
-                    }
-                    $backup_filename    = $backup_filepath . '/' . basename($filename);
-                    $outputFile         = str_replace('.mp4', '_chapters.mp4', $filename);
-
-                    // utmdd($filename, $backup_filename,$outputFile);
-                    Filesystem::renameFile($filename, $backup_filename, true);
-                    Filesystem::renameFile($outputFile, $filename);
+                    $this->createChapterVideo($filename, $chapterFile);
                 }
                 // utmdd([$filename, $backup_filename, $outputFile]);
             }
@@ -170,10 +170,81 @@ trait ChapterHelper
         return $text;
     }
 
-    // private function createChapterVideo($chapter,$file)
-    // {
+    private function createChapterVideo($filename, $chapterFile)
+    {
+        $this->ffmpegCreateChapterVideo($filename, $chapterFile);
 
-    //     ffmpeg -y -i MyWifesFirstBlowBang4-Scene2_s02_ChadAlva_CodeySteele_1080p_h264.mp4 -i MyWifesFirstBlowBang4-Scene2_s02_ChadAlva_CodeySteele_1080p_h264_chp.txt  -map_metadata 1 -c copy output3.mp4
+        if (file_exists($chapterFile)) {
+            unlink($chapterFile);
+        }
 
-    // }
+        $file_path          = dirname($filename);
+        $backup_filepath    = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
+
+        if (!Mediatag::$filesystem->exists($backup_filepath)) {
+            Mediatag::$filesystem->mkdir($backup_filepath);
+        }
+        $backup_filename    = $backup_filepath . '/' . basename($filename);
+        $outputFile         = str_replace('.mp4', '_chapters.mp4', $filename);
+
+        // utmdd($filename, $backup_filename,$outputFile);
+        Filesystem::renameFile($filename, $backup_filename, true);
+        Filesystem::renameFile($outputFile, $filename);
+    }
+
+
+    public function getVideoChapters($videoInfo, $textField)
+    {
+
+        $videoKey    = 0;
+        $chapterRow  = [];
+        $chapters    = [];
+        $chapterPos  = [];
+        $chapterIdx  = 0;
+        $rowIdx      = 0;
+        foreach ($videoInfo as $k => $row) {
+            if ($k == 0) {
+                // utmdd($row);
+            }
+            if (! array_key_exists('timeCode', $row)) {
+                return null;
+            }
+
+            if ($row['video_key'] != $videoKey) {
+                $videoKey   = $row['video_key'];
+                $chapterIdx = 0;
+            }
+
+            $chapters[$row['video_key']]             = [
+                'filename' => $row['filename'],
+            ];
+
+            if ($chapterIdx == 0) {
+                $chapterRow[] = [
+                    'start' => 0,
+                    'end'   => $videoInfo[$rowIdx + 1]['timeCode'] - 1,
+                    'text'  => $row[$textField],
+                ];
+                $chapterIdx++;
+                $rowIdx++;
+
+                continue;
+            }
+            $chapterRow[$chapterIdx]['start']        = (int) $row['timeCode'];
+
+            if (array_key_exists($rowIdx + 1, $videoInfo)) {
+                $chapterRow[$chapterIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
+            } else {
+                $chapterRow[$chapterIdx]['end'] = $row['duration'] / 1000;
+            }
+
+            $chapterRow[$chapterIdx]['text']         = $row[$textField];
+
+            $chapters[$row['video_key']]['chapters'] = $chapterRow;
+            $chapterIdx++;
+            $rowIdx++;
+        }
+
+        return $chapters;
+    }
 }

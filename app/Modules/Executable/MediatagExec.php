@@ -6,12 +6,9 @@
 
 namespace Mediatag\Modules\Executable;
 
-use Mediatag\Core\Helper\MediaCommand;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Modules\Metatags\Artist;
-use Mediatag\Traits\AutoWrapper;
 use Mediatag\Traits\ExecArgs;
 use Mediatag\Traits\preview;
 use Mediatag\Traits\Test;
@@ -19,7 +16,6 @@ use Symfony\Component\Process\Exception\ProcessSignaledException;
 use Symfony\Component\Process\Process;
 use UTM\Utilities\Debug\Debug;
 use UTM\Utilities\DynamicProperty;
-use UTM\Utilities\Option;
 
 use function is_array;
 use function is_string;
@@ -28,8 +24,9 @@ use const __META_TAGS__;
 
 class MediatagExec
 {
-    // use AutoWrapper;
+
     use DynamicProperty;
+
     use ExecArgs;
     // use MediaCommand;
 
@@ -47,13 +44,14 @@ class MediatagExec
 
     public $errors;
 
-    public $video_file;
 
+    public $video_file;
+    public $video_path;
     public $video_name;
+
 
     public $video_key;
 
-    public $video_path;
 
     public $video_library;
 

@@ -64,11 +64,11 @@ trait JsonHelper
             } else {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
             }
-
             if (\file_exists($json_file)) {
                 $json_file            = Reader::checkJsonForUpdate($json_file, $json_key);
 
                 $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
+
             }
         }
 

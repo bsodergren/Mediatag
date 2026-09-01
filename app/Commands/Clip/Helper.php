@@ -29,7 +29,7 @@ use const DIRECTORY_SEPARATOR;
 trait Helper
 {
     use ffmpegTransition;
-    use MarkerHelper;
+    // use MarkerHelper;
     use MediaFFmpeg;
 
     public $Marker;

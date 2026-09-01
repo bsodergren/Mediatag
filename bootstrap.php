@@ -1,12 +1,11 @@
 <?php
+
 /**
  * Command like Metatag writer for video files.
  */
 
 declare(strict_types=1);
 
-use Camoo\Config\Config;
-use Mediatag\Core\EnvLoader;
 use Mediatag\Core\MediaLogger;
 use Slim\Factory\AppFactory;
 use Symfony\Component\Finder\Finder;
@@ -17,13 +16,13 @@ use UTM\Utm;
 // die(get_include_path());
 
 define('__PROJECT_ROOT__', __ROOT_DIRECTORY__);
-define('__COMPOSER_LIB__', __ROOT_DIRECTORY__ . '/vendor');
+define('__COMPOSER_LIB__', __ROOT_DIRECTORY__.'/vendor');
 
-set_include_path(get_include_path() . \PATH_SEPARATOR . __COMPOSER_LIB__);
+set_include_path(get_include_path().\PATH_SEPARATOR.__COMPOSER_LIB__);
 
-require_once __COMPOSER_LIB__ . '/autoload.php';
+require_once __COMPOSER_LIB__.'/autoload.php';
 
-Utm::loadConifg(__ROOT_DIRECTORY__ . \DIRECTORY_SEPARATOR . 'config.ini');
+Utm::loadConifg(__ROOT_DIRECTORY__.\DIRECTORY_SEPARATOR.'config.ini');
 Utm::LoadEnv(__ROOT_DIRECTORY__)->load();
 
 define('CONFIG', Utm::$UTM_CONFIG['path']);
@@ -34,16 +33,16 @@ define('__SQL_USER__', CONFIG['DB_USER']);
 define('__SQL_PASSWD__', CONFIG['DB_PASS']);
 define('__MYSQL_DATABASE__', CONFIG['DB_DATABASE']);
 
-require_once __CONFIG_LIB__ . '/path_constants.php';
+require_once __CONFIG_LIB__.'/path_constants.php';
 // require_once __CONFIG_LIB__ . '/constants.php';
 
-if (! defined('__LOGFILE_DIR__')) {
-    define('__LOGFILE_DIR__', __PROJECT_ROOT__ . '/logs');
+if (!defined('__LOGFILE_DIR__')) {
+    define('__LOGFILE_DIR__', __PROJECT_ROOT__.'/logs');
 }
-ini_set('error_log', __LOGFILE_DIR__ . '/phperror.log');
+ini_set('error_log', __LOGFILE_DIR__.'/phperror.log');
 
-require_once __CONFIG_LIB__ . '/variables.php';
-require_once __CONFIG_LIB__ . '/ConsoleEventListeners.php';
+require_once __CONFIG_LIB__.'/variables.php';
+require_once __CONFIG_LIB__.'/ConsoleEventListeners.php';
 
 MediaLogger::$USE_DEBUG = false;
 // MediaLogger::$pruneLogs = true;
@@ -51,20 +50,17 @@ MediaLogger::$USE_DEBUG = false;
 
 // Debug::$AppRootDir  = __APP_HOME__.\DIRECTORY_SEPARATOR.'app';
 // Debug::$AppTraceDir = __LOGFILE_DIR__;
-Debug::$PrettyLogs      = false;
-Debug::$RealTimeLog     = false;
+Debug::$PrettyLogs  = false;
+Debug::$RealTimeLog = false;
 new Utm(__LOGFILE_DIR__);
 
-$finder                 = new Finder();
-$finder->files()->in(__LOGFILE_DIR__)->date("before 1 days ago");
+$finder = new Finder();
+$finder->files()->in(__LOGFILE_DIR__)->date('before 1 days ago');
 foreach ($finder as $file) {
-    if ($file->getFilename() != "phperror.log") {
+    if ('phperror.log' != $file->getFilename()) {
         // unlink($file->getRealPath());
     }
-
 }
-
-
 
 // if (file_exists(__LOGFILE_DIR__.'/phperror.log')) {
 //     unlink(__LOGFILE_DIR__.'/phperror.log');
@@ -83,3 +79,12 @@ TimerStart();
 // AppFactory::setContainer($container);
 
 // return AppFactory::create();
+
+use UTM\Rules;
+
+
+// utmdd(
+//   array_diff_assoc(
+//     Rules::getRulesetOne(), Rules::getRulesetThree()
+//     )
+//     );

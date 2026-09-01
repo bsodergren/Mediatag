@@ -10,34 +10,27 @@ use Mediatag\Commands\Playlist\Process as PlaylistProcess;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\ConsoleOutput;
 use Mediatag\Modules\Executable\Callbacks\traits\YtdlpCallBacks;
-use Mediatag\Modules\Executable\Helper\Pornhub;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
-use Mediatag\Traits\AutoWrapper;
 use Nette\Utils\Callback;
 use UTM\Utilities\Option;
 
 use function count;
 
-use const FILE_IGNORE_NEW_LINES;
-use const FILE_SKIP_EMPTY_LINES;
-
 class Youtube extends MediatagExec
 {
-    use AutoWrapper;
     use YtdlpCallBacks;
 
-    public $execMode              = 'write';
+    public $execMode = 'write';
 
-    public $DownloadableIds       = [];
+    public $DownloadableIds = [];
 
     public $premium;
 
     public $num_of_lines;
 
-    public $disabled              = [];
+    public $disabled = [];
 
-    public $premiumIds            = [];
+    public $premiumIds = [];
 
     public $playlist;
 
@@ -45,9 +38,9 @@ class Youtube extends MediatagExec
 
     public $model_hub;
 
-    public $downloadFiles         = true;
+    public $downloadFiles = true;
 
-    public $commonOptions         = [
+    public $commonOptions = [
         CONFIG['YOUTUBEDL_CMD'],
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
@@ -88,7 +81,7 @@ class Youtube extends MediatagExec
 
     public const __YT_DL_FORMAT__ = '%(uploader)s/%(title)s-%(id)s.%(ext)s';
 
-    public $buffer_file           = __APP_HOME__ . '/var/log/buffer.txt';
+    public $buffer_file = __APP_HOME__.'/var/log/buffer.txt';
 
     public $library;
 
@@ -108,7 +101,7 @@ class Youtube extends MediatagExec
 
         if (is_file($class)) {
             $this->playlist = $class;
-            $st_array       = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $st_array       = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
             $class          = $st_array[0];
         } else {
             $this->download_url = $class;
@@ -124,10 +117,10 @@ class Youtube extends MediatagExec
         if (str_contains($class, 'nubiles')) {
             $class = 'Studio';
         }
-        $this->library      = $class;
+        $this->library = $class;
         //        use Mediatag\Modules\Executable\Helper\Studio;
 
-        $Class              = 'Mediatag\\Modules\\Executable\\Helper\\' . $class;
+        $Class = 'Mediatag\\Modules\\Executable\\Helper\\'.$class;
         // utmdd($class);
         $this->LibraryClass = new $Class($this);
 
@@ -150,7 +143,7 @@ class Youtube extends MediatagExec
 
     public function youtubeCmdOptions()
     {
-        $options      = array_merge($this->commonOptions, $this->LibraryClass->options);
+        $options = array_merge($this->commonOptions, $this->LibraryClass->options);
         if (
             !Option::istrue('ignore')
             && !Option::istrue('skip')
@@ -173,7 +166,7 @@ class Youtube extends MediatagExec
             $options = array_merge($options, [
                 '--download-archive',
 
-                __PLEX_PL_DIR__ . '/ids/' . Option::getValue('archive') . '.txt',
+                __PLEX_PL_DIR__.'/ids/'.Option::getValue('archive').'.txt',
                 '--force-write-archive',
             ]);
         }
@@ -193,7 +186,7 @@ class Youtube extends MediatagExec
             $playlist_opt = [Option::getValue('url')];
         }
 
-        $options      = array_merge($options, $playlist_opt);
+        $options = array_merge($options, $playlist_opt);
 
         return $options;
     }
@@ -230,12 +223,12 @@ class Youtube extends MediatagExec
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
         if (!Option::istrue('url')) {
-            $names = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+            $names = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
             if (Option::istrue('max')) {
                 $this->num_of_lines = (int) Option::getValue('max', true);
             } else {
-                $this->num_of_lines = count($names); // + 1;
+                $this->num_of_lines = \count($names); // + 1;
             }
 
             if (!str_contains('premium', $this->playlist)) {
@@ -256,9 +249,9 @@ class Youtube extends MediatagExec
         // if (Option::isTrue('json')) {
         //     $callback  = Callback::check([$this, 'downloadJsonCallback']);
         // } else {
-        $callback            = Callback::check([$this->LibraryClass, 'downloadCallback']);
+        $callback = Callback::check([$this->LibraryClass, 'downloadCallback']);
         // }
-        $command             = $this->youtubeCmdOptions();
+        $command = $this->youtubeCmdOptions();
 
         if (Option::istrue('test')) {
             $this->testexec($command, $callback);
@@ -290,19 +283,20 @@ class Youtube extends MediatagExec
         // }
         // }
     }
+
     public function trimPlaylist()
     {
         // utminfo(func_get_args());
 
-        $playlist_array         = file($this->playlist, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        $playlist_array = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
-        (int) $max              = Option::getValue('max');
-        $trimed_playlist        = array_slice($playlist_array, 0, $max);
+        (int) $max       = Option::getValue('max');
+        $trimed_playlist = \array_slice($playlist_array, 0, $max);
 
-        $remaining_playlist     = array_slice($playlist_array, $max);
+        $remaining_playlist = \array_slice($playlist_array, $max);
 
-        $this->OrigPlaylist     = $this->playlist;
-        $this->playlist         = Mediatag::$filesystem->tempnam(__PLEX_PL_TMP_DIR__, 'playlist_', '.txt');
+        $this->OrigPlaylist = $this->playlist;
+        $this->playlist     = Mediatag::$filesystem->tempnam(__PLEX_PL_TMP_DIR__, 'playlist_', '.txt');
 
         // utmdd
         // (   ["orginal",count($playlist_array)],
@@ -357,7 +351,6 @@ class Youtube extends MediatagExec
 
     // public function moveJson($json_file, $json_key)
     // {
-
 
     //     $newJson_file = MediaFile::getjsonFilename(__JSON_CACHE_DIR__, $json_key, 'Update');
     //     if (Mediatag::$filesystem->exists($json_file)) {

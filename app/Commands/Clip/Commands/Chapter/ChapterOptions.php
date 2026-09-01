@@ -9,7 +9,6 @@ namespace Mediatag\Commands\Clip\Commands\Chapter;
 use Mediatag\Commands\Clip\Lang;
 use Mediatag\Commands\Clip\Options;
 use Mediatag\Traits\Translate;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
 class ChapterOptions extends Options
@@ -24,6 +23,7 @@ class ChapterOptions extends Options
         self::$Class   = __CLASS__;
         $parentOptions = parent::Definitions();
         $options       = [
+            ['markers', 'm', InputOption::VALUE_NONE, self::text('L_OPTION_MARKERS')],
             // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
             ['break'],
         ];

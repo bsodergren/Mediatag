@@ -11,7 +11,7 @@ use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
-use Mediatag\Traits\AutoWrapper;
+
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\ScriptWriter;
 use Mediatag\Utilities\Strings as UtilitiesStrings;

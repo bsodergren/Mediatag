@@ -6,24 +6,19 @@
 
 namespace Mediatag\Traits;
 
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Display\MediaBar;
 use Mediatag\Modules\Executable\Callbacks\traits\ProcessCallbacks;
 use Mediatag\Modules\Executable\MediatagExec;
-use Mediatag\Modules\Filesystem\MediaFile;
 use Mediatag\Utilities\Chooser;
 use Mediatag\Utilities\ScriptWriter;
 use Mhor\MediaInfo\MediaInfo;
 use Nette\Utils\Callback;
 use Nette\Utils\FileSystem;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Filesystem\Filesystem as SfSystem;
-use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
-use UTM\Bundle\Monolog\UTMLog;
 use UTM\Utilities\Option;
 
 use function count;
@@ -47,6 +42,13 @@ trait MediaFFmpeg
     public $ffmpeg_log   = __LOGFILE_DIR__ . '/buffer/ffmpeg.log';
 
     public $currentFrame = 0;
+    private $cmdline;
+    public $frame_count;
+    public $MergedName;
+    public $clipName;
+    public $clipLength;
+    public $videoInfo;
+
 
     public function FrameCountCallback($type, $buffer)
     {
@@ -428,9 +430,10 @@ trait MediaFFmpeg
             $outputFile,
         ];
         $this->cmdline  = $cmdOptions;
-        $this->progress = new MediaBar(200, 'one', 120);
-        MediaBar::addFormat('%current:4s%,%max:4s%,[%bar%],%percent:3s%%', 'ChapterVideos');
+        $this->progress = new MediaBar(100, 'one', 120);
+        MediaBar::addFormat('%messasge% [%bar%%percent:2s%%]', 'ChapterVideos');
         $this->progress->setMsgFormat('ChapterVideos');
+        $this->progress->setMessage(basename($file), 'messasge');
         $callback       = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
     }

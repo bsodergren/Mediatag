@@ -7,11 +7,10 @@
 namespace Mediatag\Modules\Filesystem;
 
 use Mediatag\Core\Mediatag;
-use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile as File;
 use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
-use Mediatag\Traits\AutoWrapper;
+
 use Mediatag\Utilities\MediaArray;
 use Mediatag\Utilities\Strings as UtilitiesStrings;
 use Symfony\Component\Filesystem\Filesystem as SFilesystem;
@@ -27,7 +26,7 @@ use function is_array;
  */
 class MediaFinder extends SFinder
 {
-    use AutoWrapper;
+
     use ScriptWriterHelper;
 
     /**
