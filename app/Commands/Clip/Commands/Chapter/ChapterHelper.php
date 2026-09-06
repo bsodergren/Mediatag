@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Clip\Commands\Chapter;
 
+use FFMpeg\FFProbe;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\Storage;
 use Mediatag\Modules\Display\MediaIndicator;
@@ -29,6 +30,7 @@ trait ChapterHelper
     use MediaFFmpeg;
 
     public $videoInfo;
+
     public $chapterArray;
 
     private $FileIdx = 0;
@@ -62,14 +64,15 @@ trait ChapterHelper
 
         $video_id           = $this->videoInfo->getvideoId($key);
 
-        if (null !== $video_id) {
+        if ($video_id !== null) {
             $query    = $this->videoInfo->videoQuery($video_id, $search);
             $result   = Storage::$DB->query($query);
-            if (count($result) > 0) {
+            if (\count($result) > 0) {
                 $chapters = $this->getVideoChapters($result, $textField);
-                if (null !== $chapters) {
-                    if (count($chapters) > 0) {
-                        ++$this->FileIdx;
+                if ($chapters !== null) {
+                    if (\count($chapters) > 0) {
+                        $this->FileIdx++;
+
                         return $chapters;
                     }
                 }
@@ -87,7 +90,7 @@ trait ChapterHelper
         $this->progress = new MediaIndicator('one');
         foreach ($this->chapterArray as $i => $fileRow) {
 
-            if (is_null($fileRow)) {
+            if ($fileRow === null) {
 
                 continue;
             }
@@ -95,26 +98,27 @@ trait ChapterHelper
             foreach ($fileRow as $K => $FILE) {
 
                 $filename = $FILE['filename'];
-                if (!array_key_exists('chapters', $FILE)) {
+                if (! \array_key_exists('chapters', $FILE)) {
                     continue;
                 }
 
-                if (count($FILE['chapters']) > 0) {
+                if (\count($FILE['chapters']) > 0) {
                     $mediaInfo          = new MediaInfo();
                     $mediaInfoContainer = $mediaInfo->getInfo($filename);
                     $chapters           = $mediaInfoContainer->getMenus();
 
                     $VideoChapters      = 0;
 
-                    if (array_key_exists(0, $chapters)) {
+                    if (\array_key_exists(0, $chapters)) {
                         foreach ($chapters[0]->list() as $menu) {
                             if (preg_match('/(\d+_\d+_\d+)/', $menu, $output_array)) {
-                                ++$VideoChapters;
+                                $VideoChapters++;
                             }
                         }
 
-                        if (count($FILE['chapters']) == $VideoChapters) {
+                        if (\count($FILE['chapters']) == $VideoChapters) {
                             Mediatag::$output->writeln('<comment>' . basename($filename) . '</comment> <info>Already has chapters</info>');
+
                             continue;
                         }
                     }
@@ -131,9 +135,9 @@ trait ChapterHelper
                         $contents[] = $this->chapterFileSection($chapter);
                     }
 
-                    $fileContents       = implode(PHP_EOL, $contents);
+                    $fileContents       = implode(\PHP_EOL, $contents);
 
-                    MediaFile::file_append_file($chapterFile, $fileContents . PHP_EOL);
+                    MediaFile::file_append_file($chapterFile, $fileContents . \PHP_EOL);
                     // Mediatag::$output->writeln('<comment>' . basename($filename) . '</comment> <info>Adding Chapters</info>');
 
                     $this->createChapterVideo($filename, $chapterFile);
@@ -145,14 +149,14 @@ trait ChapterHelper
 
     private function tagFileSection($tag)
     {
-        $text = ';FFMETADATA1' . PHP_EOL;
+        $text = ';FFMETADATA1' . \PHP_EOL;
 
         foreach ($tag as $key => $value) {
-            if (null !== $value) {
-                if ('studio' == $key) {
+            if ($value !== null) {
+                if ($key == 'studio') {
                     $key = 'album';
                 }
-                $text .= $key . '=' . $value . PHP_EOL;
+                $text .= $key . '=' . $value . \PHP_EOL;
             }
         }
 
@@ -161,10 +165,10 @@ trait ChapterHelper
 
     private function chapterFileSection($chapter)
     {
-        $text = '[CHAPTER]' . PHP_EOL;
-        $text .= 'TIMEBASE=1/1' . PHP_EOL;
-        $text .= 'START=' . $chapter['start'] . PHP_EOL;
-        $text .= 'END=' . $chapter['end'] . PHP_EOL;
+        $text = '[CHAPTER]' . \PHP_EOL;
+        $text .= 'TIMEBASE=1/1' . \PHP_EOL;
+        $text .= 'START=' . $chapter['start'] . \PHP_EOL;
+        $text .= 'END=' . $chapter['end'] . \PHP_EOL;
         $text .= 'title=' . trim(str_replace('Chapter', '', str_replace('_', ' ', $chapter['text'])));
 
         return $text;
@@ -172,26 +176,63 @@ trait ChapterHelper
 
     private function createChapterVideo($filename, $chapterFile)
     {
-        $this->ffmpegCreateChapterVideo($filename, $chapterFile);
+
+          $outputFile         = $this->ffmpegCreateChapterVideo($filename, $chapterFile);
+        if (!file_exists($outputFile)) {
+                        Mediatag::$output->writeln('<error>Chapter Video doeasnt exist/error>');
+
+            return false;
+        }
 
         if (file_exists($chapterFile)) {
             unlink($chapterFile);
         }
 
-        $file_path          = dirname($filename);
+        $file_path          = \dirname($filename);
         $backup_filepath    = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
 
-        if (!Mediatag::$filesystem->exists($backup_filepath)) {
-            Mediatag::$filesystem->mkdir($backup_filepath);
+        // if (!Mediatag::$filesystem->exists($backup_filepath)) {
+        //     Mediatag::$filesystem->mkdir($backup_filepath);
+        // }
+
+        $backup_filename    = $backup_filepath . \DIRECTORY_SEPARATOR . basename($filename);
+
+        $validA =   $this->getChapterVideoInfo($outputFile);
+        $validB =   $this->getChapterVideoInfo($filename);
+        if ($validA != $validB) {
+            Mediatag::$output->writeln('<comment>' . basename($outputFile) . '</comment> <error>Chapter Video Duration Mismatch</error>');
+            if (file_exists($outputFile)) {
+                unlink($outputFile);
+            }
+
+            return false;
+
         }
-        $backup_filename    = $backup_filepath . '/' . basename($filename);
-        $outputFile         = str_replace('.mp4', '_chapters.mp4', $filename);
+
 
         // utmdd($filename, $backup_filename,$outputFile);
+        // utmdd(['Chapter Video Created'=> $outputFile,
+        //     'Backup Video Created' => $backup_filename,
+        //     'New Video filename' => $filename
+        // ]);
+
         Filesystem::renameFile($filename, $backup_filename, true);
         Filesystem::renameFile($outputFile, $filename);
     }
 
+    private function getChapterVideoInfo($filename)
+    {
+        $mediaInfo          = new MediaInfo();
+        $mediaInfoContainer = $mediaInfo->getInfo($filename);
+
+        $array = $mediaInfoContainer->__toArray();
+        // $videoInfo['duration']    = $video->get('duration')->getMilliseconds();
+
+        $value = $array['videos'][0]->get('duration')->getMilliseconds();
+        // $chapters           = $mediaInfoContainer->getMenus();
+
+        return $value;
+    }
 
     public function getVideoChapters($videoInfo, $textField)
     {
@@ -206,7 +247,7 @@ trait ChapterHelper
             if ($k == 0) {
                 // utmdd($row);
             }
-            if (! array_key_exists('timeCode', $row)) {
+            if (! \array_key_exists('timeCode', $row)) {
                 return null;
             }
 
@@ -232,7 +273,7 @@ trait ChapterHelper
             }
             $chapterRow[$chapterIdx]['start']        = (int) $row['timeCode'];
 
-            if (array_key_exists($rowIdx + 1, $videoInfo)) {
+            if (\array_key_exists($rowIdx + 1, $videoInfo)) {
                 $chapterRow[$chapterIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
             } else {
                 $chapterRow[$chapterIdx]['end'] = $row['duration'] / 1000;

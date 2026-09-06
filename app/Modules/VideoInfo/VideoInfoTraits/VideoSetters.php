@@ -27,6 +27,7 @@ trait VideoSetters
     {
         // utminfo(func_get_args());
 
+         $this->VideoDataTable = __MYSQL_VIDEO_INFO__;
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
 
@@ -72,6 +73,7 @@ trait VideoSetters
 
         $file_array = $this->getDbList();
         $this->getMessageLen($file_array);
+
         if (count($file_array) > 0) {
             $this->fileCount = count($file_array);
             Mediatag::$output->writeln('<info>Found ' . $this->fileCount . ' files</info>');
@@ -82,7 +84,6 @@ trait VideoSetters
                 if (file_exists($file)) {
 
                     $res = $this->getVideoInfo($key, $file);
-
                     if ($res !== false) {
                         if ($this->progressBar === false) {
                             Mediatag::$output->writeln($this->printNo($this->fileCount) . $this->getVideoText());

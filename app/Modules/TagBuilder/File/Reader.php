@@ -154,9 +154,10 @@ class Reader extends TagReader
             $studio = Strings::before($studio, ':');
         }
 
-
         $className = ucwords($studio);
         $className = str_replace(' ', '', $className);
+        $className = str_replace('-', '', $className);
+
         $className = str_replace('&', '_', $className);
 
         $className = str_replace("'", '', $className);
@@ -202,7 +203,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $key = strtolower($studio);
-        if (array_key_exists($key, STUDIO_MAP)) {
+        if (\array_key_exists($key, STUDIO_MAP)) {
             return STUDIO_MAP[$key];
         }
 
@@ -216,9 +217,9 @@ class Reader extends TagReader
             $this->network = $this->getFileTag('Network');
         }
         if ($this->network === null) {
-            $networkPath    = \str_replace(__LIBRARY_HOME__ . '/', '', dirname($this->video_path));
+            $networkPath    = str_replace(__LIBRARY_HOME__ . '/', '', \dirname($this->video_path));
             $networkPathPcs = explode('/', $networkPath);
-            if (count($networkPathPcs) > 1) {
+            if (\count($networkPathPcs) > 1) {
                 $this->network = $networkPathPcs[0];
             }
         }
@@ -247,6 +248,7 @@ class Reader extends TagReader
 
             }
         }
+
         return $this->studio;
     }
 
@@ -257,7 +259,7 @@ class Reader extends TagReader
         $genre = '';
         if ($this->genre === null) {
             $res      = $this->getFileTag('genre');
-            $filename = dirname($this->video_file);
+            $filename = \dirname($this->video_file);
 
             $success  = preg_match(__GENRE_REGEX__, $filename, $matches);
             if ($success == true) {

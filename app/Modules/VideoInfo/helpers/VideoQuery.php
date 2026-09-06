@@ -40,12 +40,20 @@ trait VideoQuery
         }
 
         Mediatag::info('Query', $query);
+
         $result            = Storage::$DB->query($query);
 
+        $prev = '';
         foreach ($result as $_ => $row) {
-            if ('markers' == $this->thumbType) {
-                $file_array[$row['video_key']] = $row;
+            $key = $row['video_key'];
 
+            if ('markers' == $this->thumbType) {
+            if($key != $prev){
+                $markers = 0;
+                $prev = $key;
+            }
+                $markers++;
+                $file_array[$row['video_key']] =  $row['filename'];
                 continue;
             }
             $file_array[$row['video_key']] = $row['file_name'];

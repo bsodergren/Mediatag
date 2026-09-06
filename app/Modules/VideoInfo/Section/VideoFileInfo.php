@@ -114,10 +114,25 @@ class VideoFileInfo extends VideoInfo
         //   utmdd(self::getVideoDetails());
         $mediaInfo             = new MediaInfo();
         $mediaInfoContainer    = $mediaInfo->getInfo($file);
+        $menus                 = $mediaInfoContainer->getMenus();
         $videos                = $mediaInfoContainer->getVideos();
         $general               = $mediaInfoContainer->getGeneral();
         $audios                = $mediaInfoContainer->getAudios();
-        //
+
+
+
+        $videoInfo['Chapters']    = 0;
+
+        foreach ($menus as $menu) {
+            $chapters = 0;
+            $menuArray = $menu->__toArray();
+            foreach ($menuArray as $key => $v) {
+                if (str_starts_with($key, '00')) {
+                    $chapters++;
+                }
+            }
+            $videoInfo['Chapters']    = $chapters;
+        }
         // $videoInfo['file']     = $file;
         $videoInfo['filesize'] = filesize($file);
         foreach ($audios as $audio) {

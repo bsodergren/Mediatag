@@ -47,6 +47,7 @@ trait VideoGetters
 
         $this->VideoInfo  = $this->getVideoDetails();
 
+
         return $this->saveVideoDetails();
     }
 

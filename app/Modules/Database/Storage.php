@@ -376,7 +376,6 @@ class Storage
         $this->mysqllib->onDuplicate($dupCols, 'id');
         $id         = $this->mysqllib->insert($table, $data);
 
-        // utmdump($this->mysqllib->getLastQuery());
         // } catch (\Exception $e) {
 
         // }

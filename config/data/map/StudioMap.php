@@ -29,6 +29,7 @@ const STUDIO_MAP = [
     '1000facials' => 'ThousandFacials',
     'private'     => 'PrivateVid',
     'self'        => 'SelfVids',
+    'purgatoryx' => 'PurgatoryX',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',

@@ -436,5 +436,6 @@ trait MediaFFmpeg
         $this->progress->setMessage(basename($file), 'messasge');
         $callback       = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
+        return $outputFile;
     }
 }
