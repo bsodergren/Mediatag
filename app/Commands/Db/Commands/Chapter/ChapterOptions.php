@@ -17,7 +17,7 @@ class ChapterOptions extends Options
     use Lang;
     use Translate;
 
-    public $options = ['Test'];
+    public $options = ['Default'];
 
     public function Definitions()
     {

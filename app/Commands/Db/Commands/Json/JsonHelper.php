@@ -34,7 +34,7 @@ trait JsonHelper
             $this->jsonUpdates();
         } else {
             $this->file_array = StorageDB::$DB->getDbFileList();
-            parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
+            parent::$output->writeln('<info> get ' . \count($this->file_array) . ' new json file </info>');
             $this->getJson();
 
             // $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
@@ -47,7 +47,7 @@ trait JsonHelper
     public function jsonUpdates()
     {
         $this->file_array = StorageDB::$DB->getDbFileList(' AND updatedJson = 1');
-        parent::$output->writeln('<info> get ' . count($this->file_array) . ' new json file </info>');
+        parent::$output->writeln('<info> get ' . \count($this->file_array) . ' new json file </info>');
 
         parent::$output->writeln('<info> update Json</info>');
         $this->setJson();
@@ -64,7 +64,7 @@ trait JsonHelper
             } else {
                 $json_file = __JSON_CACHE_DIR__ . '/' . $json_key . '.info.json';
             }
-            if (\file_exists($json_file)) {
+            if (file_exists($json_file)) {
                 $json_file            = Reader::checkJsonForUpdate($json_file, $json_key);
 
                 $filearray[$json_key] = ['file' => $file, 'json' => $json_file];
@@ -78,7 +78,7 @@ trait JsonHelper
     public function setJson()
     {
         $jsonFileList = $this->getJsonFilelist();
-        $count        = count($jsonFileList);
+        $count        = \count($jsonFileList);
         foreach ($jsonFileList as $json_key => $file) {
             $json_file  = $file['json'];
             $video_file = $file['file'];
@@ -90,8 +90,8 @@ trait JsonHelper
             $actionTags = $reader->actionTags();
             // utmdump($actionTags, $videoInfo);
 
-            if (count($actionTags) > 0) {
-                if (! is_null($actionTags['actiontags'])) {
+            if (\count($actionTags) > 0) {
+                if ($actionTags['actiontags'] !== null) {
                     //  parent::$output->writeln('<info> Found  actiontags, updating video </info>');
                     $this->updateVideoMarkers($videoInfo, $actionTags['actiontags'], $id);
                     StorageDB::$DB->updatedJson($json_key, 2);
@@ -108,7 +108,7 @@ trait JsonHelper
     {
         // utminfo(func_get_args());
         $jsonFileList = $this->getJsonFilelist();
-        $count        = count($jsonFileList);
+        $count        = \count($jsonFileList);
         foreach ($jsonFileList as $json_key => $file) {
             $json_file  = $file['json'];
             $video_file = $file['file'];
@@ -116,8 +116,8 @@ trait JsonHelper
 
             $data       = file_get_contents($json_file);
 
-            if (\str_contains($data, 'actionTags')) {
-                $jsondata = \json_decode($data, true);
+            if (str_contains($data, 'actionTags')) {
+                $jsondata = json_decode($data, true);
                 if ($jsondata['actionTags'] != '') {
                     // parent::$output->writeln('<info>' . basename($json_file) . ' </info>');
                     StorageDB::$DB->updatedJson($json_key, 1);
@@ -130,7 +130,7 @@ trait JsonHelper
 
     private function updateVideoMarkers($videoInfo, $markerArray, $id)
     {
-        if (is_null($markerArray)) {
+        if ($markerArray === null) {
             return false;
         }
 
@@ -147,11 +147,11 @@ trait JsonHelper
                 'markerText' => $parts[0],
             ];
             $dbConn->where('timeCode', round($parts[1], 0));
-            $dbConn->where('markerText', $parts[0]);
+            // $dbConn->where('markerText', $parts[0]);
             $dbConn->where('video_id', $video_id);
             $res   = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
 
-            if (is_null($res)) {
+            if ($res === null) {
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
                 $total++;
             }
@@ -191,7 +191,7 @@ trait JsonHelper
             $fileArray[] = $key;
         }
 
-        //
+
         return $fileArray;
     }
 }

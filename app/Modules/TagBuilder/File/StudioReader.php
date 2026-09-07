@@ -145,7 +145,7 @@ trait StudioReader
                     'networkName' => $networkName,
                 ];
             }
-            // utmdd($classOption);
+            //  utmdd($classOption);
             ScriptWriter::addPattern($studioName, ucwords($this->studio), $classOption);
         }
     }

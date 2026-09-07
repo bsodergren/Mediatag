@@ -42,20 +42,25 @@ trait MediaFFmpeg
     public $ffmpeg_log   = __LOGFILE_DIR__ . '/buffer/ffmpeg.log';
 
     public $currentFrame = 0;
-    private $cmdline;
-    public $frame_count;
-    public $MergedName;
-    public $clipName;
-    public $clipLength;
-    public $videoInfo;
 
+    private $cmdline;
+
+    public $frame_count;
+
+    public $MergedName;
+
+    public $clipName;
+
+    public $clipLength;
+
+    public $videoInfo;
 
     public function FrameCountCallback($type, $buffer)
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
 
         // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
-        if (null !== $this->progress) {
+        if ($this->progress !== null) {
             if (preg_match('/frame=\s([0-9.]+)/', $buffer, $output_array)) {
                 $frame              = $output_array[1];
                 $adv                = $frame - $this->currentFrame;
@@ -69,7 +74,7 @@ trait MediaFFmpeg
     {
         $buffer = MediatagExec::cleanBuffer($buffer);
 
-        if (null !== $this->progress) {
+        if ($this->progress !== null) {
             $this->progress->advance();
         }
     }
@@ -79,7 +84,7 @@ trait MediaFFmpeg
         $buffer = MediatagExec::cleanBuffer($buffer);
         // MediaFile::file_append_file($this->ffmpeg_log, $buffer . PHP_EOL);
 
-        if (null !== $this->progress) {
+        if ($this->progress !== null) {
             $this->progress->advance();
         }
     }
@@ -122,7 +127,8 @@ trait MediaFFmpeg
 
             return true;
         }
-
+        $this->commandLine= $process->getCommandLine();
+        utmdump($this->commandLine);
         $process->Run($callback);
 
         // $process->start();
@@ -130,7 +136,7 @@ trait MediaFFmpeg
 
         //  $process->start();
 
-        if (!$process->isSuccessful()) {
+        if (! $process->isSuccessful()) {
             return false;
             //     throw new ProcessFailedException($process);
             utmdd($process->getCommandLine(), $process->getExitCode(), $process->getErrorOutput());
@@ -172,7 +178,7 @@ trait MediaFFmpeg
         $this->progress->clear();
         // Mediatag::$output->writeln('<comment>Transcoding Video '.$file.'</comment>');
 
-        $dmg_dir            = str_replace('/XXX', '/XXX/mkv', dirname($file));
+        $dmg_dir            = str_replace('/XXX', '/XXX/mkv', \dirname($file));
         FileSystem::createDir($dmg_dir);
         FileSystem::rename($file, $dmg_dir . '/' . basename($file));
     }
@@ -243,7 +249,7 @@ trait MediaFFmpeg
     {
         $videoFile     = $this->getClipFilename($file);
         $outputFile    = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
-        FileSystem::createDir(dirname($outputFile));
+        FileSystem::createDir(\dirname($outputFile));
 
         if (file_exists($outputFile)) {
             // $rename = str_replace('.mp4', '_clip-' . $marker['text'] . '-' . $idx . '.mp4', $videoFile);
@@ -285,8 +291,6 @@ trait MediaFFmpeg
         $this->progress->finishIndicator('Finished ' . $marker['text']);
     }
 
-
-
     public function createCompilation($files, $ClipName, $name)
     {
         $duration         = Option::getValue('dur', true, 3);
@@ -295,7 +299,7 @@ trait MediaFFmpeg
         $this->clipName   = $ClipName;
 
         // utmdump($files, $ClipName, $name, $duration, $type);
-        $fileCount        = count($files);
+        $fileCount        = \count($files);
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
@@ -356,7 +360,7 @@ trait MediaFFmpeg
         $this->MergedName = $name;
         $this->clipName   = $ClipName;
 
-        $fileCount        = count($files);
+        $fileCount        = \count($files);
         Mediatag::$output->writeln('<info>Merging ' . $fileCount . ' files</info>');
         Mediatag::$output->writeln('<info>Info compilation called  ' . $name . ' </info>');
 
@@ -414,7 +418,7 @@ trait MediaFFmpeg
         $outputFile     = str_replace('.mp4', '_chapters.mp4', $file);
 
         if (file_exists($outputFile)) {
-            if (!Chooser::changes(' Overwrite File' . __LINE__, 'overwrite', __LINE__)) {
+            if (! Chooser::changes(' Overwrite File' . __LINE__, 'overwrite', __LINE__)) {
                 return;
             }
         }
@@ -436,6 +440,7 @@ trait MediaFFmpeg
         $this->progress->setMessage(basename($file), 'messasge');
         $callback       = Callback::check([$this, 'Outputdebug']);
         $this->ffmpegExec($cmdOptions, $callback);
+
         return $outputFile;
     }
 }

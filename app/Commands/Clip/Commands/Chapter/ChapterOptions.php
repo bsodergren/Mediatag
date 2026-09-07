@@ -24,6 +24,7 @@ class ChapterOptions extends Options
         $parentOptions = parent::Definitions();
         $options       = [
             ['markers', 'm', InputOption::VALUE_NONE, self::text('L_OPTION_MARKERS')],
+            ['nobackup', 'b', InputOption::VALUE_NONE, self::text('L_OPTION_NO_BACKUP')],
             // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
             ['break'],
         ];

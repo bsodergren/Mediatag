@@ -31,6 +31,8 @@ trait ChapterHelper
 
     public $videoInfo;
 
+    public $commandline;
+
     public $chapterArray;
 
     private $FileIdx = 0;
@@ -177,16 +179,19 @@ trait ChapterHelper
     private function createChapterVideo($filename, $chapterFile)
     {
 
-          $outputFile         = $this->ffmpegCreateChapterVideo($filename, $chapterFile);
-        if (!file_exists($outputFile)) {
-                        Mediatag::$output->writeln('<error>Chapter Video doeasnt exist/error>');
+
+
+
+        $outputFile         = $this->ffmpegCreateChapterVideo($filename, $chapterFile);
+
+        if (! file_exists($outputFile)) {
+            Mediatag::$output->writeln('<error>Chapter Video doeasnt exist/error>');
+            utmdump($this->commandLine);
 
             return false;
         }
 
-        if (file_exists($chapterFile)) {
-            unlink($chapterFile);
-        }
+
 
         $file_path          = \dirname($filename);
         $backup_filepath    = str_replace('XXX/', 'XXX/ChapVid/', $file_path);
@@ -199,7 +204,10 @@ trait ChapterHelper
 
         $validA =   $this->getChapterVideoInfo($outputFile);
         $validB =   $this->getChapterVideoInfo($filename);
-        if ($validA != $validB) {
+        $diff =  abs($validA - $validB);
+        if ($diff > 10) {
+            utmdump($validA, $validB, $diff);
+            utmdump($this->commandLine);
             Mediatag::$output->writeln('<comment>' . basename($outputFile) . '</comment> <error>Chapter Video Duration Mismatch</error>');
             if (file_exists($outputFile)) {
                 unlink($outputFile);
@@ -216,8 +224,23 @@ trait ChapterHelper
         //     'New Video filename' => $filename
         // ]);
 
-        Filesystem::renameFile($filename, $backup_filename, true);
-        Filesystem::renameFile($outputFile, $filename);
+        if (Option::isFalse('nobackup')) {
+            Filesystem::renameFile($filename, $backup_filename, true);
+        } else {
+            if (! file_exists($filename)) {
+                //     unlink($filename);
+
+                // } else {
+                Mediatag::$output->writeln('<error>What happened to the file </error>');
+
+                utmdump($this->commandLine);
+
+                return false;
+            }
+
+            // Filesystem::renameFile($filename, $filename . '.bk', true);
+        }
+        Filesystem::renameFile($outputFile, $filename, true);
     }
 
     private function getChapterVideoInfo($filename)

@@ -21,7 +21,7 @@ trait StudioJsonHelper
     public function loadVideoJson()
     {
         $db           = MysqliDb::getInstance();
-        $fileLocation = __PLEX_STUDIO_JSON_DIR__ . DIRECTORY_SEPARATOR . 'adulttime';
+        $fileLocation = __PLEX_STUDIO_JSON_DIR__ . \DIRECTORY_SEPARATOR . 'adulttime';
         $files        = MediaFinder::find('*.json', $fileLocation);
         foreach ($files as $file) {
             $videoName = basename($file, '.json');
@@ -35,7 +35,7 @@ trait StudioJsonHelper
 
             $video_id  = (new Markers())->getvideoId($result[0]['video_key']);
             // utmdump([$result, $query]);
-            if (! is_null($video_id)) {
+            if ($video_id !== null) {
                 $jsonData = file_get_contents($file);
                 $jsonData = str_replace("\n", ',', $jsonData);
                 // $markerArray = implode(',', $jsonData);
@@ -57,7 +57,7 @@ trait StudioJsonHelper
 
     public function myupdateVideoMarkers($videoInfo, $markerArray, $id)
     {
-        if (is_null($markerArray)) {
+        if ($markerArray === null) {
             return false;
         }
         $dbConn   = MysqliDb::getInstance();
@@ -73,10 +73,10 @@ trait StudioJsonHelper
                 'markerText' => $parts[0],
             ];
             $dbConn->where('timeCode', round($parts[1], 0));
-            $dbConn->where('markerText', $parts[0]);
+            // $dbConn->where('markerText', $parts[0]);
             $dbConn->where('video_id', $video_id);
             $res   = $dbConn->getone(__MYSQL_VIDEO_MARKERS__);
-            if (is_null($res)) {
+            if ($res === null) {
                 $dbConn->insert(__MYSQL_VIDEO_MARKERS__, $data);
                 parent::$output->writeln(' <id>Updating markers for ' . basename($videoInfo['title']) . '</id>');
             }

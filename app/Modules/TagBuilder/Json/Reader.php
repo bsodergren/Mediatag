@@ -220,8 +220,7 @@ class Reader extends TagReader
                 $value                 = $this->json_array[$json_key];
                 if ($tag == 'studio') {
                     $value =  str_replace('-', ' ', $value);
-                    $value = ucwords(strtolower($value));
-                    // utmdump($value);
+                    $value = ucwords($value);
                 }
                 if ($json_key == 'categories') {
                     $keyword_value = $this->json_array['tags'];

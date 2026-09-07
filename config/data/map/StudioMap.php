@@ -30,6 +30,7 @@ const STUDIO_MAP = [
     'private'     => 'PrivateVid',
     'self'        => 'SelfVids',
     'purgatoryx' => 'PurgatoryX',
+    'teamskeet' => 'TeamSkeet',
     // 'riggs'               => 'AdultTime',
     // 'gostuckyourself'     => 'AdultTime',
     // 'cheatingwhorewives'  => 'AdultTime',

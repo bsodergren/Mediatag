@@ -16,6 +16,7 @@ use Mediatag\Modules\VideoInfo\helpers\VideoStrings;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\DynamicProperty;
+use UTM\Utilities\Option;
 
 use function array_key_exists;
 use function count;
@@ -27,22 +28,24 @@ trait VideoSetters
     {
         // utminfo(func_get_args());
 
-         $this->VideoDataTable = __MYSQL_VIDEO_INFO__;
+        if (Option::getValue('command', true) == 'chapter') {
+            $this->VideoDataTable = __MYSQL_VIDEO_INFO__;
+        }
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
 
-        if (array_key_exists('duration', $this->VideoInfo)) {
+        if (\array_key_exists('duration', $this->VideoInfo)) {
             if ($this->VideoInfo['duration'] === null) {
                 return false;
             }
         }
-        if (array_key_exists('format', $this->VideoInfo)) {
+        if (\array_key_exists('format', $this->VideoInfo)) {
             if ($this->VideoInfo['format'] === null) {
                 return false;
             }
         }
 
-        if (array_key_exists('artist', $this->VideoInfo)) {
+        if (\array_key_exists('artist', $this->VideoInfo)) {
             if ($this->VideoInfo['artist'] !== null) {
                 if ($this->saveArtist($this->VideoInfo['artist']) !== null) {
                     unset($this->VideoInfo['artist']);
@@ -74,8 +77,8 @@ trait VideoSetters
         $file_array = $this->getDbList();
         $this->getMessageLen($file_array);
 
-        if (count($file_array) > 0) {
-            $this->fileCount = count($file_array);
+        if (\count($file_array) > 0) {
+            $this->fileCount = \count($file_array);
             Mediatag::$output->writeln('<info>Found ' . $this->fileCount . ' files</info>');
 
             // $this->maxLen = 0;
