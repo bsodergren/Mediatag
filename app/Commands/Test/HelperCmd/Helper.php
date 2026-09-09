@@ -6,7 +6,10 @@
 
 namespace Mediatag\Commands\Test\HelperCmd;
 
-use Mediatag\Commands\Playlist\Process;
+use Mediatag\Bundle\Dialog\Options\Common;
+use Mediatag\Bundle\Dialog\Widgets\Buildlist;
+use Mediatag\Bundle\Dialog\Widgets\Gauge;
+use Mediatag\Bundle\Dialog\Widgets\Menu;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -24,6 +27,7 @@ use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
+use Mediatag\Bundle\WhipTail\Controller as WhipTail;
 
 use function count;
 use function dirname;
@@ -40,12 +44,36 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    public function guiTest()
+    {
+        $filelist_array = $this->VideoList['file'];
+        
+        $common= new \Mediatag\Bundle\Dialog\Options\Common(
+            ['backtitle', 'Testing Dialog...']
+        );
+
+        foreach($filelist_array as $key => $fileInfo)
+        {
+            $items[] = new \Mediatag\Bundle\Dialog\Options\Item($key, $fileInfo['video_name']);
+        }
+
+        $box = new \Mediatag\Bundle\Dialog\Widgets\Buildlist('Change items:', 0,...$items);
+        $dialog = new \Mediatag\Bundle\Dialog\Dialog($common, $box);
+        $dialog->run();
+
+
+        echo PHP_EOL, 'Output is: ', $dialog->output(), PHP_EOL, 'Exit code: ', $dialog->exit_code(), PHP_EOL;
+
+
+
+    }
+
     public function moveJsonCache()
     {
         $file_string = '';
 
         $finder      = new Finder();
-        $dirs        = $finder->files()->in(__PLEX_DOWNLOAD__)->name("*.json");//->depth(0);
+        $dirs        = $finder->files()->in(\__PLEX_DOWNLOAD__)->name('*.json'); // ->depth(0);
         foreach ($dirs as $dir) {
             // $key = basename( ".info.json");
             $video_key = MediaFile::getVideoKey($dir->getRealPath());
@@ -56,11 +84,12 @@ trait Helper
             if (file_exists($newFile)) {
                 Mediatag::$Console->writeln('<info> deleting ' . $dir->getRealPath() . ' </>');
                 unlink($dir->getRealPath());
+
                 continue;
             }
             FileSystem::rename($dir->getRealPath(), $newFile, false);
             Mediatag::$Console->writeln('<info>' . $newFile . ' </>');
-            //exit;
+            // exit;
         }
 
         // MediaFilesystem::writeFile(Process::JSONPLAYLIST, $file_string);
@@ -88,7 +117,7 @@ trait Helper
                 // rename old file to new file
 
                 $video_file  = $fileInfo['video_file'];
-                $new_file    = $fileInfo['video_path'] . DIRECTORY_SEPARATOR . $output_array[1];
+                $new_file    = $fileInfo['video_path'] . \DIRECTORY_SEPARATOR . $output_array[1];
 
                 Mediatag::$Console->writeln('<info>renaming</>');
                 Mediatag::$Console->writeln('<comment>' . $fileInfo['video_name'] . ' to </>');
@@ -155,7 +184,7 @@ trait Helper
         $filename     = $fileInfo['filename'];
         $extension    = $fileInfo['extension'];
         // 2 "/media/Videos/Plex/XXX/Studios/Adult Time/Watch You Cheat/MFF/Subtitles"
-        $subtitlePath = str_replace('Subtitles/', '', $directory) . DIRECTORY_SEPARATOR . 'Subtitles' . DIRECTORY_SEPARATOR;
+        $subtitlePath = str_replace('Subtitles/', '', $directory) . \DIRECTORY_SEPARATOR . 'Subtitles' . \DIRECTORY_SEPARATOR;
         FileSystem::createDir($subtitlePath);
 
         return $subtitlePath . $filename . '.' . $extension;
@@ -163,7 +192,7 @@ trait Helper
 
     public function moveSubtitles()
     {
-        $file_array = Mediatag::$finder->Search(\__PLEX_HOME__ . DIRECTORY_SEPARATOR . 'Subtitles', '*.srt*', exit: false);
+        $file_array = Mediatag::$finder->Search(\__PLEX_HOME__ . \DIRECTORY_SEPARATOR . 'Subtitles', '*.srt*', exit: false);
         foreach ($file_array as $file) {
             $newFile = $this->subtitlepath($file);
 
@@ -191,7 +220,7 @@ trait Helper
                 $db->where('id', $user[$column]);
                 $res = $db->getOne('mediatag_video_file');
 
-                if (null === $res) {
+                if ($res === null) {
                     $db->where($column, $user[$column]);
                     $db->delete($table);
 
@@ -236,17 +265,17 @@ trait Helper
 
         foreach ($keys as $key) {
             Mediatag::$Console->writeln('searching for key ' . $key);
-            $file_array = Mediatag::$finder->Search(__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
-            if (count($file_array) > 0) {
+            $file_array = Mediatag::$finder->Search(\__PLEX_DOWNLOAD__, '*' . $key . '*', exit: false);
+            if (\count($file_array) > 0) {
                 foreach ($file_array as $file) {
                     if (str_ends_with($file, '.mp4')) {
-                        $currentPath  = dirname($file);
-                        $filename     = DIRECTORY_SEPARATOR . basename($file, '.mp4');
+                        $currentPath  = \dirname($file);
+                        $filename     = \DIRECTORY_SEPARATOR . basename($file, '.mp4');
 
                         $jsonFile     = $filename . '.info.json';
                         $videoFile    = $filename . '.mp4';
 
-                        $newPath      = str_replace(__PLEX_DOWNLOAD__, __PLEX_DOWNLOADED__, $currentPath);
+                        $newPath      = str_replace(\__PLEX_DOWNLOAD__, \__PLEX_DOWNLOADED__, $currentPath);
                         FileSystem::createDir($newPath);
 
                         $newVideoFile = $newPath . $videoFile;
@@ -288,7 +317,7 @@ trait Helper
             } else {
                 $thumbnail = $this->saveArtistThumbnail($newnameKey, $thumbnail);
             }
-            --$this->max;
+            $this->max--;
             // utmdd($query);
         }
     }
@@ -319,15 +348,15 @@ trait Helper
             $data    = [];
             foreach ($pcs as $x => $star) {
                 // $starAr = $star['star'];
-                if ('0' == $star['star']['videos_count_all']) {
+                if ($star['star']['videos_count_all'] == '0') {
                     $data['NV'][] = $star['star'];
 
                     continue;
                 }
 
-                if ('male' == $star['star']['gender'] || 'female' == $star['star']['gender']) {
+                if ($star['star']['gender'] == 'male' || $star['star']['gender'] == 'female') {
                     $data['Stars'][] = $star['star'];
-                } elseif ('unknown' == $star['star']['gender']) {
+                } elseif ($star['star']['gender'] == 'unknown') {
                     $data['Unknown'][] = $star['star'];
                 } else {
                     $data['NG'][] = $star['star'];
@@ -421,7 +450,7 @@ trait Helper
     {
         new Artist(__MYSQL_ARTIST_PH__, __MYSQL_ARTIST_MAP__);
         $vInfo          = new LibVinfo(__MYSQL_VIDEO_FILE__);
-        $vInfo->setLibrary(__LIBRARY__);
+        $vInfo->setLibrary(\__LIBRARY__);
         // LibVinfo
         $filelist_array = $this->VideoList['file'];
         // Mediatag::$Display->LineBreaks = true;
@@ -437,7 +466,7 @@ trait Helper
 
             $videoId  = $vInfo->getvideoId($key);
 
-            if ('artist' == $tag) {
+            if ($tag == 'artist') {
                 $r = Artist::updateArtistMap($videoId, $tagValue);
                 // MetaTagInfo::updateArtistMap($videoId, $tag, $tagValue);
             }
@@ -461,7 +490,7 @@ trait Helper
 
             $NewThumbnail  = $this->saveImageFromUrl($thumbnail, $img_file_path);
             // utmdd($NewThumbnail);
-            if (false !== $NewThumbnail) {
+            if ($NewThumbnail !== false) {
                 $data      = ['star_thumb' => $NewThumbnail];
                 $db->where('nameKey', $artist);
                 $db->update('mediatag_artist_ph', $data);
@@ -475,23 +504,22 @@ trait Helper
     /**
      * Save an image from a given URL to a local folder.
      *
-     * @param string      $imageUrl The full URL of the image
-     * @param string      $saveDir  The local folder path (must be writable)
-     * @param string|null $fileName Optional custom file name (with extension)
-     *
+     * @param  string  $imageUrl  The full URL of the image
+     * @param  string  $saveDir  The local folder path (must be writable)
+     * @param  string|null  $fileName  Optional custom file name (with extension)
      * @return string|false Path to saved file on success, false on failure
      */
     public function saveImageFromUrl($imageUrl, $saveDir, $fileName = null)
     {
         // Validate URL
-        if (!filter_var($imageUrl, FILTER_VALIDATE_URL)) {
+        if (! filter_var($imageUrl, \FILTER_VALIDATE_URL)) {
             echo "Invalid URL.\n";
 
             return false;
         }
 
         // Ensure save directory exists and is writable
-        if (!is_dir($saveDir) || !is_writable($saveDir)) {
+        if (! is_dir($saveDir) || ! is_writable($saveDir)) {
             echo "Save directory does not exist or is not writable.\n";
 
             return false;
@@ -499,26 +527,26 @@ trait Helper
 
         // Get image content
         $imageData    = @file_get_contents($imageUrl);
-        if (false === $imageData) {
+        if ($imageData === false) {
             echo "Failed to fetch image from URL.\n";
 
             return false;
         }
 
         // Determine file name
-        if (null === $fileName) {
-            $urlPath   = parse_url($imageUrl, PHP_URL_PATH);
+        if ($fileName === null) {
+            $urlPath   = parse_url($imageUrl, \PHP_URL_PATH);
 
             $fileName  = basename($urlPath);
             $fileName  = Strings::after($fileName, ')', 2);
 
             $dir       = [];
             $fileId    = Strings::after(basename($fileName, '.jpg'), '_');
-            if (null !== $fileId) {
+            if ($fileId !== null) {
                 $dir = str_split($fileId, 2);
                 array_pop($dir);
             }
-            $imagePath = DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $dir);
+            $imagePath = \DIRECTORY_SEPARATOR . implode(\DIRECTORY_SEPARATOR, $dir);
             // for ($i = 0; $i < $len; $i++) {
             //     $dir[] = $fileId[$i] . $fileId[$i++];
             // }
@@ -530,17 +558,17 @@ trait Helper
         }
 
         // Full save path
-        $imagePath    = rtrim($imagePath, DIRECTORY_SEPARATOR);
-        $savePath     = rtrim($saveDir, DIRECTORY_SEPARATOR) . $imagePath;
+        $imagePath    = rtrim($imagePath, \DIRECTORY_SEPARATOR);
+        $savePath     = rtrim($saveDir, \DIRECTORY_SEPARATOR) . $imagePath;
 
         FileSystem::createDir($savePath);
-        $saveFile     = $savePath . DIRECTORY_SEPARATOR . $fileName;
-        $img_web_path = 'http://media.lan/plex/images/thumbnails' . $imagePath . DIRECTORY_SEPARATOR . $fileName;
+        $saveFile     = $savePath . \DIRECTORY_SEPARATOR . $fileName;
+        $img_web_path = 'http://media.lan/plex/images/thumbnails' . $imagePath . \DIRECTORY_SEPARATOR . $fileName;
 
         // utmdd($saveFile, $img_web_path);
         // Save file
-        if (!file_exists($saveFile)) {
-            if (false === file_put_contents($saveFile, $imageData)) {
+        if (! file_exists($saveFile)) {
+            if (file_put_contents($saveFile, $imageData) === false) {
                 echo "Failed to save image to folder.\n";
 
                 return false;
