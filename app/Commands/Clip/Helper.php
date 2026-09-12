@@ -29,6 +29,7 @@ use const DIRECTORY_SEPARATOR;
 trait Helper
 {
     use ffmpegTransition;
+
     // use MarkerHelper;
     use MediaFFmpeg;
 
@@ -73,10 +74,10 @@ trait Helper
 
         rsort($pcs);
         $seconds = $pcs[0];
-        if (array_key_exists(1, $pcs)) {
+        if (\array_key_exists(1, $pcs)) {
             $minutes = $pcs[1] * 60;
         }
-        if (array_key_exists(2, $pcs)) {
+        if (\array_key_exists(2, $pcs)) {
             $hours = $pcs[2] * 60 * 60;
         }
 
@@ -90,27 +91,27 @@ trait Helper
         $outputFile = str_replace('/XXX', '/XXX/Clips', $filename);
 
         // Filesystem::createDir(dirname($outputFile));
-        if (0 == $level) {
+        if ($level == 0) {
             return $outputFile;
         }
 
-        return dirname($outputFile, $level);
+        return \dirname($outputFile, $level);
     }
 
     public function getClipFilename($filename)
     {
-        return $this->getClipDirectory($filename) . DIRECTORY_SEPARATOR . basename($filename);
+        return $this->getClipDirectory($filename) . \DIRECTORY_SEPARATOR . basename($filename);
     }
 
     public function setClipFilename($name)
     {
         $name     = str_replace(' ', '_', $name);
 
-        $filename = __LIBRARY_HOME__ . DIRECTORY_SEPARATOR . 'Home Videos' . DIRECTORY_SEPARATOR . 'Compilation' . DIRECTORY_SEPARATOR . $name . '.mp4';
-        Filesystem::createDir(dirname($filename));
+        $filename = __LIBRARY_HOME__ . \DIRECTORY_SEPARATOR . 'Home Videos' . \DIRECTORY_SEPARATOR . 'Compilation' . \DIRECTORY_SEPARATOR . $name . '.mp4';
+        Filesystem::createDir(\dirname($filename));
         // utmdump($filename);
         if (file_exists($filename)) {
-            if (!Option::istrue('yes')) {
+            if (! Option::istrue('yes')) {
                 if (Chooser::changes(' Overwrite File ' . __LINE__, 'overwrite', __LINE__)) {
                     unlink($filename);
                 }
@@ -128,7 +129,7 @@ trait Helper
 
     public function setffmpegFilename($name)
     {
-        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0) . DIRECTORY_SEPARATOR . $name . '.txt';
+        return $this->getClipDirectory(__CURRENT_DIRECTORY__, 0) . \DIRECTORY_SEPARATOR . $name . '.txt';
     }
 
     public function getfileList()
@@ -142,33 +143,33 @@ trait Helper
 
             $this->Marker->getvideoId($key);
 
-            if (null !== $this->Marker->video_id) {
+            if ($this->Marker->video_id !== null) {
                 $query   = $this->Marker->videoQuery($this->Marker->video_id, $search);
 
                 $result  = Storage::$DB->query($query);
 
-                $markers = $this->getVideoMarks($result);
-
-                if (count($markers) > 0) {
-                    ++$this->FileIdx;
+                $markers = $this->getVideoChapters($result, 'markerText');
+                if (\count($markers) > 0) {
+                    $this->FileIdx++;
 
                     $markerArray[] = $markers;
                 }
             }
         }
         $this->markerArray = $markerArray;
+
         return $this->markerArray;
     }
 
     public function backupOrigFile($OriginalName, $NewName, $directory)
     {
         // utmdump(__METHOD__);
-        $file_path       = dirname($OriginalName);
+        $file_path       = \dirname($OriginalName);
         $backup_filepath = str_replace('XXX/', 'XXX/' . $directory . '/', $file_path);
 
         // utmdump($backup_filepath);
 
-        if (!Mediatag::$filesystem->exists($backup_filepath)) {
+        if (! Mediatag::$filesystem->exists($backup_filepath)) {
             Mediatag::$filesystem->mkdir($backup_filepath);
         }
         $backup_filename = $backup_filepath . '/' . basename($OriginalName);
@@ -179,5 +180,123 @@ trait Helper
         // utmdump($NewName);
 
         Filesystem::renameFile($NewName, $OriginalName);
+    }
+
+    public function getVideoChapters($videoInfo, $textField)
+    {
+
+        $videoKey    = 0;
+        $chapterRow  = [];
+        $chapters    = [];
+        $chapterPos  = [];
+        $chapterIdx  = 0;
+        $rowIdx      = 0;
+        foreach ($videoInfo as $k => $row) {
+            if ($k == 0) {
+                // utmdd($row);
+            }
+            if (! \array_key_exists('timeCode', $row)) {
+                return null;
+            }
+
+            if ($row['video_key'] != $videoKey) {
+                $videoKey   = $row['video_key'];
+                $chapterIdx = 0;
+            }
+
+            $chapters[$row['video_key']]             = [
+                'filename' => $row['filename'],
+            ];
+
+            if ($chapterIdx == 0) {
+                $endTime =  $row['duration'] / 1000;
+                if (\array_key_exists($rowIdx + 1, $videoInfo)) {
+                    $endTime = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
+                }
+                $chapterRow[] = [
+                    'start' => 0,
+                    'end'   => $endTime,
+                    'text'  => $row[$textField],
+                ];
+                $chapterIdx++;
+                $rowIdx++;
+
+                continue;
+            }
+            $chapterRow[$chapterIdx]['start']        = (int) $row['timeCode'];
+
+            if (\array_key_exists($rowIdx + 1, $videoInfo)) {
+                $chapterRow[$chapterIdx]['end'] = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
+            } else {
+                $chapterRow[$chapterIdx]['end'] = $row['duration'] / 1000;
+            }
+
+            $chapterRow[$chapterIdx]['text']         = $row[$textField];
+
+            $chapters[$row['video_key']]['chapters'] = $chapterRow;
+            $chapterIdx++;
+            $rowIdx++;
+        }
+
+        return $chapters;
+    }
+
+    public function getVideoMarks($videoInfo)
+    {
+        $videoKey  = 0;
+        $markers   = [];
+        $markerPos = [];
+        foreach ($videoInfo as $k => $row) {
+            if (! \array_key_exists('timeCode', $row)) {
+                return null;
+            }
+
+            if ($row['video_key'] != $videoKey) {
+                $videoKey  = $row['video_key'];
+                $markerIdx = 0;
+            }
+
+            $markers[$row['video_key']] = [
+                'filename' => $row['filename'],
+            ];
+
+            [$markerText,$markerKey] = explode('_', $row['markerText']);
+
+            if (str_contains(strtolower($markerKey), 'start')) {
+                $start = $row['timeCode'];
+                $start = $this->videoDuration($start);
+
+            }
+
+            if (str_contains(strtolower($markerKey), 'end')) {
+                $end = $row['timeCode'];
+                $end = $this->videoDuration($end);
+
+
+                $markerPos[$markerIdx] = [
+                    'text' => $markerText,
+                    'start' => $start,
+                    'end'  => $end];
+                $markerIdx++;
+            }
+
+            $markers[$row['video_key']]['markers'] = $markerPos;
+        }
+
+        return $markers;
+    }
+
+    public function videoDuration($duration)
+    {
+        // utminfo(func_get_args());
+
+        $seconds = (int) round($duration);
+        $secs    = $seconds % 60;
+        $hrs     = $seconds / 60;
+        $hrs     = floor($hrs);
+        $mins    = $hrs % 60;
+        $hrs /= 60;
+
+        return \sprintf('%02d:%02d:%02d', $hrs, $mins, $secs);
     }
 }

@@ -128,7 +128,7 @@ trait MediaFFmpeg
             return true;
         }
         $this->commandLine= $process->getCommandLine();
-        utmdump($this->commandLine);
+        // utmdump($this->commandLine);
         $process->Run($callback);
 
         // $process->start();

@@ -19,16 +19,15 @@ trait MediaProcess
         Mediatag::debug('Running Exec on MediaProcess Trait');
 
         $this->VideoList = parent::getVideoArray();
-        if (count($this->VideoList['file']) == 0) {
+        if (\count($this->VideoList['file']) == 0) {
             return SymCommand::SUCCESS;
         }
     }
 
     public function __call($method, $args)
     {
-
-        if (array_key_exists($method, $this->commandList)) {
-            Mediatag::debug('Running command from MediaProcess Trait ', [get_class($this), $method]);
+        if (\array_key_exists($method, $this->commandList)) {
+            Mediatag::debug('Running command from MediaProcess Trait ', [static::class, $method]);
 
             foreach ($this->commandList[$method] as $cmd => $option) {
                 if ($cmd == 'handler') {
@@ -44,8 +43,8 @@ trait MediaProcess
             }
         } else {
             Mediatag::debug('Running process from MediaProcess Trait ');
-
-            $this->process();
+            utmdd($method);
+            // $this->process();
         }
     }
 }
