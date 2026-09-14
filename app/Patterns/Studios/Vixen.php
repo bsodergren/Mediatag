@@ -1,14 +1,12 @@
 <?php
 
 /**
- * Command like Metatag writer for video files.
+ * This file is auto-generated.
  */
 
 namespace Mediatag\Patterns\Studios;
 
 use Mediatag\Modules\TagBuilder\Patterns;
-
-const VIXEN_REGEX_COMMON = '//i';
 
 class Vixen extends Patterns
 {

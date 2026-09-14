@@ -1,18 +1,15 @@
 <?php
 
 /**
- * Command like Metatag writer for video files.
+ * This file is auto-generated.
  */
 
 namespace Mediatag\Patterns\Studios\TwentyFirstSextury;
 
-const CLUBSANDY_REGEX_COMMON = '//i';
-
-use Mediatag\Patterns\Studios\TwentyFirstSextury\TwentyFirstSextury;
+use Mediatag\Modules\TagBuilder\Patterns;
 
 class ClubSandy extends TwentyFirstSextury
 {
-    public $studio  = 'Club Sandy';
-
+    public $studio = 'Club Sandy';
     public $network = '21st Sextury';
 }
