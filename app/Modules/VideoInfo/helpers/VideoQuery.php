@@ -129,13 +129,13 @@ trait VideoQuery
 
     private function MarkersVideoQuery($video_id = null, $search = null)
     {
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as filename, f.video_key, vm.timeCode, vm.id, i.duration ";
+        $fields = " vm.markerThumbnail as thumbnail, CONCAT(f.fullpath,'/',f.filename) as filename, f.video_key, vm.timeCode, vm.id, i.duration ";
         $order  = '';
         if (null === $video_id) {
             $where = ' vm.markerThumbnail is null ';
         } else {
             $where = ' vm.video_id =  ' . $video_id . ' ';
-            $fields .= ', vm.markerText ';
+            $fields .= ', vm.markerText as text ';
             $order = ' ORDER BY `vm`.`timeCode` ASC';
         }
         if (Option::istrue('update')) {
@@ -154,7 +154,7 @@ trait VideoQuery
 
     private function ChaptersVideoQuery($video_id = null, $search = null)
     {
-        $fields = " CONCAT(f.fullpath,'/',f.filename) as filename, f.video_key, vm.timeCode, vm.id, i.duration ";
+        $fields = "  vm.chapterThumbnail as thumbnail, CONCAT(f.fullpath,'/',f.filename) as filename, f.video_key, vm.timeCode, vm.id, i.duration ";
         $order  = '';
         if (null === $video_id) {
             $where = ' vm.chapterThumbnail is null ';

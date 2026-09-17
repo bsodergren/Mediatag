@@ -75,10 +75,13 @@ if (defined('__APP_HOME__')) {
 if (defined('__WEB_HOME__')) {
     define('__INC_WEB_THUMB_ROOT__', __WEB_HOME__);
     define('__INC_WEB_CAPTION_ROOT__', __WEB_HOME__ . '/videos/captions');
+
     define('__INC_WEB_THUMB_URL__', '/images/plex/thumbnails');
     define('__INC_WEB_THUMB_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_THUMB_URL__);
+
     define('__INC_WEB_CHAPTER_URL__', '/images/plex/chapterImages');
     define('__INC_WEB_CHAPTER_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_CHAPTER_URL__);
+
     define('__INC_WEB_PREVIEW_URL__', '/images/plex/preivew');
     define('__INC_WEB_PREVIEW_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_PREVIEW_URL__);
 

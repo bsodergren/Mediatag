@@ -64,6 +64,8 @@ class VideoInfo
 
     public $VideoFileTable = __MYSQL_VIDEO_FILE__;
 
+    public $ThumbnailField = "";
+
     public function __construct($key = '', $file = '')
     {
         $this->video_key  = $key;

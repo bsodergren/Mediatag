@@ -10,6 +10,7 @@ use Mediatag\Bundle\Dialog\Options\Common;
 use Mediatag\Bundle\Dialog\Widgets\Buildlist;
 use Mediatag\Bundle\Dialog\Widgets\Gauge;
 use Mediatag\Bundle\Dialog\Widgets\Menu;
+use Mediatag\Bundle\WhipTail\Controller as WhipTail;
 use Mediatag\Core\Mediatag;
 use Mediatag\Modules\Database\StorageDB;
 use Mediatag\Modules\Filesystem\MediaFile;
@@ -18,6 +19,7 @@ use Mediatag\Modules\Filesystem\Traits\ScriptWriterHelper;
 use Mediatag\Modules\Metatags\MetaTagInfo;
 use Mediatag\Modules\TagBuilder\Json\Reader;
 use Mediatag\Modules\TagBuilder\TagReader;
+use Mediatag\Modules\TagBuilder\VideoPattern;
 use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Traits\MediaFFmpeg;
 use Nette\Utils\FileSystem;
@@ -27,7 +29,6 @@ use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
-use Mediatag\Bundle\WhipTail\Controller as WhipTail;
 
 use function count;
 use function dirname;
@@ -44,25 +45,48 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    public function regextest()
+    {
+
+        //$pat = '<ALL>? SEP_D SCENE SEP_U SEASON SEP_U <ALL> FILE_RES_LONG';
+$pat = '[glamkore|pretty_and_raw|rammed|trickery]? SEP_D? <ALL> SEP_D SCENE SEP_DOT FILE_RES_LONG ';
+      
+                //'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',
+
+        $str =          'DirtyLittleCheerleaderStories-Scene1_s01_ChadWhite_LilyLarimar_1080p_h264.mp4';
+        $str2 =          'DirtyLittleCheerleaderStories-Scene1_s01_ChadWhite_LilyLarimar_1080p.mp4';
+        $str = 'hooked-up-scene-3.1080p.mp4';
+
+        $patt =  VideoPattern::pattern($pat);
+        Mediatag::$Console->note($patt);
+
+
+        preg_match($patt, $str, $out);
+        Mediatag::$Console->text($out);
+
+        preg_match($patt, $str2, $out);
+        Mediatag::$Console->text($out);
+
+    }
+
     public function guiTest()
     {
         $filelist_array = $this->VideoList['file'];
-        
-        $common= new \Mediatag\Bundle\Dialog\Options\Common(
-            ['backtitle', 'Testing Dialog...']
+
+        $common = new \Mediatag\Bundle\Dialog\Options\Common(
+            ['backtitle', 'Testing Dialog...'],
         );
 
-        foreach($filelist_array as $key => $fileInfo)
-        {
+        foreach ($filelist_array as $key => $fileInfo) {
             $items[] = new \Mediatag\Bundle\Dialog\Options\Item($key, $fileInfo['video_name']);
         }
 
-        $box = new \Mediatag\Bundle\Dialog\Widgets\Buildlist('Change items:', 0,...$items);
+        $box = new \Mediatag\Bundle\Dialog\Widgets\Buildlist('Change items:', 0, ...$items);
         $dialog = new \Mediatag\Bundle\Dialog\Dialog($common, $box);
         $dialog->run();
 
 
-        echo PHP_EOL, 'Output is: ', $dialog->output(), PHP_EOL, 'Exit code: ', $dialog->exit_code(), PHP_EOL;
+        echo \PHP_EOL, 'Output is: ', $dialog->output(), \PHP_EOL, 'Exit code: ', $dialog->exit_code(), \PHP_EOL;
 
 
 

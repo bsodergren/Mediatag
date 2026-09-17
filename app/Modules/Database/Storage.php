@@ -310,8 +310,9 @@ class Storage
 
         // $this->mysqllib->onDuplicate($data, 'id');
         // $id = $this->mysqllib->insert($table, $data);
+
         $id = $this->mysqllib->update($table, $data);
-        // UtmDump($this->mysqllib->getLastQuery());
+        // UtmDd($this->mysqllib->getLastQuery());
         if (! $id) {
             $this->video_string = ['insert failed: ' . $this->mysqllib->getLastQuery()];
 

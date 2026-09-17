@@ -33,7 +33,6 @@ trait VideoSetters
         }
         $this->VideoInfo['video_key'] = $this->video_key;
         $this->VideoInfo['library']   = __LIBRARY__;
-
         if (\array_key_exists('duration', $this->VideoInfo)) {
             if ($this->VideoInfo['duration'] === null) {
                 return false;

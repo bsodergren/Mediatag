@@ -242,6 +242,18 @@ class Patterns extends TagBuilder
             $array = $array[$tag];
         }
 
+
+        if($key == 'pattern'){
+            if( array_key_exists('new', $array))
+            {
+                $array[$key] =  VideoPattern::pattern($array[$key]);
+            }
+            utmdump($array);
+
+            return $array[$key];
+        }
+         //
+
         return $array[$key];
     }
 

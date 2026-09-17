@@ -214,9 +214,11 @@ trait Helper
                     $endTime = $videoInfo[$rowIdx + 1]['timeCode'] - 1;
                 }
                 $chapterRow[] = [
+                    'id' => $row['id'],
                     'start' => 0,
                     'end'   => $endTime,
-                    'text'  => $row[$textField],
+                    'text'  => $row['text'],
+                    'thumbnail' => $row['thumbnail'],
                 ];
                 $chapterIdx++;
                 $rowIdx++;
@@ -230,8 +232,10 @@ trait Helper
             } else {
                 $chapterRow[$chapterIdx]['end'] = $row['duration'] / 1000;
             }
+            $chapterRow[$chapterIdx]['id'] = $row['id'];
+            $chapterRow[$chapterIdx]['thumbnail'] = $row['thumbnail'];
 
-            $chapterRow[$chapterIdx]['text']         = $row[$textField];
+            $chapterRow[$chapterIdx]['text']         = $row['text'];
 
             $chapters[$row['video_key']]['chapters'] = $chapterRow;
             $chapterIdx++;

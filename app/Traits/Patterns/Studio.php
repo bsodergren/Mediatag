@@ -44,8 +44,12 @@ trait Studio
         // utminfo(func_get_args());
 
         // UTMlog::Logger('Studio Key', $this->video_name);
+utmdd($this->video_name,$this->getStudioRegex());
+        
         if ($this->getStudioRegex() !== false) {
-            $return = preg_replace_callback($this->getStudioRegex(), function ($matches) {
+
+            $return = preg_replace_callback($this->getStudioRegex(), function ($matches) 
+            {
                 $studioKey = str_replace('-', '', $matches[1]);
                 if (array_key_exists($studioKey, $this->replace_studios)) {
                     return $this->replace_studios[$studioKey];
@@ -53,6 +57,7 @@ trait Studio
 
                 return null;
             }, $this->video_name);
+
             if ($return == $this->video_name) {
                 return null;
             }

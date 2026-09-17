@@ -15,7 +15,9 @@ class Bang extends Patterns
     public $regex           = [
         'bang' => [
             'artist' => [
-                'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',
+                'new'=> true,
+                'pattern'             =>'[glamkore|pretty_and_raw|rammed|trickery] SEP_D? <ALL> SEP_D SCENE SEP_DOT FILE_RES_LONG ',
+            //    'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',
                 'delim'               => '_and_',
                 'match'               => 2,
                 'artistFirstNameOnly' => false,

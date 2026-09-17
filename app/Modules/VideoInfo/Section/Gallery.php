@@ -21,6 +21,9 @@ class Gallery extends VideoInfo
 
     public $actionText     = '<comment>Updated Gallery Info</comment>';
 
+    public $ThumbnailField = "chapterThumbnail";
+
+
     public function get($key, $file)
     {
         // utminfo(func_get_args());

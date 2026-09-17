@@ -23,8 +23,8 @@ trait Artist
     public function getArtistRegex()
     {
         // utminfo(func_get_args());
-
-        return $this->getKeyValue('artist', 'pattern');
+            $pattern = $this->getKeyValue('artist', 'pattern');
+        return $pattern;
     }
 
     /**
@@ -86,9 +86,12 @@ trait Artist
         $names          = str_replace($this->getArtistDelim(), $delim, $names);
         $names          = str_replace('_', ' ', $names);
         $names_array    = explode($delim, $names);
+
+        /*
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
         $prev_name      = '';
-        /*$total_names = count($names_array);
+        
+        $total_names = count($names_array);
         $new_array = [];
         $key = 0;
         $new_array[$key] = '';
@@ -113,7 +116,9 @@ trait Artist
             }
 
             if ($this->getArtistFullNames() === true) {
+
                 $name_key    = str_replace(' ', '_', strtolower($aName));
+
                 $matchedName = self::CheckArtist($name_key);
                 if ($matchedName !== false && count($matchedName) == 1) {
                     $matchedNames[] = $matchedName[0]['star_name'];
@@ -209,11 +214,12 @@ trait Artist
             $delim      = ', ';
             $names      = implode($delim, $matchedNames);
             $names      = str_replace('_', ' ', $names);
+                        $names      = str_replace('-', ' ', $names);
+
             $names      = str_replace('  ', ' ', $names);
             $names      = ucwords($names);
 
             $nameString = str_replace(', ', ',', $names);
-            // utmdump(['Arist String' => [$nameString, $this->video_file]]);
 
             return $nameString;
         }
@@ -246,6 +252,7 @@ trait Artist
         $regex = $this->getArtistRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
+          
             if ($success != 0) {
                 if ($this->getArtistFullNames() === true) {
                     if ($this->getGenre() == 'MFF') {
@@ -272,7 +279,8 @@ trait Artist
                         continue;
                     }
                     $names[] = $this->getArtistTextTransform($output_array[$keyMatch]);
-                }
+                }            
+                
 
                 if (count($names) == 0) {
                     return null;

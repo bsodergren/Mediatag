@@ -46,7 +46,7 @@ class Markers extends VideoInfo
     public $maxLen         = 75;
 
     public $thumbExt       = '.jpg';
-
+public $ThumbnailField = "markerThumbnail";
     public $thumbDir       = __INC_WEB_CHAPTER_DIR__;
 
     public $video_markers;

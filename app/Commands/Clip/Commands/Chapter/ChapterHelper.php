@@ -15,6 +15,7 @@ use Mediatag\Modules\Filesystem\MediaFilesystem as Filesystem;
 use Mediatag\Modules\VideoInfo\Section\Chapters;
 use Mediatag\Modules\VideoInfo\Section\Markers;
 use Mediatag\Modules\VideoInfo\Section\VideoTags;
+use Mediatag\Modules\VideoInfo\VideoInfo;
 use Mediatag\Traits\MediaFFmpeg;
 use Mhor\MediaInfo\MediaInfo;
 use UTM\Utilities\Option;
@@ -87,8 +88,69 @@ trait ChapterHelper
 
     }
 
+    public function createVideoChapterThumbnails($ChapterRow)
+    {
+
+
+
+        // utmdump([$this->video_file, $img_file, $time]);
+        // utmdd($duration,$time);
+
+
+        foreach ($ChapterRow as $x => $fileRow) {
+            if ($fileRow === null) {
+
+                continue;
+            }
+
+            foreach ($fileRow as $K => $FILE) {
+                $filename = $FILE['filename'];
+                $video_name = basename($filename);
+                $video_path = \dirname($filename);
+                $img_web_path     = trim((new Filesystem())->makePathRelative($video_path, __PLEX_HOME__), '/');
+                $img_location     = __INC_WEB_CHAPTER_DIR__ . '/' . $img_web_path . '/' . $K . \DIRECTORY_SEPARATOR;
+                (new Filesystem())->mkdir($img_location);
+
+                foreach ($FILE['chapters'] as $i => $chapters) {
+                    $duration = $chapters['start'];
+                    if ($chapters['start'] == 0) {
+                        $duration = $chapters['end'];
+                    }
+                    $time     = VideoInfo::videoDuration($duration, 10);
+
+                    $img_name         = $i . '-' . str_replace(' ', '_', $chapters['text']) . '-' . $duration . '.jpg';
+
+                    $img_file         = $img_location . $img_name;
+                    // $img_url_path = str_replace($img_name);
+                    $img_url_path     = __INC_WEB_CHAPTER_URL__ . '/' . $img_web_path . $img_name;
+                     $img_url_path = str_replace(__WEB_HOME__,'',$img_file);
+
+
+
+                    $this->ffmegCreateThumb($filename, $img_file, $time);
+
+                    Storage::$DB->update([$this->videoInfo->ThumbnailField => $img_url_path], ['id' => $chapters['id']], $this->videoInfo->VideoDataTable);
+
+
+
+                }
+            }
+        }
+
+    }
+
     public function createChapterFile()
     {
+
+
+        if (Option::isTrue('thumbnail')) {
+
+
+            $this->createVideoChapterThumbnails($this->chapterArray);
+
+
+            return true;
+        }
         $this->progress = new MediaIndicator('one');
         foreach ($this->chapterArray as $i => $fileRow) {
 
