@@ -45,13 +45,180 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+
+public function copyvideoid(){
+     $db  = MysqliDb::getInstance();
+     $q = 'SELECT f.id, f.video_key FROM `mediatag_video_file` f left join mediatag_video_metadata m on m.video_key = f.video_key where m.video_id is null limit 2500';
+      $artistRes = $db->rawQuery($q);
+    //   utmdd($artistRes);
+      foreach($artistRes as $v => $row){
+        $q2 = "UPDATE `mediatag_video_metadata` SET `video_id` = '".$row['id']."' WHERE video_key like '".$row['video_key']."'";
+         Mediatag::$Console->writeln($q2);
+         $db->rawQuery($q2);
+        // utmdump($q2);
+
+      }
+}
+
+    private function artistOut($msg, $label = 'info')
+    {
+        if (\is_array($msg)) {
+            foreach ($msg as $key => $str) {
+                $this->artistOut($key . ' => ' . $str, $label);
+            }
+        } else {
+            $string = '<' . $label . '>' . $msg . '</' . $label . '>';
+            Mediatag::$Console->writeln($string);
+        }
+    }
+
+    private function updateMetafield($video_key, $artist, $correntName)
+    {
+
+        $db  = MysqliDb::getInstance();
+        $mquery = "SELECT artist FROM `mediatag_video_metadata` WHERE `video_key` LIKE '" . $video_key . "'";
+        $artistRes = $db->rawQuery($mquery);
+        $artist_array = explode(',', $artistRes[0]['artist']);
+        $key = array_search($artist, $artist_array, true);
+        $artist_array[$key] = $correntName;
+
+        $artist_str = implode(',', $artist_array);
+
+        $mquery = "UPDATE mediatag_video_metadata SET artist = '" . $artist_str . "' WHERE video_key LIKE '" . $video_key . "'";
+        $this->artistOut($mquery, 'error');
+        $db->rawQuery($mquery);
+        // utmdump($mquery);
+
+
+    }
+
+    private function findArtist($name, $video_id)
+    {
+        $name = trim($name);
+        $nameKey = strtolower(str_replace([' ', "'"], ['', ''], $name));
+        $db  = MysqliDb::getInstance();
+
+        $sql = "SELECT * FROM `mediatag_artist_ph` WHERE `nameKey` LIKE '" . $nameKey . "' ORDER BY `star_thumb` ASC";
+        $res = $db->rawQuery($sql);
+
+        if (\count($res) == 1) {
+            $artist_id = $res[0]['id'];
+            $equery = 'SELECT * FROM `mediatag_artist_map` where video_id = ' . $video_id . ' and artist_id = ' . $artist_id;
+            $exists = $db->rawQuery($equery);
+            // utmdump([$equery,$exists,count($exists)]);
+            if (\count($exists) == 0) {
+                $insertQ = 'INSERT INTO mediatag_artist_map (id,video_id, artist_id) VALUES (NULL, ' . $video_id . ',' . $artist_id . ')';
+                $db->rawQuery($insertQ);
+                $this->artistOut($insertQ . ' Artist => ' . $res[0]['star_name'], 'comment');
+            }
+            if ($name != $res[0]['star_name']) {
+                utmdd($name,$res);
+                $this->updateMetafield($this->video_key, $name, $res[0]['star_name']);
+            }
+
+            return $res[0]['star_name'];
+        }
+        // utmdump($res);
+
+        return false;
+
+    }
+
+    public function getArtistList()
+    {
+
+        $db  = MysqliDb::getInstance();
+
+
+        // $db->where("m.artist")
+
+
+        // done dont run now.
+        // $sql = 'SELECT f.id,m.video_key,map.artist_id, p.star_name FROM mediatag_video_metadata m  LEFT JOIN mediatag_video_file f on f.video_key = m.video_key LEFT join mediatag_artist_map map on map.video_id = f.id left join mediatag_artist_ph p on map.artist_id = p.id   WHERE m.artist IS NULL and map.artist_id is not NULL LIMIT 500;';
+        // utmdd($sql);
+        // $res = $db->rawQuery($sql);
+        // foreach ($res as $i => $videoInfo) {
+        //     $artistArray[$videoInfo['video_key']][] = $videoInfo['star_name'];
+
+        // }
+        // $z = 0;
+        // foreach ($artistArray as $video_key => $artist_array) {
+        //     $z++;
+        //     $artists = implode(',', $artist_array);
+        //     $q2 = "UPDATE mediatag_video_metadata SET artist = '" . $artists . "' WHERE video_key = '" . $video_key . "'";
+        //     $resres2 = $db->query($q2);
+        //     utmdump([$z => $q2]);
+        // }
+
+
+
+        $q     = 'SELECT f.id,m.video_key,m.artist FROM `mediatag_video_metadata` m left join mediatag_video_file f on f.video_key = m.video_key left join mediatag_artist_map map on map.video_id = f.id where m.artist is not NULL ORDER BY f.id ASC';
+        $q     .= ' limit 100';
+        $this->artistOut($q, 'question');
+        // utmdd($q);
+        $result = $db->query($q);
+        foreach ($result as $i => $row) {
+            $video_id = $row['id'];
+            $this->video_key = $row['video_key'];
+            $artist_key = $row['artist'];
+            if (str_contains($artist_key, ',')) {
+                $artists = explode(',', $artist_key);
+                utmdump($artists);
+                foreach ($artists as $n => $name) {
+                    $sucess = $this->findArtist($name, $video_id);
+                    if ($sucess === false) {
+                        $this->artistOut([$name, $video_id, $this->video_key], 'question');
+                        Mediatag::$Console->writeln('');
+
+                        continue;
+                    }
+                    $this->artistOut($sucess,'info');
+                    // $this->updateMetafield($video_key, $name);
+                }
+
+                continue;
+            }
+
+            $sucess =  $this->findArtist($artist_key, $video_id);
+            if ($sucess === false) {
+                $this->artistOut([$artist_key, $video_id, $this->video_key], 'error');
+                Mediatag::$Console->writeln('');
+
+                continue;
+            }
+            // $this->updateMetafield($video_key, $artist_key);
+        }
+
+        // $q = 'SELECT  DISTINCT(video_id) FROM `mediatag_artist_map`';
+        // $users = $db->rawQuery($q);
+        // foreach ($users as $i => $info) {
+        //     $video_id = $info['video_id'];
+        //     $query = 'SELECT * FROM `mediatag_video_file` WHERE `id` = ' . $video_id;
+        //     $res = $db->rawQueryOne($query);
+        //     if ($res === null) {
+        //         Mediatag::$Console->text(["removing map for video ID $video_id"]);
+        //         $del_q = 'DELETE FROM mediatag_artist_map WHERE `mediatag_artist_map`.`video_id` = ' . $video_id;
+        //         $dres = $db->rawQuery($del_q);
+        //     }
+
+
+
+
+        // }
+
+
+
+        // utmdump($users);
+
+    }
+
     public function regextest()
     {
 
-        //$pat = '<ALL>? SEP_D SCENE SEP_U SEASON SEP_U <ALL> FILE_RES_LONG';
-$pat = '[glamkore|pretty_and_raw|rammed|trickery]? SEP_D? <ALL> SEP_D SCENE SEP_DOT FILE_RES_LONG ';
-      
-                //'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',
+        // $pat = '<ALL>? SEP_D SCENE SEP_U SEASON SEP_U <ALL> FILE_RES_LONG';
+        $pat = '[glamkore|pretty_and_raw|rammed|trickery]? SEP_D? <ALL> SEP_D SCENE SEP_DOT FILE_RES_LONG ';
+
+        // 'pattern'             => '/(glamkore|pretty_and_raw|rammed|trickery)\_([a-zA-Z_]{1,})[0-9]?\_scene.*[0-9]{1,4}.*\.mp4/i',
 
         $str =          'DirtyLittleCheerleaderStories-Scene1_s01_ChadWhite_LilyLarimar_1080p_h264.mp4';
         $str2 =          'DirtyLittleCheerleaderStories-Scene1_s01_ChadWhite_LilyLarimar_1080p.mp4';
