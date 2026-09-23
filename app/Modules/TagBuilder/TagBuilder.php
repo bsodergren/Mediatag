@@ -48,6 +48,7 @@ class TagBuilder
         if (! defined('__UPDATE_SET_ONLY__') || OptionIsTrue('add')) {
             // if (str_starts_with($this->video_key, 'x')) {
             $updates     = $this->ReaderObj->getFileValues();
+            // utmdump($updates);
             Mediatag::notice('updates {updates} ', ['updates' => $updates]);
 
             // }
@@ -130,7 +131,6 @@ class TagBuilder
             foreach ($updates as $tag => $value) {
                 if ($tag == 'studio') {
                     $updates[$tag] = $this->addNetwork($current, $updates);
-
                 }
             }
             if (is_array($current) && is_array($updates)) {

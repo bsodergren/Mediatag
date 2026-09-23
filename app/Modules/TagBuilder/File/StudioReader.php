@@ -20,6 +20,7 @@ trait StudioReader
     {
         $studio_dir   = (new Filesystem())->makePathRelative($this->video_path, __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_dir   = str_replace('/' . $this->getGenre() . '/', '', $studio_dir);
+        $studio_dir = rtrim($studio_dir, '/');
         $arr          = explode('/', $studio_dir);
 
         $studio_array = [];
@@ -50,6 +51,7 @@ trait StudioReader
 
         if ($this->studio === null) {
             $string       = $this->studioParse();
+
             $studio_array = explode('/', $string);
 
             if ($studio_array[0] !== null) {
@@ -62,7 +64,7 @@ trait StudioReader
             }
         }
 
-        // utmdd([$this->network , $this->studio ]);
+        // utmdd([$this->network, $this->studio]);
     }
 
     private function notPhFile()

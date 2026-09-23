@@ -36,7 +36,7 @@ trait FilterMethods
     {
         $file      = str_replace(__PLEX_DOWNLOAD__, '', $filename);
         $file_name = basename($file);
-        $file_path = str_replace($file_name, '', $file);
+        $file_path = ''; //str_replace($file_name, '', $file);
         $file_name = Strings::truncateString($file_name, 60, true, true);
 
         // $file_name = Strings::truncateString($file_name, 30, true);
@@ -66,7 +66,12 @@ trait FilterMethods
     {
         $text       = "No text";
         $file       = "No File";
+        $buffer = str_replace("\n", ' ', $buffer);
+
         preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
+        utmdump($buffer, $match);
+
+
         // preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);
 
         if (true === array_key_exists(4, $match) && $match[4] != "") {
@@ -79,7 +84,6 @@ trait FilterMethods
             $text = 'file downlaoding';
         }
         $outputText = PHP_TAB . '<text>' . $text . '<text> <file>' . $file . '</file>' . PHP_EOL;
-
 
         // utmdump(["In Method " . __METHOD__ => $outputText,[$buffer, $match],]);
         return $outputText;
@@ -296,7 +300,6 @@ trait FilterMethods
         // $this->updateIdList(PlaylistProcess::DISABLED);
         // utmdump(["In Method " . __METHOD__ => $outputText ]);
         return $outputText;
-
     }
 
     // public function moveNewJson($json_file)

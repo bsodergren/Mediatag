@@ -223,6 +223,10 @@ class Youtube extends MediatagExec
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
         if (!Option::istrue('url')) {
+            
+            if($this->playlist === false){
+                return false;
+            }
             $names = file($this->playlist, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
 
             if (Option::istrue('max')) {

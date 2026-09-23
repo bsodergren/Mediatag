@@ -68,8 +68,12 @@ class Reader extends TagReader
 
         $networkName     = '';
 
+
+
         $this->getStudio();
+
         $studioName      = $this->getStudioClass($this->studio);
+
 
         $this->getnetwork();
 
@@ -94,7 +98,8 @@ class Reader extends TagReader
         if (str_starts_with($this->video_key, 'x')) {
             // utmdd($studioClass,class_exists($studioClass) );
             if ((! class_exists($studioClass) || Option::isTrue('addClass'))
-            && ($this->video_library == 'Studios')) {// || 'HomeVideos' == $this->video_library)) {
+                && ($this->video_library == 'Studios')
+            ) { // || 'HomeVideos' == $this->video_library)) {
                 // UTMlog::Logger('File Studio className', $className);
                 //
                 // if (Option::isTrue('addClass')) {
@@ -213,6 +218,7 @@ class Reader extends TagReader
     public function getNetwork()
     {
         // utminfo(func_get_args());
+
         if ($this->network === null) {
             $this->network = $this->getFileTag('Network');
         }
@@ -245,7 +251,6 @@ class Reader extends TagReader
             if (File::isPornhubfile($this->video_file) == true) {
 
                 $this->isPhFile();
-
             }
         }
 

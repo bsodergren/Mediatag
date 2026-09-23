@@ -44,7 +44,7 @@ trait Studio
         // utminfo(func_get_args());
 
         // UTMlog::Logger('Studio Key', $this->video_name);
-utmdd($this->video_name,$this->getStudioRegex());
+// utmdd($this->video_name,$this->getStudioRegex());
         
         if ($this->getStudioRegex() !== false) {
 
