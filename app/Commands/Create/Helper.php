@@ -20,7 +20,7 @@ trait Helper
 {
     public $excludeFiles = [];
 
-    private $functions   = [
+    public $functions   = [
         'Command' => [
             'getClassBase',
             'setNameSpace',
@@ -57,12 +57,12 @@ trait Helper
     public function createCommand()
     {
         $this->excludeFiles = Option::getValue('exclude', true, []);
-        if (! is_array($this->excludeFiles)) {
+        if (! \is_array($this->excludeFiles)) {
             $tmp[]              = $this->excludeFiles;
             unset($this->excludeFiles);
             $this->excludeFiles = $tmp;
         }
-        if (count($this->excludeFiles) > 0) {
+        if (\count($this->excludeFiles) > 0) {
             $this->excludeFiles = array_map('ucfirst', $this->excludeFiles);
         }
 
@@ -73,15 +73,15 @@ trait Helper
         $userCommand        = Option::getValue('userCommand', true);
         if ($userCommand !== null) {
             $parts = explode(':', $userCommand);
-            if (count($parts) === 3) {
+            if (\count($parts) === 3) {
                 $type = ucfirst($parts[2]);
             }
         }
 
-        utmdd([$this->excludeFiles, $type,  $userCommand]);
+        // utmdd([$this->excludeFiles, $type,  $userCommand]);
         foreach ($this->functions as $fileType => $methods) {
-            if (count($this->excludeFiles) > 0) {
-                if (in_array($fileType, $this->excludeFiles)) {
+            if (\count($this->excludeFiles) > 0) {
+                if (\in_array($fileType, $this->excludeFiles)) {
                     Mediatag::$Console->writeln('skipping ' . $fileType);
 
                     continue;
@@ -94,6 +94,8 @@ trait Helper
             }
             $this->parseOptions($fileType);
             foreach ($methods as $method) {
+                            utmdump([$fileType,$method]);
+
                 $this->$method();
             }
             $this->saveClass();

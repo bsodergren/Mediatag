@@ -25,6 +25,7 @@ use Mediatag\Traits\MediaFFmpeg;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder as NetteFinder;
 use Nette\Utils\Strings;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
 use UTMDbLib\Metatags\Artist;
@@ -45,20 +46,81 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    public function sortFiles()
+    {
 
-public function copyvideoid(){
-     $db  = MysqliDb::getInstance();
-     $q = 'SELECT f.id, f.video_key FROM `mediatag_video_file` f left join mediatag_video_metadata m on m.video_key = f.video_key where m.video_id is null limit 2500';
-      $artistRes = $db->rawQuery($q);
-    //   utmdd($artistRes);
-      foreach($artistRes as $v => $row){
-        $q2 = "UPDATE `mediatag_video_metadata` SET `video_id` = '".$row['id']."' WHERE video_key like '".$row['video_key']."'";
-         Mediatag::$Console->writeln($q2);
-         $db->rawQuery($q2);
-        // utmdump($q2);
+$fileArray = [];
+$dups = [];
+        $finder      = new Finder();
 
-      }
-}
+        $baseDir = __CURRENT_DIRECTORY__;
+        $dirParent =dirname($baseDir);
+        $dirPrefix = Path::makeRelative($baseDir,dirname($baseDir));
+
+          Mediatag::$Console->writeln($baseDir);
+            Mediatag::$Console->writeln($dirParent);
+            Mediatag::$Console->writeln($dirPrefix);
+
+        $filelist = '/media/bjorns-pc/Pornhub/filelist.txt';
+        
+
+
+        $dirs        = $finder->files()->in($baseDir)->name('*.mp4');
+        Mediatag::$Console->writeln( $dirs->count() . " files found");
+        foreach ($dirs as $dir) {
+            // $key = basename( ".info.json");
+            $video_key = MediaFile::getVideoKey($dir->getRealPath(), 'Pornhub');
+            $fileArray[$video_key][] = $dir->getRealPath();
+            
+
+        }
+
+      
+        foreach ($fileArray as $key => $vids) {
+            if (\count($vids) > 1) {
+                $dups[] = $vids;
+            }
+        }
+  Mediatag::$Console->writeln( count($dups) . " duplicate files found");
+
+        foreach ($dups as $i => $files) {
+             $DupefilePath = '';
+             $origFilePath =  Path::makeRelative(dirname($files[0]),$baseDir);
+            //  utmdd($origFilePath);
+            $dupeFile = $files[1];
+            $dupeFile= Path::makeRelative($dupeFile, $baseDir);
+            $filePath = FileSystem::joinPaths($baseDir, $dupeFile);
+            if (file_exists($filePath)) {
+                 Mediatag::$Console->writeln( "Renaming " . basename($dupeFile) ." ");
+                $DupefilePath = FileSystem::joinPaths($dirParent,'..', 'dupes', $dirPrefix, $origFilePath, basename($dupeFile));
+                          Mediatag::$Console->writeln($DupefilePath);
+
+                // utmdd($filePath,$DupefilePath);
+                FileSystem::createDir(\dirname($DupefilePath));
+                FileSystem::rename($filePath, $DupefilePath);
+                // utmdd($filePath,$DupefilePath);
+            }
+
+        }
+
+        // utmdump($fileArray);
+
+    }
+
+    public function copyvideoid()
+    {
+        $db  = MysqliDb::getInstance();
+        $q = 'SELECT f.id, f.video_key FROM `mediatag_video_file` f left join mediatag_video_metadata m on m.video_key = f.video_key where m.video_id is null limit 2500';
+        $artistRes = $db->rawQuery($q);
+        //   utmdd($artistRes);
+        foreach ($artistRes as $v => $row) {
+            $q2 = "UPDATE `mediatag_video_metadata` SET `video_id` = '" . $row['id'] . "' WHERE video_key like '" . $row['video_key'] . "'";
+            Mediatag::$Console->writeln($q2);
+            $db->rawQuery($q2);
+            // utmdump($q2);
+
+        }
+    }
 
     private function artistOut($msg, $label = 'info')
     {
@@ -112,7 +174,7 @@ public function copyvideoid(){
                 $this->artistOut($insertQ . ' Artist => ' . $res[0]['star_name'], 'comment');
             }
             if ($name != $res[0]['star_name']) {
-                utmdd($name,$res);
+                utmdd($name, $res);
                 $this->updateMetafield($this->video_key, $name, $res[0]['star_name']);
             }
 
@@ -172,7 +234,7 @@ public function copyvideoid(){
 
                         continue;
                     }
-                    $this->artistOut($sucess,'info');
+                    $this->artistOut($sucess, 'info');
                     // $this->updateMetafield($video_key, $name);
                 }
 

@@ -17,6 +17,6 @@ final class AddCommand extends MediaCommand
     public const USE_SEARCH  = false;
 
     public $command          = [
-        'add' => ['addCommand' => null],
+        'add' => ['addCommandClass' => null],
     ];
 }

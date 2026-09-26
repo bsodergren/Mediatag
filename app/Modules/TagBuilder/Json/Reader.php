@@ -47,7 +47,7 @@ class Reader extends TagReader
         $this->expandArray($videoData);
         if ($this->getJsonFile()) {
             $this->json_array = json_decode($this->json_string, true);
-            $this->json_array = $this->convertJson($this->json_array);
+            $this->json_array = self::convertJson($this->json_array);
         } else {
             // return [];
         }
@@ -58,18 +58,19 @@ class Reader extends TagReader
         unset($this->json_array['url']);
     }
 
-    private function convertJson($json)
+    public static function convertJson($json)
     {
         if (\is_string($json)) {
             $json = json_decode($json, \JSON_OBJECT_AS_ARRAY);
         }
-
         $newJson = [];
         $map     = [
             'VideoName'  => 'title',
             'Title'      => 'title',
             'Actors'     => 'cast',
+            'Artist'     => 'cast',
             'Genre'      => ['categories', 'tags'],
+            'Keyword'      => ['categories', 'tags'],
             'Studio'     => 'uploader',
             'Network'    => 'extractor',
             'title'      => 'title',
@@ -82,7 +83,16 @@ class Reader extends TagReader
             'series'     => 'series',
             'duration'   => 'duration',
             'extractor'  => 'extractor',
+            'Filesize' => 'Filesize',
+            'Width' => 'Width',
+            'Height' => 'Height',
+
         ];
+
+
+        // $map = array_change_key_case($map,CASE_UPPER);
+        $json = array_change_key_case($json, \CASE_UPPER);
+
         // $text                = urldecode($this->postArray['text']);
         // $array2              = \json_decode($text, \JSON_OBJECT_AS_ARRAY);
         // $videoLength         = $array2['VideoLen'];
@@ -95,15 +105,30 @@ class Reader extends TagReader
         // }
         // $newJson['actionTags'] = \implode(',', $actionTags);
 
+        // $keys = array_keys($map);
+        // utmdd($keys);
         foreach ($map as $oldKey => $newKey) {
-            if (\array_key_exists($oldKey, $json)) {
+
+            $from = strtoupper($oldKey);
+            if (\array_key_exists($from, $json)) {
+                // utmdump([$oldKey=>$json[$oldKey]]);
                 if (\is_array($newKey)) {
                     foreach ($newKey as $nk) {
-                        $newJson[$nk] = $json[$oldKey];
+                        $newJson[$nk] = $json[$from];
                     }
                 } else {
-                    $newJson[$newKey] = $json[$oldKey];
+                    $newJson[$newKey] = $json[$from];
+                    // utmdump([$newKey => $newJson[$newKey]]);
+                    // utmdump([$json[$oldKey],$oldKey,$newJson[$newKey],$newKey]);
+
                 }
+            } else {
+                if ($json[$from] != null) {
+                    $newJson[$newKey] = $json[$from];
+                }
+                // if (!\array_key_exists($oldKey, $newJson)) {
+                // $newJson[ucfirst($oldKey)] = $json[$oldKey];
+                // }
             }
         }
 

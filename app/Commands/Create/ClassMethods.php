@@ -29,25 +29,25 @@ trait ClassMethods
 {
     use DynamicProperty;
 
-    public $cmd             = null;
+    public $cmd;
 
-    public $type            = null;
+    public $type;
 
-    public $name            = null;
+    public $name;
 
-    public $desc            = null;
+    public $desc;
 
-    public $CmdMethod       = null;
+    public $CmdMethod;
 
     public $params          = [];
 
-    public $className       = null;
+    public $className;
 
-    public $userCommand     = null;
+    public $userCommand;
 
-    public $NewNamespace    = null;
+    public $NewNamespace;
 
-    private $GeneratedClass = null;
+    private $GeneratedClass;
 
     public function parseOptions($type = null)
     {
@@ -88,10 +88,10 @@ trait ClassMethods
             // }
             $this->cmd  = $parts[0];
             $this->name = $this->cmd;
-            if (count($parts) === 2) {
+            if (\count($parts) === 2) {
                 $this->name = $parts[1];
             }
-            if (count($parts) === 3) {
+            if (\count($parts) === 3) {
                 $this->name = $parts[1];
                 $this->type = ucfirst($parts[2]);
             }
@@ -105,12 +105,12 @@ trait ClassMethods
             $this->CmdMethod = ucfirst($this->name) . 'Method';
         }
 
-        //$this->processOptions(Option::getValue('params'));
+        $this->processOptions(Option::getValue('params'));
 
         $this->className   = ucfirst($this->name) . ucfirst($this->type);
 
         if ($this->cmd) {
-            $DefaultCommandFile = __COMMANDS_DIR__ . DIRECTORY_SEPARATOR . $this->cmd . DIRECTORY_SEPARATOR . 'Command' . '.php';
+            $DefaultCommandFile = __COMMANDS_DIR__ . \DIRECTORY_SEPARATOR . $this->cmd . \DIRECTORY_SEPARATOR . 'Command.php';
             if (! file_exists($DefaultCommandFile)) {
                 Mediatag::$output->writeln('Oops Looks like we need to create the base command first: ' . $DefaultCommandFile);
                 $this->createBinFile();
@@ -131,13 +131,14 @@ trait ClassMethods
 
     private function processOptions($options)
     {
-        if (is_array($options)) {
-            if (count($options) > 0) {
+        if (\is_array($options)) {
+            if (\count($options) > 0) {
                 foreach ($options as $x => $value) {
                     if ($value === null) {
                         return false;
                     }
                     $parts         = explode('=', $value);
+                    utmdump($parts);
                     $name          = $parts[0];
                     $v             = $parts[1];
                     $this->{$name} = $v;
@@ -151,13 +152,13 @@ trait ClassMethods
         $this->NewNamespace->addUse('Mediatag\Core\Mediatag');
 
         $method = $this->GeneratedClass->addMethod(lcfirst($this->CmdMethod));
-        //->setPublic()->setBody('// ' . $this->CmdMethod . ' method body');
-        $method->setPublic()->setBody(' Mediatag::$Console->writeln("Hello ". __METHOD__);' . PHP_EOL . 'exit;');
+        // ->setPublic()->setBody('// ' . $this->CmdMethod . ' method body');
+        $method->setPublic()->setBody(' Mediatag::$Console->writeln("Hello ". __METHOD__);' . \PHP_EOL . 'exit;');
     }
 
     private function getClassBase()
     {
-        utmdd($this->type);
+        // utmdd($this->type);
         switch ($this->type) {
             case 'Command':
             case 'Process':
@@ -341,7 +342,6 @@ EOT;
 
         $path       = $this->getFilePath();
         $filename   = str_replace(__COMMANDS_DIR__, '', $path);
-
         $overwrite  = true;
 
         if (file_exists($path)) {
@@ -351,6 +351,8 @@ EOT;
                 $overwrite = false;
             }
         }
+
+        // utmdd($filename, $path);
 
         if ($overwrite === true) {
             FileSystem::write($path, $fileString);
@@ -368,13 +370,13 @@ EOT;
             $classFileName = $this->className;
         }
         $path = __COMMANDS_DIR__ .
-        DIRECTORY_SEPARATOR . $this->cmd .
-        DIRECTORY_SEPARATOR . 'Commands' .
-        DIRECTORY_SEPARATOR . ucfirst($this->name);
+        \DIRECTORY_SEPARATOR . $this->cmd .
+        \DIRECTORY_SEPARATOR . 'Commands' .
+        \DIRECTORY_SEPARATOR . ucfirst($this->name);
         if (! is_dir($path)) {
             FileSystem::createDir($path);
         }
 
-        return $path . DIRECTORY_SEPARATOR . $classFileName . '.php';
+        return $path . \DIRECTORY_SEPARATOR . $classFileName . '.php';
     }
 }

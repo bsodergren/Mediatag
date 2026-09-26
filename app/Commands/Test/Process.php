@@ -45,6 +45,7 @@ class Process extends Mediatag
         }
 
         $cmd = Option::getValue('cmd');
+           if (! is_null($cmd)) {
         if (\method_exists($this, $cmd)) {
             Mediatag::$Console->writeln($cmd . ' found');
             $this->displayTable = new MediaTable($output);
@@ -52,6 +53,7 @@ class Process extends Mediatag
         } else {
             Mediatag::$Console->writeln('No method found');
         }
+           }
     }
 
     public function execCmdOption()

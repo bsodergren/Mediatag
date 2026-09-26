@@ -26,16 +26,32 @@ trait AddHelper
     use ClassMethods;
     use DynamicProperty;
 
-    public function addCommand()
+
+    private function createClassFile()
     {
-        $this->parseOptions();
-        $this->getClassBase();
-        $this->SetNameSpace();
-        $this->getUseClasses();
-        $this->getTraits();
+        $fileType = ucfirst($this->type);
+        $methods = $this->functions[$fileType];
+
+            utmdump(['createClassFile'=>$methods]);
+
+
+        // $this->parseOptions($fileType);
+            foreach ($methods as $method) {
+                            utmdump([$fileType,$method]);
+
+                $this->$method();
+            }
+    }
+
+    public function addCommandClass()
+    {
+                $this->parseOptions();
 
         $method = 'add' . $this->type;
-        if (method_exists($this, $method)) {
+        utmdump(['addCommandClass' => $method]);
+         $this->createClassFile();
+
+         if (method_exists($this, $method)) {
             $this->$method();
         } else {
             Mediatag::$output->writeln('Method not found: ' . $method);
@@ -43,6 +59,12 @@ trait AddHelper
         $this->saveClass();
 
         // utmdd(get_class_vars(get_class($this)), Option::getOptions());
+    }
+
+
+    public function addCommand()
+    {
+        Mediatag::$output->writeln('Add ddd command');
     }
 
     public function addProcess()
@@ -53,7 +75,6 @@ trait AddHelper
 
     public function addHelper()
     {
-        $this->addMethods();
         Mediatag::$output->writeln('Add ddd command3');
         // utmdd(Option::getOptions());
     }
