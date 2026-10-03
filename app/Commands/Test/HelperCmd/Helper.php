@@ -6,6 +6,7 @@
 
 namespace Mediatag\Commands\Test\HelperCmd;
 
+use Exception;
 use Mediatag\Bundle\Dialog\Options\Common;
 use Mediatag\Bundle\Dialog\Widgets\Buildlist;
 use Mediatag\Bundle\Dialog\Widgets\Gauge;
@@ -25,6 +26,10 @@ use Mediatag\Traits\MediaFFmpeg;
 use Nette\Utils\FileSystem;
 use Nette\Utils\Finder as NetteFinder;
 use Nette\Utils\Strings;
+use Symfony\Component\Console\Helper\FormatterHelper;
+use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
@@ -46,8 +51,137 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    private function copyWithProgress($source, $destination, $chunkSize = 1048576) // 1 MB chunks
+    {
+        // Mediatag::$Console->writeln("Starting copy with progress...");
+        // Mediatag::$Console->writeln($source);
+        // Mediatag::$Console->writeln($destination);
+        if (! file_exists($source)) {
+            throw new \Exception("Source file does not exist: $source");
+        }
+
+        $sourceSize = filesize($source);
+        if ($sourceSize === false || $sourceSize === 0) {
+            throw new \Exception('Unable to get file size or file is empty.');
+        }
+
+        $totalChunks = ceil($sourceSize / $chunkSize);
+        // utmdump($totalChunks);
+
+
+// ProgressBar::setFormatDefinition(
+//     'minimal',
+//     '<info>%progress%</info><fg=white;bg=blue>%bar%</>'
+// );
+
+
+$progressBar = new ProgressBar(Mediatag::$output, $totalChunks );
+// $progressBar->setRedrawFrequency(100);
+// $progressBar->maxSecondsBetweenRedraws(0.2);
+// $progressBar->minSecondsBetweenRedraws(0.1);
+
+
+
+        // the finished part of the bar
+$progressBar->setBarCharacter('<comment>=</comment>');
+
+// the unfinished part of the bar
+$progressBar->setEmptyBarCharacter(' ');
+
+// the progress character
+$progressBar->setProgressCharacter('|');
+
+$progressBar->setBarWidth(60);
+$progressBar->setFormat('[%bar%] %progress%');
+        // $progressBar->setFormat('minimal');
+
+
+
+
+
+
+
+        $src = fopen($source, 'r');
+        if (! $src) {
+            throw new \Exception('Failed to open source file.');
+        }
+        // if (is_file($destination)) {
+            FileSystem::createDir(\dirname($destination));
+        // } else {
+            // FileSystem::createDir($destination);
+        // }
+
+        $dest = fopen($destination, 'w');
+        if (! $dest) {
+            fclose($src);
+            throw new \Exception('Failed to open destination file.');
+        }
+
+        $progressBar->start();
+
+        $copied = 0;
+        while (! feof($src)) {
+            $buffer = fread($src, $chunkSize);
+            if ($buffer === false) {
+                fclose($src);
+                fclose($dest);
+                throw new \Exception('Error reading source file.');
+            }
+
+            $written = fwrite($dest, $buffer);
+            if ($written === false) {
+                fclose($src);
+                fclose($dest);
+                throw new \Exception('Error writing to destination file.');
+            }
+
+            $copied += $written;
+
+            // utmdump($written);
+            // Calculate and display progress
+            $progress = ($copied / $sourceSize) * 100;
+            // echo "\rCopying: " . number_format($progress, 2) . "%";
+            $progressBar->setMessage(number_format($progress, 2) . '%', 'progress');
+            $progressBar->advance();
+            flush();
+        }
+
+        fclose($src);
+        fclose($dest);
+        $progressBar->finish();
+        Mediatag::$Console->writeln("");
+        //    echo "\nCopy complete!\n";
+    }
+
+    private function formatBytes($bytes, $precision = 2)
+    {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, \count($units) - 1);
+        $bytes /= 1024 ** $pow;
+
+        return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
     public function sortDirs()
     {
+
+
+
+        $BarSection1      = Mediatag::$output->section();
+        $BarSection2      = Mediatag::$output->section();
+        $fileCountSection = Mediatag::$output->section();
+        $fileInfoSection  = Mediatag::$output->section();
+        $MetaBlockSection = Mediatag::$output->section();
+        $processOutput    = Mediatag::$output->section();
+        $VideoInfoSection = Mediatag::$output->section();
+        $BarBottom        = Mediatag::$output->section();
+
+
+
+        $formatter = new FormatterHelper();
+
         $finder      = new Finder();
 
         $baseDir = __CURRENT_DIRECTORY__;
@@ -67,32 +201,65 @@ trait Helper
                 'Premium',
                 basename($dirPath),
             );
-            // Mediatag::$Console->writeln($dirPath . ' => ' . $newDir);
+            $fileInfoSection->writeln($dirPath);
             $files = (new Finder())->files()->in($dirPath)->sortByName(true);
             $n = 1;
-            foreach ($files as $file) {
-                $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
-                if (! file_exists($newFilePath)) {
-                    Mediatag::$Console->writeln('<id>' . $n . '</> <info>Copying: <file>' . basename($file->getPathname()) . '</></info>');
-                    FileSystem::copy($file->getPathname(), $newFilePath);
 
-                } else {
-                    Mediatag::$Console->writeln('<id>' . $n . '</> <comment>Skipped: <file>' . basename($file->getPathname()) . '</></comment>');
-                }
-                $n++;
-            }
             $movedDir = FileSystem::joinPaths(
                 __CURRENT_DIRECTORY__,
                 '..',
                 'MovedDir',
                 basename($dirPath),
             );
-            Mediatag::$Console->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
+
+            $MetaBlockSection->setMaxHeight(9);
+            foreach ($files as $file) {
+
+                $filesize = $file->getSize();
+                $filesizeFormatted = $this->formatBytes($filesize);
+
+                $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
+
+                // Mediatag::$Console->writeln("Preparing to copy: " . $file->getPathname());
+                // Mediatag::$Console->writeln("Destination: " . $newFilePath);
+
+                $filename = $formatter->truncate(basename($file->getPathname()), 60);
 
 
+$filename = str_pad($filename, 65, ' ', STR_PAD_RIGHT);
+                if (file_exists($newFilePath)) {
+                    $existingFilesize = filesize($newFilePath);
+                    if ($existingFilesize < $filesize) {
+                        // Existing file is smaller, will be replaced.
+                        // Mediatag::$Console->writeln("Existing file is smaller, will be replaced.");
+                        unlink($newFilePath);
+                                                // utmdd([$newFilePath, $existingFilesize, $filesize]);
 
+                    }
+                }
+                if (! file_exists($newFilePath)) {
+                    // Mediatag::$Console->writeln('<id>' . $n . '</> <info>Copying: <file>' . basename($file->getPathname()) . '</></info>');
+
+                    $MetaBlockSection->overwrite('<id>' . $n . '</> <info>Copying</info> <file>' . $filename . '</file> <comment>' . $filesizeFormatted . '</comment>');
+                    // FileSystem::copy($file->getPathname(), $newFilePath);
+                    $this->copyWithProgress($file->getPathname(), $newFilePath);
+                    $moveFile = FileSystem::joinPaths($movedDir, $file->getFilename());
+                    $MetaBlockSection->writeln('<id>' . $n . '</> <info>Moving</info>');
+
+                    FileSystem::rename($file->getPathname(), $moveFile);
+                    // Mediatag::$Console->writeln('<id>' . $n . '</> <current>Moved: <file>' . $moveFile . '</></current>');
+
+
+                } else {
+                    $MetaBlockSection->overwrite('<id>' . $n . '</> <comment>Skipped</comment> <file>' . $filename . '</file>');
+                }
+                $n++;
+                // exit;
+            }
+            $BarBottom->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
             FileSystem::rename($dirPath, $movedDir);
-            utmdd($dirPath, $movedDir);
+            utmdd('');
+
 
         }
 
