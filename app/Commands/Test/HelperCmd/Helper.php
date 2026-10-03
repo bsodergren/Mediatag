@@ -46,62 +46,138 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
-    public function sortFiles()
+    public function sortDirs()
     {
-
-$fileArray = [];
-$dups = [];
         $finder      = new Finder();
 
         $baseDir = __CURRENT_DIRECTORY__;
-        $dirParent =dirname($baseDir);
-        $dirPrefix = Path::makeRelative($baseDir,dirname($baseDir));
+        $dirs        = $finder->directories()->in($baseDir)->depth('1')->sortByName(true);
 
-          Mediatag::$Console->writeln($baseDir);
-            Mediatag::$Console->writeln($dirParent);
-            Mediatag::$Console->writeln($dirPrefix);
+        // utmdd($newDir);
+        foreach ($dirs as $dir) {
+            $dirArray[] = $dir->getPathname();
+            // Mediatag::$Console->writeln($dir->getPath());
+        }
 
-        $filelist = '/media/bjorns-pc/Pornhub/filelist.txt';
-        
+        foreach ($dirArray as $dirPath) {
+
+            $newDir = FileSystem::joinPaths(
+                __PLEX_HOME__,
+                'Pornhub',
+                'Premium',
+                basename($dirPath),
+            );
+            // Mediatag::$Console->writeln($dirPath . ' => ' . $newDir);
+            $files = (new Finder())->files()->in($dirPath)->sortByName(true);
+            $n = 1;
+            foreach ($files as $file) {
+                $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
+                if (! file_exists($newFilePath)) {
+                    Mediatag::$Console->writeln('<id>' . $n . '</> <info>Copying: <file>' . basename($file->getPathname()) . '</></info>');
+                    FileSystem::copy($file->getPathname(), $newFilePath);
+
+                } else {
+                    Mediatag::$Console->writeln('<id>' . $n . '</> <comment>Skipped: <file>' . basename($file->getPathname()) . '</></comment>');
+                }
+                $n++;
+            }
+            $movedDir = FileSystem::joinPaths(
+                __CURRENT_DIRECTORY__,
+                '..',
+                'MovedDir',
+                basename($dirPath),
+            );
+            Mediatag::$Console->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
+
+
+
+            FileSystem::rename($dirPath, $movedDir);
+            utmdd($dirPath, $movedDir);
+
+        }
+
+
+    }
+    // $dirArray = array_unique($dirArray);
+
+    // if (\count($dirArray) > 5) {
+    //     $chunks = array_chunk($dirArray, 5);
+
+    //     foreach ($chunks as $chunkIndex => $chunk) {
+    //         foreach ($chunk as $i => $path) {
+    //             if (file_exists($path)) {
+    //                 $studioDir = Strings::after($path, '/', -1);
+    //                 $rootDir = __CURRENT_DIRECTORY__;
+
+    //                 // $rootDir = '/media/bjorns-pc/';
+    //                 $newPath = Strings::after($rootDir, '/', -1);
+
+
+    //                 $newDir = FileSystem::joinPaths(
+    //                     $rootDir,
+    //                     // 'Pornhub',
+    //                     // 'Alpha',
+    //                     $chunkIndex + 1,
+    //                     $studioDir,
+    //                 );
+    //                 FileSystem::rename($path, $newDir);
+
+    //                 // Mediatag::$Console->writeln($rootDir);
+    //                 // FileSystem::createDir($newDir);
+    //                 Mediatag::$Console->writeln($path . ' => ' . $newDir);
+    //                 // if ($i == 30) {
+    //                 // utmdd([\dirname($rootDir, 1), $path, $newDir]);
+    //             }
+    //         }
+    //     }
+    // Mediatag::$Console->writeln($path . ' Not Found');
+    // utmdump($path);
+
+    public function sortFiles()
+    {
+
+        $fileArray = [];
+        $dups = [];
+        $finder      = new Finder();
+
+        $baseDir = __CURRENT_DIRECTORY__;
+        $dirParent = \dirname($baseDir);
+        $dirPrefix = Path::makeRelative($baseDir, \dirname($baseDir));
+
+        Mediatag::$Console->writeln($baseDir);
+        Mediatag::$Console->writeln($dirParent);
+        Mediatag::$Console->writeln($dirPrefix);
+
+
 
 
         $dirs        = $finder->files()->in($baseDir)->name('*.mp4');
-        Mediatag::$Console->writeln( $dirs->count() . " files found");
+        // Mediatag::$Console->writeln($dirs->count() . ' files found');
         foreach ($dirs as $dir) {
             // $key = basename( ".info.json");
-            $video_key = MediaFile::getVideoKey($dir->getRealPath(), 'Pornhub');
-            $fileArray[$video_key][] = $dir->getRealPath();
-            
-
+            $fileArray[] = $dir->getRealPath();
         }
 
-      
-        foreach ($fileArray as $key => $vids) {
-            if (\count($vids) > 1) {
-                $dups[] = $vids;
+        $chunkedFiles = array_chunk($fileArray, 50);
+        // Mediatag::$Console->writeln(\count($chunkedFiles) . ' chunks created');
+        foreach ($chunkedFiles as $index => $chunk) {
+            foreach ($chunk as $n => $file) {
+                $newFile = FileSystem::joinPaths(
+                    __CURRENT_DIRECTORY__,
+                    // 'Pornhub',
+                    // 'Alpha',
+                    'files',
+                    $index + 1,
+                    basename($file),
+                );
+
+
+                FileSystem::rename($file, $newFile, false);
+                Mediatag::$Console->writeln($file . '=>' . $newFile);
             }
+            // Mediatag::$Console->writeln('Chunk ' . ($index + 1) . ' contains ' . \count($chunk) . ' files');
         }
-  Mediatag::$Console->writeln( count($dups) . " duplicate files found");
 
-        foreach ($dups as $i => $files) {
-             $DupefilePath = '';
-             $origFilePath =  Path::makeRelative(dirname($files[0]),$baseDir);
-            //  utmdd($origFilePath);
-            $dupeFile = $files[1];
-            $dupeFile= Path::makeRelative($dupeFile, $baseDir);
-            $filePath = FileSystem::joinPaths($baseDir, $dupeFile);
-            if (file_exists($filePath)) {
-                 Mediatag::$Console->writeln( "Renaming " . basename($dupeFile) ." ");
-                $DupefilePath = FileSystem::joinPaths($dirParent,'..', 'dupes', $dirPrefix, $origFilePath, basename($dupeFile));
-                          Mediatag::$Console->writeln($DupefilePath);
-
-                // utmdd($filePath,$DupefilePath);
-                FileSystem::createDir(\dirname($DupefilePath));
-                FileSystem::rename($filePath, $DupefilePath);
-                // utmdd($filePath,$DupefilePath);
-            }
-
-        }
 
         // utmdump($fileArray);
 

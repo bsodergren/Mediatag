@@ -195,6 +195,7 @@ trait Helper
         if (self::istrue('Bisexual')) {
             return 'Bisexual';
         }
+
         return false;
     }
 
@@ -229,7 +230,7 @@ trait Helper
         // utminfo(func_get_args());
 
         $file_name = basename($file);
-        $file_dir  = dirname($file);
+        $file_dir  = \dirname($file);
         $file_name = Strings::cleanFileName($file_name);
 
         return $file_dir . '/' . $file_name;
@@ -253,15 +254,15 @@ trait Helper
 
                 if (! Option::isTrue('test')) {
                     $color = 'fg=red';
-                    // utmdump([__METHOD__, $oldName, $newName]);
+                    utmdd([__METHOD__, $oldName, $newName]);
 
-                    Filesystem::renameFile($oldName, $newName);
+                    // Filesystem::renameFile($oldName, $newName);
                     // } else {
                     // Mediatag::$output->writeln('<info> test </info>');
                 }
 
                 if ($write == true) {
-                    $message = 'Renaming file from ' . PHP_EOL . '<' . $color . '>' . basename($oldName) . '</' . $color . '> to ' . PHP_EOL . '<' . $color . '>' . basename($newName) . '</' . $color . '> ';
+                    $message = 'Renaming file from ' . \PHP_EOL . '<' . $color . '>' . basename($oldName) . '</' . $color . '> to ' . \PHP_EOL . '<' . $color . '>' . basename($newName) . '</' . $color . '> ';
                     Mediatag::$output->writeln('<info>' . $message . '</info>');
                 } else {
                     $rtn_message = ['Renaming files', ['Old' => basename($oldName)], ['New' => basename($newName)]];

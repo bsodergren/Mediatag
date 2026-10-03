@@ -123,9 +123,11 @@ class Reader extends TagReader
 
                 }
             } else {
+                 if (\array_key_exists($from, $json)) {
                 if ($json[$from] != null) {
                     $newJson[$newKey] = $json[$from];
                 }
+                 }
                 // if (!\array_key_exists($oldKey, $newJson)) {
                 // $newJson[ucfirst($oldKey)] = $json[$oldKey];
                 // }
