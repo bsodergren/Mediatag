@@ -31,6 +31,8 @@ class Options extends MediaOptions
             // ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             // ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
             // ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
+            ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_MAX')],
+            // ['range', 'R', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_RANGE')],
 
             ['search', 'S', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             //

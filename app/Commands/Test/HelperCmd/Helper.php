@@ -33,6 +33,7 @@ use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 use UTM\Bundle\mysql\MysqliDb;
+use UTM\Utilities\Option;
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
 
@@ -69,46 +70,39 @@ trait Helper
         // utmdump($totalChunks);
 
 
-// ProgressBar::setFormatDefinition(
-//     'minimal',
-//     '<info>%progress%</info><fg=white;bg=blue>%bar%</>'
-// );
+        // ProgressBar::setFormatDefinition(
+        //     'minimal',
+        //     '<info>%progress%</info><fg=white;bg=blue>%bar%</>'
+        // );
 
 
-$progressBar = new ProgressBar(Mediatag::$output, $totalChunks );
-// $progressBar->setRedrawFrequency(100);
-// $progressBar->maxSecondsBetweenRedraws(0.2);
-// $progressBar->minSecondsBetweenRedraws(0.1);
+        $progressBar = new ProgressBar(Mediatag::$output, $totalChunks);
+        // $progressBar->setRedrawFrequency(100);
+        // $progressBar->maxSecondsBetweenRedraws(0.2);
+        // $progressBar->minSecondsBetweenRedraws(0.1);
 
 
 
         // the finished part of the bar
-$progressBar->setBarCharacter('<comment>=</comment>');
+        $progressBar->setBarCharacter('<comment>=</comment>');
 
-// the unfinished part of the bar
-$progressBar->setEmptyBarCharacter(' ');
+        // the unfinished part of the bar
+        $progressBar->setEmptyBarCharacter(' ');
 
-// the progress character
-$progressBar->setProgressCharacter('|');
+        // the progress character
+        $progressBar->setProgressCharacter('|');
 
-$progressBar->setBarWidth(60);
-$progressBar->setFormat('[%bar%] %progress%');
-        // $progressBar->setFormat('minimal');
-
-
-
-
-
-
+        $progressBar->setBarWidth(77);
+        $progressBar->setFormat('[%bar%] %progress%');
 
         $src = fopen($source, 'r');
         if (! $src) {
             throw new \Exception('Failed to open source file.');
         }
         // if (is_file($destination)) {
-            FileSystem::createDir(\dirname($destination));
+        FileSystem::createDir(\dirname($destination));
         // } else {
-            // FileSystem::createDir($destination);
+        // FileSystem::createDir($destination);
         // }
 
         $dest = fopen($destination, 'w');
@@ -149,8 +143,19 @@ $progressBar->setFormat('[%bar%] %progress%');
         fclose($src);
         fclose($dest);
         $progressBar->finish();
-        Mediatag::$Console->writeln("");
+        Mediatag::$Console->writeln('');
         //    echo "\nCopy complete!\n";
+    }
+
+    private function is_dir_empty(string $dir): bool
+    {
+        if (! is_dir($dir)) {
+            return false; // Not a directory
+        }
+        $entries = scandir($dir);
+
+        // An empty directory has only '.' and '..'
+        return \count($entries) === 2;
     }
 
     private function formatBytes($bytes, $precision = 2)
@@ -167,138 +172,81 @@ $progressBar->setFormat('[%bar%] %progress%');
     public function sortDirs()
     {
 
+        $max = Option::getValue('max');
+        $range = Option::getValue('range', true);
+        // utmdd($range);
 
+        $dirArray = [];
 
-        $BarSection1      = Mediatag::$output->section();
-        $BarSection2      = Mediatag::$output->section();
-        $fileCountSection = Mediatag::$output->section();
         $fileInfoSection  = Mediatag::$output->section();
         $MetaBlockSection = Mediatag::$output->section();
-        $processOutput    = Mediatag::$output->section();
-        $VideoInfoSection = Mediatag::$output->section();
         $BarBottom        = Mediatag::$output->section();
-
-
-
         $formatter = new FormatterHelper();
 
         $finder      = new Finder();
-
         $baseDir = __CURRENT_DIRECTORY__;
         $dirs        = $finder->directories()->in($baseDir)->depth('1')->sortByName(true);
-
-        // utmdd($newDir);
         foreach ($dirs as $dir) {
             $dirArray[] = $dir->getPathname();
-            // Mediatag::$Console->writeln($dir->getPath());
         }
 
+        $dirIndex = 1;
         foreach ($dirArray as $dirPath) {
-
-            $newDir = FileSystem::joinPaths(
-                __PLEX_HOME__,
-                'Pornhub',
-                'Premium',
-                basename($dirPath),
-            );
-            $fileInfoSection->writeln($dirPath);
-            $files = (new Finder())->files()->in($dirPath)->sortByName(true);
             $n = 1;
 
-            $movedDir = FileSystem::joinPaths(
-                __CURRENT_DIRECTORY__,
-                '..',
-                'MovedDir',
-                basename($dirPath),
-            );
+
+            $newDir = FileSystem::joinPaths(__PLEX_HOME__, 'Pornhub', 'Premium', basename($dirPath));
+            $movedDir = FileSystem::joinPaths(__CURRENT_DIRECTORY__, '..', 'MovedDir', basename($dirPath));
+
+            // $fileInfoSection->writeln($dirPath);
+            $files = (new Finder())->files()->in($dirPath)->sortByName(true);
 
             $MetaBlockSection->setMaxHeight(9);
             foreach ($files as $file) {
 
+                $id = str_pad($n, 3, ' ', \STR_PAD_LEFT);
                 $filesize = $file->getSize();
                 $filesizeFormatted = $this->formatBytes($filesize);
 
                 $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
-
-                // Mediatag::$Console->writeln("Preparing to copy: " . $file->getPathname());
-                // Mediatag::$Console->writeln("Destination: " . $newFilePath);
-
                 $filename = $formatter->truncate(basename($file->getPathname()), 60);
+                $filename = str_pad($filename, 65, ' ', \STR_PAD_RIGHT);
 
-
-$filename = str_pad($filename, 65, ' ', STR_PAD_RIGHT);
                 if (file_exists($newFilePath)) {
                     $existingFilesize = filesize($newFilePath);
                     if ($existingFilesize < $filesize) {
-                        // Existing file is smaller, will be replaced.
-                        // Mediatag::$Console->writeln("Existing file is smaller, will be replaced.");
                         unlink($newFilePath);
-                                                // utmdd([$newFilePath, $existingFilesize, $filesize]);
-
                     }
                 }
                 if (! file_exists($newFilePath)) {
-                    // Mediatag::$Console->writeln('<id>' . $n . '</> <info>Copying: <file>' . basename($file->getPathname()) . '</></info>');
 
-                    $MetaBlockSection->overwrite('<id>' . $n . '</> <info>Copying</info> <file>' . $filename . '</file> <comment>' . $filesizeFormatted . '</comment>');
-                    // FileSystem::copy($file->getPathname(), $newFilePath);
+                    $MetaBlockSection->overwrite('<id>' . $id . '</> <info>Copying</info> <file>' . $filename . '</file> <comment>' . $filesizeFormatted . '</comment>');
                     $this->copyWithProgress($file->getPathname(), $newFilePath);
                     $moveFile = FileSystem::joinPaths($movedDir, $file->getFilename());
-                    $MetaBlockSection->writeln('<id>' . $n . '</> <info>Moving</info>');
-
+                    // $MetaBlockSection->writeln('<id>' . $n . '</> <info>Moving</info>');
                     FileSystem::rename($file->getPathname(), $moveFile);
-                    // Mediatag::$Console->writeln('<id>' . $n . '</> <current>Moved: <file>' . $moveFile . '</></current>');
-
-
                 } else {
-                    $MetaBlockSection->overwrite('<id>' . $n . '</> <comment>Skipped</comment> <file>' . $filename . '</file>');
+                    $MetaBlockSection->overwrite('<id>' . $id . '</> <comment>Skipped</comment> <file>' . $filename . '</file>');
+                }
+                if ($range !== null && $n >= $range) {
+                    break;
                 }
                 $n++;
-                // exit;
             }
-            $BarBottom->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
-            FileSystem::rename($dirPath, $movedDir);
-            utmdd('');
+            if ($this->is_dir_empty($dirPath)) {
 
+                $BarBottom->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
+                FileSystem::rename($dirPath, $movedDir);
+            }
+
+            if ($max !== null && $max == $dirIndex) {
+                break;
+            }
+
+            $dirIndex++;
 
         }
-
-
     }
-    // $dirArray = array_unique($dirArray);
-
-    // if (\count($dirArray) > 5) {
-    //     $chunks = array_chunk($dirArray, 5);
-
-    //     foreach ($chunks as $chunkIndex => $chunk) {
-    //         foreach ($chunk as $i => $path) {
-    //             if (file_exists($path)) {
-    //                 $studioDir = Strings::after($path, '/', -1);
-    //                 $rootDir = __CURRENT_DIRECTORY__;
-
-    //                 // $rootDir = '/media/bjorns-pc/';
-    //                 $newPath = Strings::after($rootDir, '/', -1);
-
-
-    //                 $newDir = FileSystem::joinPaths(
-    //                     $rootDir,
-    //                     // 'Pornhub',
-    //                     // 'Alpha',
-    //                     $chunkIndex + 1,
-    //                     $studioDir,
-    //                 );
-    //                 FileSystem::rename($path, $newDir);
-
-    //                 // Mediatag::$Console->writeln($rootDir);
-    //                 // FileSystem::createDir($newDir);
-    //                 Mediatag::$Console->writeln($path . ' => ' . $newDir);
-    //                 // if ($i == 30) {
-    //                 // utmdd([\dirname($rootDir, 1), $path, $newDir]);
-    //             }
-    //         }
-    //     }
-    // Mediatag::$Console->writeln($path . ' Not Found');
-    // utmdump($path);
 
     public function sortFiles()
     {
