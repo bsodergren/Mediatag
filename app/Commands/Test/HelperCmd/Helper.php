@@ -149,11 +149,12 @@ trait Helper
 
     private function is_dir_empty(string $dir): bool
     {
+       
         if (! is_dir($dir)) {
             return false; // Not a directory
         }
         $entries = scandir($dir);
-
+//  utmdump($entries);
         // An empty directory has only '.' and '..'
         return \count($entries) === 2;
     }
@@ -175,7 +176,13 @@ trait Helper
         $max = Option::getValue('max');
         $range = Option::getValue('range', true);
         // utmdd($range);
+        $total_files =  0;
+        if ($max !== null && $range !== null) {
+            $total_files = $max * $range;
+        }
 
+
+        $fileArray = [];
         $dirArray = [];
 
         $fileInfoSection  = Mediatag::$output->section();
@@ -186,67 +193,140 @@ trait Helper
         $finder      = new Finder();
         $baseDir = __CURRENT_DIRECTORY__;
         $dirs        = $finder->directories()->in($baseDir)->depth('1')->sortByName(true);
+
+        $x = 1;
         foreach ($dirs as $dir) {
             $dirArray[] = $dir->getPathname();
+            if ($max !== null && $max == $x) {
+                break;
+            }
+            $x++;
         }
 
-        $dirIndex = 1;
         foreach ($dirArray as $dirPath) {
             $n = 1;
-
-
-            $newDir = FileSystem::joinPaths(__PLEX_HOME__, 'Pornhub', 'Premium', basename($dirPath));
-            $movedDir = FileSystem::joinPaths(__CURRENT_DIRECTORY__, '..', 'MovedDir', basename($dirPath));
-
-            // $fileInfoSection->writeln($dirPath);
             $files = (new Finder())->files()->in($dirPath)->sortByName(true);
-
-            $MetaBlockSection->setMaxHeight(9);
+            $dirIndex = Strings::after($dirPath, '/', -1);
             foreach ($files as $file) {
-
-                $id = str_pad($n, 3, ' ', \STR_PAD_LEFT);
-                $filesize = $file->getSize();
-                $filesizeFormatted = $this->formatBytes($filesize);
-
-                $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
-                $filename = $formatter->truncate(basename($file->getPathname()), 60);
-                $filename = str_pad($filename, 65, ' ', \STR_PAD_RIGHT);
-
-                if (file_exists($newFilePath)) {
-                    $existingFilesize = filesize($newFilePath);
-                    if ($existingFilesize < $filesize) {
-                        unlink($newFilePath);
-                    }
-                }
-                if (! file_exists($newFilePath)) {
-
-                    $MetaBlockSection->overwrite('<id>' . $id . '</> <info>Copying</info> <file>' . $filename . '</file> <comment>' . $filesizeFormatted . '</comment>');
-                    $this->copyWithProgress($file->getPathname(), $newFilePath);
-                    $moveFile = FileSystem::joinPaths($movedDir, $file->getFilename());
-                    // $MetaBlockSection->writeln('<id>' . $n . '</> <info>Moving</info>');
-                    FileSystem::rename($file->getPathname(), $moveFile);
-                } else {
-                    $MetaBlockSection->overwrite('<id>' . $id . '</> <comment>Skipped</comment> <file>' . $filename . '</file>');
-                }
+                $fileArray[$dirIndex][] = ['filename' => $file->getFilename(), 'root' => $dirPath, 'filesize' => $file->getSize()];
                 if ($range !== null && $n >= $range) {
                     break;
                 }
                 $n++;
             }
-            if ($this->is_dir_empty($dirPath)) {
+        }
+        $keys = array_keys($fileArray);
+        $count = 0;
+        foreach ($keys as $key) {
+            $count += \count($fileArray[$key]);
+        }
 
-                $BarBottom->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
-                FileSystem::rename($dirPath, $movedDir);
+        $MetaBlockSection->setMaxHeight(9);
+        foreach ($fileArray as $i => $files) {
+            $currentDir = $files[0]['root'];
+            $fileInfoSection->writeln('<id>   </> <info> Current Directory:    ' . $currentDir . '</info>');
+
+            foreach ($files as $file) {
+                $id = str_pad($count, 3, ' ', \STR_PAD_LEFT);
+                $count--;
+
+                $filename = FileSystem::joinPaths($currentDir, $file['filename']);
+                $filesize = $file['filesize'];
+
+                $newDir = FileSystem::joinPaths(__PLEX_HOME__, 'Pornhub', 'Premium', basename($currentDir));
+                $movedDir = FileSystem::joinPaths(__CURRENT_DIRECTORY__, '..', 'MovedDir', basename($currentDir));
+                $newFilename = FileSystem::joinPaths($newDir, basename($filename));
+                $filesizeFormatted = $this->formatBytes($filesize);
+
+                $filename_text = $formatter->truncate(basename($filename), 60);
+                $filename_text = str_pad($filename_text, 65, ' ', \STR_PAD_RIGHT);
+
+                // if (file_exists($newFilename)) {
+                //     $existingFilesize = filesize($newFilename);
+                //     if ($existingFilesize < $filesize) {
+                //         unlink($newFilename);
+                //     }
+                // }
+                if (! file_exists($newFilename)) {
+                    // utmdump(['Copying' => [$filename, $newFilename]]);
+                    $MetaBlockSection->overwrite('<id>' . $id . '</> <info>Copying</info> <file>' . $filename_text . '</file> <comment>' . $filesizeFormatted . '</comment>');
+                    $this->copyWithProgress($filename, $newFilename);
+                    $moveFile = FileSystem::joinPaths($movedDir, basename($filename));
+                    // utmdump(['Moving' => [$filename, $moveFile]]);
+                    $MetaBlockSection->writeln('<id>' . $id . '</> <info>Moving</info>');
+                    FileSystem::rename($filename, $moveFile);
+                } else {
+                    $MetaBlockSection->overwrite('<id>' . $id . '</> <comment>Skipped</comment> <file>' . $filename_text . '</file>');
+                }
+                // utmdd($newDir, $newFilename);
             }
 
-            if ($max !== null && $max == $dirIndex) {
-                break;
-            }
 
-            $dirIndex++;
+            if ($this->is_dir_empty($currentDir)) {
+                $fileInfoSection->writeln('<error> DELETING ' . $currentDir . ' </error>');
+                // utmdump(['Moving Directory' => [$currentDir]]);
+                // FileSystem::delete($currentDir);
+            }
 
         }
+
+
+
     }
+
+
+
+    // $fileInfoSection->writeln("<info> Current Directory:    $dirPath</info>");
+
+
+    // $MetaBlockSection->setMaxHeight(9);
+    // if ($total_files == 0) {
+    //     $total_files = $files->count();
+    // }
+
+    // utmdump([$files->count(), $range]);
+
+    // foreach ($files as $file) {
+
+    //     $id = str_pad($total_files, 3, ' ', \STR_PAD_LEFT);
+    //     $total_files--;
+
+    //     $filesize = $file->getSize();
+    //     $filesizeFormatted = $this->formatBytes($filesize);
+
+    //     $newFilePath = FileSystem::joinPaths($newDir, $file->getFilename());
+    //     $filename = $formatter->truncate(basename($file->getPathname()), 60);
+    //     $filename = str_pad($filename, 65, ' ', \STR_PAD_RIGHT);
+
+    //     if (file_exists($newFilePath)) {
+    //         $existingFilesize = filesize($newFilePath);
+    //         if ($existingFilesize < $filesize) {
+    //             unlink($newFilePath);
+    //         }
+    //     }
+    //     if (! file_exists($newFilePath)) {
+
+    //         $MetaBlockSection->overwrite('<id>' . $id . '</> <info>Copying</info> <file>' . $filename . '</file> <comment>' . $filesizeFormatted . '</comment>');
+    //         $this->copyWithProgress($file->getPathname(), $newFilePath);
+    //         $moveFile = FileSystem::joinPaths($movedDir, $file->getFilename());
+    //         // $MetaBlockSection->writeln('<id>' . $n . '</> <info>Moving</info>');
+    //         FileSystem::rename($file->getPathname(), $moveFile);
+    //     } else {
+    //         $MetaBlockSection->overwrite('<id>' . $id . '</> <comment>Skipped</comment> <file>' . $filename . '</file>');
+    //     }
+    //
+    //     $n++;
+
+    // }
+    // if ($this->is_dir_empty($dirPath)) {
+
+    //     $BarBottom->writeln('<info>' . $dirPath . ' => ' . $movedDir . '</info>');
+    //     FileSystem::rename($dirPath, $movedDir);
+    // }
+
+
+
+    // $dirIndex++;
 
     public function sortFiles()
     {
