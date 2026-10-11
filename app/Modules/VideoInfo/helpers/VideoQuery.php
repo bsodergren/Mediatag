@@ -134,7 +134,7 @@ trait VideoQuery
             $where = ' vm.markerThumbnail is null ';
         } else {
             $where = ' vm.video_id =  ' . $video_id . ' ';
-            $fields .= ', vm.markerText  ';
+            $fields .= ', vm.markerText as text ';
             $order = ' ORDER BY `vm`.`timeCode` ASC';
         }
         if (Option::istrue('update')) {
