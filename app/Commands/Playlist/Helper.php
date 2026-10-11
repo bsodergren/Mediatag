@@ -276,12 +276,16 @@ trait Helper
 
             $idCnt     = count($this->ids);
 
-
             // utmdd(["Running Compact on " . $this->playlist, "playlist has " . $before . " videos",
             //     "kid List has " . $idCnt . " videos"]);
 
             if ($before > 0) {
+                foreach($f as $line) {
+                    $array[] = $this->compactPlaylist($line);
+                }
+                // utmdd($array);
                 $array         = Filesystem::readLines($this->playlist, [$this, 'compactPlaylist']);
+
                 if (count($array) > 0) {
                     $array = MediaArray::array_iunique($array);
                 }
@@ -348,6 +352,7 @@ trait Helper
     public function compactPlaylist($line)
     {
         // $line .= "f";
+return $line;
         if (str_contains($line, '&')) {
             $line = Strings::before($line, '&');
 
@@ -362,8 +367,8 @@ trait Helper
             }
         }
         $ph_id = trim($ph_id);
-
-        if (!in_array($ph_id, $this->ids, true)) {
+        // utmdd([$ph_id=>in_array($ph_id, $this->ids, true)]);
+        if (in_array($ph_id, $this->ids, true) === false) {
 
             if (str_contains($line, 'view_video.php')) {
                 return $line;

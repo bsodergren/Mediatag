@@ -93,7 +93,6 @@ trait VideoQuery
 
         $query    = "SELECT id, CONCAT(fullpath,'/',filename) as file_name, video_key, " . $this->thumbType . '  FROM ' . $this->VideoDataTable . ' WHERE ';
         $query .= $where;
-
         return $query;
     }
 
@@ -135,7 +134,7 @@ trait VideoQuery
             $where = ' vm.markerThumbnail is null ';
         } else {
             $where = ' vm.video_id =  ' . $video_id . ' ';
-            $fields .= ', vm.markerText as text ';
+            $fields .= ', vm.markerText  ';
             $order = ' ORDER BY `vm`.`timeCode` ASC';
         }
         if (Option::istrue('update')) {
@@ -148,7 +147,6 @@ trait VideoQuery
         }
 
         $sql    = 'SELECT ' . $fields . ' FROM ' . $this->VideoDataTable . ' vm, ' . __MYSQL_VIDEO_FILE__ . ' f, ' . __MYSQL_VIDEO_INFO__ . ' i WHERE ' . $where . $order;
-
         return $sql;
     }
 

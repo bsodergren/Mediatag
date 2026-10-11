@@ -11,6 +11,7 @@ use Mediatag\Modules\Database\Traits\DbMap;
 use Mediatag\Modules\Database\Traits\StorageDB;
 use Mediatag\Modules\Database\Traits\TagDB;
 use Mediatag\Modules\Filesystem\MediaFilesystem;
+use Mediatag\Modules\Database\Static\StaticStudio;
 use Mediatag\Utilities\Strings;
 use PDO;
 use Symfony\Component\Filesystem\Filesystem;
@@ -26,6 +27,8 @@ class Storage
 {
     use DbMap;
     use TagDB;
+    // use StaticStudio;
+
 
     public $DbFileArray  = [];
 
