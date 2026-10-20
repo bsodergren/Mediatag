@@ -351,7 +351,7 @@ trait Helper
 
             $filename = $file['filename'];
             $path = $file['path'];
-            Mediatag::$Console->write('<info>' . --$count . '</> Looking for <file>' . $filename . '</file>');
+            Mediatag::$Console->write('<info>' . $n+1 . '</> Looking for <file>' . $filename . '</file>');
             $found = false;
             $serverFile = str_replace(__PLEX_HOME__, '', $path);
             foreach ((clone $bkFinder)->name($filename) as $ffile) {
