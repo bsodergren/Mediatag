@@ -149,12 +149,13 @@ trait Helper
 
     private function is_dir_empty(string $dir): bool
     {
-       
+
         if (! is_dir($dir)) {
             return false; // Not a directory
         }
         $entries = scandir($dir);
-//  utmdump($entries);
+
+        //  utmdump($entries);
         // An empty directory has only '.' and '..'
         return \count($entries) === 2;
     }
@@ -331,50 +332,69 @@ trait Helper
     public function sortFiles()
     {
 
+        $pc_dir = '/media/bjorns-pc';
         $fileArray = [];
         $dups = [];
         $finder      = new Finder();
-
-        $baseDir = __CURRENT_DIRECTORY__;
-        $dirParent = \dirname($baseDir);
-        $dirPrefix = Path::makeRelative($baseDir, \dirname($baseDir));
-
-        Mediatag::$Console->writeln($baseDir);
-        Mediatag::$Console->writeln($dirParent);
-        Mediatag::$Console->writeln($dirPrefix);
-
-
-
-
-        $dirs        = $finder->files()->in($baseDir)->name('*.mp4');
+        $files        = $finder->files()->in(__PLEX_HOME__ . '/Pornhub')->name('*.mp4')->sortByName(true);
         // Mediatag::$Console->writeln($dirs->count() . ' files found');
-        foreach ($dirs as $dir) {
+        foreach ($files as $file) {
             // $key = basename( ".info.json");
-            $fileArray[] = $dir->getRealPath();
+            $fileArray[] = ['filename' => $file->getFilename(), 'path' => $file->getRealPath()];
         }
 
-        $chunkedFiles = array_chunk($fileArray, 50);
-        // Mediatag::$Console->writeln(\count($chunkedFiles) . ' chunks created');
-        foreach ($chunkedFiles as $index => $chunk) {
-            foreach ($chunk as $n => $file) {
-                $newFile = FileSystem::joinPaths(
-                    __CURRENT_DIRECTORY__,
-                    // 'Pornhub',
-                    // 'Alpha',
-                    'files',
-                    $index + 1,
-                    basename($file),
-                );
+        $count = \count($fileArray);
 
+        $bkFinder      = new Finder();
+        $bkFinder->files()->in($pc_dir . '/Pornhub');
+        foreach ($fileArray as $n => $file) {
 
-                FileSystem::rename($file, $newFile, false);
-                Mediatag::$Console->writeln($file . '=>' . $newFile);
+            $filename = $file['filename'];
+            $path = $file['path'];
+            Mediatag::$Console->write('<info>' . --$count . '</> Looking for <file>' . $filename . '</file>');
+            $found = false;
+            $serverFile = str_replace(__PLEX_HOME__, '', $path);
+            foreach ((clone $bkFinder)->name($filename) as $ffile) {
+                $backupFile = '/Pornhub/' . $ffile->getRelativePathname();
+                $found = true;
             }
-            // Mediatag::$Console->writeln('Chunk ' . ($index + 1) . ' contains ' . \count($chunk) . ' files');
+            if ($found) {
+                Mediatag::$Console->writeln('<comment> Found</comment> ');
+                if ($backupFile != $serverFile) {
+                    //     echo "MATCHED" . PHP_EOL;
+                    // } else {
+                    Mediatag::$Console->writeln('Moving <file>' . $backupFile . '</file> to');
+                    Mediatag::$Console->writeln(' <file>' . $serverFile . '</file>');
+                    FileSystem::createDir(\dirname($pc_dir . $serverFile));
+                    FileSystem::rename($pc_dir . $backupFile, $pc_dir . $serverFile);
+                }
+
+                    // exit;
+            }
+            if (! $found) {
+                Mediatag::$Console->writeln('<error> not found </>');
+                FileSystem::createDir(\dirname($pc_dir . $serverFile));
+                $this->copyWithProgress($path, $pc_dir . $serverFile);
+            }
+             $renamedFile = str_replace("XXX/Pornhub", 'XXX/Old/Pornhub', $path);
+                     FileSystem::createDir(\dirname($renamedFile));
+                    FileSystem::rename($path, $renamedFile);
+if($n > 500){
+    utmdd("done");
+}
+            // if($bkFinder->hasResults()) {
+            //     foreach ($bkFinder as $bkfile) {
+            //         $pcFile = str_replace( $pc_dir,'', $bkfile->getRealPath());
+            //         $serverFile = str_replace( __PLEX_HOME__,'', $path);
+            //         if( $pcFile != $serverFile) {
+            //             $dups[] = ['server' => $serverFile, 'pc' => $pcFile];
+            //              utmdd([ $serverFile, $pcFile]);
+            //         }
+
+            //     }
+            // }
         }
 
-
-        // utmdump($fileArray);
 
     }
 
