@@ -138,12 +138,17 @@ class TagReader
         return $this;
     }
 
-    public function getJsonValues()
+    public function getJsonValues($tag=null)
     {
         // utminfo(func_get_args());
 
         $json = new jsonReader($this->videoData);
-
+if($tag !== null){
+    $method = 'get' . ucfirst($tag);
+    if (method_exists($json, $method)) {
+        return $json->{$method}();
+    }
+}
         return $json->getTagArray();
     }
 

@@ -223,6 +223,18 @@ class Reader extends TagReader
             $this->network = $this->getFileTag('Network');
         }
         if ($this->network === null) {
+            $tags = $this->getJsonValues('network');
+            if ($tags !== null) {
+                if(array_key_exists('network', $tags)){
+                    $this->network = $tags['network'];
+                } else {
+                    $this->network = null;
+                }
+            }
+
+        }
+
+        if ($this->network === null) {
             $networkPath    = str_replace(__LIBRARY_HOME__ . '/', '', \dirname($this->video_path));
             $networkPathPcs = explode('/', $networkPath);
             if (\count($networkPathPcs) > 1) {
@@ -324,7 +336,6 @@ class Reader extends TagReader
             //  } else {
             //     $result =  $this->{$method}();
         }
-
         return $result;
     }
 }

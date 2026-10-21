@@ -248,7 +248,6 @@ class Patterns extends TagBuilder
             {
                 $array[$key] =  VideoPattern::pattern($array[$key]);
             }
-            utmdump($array);
 
             return $array[$key];
         }

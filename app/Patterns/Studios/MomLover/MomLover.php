@@ -13,7 +13,7 @@ const MOMLOVER_REGEX_COMMON = '//i';
 class MomLover extends Patterns
 {
     public $studio = 'Mom Lover';
-
+public $network = 'Mom Lover';
     public $regex  = [
         'momlover' => [
             'title' => [

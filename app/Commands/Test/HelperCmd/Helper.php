@@ -379,9 +379,7 @@ trait Helper
              $renamedFile = str_replace("XXX/Pornhub", 'XXX/Old/Pornhub', $path);
                      FileSystem::createDir(\dirname($renamedFile));
                     FileSystem::rename($path, $renamedFile);
-if($n > 500){
-    utmdd("done");
-}
+
             // if($bkFinder->hasResults()) {
             //     foreach ($bkFinder as $bkfile) {
             //         $pcFile = str_replace( $pc_dir,'', $bkfile->getRealPath());
