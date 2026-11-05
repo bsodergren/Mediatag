@@ -32,8 +32,8 @@ class Options extends MediaOptions
             // ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
             // ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
             ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_MAX')],
-            // ['range', 'R', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_RANGE')],
-
+            ['limit', 'L', InputOption::VALUE_REQUIRED, self::text('L__COPY_LIMIT')],
+            ['source', '', InputOption::VALUE_REQUIRED, self::text('L__SOURCE_DIR')],
             ['search', 'S', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             //
             // ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],

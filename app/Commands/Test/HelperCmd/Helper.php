@@ -52,6 +52,63 @@ trait Helper
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    private $i = 50;
+    private $backupDrive = '/mnt/sas2';
+    public function restoreStudios()
+    {
+
+             if(Option::isTrue('limit')) $this->i = (int) Option::getValue('limit');
+
+            if(Option::isTrue('source')) $this->backupDrive = Option::getValue('source');
+        // $backupDrive = '/mnt/sas2';
+        $sourceDir = $this->backupDrive . '/Studios';
+        Mediatag::$Console->writeln("<info>restoring <file>" . $this->backupDrive . "</file> directory</info>");
+
+// utmdd($this->backupDrive);
+        $destinationDir = '/media/Videos/Plex/XXX/Studios';
+
+        $CopiedDestDir = $this->backupDrive . '/Copied/Studios';
+
+        $finder = new Finder();
+        $finder->files()->in($sourceDir)->sortByCaseInsensitiveName(true);
+        $currentDir = '';
+        foreach ($finder as $file) {
+            $relativePath = $file->getRelativePathname();
+            $sourcePath = $file->getRealPath();
+            $firstDir = \explode(DIRECTORY_SEPARATOR,$relativePath);
+            if ($currentDir !== $firstDir[0]) {
+                if($currentDir !== '' ) {
+                Mediatag::$Console->writeln("<info>Moving <file>" . $currentDir."</file> directory</info>");
+
+                    // FileSystem::createDir($CopiedDestDir . '/' . $currentDir);
+
+                    FileSystem::rename($sourceDir . '/' . $currentDir, $CopiedDestDir . '/' . $currentDir);
+                    // utmdd("");
+                }
+                $currentDir = $firstDir[0];
+                 Mediatag::$Console->writeln("<info>Checking <file>" . $currentDir."</file> directory</info>");
+            }
+
+            $destinationPath = $destinationDir . \DIRECTORY_SEPARATOR . $relativePath;
+
+            if ($this->copyWithProgress($sourcePath, $destinationPath)) {
+                $this->i--;
+                //    Mediatag::$Console->writeln("Failed to copy: $sourcePath");
+            }
+
+            if ($this->i == 0) {
+                Mediatag::$Console->writeln('More than 50 files copied.');
+                break;
+
+            }
+        }
+
+
+
+
+
+    }
+
     private function copyWithProgress($source, $destination, $chunkSize = 1048576) // 1 MB chunks
     {
         // Mediatag::$Console->writeln("Starting copy with progress...");
@@ -95,6 +152,20 @@ trait Helper
         $progressBar->setBarWidth(77);
         $progressBar->setFormat('[%bar%] %progress%');
 
+        if (file_exists($destination)) {
+            $destFileSize =  filesize($destination);
+            if ($destFileSize >= $sourceSize) {
+                // Mediatag::$Console->writeln('Destination file is newer or same size, skipping copy.');
+
+                return false; // Skip copying if destination is newer or same size
+            }
+            Mediatag::$Console->writeln('<warning>Deleting destination file.</warning>');
+            rename($destination, $destination . '.bak');
+
+            //    utmdd([$source, $sourceSize, $destination,$destFileSize , "Destination file exists"]);
+        }
+        // Mediatag::$Console->writeln('Destination file does not exist.');
+        // utmdd([$source, $destination, filesize($destination),    "Destination does not file exists"]);
         $src = fopen($source, 'r');
         if (! $src) {
             throw new \Exception('Failed to open source file.');
@@ -110,6 +181,7 @@ trait Helper
             fclose($src);
             throw new \Exception('Failed to open destination file.');
         }
+           Mediatag::$Console->writeln('<info>'.$this->i.'</info><comment> copying '.basename($source).'</comment>');
 
         $progressBar->start();
 
@@ -135,6 +207,7 @@ trait Helper
             // Calculate and display progress
             $progress = ($copied / $sourceSize) * 100;
             // echo "\rCopying: " . number_format($progress, 2) . "%";
+
             $progressBar->setMessage(number_format($progress, 2) . '%', 'progress');
             $progressBar->advance();
             flush();
@@ -144,6 +217,8 @@ trait Helper
         fclose($dest);
         $progressBar->finish();
         Mediatag::$Console->writeln('');
+
+        return true; // Indicate that the copy was successful
         //    echo "\nCopy complete!\n";
     }
 
@@ -351,7 +426,7 @@ trait Helper
 
             $filename = $file['filename'];
             $path = $file['path'];
-            Mediatag::$Console->write('<info>' . $n+1 . '</> Looking for <file>' . $filename . '</file>');
+            Mediatag::$Console->write('<info>' . $n + 1 . '</> Looking for <file>' . $filename . '</file>');
             $found = false;
             $serverFile = str_replace(__PLEX_HOME__, '', $path);
             foreach ((clone $bkFinder)->name($filename) as $ffile) {
@@ -369,16 +444,16 @@ trait Helper
                     FileSystem::rename($pc_dir . $backupFile, $pc_dir . $serverFile);
                 }
 
-                    // exit;
+                // exit;
             }
             if (! $found) {
                 Mediatag::$Console->writeln('<error> not found </>');
                 FileSystem::createDir(\dirname($pc_dir . $serverFile));
                 $this->copyWithProgress($path, $pc_dir . $serverFile);
             }
-             $renamedFile = str_replace("XXX/Pornhub", 'XXX/Old/Pornhub', $path);
-                     FileSystem::createDir(\dirname($renamedFile));
-                    FileSystem::rename($path, $renamedFile);
+            $renamedFile = str_replace('XXX/Pornhub', 'XXX/Old/Pornhub', $path);
+            FileSystem::createDir(\dirname($renamedFile));
+            FileSystem::rename($path, $renamedFile);
 
             // if($bkFinder->hasResults()) {
             //     foreach ($bkFinder as $bkfile) {
