@@ -209,12 +209,16 @@ trait MediaFFmpeg
                 break;
         }
 
-        $this->ffmpegExec($cmdOptions, Callback::check([$this, 'Outputdebug']));
+       $out= $this->ffmpegExec($cmdOptions, Callback::check([$this, 'Outputdebug']));
+
 
         $dmg_dir      = str_replace('/XXX', '/XXX/dmg', $this->video_path);
         FileSystem::createDir($dmg_dir);
         FileSystem::rename($orig_file, $dmg_dir . '/' . $this->video_name);
+        if($out !== false){
+            Mediatag::$output->writeln('<info>Repairing Video ' . $this->video_file . '</info>');
         FileSystem::rename($new_tmp_file, $new_file);
+        }
 
         $this->write();
     }

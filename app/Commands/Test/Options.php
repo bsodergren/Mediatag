@@ -27,14 +27,16 @@ class Options extends MediaOptions
 
         return [
             ['cmd', 'c', InputOption::VALUE_REQUIRED, self::text('L__TEST_CLIP')],
-
+  ['list', 'l', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             // ['colors', 'C', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
             // ['move', 'm', InputOption::VALUE_NONE, self::text('L__TEST_MOVE')],
             // ['splitlines', 'S', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_SPLIT')],
             ['max', 'M', InputOption::VALUE_REQUIRED, self::text('L__PLAYLIST_MAX')],
             ['limit', 'L', InputOption::VALUE_REQUIRED, self::text('L__COPY_LIMIT')],
             ['source', '', InputOption::VALUE_REQUIRED, self::text('L__SOURCE_DIR')],
-            ['search', 'S', InputOption::VALUE_NONE, self::text('L__TEST_CLIP')],
+                    ['filter', '', InputOption::VALUE_REQUIRED, self::text('L__SOURCE_DIR')],
+            ['exclude','e',InputOption::VALUE_REQUIRED|InputOption::VALUE_IS_ARRAY,"exclude"],
+            ['search', 'S', InputOption::VALUE_NONE|InputOption::VALUE_OPTIONAL, self::text('L__TEST_CLIP')],
             //
             // ['name', '', InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY, self::text('L__CLIP_MERGED_NAME')],
         ];

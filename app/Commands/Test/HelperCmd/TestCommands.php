@@ -6,6 +6,8 @@
 
 namespace Mediatag\Commands\Test\HelperCmd;
 
+use FFMpeg\FFMpeg;
+use Symfony\Component\Process\Process;
 use Exception;
 use Mediatag\Bundle\Dialog\Options\Common;
 use Mediatag\Bundle\Dialog\Widgets\Buildlist;
@@ -36,6 +38,7 @@ use UTM\Bundle\mysql\MysqliDb;
 use UTM\Utilities\Option;
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
+use Nette\Utils\FileSystem as NetteFile;
 
 use function count;
 use function dirname;
@@ -47,38 +50,79 @@ use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_URL;
 use const PHP_URL_PATH;
 
-trait Helper
+Class TestCommands
 {
     use MediaFFmpeg;
     use ScriptWriterHelper;
 
+    private static $BAD_FILE = __PLEX_VAR_DIR__ . '/bad_files.txt';
+
     private $i = 50;
+
     private $backupDrive = '/mnt/sas2';
+
     public function restoreStudios()
     {
 
-             if(Option::isTrue('limit')) $this->i = (int) Option::getValue('limit');
+        if (Option::isTrue('limit')) {
+            $this->i = (int) Option::getValue('limit');
+        }
 
-            if(Option::isTrue('source')) $this->backupDrive = Option::getValue('source');
+        if (Option::isTrue('source')) {
+            $this->backupDrive = Option::getValue('source');
+        }
         // $backupDrive = '/mnt/sas2';
         $sourceDir = $this->backupDrive . '/Studios';
-        Mediatag::$Console->writeln("<info>restoring <file>" . $this->backupDrive . "</file> directory</info>");
+        Mediatag::$Console->writeln('<info>restoring <file>' . $this->backupDrive . '</file> directory</info>');
 
-// utmdd($this->backupDrive);
+        // utmdd($this->backupDrive);
         $destinationDir = '/media/Videos/Plex/XXX/Studios';
 
         $CopiedDestDir = $this->backupDrive . '/Copied/Studios';
 
         $finder = new Finder();
         $finder->files()->in($sourceDir)->sortByCaseInsensitiveName(true);
+
+        $filter = function (\SplFileInfo $file) {
+            $search = Option::getValue('filter');
+            if (! str_starts_with($file->getRelativePathname(), $search)) {
+                // utmdd([$file->getRelativePathname(),$search]);
+                return false;
+            }
+
+        };
+        if (Option::isTrue('filter')) {
+            $finder->filter($filter);
+        }
+
+
+        $excludeFilter = function (\SplFileInfo $file) {
+            $text  = NetteFile::readLines(self::$BAD_FILE, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
+            foreach ($text as $lineNum => $exclude) {
+                if (str_contains(strtolower($file->getRelativePathname()), strtolower($exclude))) {
+                    utmdump(['Excluding file', $file->getRelativePathname(), $exclude]);
+
+                    return false;
+                }
+            }
+        };
+        $finder->filter($excludeFilter);
+
+
         $currentDir = '';
+        $filesArray = iterator_to_array($finder, false);
+        $resultCount = \count($filesArray);
+        if ($this->i > $resultCount) {
+            $this->i = $resultCount;
+        }
+
         foreach ($finder as $file) {
             $relativePath = $file->getRelativePathname();
             $sourcePath = $file->getRealPath();
-            $firstDir = \explode(DIRECTORY_SEPARATOR,$relativePath);
+            $firstDir = explode(\DIRECTORY_SEPARATOR, $relativePath);
             if ($currentDir !== $firstDir[0]) {
-                if($currentDir !== '' ) {
-                Mediatag::$Console->writeln("<info>Moving <file>" . $currentDir."</file> directory</info>");
+                if ($currentDir !== '') {
+                    Mediatag::$Console->writeln('<info>Moving <file>' . $currentDir . '</file> directory</info>');
 
                     // FileSystem::createDir($CopiedDestDir . '/' . $currentDir);
 
@@ -86,7 +130,7 @@ trait Helper
                     // utmdd("");
                 }
                 $currentDir = $firstDir[0];
-                 Mediatag::$Console->writeln("<info>Checking <file>" . $currentDir."</file> directory</info>");
+                Mediatag::$Console->writeln('<info>Checking <file>' . $currentDir . '</file> directory</info>');
             }
 
             $destinationPath = $destinationDir . \DIRECTORY_SEPARATOR . $relativePath;
@@ -181,7 +225,7 @@ trait Helper
             fclose($src);
             throw new \Exception('Failed to open destination file.');
         }
-           Mediatag::$Console->writeln('<info>'.$this->i.'</info><comment> copying '.basename($source).'</comment>');
+        Mediatag::$Console->writeln('<info>' . $this->i . '</info><comment> copying ' . basename($source) . '</comment>');
 
         $progressBar->start();
 
@@ -191,7 +235,17 @@ trait Helper
             if ($buffer === false) {
                 fclose($src);
                 fclose($dest);
-                throw new \Exception('Error reading source file.');
+                $progressBar->finish();
+                Mediatag::$Console->writeln('');
+
+                Mediatag::$Console->writeln('Error reading source file. ' . basename($source));
+                Mediatag::$Console->writeln('Removing destination file. ' . $destination);
+                unlink($destination); // Remove the incomplete destination file
+
+                file_put_contents(self::$BAD_FILE, basename($source) . \PHP_EOL, \FILE_APPEND);
+                utmdump("adding $source to bad files list");
+
+                return false;
             }
 
             $written = fwrite($dest, $buffer);
@@ -1193,5 +1247,42 @@ trait Helper
         }
 
         return $img_web_path;
+    }
+
+    public function findCorrupt()
+    {
+        $finder = new Finder();
+        $dirs   = $finder->files()->in(__CURRENT_DIRECTORY__)->name('/\.mp4$/i');
+        foreach ($dirs as $dir) {
+            // Mediatag::$Console->writeln('<info>' . $dir->getRealPath() . '</>');
+
+            $this->checkCorrupt($dir->getRealPath());
+
+        }
+    }
+
+    private function checkCorrupt($file)
+    {
+        $command = ['ffprobe', '-loglevel', 'error', '-i', $file];
+        $process = new Process($command);
+
+// utmdd($process->getCommandLine());
+
+        $process->setTimeout(60);
+        $process->run();
+
+        if (! $process->isSuccessful()) {
+            Mediatag::$Console->writeln('<error>Corrupt file detected: ' . $file . '</>');
+
+            $dmg_dir      = str_replace('/XXX', '/XXX/dmg', \dirname($file));
+
+            FileSystem::createDir($dmg_dir);
+            FileSystem::rename($file, $dmg_dir . '/' . basename($file));
+
+            // Mediatag::$Console->writeln('<error>' . $process->getErrorOutput() . '</>');
+        } else {
+            Mediatag::$Console->writeln('<info>File is valid: ' . $file . '</>');
+        }
+
     }
 }

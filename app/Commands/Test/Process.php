@@ -14,12 +14,12 @@ use Mediatag\Modules\Display\MediaTable;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use UTM\Utilities\Option;
+use Mediatag\Commands\Test\HelperCmd\TestCommands;
 
 include_once __DATA_MAPS__ . '/WordMap.php';
 
 class Process extends Mediatag
 {
-    use Helper;
     use MediaExecute;
     use MediaProcess;
 
@@ -29,42 +29,57 @@ class Process extends Mediatag
 
     public $videoFiles     = [];
 
-    public $method         = null;
+    public $method;
 
     protected $useFuncs    = ['addMeta'];
 
     public $displayTable;
 
+    public static $TestObj;
+
     // public $csvfilename = __DOWNLOAD_DIR__.'/pornhub.com-db.csv';
 
     public function __construct(?InputInterface $input = null, ?OutputInterface $output = null, $args = null)
     {
+
         parent::boot($input, $output);
         if (Option::isTrue('search')) {
             parent::$SearchArray = parent::$finder->ExecuteSearch();
         }
 
-        $cmd = Option::getValue('cmd');
-           if (! is_null($cmd)) {
-        if (\method_exists($this, $cmd)) {
-            Mediatag::$Console->writeln($cmd . ' found');
-            $this->displayTable = new MediaTable($output);
-            $this->method       = $cmd;
-        } else {
-            Mediatag::$Console->writeln('No method found');
+        self::$TestObj = new TestCommands($input, $output);
+
+
+        if (Option::isTrue('list')) {
+            self::$CmdList = get_class_methods(self::$TestObj);
+            Mediatag::$Console->writeln('Available commands:');
+            foreach (self::$CmdList as $cmd) {
+                Mediatag::$Console->writeln($cmd);
+            }
+
+            return true;
         }
-           }
+        $cmd = Option::getValue('cmd');
+        if ($cmd !== null) {
+            if (method_exists(self::$TestObj, $cmd)) {
+                Mediatag::$Console->writeln($cmd . ' found');
+                $this->displayTable = new MediaTable($output);
+                $this->method       = $cmd;
+            } else {
+                Mediatag::$Console->writeln('No method found');
+            }
+        }
     }
 
     public function execCmdOption()
     {
-        if (! is_null($this->method)) {
+        if ($this->method !== null) {
             $fileList = $this->VideoList['file'];
             foreach ($fileList as $key => $file) {
                 $this->videoFiles[] = $file['video_file'];
             }
             $cmd      = $this->method;
-            $this->$cmd();
+            self::$TestObj->$cmd();
         }
     }
 }
