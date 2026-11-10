@@ -107,7 +107,8 @@ class Reader extends TagReader
   m.keyword as keyword,
   m.movie as movie,
   m.episode as episode,
-  m.scene as scene
+  m.scene as scene,
+    m.season as season
   FROM  mediatag_video_metadata m WHERE m.video_key = '" . $key . "'";
 
         // $query      = 'SELECT * FROM ' . __MYSQL_VIDEO_CUSTOM__ . " WHERE  video_key = '" . $key . "'";

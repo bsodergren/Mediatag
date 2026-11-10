@@ -42,6 +42,7 @@ const __CACHE_DIR__             = __PLEX_HOME__ . '/.cache';
 const __JSON_CACHE_DIR__        = __CACHE_DIR__ . '/json';
 const __PH_CACHE_DIR__          = __CACHE_DIR__ . '/Pornhub';
 const __STUDIO_CACHE_DIR__      = __CACHE_DIR__ . '/Studio';
+const __STUDIO_TMP_JSON_CACHE_DIR__ = __STUDIO_CACHE_DIR__ . '/tmpJson';
 const __STUDIO_JSON_CACHE_DIR__ = __STUDIO_CACHE_DIR__ . '/json';
 
 const __APP_CACHE_DIR__         = __CACHE_DIR__ . '/mediatag';
@@ -92,7 +93,8 @@ define(
         __INC_WEB_CHAPTER_DIR__,
         __INC_WEB_PREVIEW_DIR__,
         __STUDIO_JSON_CACHE_DIR__,
+        __STUDIO_TMP_JSON_CACHE_DIR__,
     ],
 );
-
+utmdd(__STUDIO_TMP_JSON_CACHE_DIR__);
 // dd(__INC_WEB_THUMB_DIR__);

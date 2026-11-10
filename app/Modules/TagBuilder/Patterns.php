@@ -269,6 +269,10 @@ class Patterns extends TagBuilder
      */
     public function getKeyword() {}
 
+    public function getseason() {}
+
+    public function getEpisode() {}
+
     /**
      * getFilename.
      */

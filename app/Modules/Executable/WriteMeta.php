@@ -68,6 +68,7 @@ class WriteMeta extends MediatagExec
                 $this->createOptionArg($var, '');
             }
         } else {
+            utmdd(__META_TAGS__);
             foreach (__META_TAGS__ as $tag) {
                 $this->createOptionArg($tag, '');
             }

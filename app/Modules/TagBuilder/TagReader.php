@@ -195,12 +195,14 @@ if($tag !== null){
 
         if (is_array($this->videoData)) {
             if (array_key_exists('video_name', $this->videoData)) {
-                $tvParams = MetaEntities::CheckForTvParams($this->videoData['video_name']);
-                if (is_array($tvParams)) {
-                    foreach ($tvParams as $tag => $valure) {
-                        $this->tag_array[$tag] = $valure;
-                    }
-                }
+                $this->Episode();
+                $this->Season();
+                // $tvParams = MetaEntities::CheckForTvParams($this->videoData['video_name']);
+                // if (is_array($tvParams)) {
+                //     foreach ($tvParams as $tag => $valure) {
+                //         $this->tag_array[$tag] = $valure;
+                //     }
+                // }
             }
         }
 

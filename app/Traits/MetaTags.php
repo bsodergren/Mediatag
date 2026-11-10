@@ -44,12 +44,19 @@ trait MetaTags
 
         $tag    = strtolower($tag);
         $method = 'clean' . ucfirst($tag);
+        // utmdump($tag, $method, $text);
         $out    = trim($this->{$method}($text));
         return $out;
     }
 
     public function cleanEpisode($text)
     {
+        $text = str_replace("E", "", $text);
+        return $text;
+    }
+        public function cleanSeason($text)
+    {
+        $text = str_replace("S", "", $text);
         return $text;
     }
 
@@ -319,7 +326,8 @@ trait MetaTags
 
         $method = 'priority' . $priority;
 
-        if ($tag == 'title' || $tag == 'studio') {
+        if ($tag == 'title' || $tag == 'studio' || $tag ==
+        'episode' || $tag == 'season' || $tag == 'scene') {
             $method = 'priority';
             // self::dumpTag($tag, $method . ':' . __LINE__, ['return' => $return]);
         }

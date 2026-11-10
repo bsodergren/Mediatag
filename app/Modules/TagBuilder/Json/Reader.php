@@ -86,6 +86,8 @@ class Reader extends TagReader
             'Filesize' => 'Filesize',
             'Width' => 'Width',
             'Height' => 'Height',
+            'episode_number' => 'episode',
+            'season_number' => 'season',
 
         ];
 
@@ -123,11 +125,11 @@ class Reader extends TagReader
 
                 }
             } else {
-                 if (\array_key_exists($from, $json)) {
-                if ($json[$from] != null) {
-                    $newJson[$newKey] = $json[$from];
+                if (\array_key_exists($from, $json)) {
+                    if ($json[$from] != null) {
+                        $newJson[$newKey] = $json[$from];
+                    }
                 }
-                 }
                 // if (!\array_key_exists($oldKey, $newJson)) {
                 // $newJson[ucfirst($oldKey)] = $json[$oldKey];
                 // }
@@ -141,7 +143,6 @@ class Reader extends TagReader
     {
         // utminfo(func_get_args());
         // UTMlog::logger('Call in json', $method);
-
         $this->get($method);
 
         return $this->tag_array;
@@ -202,34 +203,47 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $tag = strtolower($tag);
-        if ($tag == 'genre') {
-            $this->getJsonValue($tag, ['tags', 'categories']);
+
+        switch ($tag) {
+            case 'genre':
+                $this->getJsonValue($tag, ['tags', 'categories']);
+                break;
+            case 'title':
+                $this->getJsonValue($tag, ['title']);
+                break;
+            case 'episode':
+                $this->getJsonValue($tag, ['episode']);
+                break;
+            case 'season':
+                $this->getJsonValue($tag, ['season']);
+                break;
+            case 'studio':
+                $this->getJsonValue($tag, ['uploader', 'channel', 'series']);
+                break;
+            case 'keyword':
+                $this->getJsonValue($tag, ['tags', 'categories']);
+                break;
+            case 'artist':
+                $this->getJsonValue($tag, ['cast']);
+                break;
+            case 'network':
+                $this->getJsonValue(
+                    $tag,
+                    ['extractor'],
+                    [
+                        'exclude' => ['Pornhub'],
+                        'rename'  => ['NubilesPorn' => 'Nubiles'],
+                    ],
+                );
+                break;
+            case 'actiontags':
+                $this->getJsonValue($tag, ['actionTags']);
+                break;
+            default:
+                // utmdump(['Unknown tag' => $tag]);
+                break;
         }
-        if ($tag == 'title') {
-            $this->getJsonValue($tag, ['title']);
-        }
-        if ($tag == 'studio') {
-            $this->getJsonValue($tag, ['uploader', 'channel', 'series']);
-        }
-        if ($tag == 'keyword') {
-            $this->getJsonValue($tag, ['tags', 'categories']);
-        }
-        if ($tag == 'artist') {
-            $this->getJsonValue($tag, ['cast']);
-        }
-        if ($tag == 'network') {
-            $this->getJsonValue(
-                $tag,
-                ['extractor'],
-                [
-                    'exclude' => ['Pornhub'],
-                    'rename'  => ['NubilesPorn' => 'Nubiles'],
-                ],
-            );
-        }
-        if ($tag == 'actiontags') {
-            $this->getJsonValue($tag, ['actionTags']);
-        }
+
     }
 
     private function getJsonValue($tag, $keyList = [], $options = [])
@@ -290,6 +304,7 @@ class Reader extends TagReader
                 }
             }
         }
+        // utmdump([$tag, $this->tag_array]);
         if (\array_key_exists($tag, $this->tag_array)) {
             if ($this->tag_array[$tag] !== null) {
                 self::$HasField[$tag] = 'true';
@@ -378,6 +393,33 @@ class Reader extends TagReader
         return $json_file;
     }
 
+    private function findjsonFromtmpCache($searchdir)
+    {
+        $files = MediaFinder::find('*.json', $searchdir, false, true);
+        foreach ($files as $file) {
+            $json_key         = basename($file, '.json');
+            $json_key         = basename($json_key, '.info');
+
+            $json_key         = strtolower(str_replace('_', '_', $json_key));
+
+            $this->video_name = strtolower($this->video_name);
+            if (str_contains($this->video_key, $json_key)) {
+                // utmdd([$json_key,$this->video_name,$file]);
+
+                $this->json_file = $this->moveJsontoCache($file);
+                $video_key       = $json_key;
+                break;
+            }
+
+            // utmdump(['VideoName' => [$this->video_name, $json_key, $file]]);
+            if (str_contains($this->video_name, $json_key)) {
+                $this->json_file = $this->moveJsontoCache($file);
+                $video_key       = $json_key;
+                break;
+            }
+        }
+    }
+
     private function getJsonFile()
     {
         // utminfo(func_get_args());
@@ -403,33 +445,15 @@ class Reader extends TagReader
 
 
         if ($this->json_file === null) {
-            $files = MediaFinder::find('*.json', __PLEX_STUDIO_JSON_DIR__, false, true);
-            foreach ($files as $file) {
-                $json_key         = basename($file, '.json');
-                $json_key         = basename($json_key, '.info');
-
-                $json_key         = strtolower(str_replace('_', '_', $json_key));
-                // utmdump([$json_key,$this->video_name]);
-
-                $this->video_name = strtolower($this->video_name);
-                if (str_contains($this->video_key, $json_key)) {
-                    $this->json_file = $this->moveJsontoCache($file);
-                    $video_key       = $json_key;
-                    break;
-                }
-
-                // utmdump(['VideoName' => [$this->video_name, $json_key, $file]]);
-                if (str_contains($this->video_name, $json_key)) {
-                    $this->json_file = $this->moveJsontoCache($file);
-                    $video_key       = $json_key;
-                    break;
-                }
-            }
-            // utmdd($this->json_file);
-            if (! file_exists($this->json_file)) {
-                return false;
-            }
+            $this->findjsonFromtmpCache(\__PLEX_STUDIO_JSON_DIR__);
         }
+        if ($this->json_file === null) {
+            $this->findjsonFromtmpCache(\__STUDIO_TMP_JSON_CACHE_DIR__);
+        }
+        if (! file_exists($this->json_file)) {
+            return false;
+        }
+
 
         $this->json_file   = self::checkJsonForUpdate($this->json_file, $video_key);
 

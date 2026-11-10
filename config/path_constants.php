@@ -50,6 +50,8 @@ if (defined('__PLEX_HOME__')) {
     define('__PH_CACHE_DIR__', __CACHE_DIR__ . '/Pornhub');
     define('__STUDIO_CACHE_DIR__', __CACHE_DIR__ . '/Studio');
     define('__STUDIO_JSON_CACHE_DIR__', __STUDIO_CACHE_DIR__ . '/json');
+    define('__STUDIO_TMP_JSON_CACHE_DIR__', __STUDIO_CACHE_DIR__ . '/tmpJson');
+
     define('__APP_CACHE_DIR__', __CACHE_DIR__ . '/mediatag');
     $CreateDirs[] = __PLEX_PL_ID_DIR__;
     $CreateDirs[] = __PLEX_PL_LIST_DIR__;

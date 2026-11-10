@@ -23,8 +23,8 @@ class Scene extends MetaEntities
 
     public static function MetaReaderCallback()
     {
-        return '/(tves).*contains\:\ (.*)/'; //  = function ($matches) {return $matches[2];},
-    }
+ $value =  '/(tves).*contains\:\ (.*)/'; //  = function ($matches) {return $matches[2];},
+        return $value;    }
 
     public static function GenerateOption()
     {

@@ -303,6 +303,26 @@ class Reader extends TagReader
         return null;
     }
 
+  public function getSeason()
+    {
+        // utminfo(func_get_args());
+        $res = $this->getFileTag('season');
+        if ($res === false) {
+            return null;
+        }
+        return $res;
+    }
+    public function getEpisode()
+    {
+        // utminfo(func_get_args());
+        $res = $this->getFileTag('episode');
+        if ($res === false) {
+            return null;
+        }
+
+        return $res;
+    }
+
     public function getArtist()
     {
         // utminfo(func_get_args());
@@ -331,6 +351,7 @@ class Reader extends TagReader
         // UTMlog::Logger('method', $method);
 
         if ($this->PatternObject !== null) {
+            // utmdump([get_class($this->PatternObject), $method]);
             $result = $this->PatternObject->{$method}();
             $use    = 1;
             //  } else {

@@ -9,6 +9,7 @@ namespace Mediatag\Entities;
 use Mediatag\Entities\Tags\Episode;
 use Mediatag\Entities\Tags\Movie;
 use Mediatag\Entities\Tags\Scene;
+use Mediatag\Entities\Tags\Season;
 use Nette\Utils\Arrays;
 use Symfony\Component\Finder\Finder;
 
@@ -96,6 +97,10 @@ class MetaEntities
                 $episode = Episode::isEpisode($file);
                 if (count($episode) < 1) {
                     $episode = ['episode' => 1];
+                }
+                $season = Season::isSeason($file);
+                if (count($season) < 1) {
+                    $season = ['season' => 1];
                 }
                 $Movie   = Movie::isMovie($file);
                 $params  = array_merge($scene, $episode, $Movie);
