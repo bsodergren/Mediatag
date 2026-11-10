@@ -91,8 +91,12 @@ trait MetaTags
     public function cleanTitle($text)
     {
         // utminfo(func_get_args());
-        // utmdd([__FILE__, __METHOD__, __LINE__]);
 
+        $text = str_replace($this->tag_array['network'] . " - ", "", $text);
+        //utmdump('"'.$text.'"');
+        $text = preg_replace('/( \- [S0-9:]+[e0-9]+)$/', '', $text);
+        // utmdd([__FILE__, __METHOD__, __LINE__]);
+// utmdd($this->tag_array,$text);
         return Title::clean($text);
     }
 

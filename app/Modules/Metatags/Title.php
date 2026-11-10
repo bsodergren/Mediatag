@@ -16,7 +16,6 @@ class Title extends TagBuilder
     public function __construct($videoData)
     {
         // utminfo(func_get_args());
-
         // // UTMlog::Logger('data', $this->videoData);
     }
 
