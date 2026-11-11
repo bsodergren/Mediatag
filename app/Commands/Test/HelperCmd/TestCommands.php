@@ -39,6 +39,8 @@ use UTM\Utilities\Option;
 use UTMDbLib\Metatags\Artist;
 use UTMDbLib\VideoInfo\VideoInfo as LibVinfo;
 use Nette\Utils\FileSystem as NetteFile;
+use Mediatag\Commands\Test\HelperCmd\traits\jsonExporter;
+use Mediatag\Commands\Test\HelperCmd\traits\BackupVideos;
 
 use function count;
 use function dirname;
@@ -50,108 +52,21 @@ use const DIRECTORY_SEPARATOR;
 use const FILTER_VALIDATE_URL;
 use const PHP_URL_PATH;
 
-Class TestCommands
+class TestCommands
 {
     use MediaFFmpeg;
     use ScriptWriterHelper;
+    use jsonExporter;
+    use BackupVideos;
+
+
+    private $CorruptedFiles =   __DATA_LISTS__. '/corrupted_files.txt';
+
+    private $existingFiles = "/home/bjorn/ExistingStudioFiles.txt";
 
     private static $BAD_FILE = __PLEX_VAR_DIR__ . '/bad_files.txt';
 
-    private $i = 50;
 
-    private $backupDrive = '/mnt/sas2';
-
-    public function restoreStudios()
-    {
-
-        if (Option::isTrue('limit')) {
-            $this->i = (int) Option::getValue('limit');
-        }
-
-        if (Option::isTrue('source')) {
-            $this->backupDrive = Option::getValue('source');
-        }
-        // $backupDrive = '/mnt/sas2';
-        $sourceDir = $this->backupDrive . '/Studios';
-        Mediatag::$Console->writeln('<info>restoring <file>' . $this->backupDrive . '</file> directory</info>');
-
-        // utmdd($this->backupDrive);
-        $destinationDir = '/media/Videos/Plex/XXX/Studios';
-
-        $CopiedDestDir = $this->backupDrive . '/Copied/Studios';
-
-        $finder = new Finder();
-        $finder->files()->in($sourceDir)->sortByCaseInsensitiveName(true);
-
-        $filter = function (\SplFileInfo $file) {
-            $search = Option::getValue('filter');
-            if (! str_starts_with($file->getRelativePathname(), $search)) {
-                // utmdd([$file->getRelativePathname(),$search]);
-                return false;
-            }
-
-        };
-        if (Option::isTrue('filter')) {
-            $finder->filter($filter);
-        }
-
-
-        $excludeFilter = function (\SplFileInfo $file) {
-            $text  = NetteFile::readLines(self::$BAD_FILE, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES);
-            foreach ($text as $lineNum => $exclude) {
-                if (str_contains(strtolower($file->getRelativePathname()), strtolower($exclude))) {
-                    utmdump(['Excluding file', $file->getRelativePathname(), $exclude]);
-
-                    return false;
-                }
-            }
-        };
-        $finder->filter($excludeFilter);
-
-
-        $currentDir = '';
-        $filesArray = iterator_to_array($finder, false);
-        $resultCount = \count($filesArray);
-        if ($this->i > $resultCount) {
-            $this->i = $resultCount;
-        }
-
-        foreach ($finder as $file) {
-            $relativePath = $file->getRelativePathname();
-            $sourcePath = $file->getRealPath();
-            $firstDir = explode(\DIRECTORY_SEPARATOR, $relativePath);
-            if ($currentDir !== $firstDir[0]) {
-                if ($currentDir !== '') {
-                    Mediatag::$Console->writeln('<info>Moving <file>' . $currentDir . '</file> directory</info>');
-
-                    // FileSystem::createDir($CopiedDestDir . '/' . $currentDir);
-
-                    FileSystem::rename($sourceDir . '/' . $currentDir, $CopiedDestDir . '/' . $currentDir);
-                    // utmdd("");
-                }
-                $currentDir = $firstDir[0];
-                Mediatag::$Console->writeln('<info>Checking <file>' . $currentDir . '</file> directory</info>');
-            }
-
-            $destinationPath = $destinationDir . \DIRECTORY_SEPARATOR . $relativePath;
-
-            if ($this->copyWithProgress($sourcePath, $destinationPath)) {
-                $this->i--;
-                //    Mediatag::$Console->writeln("Failed to copy: $sourcePath");
-            }
-
-            if ($this->i == 0) {
-                Mediatag::$Console->writeln('More than 50 files copied.');
-                break;
-
-            }
-        }
-
-
-
-
-
-    }
 
     private function copyWithProgress($source, $destination, $chunkSize = 1048576) // 1 MB chunks
     {
@@ -454,6 +369,70 @@ Class TestCommands
     //     FileSystem::rename($dirPath, $movedDir);
     // }
 
+ private function arraySearch($array, $search)
+    {
+        foreach ($array as $key => $value) {
+            if (str_contains($value, $search)) {
+                return $key;
+            }
+        }
+
+        return false;
+    }
+
+    public function listStudioFiles()
+    {
+
+
+        $lines  =  FileSystem::readLines($this->existingFiles,true);
+        foreach ($lines as $lineNum => $line) {
+            $tline =  trim(preg_replace('/[\x00-\x1F\x7F]/', '', $line));
+            if ($tline !== '') {
+                 $existingFiles[] = $tline;
+//                $existingFiles[] = preg_replace('/(_[0-9]{1,4}.*\.mp4)/', '', $tline);
+            }
+}
+unset($existingFiles[0]);
+    //    utmdd($existingFiles);
+
+        $fileArray = [];
+        $dups = [];
+        $totalSize = 0;
+        $finder      = new Finder();
+        $files        = $finder->files()->in(\__CURRENT_DIRECTORY__)->name('*.mp4')->sortBySize();
+        // Mediatag::$Console->writeln($dirs->count() . ' files found');
+        foreach ($files as $file) {
+            // $key = basename( ".info.json");
+            $search  = preg_replace('/(_[0-9]{1,4}.*\.mp4)/', '', $file->getFilename());
+
+            if($existingFile = $this->arraySearch($existingFiles, $search))  {
+
+utmdump([$existingFile, $file->getFilename(), $existingFiles[$existingFile]]);
+                $currentFile = $existingFiles[$existingFile]    ;
+
+
+    $winPath = str_replace('/media/Videos/Plex/XXX/Studios/', 'D:\\Plex\\Studios\\', $file->getRealPath());
+    $winPath = str_replace('/', '\\', $winPath);
+                $mvFile[] = 'RenameStudioFile -Old "D:\\Plex\\Videos\\'.$currentFile.'" -New "'.$winPath.'"';
+
+
+//                $file->getRealPath();
+                // utmdd(['filename' => $file->getFilename()]);
+                continue;
+            }
+            $totalSize += $file->getSize();
+            if($totalSize > (1643704144*1024)) {
+                // break;
+            }
+            $fileArray[] = $file->getRealPath();
+
+
+        }
+        $string = implode(PHP_EOL, $mvFile);
+        file_put_contents('/home/bjorn/RenameStudioFile.ps1', $string);
+
+//  utmdd($string);
+    }
 
 
     // $dirIndex++;
@@ -1266,7 +1245,7 @@ Class TestCommands
         $command = ['ffprobe', '-loglevel', 'error', '-i', $file];
         $process = new Process($command);
 
-// utmdd($process->getCommandLine());
+        // utmdd($process->getCommandLine());
 
         $process->setTimeout(60);
         $process->run();
@@ -1277,8 +1256,16 @@ Class TestCommands
             $dmg_dir      = str_replace('/XXX', '/XXX/dmg', \dirname($file));
 
             FileSystem::createDir($dmg_dir);
-            FileSystem::rename($file, $dmg_dir . '/' . basename($file));
-
+            // FileSystem::rename($file, $dmg_dir . '/' . basename($file));
+            $dmgFile = str_replace(__PLEX_HOME__.'/'.__LIBRARY__.'/','',$file);
+            $depth = 1;
+            if(__LIBRARY__ == 'Pornhub'){
+                $depth = 2;
+            }
+            $network = str_replace(" ","",Strings::before($dmgFile, '/', $depth));
+            $dmgTextFile = __DATA_LISTS__ . "/".__LIBRARY__."-".$network.".txt";
+            utmdd($dmgTextFile);
+            file_put_contents($dmgTextFile , $dmgFile . PHP_EOL, FILE_APPEND);
             // Mediatag::$Console->writeln('<error>' . $process->getErrorOutput() . '</>');
         } else {
             Mediatag::$Console->writeln('<info>File is valid: ' . $file . '</>');

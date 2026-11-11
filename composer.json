@@ -55,7 +55,8 @@
         "stecman/symfony-console-completion": "^0.15.0",
         "patrickschur/language-detection": "^5.3",
         "league/commonmark": "^2.10",
-        "tempest/highlight": "^2.28"
+        "tempest/highlight": "^2.28",
+        "symfony/tui": "^8.1"
         },
     "scripts": {
         "clean": [
