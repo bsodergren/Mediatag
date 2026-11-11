@@ -1264,7 +1264,6 @@ utmdump([$existingFile, $file->getFilename(), $existingFiles[$existingFile]]);
             }
             $network = str_replace(" ","",Strings::before($dmgFile, '/', $depth));
             $dmgTextFile = __DATA_LISTS__ . "/".__LIBRARY__."-".$network.".txt";
-            utmdd($dmgTextFile);
             file_put_contents($dmgTextFile , $dmgFile . PHP_EOL, FILE_APPEND);
             // Mediatag::$Console->writeln('<error>' . $process->getErrorOutput() . '</>');
         } else {
