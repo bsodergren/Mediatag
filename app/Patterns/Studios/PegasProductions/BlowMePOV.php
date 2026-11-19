@@ -15,4 +15,6 @@ use Mediatag\Patterns\Studios\PegasProductions\PegasProductions;
 class BlowMePOV extends PegasProductions
 {
     public $studio = 'Blow Me POV';
+        public $network = 'Pegas Productions';
+
 }

@@ -28,7 +28,7 @@ trait TitleMap
     {
         // utminfo(func_get_args());
 
-
+ $namesArray = [];
         $query = 'SELECT title FROM ' . __MYSQL_TITLE__;
         $res   = $this->query($query);
         foreach ($res as $k => $val) {

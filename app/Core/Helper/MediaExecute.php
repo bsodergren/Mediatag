@@ -94,6 +94,7 @@ trait MediaExecute
         Mediatag::notice('getTitleMap', __FILE__);
         Mediatag::debug('getTitleMap', __FILE__);
 
+ $nameArray = [];
         if (is_string($file)) {
             if (is_file($file)) {
                 $artistList = file_get_contents($file);

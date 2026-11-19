@@ -56,6 +56,8 @@ if (defined('__PLEX_HOME__')) {
     $CreateDirs[] = __PLEX_PL_ID_DIR__;
     $CreateDirs[] = __PLEX_PL_LIST_DIR__;
 
+    $CreateDirs[] = __STUDIO_TMP_JSON_CACHE_DIR__;
+
     $CreateDirs[] = __STUDIO_JSON_CACHE_DIR__;
     $CreateDirs[] = __PLEX_PL_DIR__;
     $CreateDirs[] = __JSON_CACHE_DIR__;
