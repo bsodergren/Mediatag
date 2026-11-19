@@ -117,10 +117,10 @@ trait Helper
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
-            // utmdd($videoArray);
 
             $message    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             if (count($videoArray['updateTags']) > 0) {
+
                 $this->ChangesArray[] = $videoArray;
                 // $this->LogDifferences($videoArray);
                 $message              = Mediatag::$Display->truncate($message, __CONSOLE_WIDTH__ - 35);
@@ -135,6 +135,8 @@ trait Helper
         // $progressBar2->finish();
         $progressBar->finish();
         Mediatag::$Display->BarBottom->clear();
+                    // utmdump(count($this->ChangesArray));
+
     }
 
     // public function saveChanges($json_file = '')
@@ -195,7 +197,7 @@ trait Helper
 
         $lines                        = Mediatag::$Display->displayFileInfo($videoArray, $count, $index);
 
-        // utmdd($videoArray);
+        //  utmdd(count($videoArray));
 
         foreach (Mediatag::$Display->BlockInfo as $tag => $value) {
             $value            = trim($value);

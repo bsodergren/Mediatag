@@ -196,7 +196,7 @@ class PornWorld extends Patterns
     //         return false;
     //     }
 
-    public function getTitle()
+    public function _getTitle()
     {
         $key        = $this->video_name . '_' . __FUNCTION__;
 
@@ -228,7 +228,7 @@ class PornWorld extends Patterns
                 $url     = 'https://pornbox.com/store/search?q=' . $search . '&skip=0&is_purchased=-1';
                 // https:// pornbox.com/store/search?q=ultra+horny&skip=0&sort=relevant&is_purchased=1
 
-                $content = MediaScraper::getUrl($url);
+                $content['content'] = [];// MediaScraper::getUrl($url);
 
                 //   // utmdump($url);
                 // utmdd(array_keys($content['content']));

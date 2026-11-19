@@ -45,7 +45,7 @@ class Youtube extends MediatagExec
         '-f',
         'bestvideo[width<=?1080]+bestaudio/best',
         // 'worstvideo[width<=?1080]+worstaudio/worst',
-        // '--restrict-filenames',
+        '--restrict-filenames',
         // '-w',
         '-c',
         '--abort-on-unavailable-fragments',
@@ -223,7 +223,7 @@ class Youtube extends MediatagExec
         $this->downloadFiles = $downloadFiles;
         $this->num_of_lines  = 100;
         if (!Option::istrue('url')) {
-            
+
             if($this->playlist === false){
                 return false;
             }

@@ -92,7 +92,10 @@ trait MetaTags
     {
         // utminfo(func_get_args());
 
-        $text = str_replace($this->tag_array['network'] . " - ", "", $text);
+        if(array_key_exists('network', $this->tag_array)) {
+            $text = str_replace($this->tag_array['network'] . " - ", "", $text);
+        }   
+        // $text = str_replace($this->tag_array['network'] . " - ", "", $text);
         //utmdump('"'.$text.'"');
         $text = preg_replace('/( \- [S0-9:]+[e0-9]+)$/', '', $text);
         // utmdd([__FILE__, __METHOD__, __LINE__]);

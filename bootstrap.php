@@ -22,6 +22,8 @@ set_include_path(get_include_path().\PATH_SEPARATOR.__COMPOSER_LIB__);
 
 require_once __COMPOSER_LIB__.'/autoload.php';
 
+
+
 Utm::loadConifg(__ROOT_DIRECTORY__.\DIRECTORY_SEPARATOR.'config.ini');
 Utm::LoadEnv(__ROOT_DIRECTORY__)->load();
 
@@ -53,7 +55,6 @@ MediaLogger::$USE_DEBUG = false;
 Debug::$PrettyLogs  = false;
 Debug::$RealTimeLog = false;
 new Utm(__LOGFILE_DIR__);
-
 $finder = new Finder();
 $finder->files()->in(__LOGFILE_DIR__)->date('before 1 days ago');
 foreach ($finder as $file) {

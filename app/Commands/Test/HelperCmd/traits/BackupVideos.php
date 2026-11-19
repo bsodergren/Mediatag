@@ -43,6 +43,73 @@ trait BackupVideos
 
     private $backupDrive = '/mnt/sas2';
 
+
+    private  $StudioList = "/media/Videos/Plex/XXX/studio_files.txt";
+
+    private static $StudioListText = '';
+
+    private function findExistinFileMap($filename)
+    {
+            
+
+        // utmdd($filename);
+            foreach ( $this->StudioListText  as $lineNum => $exclude) {
+                $filenameLen = strlen($filename);
+                $fileFirstPart = substr($filename, 0, $filenameLen/2);
+                if (str_contains( strtolower($exclude),strtolower($fileFirstPart))) {
+                    return $exclude;
+                }
+            }
+            return false;
+    }
+
+    public function SortStudios()
+    {
+        
+    $StudioListText = NetteFile::readLines($this->StudioList, \FILE_IGNORE_NEW_LINES | \FILE_SKIP_EMPTY_LINES) ;
+
+        
+            $this->StudioListText = iterator_to_array($StudioListText);
+
+        $sourceDir = '/media/Videos/Plex/XXX/Sort';
+
+        $finder = new Finder();
+        $finder->files()->in($sourceDir)->sortByCaseInsensitiveName(true);
+
+        foreach ($finder as $file) {
+            $sourcePath = dirname($file->getPath(),1);
+            $fileName = $file->getFilename();
+            $found = $this->findExistinFileMap($fileName);
+
+
+            if($found !== false){
+            $sourceFile = $file->getRealPath();
+
+            $destination = FileSystem::joinPaths($sourcePath, 'Studios', $found);
+                $destinationDir = basename($destination);
+                
+                //FileSystem::createDir($destinationDir);
+
+                Mediatag::$Console->writeln('<info>Old File <file>' . $sourceFile . '</file> </info>');
+
+              Mediatag::$Console->writeln('<info>New File <file>' . $destination . '</file> </info>');
+
+                continue;
+            }
+            // $firstDir = explode(\DIRECTORY_SEPARATOR, $relativePath);
+            // $currentDir = $firstDir[0];
+
+            // 
+
+            // // Create the destination directory if it doesn't exist
+            // FileSystem::createDir($destinationDir . '/' . $currentDir);
+
+            // // Move the file to the destination directory
+            // FileSystem::rename($sourcePath, $destinationDir . '/' . $relativePath);
+        }
+        return false;
+    }
+
     public function restoreStudios()
     {
 
@@ -106,7 +173,7 @@ trait BackupVideos
                 if ($currentDir !== '') {
                     Mediatag::$Console->writeln('<info>Moving <file>' . $currentDir . '</file> directory</info>');
 
-                    // FileSystem::createDir($CopiedDestDir . '/' . $currentDir);
+                    FileSystem::createDir($CopiedDestDir);
 
                     FileSystem::rename($sourceDir . '/' . $currentDir, $CopiedDestDir . '/' . $currentDir);
                     // utmdd("");
@@ -128,9 +195,13 @@ trait BackupVideos
 
             }
         }
-
-
-
+        // The last directory has no following directory to trigger its move.
+        // Leave it in place if the limit stopped processing partway through it.
+        if ($currentDir !== '' && $this->i > 0 && is_dir($sourceDir . '/' . $currentDir)) {
+            Mediatag::$Console->writeln('<info>Moving <file>' . $currentDir . '</file> directory</info>');
+            FileSystem::createDir($CopiedDestDir);
+            FileSystem::rename($sourceDir . '/' . $currentDir, $CopiedDestDir . '/' . $currentDir);
+        }
 
 
     }

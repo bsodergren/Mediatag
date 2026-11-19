@@ -454,7 +454,6 @@ class Reader extends TagReader
             return false;
         }
 
-
         $this->json_file   = self::checkJsonForUpdate($this->json_file, $video_key);
 
         $this->json_string = MediaFilesystem::readLineNo($this->json_file, 1);
