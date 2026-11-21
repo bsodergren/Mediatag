@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * Command like Metatag writer for video files.
+ */
+
+namespace Mediatag\Commands\Clip\Commands\Screenshot;
+
+use Mediatag\Commands\Clip\Lang;
+use Mediatag\Commands\Clip\Options;
+use Mediatag\Traits\Translate;
+use Symfony\Component\Console\Input\InputOption;
+
+class ScreenshotOptions extends Options
+{
+    use Lang;
+    use Translate;
+
+    // public $options = ['Test'];
+
+    public function Definitions()
+    {
+        self::$Class   = __CLASS__;
+        $parentOptions = parent::Definitions();
+        $options       = [
+            ['thumbnail', 'T', InputOption::VALUE_NONE, self::text('L_OPTION_THUMBNAIL')],
+            ['markers', 'm', InputOption::VALUE_NONE, self::text('L_OPTION_MARKERS')],
+            ['nobackup', 'b', InputOption::VALUE_NONE, self::text('L_OPTION_NO_BACKUP')],
+            // ['overwrite', 'o', InputOption::VALUE_NONE, self::text('L_OPTION_OVERWRITE')],
+            ['break'],
+        ];
+
+        return array_merge($parentOptions, $options);
+    }
+}

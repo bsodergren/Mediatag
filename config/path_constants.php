@@ -89,6 +89,11 @@ if (defined('__WEB_HOME__')) {
     define('__INC_WEB_PREVIEW_URL__', '/images/plex/preivew');
     define('__INC_WEB_PREVIEW_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_PREVIEW_URL__);
 
+    define('__INC_WEB_SCREENSHOT_URL__', '/images/plex/screenshots');
+    define('__INC_WEB_SCREENSHOT_DIR__', __INC_WEB_THUMB_ROOT__ . __INC_WEB_SCREENSHOT_URL__);
+
+
+    $CreateDirs[] = __INC_WEB_SCREENSHOT_DIR__;
     $CreateDirs[] = __INC_WEB_THUMB_DIR__;
     $CreateDirs[] = __INC_WEB_CHAPTER_DIR__;
     $CreateDirs[] = __INC_WEB_PREVIEW_DIR__;

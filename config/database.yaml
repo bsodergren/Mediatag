@@ -21,6 +21,7 @@ plexweb:
         - 'video_markers'
         - 'settings'
         - 'search_data'
+        - 'video_screenshots'
         - 'video_sequence'
         - 'playlist_videos'
         - 'playlist_data'

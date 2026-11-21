@@ -85,12 +85,14 @@ trait Artist
         $names          = str_replace('_1080p', '', $names);
         $names          = str_replace($this->getArtistDelim(), $delim, $names);
         $names          = str_replace('_', ' ', $names);
+        $names = \ucwords($names,', ');
         $names_array    = explode($delim, $names);
+        //   utmdump($names);
 
         /*
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
         $prev_name      = '';
-        
+
         $total_names = count($names_array);
         $new_array = [];
         $key = 0;
@@ -252,7 +254,6 @@ trait Artist
         $regex = $this->getArtistRegex();
         if ($regex) {
             $success = preg_match($regex, $this->video_name, $output_array);
-          
             if ($success != 0) {
                 if ($this->getArtistFullNames() === true) {
                     if ($this->getGenre() == 'MFF') {
@@ -279,8 +280,8 @@ trait Artist
                         continue;
                     }
                     $names[] = $this->getArtistTextTransform($output_array[$keyMatch]);
-                }            
-                
+                }
+
 
                 if (count($names) == 0) {
                     return null;

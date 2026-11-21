@@ -96,5 +96,5 @@ define(
         __STUDIO_TMP_JSON_CACHE_DIR__,
     ],
 );
-utmdd(__STUDIO_TMP_JSON_CACHE_DIR__);
+// utmdd(__STUDIO_TMP_JSON_CACHE_DIR__);
 // dd(__INC_WEB_THUMB_DIR__);

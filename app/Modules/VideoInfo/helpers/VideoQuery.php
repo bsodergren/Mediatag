@@ -76,6 +76,9 @@ trait VideoQuery
         if ('chapters' == $this->thumbType) {
             return $this->ChaptersVideoQuery($video_id, $search);
         }
+            if ('screenshot' == $this->thumbType) {
+            return $this->ScreenshotVideoQuery($video_id, $search);
+        }
         $_where[] = '  fullpath like \'' . __CURRENT_DIRECTORY__ . '%\' ';
 
         // utmdd(Option::getOptions());
@@ -171,6 +174,20 @@ trait VideoQuery
         }
 
         $sql    = 'SELECT ' . $fields . ' FROM ' . $this->VideoDataTable . ' vm, ' . __MYSQL_VIDEO_FILE__ . ' f, ' . __MYSQL_VIDEO_INFO__ . ' i WHERE ' . $where . $order;
+
+        return $sql;
+    }
+
+    private function ScreenshotVideoQuery($video_id = null,$search = null)
+    {
+            $fields = " CONCAT(f.fullpath,'/',f.filename) as filename, vs.timeCode, vs.id ";
+
+            $where = ' vs.video_id =  ' . $video_id . ' ';
+            $where .= ' AND vs.ScreenshotFile  is null  ';
+            $where .= ' AND f.id = vs.video_id AND f.fullpath like \'' . __CURRENT_DIRECTORY__ . '%\'';
+
+            $order = ' ORDER BY `vs`.`timeCode` ASC';
+            $sql    = 'SELECT ' . $fields . ' FROM ' . $this->VideoDataTable . ' vs, ' . __MYSQL_VIDEO_FILE__ . ' f  WHERE ' . $where . $order;
 
         return $sql;
     }
