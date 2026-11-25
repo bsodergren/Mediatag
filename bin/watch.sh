@@ -15,6 +15,7 @@ BIN_DIR="/home/bjorn/scripts/Mediatag/bin/"
 MEDIADB_CMD="${BIN_DIR}mediadb"         # Path to the media database command
 MEDIAUPDATE_CMD="${BIN_DIR}mediaupdate" # Path to the media update command
 
+SILENT="--silent"
 OPTIONS=""
 
 PrevEvent=""
@@ -24,73 +25,95 @@ PreviousFilename=""
 DEBUG="NO"
 COLOR_OUTPUT="NO"
 if [[ "$TEST" == "YES" ]]; then
-    DEBUG="YES"
+	DEBUG="YES"
 fi
 
-function watch.debug {
-    local text="$1"
-    echo $(string.cyan "$text")
+function exec_cmd
+{
+	if [[ "$DEBUG" == "YES" ]]; then
+		echo "$@"
+	fi
+	if [[ "$TEST" == "NO" ]]; then
+		"$@"
+	fi
 
 }
 
-function update_media_file {
-    local filename="$1"
-    local directory="$2"
-    FILE="${directory}$filename"
-    # echo $(string.blue "Video Metatags: $filenameColored")
-    main.log "Running update_media_file: " $FILE
-
-    if [[ "$TEST" == "NO" ]]; then
-        $MEDIAUPDATE_CMD --silent --no-progress --path="$directory" -f="$FILE" $OPTIONS
-        # echo $(string.green "Video Metatags added: $filenameColored")
+function watch.debug
+{
+	local text="$1"
+    if [[ "$DEBUG" == "YES" ]]; then
+	echo $(string.cyan "$text")
     fi
-    # # echo "$MEDIAUPDATE_CMD --no-progress --path=$directory -f=$FILE $OPTIONS"
+
 }
 
-function update_media_db {
-    local filename="$1"
-    local directory="$2"
-    FILE="${directory}$filename"
-    # echo $(string.blue "Updating media database for $filenameColored")
-    main.log "Running update_media_db: " $FILE
-    # Placeholder for actual media database update command
-    if [[ "$TEST" == "NO" ]]; then
-        $MEDIADB_CMD --silent --path="$directory" -f="$FILE"
-        $MEDIADB_CMD --silent --path="$directory" info
-        $MEDIADB_CMD --silent --path="$directory" thumbnail
-        # mediadb $OPTIONS --path="$directory" preview
-        # echo $(string.green "Finished updating database for $filenameColored")
-    fi
+function update_media_file
+{
+	local filename="$1"
+	local directory="$2"
+	FILE="${directory}$filename"
+	echo $(string.blue "Video Metatags: $filename")
+	main.log "Running update_media_file: " $FILE
+
+	exec_cmd $MEDIAUPDATE_CMD $SILENT --path="$directory" -f="$FILE" $OPTIONS
+	echo $(string.green "Video Metatags added: $filename")
 }
 
-function process_deleted_file {
-    local directory="$1"
-    # echo $(string.red "Updating media database for $directory after deletion")
-    if [[ "$TEST" == "NO" ]]; then
-        main.log "Running process_deleted_file: " $directory
-        if [ -z "$(ls -A $directory)" ]; then
-            directory="$(dirname "$directory")"
-        fi
+function update_media_db
+{
+	local filename="$1"
+	local directory="$2"
+	FILE="${directory}$filename"
+	echo $(string.blue "Updating media database for $filename")
+	main.log "Running update_media_db: " $FILE
+	# Placeholder for actual media database update command
 
-        $MEDIADB_CMD --silent --path="$directory"
-        $MEDIADB_CMD --silent --path="$directory" -c thumbnail
-        $MEDIADB_CMD --silent --path="$directory" -c preview
-    fi
+	exec_cmd $MEDIADB_CMD $SILENT --path="$directory" -f="$FILE"
+	exec_cmd $MEDIADB_CMD $SILENT --path="$directory" most
+	exec_cmd $MEDIADB_CMD $SILENT --path="$directory" preview
+
+	echo $(string.green "Finished updating database for $filename")
+
+}
+
+function process_deleted_file
+{
+	local directory="$1"
+	echo $(string.red "Updating media database for $directory after deletion")
+	if [[ "$TEST" == "NO" ]]; then
+		main.log "Running process_deleted_file: " $directory
+		if [ -z "$(ls -A $directory)" ]; then
+			directory="$(dirname "$directory")"
+		fi
+
+		exec_cmd $MEDIADB_CMD $SILENT --path="$directory"
+		exec_cmd $MEDIADB_CMD $SILENT --path="$directory" -c thumbnail
+		exec_cmd $MEDIADB_CMD $SILENT --path="$directory" -c preview
+	fi
 }
 
 # function runWatch {
 
-    inotifywait -r -m --format '%:e,%w,%f,%T' \
-        --exclude '(-temp-|-data-|Premium|Sort)' \
-        --timefmt "%T"  \
-        -e close_write,move,delete,create,moved_to "$WATCH_DIR" |
-        while IFS="," read -r events directory filename time; do
+inotifywait -r -m --format '%:e,%w,%f,%T' \
+	--exclude '(-temp-|-data-|Premium|Sort)' \
+	--timefmt "%T" \
+	-e close_write,move,delete,create,moved_to "$WATCH_DIR" |
+	while IFS="," read -r events directory filename time; do
 
-            # -f "$filename" &&
-            #
+        filenameColored=$filename
+        if [[ "$DEBUG" == "YES" ]]; then
+            filenameColored=$(string.red $filename)
+        fi
 
+        echo $(watch.debug "$time: -----------------------")
+        echo $(watch.debug "$time: filename $filenameColored")
+        echo $(watch.debug "$time: dir      $directory")
+        echo $(watch.debug "$time: event    $events")
+
+
+        if [[ "$filename" =~ \.mp4$ ]] then
             FILE="${directory}$filename"
-            main.log "Events on : " "$filename $events"
             filePrev="$(basename "$PreviousFilename")"
             fileNew="$(basename "$FILE")"
 
@@ -103,15 +126,7 @@ function process_deleted_file {
             if [[ "$PreviousFilename" != "$FILE" &&
                 "$filePrev" != "$filePart" ]]; then
 
-                if [[ "$DEBUG" == "YES" ]]; then
 
-                    # echo $(watch.debug "$time: -----------------------")
-                    # echo $(watch.debug "$time: $filePrev $fileNew $filePart")
-
-                    filenameColoredRed=$(string.red $filename)
-                    # echo $(watch.debug "$time: -----------------------")
-                    # echo $(watch.debug "$time: NEW File Changes Detected $filenameColoredRed ")
-                fi
                 PrevEvent=""
                 MovedFile="NO"
                 PreviousFilename=$FILE
@@ -121,11 +136,11 @@ function process_deleted_file {
                     SKIP_NEXT="YES"
                 fi
             fi
-            # if [[ "$DEBUG" == "YES" ]]; then
 
-            # echo $(string.blue "$time: '$events' MovedFile=>$MovedFile, SKIP_NEXT=?$SKIP_NEXT")
-            # fi
-            filenameColored=$(string.yellow $filename)
+            if [[ "$DEBUG" == "YES" ]]; then
+                echo $(string.blue "$time: '$events' MovedFile=>$MovedFile, SKIP_NEXT=?$SKIP_NEXT")
+            fi
+            # filenameColored=$(string.yellow $filename)
 
             if [[ "$SKIP_NEXT" == "NO" ]]; then
 
@@ -146,7 +161,7 @@ function process_deleted_file {
                         TEXT="$time: '$events'"
                     fi
 
-                    # echo $(watch.debug "${TEXT} => $filenameColored")
+                    echo $(watch.debug "$time: ${TEXT} => $filenameColored")
                 fi
 
                 if [[ "$events" == "CREATE" ]]; then
@@ -155,6 +170,7 @@ function process_deleted_file {
                 fi
                 if [[ "$PrevEvent" == "CREATE" ]]; then
                     if [[ "$events" == "CLOSE_WRITE:CLOSE" ]]; then
+                        echo $(watch.debug "$time: ${PrevEvent} => ${events} => update_media_file")
                         update_media_file "$filename" "$directory"
                         MovedFile=YES
                     fi
@@ -162,6 +178,7 @@ function process_deleted_file {
 
                 if [[ "$events" == "MOVED_TO" ]]; then
                     if [[ "$MovedFile" == "NO" ]]; then
+                    echo $(watch.debug "$time: ${events} => ${MovedFile} => update_media_file")
                         update_media_file "$filename" "$directory"
                         PrevEvent=""
                         MovedFile="YES"
@@ -171,6 +188,7 @@ function process_deleted_file {
 
                 if [[ "$events" == "MOVED_TO" || "$MovedFile" == "YES" ]]; then
                     if [[ "$MovedFile" == "YES" ]]; then
+                        echo $(watch.debug "$time: ${events} => ${MovedFile} => update_media_db")
                         update_media_db "$filename" "$directory"
                         PrevEvent=""
                         MovedFile="NO"
@@ -179,43 +197,22 @@ function process_deleted_file {
                 fi
 
                 if [[ "$events" == "DELETE" || "$events" == "MOVED_FROM" ]]; then
+
+                    echo $(watch.debug "$time: Deleted File => ${events} => $filenameColored")
+
                     if [[ "$filename" =~ \.part$ && "$events" == "MOVED_FROM" ]]; then
                         SKIP_NEXT="YES"
+                         echo $(string.blue "$filenameColored: 'part file' ")
+                        elif [[ "$filename" =~ '*-temp-*' && "$events" == "MOVED_FROM" ]]; then
+                        SKIP_NEXT="YES"
+                        echo $(string.blue "$filenameColored: 'Tmp file' ")
                     else
                         process_deleted_file "$directory"
                     fi
                 fi
             fi
-            # else
-            #     # echo "File '$filename' is NOT an MP4 file."
-            # fi
+		else
+		    echo "File '$filename' is NOT an MP4 file."
+		fi
 
-        done
-
-# }
-
-# while true; do
-# #
-#     $(runWatch)
-#     exit_code=$?
-#     main.log "exit_code: " $exit_code
-#     # exiteak
-#     # fi_code=$?
-#     # if [ $exit_code -ne 0 ]; then
-
-#     #     # echo "$exit_code exitted over "
-#     #     br
-# done
-
-# exit_code=$?
-
-# until $(runWatch); do
-#     # echo "Still failing..."
-#     sleep 1
-# done
-
-# if [[ $exit_code -eq 0 ]];then
-# # echo "starting over "
-# # echo
-#     goto goto_label
-# fi
+	done
