@@ -94,7 +94,7 @@ trait MetaTags
 
         if(array_key_exists('network', $this->tag_array)) {
             $text = str_replace($this->tag_array['network'] . " - ", "", $text);
-        }   
+        }
         // $text = str_replace($this->tag_array['network'] . " - ", "", $text);
         //utmdump('"'.$text.'"');
         $text = preg_replace('/( \- [S0-9:]+[e0-9]+)$/', '', $text);
@@ -135,23 +135,31 @@ trait MetaTags
 
         $studio_dir   = (new Filesystem())->makePathRelative($this->videoData['video_path'], __PLEX_HOME__ . '/' . __LIBRARY__);
         $studio_array = explode('/', $studio_dir);
-
+//   utmdump($studio_dir);
+        $key_network = '';
+        $key_studio = '';
         if (array_key_exists(3, $studio_array)) {
+            if($studio_array[1] != $studio_array[0]) {
             $key_studio = $studio_array[1];
+            } else {
+                $key_network = '/'. $studio_array[0] ;
+            }
         } else {
             $key_studio = $studio_array[0];
         }
-
+//   utmdump($key_studio);
         if (isset(fileReader::$PatternClass)) {
             $studio_str = fileReader::$PatternClassObj->getStudio();
             // utmdump(['Studio from pattern' => $studio_str]);
-            $studio_str = trim($key_studio . '/' . $studio_str, '/');
+            $studio_str = trim($key_studio . '/' . $studio_str. $key_network, '/');
             $arr        = explode('/', $studio_str);
             $arr        = MediaArray::array_iunique($arr);
+
+
         }
         // utmdump(['Clean Studio' => ['Input' => $text, 'Studio Array' => $arr,
         // 'Studio Dir'                    => $studio_dir, 'Studio Array 2' => $studio_array]]);
-
+//   utmdump($arr);
         return implode('/', $arr);
     }
 
@@ -495,9 +503,9 @@ trait MetaTags
             $i--;
         }
         $new_arr   = array_slice($arr, 0, $i);
-        self::dumpTag('genre', __FUNCTION__ . ':' . __LINE__, ['new' => $new_arr, 'old' => $arr]);
+        // utmdd('genre', __FUNCTION__ . ':' . __LINE__, ['new' => $new_arr, 'old' => $arr]);
 
-        $string    = implode($delim, $new_arr);
+        $string    = implode($delim, $arr);
         if ($string == '') {
             $string = null;
         }

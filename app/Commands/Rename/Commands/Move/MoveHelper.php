@@ -110,6 +110,8 @@ trait MoveHelper
                 $tbsep  = new TableSeparator();
                 $text[] = $tbsep;
             }
+            // utmdd($videoData,$metatags);
+
 
             $genrePath  = '';
             $studio     = '';
@@ -144,7 +146,7 @@ trait MoveHelper
             if (self::istrue('pov')) {
                 $prefix = '/POV';
             }
-
+// utmdump($studio);
             if ('' == $studio) {
                 $studio_dir = 'Misc/';
             } else {
@@ -155,7 +157,6 @@ trait MoveHelper
                 if (false == $studio_dir) {
                     $ArraykeyLast = array_key_last($studios);
                     $studio_dir   = $tagConn->getStudioPath($studios[$ArraykeyLast]);
-                    // utmdd($studio_dir);
                     if (false == $studio_dir) {
                         // continue;
                         $studio_dir = 'New/' . $studios[$Arraykey];
@@ -163,29 +164,29 @@ trait MoveHelper
                         $studio_dir = $studio_dir . '/' . $studios[$Arraykey];
                     }
                 } else {
+                    utmdump($studios);
                     $ArraykeyLast = array_key_last($studios);
-                    $studio_dir   = $studio_dir . '/' . $studios[$ArraykeyLast];
+                    utmdump($ArraykeyLast);
+                    $studio_dir   =  $studios[$ArraykeyLast] . '/' . $studio_dir  ;
+                    // utmdd($studio_dir);
+
                 }
             }
-            // utmdd($studio_dir);
 
+// utmdump($studio_dir);
             $arr        = explode('/', $studio_dir);
             $arr        = MediaArray::array_iunique($arr);
             $studio_dir = implode('/', $arr);
+// utmdump($studio_dir);
 
             $video_path = $studio_dir . $genrePath;
             if (true == $SortDir) {
                 $video_path = 'Sort/' . $studio_dir;
             }
-            // utmdd($studio_dir);
 
-            // utmdump($video_path);
             $newPath    = __PLEX_HOME__ . '/' . __LIBRARY__ . '/' . $video_path;
-            // utmdump($newPath);
             $newPath    = str_replace(__LIBRARY__ . '/' . __LIBRARY__ . '/', __LIBRARY__ . '/', $newPath);
-            // utmdump($newPath);
             $newPath    = nFileSystem::normalizePath($newPath);
-            // utmdd($newPath);
             if (!is_dir($newPath)) {
                 if (!Option::isTrue('test')) {
                     nFileSystem::createDir($newPath, 0755);
@@ -226,7 +227,7 @@ trait MoveHelper
                 $text[]  = ['Moving' => File::videoPath($video_name)];
                 Mediatag::$output->writeln('Renaming <file>' . File::videoPath($video_file) . '</>' . PHP_EOL .
                 $style . File::videoPath($newFile) . '</>');
-
+// utmdd($video_file, $newFile);
                 if (!Option::isTrue('test')) {
                     (new SfSystem())->rename($video_file, $newFile, false);
                 } else {
@@ -254,6 +255,8 @@ trait MoveHelper
                     // if (!file_exists($newFile)) {
                     Mediatag::$output->writeln('Renaming duplicate ' . PHP_EOL . '<file>' . File::videoPath($video_file) . '</> ' . PHP_EOL . '<comment> ' . File::videoPath($dupeFile) . '</>');
                     if (!Option::isTrue('test')) {
+                        // utmdd($video_file, $dupeFile);
+
                         (new SfSystem())->rename($video_file, $dupeFile, true);
                     }
 

@@ -298,7 +298,6 @@ class Patterns extends TagBuilder
         //     }
         //     return  $this->network . '/' . $this->studio;
         // }
-
         return $this->studio;
     }
 

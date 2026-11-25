@@ -313,7 +313,7 @@ EOD;
 
         $Patterns_template = (new PsrPrinter())->printFile($file);
         $Pattern_file          = __PATTERNS_LIB_DIR__ . \DIRECTORY_SEPARATOR . __LIBRARY__ . $networkPath . \DIRECTORY_SEPARATOR . $className . '.php';
-        echo $Patterns_template;
+        // echo $Patterns_template;
 
 
         if (file_exists($Pattern_file)) {
@@ -321,7 +321,6 @@ EOD;
             utmdd($Pattern_file);
         }
         $filesystem->dumpFile($Pattern_file, $Patterns_template);
-        // utmdd();
 
         require_once $Pattern_file;
 

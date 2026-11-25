@@ -15,24 +15,27 @@ trait StudioMap
     public function lookupStudio($tag, $text, $returnPath = false)
     {
         $queryTerm = str_replace(' ', '', $text);
-        $query     = 'SELECT library, path,studio FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $queryTerm . "'";
-        //        utmdd($query);
-
+        $query     = 'SELECT library, path,studio,name FROM ' . __MYSQL_STUDIOS__ . " WHERE name LIKE '" . $queryTerm . "'";
         $result    = $this->queryOne($query);
-        if (null !== $result) {
-            if (true === $returnPath) {
-                if ('Pornhub' == $result['library']) {
+
+        if ($result !== null) {
+            if ($returnPath === true) {
+                if ($result['library'] == 'Pornhub') {
                     $result['library'] = 'New';
                 }
-                unset($result['name']);
-                //            unset($result['library']);
-                if (null === $result['path'] || '' == $result['path']) {
+
+
+                if ($result['path'] === null || $result['path'] == '') {
                     //                  return false;
+                    if($result['studio'] == $result['name'] && $text != $result['studio']){
+                            $result['studio'] = $text;
+                    }
                     unset($result['path']);
                 } else {
                     unset($result['studio']);
                 }
-
+                    unset($result['library']);
+                unset($result['name']);
                 $path = implode('/', $result);
 
                 return rtrim($path, '/');
@@ -56,7 +59,7 @@ trait StudioMap
         $name    = trim("'" . $array['name'] . "'");
         $studio  = trim("'" . $array['studio'] . "'");
 
-        if (null !== $array['path']) {
+        if ($array['path'] !== null) {
             $path = "'" . $array['path'] . "'";
         } else {
             $path = 'NULL';

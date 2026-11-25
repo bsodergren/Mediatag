@@ -117,7 +117,7 @@ trait Helper
             $tagBuilder = new TagBuilder($key, $tagObj);
 
             $videoArray = $tagBuilder->getTags($videoInfo);
-
+// utmdd($videoArray,$videoinfo);
             $message    = str_replace(__CURRENT_DIRECTORY__, '.', $videoInfo['video_path']) . '/' . $videoInfo['video_name'];
             if (count($videoArray['updateTags']) > 0) {
 
