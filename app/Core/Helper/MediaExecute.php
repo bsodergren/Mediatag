@@ -24,7 +24,7 @@ trait MediaExecute
         'genre',
         'artist',
         'title',
-        'keyword',
+        // 'keyword',
         'network',
     ];
 
@@ -40,7 +40,7 @@ trait MediaExecute
                 case 'title':
                 case 'genre':
                 case 'artist':
-                case 'keyword':
+                // case 'keyword':
                 case 'network':
                 case 'studio':
                     if (! defined('__UPDATE_SET_ONLY__')) {

@@ -12,7 +12,7 @@ trait GenreMap
     {
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-
+utmdump([$key,$text]);
         if ($text == '') {
             return;
         }
@@ -28,7 +28,6 @@ trait GenreMap
         $where  = $this->getTagWhere($tag, $string);
         $query  = 'SELECT * FROM ' . $table . ' WHERE ' . $where;
         $result = $this->query($query);
-
         if (is_array($result)) {
             if (count($result) == 0) {
                 $this->addTag($tag, $string);

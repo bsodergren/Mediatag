@@ -47,7 +47,6 @@ class Title extends TagBuilder
         // UTMlog::Logger('before', $text);
 
         $text      = Strings::clean($clean_text, false, true);
-
         $text      = str_replace("\\'", "'", $text);
         $text      = str_replace('/', ' ', $text);
         $text      = str_replace('(', ' ', $text);
@@ -55,6 +54,7 @@ class Title extends TagBuilder
         $text      = str_replace(', ', ',', $text);
         $text      = str_replace(',,', '', $text);
         $titleText = trim($text);
+// utmdd($titleText,$text);
 
         // utmdd([__FILE__, __METHOD__, __LINE__]);
 

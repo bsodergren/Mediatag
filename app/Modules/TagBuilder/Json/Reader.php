@@ -153,12 +153,13 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $this->title();
+//         utmdump($this->tag_array);
         if (\array_key_exists('title', $this->tag_array)) {
             $string                    = $this->tag_array['title'];
             $string                    = $this->matchArtist($string);
             $this->tag_array['artist'] = $string;
         }
-
+utmdump($this->tag_array);
         return null;
     }
 
@@ -220,9 +221,9 @@ class Reader extends TagReader
             case 'studio':
                 $this->getJsonValue($tag, ['uploader', 'channel', 'series']);
                 break;
-            case 'keyword':
-                $this->getJsonValue($tag, ['tags', 'categories']);
-                break;
+            // case 'keyword':
+            //     $this->getJsonValue($tag, ['tags', 'categories']);
+            //     break;
             case 'artist':
                 $this->getJsonValue($tag, ['cast']);
                 break;

@@ -46,6 +46,6 @@ class Keyword extends TagBuilder
     {
         // utminfo(func_get_args());
 
-        return parent::clean($text, 'keyword');
+        return "";//parent::clean($text, 'keyword');
     }
 }

@@ -80,14 +80,13 @@ trait Artist
     public function getArtistTransform($names, $delim = ',')
     {
         // utminfo(func_get_args());
-
         $matchedNames   = [];
         $names          = str_replace('_1080p', '', $names);
         $names          = str_replace($this->getArtistDelim(), $delim, $names);
         $names          = str_replace('_', ' ', $names);
         $names = \ucwords($names,', ');
         $names_array    = explode($delim, $names);
-        //   utmdump($names);
+//           utmdump($names);
 
         /*
         $artist_matches = array_change_key_case($this->artist_match, CASE_LOWER);
@@ -107,12 +106,13 @@ trait Artist
         foreach ($names_array as $aName) {
             //  $aName = ucwords($aName);
             $aName = str_replace(' ', '', $aName);
+
             $parts = preg_split('/(?=[A-Z])/', $aName, -1, PREG_SPLIT_NO_EMPTY);
             $aName = implode(' ', $parts);
             //  $name_key = str_replace(' ', '', $name_key);
 
             if ($this->ignoreArtist($aName) === true) {
-                // utmdump(['ignored' => $aName]);
+//                  utmdump(['ignored' => $aName]);
 
                 continue;
             }
@@ -121,10 +121,13 @@ trait Artist
 
                 $name_key    = str_replace(' ', '_', strtolower($aName));
 
+
                 $matchedName = self::CheckArtist($name_key);
+
                 if ($matchedName !== false && count($matchedName) == 1) {
                     $matchedNames[] = $matchedName[0]['star_name'];
                 } else {
+
                     foreach ($parts as $index => $PartName) {
                         $matchedName = self::CheckArtist($PartName);
                         if ($matchedName !== false) {
@@ -215,6 +218,7 @@ trait Artist
         if (count($matchedNames) > 0) {
             $delim      = ', ';
             $names      = implode($delim, $matchedNames);
+
             $names      = str_replace('_', ' ', $names);
                         $names      = str_replace('-', ' ', $names);
 
@@ -222,7 +226,7 @@ trait Artist
             $names      = ucwords($names);
 
             $nameString = str_replace(', ', ',', $names);
-
+utmdump($nameString);
             return $nameString;
         }
 
@@ -287,7 +291,7 @@ trait Artist
                     return null;
                 }
                 $name      = implode($delim, $names);
-
+utmdump($name);
                 return $this->getArtistTransform($name, $delim);
             }
         }
@@ -320,7 +324,7 @@ trait Artist
                 $res = [$t];
             }
         }
-        // utmdump($res, $db->getLastQuery());
+        // utmdump([$res, $db->getLastQuery()]);
 
         if (count($res) == 0) {
             return false;

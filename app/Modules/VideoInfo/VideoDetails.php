@@ -32,7 +32,7 @@ class VideoDetails
         'FavoriteVideo',
     ];
 
-    public static $metaFields     = ['Library', 'subLibrary', 'title', 'genre', 'studio', 'network', 'artist', 'keyword'];
+    public static $metaFields     = ['Library', 'subLibrary', 'title', 'genre', 'studio', 'network', 'artist'];
 
     public static $fileInfoFields = ['format', 'bit_rate', 'width', 'height', 'filesize', 'duration'];
 

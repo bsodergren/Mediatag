@@ -142,10 +142,10 @@ class Storage
             $method = str_replace('Genre', 'Tag', $name);
             // return $this->getTag($tag, $arguments);
         }
-        if (str_contains($name, 'Keyword')) {
-            $tag    = 'keyword';
-            $method = str_replace('Keyword', 'Tag', $name);
-        }
+        // if (str_contains($name, 'Keyword')) {
+        //     $tag    = 'keyword';
+        //     $method = str_replace('Keyword', 'Tag', $name);
+        // }
 
         if (method_exists($this, $method)) {
             return $this->{$method}($tag, ...$arguments);
@@ -415,8 +415,8 @@ class Storage
             case 'genre':
                 return __MYSQL_GENRE__;
 
-            case 'keyword':
-                return __MYSQL_KEYWORD__;
+            // case 'keyword':
+            //     return __MYSQL_KEYWORD__;
             case 'artist':
                 return __MYSQL_ARTISTS__;
             case 'studio':

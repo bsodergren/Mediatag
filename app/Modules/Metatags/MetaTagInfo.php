@@ -134,7 +134,7 @@ class MetaTagInfo extends Mediatag
             }
         }
 
-        // utmdump([$result,$artist]);
+//         utmdump([$result,$artist]);
         return $result;
         //     $data = ['name' => \strtolower($v), 'replacement' => ''];
         //     $id   = $db->insert(__MYSQL_ARTISTS__, $data);
@@ -163,7 +163,7 @@ class MetaTagInfo extends Mediatag
         }
         $res = $db->get(\__MYSQL_GENRE__);
 
-        // utmdump($res, $db->getLastQuery());
+//          utmdump($res, $db->getLastQuery());
 
         return $res;
     }

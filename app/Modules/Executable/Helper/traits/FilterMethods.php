@@ -69,7 +69,7 @@ trait FilterMethods
         $buffer = str_replace("\n", ' ', $buffer);
 
         preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\] )?(Destination: )?(.*)/m', $buffer, $match);
-        utmdump($buffer, $match);
+//         utmdump($buffer, $match);
 
 
         // preg_match('/(\[[a-z]+\] [a-zA-Z0-9 :]+)(\[[a-z]+\]) (Destination:) (.*)/m', $buffer, $match);

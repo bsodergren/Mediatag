@@ -352,9 +352,9 @@ class Strings extends \Nette\Utils\Strings
         } else {
             $file_special_chars = ['’', "'"];
         }
+
         $special_chars      = array_merge($special_chars, $file_special_chars);
         $text               = str_replace('é', 'e', $text);
-
         if (true === $file) {
             if (false === $caseSensitive) {
                 $text = strtolower($text);
@@ -366,8 +366,9 @@ class Strings extends \Nette\Utils\Strings
 
         foreach (str_split($text) as $char) {
             // Mediatag::notice('Character {char}, {ord}', ['char'=>$char,'ord'=>ord($char) ]);
+            // utmdump([$char=>ord($char)]);
             if (ord($char) > 125) {
-                $str[] = ' ';
+                $str[] = '';
             } else {
                 $str[] = $char;
             }
@@ -380,6 +381,8 @@ class Strings extends \Nette\Utils\Strings
         // Mediatag::notice('Getting text value, {text}', ['text'=>$text]);
 
         $text               = str_replace($special_chars, '', $text);
+        // utmdd($text);
+
         $special_chars      = ['(', ')', '~'];
         $text               = str_replace($special_chars, ' ', $text);
         $text               = str_replace(['%20', '+'], '-', $text);

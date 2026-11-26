@@ -328,6 +328,7 @@ class Reader extends TagReader
         // utminfo(func_get_args());
 
         $res = $this->getFileTag('artist');
+        // utmdump($res);
         if ($res === false) {
             return null;
         }
