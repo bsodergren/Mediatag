@@ -226,7 +226,7 @@ trait Artist
             $names      = ucwords($names);
 
             $nameString = str_replace(', ', ',', $names);
-utmdump($nameString);
+// utmdump($nameString);
             return $nameString;
         }
 
@@ -291,7 +291,6 @@ utmdump($nameString);
                     return null;
                 }
                 $name      = implode($delim, $names);
-utmdump($name);
                 return $this->getArtistTransform($name, $delim);
             }
         }

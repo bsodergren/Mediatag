@@ -12,13 +12,12 @@ trait GenreMap
     {
         $table = $this->getTagTable($tag);
         $key   = $this->makeKey($text);
-utmdump([$key,$text]);
         if ($text == '') {
             return;
         }
+         $text = self::$DB->escape( $text);
 
         $query = 'INSERT IGNORE INTO ' . $table . '  (' . $tag . ", replacement, keep,new) VALUES ('" . $key . "','" . $text . "', 1,1)";
-
         $this->query($query);
     }
 
